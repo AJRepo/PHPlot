@@ -20,6 +20,7 @@ if (! defined(__FUNCTION__))
 
 define ('MINY', -1);        // Indexes in $data (for DrawXDataLine())
 define ('MAXY', -2);
+define ('TOTY', -3);
 
 error_reporting(E_ALL);
 
@@ -64,7 +65,7 @@ class PHPlot {
     var $output_file = '';                  // For output to a file instead of stdout
 
 //Data
-    var $data_type = 'text-data';           // text-data, data-data-error, data-data, text-data-pie
+    var $data_type = 'text-data';           // text-data, data-data-error, data-data, text-data-single
     var $plot_type= 'linepoints';           // bars, lines, linepoints, area, points, pie, thinbarline, squared
 
     var $label_scale_position = 0.5;        // Shifts data labes in pie charts. 1 = top, 0 = bottom
@@ -147,6 +148,7 @@ class PHPlot {
     var $draw_y_grid = TRUE;
 
     var $dashed_grid = TRUE;
+    var $grid_at_foreground = FALSE;
 
 //Colors and styles       (all colors can be array (R,G,B) or named color)
     var $color_array = 'small';             // 'small', 'large' or array (define your own colors)
@@ -1096,7 +1098,7 @@ class PHPlot {
      */
     function SetIsInline($which_ii) 
     {
-        $this->is_inline = $which_ii;
+        $this->is_inline = (bool)$which_ii;
         return TRUE;
     }
 
@@ -1565,8 +1567,8 @@ class PHPlot {
     function SetPlotType($which_pt) 
     {
         $this->plot_type = $this->CheckOption($which_pt, 
-                                  'bars, lines, linepoints, area, points, pie, thinbarline, squared', 
-                                  __FUNCTION__);
+                           'bars, stackedbars, lines, linepoints, area, points, pie, thinbarline, squared', 
+                            __FUNCTION__);
     }
 
     /*!
@@ -1687,19 +1689,20 @@ class PHPlot {
 
     /*!
      *  text-data: ('label', y1, y2, y3, ...)
-     *  text-data-pie: ('label', y1), for pie charts. See DrawPieChart()
+     *  text-data-single: ('label', data), for some pie charts.
      *  data-data: ('label', x, y1, y2, y3, ...)
      *  data-data-error: ('label', x1, y1, e1+, e2-, y2, e2+, e2-, y3, e3+, e3-, ...)
      */
     function SetDataType($which_dt) 
     {
-        //The next three lines are for past compatibility.
+        //The next four lines are for past compatibility.
         if ($which_dt == 'text-linear') { $which_dt = 'text-data'; };
         if ($which_dt == 'linear-linear') { $which_dt = 'data-data'; };
         if ($which_dt == 'linear-linear-error') { $which_dt = 'data-data-error'; };
+        if ($which_dt == 'text-data-pie') { $which_dt = 'text-data-single'; }
 
-        $this->data_type = $this->CheckOption($which_dt, 'text-data, text-data-pie, data-data, data-data-error',
-                                              __FUNCTION__);
+        $this->data_type = $this->CheckOption($which_dt, 'text-data, text-data-single, '.
+                                                         'data-data, data-data-error', __FUNCTION__);
         return TRUE;
     }
 
@@ -1786,6 +1789,9 @@ class PHPlot {
         
         $minminy = $miny;
         $maxmaxy = $maxy;
+
+        if ($this->plot_type == 'stackedbars') { $maxmaxy = $minminy = 0; }
+            
         // Process each row of data
         for ($i=0; $i < $this->num_data_rows; $i++) {
             $j=0;
@@ -1793,15 +1799,22 @@ class PHPlot {
             $val = @ strlen($this->data[$i][$j++]);
             $maxt = ($val > $maxt) ? $val : $maxt;
 
+
+            if ($this->plot_type == 'stackedbars') { $maxy = $miny = 0; }
+            
             switch ($this->data_type) {
             case 'text-data':           // Data is passed in as (title, y1, y2, y3, ...)
-            case 'text-data-pie':       // This one is for some pie charts, see DrawPieChart()
+            case 'text-data-single':    // This one is for some pie charts
                 // $numrecs = @ count($this->data[$i]);
                 $miny = $maxy = (double)$this->data[$i][$j];
                 for (; $j < $this->num_recs[$i]; $j++) {
                     $val = (double)$this->data[$i][$j];
-                    $maxy = ($val > $maxy) ? $val : $maxy;
-                    $miny = ($val < $miny) ? $val : $miny;
+                    if ($this->plot_type == 'stackedbars') {
+                        $maxy += abs($val);      // only positive values for the moment
+                    } else {
+                        $maxy = ($val > $maxy) ? $val : $maxy;
+                        $miny = ($val < $miny) ? $val : $miny;
+                    }                        
                 }
                 break;
             case 'data-data':           // Data is passed in as (title, x, y, y2, y3, ...) 
@@ -1847,6 +1860,7 @@ class PHPlot {
             }
             $this->data[$i][MINY] = $miny;      // This row's min Y, for DrawXDataLine()
             $this->data[$i][MAXY] = $maxy;      // This row's max Y, for DrawXDataLine()
+
             $minminy = ($miny < $minminy) ? $miny : $minminy;   // global min
             $maxmaxy = ($maxy > $maxmaxy) ? $maxy : $maxmaxy;   // global max
         }
@@ -1871,7 +1885,7 @@ class PHPlot {
      *        maybe it shouldn't be so...
      *
      * TODO: add x_tick_label_width and y_tick_label_height and use them to calculate
-     *       max_x_labels and max_y_labels, to be used by drawing functions t avoid overlapping.
+     *       max_x_labels and max_y_labels, to be used by drawing functions to avoid overlapping.
      */
     function CalcMargins() 
     {
@@ -2048,7 +2062,7 @@ class PHPlot {
             }
 
             $ymax = ceil($this->max_y * 1.1);
-            $ymin = floor($this->min_y * 0.9);
+            $ymin = ceil($this->min_y * 1.1);
         }
 
         $this->plot_min_x = $xmin;
@@ -2085,17 +2099,18 @@ class PHPlot {
 
 
     /*!
-     * For plots that have equally spaced x variables and multiple bars per x-point.
+     * For bar plots, which have equally spaced x variables.
      */
-    function SetEqualXCoord() 
+    function CalcBarWidths() 
     {
-        $space = ($this->plot_area[2] - $this->plot_area[0]) / 
-                 ($this->num_data_rows * 2) * $this->group_frac_width;
-        $group_width = $space * 2;
-        $bar_width = $group_width / $this->records_per_group;
-        //I think that eventually this space variable will be replaced by just graphing x.
-        $this->data_group_space = $space;
-        $this->record_bar_width = $bar_width;
+        $group_width = ($this->plot_area[2] - $this->plot_area[0]) / 
+                      $this->num_data_rows * $this->group_frac_width;
+        if ($this->plot_type == 'bars') {
+            $this->record_bar_width = $group_width / $this->records_per_group;
+        } else if ($this->plot_type == 'stackedbars') {
+            $this->record_bar_width = $group_width;
+        }            
+        $this->data_group_space = $group_width / 2;
         return TRUE;
     }
 
@@ -2984,7 +2999,7 @@ class PHPlot {
             }
         }
         // Or only one column per row, one pie slice per row?
-        else if ($this->data_type == 'text-data-pie') {
+        else if ($this->data_type == 'text-data-single') {
             for ($i = 0; $i < $this->num_data_rows; $i++) {
                 $legend[$i] = $this->data[$i][0];                   // Set the legend to column labels
                 $sumarr[$i] = $this->data[$i][1];
@@ -3590,6 +3605,57 @@ class PHPlot {
     } //function DrawBars    
 
 
+
+
+    /*!    
+     * Data comes in as array("title", x, y, y2, y3, ...)
+     */
+    function DrawStackedBars() 
+    {
+        if ($this->data_type != 'text-data') { 
+            $this->DrawError('DrawStackedBars(): Bar plots must be text-data: use SetDataType("text-data")');
+            return FALSE;
+        }
+
+        for ($row = 0; $row < $this->num_data_rows; $row++) {
+            $record = 1;                                    // Skip record #0 (data label)
+
+            $x_now_pixels = $this->xtr(0.5 + $row);         // Place text-data at X = 0.5, 1.5, 2.5, etc...
+
+            if ($this->x_data_label_pos != 'none')          // Draw X Data labels?
+                $this->DrawXDataLabel($this->data[$row][0], $x_now_pixels);
+
+            // Draw the bars
+            $oldv = 0;
+            for ($idx = 0; $record < $this->num_recs[$row]; $record++, $idx++) {
+                if (is_numeric($this->data[$row][$record])) {       // Allow for missing Y data 
+                    $x1 = $x_now_pixels - $this->data_group_space;
+                    $x2 = $x_now_pixels + $this->data_group_space; 
+
+                    $y1 = $this->ytr(abs($this->data[$row][$record]) + $oldv);
+                    $y2 = $this->ytr($this->x_axis_position + $oldv);
+                    $oldv += abs($this->data[$row][$record]);
+
+                    if ($this->shading) {                           // Draw the shade?
+                        ImageFilledPolygon($this->img, array($x1, $y1, 
+                                                       $x1 + $this->shading, $y1 - $this->shading,
+                                                       $x2 + $this->shading, $y1 - $this->shading,
+                                                       $x2 + $this->shading, $y2 - $this->shading,
+                                                       $x2, $y2,
+                                                       $x2, $y1),
+                                           6, $this->ndx_data_dark_colors[$idx]);
+                    } 
+                    // Or draw a border?
+                    else {
+                        ImageRectangle($this->img, $x1, $y1, $x2,$y2, $this->ndx_data_border_colors[$idx]);
+                    }
+                    // Draw the bar
+                    ImageFilledRectangle($this->img, $x1, $y1, $x2, $y2, $this->ndx_data_colors[$idx]);
+                    
+                } 
+            }   // end for
+        }   // end for
+    } //function DrawStackedBars 
     /*!
      *
      */
@@ -3621,8 +3687,8 @@ class PHPlot {
         if (! isset($this->plot_max_y))             // Set plot area world values (plot_max_x, etc.)
             $this->SetPlotAreaWorld();
 
-        if ($this->data_type == 'text-data')
-            $this->SetEqualXCoord();
+        if ($this->plot_type == 'bars' || $this->plot_type == 'stackedbars') // Calculate bar widths
+            $this->CalcBarWidths();
 
         if ($this->x_data_label_pos != 'none') {    // Default: do not draw tick stuff if 
             $this->x_tick_label_pos = 'none';       // there are data labels.
@@ -3642,6 +3708,11 @@ class PHPlot {
         $this->DrawXTitle();
         $this->DrawYTitle();
 
+
+        if (! $this->grid_at_foreground) {         // Usually one wants grids to go back, but...
+            $this->DrawYAxis();     // Y axis must be drawn before X axis (see DrawYAxis()) 
+            $this->DrawXAxis();
+        }
         switch ($this->plot_type) {
         case 'thinbarline':
             $this->DrawThinBarLines();
@@ -3682,21 +3753,25 @@ class PHPlot {
                                      $this->image_height - $this->safe_margin);
             $this->DrawPieChart();
             break;
+        case 'stackedbars':
+            $this->DrawStackedBars();
+            break; 
         case 'bars':
+            $this->DrawBars();
+            break;
         default:
             $this->plot_type = 'bars';  // Set it if it wasn't already set.
-            $this->DrawYAxis();     // We don't want the grid to overwrite bar charts
-            $this->DrawXAxis();     // so we draw it first. Also, Y must be drawn before X (see DrawYAxis())
             $this->DrawBars();
-            $this->DrawPlotBorder();
             break;
         }   // end switch
 
-        if ($this->plot_type != 'pie' && $this->plot_type != 'bars') {
-            $this->DrawYAxis();
+        if ($this->grid_at_foreground) {         // Usually one wants grids to go back, but...
+            $this->DrawYAxis();     // Y axis must be drawn before X axis (see DrawYAxis()) 
             $this->DrawXAxis();
-            $this->DrawPlotBorder();
         }
+
+        $this->DrawPlotBorder();
+        
         if ($this->legend)
             $this->DrawLegend($this->legend_x_pos, $this->legend_y_pos, '');
 
