@@ -2051,13 +2051,13 @@ class PHPlot {
             $this->FindDataLimits() ;
         }
  
-        if (! $xmin) {
+        if ( $xmin == NULL) {
             if ($this->data_type == 'text-data')  // Valid for data without X values only.
                 $xmin = 0;
             else
                 $xmin = $this->min_x;
         }
-        if (! $xmax) {
+        if ( $xmax == NULL) {
             if ($this->data_type == 'text-data')  // Valid for data without X values only.
                 $xmax = $this->max_x + 1;
             else
@@ -2066,13 +2066,13 @@ class PHPlot {
 
         // Leave room above and below the highest and lowest data points.
         
-        if (! $ymin) {
+        if ( $ymin == NULL) {
             if ($this->min_y < 0)
                 $ymin = ceil($this->min_y * 1.1);
             else
                 $ymin = floor($this->min_y * 0.9);
         }    
-        if (! $ymax) {
+        if ( $ymax == NULL) {
             if ($this->max_y < 0)
                 $ymax = floor($this->max_y * 0.9);
             else
