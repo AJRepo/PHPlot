@@ -242,7 +242,7 @@ class PHPlot {
      * it is safer to automatically call imagedestroy upon script termination than
      * do it ourselves.
      */
-    function PHPlot () 
+    function _PHPlot () 
     {
         ImageDestroy($this->img);
         return;
