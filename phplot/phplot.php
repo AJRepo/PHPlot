@@ -36,6 +36,7 @@ class PHPlot{
 	var $x_right_margin;
 	var $y_bot_margin;
 	var $plot_area = array(5,5,600,400);
+	var $x_axis_position = 0;	//Where to draw the X_axis (world coordinates)
 //Fonts
 	var $use_ttf  = 1;		  //Use TTF fonts (1) or not (0)
 	var $font = "./benjamingothic.ttf";
@@ -93,7 +94,8 @@ class PHPlot{
 	var $min_y;
 	var $max_y;
 	var $max_x = 10;  //Must not be = 0;
-	var $precision = "1";
+	var $precision_y = "1";
+	var $precision_x = "1";
 	var $si_units;
 //Labels
 	var $title_txt = "this is a title";
@@ -138,8 +140,16 @@ class PHPlot{
 		return true;
 	}
 
-	function SetPrecision($which_prec) {
-		$this->precision = $which_prec;
+	function SetXAxisPosition($which_pos) {
+		$this->x_axis_position = $which_pos;
+		return true;
+	}
+	function SetPrecisionX($which_prec) {
+		$this->precision_x = $which_prec;
+		return true;
+	}
+	function SetPrecisionY($which_prec) {
+		$this->precision_y = $which_prec;
 		return true;
 	}
 
@@ -424,6 +434,7 @@ class PHPlot{
 						}
 						$tmp++;
 					}
+					$tmp = $tmp - 1; //# records per group
 				break;
 				case "linear-linear-error":  //Assume 2-D for now, can go higher
 				//Regular X-Y data is passed in as $data[] = (title,x,y,error+,error-,y2,error2+,error2-) 
@@ -673,7 +684,7 @@ class PHPlot{
 	function SetYLabelWidth() {
 		//$ylab = sprintf("%6.1f %s",$i,$si_units[0]);  //use for PHP2 compatibility
 		//the "." is for space. It isn't actually printed
-		$ylab = number_format($this->max_y, $this->precision, ".", ",") . $this->si_units . ".";
+		$ylab = number_format($this->max_y, $this->precision_y, ".", ",") . $this->si_units . ".";
 
 		if ($this->use_ttf == 1) { 
 			$size = $this->TTFBBoxSize($this->axis_ttffont_size, 0, $this->axis_ttffont, $ylab);
@@ -830,18 +841,18 @@ class PHPlot{
 	}
 
 	function DrawXAxis() { 
-		//Draw X Axis at Y=0
+		//Draw X Axis at Y=$x_axis_postion
 		ImageLine($this->img,(-$this->tick_length+$this->plot_area[0]),
-				$this->ytr(0),$this->xtr(1),$this->ytr(0),$this->tick_color);
-		ImageLine($this->img,$this->plot_area[0]+1,$this->ytr(0),
-				$this->xtr($this->plot_max_x)-1,$this->ytr(0),$this->tick_color);
+				$this->ytr($this->x_axis_position),$this->xtr(1),$this->ytr($this->x_axis_position),$this->tick_color);
+		ImageLine($this->img,$this->plot_area[0]+1,$this->ytr($this->x_axis_position),
+				$this->xtr($this->plot_max_x)-1,$this->ytr($this->x_axis_position),$this->tick_color);
 		ImageLine($this->img,($this->xtr($this->plot_max_x)+$this->tick_length),
-				$this->ytr(0),$this->xtr($this->plot_max_x-1),$this->ytr(0),$this->grid_color);
+				$this->ytr($this->x_axis_position),$this->xtr($this->plot_max_x-1),$this->ytr($this->x_axis_position),$this->grid_color);
 
 		//Y Axis Label
-		$ylab = number_format(0,$this->precision,".",",") . "$this->si_units";
+		$ylab = number_format($this->x_axis_position,$this->precision_y,".",",") . "$this->si_units";
 		ImageString($this->img, $this->small_font,($this->plot_area[0] - $this->y_label_width - $this->tick_length/2),
-			( -($this->small_font_height/2.0) + $this->ytr(0)),$ylab, $this->text_color);
+			( -($this->small_font_height/2.0) + $this->ytr($this->x_axis_position)),$ylab, $this->text_color);
 
 		//X Ticks and Labels
 		if ($this->data_type != "text-linear") { //labels for text-linear is done at data drawing time for speed.
@@ -859,7 +870,7 @@ class PHPlot{
 		if ($this->x_grid_label_type == "title") { 
 			$xlab = $this->data_values[0][0];
 		} else { 
-			$xlab = number_format($this->plot_min_x,$this->precision,".",",") . "$this->si_units";
+			$xlab = number_format($this->plot_min_x,$this->precision_x,".",",") . "$this->si_units";
 		}
 			ImageString($this->img, $this->small_font,($this->plot_area[0] - $this->small_font_width*strlen($xlab)/2 ),
 			( $this->small_font_height + $this->plot_area[3]),$xlab, $this->text_color);
@@ -883,7 +894,7 @@ class PHPlot{
 			if ($this->x_grid_label_type == "title") { 
 				$xlab = $this->data_values[$x_tmp][0];
 			} else { 
-				$xlab = number_format($x_tmp,$this->precision,".",",") . "$this->si_units";
+				$xlab = number_format($x_tmp,$this->precision_x,".",",") . "$this->si_units";
 			}
 
 			$x_pixels = $this->xtr($x_tmp);
@@ -915,7 +926,7 @@ class PHPlot{
 		ImageLine($this->img,(-$this->tick_length+$this->plot_area[0]),
 				$this->plot_area[1],$this->xtr(1),$this->plot_area[1],$this->tick_color);
 
-		$ylab = number_format($this->plot_min_y,$this->precision,".",",") . "$this->si_units";
+		$ylab = number_format($this->plot_min_y,$this->precision_y,".",",") . "$this->si_units";
 		ImageString($this->img, $this->small_font,($this->plot_area[0] - $this->y_label_width - $this->tick_length/2),
 			( -($this->small_font_height/2.0) + $this->ytr($this->plot_min_y)),$ylab, $this->text_color);
 
@@ -931,7 +942,7 @@ class PHPlot{
 		//Left Top
 		//ImageLine($this->img,(-$this->tick_length+$this->xtr($this->plot_min_x)),
 		//		$this->ytr($this->plot_max_y),$this->xtr(1),$this->ytr($this->plot_max_y),$this->tick_color);
-		//$ylab = number_format($this->plot_max_y,$this->precision,".",",") . "$this->si_units";
+		//$ylab = number_format($this->plot_max_y,$this->precision_y,".",",") . "$this->si_units";
 		//ImageString($this->img, $this->small_font,($this->plot_area[0] - $this->y_label_width - $this->tick_length/2),
 		//	( -($this->small_font_height/2.0) + $this->ytr($this->plot_max_y)),$ylab, $this->text_color);
 
@@ -960,7 +971,7 @@ class PHPlot{
 
 		while ($y_tmp <= $this->plot_max_y){
 			//$ylab = sprintf("%6.1f %s",$min_y,$si_units[0]);  //PHP2 past compatibility
-			$ylab = number_format($y_tmp,$this->precision,".",",") . "$this->si_units";
+			$ylab = number_format($y_tmp,$this->precision_y,".",",") . "$this->si_units";
 			$y_pixels = $this->ytr($y_tmp);
 	
 			//ImageLine($this->img,(-$this->tick_length+$this->xtr($this->plot_min_x)),
@@ -1100,7 +1111,7 @@ class PHPlot{
 		reset($sumarr);
 		while (list(, $val) = each($sumarr)) {
 			if ($color_index >= count($this->data_color)) $color_index=0;  //data_color = array
-			$label_txt = number_format(($val / $total * 100), $this->precision, ".", ",") . "%";
+			$label_txt = number_format(($val / $total * 100), $this->precision_y, ".", ",") . "%";
 			$val = 360 * ($val / $total);
 
 			$end_angle += $val;
@@ -1339,13 +1350,71 @@ class PHPlot{
 		return true;
 	}
 
+	function DrawArea() { 
+		//Data comes in as $data[]=("title",x,y,...);
+		//Set first and last datapoints of area
+		$i = 0;
+		while ($i < $this->records_per_group) { 
+			$posarr[$i][] =  $this->xtr($this->min_x);	//x initial
+			$posarr[$i][] =  $this->ytr($this->x_axis_position); 	//y initial
+			$i++;
+		}	
+
+		reset($this->data_values);
+		while (list($j, $row) = each($this->data_values)) {
+			$color_index = 0;
+			//foreach ($row as $v) 
+			while (list($k, $v) = each($row)) {
+				if ($k == 0) {
+					//Draw Data Labels
+					$xlab = SubStr($v,0,$this->x_datalabel_maxlength);
+				} elseif ($k == 1) { 
+					$x = $this->xtr($v);
+					// DrawXDataLabel interferes with Numbers on x-axis
+					//$this->DrawXDataLabel($xlab,$x);
+				} else {
+					// Create Array of points for later
+
+					$y = $this->ytr($v);
+					$posarr[$color_index][] = $x;
+					$posarr[$color_index][] = $y;
+//echo "DEBUG: $x,$y,$color_index,".$posarr[0][0].",".$posarr[0][1].",".$posarr[0][2];
+//.",".$posarr[0][3]."<br>";
+//echo "DEBUG: <br>";
+					$color_index++;
+				}
+			}
+		}
+
+		//Final_points
+//echo "DEBUG: RPG: $this->records_per_group<br>";
+		for ($i = 0; $i < $this->records_per_group; $i++) {
+			$posarr[$i][] =  $this->xtr($this->max_x);			//x final
+			$posarr[$i][] =  $this->ytr($this->x_axis_position); 	//y final
+	   	}
+
+		$color_index=0;
+
+		//foreach($posarr as $row) 
+		reset($posarr);
+		while (list(, $row) = each($posarr)) {
+			if ($color_index >= count($this->data_color)) $color_index=0;
+			$barcol = $this->col_data_color[$color_index];
+//echo "$row[0],$row[1],$row[2],$row[3],$row[4],$row[5],$row[6],$row[7],$row[8],$row[9],$row[10],$row[11],$row[12], $barcol<br>";
+			ImageFilledPolygon($this->img, $row, (count($row)) / 2, $barcol);
+			$color_index++;
+		}
+//exit;
+
+	}
+
 	function DrawAreaSeries() { 
 
 		//Set first and last datapoints of area
 		$i = 0;
 		while ($i < $this->records_per_group) { 
 			$posarr[$i][] =  $this->xtr(.5);			//x initial
-			$posarr[$i][] =  $this->ytr(0); 	//y initial
+			$posarr[$i][] =  $this->ytr($this->x_axis_position); 	//y initial
 			$i++;
 		}	
 
@@ -1373,12 +1442,12 @@ class PHPlot{
 		//Final_points
 		for ($i = 0; $i < $this->records_per_group; $i++) {
 			$posarr[$i][] =  round($this->xtr($this->max_x + .5));	//x final
-			$posarr[$i][] =  $this->ytr(0); 		//y final
+			$posarr[$i][] =  $this->ytr($this->x_axis_position); 		//y final
 	   	}
 
 		$color_index=0;
 
-		//foreach($posarr as $row) {
+		//foreach($posarr as $row) 
 		reset($posarr);
 		while (list(, $row) = each($posarr)) {
 			if ($color_index >= count($this->data_color)) $color_index=0;
@@ -1512,11 +1581,11 @@ class PHPlot{
 					$x1 = $start_pos;
 					$x2 = $start_pos + $this->record_bar_width;
 					if ($v < 0) { 
-						$y1 = $this->ytr(0);
+						$y1 = $this->ytr($this->x_axis_position);
 						$y2 = $this->ytr($v);
 					} else { 
 						$y1 = $this->ytr($v);
-						$y2 = $this->ytr(0);
+						$y2 = $this->ytr($this->x_axis_position);
 					}
 
 					if ($color_index >= count($this->data_color)) $color_index=0;
@@ -1605,7 +1674,11 @@ class PHPlot{
 				case "area":
 					$this->DrawPlotBorder();
 					$this->DrawLabels();
-					$this->DrawAreaSeries();
+					if ( $this->data_type == "text-linear") {
+						$this->DrawAreaSeries();
+					} else { 
+						$this->DrawArea();
+					}
 					break;
 				case "linepoints":
 					$this->DrawPlotBorder();

@@ -42,6 +42,7 @@ if ($which_data_type =="function") {
 	$graph->SetXLabel($xlbl);
 	$graph->SetYLabel($ylbl);
 	$graph->SetTitle($title);
+	$graph->SetXAxisPosition($which_xap);
 	$graph->SetDataColors(
 		array("blue","green","yellow","red"),  //Data Colors
 		array("black")							//Border Colors
@@ -52,7 +53,7 @@ if ($maxy_in) {
 	}
 }
 
-	//$graph->SetPlotAreaWorld(0,-5,count($data),30);
+	//$graph->SetPlotAreaWorld(0,100,5.5,1000);
 	//$graph->SetPlotAreaWorld(0,-10,5,35);
 	//$graph->SetPlotAreaPixels(150,50,600,400);
 

@@ -46,6 +46,7 @@ Data: (linear-linear)<br>
 </TABLE>
 <p>
 <SELECT NAME="which_plot_type">
+<OPTION VALUE="area">Area
 <OPTION VALUE="lines">Lines
 <OPTION VALUE="linepoints">Line and Points
 <OPTION VALUE="points">Points

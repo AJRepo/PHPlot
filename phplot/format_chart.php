@@ -40,6 +40,7 @@ Optional Settings: (Leave blank for automatic calculated values)<br>
 <INPUT TYPE="TEXT" NAME="title" VALUE="This is a title"> Title<br> 
 <INPUT TYPE="TEXT" NAME="which_vti" VALUE=""> Veritcal Tick Increment (blank for auto)<br>
 <INPUT TYPE="TEXT" NAME="which_hti" VALUE="1"> Horizontal Tick Increment (blank for auto)<br>
+<INPUT TYPE="TEXT" NAME="which_xap" VALUE="1"> X Axis Position (blank for 0)<br>
 </UL>
 <INPUT TYPE="SUBMIT">
 
