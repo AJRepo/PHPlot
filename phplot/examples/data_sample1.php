@@ -1,14 +1,19 @@
-Data Type: <A HREF="format_chart.php?which_data_type=text-linear">text-linear</A>//
-<A HREF="format_chart.php?which_data_type=linear-linear">linear-linear</A>//
-<A HREF="format_chart.php?which_data_type=function">function</A>//
-<A HREF="format_chart.php?which_data_type=linear-linear-error">linear-linear-error</A><br>
 <p>
-Data: (text-linear)<br>
-<INPUT TYPE="hidden" NAME="which_data_type" VALUE="text-linear">
-<TABLE border=1>
-<TR><TD>Title (x axis)</TD><TD>Ydata 1</TD><TD>Ydata 2</TD>
-<TD>Ydata 3</TD>
-<TD>Ydata 4</TD></TR>
+Data type: <a href="format_chart.php?which_data_type=text-linear">text-linear</a>//
+<a href="format_chart.php?which_data_type=linear-linear">linear-linear</a>//
+<a href="format_chart.php?which_data_type=function">function</a>//
+<a href="format_chart.php?which_data_type=linear-linear-error">linear-linear-error</a><br />
+</p>
+<p>
+Data: (Text-Linear)<br />
+</p>
+<input type="hidden" name="which_data_type" value="text-linear" />
+<table border=1>
+ <tr>
+  <td>title (x axis)</td><td>ydata 1</td><td>ydata 2</td>
+  <td>ydata 3</td> <td>ydata 4</td>
+ </tr>
+ 
 <?php 
 	srand ((double) microtime() * 12341234);
 	$a = 25;
@@ -20,29 +25,33 @@ Data: (text-linear)<br>
 		$c += rand(-2, 2);
 
 ?>
-<tr>
-<TD>
-<input TYPE="text" NAME="data_row0[<?php echo $i?>]" VALUE="year <?php echo $i?>">
-</TD><TD>
-<input TYPE="text" NAME="data_row1[<?php echo $i?>]" VALUE="<?php echo $a?>" SIZE="2">
-</TD><TD>
-<input TYPE="text" NAME="data_row2[<?php echo $i?>]" VALUE="<?php echo $b?>" SIZE="2">
-</TD><TD>
-<input TYPE="text" NAME="data_row3[<?php echo $i?>]" VALUE="<?php echo $c?>" SIZE="2">
-</TD><TD>
-<input TYPE="text" NAME="data_row4[<?php echo $i?>]" VALUE="<?php echo $c+1?>" SIZE="2">
-</TD><TD>
-</TR>
+ <tr>
+  <td>
+   <input type="text" name="data_row0[<?php echo $i?>]" value="Year <?php echo $i?>">
+  </td><td>
+   <input type="text" name="data_row1[<?php echo $i?>]" value="<?php echo $a?>" size="2">
+  </td><td>
+   <input type="text" name="data_row2[<?php echo $i?>]" value="<?php echo $b?>" size="2">
+  </td><td>
+   <input type="text" name="data_row3[<?php echo $i?>]" value="<?php echo $c?>" size="2">
+  </td><td>
+   <input type="text" name="data_row4[<?php echo $i?>]" value="<?php echo $c+1?>" size="2">
+  </td><td>
+ </tr>
 <?php 
 	}
 ?>
-</TABLE>
+
+</table>
+
 <p>
-<SELECT NAME="which_plot_type">
-<OPTION VALUE="bars">Bars (text-linear data only)
-<OPTION VALUE="lines">Lines
-<OPTION VALUE="pie">Pie (text-linear data only)
-<OPTION VALUE="linepoints">Line and Points
-<OPTION VALUE="points">Points
-<OPTION VALUE="area">Area (text-linear data only)
-</SELECT>
+Graph type:
+<select name="which_plot_type">
+  <option value="bars">Bars (text-linear data only)</option>
+  <option value="lines">Lines</option>
+  <option value="pie">Pie (text-linear data only)</option>
+  <option value="linepoints">Line and points</option>
+  <option value="points">Points</option>
+  <option value="area">Area (text-linear data only)</option>
+</select>
+</p>

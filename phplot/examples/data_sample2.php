@@ -1,8 +1,10 @@
-Data Type: <A HREF="format_chart.php?which_data_type=text-linear">text-linear</A>//
-<A HREF="format_chart.php?which_data_type=linear-linear">linear-linear</A>//
-<A HREF="format_chart.php?which_data_type=function">function</A>//
-<A HREF="format_chart.php?which_data_type=linear-linear-error">linear-linear-error</A><br>
 <p>
+Data type: 
+ <a href="format_chart.php?which_data_type=text-linear">text-linear</a>//
+ <a href="format_chart.php?which_data_type=linear-linear">linear-linear</a>//
+ <a href="format_chart.php?which_data_type=function">function</a>//
+ <a href="format_chart.php?which_data_type=linear-linear-error">linear-linear-error</a>
+</p>
 <?php 
 //linear-linear as just data
 		$data = array(
@@ -13,41 +15,44 @@ Data Type: <A HREF="format_chart.php?which_data_type=text-linear">text-linear</A
 			array("label 4", 5, 6, 1 )
 		);
 ?>
-Data: (linear-linear)<br>
-<INPUT TYPE="hidden" NAME="which_data_type" VALUE="linear-linear">
-<TABLE border=1>
-<TR><TD>Title (data lablel)</TD><TD>Xdata</TD><TD>Ydata 1</TD>
-<TD>Ydata 2</TD>
-<TD>Ydata 3</TD></TR>
+<p>
+Data: (Linear-Linear)<br />
+<input type="hidden" name="which_data_type" value="linear-linear" />
+<table border=1>
+ <tr>
+  <td>Title (data label)</td><td>X data</td><td>Y data 1</td>
+  <td>Y data 2</td><td>Y data 3</td>
+ </tr>
+ 
 <?php 
 	for ($i=0; $i<5; $i++) {
 ?>
-<tr>
-<TD>
-<input TYPE="text" NAME="data_row0[<?php echo $i?>]" 
-	VALUE="<?php echo $data[$i][0]?>" >
-</TD><TD>
-<input TYPE="text" NAME="data_row1[<?php echo $i?>]" 
-	VALUE="<?php echo $data[$i][1]?>" SIZE="3">
-</TD><TD>
-<input TYPE="text" NAME="data_row2[<?php echo $i?>]"
-	VALUE="<?php echo $data[$i][2]?>" SIZE="3">
-</TD><TD>
-<input TYPE="text" NAME="data_row3[<?php echo $i?>]"
-	VALUE="<?php echo $data[$i][3]?>" SIZE="3">
-</TD><TD>
-<input TYPE="text" NAME="data_row4[<?php echo $i?>]"
-	VALUE="<?php echo $data[$i][4]?>" SIZE="3">
-</TD><TD>
-</TR>
+ <tr>
+  <td>
+   <input type="text" name="data_row0[<?php echo $i?>]" value="<?php echo $data[$i][0]?>" />
+  </td><td>
+   <input type="text" name="data_row1[<?php echo $i?>]" value="<?php echo $data[$i][1]?>" size="3" />
+  </td><td>
+   <input type="text" name="data_row2[<?php echo $i?>]" value="<?php echo $data[$i][2]?>" size="3" />
+  </td><td>
+   <input type="text" name="data_row3[<?php echo $i?>]" value="<?php echo $data[$i][3]?>" size="3" />
+  </td><td>
+   <input type="text" name="data_row4[<?php echo $i?>]" value="<?php echo $data[$i][4]?>" size="3" />
+  </td><td>
+ </tr>
+ 
 <?php 
 	}
 ?>
-</TABLE>
+
+</table>
+
 <p>
-<SELECT NAME="which_plot_type">
-<OPTION VALUE="area">Area
-<OPTION VALUE="lines">Lines
-<OPTION VALUE="linepoints">Line and Points
-<OPTION VALUE="points">Points
-</SELECT>
+Graph type:
+<select name="which_plot_type">
+ <option value="area">Area</option>
+ <option value="lines">Lines</option>
+ <option value="linepoints">Line and points</option>
+ <option value="points">Points</option>
+</select>
+</p>
