@@ -103,7 +103,7 @@ class PHPlot {
     var $x_data_label_pos = 'plotdown';     // plotdown, plotup, both, plot, all, none
     var $y_data_label_pos = 'plotleft';     // plotleft, plotright, both, plot, all, none
 
-    var $draw_x_data_label_lines = TRUE;   // Draw a line from the data point to the axis?
+    var $draw_x_data_label_lines = FALSE;   // Draw a line from the data point to the axis?
     var $draw_y_data_label_lines = FALSE;   // TODO
 
     // Label types: (for tick, data and plot labels)
@@ -1398,52 +1398,78 @@ class PHPlot {
     /*!
      * Accepted values are: left, sides, none, full
      */
-    function SetPlotBorderType($which_pbt) 
+    function SetPlotBorderType($pbt) 
     {
-        $this->plot_border_type = $this->CheckOption($which_pbt, 'left, sides, none, full', __FUNCTION__);
+        $this->plot_border_type = $this->CheckOption($pbt, 'left, sides, none, full', __FUNCTION__);
     }
 
     /*!
      * Accepted values are: raised, plain
      */
-    function SetImageBorderType($which_sibt) 
+    function SetImageBorderType($sibt) 
     {
-        $this->image_border_type = $this->CheckOption($which_sibt, 'raised, plain', __FUNCTION__);
+        $this->image_border_type = $this->CheckOption($sibt, 'raised, plain', __FUNCTION__);
     }
 
-    /*!
-     *
-     */
-    function SetDrawPlotAreaBackground($which_dpab) 
-    {
-        $this->draw_plot_area_background = $which_dpab;  // TRUE or FALSE
-    }
 
     /*!
+     * \param dpab bool
      */
-    function SetDrawYGrid($which_dyg) 
+    function SetDrawPlotAreaBackground($dpab) 
     {
-        $this->draw_y_grid = $which_dyg;
-        return TRUE;
+        $this->draw_plot_area_background = (bool)$dpab;
     }
 
-    /*!
-     */
-    function SetDrawXGrid($which_dxg) 
-    {
-        $this->draw_x_grid = $which_dxg;
-        return TRUE;
-    }
 
     /*!
+     * \param dyg bool 
      */
-    function SetDrawDashedGrid($which_dsh) 
+    function SetDrawYGrid($dyg) 
     {
-        $this->dashed_grid = $which_dsh;
+        $this->draw_y_grid = (bool)$dyg;
         return TRUE;
     }
 
 
+    /*!
+     * \param dxg bool
+     */
+    function SetDrawXGrid($dxg) 
+    {
+        $this->draw_x_grid = (bool)$dxg;
+        return TRUE;
+    }
+
+
+    /*!
+     * \param ddg bool 
+     */
+    function SetDrawDashedGrid($ddg) 
+    {
+        $this->dashed_grid = (bool)$ddg;
+        return TRUE;
+    }
+
+
+    /*!
+     * \param dxdl bool
+     */
+    function SetDrawXDataLabelLines($dxdl)
+    {
+        $this->draw_x_data_label_lines = (bool)$dxdl;
+        return TRUE;
+    }
+
+    
+    /*!
+     * TODO: draw_y_data_label_lines not implemented.
+     * \param dydl bool
+     */
+    function SetDrawYDataLabelLines($dydl)
+    {
+        $this->draw_y_data_label_lines = $dydl;
+        return TRUE;
+    }
     /*!
      * Sets the graph's title.
      */
@@ -1477,7 +1503,7 @@ class PHPlot {
         if ($which_xtitle == '')
             $which_xpos = 'none';
 
-        $this->x_title_pos = $which_xpos;
+        $this->x_title_pos = $this->CheckOption($which_xpos, 'plotdown, plotup, both', __FUNCTION__);
 
         $this->x_title_txt = $which_xtitle;
 
@@ -1504,7 +1530,7 @@ class PHPlot {
         if ($which_ytitle == '')
             $which_ypos = 'none';
 
-        $this->y_title_pos = $which_ypos;
+        $this->y_title_pos = $this->CheckOption($which_ypos, 'plotleft, plotright, both', __FUNCTION__);
 
         $this->y_title_txt = $which_ytitle;
 
@@ -1523,9 +1549,13 @@ class PHPlot {
         return TRUE;
     }
 
+    /*!
+     * Sets the size of the drop shadow for bar and pie charts.
+     * \param which_s int Size in pixels.
+     */
     function SetShading($which_s) 
     { 
-        $this->shading = $which_s;
+        $this->shading = (int)$which_s;
         return TRUE;
     }
 
@@ -1536,18 +1566,26 @@ class PHPlot {
                                   __FUNCTION__);
     }
 
-    function SetYAxisPosition($which_pos) 
+    /*!
+     * Sets the position of Y axis.
+     * \param pos int Position in world coordinates. 
+     */
+    function SetYAxisPosition($pos) 
     {
-        $this->y_axis_position = $which_pos;
+        $this->y_axis_position = (int)$pos;
         if (isset($this->scale_is_set)) {
             $this->CalcTranslation();
         }
         return TRUE;
     }
-
-    function SetXAxisPosition($which_pos) 
+    
+    /*!
+     * Sets the position of X axis.
+     * \param pos int Position in world coordinates. 
+     */
+    function SetXAxisPosition($pos) 
     {
-        $this->x_axis_position = $which_pos;
+        $this->x_axis_position = (int)$pos;
         if (isset($this->scale_is_set)) {
             $this->CalcTranslation();
         }
@@ -1557,13 +1595,13 @@ class PHPlot {
 
     function SetXScaleType($which_xst) 
     { 
-        $this->xscale_type = $which_xst;
+        $this->xscale_type = $this->CheckOption($which_xst, 'linear, log', __FUNCTION__);
         return TRUE;
     }
 
     function SetYScaleType($which_yst) 
     { 
-        $this->yscale_type = $which_yst;
+        $this->yscale_type = $this->CheckOption($which_yst, 'linear, log',  __FUNCTION__);
         return TRUE;
     }
 
@@ -1617,11 +1655,13 @@ class PHPlot {
                               __FUNCTION__);
     }
 
-    function SetPointSize($which_ps) 
+    /*!
+     * Sets the point size for point plots.
+     * \param ps int Size in pixels.
+     */
+    function SetPointSize($ps) 
     {
-        //in pixels
-        SetType($which_ps, 'integer');
-        $this->point_size = $which_ps;
+        $this->point_size = (int)$ps;
 
         if ($this->point_shape == 'diamond' or $this->point_shape == 'triangle') {
             if ($this->point_size % 2 != 0) {
@@ -1634,10 +1674,11 @@ class PHPlot {
 
     /*!
      * Tells not to draw lines for missing Y data. Only works with 'lines' and 'squared' plots.
+     * \param bl bool
      */
-    function SetDrawBrokenLines($which_bl)
+    function SetDrawBrokenLines($bl)
     {
-        $this->draw_broken_lines = $which_bl;
+        $this->draw_broken_lines = (bool)$bl;
     }
 
 
@@ -1654,14 +1695,15 @@ class PHPlot {
         if ($which_dt == 'linear-linear') { $which_dt = 'data-data'; };
         if ($which_dt == 'linear-linear-error') { $which_dt = 'data-data-error'; };
 
-        $this->data_type = $which_dt;
+        $this->data_type = $this->CheckOption($which_dt, 'text-data, text-data-pie, data-data, data-data-error',
+                                              __FUNCTION__);
         return TRUE;
     }
 
     /*!
      * Copy the array passed as data values. We convert to numerical indexes, for its
      * use for (or while) loops, which sometimes are faster. Performance improvements
-     * vary from 28% to 49% in plot drawing functions.
+     * vary from 28% in DrawLines() to 49% in DrawArea() for plot drawing functions.
      */
     function SetDataValues(&$which_dv) 
     {
