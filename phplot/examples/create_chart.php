@@ -91,7 +91,8 @@ else if ($which_data_type == 'data-data-error') {
 	$graph->SetLineStyles(array("dashed","dashed","solid","solid"));
 	$graph->SetPointShape($which_point);
     $graph->SetPointSize($which_point_size);
-    
+    $graph->SetDrawBrokenLines($which_broken);
+
     // Some forms in format_chart.php don't set this variable, suppress errors.
 	@ $graph->SetErrorBarShape($which_error_type);
     

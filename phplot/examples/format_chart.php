@@ -254,6 +254,13 @@ automatic values.
   <td><input name="which_point_size" value="4" size="3" /></td>
 </tr>
 <tr>
+  <td>Draw broken lines with missing Y data:</td>
+  <td>
+    <select name="which_broken">
+      <option value="0" selected>No</option>
+      <option value="1">Yes</option>
+    </select>
+<tr>
   <td>Use TrueType font:</td>
   <td>
     <select name="which_use_ttf">
