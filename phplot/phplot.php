@@ -17,7 +17,7 @@
 
 
 //PHPLOT Version 4.?.?
-//Requires PHP 4 or later 
+//Requires PHP 4.0.6 or later 
 
 //error_reporting(E_ALL);
 
@@ -91,6 +91,8 @@ class PHPlot {
     var $label_color;
     var $text_color;
     var $i_light = '';
+
+    var $default_dashed_style = '3-3';      // See SetDashedStyle() and SetDefaultDashedStyle();
 
 //Data
     var $data_type = 'text-data';           // text-data, data-data-error, data-data 
@@ -220,11 +222,6 @@ class PHPlot {
         //Solid or dashed lines
         $this->line_style = array('solid','solid','dashed','dashed','solid', 'solid','dashed','dashed');
 
-        // Dashed grid?
-        // The grid is always drawn before the lines so we should be safe with dashed lines
-        // which change the style with imagesetstyle() too...
-        if ($this->dashed_grid == 1)
-            $this->SetDashedStyle($this->ndx_light_grid_color);
     }
 
     //Set up the image and colors
@@ -236,7 +233,10 @@ class PHPlot {
         return true;
     }
 
-    function SetBrowserCache($which_browser_cache) {  //Submitted by Thiemo Nagel
+    /*!
+     *  Submitted by Thiemo Nagel
+     */
+    function SetBrowserCache($which_browser_cache) {
         $this->browser_cache = $which_browser_cache;
         return true;
     }
@@ -775,8 +775,7 @@ class PHPlot {
                 return FALSE;
         }
         $this->dashed_grid = $which_dsh;    // 1 = true, 0 = false
-        if ($which_dsh)
-            $this->SetDashedStyle($this->ndx_light_grid_color);
+        
         return TRUE;
     }
 
@@ -1641,10 +1640,20 @@ class PHPlot {
 
 
     /*!
-     * Sets the style for a dashed line. Defaults to 3 dots colored, 3 transparent.
+     * \todo Check for valid input?
      */
-    function SetDashedStyle($which_ndxcol, $which_style='3-2-1-2')
+    function SetDefaultDashedStyle($which_style) {
+        $this->default_dashed_style = $which_style;
+    }
+    
+    /*!
+     * Sets the style before drawing a dashed line. Defaults to $this->default_dashed_style
+     * (3 dots colored, 3 transparent)
+     */
+    function SetDashedStyle($which_ndxcol, $which_style=NULL)
     {
+        $which_style = ($which_style == NULL) ? $this->default_dashed_style : $which_style;
+        
         switch ($which_style) {
             case '3-3':
                $style = array($which_ndxcol, $which_ndxcol, $which_ndxcol,
@@ -1659,12 +1668,16 @@ class PHPlot {
             case '1-1':
                 $style = array($which_ndxcol, IMG_COLOR_TRANSPARENT);
                 break;
+            case '4-3':
+                $style = array($which_ndxcol, $which_ndxcol, $which_ndxcol, $which_ndxcol,
+                               IMG_COLOR_TRANSPARENT, IMG_COLOR_TRANSPARENT, IMG_COLOR_TRANSPARENT));
+                break;
             default:
                 $this->DrawError("SetDashedStyle(): unknow style '$style' requested.");
                 return false;
         }
-        imagesetstyle($this->img, $style);
-        return true;                               
+        
+        return imagesetstyle($this->img, $style);
     }
     
     
@@ -2062,7 +2075,7 @@ class PHPlot {
         $y_pixels = $this->ytr($which_ypos);
 
         //Lines Across the Plot Area
-        if ($this->draw_y_grid == 1) {
+        if ($this->draw_y_grid) {
             if ($this->dashed_grid) {
                 ImageLine($this->img,$this->plot_area[0]+1,$y_pixels, $this->plot_area[2]-1,$y_pixels, IMG_COLOR_STYLED);
             } else {
@@ -2110,6 +2123,10 @@ class PHPlot {
      */
     function DrawYTicks() {
 
+        // Sets the line style for IMG_COLOR_STYLED lines (grid)
+        if ($this->dashed_grid)
+            $this->SetDashedStyle($this->ndx_light_grid_color);
+            
         if ($this->skip_top_tick != 1) { //If tick increment doesn't hit the top 
             //Left Top
             //ImageLine($this->img,(-$this->tick_length+$this->xtr($this->plot_min_x)),
@@ -2123,8 +2140,8 @@ class PHPlot {
             //        $this->ndx_tick_color);
 
             //Draw Grid Line at Top
-            if ($this->draw_y_grid == 1) {
-                if ($this->dashed_grid == 1) {
+            if ($this->draw_y_grid) {
+                if ($this->dashed_grid) {
                     ImageLine($this->img,$this->plot_area[0]+1,$this->ytr($this->plot_max_y),
                               $this->plot_area[2]-1,$this->ytr($this->plot_max_y), IMG_COLOR_STYLED);
                 } else {
@@ -2141,8 +2158,8 @@ class PHPlot {
             //        $this->ytr($this->plot_min_y),$this->ndx_tick_color);
 
             //Draw Grid Line at Bottom of Plot
-            if ($this->draw_y_grid == 1) {
-                if ($this->dashed_grid == 1) {
+            if ($this->draw_y_grid) {
+                if ($this->dashed_grid) {
                     ImageLine($this->img,$this->xtr($this->plot_min_x)+1,$this->ytr($this->plot_min_y),
                               $this->xtr($this->plot_max_x),$this->ytr($this->plot_min_y), IMG_COLOR_STYLED);
                 } else {
@@ -2198,6 +2215,10 @@ class PHPlot {
      */
     function DrawXTicks() {
     
+        // Sets the line style for IMG_COLOR_STYLED lines (grid)
+        if ($this->dashed_grid)
+            $this->SetDashedStyle($this->ndx_light_grid_color);
+        
         // Leftmost Tick
         ImageLine($this->img,$this->plot_area[0],
                 $this->plot_area[3]+$this->x_tick_length,
@@ -2856,10 +2877,9 @@ class PHPlot {
                         if ($color_index >= count($this->ndx_data_color)) { $color_index=0;} ;
                         $barcol = $this->ndx_data_color[$color_index];
 
-                        if ($this->line_style[$i] == "dashed") {
-                            imagesetstyle($this->img, array($barcol, $barcol, $barcol, $barcol,
-                                        IMG_COLOR_TRANSPARENT, IMG_COLOR_TRANSPARENT, IMG_COLOR_TRANSPARENT));
-                        }
+                        if ($this->line_style[$i] == "dashed")
+                            $this->SetDashedStyle($barcol, '4-3');
+                            
                         if ($start_lines == 1) {
                             for ($width = 0; $width < $this->line_width; $width++) {
                                 if ($this->line_style[$i] == "dashed") {
@@ -3291,8 +3311,6 @@ class PHPlot {
      */
     function SetDashedGrid($which_dsh) {
         $this->dashed_grid = $which_dsh;    // 1 = true, 0 = false
-        if ($which_dsh)
-            $this->SetDashedStyle($this->ndx_light_grid_color);
     }
 
     /*!
