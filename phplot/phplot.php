@@ -90,7 +90,7 @@ class PHPlot{
 
 	var $data_color = ""; //array("blue","green","yellow",array(0,0,0));
 	var $data_border_color = array("black");
-	var $plot_border_type = "left";
+	var $plot_border_type;
 	var $number_x_points;
 	var $plot_min_x; // Max and min of the plot area
 	var $plot_max_x; // Max and min of the plot area
@@ -284,7 +284,11 @@ class PHPlot{
 		return true;
 	}
 
-	function SetImageBorderType($which_sibt) {
+	function SetPlotBorderType($which_pbt) { 
+		$this->plot_border_type = $which_pbt;
+	}
+
+	function SetImageBorderType($which_sibt) { 
 		$this->image_border_type = $which_sibt;
 	}
 

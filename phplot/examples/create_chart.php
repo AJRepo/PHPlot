@@ -26,7 +26,7 @@ if ($which_data_type =="function") {
 ////////////////////////////////////////////////
 
 //Required Settings 
-	include("phplot.php");
+	include("../phplot.php");
 	$graph = new PHPlot;
 	$graph->SetDataType($which_data_type);  //Must be first thing
 
