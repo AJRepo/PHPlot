@@ -10,7 +10,7 @@ which in GD is relative to the origin at the upper left
 side of the image.
 */
 
-//PHPLOT Version 4.4.2
+//PHPLOT Version 4.4.4
 //Requires PHP 3.0.2 or later 
 
 
@@ -79,7 +79,7 @@ class PHPlot{
 	var $y_label_angle = 90;
 
 //Formats
-	var $file_format = 'png';
+	var $file_format = 'gif';
 	var $file_name = '';  //For output to a file instead of stdout
 
 //Plot Colors
@@ -358,9 +358,8 @@ class PHPlot{
 		$this->x_time_format = $which_xtf;
 		return true;
 	}
-	var $x_datalabel_maxlength = 10;	
 	function SetXDataLabelMaxlength($which_xdlm) { 
-		if ($which_dlm >0 ) { 
+		if ($which_xdlm >0 ) { 
 			$this->x_datalabel_maxlength = $which_xdlm;
 			return true;
 		} else { 
