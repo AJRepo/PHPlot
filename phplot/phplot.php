@@ -89,7 +89,7 @@ class PHPlot{
 	var $y_label_angle = 90;
 
 //Formats
-	var $file_format = "png";
+	var $file_format = "gif";
 //Plot Colors
 	var $bg_color;
 	var $plot_bg_color;
@@ -128,7 +128,7 @@ class PHPlot{
 	var $legend;  //an array
 	var $legend_x_pos;
 	var $legend_y_pos;
-	var $title_txt = "Title";
+	var $title_txt = "Title\nThe test";
 	var $y_label_txt = "Y Data";
 	var $x_label_txt = "X Data";
 	var $y_grid_label_type = "data";  //data, none, time, other
@@ -196,7 +196,7 @@ class PHPlot{
 		return true;
 	}
 
-	function SetLegendWorld($which_x,$which_y,$which_type) { //
+	function SetLegendWorld($which_x,$which_y,$which_type) { 
 		//which_type not yet used
 		//Must be called after scales are set up. 
 		$this->legend_x_pos = $this->xtr($which_x);
@@ -435,6 +435,26 @@ class PHPlot{
 
 
 	function DrawTitle() {
+		$str = split("\n",$this->title_txt); //multiple lines submitted by Remi Ricard
+		reset($str); 
+		for($i=0;$i<count($str);$i++) { 
+			if ($this->use_ttf == 1 ) { 
+				$size = $this->TTFBBoxSize($this->title_ttffont_size, $this->title_angle, $this->title_ttffont, $str[$i]/*$this->title_txt*/); 
+				$xpos = $this->plot_area[0] + ($this->plot_area_width /2 ) - $size[0]/2 ; 
+				$ypos = (2+$i) * $size[1]; 
+				ImageTTFText($this->img, $this->title_ttffont_size, $this->title_angle, 
+					$xpos, $ypos, $this->title_color, $this->title_ttffont, $this->title_txt); 
+			} else { 
+				ImageString($this->img, $this->title_font, 
+($this->plot_area[0] + $this->plot_area_width / 2) - (strlen($str[$i]) * $this->title_font_width/2), 
+					(2+$i)*$this->title_font_height, 
+					$str[$i], 
+					$this->title_color); 
+			} 
+		} 
+		return true; 
+
+/* ***OLD TITLE FUNCTION
 		if ($this->use_ttf == 1 ) {
 			$size = $this->TTFBBoxSize($this->title_ttffont_size, $this->title_angle, $this->title_ttffont, $this->title_txt);
 			$xpos = $this->plot_area[0] + ($this->plot_area_width /2 ) - $size[0]/2 ;
@@ -449,6 +469,7 @@ class PHPlot{
 				$this->title_color);
 		}
 		return true;
+***** */
 
 	}
 
