@@ -85,9 +85,26 @@ else if ($which_data_type == 'data-data-error') {
     //$graph->SetLineWidth($which_line_width);
     $graph->SetErrorBarLineWidth($which_errorbar_line_width);
 
-	$graph->SetGridParams($which_draw_grid, $which_dashed_grid);
-    $graph->SetTickLabelParams($which_xtick_label_pos, $which_ytick_label_pos, NULL, NULL);
-    $graph->SetDataLabelParams($which_xdata_label_pos, $which_ydata_label_pos, NULL, NULL);
+    $graph->SetDrawDashedGrid($which_dashed_grid);
+    switch($which_draw_grid) {
+    case 'x':
+        $graph->SetDrawXGrid(TRUE);
+        $graph->SetDrawYGrid(FALSE);
+        break;
+    case 'y':
+        $graph->SetDrawXGrid(FALSE);
+        $graph->SetDrawYGrid(TRUE);
+        break;
+    case 'both':
+        $graph->SetDrawXGrid(TRUE);
+        $graph->SetDrawYGrid(TRUE);
+        break;
+    }    
+    
+    $graph->SetXTickLabelPos($which_xtick_label_pos);
+    $graph->SetYTickLabelPos($which_ytick_label_pos);
+    $graph->SetXDataLabelPos($which_xdata_label_pos);
+    $graph->SetYDataLabelPos($which_ydata_label_pos);
     
     // Please remember that angles other than 90 are taken as 0 when working fith fixed fonts.
     $graph->SetXLabelAngle($which_xlabel_angle);
