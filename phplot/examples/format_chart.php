@@ -34,8 +34,15 @@ automatic values.
   ?>
   </td>
 </tr>
-
-            <tr><td colspan="2" class="hdr">Sizes</td></tr>
+        <tr><td colspan="2" class="hdr"><input type="submit" /></td></tr>
+        <tr>
+          <td colspan="2">
+            <br />
+              <h3 style="text-align:center;margin:0;">Optional values</h3>
+            <br />
+          </td>
+        </tr>
+        <tr><td colspan="2" class="hdr">Sizes</td></tr>
         
 <tr>
   <td>Width of graph in pixels:</td>
@@ -58,11 +65,11 @@ automatic values.
             
 <tr>
   <td>Title:</td>
-  <td><input type="text" name="title" value="this is a title" /></td>
+  <td><input type="text" name="title" value="This is a title" /></td>
 </tr>
 <tr>
   <td>Y axis title:</td>
-  <td><input type="text" name="ylbl" value="revenue in millions" /></td>
+  <td><input type="text" name="ylbl" value="Revenue in millions" /></td>
 </tr>
 <tr>
   <td>Y axis title position:</td>
@@ -173,18 +180,13 @@ automatic values.
 
 
 <tr>
-  <td>Use TrueType font:</td>
-  <td>
-    <select name="which_use_ttf">
-      <option value="0" selected>No</option>
-      <option value="1">Yes</option>
-    </select>
-  </td>
-</tr>
-<tr>
   <td>X axis position:</td>
   <td><input type="text" name="which_xap" value="1" /></td>
 </tr>
+<tr>
+  <td>Shade height (0 for none):</td>
+  <td><input type="text" name="which_shading" value="5" size="3"/></td>
+</tr>  
 <tr>
   <td>Point Type:</td>
   <td>
@@ -203,6 +205,15 @@ automatic values.
 <tr>
   <td>Point Size:</td>
   <td><input name="which_point_size" value="4" size="3" /></td>
+</tr>
+<tr>
+  <td>Use TrueType font:</td>
+  <td>
+    <select name="which_use_ttf">
+      <option value="0" selected>No</option>
+      <option value="1">Yes</option>
+    </select>
+  </td>
 </tr>
 <tr>
   <td>File format:</td>

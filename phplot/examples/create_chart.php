@@ -87,6 +87,7 @@ else if ($which_data_type == 'data-data-error') {
 		}
 	}
 
+    $graph->SetShading($which_shading);
 /*
 //Even more settings
 
