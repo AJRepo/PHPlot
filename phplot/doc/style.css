@@ -2,6 +2,7 @@
  * Style sheet for PHPlot 
  */
 
+   
 .foot { 
     text-align:right; 
     font-style:italic; 
@@ -11,6 +12,14 @@
     color:#000000;
     }
 
+    
+.nav {
+    text-align:center;
+    color:#DDDDDD;
+    background:#FFFFFF;
+    font-size:7px;
+    }
+ 
 .imgfoot { text-align:center; font-size:small; font-style:italic; }  
 .hdr { text-align:center; background: #DDDDDD; color:#000000; }
 .bighdr { text-align:center; font-weight: bold; }
