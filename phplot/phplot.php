@@ -16,7 +16,6 @@ side of the image.
 
 class PHPlot{
 
-
 	var $is_inline = 0;			//0 = Sends headers, 1 = sends just raw image data
 	var $browser_cache = "1";  // 0 = Sends headers for browser to not cache the image, (i.e. 0 = don't let browser cache image)
 									// (only if is_inline = 0 also)
@@ -77,7 +76,7 @@ class PHPlot{
 	var $y_label_angle = 90;
 
 //Formats
-	var $file_format = "png";
+	var $file_format = "gif";
 	var $file_name = "";  //For output to a file instead of stdout
 
 //Plot Colors
@@ -162,7 +161,7 @@ class PHPlot{
 
 		$this->SetRGBArray("2"); 
 
-		if ($which_output_file != "") { SetOutputFile($which_output_file);  };
+		if ($which_output_file != "") { $this->SetOutputFile($which_output_file);  };
 
 		if ($which_input_file != "") { 
 			$this->SetInputFile($which_input_file) ; 

@@ -20,25 +20,25 @@ otherwise use
 	SetUseTTF("0");
 
 Everything else should be independent of what version you are using.
-This has been tested with PHP3, PHP4, GD1.2 and GD 3.8.
+This has been tested with PHP3, PHP4, GD1.2 and GD 3.8. 
 
-To start with a test see format_chart.php
+To start with a test, see format_chart.php
+
+--------------------------
+Compatibility Note: If you are using PHP3 earlier than version 3.0.2 then 
+you need to change one line in phplot.php. Change 
+	ImageColorResolve 
+to 
+	ImageColorAllocate
 
 
-/* Copyright (C) 1998,1999,2000,2001 Afan Ottenheimer, afan@jeo.net
+Copyright (C) 1998,1999,2000,2001 Afan Ottenheimer, afan@jeo.net
 This is distributed with NO WARRANTY and under the terms of the GNU GPL
-and PHP.
+and PHP licenses.
 If you use it - a cookie or some credit would be nice.
-There is one exception - a license is required if this is used
-or distributed by Microsoft.
 You can get a copy of the GNU GPL at http://www.gnu.org/copyleft/gpl.html
 You can get a copy of the PHP License at http://www.php.net/license.html
 
- 3.6.3 (fix in DrawBars)
- 3.6.2 (adds DashedLine style for graphing data)
- 3.6.0 (adds DrawLegend, and changes position of y labels)
- 3.4.1 (same as 3.4.0 but for y axis also, adds 'none' as label type)
- 3.4.0 (adds X data in unixtime printed with strftime and minor fixes) 
-Oct 25, 2000: Version 3.01: errorbars and different types of data
+See http://www.sourceforge.net/projects/phplot/ for later changelogs.
 Aug 15, 2000: Version 3: added dots, lines, area, and pie charts
 Aug 12, 1999: version 2: added bars that can be < 0
