@@ -2057,7 +2057,7 @@ class PHPlot {
             else
                 $xmin = $this->min_x;
         }
-        if ($xmax == NULL || $xmax === '') {
+        if ($xmax === NULL || $xmax === '') {
             if ($this->data_type == 'text-data')  // Valid for data without X values only.
                 $xmax = $this->max_x + 1;
             else
