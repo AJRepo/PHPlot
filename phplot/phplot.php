@@ -140,7 +140,7 @@ class PHPlot{
 
 		//Non-TTF settings
 		if (($which_tfs > 5) && (!$this->use_ttf)) {
-			$this->ReportError('Non-TTF font size must be 1,2,3,4 or 5',0);
+			$this->DrawError('Non-TTF font size must be 1,2,3,4 or 5');
 			return false;
 		} else {
 			$this->title_font = $which_tfs;
@@ -243,7 +243,7 @@ class PHPlot{
 				ImageGif($this->img);
 				break;
 			default:
-				echo "Please select an image type!<br>";
+				PrintError("Please select an image type!<br>");
 				break;
 		}
 		ImageDestroy($this->img);
@@ -284,11 +284,11 @@ class PHPlot{
 		return true;
 	}
 
-	function SetPlotBorderType($which_pbt) { 
+	function SetPlotBorderType($which_pbt) {
 		$this->plot_border_type = $which_pbt;
 	}
 
-	function SetImageBorderType($which_sibt) { 
+	function SetImageBorderType($which_sibt) {
 		$this->image_border_type = $which_sibt;
 	}
 
@@ -565,7 +565,7 @@ class PHPlot{
 
 				break;
 				default:
-					echo "ERROR: unknown chart type";
+					PrintError("ERROR: unknown chart type");
 				break;
 			}
 			if ($tmp > $max_records_per_group) {
@@ -704,7 +704,7 @@ class PHPlot{
 //echo "$this->plot_min_x, $this->plot_max_x, $this->plot_min_y, $this->plot_max_y";
 //exit;
 		if ($ymax <= $ymin) {
-			$this->ReportError("Error in Data - max not gt min",0);
+			$this->DrawError("Error in Data - max not gt min");
 		}
 
 //Set the boundaries of the box for plotting in world coord
@@ -721,16 +721,13 @@ class PHPlot{
 	}
 
 
-	function ReportError($error_message, $is_fatal) {
-		if ($is_fatal) { 
-			echo "<p><b>Fatal error</b>: $error_message<p>";
-		} else { 
-			$this->DrawError($error_message);
-		}
+	function PrintError($error_message) {
+	// prints the error message to stdout
+		echo "<p><b>Fatal error</b>: $error_message<p>";
 	}
 
 	function DrawError($error_message) {
-	// only to be executed by ReportError, does print the error message inline into
+	// prints the error message inline into
 	// the generated image
 
 		if (($this->img) == "") $this->InitImage();
@@ -1951,7 +1948,7 @@ class PHPlot{
 		}
 		if (! is_array($this->data_values)) {
 			$this->DrawBackground();
-			$this->ReportError("No array of data in \$data_values",0);
+			$this->DrawError("No array of data in \$data_values");
 		} else {
 			if (!$this->data_color) {
 				$this->SetDataColors(array("blue","green","yellow","red","orange"),array("black"));

@@ -12,7 +12,7 @@ to modify the data arrays.
 
 class PHPlot_Data extends PHPlot {
 
-function DoScaleData($even, $show_in_legend) {
+	function DoScaleData($even, $show_in_legend) {
 	// will scale all data rows
 	// maybe later I will do a function that only scales some rows
 	// if $even is true, Data will be scaled with "even" factors. Submitted by Thiemo Nagel
@@ -21,7 +21,7 @@ function DoScaleData($even, $show_in_legend) {
 		if ($this->data_type == 'text-linear') {
 			$offset++;
 		} elseif ($this->data_type != 'linear-linear') {
-			DrawError('wrong data type!!');
+			$this->DrawError('wrong data type!!');
 			return false;
 		}
 
@@ -100,7 +100,7 @@ function DoScaleData($even, $show_in_legend) {
 		//row of y-data. Submitted by Theimo Nagel
 
 		if ($interval == 0) {
-			DrawError('DoMovingAverages: interval can\'t be 0');
+			$this->DrawError('DoMovingAverages: interval can\'t be 0');
 			return false;
 		}
 
@@ -109,7 +109,7 @@ function DoScaleData($even, $show_in_legend) {
 		if ($this->data_type == 'text-linear') {
 			$datarow++;
 		} elseif ($this->data_type != 'linear-linear') {
-			DrawError('DoMovingAverages: wrong data type!!');
+			$this->DrawError('DoMovingAverages: wrong data type!!');
 			return false;
 		}
 
@@ -118,6 +118,7 @@ function DoScaleData($even, $show_in_legend) {
 		unset($storage);
 		while (list($key, $val) = each($this->data_values)) {
 			$j = 0;
+			reset($val);
 			while (list($key, $val2) = each($val)) {
 				if ($j == $datarow) {
 					$storage[$i % $interval] = $val2;
@@ -134,5 +135,58 @@ function DoScaleData($even, $show_in_legend) {
 	} //function DoMovingAverage
 
 
-} //class PHPlot_Data extends PHPlot
+function DoRemoveDataSet($index) {
+// removes the DataSet of number $index
+
+	$offset = 1;
+	if ($this->data_type == 'linear-linear') {
+		$offset++;
+	} elseif ($this->data_type != 'text-linear') {
+		$this->DrawError('wrong data type!!');
+		return false;
+	}
+
+	$index += $offset;
+	reset($this->data_values);
+	while (list($key, $val) = each($this->data_values)) {
+		reset($val);
+		while (list($key2, $val2) = each($val)) {
+			if ($key2 >= $index) {
+				if (isset($this->data_values[$key][$key2+1])) {
+					$this->data_values[$key][$key2] = $this->data_values[$key][$key2+1];
+				} else {
+					unset($this->data_values[$key][$key2]);
+				}
+			}
+		}
+	}
+} // function DoRemoveDataSet
+
+
+function DoDivision($x,$y) {
+// computes row x divided by row y, stores the result in row x
+// and deletes row y
+
+	$offset = 1;
+	if ($this->data_type == 'linear-linear') {
+		$offset++;
+	} elseif ($this->data_type != 'text-linear') {
+		$this->DrawError('wrong data type!!');
+		return false;
+	}
+
+	$x += $offset; $y += $offset;
+	reset($this->data_values);
+	while (list($key, $val) = each($this->data_values)) {
+		if ($this->data_values[$key][$y] == 0) {
+			$this->data_values[$key][$x] = 0;
+		} else {
+			$this->data_values[$key][$x] /= $this->data_values[$key][$y];
+		}
+	}
+
+	$this->DoRemoveDataSet($y-$offset);
+} // function DoDivision
+
+} // class PHPlot_Data extends PHPlot
 ?>

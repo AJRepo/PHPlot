@@ -184,28 +184,21 @@ able to convert from world to pixel coordinates.
 <DD>Internal Function: An internal function called to set the
 image pointer for GD.
 
+<p><DT><B>PrintError($error_message)</B>
+<DD>Internal Function: Prints the given error message to stdout. The function
+is used for fatal errors that do not allow for creating an image.
+
 <p><DT><B>PrintImage()</B>
 <DD>Internal Function: An internal function which prints the image using the PHP
 functions Header("Content-type:...") and ImageGIF(), ImageJPEG(),
 or ImagePNG() depending on what the setting is of $this->file_format.
 This is set by <b>SetFileFormat()</b>
 
-<p><DT><b>ReportError</B>
-<DD>Internal and user function:
-     Main function for error handling
-     Outputs the error message to stdout if is_fatal is set
-     otherwise the error message is output inside the generated image
-
-
 <p><DT><B>SetColor($color_asked)</B>
 <DD>Internal Function:  Translate from $color_asked to the index
 name color used in GD.
 $color_asked can be either a name like "black" or an rgb color array
 array(int,int,int). <br>
-
-<p><DT><B>SetDataValues($which_dv)</B>
-<DD>Internal Function: Passes the raw data values into the class variable
-$this->data_values.
 
 <p><DT><B>SetDefaultColors()</B>
 <DD>Internal Function: Sets the default colors when first defining an image.
