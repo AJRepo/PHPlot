@@ -1217,7 +1217,7 @@ class PHPlot {
         $this->x_tick_label_pos = $this->CheckOption($which_xtlp, 'plotdown, plotup, both, xaxis, all, none',
                                                       __FUNCTION__);
         if ($which_xtlp != 'none')
-            $this->x_data_label_pos == 'none';
+            $this->x_data_label_pos = 'none';
 
         return TRUE;
     }
