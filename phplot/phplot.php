@@ -674,7 +674,8 @@ class PHPlot {
                 $this->PrintError('PrintImage(): Please select an image type!');
                 break;
         }
-        return true;
+        exit;
+        //return true;
     }
 
     /*!
@@ -2557,7 +2558,7 @@ class PHPlot {
                 $i = 0;
                 array_shift($row);                 // Label ($row[0]) unused in these pie charts
                 foreach ($row as $val)
-                    $sumarr[$i++] += abs($val);    // NOTE!  sum > 0 to make pie charts
+                    @ $sumarr[$i++] += abs($val);    // NOTE!  sum > 0 to make pie charts
             }
         }
         // Or only one column per row, one pie slice per row?
@@ -3075,23 +3076,23 @@ class PHPlot {
                     
                     $color_index = $color_index % $max_data_colors;
                     
-                    $barcol = $this->ndx_data_color[$color_index];
+                    $color = $this->ndx_data_color[$color_index];
 
                     if ($start_lines == true) {
                         if ($this->line_style[$i] == "dashed") {
-                            $this->SetDashedStyle($barcol, '4-3');
+                            $this->SetDashedStyle($color, '4-3');
                             ImageLine($this->img, $x_now_pixels, $y_now_pixels, $lastx[$i], $lasty[$i], 
                                       IMG_COLOR_STYLED);
                         } else {
                             ImageLine($this->img, $x_now_pixels, $y_now_pixels, $lastx[$i], $lasty[$i], 
-                                      $barcol);
+                                      $color);
                         }
                     }
                     $lastx[$i] = $x_now_pixels;
                 } 
                 // data missing... don't increment lastx[$i]
-                else { 
-                    $y_now_pixels = $lasty[$i];
+                else {  
+                    $y_now_pixels = @ $lasty[$i];       // FIXME: undefined offset...
                 }
                 $lasty[$i] = $y_now_pixels;
                 $color_index++;
@@ -3102,7 +3103,7 @@ class PHPlot {
 
         // Leave it at one, as we'll later draw the legend.
         imagesetthickness($this->img, 1);                                      
-    }
+    } // function DrawLines()
 
         
     /*!    
