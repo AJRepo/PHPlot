@@ -53,7 +53,7 @@
    <p>
    Here goes a (incomplete) list, in no particular order.:
    <ul>
-    <li>Several different graph types: lines, bars, points, areas, pie, squared.</li>
+    <li>Several different graph types: lines, bars, stacked bars, points, areas, pie, squared.</li>
     <li>text-data, data only and data-error data types accepted.</li>
     <li>3D shading for pie and bar graphs.</li>
     <li>Different line types: solid and wholly customizable dashed ones.</li>
@@ -83,7 +83,7 @@
 
 <h3>Requirements</h3>
 <p>
-We are not sure about exact requirements, but at least PHP 4.1.0 and 
+We are not sure about exact requirements, but at least PHP 4.2.0 and 
 GD Lib 2 are necessary. Feedback is welcome.
 </p>
 
