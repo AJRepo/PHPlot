@@ -1,11 +1,4 @@
 <p>
- Data type: 
- <a href="format_chart.php?which_data_type=text-data">text-data</a>//
- <a href="format_chart.php?which_data_type=data-data">data-data</a>//
- <a href="format_chart.php?which_data_type=function">function</a>//
- <a href="format_chart.php?which_data_type=data-data-error">data-data-error</a>
-</p>
-<p>
 Data set as X, Y, E+, E-, Y2, E2+, E2-,... <br />
 <?php
 //data-data-error
