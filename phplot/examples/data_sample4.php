@@ -22,8 +22,9 @@ data-data as a function (just press submit)
 <p>
 Chart type: 
 <select name="which_plot_type">
-    <option value="lines">lines</option>
-    <option value="linepoints">line and points</option>
-    <option value="points">points</option>
+    <option value="lines">Lines</option>
+    <option value="linepoints">Lines and points</option>
+    <option value="points">Points</option>
+    <option value="thinbarline">Thin bars</option>
 </select>
 </p>
