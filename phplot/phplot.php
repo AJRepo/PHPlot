@@ -88,7 +88,7 @@ class PHPlot{
 	var $y_label_angle = 90;
 
 //Formats
-	var $file_format = "gif";
+	var $file_format = "png";
 //Plot Colors
 	var $bg_color;
 	var $plot_bg_color;
