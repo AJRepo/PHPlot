@@ -3,11 +3,7 @@
 <html>
 <head>
     <title>Test Graph creation</title>
-    <style type="text/css">
-    <!--
-    .hdr { text-align:center;font-weight:bold; }
-    -->
-    </style>
+    <link type="text/css" rel="stylesheet" href="../doc/style.css" />
 </head>
 <body>
 
@@ -95,10 +91,11 @@ the graph generated.
 <tr>
   <td>File format:</td>
   <td>
-    <select name="which_file_format">
-      <option>png</option>
-      <option>jpeg</option>
-      <option>gif</option>
+    <select name="which_fileformat">
+      <option value="png">png</option>
+      <option value="jpg">jpeg</option>
+      <option value="gif">gif</option>
+      <option value="wbmp">bmp</option>
     </select>
   </td>
 </tr>
