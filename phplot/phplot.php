@@ -93,6 +93,8 @@ class PHPlot{
 
 //Formats
 	var $file_format = "gif";
+	var $file_name = "";  //For output to a file instead of stdout
+
 //Plot Colors
 	var $bg_color;
 	var $plot_bg_color;
@@ -165,6 +167,14 @@ class PHPlot{
 
 //BEGIN CODE
 //////////////////////////////////////////////////////
+	//
+	//Set up the image and colors
+	function InitImage() {
+		$this->img = ImageCreate($this->image_width, $this->image_height);
+		$this->SetDefaultColors();
+		return true;
+	}
+
 	function SetBrowserCache($which_browser_cache) {  //Submitted by Thiemo Nagel
 		$this->browser_cache = $which_browser_cache;
 		return true;
@@ -244,12 +254,6 @@ class PHPlot{
 		return true;
 	}
 
-	//Set up initial image
-	function InitImage() {
-		$this->img = ImageCreate($this->image_width, $this->image_height);
-		$this->SetDefaultColors();
-		return true;
-	}
 
 	function SetYAxisPosition($which_pos) {
 		$this->y_axis_position = $which_pos;
@@ -294,8 +298,8 @@ class PHPlot{
 		$this->SetLightGridColor(array(175,175,175));
 		$this->SetTickColor("black");
 		$this->SetTitleColor(array(0,0,0)); // Can be array or name
-		$this->i_light = ImageColorAllocate($this->img,194,194,194);
-		$this->i_dark  = ImageColorAllocate($this->img,100,100,100);
+		$this->i_light = $this->SetIndexColor(array(194,194,194));
+		$this->i_dark  = $this->SetIndexColor(array(100,100,100));
 	}
 
 	function PrintImage() {
@@ -508,16 +512,14 @@ class PHPlot{
 		if (($this->img) == "") {
 			$this->InitImage();
 		}
-		list($r, $g, $b) = SetColor($which_color);
-		$this->bg_color=ImageColorAllocate($this->img, $r, $g, $b);
+		$this->bg_color= $this->SetIndexColor($which_color);
 		return true;
 	}
 	function SetPlotBgColor($which_color) {
 		if (($this->img) == "") {
 			$this->InitImage();
 		}
-		list($r, $g, $b) = SetColor($which_color);
-		$this->plot_bg_color=ImageColorAllocate($this->img, $r, $g, $b);
+		$this->plot_bg_color= $this->SetIndexColor($which_color);
 		return true;
 	}
 
@@ -525,8 +527,7 @@ class PHPlot{
 		if (($this->img) == "") {
 			$this->InitImage();
 		}
-		list($r, $g, $b) = SetColor($which_color);
-		$this->title_color=ImageColorAllocate($this->img, $r, $g, $b);
+		$this->title_color= $this->SetIndexColor($which_color);
 		return true;
 	}
 
@@ -534,8 +535,7 @@ class PHPlot{
 		if (($this->img) == "") {
 			$this->InitImage();
 		}
-		list($r, $g, $b) = SetColor($which_color);
-		$this->tick_color=ImageColorAllocate($this->img, $r, $g, $b);
+		$this->tick_color= $this->SetIndexColor($which_color);
 		return true;
 	}
 
@@ -543,8 +543,7 @@ class PHPlot{
 		if (($this->img) == "") {
 			$this->InitImage();
 		}
-		list($r, $g, $b) = SetColor($which_color);
-		$this->label_color=ImageColorAllocate($this->img, $r, $g, $b);
+		$this->label_color= $this->SetIndexColor($which_color);
 		return true;
 	}
 
@@ -552,8 +551,7 @@ class PHPlot{
 		if (($this->img) == "") {
 			$this->InitImage();
 		}
-		list($r, $g, $b) = SetColor($which_color);
-		$this->text_color=ImageColorAllocate($this->img, $r, $g, $b);
+		$this->text_color= $this->SetIndexColor($which_color);
 		return true;
 	}
 
@@ -561,8 +559,7 @@ class PHPlot{
 		if (($this->img) == "") {
 			$this->InitImage();
 		}
-		list($r, $g, $b) = SetColor($which_color);
-		$this->light_grid_color=ImageColorAllocate($this->img, $r, $g, $b);
+		$this->light_grid_color= $this->SetIndexColor($which_color);
 		return true;
 	}
 
@@ -570,8 +567,7 @@ class PHPlot{
 		if (($this->img) == "") {
 			$this->InitImage();
 		}
-		list($r, $g, $b) = SetColor($which_color);
-		$this->grid_color=ImageColorAllocate($this->img, $r, $g, $b);
+		$this->grid_color= $this->SetIndexColor($which_color);
 		return true;
 	}
 
@@ -1034,6 +1030,16 @@ class PHPlot{
 		return true;
 	}
 
+	function SetIndexColor($which_color) { //Color is passed in as RGB array
+  		list ($r, $g, $b) = SetColor($which_color);
+		$index = ImageColorExact($this->img, $r, $g, $b);
+		if ($index == -1) {
+      			return ImageColorAllocate($this->img, $r, $g, $b);
+ 		} else {
+      			return $index;
+  		}
+	}
+
 	function SetDataColors($which_data,$which_border) {
 		//Set the data to be displayed in a particular color
 		if ($this->img == "") {
@@ -1049,18 +1055,17 @@ class PHPlot{
 
 		reset($this->data_color);  //data_color can be an array of colors, one for each thing plotted
 		while (list(, $col) = each($this->data_color)) {
-			list($r, $g, $b) = SetColor($col);
-			$this->col_data_color[] = ImageColorAllocate($this->img, $r, $g, $b);
+			$this->col_data_color[] = $this->SetIndexColor($col);
 		}
+
 
 		// border_color
 		//If we are also going to put a border on the data (bars, dots, area, ...)
 		//	then lets also set a border color as well.
-		//foreach($this->data_border_color as $col) {
+		//foreach($this->data_border_color as $col) 
 		reset($this->data_border_color);
 		while (list(, $col) = each($this->data_border_color)) {
-			list($r, $g, $b) = SetColor($col);
-			$this->col_data_border_color[] = ImageColorAllocate($this->img, $r, $g, $b);
+			$this->col_data_border_color[] = $this->SetIndexColor($col);
 		}
 
 		//Set color of the error bars to be that of data if not already set. 
@@ -1085,8 +1090,7 @@ class PHPlot{
 		unset($this->col_error_bar_color);
 	    reset($this->error_bar_color);  //data_color can be an array of colors, one for each thing plotted
 	    while (list(, $col) = each($this->error_bar_color)) {
-	      list($r, $g, $b) = SetColor($col);
-	      $this->col_error_bar_color[] = ImageColorAllocate($this->img, $r, $g, $b);
+	      $this->col_error_bar_color[] = $this->SetIndexColor($col);
 	    }
 	    return true;
 	  }
@@ -2060,7 +2064,7 @@ class PHPlot{
 		return false;
 	} //function DrawLineSeries
 
-	function DrawDashedLine ($x1pix,$y1pix,$x2pix,$y2pix,$dash_length,$dash_space,$color) {
+	function DrawDashedLine($x1pix,$y1pix,$x2pix,$y2pix,$dash_length,$dash_space,$color) {
 		//Code based on work by Ariel Garza and James Pine
 		//I've decided to have this be in pixels only as a replacement for ImageLine
 		//$x1pix = $this->xtr($x1);
