@@ -1,4 +1,6 @@
 <?php
+/* $Id$ */
+
 ///////////////////////////////////////////////
 //This file is meant only to be called from the
 //test page quick_start.php (or test_setup.php)
@@ -13,6 +15,6 @@ include('./data.php');
 $graph->SetTitle("$_GET[which_title]");
 $graph->SetDataValues($example_data);
 $graph->SetIsInline('1');
-$graph->SetFileFormat("$_GET[file_format]");
+$graph->SetFileFormat("$_GET[which_format]");
 $graph->DrawGraph();
 ?>
