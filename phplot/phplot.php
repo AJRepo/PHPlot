@@ -33,7 +33,7 @@ function SetColor($color_asked) {
 class PHPlot{
 
 	var $is_inline = 0;			//0 = Sends headers, 1 = sends just raw image data
-	var $browser_cache = "1";  // 0 = Sends headers for browser to not cache the image,
+	var $browser_cache = "1";  // 0 = Sends headers for browser to not cache the image, (i.e. 0 = don't let browser cache image)
 									// (only if is_inline = 0 also)
 
 	var $image_width  = 600;	//Total Width in Pixels (world coordinates)
@@ -138,7 +138,7 @@ class PHPlot{
 	var $legend;  //an array
 	var $legend_x_pos;
 	var $legend_y_pos;
-	var $title_txt = "Title\nThe test\ntest 2";
+	var $title_txt = "Title";
 	var $y_label_txt = "Y Data";
 	var $x_label_txt = "X Data";
 
@@ -167,11 +167,20 @@ class PHPlot{
 
 //BEGIN CODE
 //////////////////////////////////////////////////////
-	//
+	//Constructor: Setup Colors and Size of Image
+	function PHPlot($which_width=600,$which_height=400,$which_output_file="",$which_input_file="") {
+		if ($which_input_file != "") { 
+			//Get Background Image Info
+		} else { 
+			$this->SetImageArea($which_width,$which_height);
+		} 
+		$this->InitImage();
+		$this->SetDefaultColors();
+	}
+        
 	//Set up the image and colors
 	function InitImage() {
 		$this->img = ImageCreate($this->image_width, $this->image_height);
-		$this->SetDefaultColors();
 		return true;
 	}
 
@@ -248,6 +257,11 @@ class PHPlot{
 		}
 	}
 
+	function SetOutputFile($which_output_file) { 
+		$this->output_file = $which_output_file;
+		return true;
+	}
+
 	function SetImageArea($which_iw,$which_ih) {
 		$this->image_width = $which_iw;
 		$this->image_height = $which_ih;
@@ -316,19 +330,32 @@ class PHPlot{
 				if ($this->is_inline == 0) {
 					Header("Content-type: image/png");
 				}
-				ImagePng($this->img);
+				if ($this->is_inline == 1 && $this->output_file != "") {
+					ImagePng($this->img,$this->output_file);
+				} else {
+					ImagePng($this->img);
+				}
 				break;
 			case "jpg":
 				if ($this->is_inline == 0) {
 					Header("Content-type: image/jpg");
 				}
-				ImageJPEG($this->img);
+				if ($this->is_inline == 1 && $this->output_file != "") {
+					ImageJPEG($this->img,$this->output_file);
+				} else {
+					ImageJPEG($this->img);
+				}
 				break;
 			case "gif":
 				if ($this->is_inline == 0) {
 					Header("Content-type: image/gif");
 				}
-				ImageGif($this->img);
+				if ($this->is_inline == 1 && $this->output_file != "") {
+					ImageGIF($this->img,$this->output_file);
+				} else {
+					ImageGIF($this->img);
+				}
+
 				break;
 			default:
 				PrintError("Please select an image type!<br>");
@@ -778,6 +805,12 @@ class PHPlot{
 		}
 	}
 
+	function SetMarginsPixels($which_lm,$which_rm,$which_tm,$which_bm) { 
+		//Set the plot area using margins in pixels (left, right, top, bottom)
+		$this->SetNewPlotAreaPixels($which_lm,$which_tm,($this->image_width - $which_rm),($this->image_height - $which_bm));
+		return true;
+	}
+
 	function SetNewPlotAreaPixels($x1,$y1,$x2,$y2) {
 		//Like in GD 0,0 is upper left set via pixel Coordinates
 		$this->plot_area = array($x1,$y1,$x2,$y2);
@@ -1012,7 +1045,6 @@ class PHPlot{
 		}
 		return true;
 	}
-
 
 	function SetDataType($which_dt) {
 		//The next three lines are for past compatibility.

@@ -3,7 +3,7 @@
 include("../phplot.php");
 
 //Define the object
-$graph = new PHPlot;
+$graph = new PHPlot();
 
 //Set some data
 include("./data.php");
