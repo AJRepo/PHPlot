@@ -175,7 +175,7 @@ class PHPlot {
     var $plot_border_type = 'sides';        // left, sides, none, full
     var $image_border_type = 'none';        // 'raised', 'plain', 'none'
     
-    var $shading = 0;                       // 0 for no shading, > 0 is size of shadows in pixels
+    var $shading = 5;                       // 0 for no shading, > 0 is size of shadows in pixels
     
     var $draw_plot_area_background = FALSE;
     var $draw_broken_lines = TRUE;          // Tells not to draw lines for missing Y data.
@@ -1720,6 +1720,7 @@ class PHPlot {
 
         // Pad styles arrays for later use by plot drawing functions:
         // This removes the need for $max_data_colors, etc. and $color_index = $color_index % $max_data_colors
+        // in DrawBars(), DrawLines(), etc.
         /*
         $this->line_widths = array_pad($this->line_widths, $this->records_per_group, 1);
         $this->line_styles = array_pad($this->line_styles, $this->records_per_group, 'solid');
@@ -1958,7 +1959,6 @@ class PHPlot {
         }
 
         return TRUE;
-
     } //function SetPlotAreaWorld
 
 
@@ -2019,7 +2019,7 @@ class PHPlot {
                                      ? $this->plot_max_x : $this->y_axis_position;
             $this->y_axis_x_pixels = $this->xtr($this->y_axis_position);
         } else { 
-            // Default to bottom axis
+            // Default to left axis
             $this->y_axis_x_pixels = $this->xtr($this->plot_min_x);
         }
         // User provided x axis position?
@@ -2034,9 +2034,9 @@ class PHPlot {
             if ($this->yscale_type == 'log')
                 $this->x_axis_y_pixels = $this->ytr(1);
             else 
-                // Default to left axis
-                $this->x_axis_y_pixels = ($this->plot_max_y < 0) 
-                                         ? $this->ytr($this->plot_min_y) : $this->ytr(0);
+                // Default to axis at 0 or plot_min_y (should be 0 anyway, from SetPlotAreaWorld())
+                $this->x_axis_y_pixels = ($this->plot_min_y <= 0) && (0 <= $this->plot_max_y) 
+                                         ? $this->ytr(0) : $this->ytr($this->plot_min_y);
         }
 
     } // function CalcTranslation()
@@ -2404,7 +2404,8 @@ class PHPlot {
     }
 
     /*!
-     * Draw Just one Tick, called from _DrawYTicks() and _DrawXAxis()
+     * Draw Just one Tick, called from DrawYTicks() and DrawXAxis()
+     * TODO? Move this inside DrawYTicks() and Modify DrawXAxis() ?
      */
     function DrawYTick($which_ylab, $which_ypix) 
     {
@@ -2472,17 +2473,20 @@ class PHPlot {
         } elseif ($this->num_y_ticks) {
             $delta_y = ($this->plot_max_y - $this->plot_min_y) / $this->num_y_ticks;
         } else {
-            $delta_y =($this->plot_max_y - $this->plot_min_y) / 10 ;
+            $delta_y = ($this->plot_max_y - $this->plot_min_y) / 10 ;
         }
 
+        // NOTE: When working with decimals, because of approximations when adding $delta_y, 
+        // $y_tmp never equals $y_end  at the for loop, so one spurious line would  get drawn where 
+        // not for the substraction to $y_end here.
         $y_tmp = (double)$this->plot_min_y;
-        $y_end = (double)$this->plot_max_y;
+        $y_end = (double)$this->plot_max_y - ($delta_y/2);
         
         if (! $this->skip_bottom_tick)
             $y_end += $delta_y;
         
         if ($this->skip_top_tick)
-            $y_end += $delta_y;
+            $y_end -= $delta_y;
         
         for (;$y_tmp < $y_end; $y_tmp += $delta_y) {
             $ylab = $this->FormatLabel('y', $y_tmp);
@@ -2496,9 +2500,7 @@ class PHPlot {
             // Draw ticks
             $this->DrawYTick($ylab, $y_pixels);
         }
-
         return TRUE;
-
     } // function DrawYTicks
 
 
@@ -2527,11 +2529,14 @@ class PHPlot {
         } else {
             $delta_x =($this->plot_max_x - $this->plot_min_x) / 10 ;
         }
-
-        $x_tmp = (double)($this->plot_min_x);
-        $x_end = $this->plot_max_x;
         
-        // Should the leftmos tick be drawn?
+        // NOTE: When working with decimals, because of approximations when adding $delta_x, 
+        // $x_tmp never equals $x_end  at the for loop, so one spurious line would  get drawn where 
+        // not for the substraction to $x_end here.
+        $x_tmp = (double)$this->plot_min_x;
+        $x_end = (double)$this->plot_max_x - ($delta_x/2);
+        
+        // Should the leftmost tick be drawn?
         if ($this->skip_left_tick)
             $x_tmp += $delta_x;
 
