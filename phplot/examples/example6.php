@@ -13,7 +13,7 @@ $graph->SetXTimeFormat("%b %y");
 $graph->SetDataValues($example_data);
 $graph->SetHorizTickIncrement(2679000);
 $graph->SetPlotType("thinbarline");
-//$graph->SetDrawXDataLabels(1);
+$graph->SetDrawXDataLabels(false);
 $graph->SetPlotAreaWorld(883634400,0,915095000,90);
 $graph->DrawGraph();
 ?>

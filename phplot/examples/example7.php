@@ -24,7 +24,7 @@ $graph->SetErrorBarShape("line");
 $graph->SetPointShape("halfline");
 $graph->SetYScaleType("log");
 $graph->SetLineWidth(1);
-//$graph->SetDrawXDataLabels(1);
+$graph->SetDrawXDataLabels(false);
 
 //Since X axis is in Unixtime format we set the limits accordingly
 $graph->SetPlotAreaWorld(883634400,1,915095000,140);
