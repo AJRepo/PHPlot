@@ -1,8 +1,12 @@
 <?php    
 /* $Id$ */
 
+//error_reporting(E_ALL);
+
 extract ($_GET, EXTR_OVERWRITE);
 extract ($_POST, EXTR_OVERWRITE);
+
+
 
 //Sample functions
 
@@ -31,25 +35,39 @@ if ($which_data_type =="function") {
 //Required Settings 
 	include("../phplot.php");
 	$graph = new PHPlot($xsize_in, $ysize_in);
-	$graph->SetDataType($which_data_type);  //Must be first thing
-
+	$graph->SetDataType($which_data_type);  // Must be first thing
+    
 	$graph->SetDataValues($data);
 
 //Optional Settings (Don't need them) 
+
+	$graph->SetTitle($title);
+	$graph->SetXTitle($xlbl, $which_xtitle_pos);
+	$graph->SetYTitle($ylbl, $which_ytitle_pos);
+	$graph->SetLegend(array("A","Bee","Cee","Dee"));
+    
 	$graph->SetFileFormat($which_fileformat);
 	$graph->SetPlotType($which_plot_type);
-//	$graph->SetUseTTF(1);
-	$graph->SetVertTickIncrement($which_vti);
-	$graph->SetHorizTickIncrement($which_hti);
-    $graph->SetLineWidth("1");
-	$graph->SetDrawYGrid("1"); // 1 = true
+    
+	$graph->SetUseTTF($which_use_ttf);
+    
+	$graph->SetYTickIncrement($which_yti);
+	$graph->SetXTickIncrement($which_xti);
+    
+    $graph->SetLineWidth(1);
+    
+	$graph->SetGridParams($which_draw_grid, $which_dashed_grid);
+    $graph->SetTickLabelParams($which_xlabel_pos, $which_ylabel_pos, NULL, NULL);
+
+    $graph->SetXTickPos($which_xtick_pos);
+    $graph->SetYTickPos($which_ytick_pos);
+
+	$graph->SetLineStyles(array("dashed","dashed","solid","solid"));
 	$graph->SetPointShape($which_dot);
+
+    // Some forms in format_chart.php don't set this variable, suppress errors.
 	@ $graph->SetErrorBarShape($which_error_type);
-	$graph->SetXTitle($xlbl);
-    $graph->SetXTitlePos('both');
-	$graph->SetYTitle($ylbl);
-    $graph->SetYTitlePos('both');
-	$graph->SetTitle($title);
+    
 	$graph->SetXAxisPosition($which_xap);
     
 	if ($maxy_in) { 
@@ -58,27 +76,25 @@ if ($which_data_type =="function") {
 		}
 	}
 
-	$graph->SetLineStyles(array("dashed","dashed","solid","solid"));
-	$graph->SetLegend(array("A","Bee","Cee","Dee"));
-
-	//$graph->SetPlotAreaWorld(0,100,5.5,1000);
-	//$graph->SetPlotAreaWorld(0,-10,6,35);
-	//$graph->SetPlotAreaPixels(150,50,600,400);
-
 /*
 //Even more settings
-        $graph->SetDataColors(
+
+	$graph->SetPlotAreaWorld(0,100,5.5,1000);
+	$graph->SetPlotAreaWorld(0,-10,6,35);
+	$graph->SetPlotAreaPixels(150,50,600,400);
+
+    $graph->SetDataColors(
 	        array("blue","green","yellow","red"),  //Data Colors
             array("black")							//Border Colors
-        );  
+    );  
 
-        $graph->SetPlotBgColor(array(222,222,222));
-        $graph->SetBackgroundColor(array(200,222,222)); //can use rgb values or "name" values
-        $graph->SetTextColor("black");
-        $graph->SetGridColor("black");
-        $graph->SetLightGridColor(array(175,175,175));
-        $graph->SetTickColor("black");
-        $graph->SetTitleColor(array(0,0,0)); // Can be array or name
+    $graph->SetPlotBgColor(array(222,222,222));
+    $graph->SetBackgroundColor(array(200,222,222)); //can use rgb values or "name" values
+    $graph->SetTextColor("black");
+    $graph->SetGridColor("black");
+    $graph->SetLightGridColor(array(175,175,175));
+    $graph->SetTickColor("black");
+    $graph->SetTitleColor(array(0,0,0)); // Can be array or name
 */
 
       $graph->DrawGraph();
