@@ -38,6 +38,8 @@
   </td>
  </tr>
 </table>
+
+
 <h3>Features</h3>
 <table border="0">
  <tr>
@@ -64,10 +66,14 @@
     <li>Linear and logaritmic scales.</li>
     <li>Several output formats: jpeg, png, gif, wbmp (those supported by your GD)</li>
    </ul>
-   And here a short whishlist:
+   And here a short to-do/whishlist:
    <ul>
-    <li>Horizontal bars</li>
-    <li>Simple isometric 3D plots</li>
+    <li>Horizontal bars.</li>
+    <li>Simple isometric 3D plots.</li>
+    <li>Automatic placement of several plots in one image.</li>
+    <li>Better or automatica management of many drawing options (ticks, labels, etc.)</li>
+    <li>Subclassing for optimisation: move features into subclasses for optional use 
+        and leave a fast core.</li>
    </ul>
    </p>
   </td>
@@ -82,7 +88,11 @@ GD Lib 2 are necessary. Feedback is welcome.
 </p>
 
 
-<h3>Test and examples</h3>
+<h3>Quick start</h3>
+<p>You can rush for a quick start <a href="quickstart.html">here</a>.</p>
+
+
+<h3>Tests and examples</h3>
 <p>
 These examples make use of many, but not all, of the features present in PHPlot.
 The best one is the example-o-matic, where you can alter many parameters. Please proceed
@@ -95,7 +105,7 @@ to any of them:
             Create most of the plot types with all data types and tweak most of the parameters.</li>
           <li><a href="../examples/example1.php">Simple lines chart</a></li>
           <li><a href="../examples/example2.php">Another one</a></li>
-          <li><a href="../examples/example3.php">With labels</a></li>
+          <li><a href="../examples/example3.php">Scaled data (with phplot_data)</a></li>
           <li><a href="../examples/example4.php">Stock Chart (log scale)</a></li>
           <li><a href="../examples/example6.php">Thin bar lines</a></li>
           <li><a href="../examples/example7.php">Log chart with errors</a></li>
@@ -110,6 +120,7 @@ to any of them:
     </li>
 </ul>
 </p>
+
 
 <h3>Internals</h3>
 <p>
@@ -126,6 +137,7 @@ Description of the use and inner workings of PHPlot:
     </li>    
 </ul>
 </p>
+
 
 <h3>The Authors</h3>
 <p>
