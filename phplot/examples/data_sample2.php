@@ -8,11 +8,11 @@ Data type:
 <?php 
 //data-data as just data
 		$data = array(
-			array("label 0", 0, 2, 5 ), 	
-			array("label 1", 2, 3, 4 ),
-			array("label 2", 3, 4, 3 ),
-			array("label 3", 4.5, 5, 2 ),
-			array("label 4", 5, 6, 1 )
+			array("label 0", 0,   2, 5, 3 ), 	
+			array("label 1", 2,   3, 4, 2 ),
+			array("label 2", 3,   4, 3, 7 ),
+			array("label 3", 4.5, 5, 2, 4 ),
+			array("label 4", 5,   6, 1, 1 )
 		);
 ?>
 <p>
