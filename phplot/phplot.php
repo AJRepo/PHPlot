@@ -3,17 +3,15 @@
 /* $Id$ */
 
 /*
+ * PHPLOT Version 5.0.rc1
  * Copyright (C) 1998, 1999, 2000, 2001 Afan Ottenheimer.  Released under
  * the GPL and PHP licenses as stated in the the README file which
  * should have been included with this document.
  *
  * Recent (2003-2004) work by Miguel de Benito Delgado <nonick AT 8027 DOT org>
  *
+ * Requires PHP 4.2.0 or later (CHECK THIS)
  */
-
-
-// PHPLOT Version 5.0.rc1
-// Requires PHP 4.1.0 or later (CHECK THIS)
 
 if (! defined(__FUNCTION__))
     define(__FUNCTION__, '__FUNCTION__ Requires at least PHP 4.3.0.');
@@ -23,7 +21,6 @@ define ('MAXY', -2);
 define ('TOTY', -3);
 
 error_reporting(E_ALL);
-
 
 class PHPlot {
 
@@ -148,7 +145,7 @@ class PHPlot {
     var $draw_y_grid = TRUE;
 
     var $dashed_grid = TRUE;
-    var $grid_at_foreground = FALSE;
+    var $grid_at_foreground = FALSE;        // Chooses whether to draw the grid below or above the graph
 
 //Colors and styles       (all colors can be array (R,G,B) or named color)
     var $color_array = 'small';             // 'small', 'large' or array (define your own colors)
@@ -1030,7 +1027,7 @@ class PHPlot {
                 return TRUE;
             break;
         default:
-            $this->PrintError("SetFileFormat():File format '$which_file_format' not supported");
+            $this->PrintError("SetFileFormat():File format '$format' not supported");
             return FALSE;
         }
     }    
@@ -1327,6 +1324,7 @@ class PHPlot {
         if ($asked == '')
             return '';
 
+        $asked = strtolower($asked);
         if (@ eregi($asked, $which_acc)) {
             return $asked;
         } else {
@@ -2049,29 +2047,36 @@ class PHPlot {
      */
     function SetPlotAreaWorld($xmin=NULL, $ymin=NULL, $xmax=NULL, $ymax=NULL) 
     {
-        if ((! $xmin)  && (! $ymax) ) {
-            if (! isset($this->data_limits_done)) { // For automatic setting of data we need data limits
-                $this->FindDataLimits() ;
-            }
-            if ($this->data_type == 'text-data') {  // Valid for data without X values only.
-                $xmax = $this->max_x + 1 ;
-                $xmin = 0 ;
-            } else {
-                $xmax = $this->max_x;
+        if (! isset($this->data_limits_done)) { // For automatic setting of data we need data limits
+            $this->FindDataLimits() ;
+        }
+ 
+        if (! $xmin) {
+            if ($this->data_type == 'text-data')  // Valid for data without X values only.
+                $xmin = 0;
+            else
                 $xmin = $this->min_x;
-            }
+        }
+        if (! $xmax) {
+            if ($this->data_type == 'text-data')  // Valid for data without X values only.
+                $xmax = $this->max_x + 1;
+            else
+                $xmax = $this->max_x;
+        }
 
-            $ymax = ceil($this->max_y * 1.1);
+        if (! $ymin) {
             $ymin = ceil($this->min_y * 1.1);
+        }    
+        if (! $ymax) {
+            $ymax = ceil($this->max_y * 1.1);
         }
-
-        $this->plot_min_x = $xmin;
-        $this->plot_max_x = $xmax;
-
-        if ($ymin == $ymax) {
+        
+        // Error checking
+        
+        if ($ymin == $ymax)     // Minimum height
             $ymax += 1;
-        }
-        if ($this->yscale_type == 'log') {             //extra error checking
+
+        if ($this->yscale_type == 'log') {
             if ($ymin <= 0) { 
                 $ymin = 1;
             }
@@ -2080,16 +2085,20 @@ class PHPlot {
                 return FALSE;
             }
         }
-
-        $this->plot_min_y = $ymin;
-        $this->plot_max_y = $ymax;
-
+        
         if ($ymax <= $ymin) {
             $this->DrawError('SetPlotAreaWorld(): Error in data - max not greater than min');
             return FALSE;
         }
+       
+      
+        // Reset (if it was already set) the scale with the new maxs and mins
+      
+        $this->plot_min_x = $xmin;
+        $this->plot_max_x = $xmax;
+        $this->plot_min_y = $ymin;
+        $this->plot_max_y = $ymax;
 
-        // Reset the scale with the new maxs and mins
         if (isset($this->plot_area_width)) {
             $this->CalcTranslation();
         }
@@ -2224,7 +2233,7 @@ class PHPlot {
         case 'plotx':
             switch ($this->x_label_type) {
             case 'title':
-                $lab = $this->data[$which_lab][0];
+                $lab = @ $this->data[$which_lab][0];
                 break;
             case 'data':
                 $lab = number_format($which_lab, $this->x_precision, '.', ', ').$this->data_units_text;
@@ -3605,10 +3614,9 @@ class PHPlot {
     } //function DrawBars    
 
 
-
-
     /*!    
      * Data comes in as array("title", x, y, y2, y3, ...)
+     * \note Original stacked bars idea by Laurent Kruk < lolok at users.sourceforge.net >
      */
     function DrawStackedBars() 
     {
@@ -3656,6 +3664,8 @@ class PHPlot {
             }   // end for
         }   // end for
     } //function DrawStackedBars 
+
+    
     /*!
      *
      */
@@ -3708,11 +3718,30 @@ class PHPlot {
         $this->DrawXTitle();
         $this->DrawYTitle();
 
+        // Pie charts are drawn differently, handle them first
+        if ($this->plot_type == 'pie') {
+            // Pie charts can maximize image space usage.
+            $this->SetPlotAreaPixels($this->safe_margin, $this->title_height,
+                                     $this->image_width - $this->safe_margin,
+                                     $this->image_height - $this->safe_margin);
+            $this->DrawPieChart();
 
+            if ($this->legend)
+                $this->DrawLegend($this->legend_x_pos, $this->legend_y_pos, '');
+
+            if ($this->print_image)
+                $this->PrintImage();
+                
+            return;
+        }
+       
+        ////// All other chart types:
+        
         if (! $this->grid_at_foreground) {         // Usually one wants grids to go back, but...
             $this->DrawYAxis();     // Y axis must be drawn before X axis (see DrawYAxis()) 
             $this->DrawXAxis();
         }
+        
         switch ($this->plot_type) {
         case 'thinbarline':
             $this->DrawThinBarLines();
@@ -3745,13 +3774,6 @@ class PHPlot {
             } else {
                 $this->DrawDots();
             }
-            break;
-        case 'pie':
-            // Pie charts can maximize image space usage.
-            $this->SetPlotAreaPixels($this->safe_margin, $this->title_height,
-                                     $this->image_width - $this->safe_margin,
-                                     $this->image_height - $this->safe_margin);
-            $this->DrawPieChart();
             break;
         case 'stackedbars':
             $this->DrawStackedBars();
