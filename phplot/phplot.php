@@ -125,7 +125,7 @@ class PHPlot{
 	var $plot_max_x= ''; // Max and min of the plot area
 	var $plot_min_y = ''; // Max and min of the plot area
 	var $plot_max_y = ''; // Max and min of the plot area
-	var $y_padding = 0.2; // Fraction of graph to pad at top and bottom *MDJ*
+	var $y_padding = 0.0; // Fraction of graph to pad at top and bottom *MDJ*
 	var $min_y = '';
 	var $max_y = '';
 	var $max_x = 10;  //Must not be = 0;
@@ -1053,7 +1053,8 @@ class PHPlot{
 			$y_maxmax = $ymax["max"];
 			$ymax = "";
 		}
-		if ($ymin == "" || $ymax == "") {
+		if ((is_string($ymin) && $ymin == "") ||
+			(is_string($ymax) && $ymax == "")) {
 			if (!$this->max_y) $this->FindDataLimits();
 			if (empty($ymax)) {
 				$doAutoMaxY = true;
