@@ -64,7 +64,7 @@ automatic values.
   <td><input type="text" name="miny_in" value="" size="4" /></td>
 </tr>
 
-            <tr><td colspan="2" class="hdr">Titles and labels</td></tr>
+            <tr><td colspan="2" class="hdr">Titles and data labels</td></tr>
             
 <tr>
   <td>Title:</td>
@@ -82,17 +82,6 @@ automatic values.
       <option value="plotright">Right of plot</option>
       <option value="both" selected>Both right and left</option>
       <option value="none">No Y axis title</option>
-    </select>
-  </td>
-</tr>
-<tr>
-  <td>Y axis tick labels position:</td>
-  <td>
-    <select name="which_ytick_label_pos">
-      <option value="plotleft">Left of plot</option>
-      <option value="plotright">Right of plot</option>
-      <option value="both" selected>Both right and left</option>
-      <option value="none">No tick labels</option>
     </select>
   </td>
 </tr>
@@ -126,17 +115,6 @@ automatic values.
       <option value="plotdown">Down of plot</option>
       <option value="both" selected>Both up and down</option>
       <option value="none">No X axis title</option>
-    </select>
-  </td>
-</tr>
-<tr>
-  <td>X axis tick labels position:</td>
-  <td>
-    <select name="which_xtick_label_pos">
-      <option value="plotup">Up of plot</option>
-      <option value="plotdown">Down of plot</option>
-      <option value="both" selected>Both up and down</option>
-      <option value="none">No tick labels</option>
     </select>
   </td>
 </tr>
@@ -181,15 +159,44 @@ automatic values.
   </td>
 </tr>
 <tr>
+  <td>X axis ticks length:</td>
+  <td><input type="text" name="which_xtl" value="5" size="3"/></td>
+</tr>
+<tr>
+  <td>X axis ticks crossing:</td>
+  <td><input type="text" name="which_xtc" value="3" size="3"/></td>
+</tr>
+<tr>
   <td>X axis ticks position:</td>
   <td>
     <select name="which_xtick_pos">
       <option value="plotup">Up of plot</option>
       <option value="plotdown">Down of plot</option>
       <option value="both" selected>Both up and down</option>
+      <option value="xaxis">At X axis</option>
       <option value="none">No ticks</option>
     </select>
   </td>
+</tr>
+<tr>
+  <td>X axis tick labels position:</td>
+  <td>
+    <select name="which_xtick_label_pos">
+      <option value="plotup">Up of plot</option>
+      <option value="plotdown">Down of plot</option>
+      <option value="both" selected>Both up and down</option>
+      <option value="xaxis">Below X axis</option>
+      <option value="none">No tick labels</option>
+    </select>
+  </td>
+</tr>
+<tr>
+  <td>Y axis ticks length:</td>
+  <td><input type="text" name="which_ytl" value="5" size="3"/></td>
+</tr>
+<tr>
+  <td>Y axis ticks crossing:</td>
+  <td><input type="text" name="which_ytc" value="3" size="3"/></td>
 </tr>
 <tr>
   <td>Y axis ticks position:</td>
@@ -198,8 +205,20 @@ automatic values.
       <option value="plotleft">Left of plot</option>
       <option value="plotright">Right of plot</option>
       <option value="both" selected>Both right and left</option>
-      <option value="yaxis">Crossing Y axis (fixme?)</option>
+      <option value="yaxis">At Y axis</option>
       <option value="none">No ticks</option>
+    </select>
+  </td>
+</tr>
+<tr>
+  <td>Y axis tick labels position:</td>
+  <td>
+    <select name="which_ytick_label_pos">
+      <option value="plotleft">Left of plot</option>
+      <option value="plotright">Right of plot</option>
+      <option value="both" selected>Both right and left</option>
+      <option value="yaxis">Left of Y axis</option>
+      <option value="none">No tick labels</option>
     </select>
   </td>
 </tr>
@@ -218,8 +237,26 @@ automatic values.
 
 <tr>
   <td>X axis position:</td>
-  <td><input type="text" name="which_xap" value="1" /></td>
+  <td><input type="text" name="which_xap" value="0" size="5"/></td>
 </tr>
+<tr>
+  <td>Y axis position:</td>
+  <td><input type="text" name="which_yap" value="0" size="5"/></td>
+</tr>
+<tr>
+  <td>Plot Border:</td>
+  <td>
+    <select name="which_btype">
+      <option value="plotleft">Left of plot</option>
+      <option value="plotright">Right of plot</option>
+      <option value="both">Both sides of plot</option>
+      <option value="full" selected>All four sides</option>
+      <option value="none">None</option>
+    </select> 
+  </td>
+</tr>
+
+
 <tr>
   <td>Shade height (0 for none):</td>
   <td><input type="text" name="which_shading" value="5" size="3"/></td>

@@ -73,22 +73,27 @@ else if ($which_data_type == 'data-data-error') {
     
 	$graph->SetYTickIncrement($which_yti);
 	$graph->SetXTickIncrement($which_xti);
-   
+    $graph->SetXTickLength($which_xtl);
+    $graph->SetYTickLength($which_ytl);
+    $graph->SetXTickCrossing($which_xtc);
+    $graph->SetYTickCrossing($which_ytc);
+    $graph->SetXTickPos($which_xtick_pos);
+    $graph->SetYTickPos($which_ytick_pos);
+
+    
     $graph->SetShading($which_shading);
-    $graph->SetLineWidth($which_line_width);
+    //$graph->SetLineWidth($which_line_width);
     $graph->SetErrorBarLineWidth($which_errorbar_line_width);
 
 	$graph->SetGridParams($which_draw_grid, $which_dashed_grid);
     $graph->SetTickLabelParams($which_xtick_label_pos, $which_ytick_label_pos, NULL, NULL);
     $graph->SetDataLabelParams($which_xdata_label_pos, $which_ydata_label_pos, NULL, NULL);
     
-    $graph->SetXTickPos($which_xtick_pos);
-    $graph->SetYTickPos($which_ytick_pos);
-
     // Please remember that angles other than 90 are taken as 0 when working fith fixed fonts.
     $graph->SetXLabelAngle($which_xlabel_angle);
+    $graph->SetYLabelAngle($which_ylabel_angle);
 
-	$graph->SetLineStyles(array("dashed","dashed","solid","solid"));
+	//$graph->SetLineStyles(array("dashed","dashed","solid","solid"));
 	$graph->SetPointShape($which_point);
     $graph->SetPointSize($which_point_size);
     $graph->SetDrawBrokenLines($which_broken);
@@ -97,6 +102,8 @@ else if ($which_data_type == 'data-data-error') {
 	@ $graph->SetErrorBarShape($which_error_type);
     
 	$graph->SetXAxisPosition($which_xap);
+    $graph->SetYAxisPosition($which_yap);
+    $graph->SetPlotBorderType($which_btype);
     
 	if ($maxy_in) { 
 		if ($which_data_type = "text-data") { 
@@ -125,6 +132,7 @@ else if ($which_data_type == 'data-data-error') {
     $graph->SetTitleColor(array(0,0,0)); // Can be array or name
 */
 
+//      $graph->SetPrintImage(false);
       $graph->DrawGraph();
-      
+//      xdebug_dump_function_profile(XDEBUG_PROFILER_FS_SUM);
 ?>
