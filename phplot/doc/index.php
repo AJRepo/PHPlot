@@ -139,13 +139,12 @@ Description of the use and inner workings of PHPlot:
 </p>
 
 
-<h3>The Authors</h3>
+.....<h3>The Authors</h3>
 <p>
 <ul>
-    <li>Afan Ottenheimer</li>
-    <li>Miguel de Benito</li>
-    <li>Please fill me...</li>
-    <li>Please fill me...</li>
+    <li>Original work by <a href="mailto:afan AT jeo DOT net">Afan Ottenheimer</a>.</li>
+    <li>Recent work by <a href="mailto:nonick AT 8027 DOT org">Miguel de Benito</a>.</li>
+    <li>Contributions by Thiemo Nagel, Marlin Viss and Remi Ricard.</li>
 </p>
 
 <p class="foot">$Id$</p>
