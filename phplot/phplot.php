@@ -1409,6 +1409,7 @@ class PHPlot{
 					$this->plot_area[2],$this->ytr($this->plot_max_y),$this->ndx_grid_color);
 			break;
 		}
+
 		$this->DrawYAxis();
 		$this->DrawXAxis();
 		return true;
