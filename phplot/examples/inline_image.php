@@ -22,7 +22,7 @@ $graph = new PHPlot;
 include('./data.php');
 $graph->SetTitle("$_GET[which_title]");
 $graph->SetDataValues($example_data);
-$graph->SetIsInline('1');
+$graph->SetIsInline(true);
 $graph->SetFileFormat("$_GET[which_format]");
 $graph->DrawGraph();
 ?>

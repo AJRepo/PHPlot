@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
     <title>Example-o-matic</title>
@@ -272,7 +272,7 @@ automatic values.
   <td><input type="text" name="which_shading" value="5" size="3"/></td>
 </tr>  
 <tr>
-  <td>Plot line width:</td>
+  <td>Plot line width:<br /><em>FIXME: set multiple values</em></td>
   <td><input name="which_line_width" value="1" size="3" /></td>
 </tr>
 <tr>
@@ -280,7 +280,7 @@ automatic values.
   <td><input name="which_errorbar_line_width" value="1" size="3" /></td>
 </tr>
 <tr>
-  <td>Point Type:</td>
+  <td>Point Shape:<br /><em>FIXME: set multiple values</em></td>
   <td>
     <select name="which_point">
 	  <option value="diamond">Diamond</option>
@@ -297,7 +297,7 @@ automatic values.
   </td>
 </tr>
 <tr>
-  <td>Point Size:</td>
+  <td>Point Size:<br /><em>FIXME: set multiple values</em></td>
   <td><input name="which_point_size" value="4" size="3" /></td>
 </tr>
 <tr>
