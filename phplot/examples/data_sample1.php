@@ -22,18 +22,18 @@ Data: (text-linear)<br>
 ?>
 <tr>
 <TD>
-<input TYPE="text" NAME="data_row0[<?echo $i?>]" VALUE="year <?echo $i?>">
+<input TYPE="text" NAME="data_row0[<?php echo $i?>]" VALUE="year <?php echo $i?>">
 </TD><TD>
-<input TYPE="text" NAME="data_row1[<?echo $i?>]" VALUE="<?echo $a?>" SIZE="2">
+<input TYPE="text" NAME="data_row1[<?php echo $i?>]" VALUE="<?php echo $a?>" SIZE="2">
 </TD><TD>
-<input TYPE="text" NAME="data_row2[<?echo $i?>]" VALUE="<?echo $b?>" SIZE="2">
+<input TYPE="text" NAME="data_row2[<?php echo $i?>]" VALUE="<?php echo $b?>" SIZE="2">
 </TD><TD>
-<input TYPE="text" NAME="data_row3[<?echo $i?>]" VALUE="<?echo $c?>" SIZE="2">
+<input TYPE="text" NAME="data_row3[<?php echo $i?>]" VALUE="<?php echo $c?>" SIZE="2">
 </TD><TD>
-<input TYPE="text" NAME="data_row4[<?echo $i?>]" VALUE="<?echo $c+1?>" SIZE="2">
+<input TYPE="text" NAME="data_row4[<?php echo $i?>]" VALUE="<?php echo $c+1?>" SIZE="2">
 </TD><TD>
 </TR>
-<?
+<?php 
 	}
 ?>
 </TABLE>

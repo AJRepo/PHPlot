@@ -1,4 +1,4 @@
-<?
+<?php 
 include("../phplot.php");
 $graph = new PHPlot(600,200);
 include("./data_date.php");

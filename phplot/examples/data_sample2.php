@@ -3,7 +3,7 @@ Data Type: <A HREF="format_chart.php?which_data_type=text-linear">text-linear</A
 <A HREF="format_chart.php?which_data_type=function">function</A>//
 <A HREF="format_chart.php?which_data_type=linear-linear-error">linear-linear-error</A><br>
 <p>
-<?
+<?php 
 //linear-linear as just data
 		$data = array(
 			array("label 0", 0, 2, 5 ), 	
@@ -19,28 +19,28 @@ Data: (linear-linear)<br>
 <TR><TD>Title (data lablel)</TD><TD>Xdata</TD><TD>Ydata 1</TD>
 <TD>Ydata 2</TD>
 <TD>Ydata 3</TD></TR>
-<?
+<?php 
 	for ($i=0; $i<5; $i++) {
 ?>
 <tr>
 <TD>
-<input TYPE="text" NAME="data_row0[<?echo $i?>]" 
-	VALUE="<?echo $data[$i][0]?>" >
+<input TYPE="text" NAME="data_row0[<?php echo $i?>]" 
+	VALUE="<?php echo $data[$i][0]?>" >
 </TD><TD>
-<input TYPE="text" NAME="data_row1[<?echo $i?>]" 
-	VALUE="<?echo $data[$i][1]?>" SIZE="3">
+<input TYPE="text" NAME="data_row1[<?php echo $i?>]" 
+	VALUE="<?php echo $data[$i][1]?>" SIZE="3">
 </TD><TD>
-<input TYPE="text" NAME="data_row2[<?echo $i?>]"
-	VALUE="<?echo $data[$i][2]?>" SIZE="3">
+<input TYPE="text" NAME="data_row2[<?php echo $i?>]"
+	VALUE="<?php echo $data[$i][2]?>" SIZE="3">
 </TD><TD>
-<input TYPE="text" NAME="data_row3[<?echo $i?>]"
-	VALUE="<?echo $data[$i][3]?>" SIZE="3">
+<input TYPE="text" NAME="data_row3[<?php echo $i?>]"
+	VALUE="<?php echo $data[$i][3]?>" SIZE="3">
 </TD><TD>
-<input TYPE="text" NAME="data_row4[<?echo $i?>]"
-	VALUE="<?echo $data[$i][4]?>" SIZE="3">
+<input TYPE="text" NAME="data_row4[<?php echo $i?>]"
+	VALUE="<?php echo $data[$i][4]?>" SIZE="3">
 </TD><TD>
 </TR>
-<?
+<?php 
 	}
 ?>
 </TABLE>

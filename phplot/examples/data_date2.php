@@ -1,4 +1,4 @@
-<?
+<?php
 //Title,unixtime_date,value,+error,-error
 
 $example_data = array(

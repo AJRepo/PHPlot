@@ -1,4 +1,4 @@
-<?
+<?php 
 //Include the code
 include("../phplot.php");
 
