@@ -42,6 +42,7 @@ Data type: (Text-data)<br />
 Graph type:
 <select name="which_plot_type">
   <option value="bars">Bars (*)</option>
+  <option value="stackedbars">Stacked bars (*)</option>
   <option value="thinbarline">Thin bars</option>
   <option value="lines">Lines</option>
   <option value="squared">Squared lines</option>
