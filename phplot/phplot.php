@@ -1213,7 +1213,7 @@ class PHPlot {
             //Call sety_TICK_labelpos instead of sety_DATA_labelpos
             $this->SetYTickLabelPos($which_ydlp);
 
-        } elseif ($which_ydlp != 'none')
+        } elseif ($which_ydlp != 'none') { 
             //right now its plotin or none
             $this->y_data_label_pos = 'plotin';
         }
