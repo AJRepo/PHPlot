@@ -10,7 +10,8 @@ which in GD is relative to the origin at the upper left
 side of the image.
 */
 
-//PHPLOT Version 4.4.0
+//PHPLOT Version 4.4.1
+//Requires PHP 3.0.2 or later 
 
 
 class PHPlot{
@@ -76,7 +77,7 @@ class PHPlot{
 	var $y_label_angle = 90;
 
 //Formats
-	var $file_format = "gif";
+	var $file_format = "png";
 	var $file_name = "";  //For output to a file instead of stdout
 
 //Plot Colors
@@ -157,25 +158,22 @@ class PHPlot{
 //BEGIN CODE
 //////////////////////////////////////////////////////
 	//Constructor: Setup Img pointer, Colors and Size of Image
-	function PHPlot($which_width=600,$which_height=400,$which_output_file="",$which_input_file="",$which_file_format="") {
+	function PHPlot($which_width=600,$which_height=400,$which_output_file="",$which_input_file="") {
 
 		$this->SetRGBArray("2"); 
-
-		$this->SetImageArea($which_width, $which_height);
 
 		if ($which_output_file != "") { SetOutputFile($which_output_file);  };
 
 		if ($which_input_file != "") { 
-			if ($which_file_format=="") { 
-				DrawError('When specifying an Input file, you must also specify a file format');
-			}
-			GetInputFile($which_input_file,$which_file_format) ; 
-		} 
+			$this->SetInputFile($which_input_file) ; 
+		} else { 
+			$this->SetImageArea($which_width, $which_height);
+			$this->InitImage();
+		}
 
 		if ( ($this->session_set == 1) && ($this->img == "") ) {  //For sessions
-			$this->InitImage();
+			//Do nothing
 		} else { 
-			$this->InitImage();
 			$this->SetDefaultColors();
 		}
 
@@ -253,9 +251,9 @@ class PHPlot{
 		return true;
 	}
 /* ***************************************
-	function SetFileFormat($which_file_format) {
-		$aFormat = strtolower($which_file_format);
-		if( $which_file_format=="jpg" || $which_file_format=="png" || $which_file_format=="gif" ) {
+	function SetFileFormat($which_file_format) { //Only works with PHP4
+		$asked = strtolower($which_file_format);
+		if( $asked =="jpg" || $asked =="png" || $asked =="gif" ) {
 			if( $asked=="jpg" && !(imagetypes() & IMG_JPG) )
 				return false;
 			elseif( $asked=="png" && !(imagetypes() & IMG_PNG) ) 
@@ -274,14 +272,55 @@ class PHPlot{
 *************************************** */
 	function SetFileFormat($which_file_format) {
 	//eventually test to see if that is supported - if not then return false
-		$accepted = "jpg,gif,png";
 		$asked = strtolower(trim($which_file_format));
-		if (eregi($asked, $accepted)) {
+		if( ($asked=="jpg") || ($asked=="png") || ($asked=="gif") ) {
 			$this->file_format = $asked;
 			return true;
 		} else {
 			return false;
 		}
+	}
+
+	function SetInputFile($which_input_file) { 
+		//$this->SetFileFormat($which_frmt);
+		$size = GetImageSize($which_input_file);
+		$input_type = $size[2]; 
+
+		switch($input_type) {  //After SetFileFormat is in lower case
+			case "1":
+				$im = @ImageCreateFromGIF ($which_input_file);
+				if (!$im) { // See if it failed 
+					$this->PrintError("Unable to open $which_input_file as a GIF");
+					return false;
+				}
+			break;
+			case "3":
+				$im = @ImageCreateFromPNG ($which_input_file); 
+				if (!$im) { // See if it failed 
+					$this->PrintError("Unable to open $which_input_file as a PNG");
+					return false;
+				}
+			break;
+			case "2":
+				$im = @ImageCreateFromJPEG ($which_input_file); 
+				if (!$im) { // See if it failed 
+					$this->PrintError("Unable to open $which_input_file as a JPG");
+					return false;
+				}
+			break;
+			default:
+				$this->PrintError("Please select gif,jpg, or png for image type!");
+				return false;
+			break;
+		}
+
+		//Get Width and Height of Image
+		$this->SetImageArea($size[0],$size[1]);
+
+		$this->img = $im;
+
+		return true;
+
 	}
 
 	function SetOutputFile($which_output_file) { 
@@ -337,8 +376,6 @@ class PHPlot{
 		//These are the colors of the image that are used. They are initialized
 		//to work with sessions and PHP. 
 
-//$this->Debug();
-
 		$this->ndx_i_light = $this->SetIndexColor($this->i_light);
 		$this->ndx_i_dark  = $this->SetIndexColor($this->i_dark);
 		$this->ndx_bg_color= $this->SetIndexColor($this->bg_color);
@@ -372,8 +409,6 @@ class PHPlot{
 			$this->ndx_data_color[$i] = $this->SetIndexColor($col);
 			$i++;
 		}
-
-//$this->Debug();
 
 		return true;
 	}
@@ -420,7 +455,7 @@ class PHPlot{
 				break;
 			case "jpg":
 				if ($this->is_inline == 0) {
-					Header("Content-type: image/jpg");
+					Header("Content-type: image/jpeg");
 				}
 				if ($this->is_inline == 1 && $this->output_file != "") {
 					ImageJPEG($this->img,$this->output_file);
@@ -488,6 +523,10 @@ class PHPlot{
 
 	function SetImageBorderType($which_sibt) {
 		$this->image_border_type = $which_sibt; //raised, plain
+	}
+
+	function SetDrawPlotAreaBackground($which_dpab) {
+		$this->draw_plot_area_background = $which_dpab;  // 1=true or anything else=false
 	}
 
 	function SetDrawXDataLabels($which_dxdl) {
@@ -887,6 +926,7 @@ class PHPlot{
 		$this->plot_area = array($x1,$y1,$x2,$y2);
 		$this->plot_area_width = $this->plot_area[2] - $this->plot_area[0];
 		$this->plot_area_height = $this->plot_area[3] - $this->plot_area[1];
+		$this->y_top_margin = $this->plot_area[1];
 		if ($this->plot_max_x) {
 			$this->SetTranslation();
 		}
@@ -896,7 +936,6 @@ class PHPlot{
 	function SetPlotAreaPixels($x1,$y1,$x2,$y2) {
 		//Like in GD 0,0 is upper left
 		if (!$this->x_tot_margin) {
-			//echo "SPAP<br>";
 			$this->SetMargins();
 		}
 		if ($x2 && $y2) {
@@ -909,10 +948,6 @@ class PHPlot{
 		}
 		$this->plot_area_width = $this->plot_area[2] - $this->plot_area[0];
 		$this->plot_area_height = $this->plot_area[3] - $this->plot_area[1];
-
-//echo "SPAP: $this->x_left_margin, $this->y_top_margin,$this->y_bot_margin,$this->x_right_margin<br>";
-//echo "SPAP: $this->plot_area[0], $this->plot_area[1],$this->plot_area[2],$this->plot_area[3]<br>";
-//exit;
 
 		return true;
 
@@ -981,8 +1016,9 @@ class PHPlot{
 
 
 	function PrintError($error_message) {
-	// prints the error message to stdout
+	// prints the error message to stdout and die
 		echo "<p><b>Fatal error</b>: $error_message<p>";
+		die;
 	}
 
 	function DrawError($error_message) {
@@ -1195,7 +1231,7 @@ class PHPlot{
 
 	function SetColor($which_color) { 
 		//obsoleted by SetRGBColor
-		SetRGBColor($which_color);
+		SetRgbColor($which_color);
 		return true;
 	}
 
@@ -1203,10 +1239,17 @@ class PHPlot{
   		list ($r, $g, $b) = $this->SetRgbColor($which_color);  //Translate to RGB
 		$index = ImageColorExact($this->img, $r, $g, $b);
 		if ($index == -1) {
-	  			return ImageColorAllocate($this->img, $r, $g, $b);
+	  			//return ImageColorAllocate($this->img, $r, $g, $b);
+	  			//return ImageColorClosest($this->img, $r, $g, $b);
+	  			return ImageColorResolve($this->img, $r, $g, $b); //requires PHP 3.0.2 and later
  		} else {
 	  			return $index;
   		}
+	}
+	
+	function SetTransparentColor($which_color) { 
+		ImageColorTransparent($this->img,$this->SetIndexColor($which_color));
+		return true;
 	}
 
 	function SetRgbColor($color_asked) {
@@ -2446,7 +2489,9 @@ class PHPlot{
 
 			$this->SetTranslation();
 
-			$this->DrawPlotAreaBackground();
+			if ($this->draw_plot_area_background == 1) {
+				$this->DrawPlotAreaBackground();
+			}
 //$foo = "$this->max_y, $this->min_y, $new_miny, $new_maxy, $this->x_label_height";
 //ImageString($this->img, 4, 20, 20, $foo, $this->ndx_text_color);
 
