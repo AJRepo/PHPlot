@@ -27,16 +27,16 @@ Data: (Linear-Linear)
  ?>
  <tr>
   <td>
-   <input type="text" name="data_row0[<?php echo $i?>]" value="<?php echo $data[$i][0]?>" >
+   <input type="text" name="data_row0[<?php echo $i; ?>]" value="<?php echo $data[$i][0]; ?>" />
   </td><td>
-   <input type="text" name="data_row1[<?php echo $i?>]" value="<?php echo $data[$i][1]?>" size="3">
+   <input type="text" name="data_row1[<?php echo $i; ?>]" value="<?php echo $data[$i][1]; ?>" size="3"/>
   </td><td>
-   <input type="text" name="data_row2[<?php echo $i?>]" value="<?php echo $data[$i][2]?>" size="3">
+   <input type="text" name="data_row2[<?php echo $i; ?>]" value="<?php echo $data[$i][2]; ?>" size="3" />
   </td><td>
-   <input type="text" name="data_row3[<?php echo $i?>]" value="<?php echo $data[$i][3]?>" size="3">
+   <input type="text" name="data_row3[<?php echo $i; ?>]" value="<?php echo $data[$i][3]; ?>" size="3" />
   </td><td>
-   <input type="text" name="data_row4[<?php echo $i?>]" value="<?php echo $data[$i][4]?>" size="3">
-  </td><td>
+   <input type="text" name="data_row4[<?php echo $i; ?>]" value="<?php echo $data[$i][4]; ?>" size="3" />
+  </td>
  </tr>
  <?php
     }
