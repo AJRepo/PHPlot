@@ -3,6 +3,7 @@
 include("../phplot.php");
 $graph = new PHPlot;
 
+extract($_POST);
 
 //linear-linear-error data 
 unset($data);
@@ -18,7 +19,7 @@ for ($i=0; $i<=30; $i++){
 	$a += rand(-1, 2);
 	$b = rand(0,1);
 	$c = rand(0,1);
-	$data[] = array("$label[$i]",$i+1,$a,$b,$c);
+	$data[] = @ array("$label[$i]",$i+1,$a,$b,$c);
 }
 	$graph->SetDataType("linear-linear-error");  //Must be first thing
 	$graph->SetPrecisionY(0);

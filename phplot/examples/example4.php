@@ -23,7 +23,7 @@ $label[20] = "Day 20";
 $label[25] = "Day 25";
 $label[30] = "Day 30";
 Error_Reporting(0);
-for ($i=0; $i<=30; $i++){ 
+for ($i=0; $i<=50; $i++){ 
 	$a += rand(-1, 2);
 	$b = $a*rand(0,1)/10;
 	$c = $a*rand(0,1)/10;
@@ -51,15 +51,15 @@ for ($i=0; $i<=30; $i++){
 	$graph->SetPlotType("points");
 	$graph->SetXGridLabelType("title");
 	$graph->SetXLabel("Day");
-	$graph->SetYLabel("index");
-	$graph->SetTitle("Stock Market Data");
+	$graph->SetYLabel("Stock value");
+	$graph->SetTitle("Logarithmic scale\nexample 4");
 	//$graph->SetErrorBarColors(array("blue","red","green","black"));
 	$graph->SetDataColors(
 		array("blue","green","yellow","red"),  //Data Colors
 		array("black")							//Border Colors
 	);  
 
-	//$graph->SetPlotAreaWorld(0,5,32,30);
+	$graph->SetPlotAreaWorld(0,0,32,50);
 	//$graph->SetPlotAreaPixels(150,50,600,400);
 
 /*
