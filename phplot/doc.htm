@@ -1,0 +1,163 @@
+Documentation for PHPlot. <p>
+
+
+	<DT><b>DrawAreaSeries()</b>
+		<DD> Draw an Area.
+	$data[] must already be defined as $data[] = array("title",y1,y2,y3,...)
+	The x axis is divided evenly, one x-point per $data[] element. <br>
+	Colors and border colors for each of the y1, y2, ... is set by <b>SetDataColors($which_data,$which_border)</b>
+	<DT><b>DrawBackground()</b>
+		<DD> Draw the full background of the image on image pointer. Should be used BEFORE
+		other Draw functions unless you really want to overwrite what you've done before. 
+		See <b>SetBackgroundColor</b> and <b>SetImageArea</b> for setting parameters.
+	<DT><b>DrawBars()</b>
+		<DD>Draw vertical bars. 
+	$data[] must already be defined as $data[] = array("title",y1,y2,y3,...)
+	The x axis is divided evenly, one x-point per $data[] element. <br>
+	Colors and border colors for each of the y1, y2, ... is set by <b>SetDataColors($which_data,$which_border)</b>
+	<DT><b>DrawDataLabel($lab,$x_world,$y_world)</b>
+		<DD>Draw a label at the world coordinates of x_world and y_world.  
+	<DT><b>DrawDots()</b>
+		<DD> Draw Dots as defined by <b>SetPointType</b> and data in x,y format.
+	$data[] must already be defined as $data[] = array("title",x,y1,y2,...)
+	Where the point occurs depends on both the X and Y values. <br>
+	Colors and border colors for each y1, y2, , ... is set by <b>SetDataColors($which_data,$which_border)</b>
+	<DT><b>DrawDotSeries()</b>
+		<DD> Draw Dots as defined by <b>SetPointType</b> and data in text-y format.
+	$data[] must already be defined as $data[] = array("title",y1,y2,...)
+	The x axis is divided evenly, one x-point per $data[] element. <br>
+	Colors and border colors for each y1, y2, , ... is set by <b>SetDataColors($which_data,$which_border)</b>
+	<DT><b>DrawDotsError()</b>
+		<DD> 
+	<DT><b>DrawDot($x_world,$y_world,$dot_type,$color)</b>
+		<DD> 
+	<DT><b>DrawError($error_message)</b>
+		<DD>
+	<DT><b>DrawGraph()</b>
+		<DD>
+	<DT><b>DrawHorizontalTicks()</b>
+		<DD> 
+	<DT><b>DrawImageBorder()</b>
+		<DD> 
+	<DT><b>DrawLabels()</b>
+		<DD>
+	<DT><b>DrawLines()</b>
+		<DD> 
+	<DT><b>DrawLineSeries()</b>
+		<DD> 
+	<DT><b>DrawLinesError()</b>
+		<DD> 
+	<DT><b>DrawPieChart()</b>
+		<DD> 
+	<DT><b>DrawPlotAreaBackground()</b>
+		<DD>
+	<DT><b>DrawPlotBorder()</b>
+		<DD> 
+	<DT><b>DrawTitle()</b>
+		<DD>
+	<DT><b>DrawVerticalTicks()</b>
+		<DD> 
+	<DT><b>DrawXAxis()</b>
+		<DD> 
+	<DT><b>DrawXDataLabel($xlab,$xpos)</b>
+		<DD> 
+	<DT><b>DrawXLabel()</b>
+		<DD>
+	<DT><b>DrawYErrorBar($x_world,$y_world,$error_height,$error_bar_type,$color)</b>
+		<DD> 
+	<DT><b>DrawYLabel()</b>
+		<DD>
+	<DT><b>FindDataLimits()</b>
+		<DD>
+	<DT><b>InitImage()</b>
+		<DD>
+	<DT><b>PrintImage()</b>
+		<DD>
+	<DT><b>SetBackgroundColor($which_color)</b>
+		<DD> 
+	<DT><b>SetCharacterHeight()</b>
+		<DD> 
+	<DT><b>SetColor($color_asked)</b>
+		<DD> 
+	<DT><b>SetDataColors($which_data,$which_border)</b>
+		<DD>
+	<DT><b>SetDataType($which_dt)</b>
+		<DD> 
+	<DT><b>SetDataValues($which_dv)</b>
+		<DD> 
+	<DT><b>SetDefaultColors()</b>
+		<DD>
+	<DT><b>SetDrawYGrid($which_dyg)</b>
+		<DD> 
+	<DT><b>SetEqualXCoord()</b>
+		<DD>
+	<DT><b>SetErrorBarShape($which_ebs)</b>
+		<DD>
+	<DT><b>SetErrorBarSize($which_ebs)</b>
+		<DD>
+	<DT><b>SetFileFormat($which_file_format)</b>
+		<DD>
+	<DT><b>SetGridColor ($which_color)</b>
+		<DD> 
+	<DT><b>SetHorizTickIncrement($which_ti)</b>
+		<DD> 
+	<DT><b>SetImageArea($which_iw,$which_ih)</b>
+		<DD>
+	<DT><b>SetLabels($xlbl,$ylbl,$title)</b>
+		<DD> 
+	<DT><b>SetLightGridColor ($which_color)</b>
+		<DD> 
+	<DT><b>SetLineWidth($which_lt)</b>
+		<DD> 
+	<DT><b>SetMargins()</b>
+		<DD> 
+	<DT><b>SetNewPlotAreaPixels($x1,$y1,$x2,$y2)</b>
+		<DD>
+	<DT><b>SetNumVertTicks($which_nt)</b>
+		<DD> 
+	<DT><b>SetPlotAreaPixels($x1,$y1,$x2,$y2)</b>
+		<DD>
+	<DT><b>SetPlotAreaWorld($xmin,$ymin,$xmax,$ymax)</b>
+		<DD>
+	<DT><b>SetPlotBgColor($which_color)</b>
+		<DD> 
+	<DT><b>SetPlotType($which_pt)</b>
+		<DD> 
+	<DT><b>SetPointShape($which_pt)</b>
+		<DD>
+	<DT><b>SetPointSize($which_ps)</b>
+		<DD>
+	<DT><b>SetPrecision($which_prec)</b>
+		<DD>
+	<DT><b>SetTextColor ($which_color)</b>
+		<DD> 
+	<DT><b>SetTickColor ($which_color)</b>
+		<DD> 
+	<DT><b>SetTickLength($which_tl)</b>
+		<DD> 
+	<DT><b>SetTitleColor($which_color)</b>
+		<DD> 
+	<DT><b>SetTitle($title)</b>
+		<DD> 
+	<DT><b>SetTranslation()</b>
+		<DD>
+	<DT><b>SetUseTTF($which_ttf)</b>
+		<DD>
+	<DT><b>SetVertTickIncrement($which_ti)</b>
+		<DD> 
+	<DT><b>SetXGridLabelType($which_xglt)</b>
+		<DD> 
+	<DT><b>SetXLabelHeight()</b>
+		<DD>
+	<DT><b>SetXLabel($xlbl)</b>
+		<DD> 
+	<DT><b>SetYLabelWidth()</b>
+		<DD>
+	<DT><b>SetYLabel($ylbl)</b>
+		<DD> 
+	<DT><b>TTFBBoxSize($size, $angle, $font, $string)</b>
+		<DD>
+	<DT><b>xtr($x_world)</b>
+		<DD> 
+	<DT><b>ytr($y_world)</b>
+		<DD>
