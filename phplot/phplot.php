@@ -89,7 +89,7 @@ class PHPlot {
     //    Tick labels: they follow the grid, next to ticks in axis.   (DONE)
     //                 they are drawn at grid drawing time, by DrawXTicks() and DrawYTicks()
     //    Data labels: they follow the data points, and can be placed on the axis or the plot (x/y)  (TODO)
-    //                 they are drawn at graph plotting time, by DrawDataLabel(), called by DrawLines(), etc.
+    //                 they are drawn at graph plotting time, by Draw*DataLabel(), called by DrawLines(), etc.
     //                 Draw*DataLabel() also draws H/V lines to datapoints depending on draw_*_data_label_lines
 
     // Tick Labels
@@ -2173,24 +2173,32 @@ class PHPlot {
      */
     function CalcTranslation()
     {
-        if ($this->xscale_type == 'log') { 
-            $this->xscale = ($this->plot_area_width)/(log10($this->plot_max_x) - log10($this->plot_min_x));
-        } else { 
-            $this->xscale = ($this->plot_area_width)/($this->plot_max_x - $this->plot_min_x);
-        }
-        if ($this->yscale_type == 'log') {
-            $this->yscale = ($this->plot_area_height)/(log10($this->plot_max_y) - log10($this->plot_min_y));
+        if ($this->plot_max_x - $this->plot_min_x == 0) { // Check for div by 0
+            $this->xscale = 0;
         } else {
-            $this->yscale = ($this->plot_area_height)/($this->plot_max_y - $this->plot_min_y);
+            if ($this->xscale_type == 'log') {
+                $this->xscale = ($this->plot_area_width)/(log10($this->plot_max_x) - log10($this->plot_min_x));
+            } else {
+                $this->xscale = ($this->plot_area_width)/($this->plot_max_x - $this->plot_min_x);
+            }
         }
 
+        if ($this->plot_max_y - $this->plot_min_y == 0) { // Check for div by 0
+            $this->yscale = 0;
+        } else {
+            if ($this->yscale_type == 'log') {
+                $this->yscale = ($this->plot_area_height)/(log10($this->plot_max_y) - log10($this->plot_min_y));
+            } else {
+                $this->yscale = ($this->plot_area_height)/($this->plot_max_y - $this->plot_min_y);
+            }
+        }
         // GD defines x = 0 at left and y = 0 at TOP so -/+ respectively
         if ($this->xscale_type == 'log') {
             $this->plot_origin_x = $this->plot_area[0] - ($this->xscale * log10($this->plot_min_x) );
-        } else { 
+        } else {
             $this->plot_origin_x = $this->plot_area[0] - ($this->xscale * $this->plot_min_x);
         }
-        if ($this->yscale_type == 'log') { 
+        if ($this->yscale_type == 'log') {
             $this->plot_origin_y = $this->plot_area[3] + ($this->yscale * log10($this->plot_min_y));
         } else { 
             $this->plot_origin_y = $this->plot_area[3] + ($this->yscale * $this->plot_min_y);
@@ -4407,6 +4415,34 @@ function array_pad_array(&$arr, $size, $arr2=NULL)
         $arr2 = $arr;                           // copy the original array
     }
     while (count($arr) < $size)
-        $arr = array_merge($arr, $arr2);        // append until done
+        $arr = array_merge_php4($arr, $arr2);        // append until done
 }
+
+/*!
+ * Fixes problem with array_merge() in PHP5.
+ * \note I simply copied this from a bug report. I am not running php5 yet, so
+ *       I cannot reproduce it, which is why I trust the reporter.
+ */
+function array_merge_php4($array1,$array2)
+{
+    $return=array();
+
+    foreach(func_get_args() as $arg){
+        if(!is_array($arg)){
+        $arg=array($arg);
+        }
+        foreach($arg as $key=>$val){
+            if(!is_int($key)){
+                $return[$key]=$val;
+            }else{
+                $return[]=$val;
+            }
+        }
+    }
+    return $return;
+ }
+ 
+ 
+
+
 ?>
