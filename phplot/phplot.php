@@ -98,7 +98,7 @@ class PHPlot {
 
     // Data Labels:
     var $x_data_label_pos = 'plotdown';     // plotdown, plotup, both, plot, all, none
-    var $y_data_label_pos = 'plotleft';     // plotleft, plotright, both, plot, all, none
+    var $y_data_label_pos = 'plotleft';     // plotleft, plotright, both, plot, all, plotin, none
 
     var $draw_x_data_label_lines = FALSE;   // Draw a line from the data point to the axis?
     var $draw_y_data_label_lines = FALSE;   // TODO
@@ -787,7 +787,7 @@ class PHPlot {
             $path = $this->ttf_path.'/'.$which_font;
 
             if (! is_file($path) || ! is_readable($path) ) {
-                $this->DrawError("SetFont(): Font $path doesn't exist");
+                $this->DrawError("SetFont(): True Type font $path doesn't exist");
                 return FALSE;
             }
 
@@ -1197,14 +1197,26 @@ class PHPlot {
     }
 
     /*!
-     * Sets position for Y labels following data points.
+     * Sets position for Y labels near data points.
+     * For past compatability we accept plotleft, ...but pass it to SetTickLabelPos
+     * eventually to specify how far up/down or left/right of the data point
      */
-    function SetYDataLabelPos($which_ydlp)
+    function SetYDataLabelPos($which_ydlp, $which_distance_from_point=0)
     {
         $this->y_data_label_pos = $this->CheckOption($which_ydlp, 'plotleft, plotright, both, yaxis, all, plotin, none',
                                                       __FUNCTION__);
-        if ($which_ydlp != 'plotin')
-            $this->y_data_label_pos = 'none';
+        //This bit in SetYDataLabelPos about plotleft is for those who were 
+        //using this function to set SetYTickLabelPos.
+        if ( ($which_ydlp == 'plotleft') || ($which_ydlp == 'plotright') || 
+             ($which_ydlp == 'both') || ($which_ydlp == 'yaxis') ) { 
+
+            //Call sety_TICK_labelpos instead of sety_DATA_labelpos
+            $this->SetYTickLabelPos($which_ydlp);
+
+        } elseif ($which_ydlp != 'none')
+            //right now its plotin or none
+            $this->y_data_label_pos = 'plotin';
+        }
 
         return TRUE;
     }
@@ -3798,7 +3810,7 @@ class PHPlot {
                     //Draw the Value If you want it IN the bar use valign=bottom, 
                     //               if you want it on top use valign=top and push up a bit
                     //FIXME: if the next bar chart is higher than the number the number is put behind the next bar
-                    if ( $this->y_data_label_pos == 'plotin' && $this->data[$row][$record] != 0 ) 
+                                        if ( $this->y_data_label_pos == 'plotin' && $this->data[$row][$record] != 0 ) 
                         $this->DrawDataLabel('',NULL,$row+0.5,$this->data[$row][$record],'',$this->data[$row][$record],
                                          'center','top',$idx*($x2-$x1)/2,-10);
 
@@ -3810,7 +3822,6 @@ class PHPlot {
 
     /*!
      * Data comes in as array("title", x, y, y2, y3, ...)
-                    //FIXME: if the next bar chart is higher than the number the number is put behind the next bar
      * \note Original stacked bars idea by Laurent Kruk < lolok at users.sourceforge.net >
      */
     function DrawStackedBars()
