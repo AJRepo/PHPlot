@@ -19,7 +19,7 @@
 //PHPLOT Version 4.?.?
 //Requires PHP 4 or later 
 
-error_reporting(E_ALL);
+//error_reporting(E_ALL);
 
 class PHPlot {
 
@@ -165,11 +165,11 @@ class PHPlot {
     
     var $num_y_ticks = '';
     var $y_tick_increment='';               // Set num_y_ticks or y_tick_increment, not both.
-    var $y_tick_position = 'plotleft';      // plotright, plotleft,both, yaxis, none (MBD)
+    var $y_tick_pos = 'plotleft';      // plotright, plotleft,both, yaxis, none (MBD)
     
     var $num_x_ticks='';
     var $x_tick_increment='';               // Set num_x_ticks or x_tick_increment, not both.
-    var $x_tick_position = 'plotdown';      // plotdown, plotup, both, none (MBD)
+    var $x_tick_pos = 'plotdown';      // plotdown, plotup, both, none (MBD)
     
     var $skip_top_tick = '0';
     var $skip_bottom_tick = '0';
@@ -1095,45 +1095,60 @@ class PHPlot {
     /*!
      * Calculates image margins on the fly from title positions and sizes,
      * and tick labels positions and sizes
+     * \fixme: when ticks are not to be drawn, CalcMargin() doesn't count them, 
+     *  but DrawYTicks() and DrawXTicks() do when placing data labels, so they overlap.
+     *  A solution may be to set *_tick_length to zero when *_tick_pos == 'none'
      */
     function CalcMargins() {
 
-        // Upper title and tick labels
+        // Upper title, ticks and tick labels
         $this->y_top_margin = $this->safe_margin + $this->title_height + $this->safe_margin;
 
         if ($this->x_title_pos == 'plotup' || $this->x_title_pos == 'both')
             $this->y_top_margin += $this->x_title_height + $this->safe_margin;
             
         if ($this->x_tick_label_pos == 'plotup' || $this->x_tick_label_pos == 'both')
-            $this->y_top_margin += $this->x_tick_label_height + $this->x_tick_length * 2;
-
-        // Lower title and tick labels
+            $this->y_top_margin += $this->x_tick_label_height;
+            
+        if ($this->x_tick_pos == 'plotup' || $this->x_tick_pos == 'both')
+            $this->y_top_margin += $this->x_tick_length * 2;
+            
+        // Lower title, ticks and tick labels
         $this->y_bot_margin = $this->safe_margin * 2; // FIXME (this *2 should not be here)
         
         if ($this->x_title_pos == 'plotdown' || $this->x_title_pos == 'both')
             $this->y_bot_margin += $this->x_title_height;
             
         if ($this->x_tick_label_pos == 'plotdown' || $this->x_tick_label_pos == 'both')            
-            $this->y_bot_margin += $this->x_tick_label_height + $this->x_tick_length * 2;
+            $this->y_bot_margin += $this->x_tick_label_height;
 
-        // Left title and tick labels
+        if ($this->x_tick_pos == 'plotdown' || $this->x_tick_pos == 'both')
+            $this->y_bot_margin += $this->x_tick_length * 2;
+            
+        // Left title, ticks and tick labels
         $this->x_left_margin = $this->safe_margin;
         
         if ($this->y_title_pos == 'plotleft' || $this->y_title_pos == 'both')
             $this->x_left_margin += $this->y_title_width;
             
         if ($this->y_tick_label_pos == 'plotleft' || $this->y_tick_label_pos == 'both')
-            $this->x_left_margin += $this->y_tick_label_width + $this->y_tick_length * 2;
-            
-        // Right title and tick labels
+            $this->x_left_margin += $this->y_tick_label_width;
+
+        if ($this->y_tick_pos == 'plotleft' || $this->y_tick_pos == 'both')
+            $this->x_left_margin += $this->y_tick_length * 2;
+
+        // Right title, ticks and tick labels
         $this->x_right_margin = $this->safe_margin;
         
         if ($this->y_title_pos == 'plotright' || $this->y_title_pos == 'both')
             $this->x_right_margin += $this->y_title_width + $this->safe_margin;
             
         if ($this->y_tick_label_pos == 'plotright' || $this->y_tick_label_pos == 'both')
-            $this->x_right_margin += $this->y_tick_label_width + $this->y_tick_length * 2;
+            $this->x_right_margin += $this->y_tick_label_width;
         
+        if ($this->y_tick_pos == 'plotright' || $this->y_tick_pos == 'both')
+            $this->x_right_margin += $this->y_tick_length * 2;
+
 
         $this->x_tot_margin = $this->x_left_margin + $this->x_right_margin;
         $this->y_tot_margin = $this->y_top_margin + $this->y_bot_margin;
@@ -1709,11 +1724,11 @@ class PHPlot {
     }
     
     function SetYTickPos($which_tp) { 
-        $this->y_tick_position = $which_tp;  //plotleft, plotright, both, yaxis, none
+        $this->y_tick_pos = $which_tp;  //plotleft, plotright, both, yaxis, none
         return true;
     }
     function SetXTickPos($which_tp) { 
-        $this->x_tick_position = $which_tp; //plotdown, plotup, both, none
+        $this->x_tick_pos = $which_tp; //plotdown, plotup, both, none
         return true;
     }
 
@@ -2057,21 +2072,21 @@ class PHPlot {
         }
 
         //Ticks to the Left of the Plot Area
-        if (($this->y_tick_position == "plotleft") || ($this->y_tick_position == "both") ) { 
+        if (($this->y_tick_pos == "plotleft") || ($this->y_tick_pos == "both") ) { 
             ImageLine($this->img,(-$this->x_tick_length+$yaxis_x),
                       $y_pixels,$yaxis_x,
                       $y_pixels, $this->ndx_tick_color);
         }
 
         //Ticks to the Right of the Plot Area
-        if (($this->y_tick_position == "plotright") || ($this->y_tick_position == "both") ) { 
+        if (($this->y_tick_pos == "plotright") || ($this->y_tick_pos == "both") ) { 
             ImageLine($this->img,($this->plot_area[2]+$this->x_tick_length),
                       $y_pixels,$this->plot_area[2],
                       $y_pixels,$this->ndx_tick_color);
         }
         
         //Ticks on the Y Axis 
-        if (($this->y_tick_position == "yaxis") ) { 
+        if (($this->y_tick_pos == "yaxis") ) { 
             ImageLine($this->img,$yaxis_x - $this->y_tick_length, $y_pixels,$yaxis_x,$y_pixels,$this->ndx_tick_color);
         }
 
@@ -2212,12 +2227,12 @@ class PHPlot {
             $x_pixels = $this->xtr($x_tmp);
 
             // Bottom Tick
-            if ($this->x_tick_position == 'plotdown' || $this->x_tick_position == 'both') {
+            if ($this->x_tick_pos == 'plotdown' || $this->x_tick_pos == 'both') {
                   ImageLine($this->img,$x_pixels,$this->plot_area[3] + $this->x_tick_length,
                             $x_pixels,$this->plot_area[3], $this->ndx_tick_color);
             }
             // Top Tick
-            if ($this->x_tick_position == 'plotup' || $this->x_tick_position == 'both') {
+            if ($this->x_tick_pos == 'plotup' || $this->x_tick_pos == 'both') {
                 ImageLine($this->img, $x_pixels, $this->plot_area[1] - $this->x_tick_length,
                           $x_pixels, $this->plot_area[1], $this->ndx_tick_color);
             }
