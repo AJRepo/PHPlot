@@ -7,10 +7,9 @@ extract ($_GET, EXTR_OVERWRITE);
 extract ($_POST, EXTR_OVERWRITE);
 
 
-
 //Sample functions
 
-//Linear-linear as a function
+//data-data as a function
 if ($which_data_type =="function") { 
 	//Put function here
 	$dx = ".3";
@@ -21,10 +20,21 @@ if ($which_data_type =="function") {
 		$x = $dx*$i;
 		$data[$i] = array("", $x, $a*sin($x),$a*cos($x),$a*cos($x+1)); 	
 	}
-	$which_data_type = "linear-linear";
+	$which_data_type = "data-data";
+} 
+// MBD, goes with data_sample3.php, $num_data_rows is set there
+else if ($which_data_type == 'data-data-error') {
+    for ($i = 0; $i < $num_data_rows; $i++)
+        eval ("\$data[\$i] = \$data_row$i; ");
+/*        
+    header("Content: text/html");
+    echo "<pre>";
+    print_r ($data);
+    echo "</pre>";
+*/    
 } else { 
 	while (list($key, $val) = each($data_row0)) {
-		$data[$key] =array($data_row0[$key],$data_row1[$key],$data_row2[$key],$data_row3[$key],$data_row4[$key]); 	
+		$data[$key] = array($data_row0[$key],$data_row1[$key],$data_row2[$key],$data_row3[$key],$data_row4[$key]); 	
 	}
 
 }
@@ -71,7 +81,7 @@ if ($which_data_type =="function") {
 	$graph->SetXAxisPosition($which_xap);
     
 	if ($maxy_in) { 
-		if ($which_data_type = "text-linear") { 
+		if ($which_data_type = "text-data") { 
 			$graph->SetPlotAreaWorld(0,$miny_in,count($data),$maxy_in);
 		}
 	}
