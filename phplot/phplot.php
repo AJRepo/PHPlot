@@ -1201,10 +1201,10 @@ class PHPlot {
      */
     function SetYDataLabelPos($which_ydlp)
     {
-        $this->y_data_label_pos = $this->CheckOption($which_ydlp, 'plotleft, plotright, both, yaxis, all, none',
+        $this->y_data_label_pos = $this->CheckOption($which_ydlp, 'plotleft, plotright, both, yaxis, all, plotin, none',
                                                       __FUNCTION__);
-        if ($which_ydlp != 'none')
-            $this->y_tick_label_pos = 'none';
+        if ($which_ydlp != 'plotin')
+            $this->y_data_label_pos = 'none';
 
         return TRUE;
     }
@@ -2963,6 +2963,34 @@ class PHPlot {
 
 
     /*!
+     * Draws the data label associated with a point in the plot at specified x/y world position.
+     * Calling of this function in DrawLines(), etc is decided after x_data_label_pos value.
+     * what the setting is (for plots that need it, like DrawSquared())
+     */
+    function DrawDataLabel($which_font, $which_angle, $x_world, $y_world, $which_color, $which_text,
+                      $which_halign = 'center', $which_valign = 'top', $x_adjustment=0, $y_adjustment=0) 
+    {
+        $data_label = $this->FormatLabel('y', $which_text);
+        //since DrawDataLabel is going to be called alot - perhaps for speed it is better to 
+        //not use this if statement and just always assume which_font is x_label_font (ditto for color).
+        if ( empty($which_font) ) 
+            $which_font = $this->x_label_font;
+
+        $which_angle = empty($which_angle)?'0':$this->x_label_angle;
+
+        if ( empty($which_color) ) 
+            $which_color = $this->ndx_title_color;
+
+        $x_pixels = $this->xtr($x_world) + $x_adjustment;
+        $y_pixels = $this->ytr($y_world) + $y_adjustment;
+
+        $this->DrawText($which_font, $which_angle, $x_pixels, $y_pixels,
+                        $which_color, $which_text, $which_halign, $which_valign);
+
+        return TRUE;
+
+    }
+    /*!
      * Draws the data label associated with a point in the plot.
      * This is different from x_labels drawn by DrawXTicks() and care
      * should be taken not to draw both, as they'd probably overlap.
@@ -3766,6 +3794,13 @@ class PHPlot {
                     }
                     // Draw the bar
                     ImageFilledRectangle($this->img, $x1, $y1, $x2, $y2, $this->ndx_data_colors[$idx]);
+
+                    //Draw the Value If you want it IN the bar use valign=bottom, 
+                    //               if you want it on top use valign=top and push up a bit
+                    if ( $this->y_data_label_pos == 'plotin' ) 
+                        $this->DrawDataLabel('',NULL,$row,$this->data[$row][$record],'',$this->data[$row][$record],
+                                         'left','top',2+($x2-$x1)/2,-10);
+
                 }
             }   // end for
         }   // end for
