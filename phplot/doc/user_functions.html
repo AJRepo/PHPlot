@@ -121,9 +121,6 @@ the half-width of the tee is set by <b>SetErrorBarSize</b>
 <p><DT><B>SetHorizTickIncrement($which_ti)</B>
 <DD>User Function: Set where to place the X-tick marks.
 
-<p><DT><B>SetImageArea($which_iw,$which_ih)</B>
-<DD>User Function: Sets the size of the image in pixels.
-
 <p><DT><B>SetNumHorizTicks($which_nt)</B>
 <DD>User Function: Use this or SetHorizTickIncrements but not both.
 
@@ -155,6 +152,10 @@ $which_prec is an integer which represents the number of digits
 displayed to the right of the decimal. This uses the number_format
 command in PHP.
 
+<p><DT><B>SetShading($which_s)</B>
+<DD>User Function: Set the length of the shadows for shading bar charts
+The color used is the LightGridColor See <b>SetLightGridColor</b>. <br>
+
 <p><DT><B>SetTickLength($which_tl)</B>
 <DD>User Function: Set the length of the tick in pixels for the x axis and y axis.
 $which_color can be either a name like "black" or an rgb color array
@@ -172,6 +173,12 @@ is in world coordinates.
 <p><DT><B>SetVertTickIncrement($which_ti)</B>
 <DD>User Function: Set the distance between tick marks on the Y axis. $which_ti
 is in world coordinates.
+
+<p><DT><b>SetXDatalabelMaxlength($which_xdlm)</b>
+<DD>User Function: Sets the maximum length of the datalabels on the x-axis. 
+This adjusts the margins if the angle of the labels is not 0. 
+
+<p>
 
 <p><DT><b>SetXGridLabelType($which_xtf)</b>
 <DD>User Function: Can be "time", "title", "none", "default" or "data". <br>

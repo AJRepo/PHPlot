@@ -10,7 +10,7 @@ which in GD is relative to the origin at the upper left
 side of the image.
 */
 
-//PHPLOT Version 4.4.4
+//PHPLOT Version 4.4.5
 //Requires PHP 3.0.2 or later 
 
 
@@ -22,8 +22,8 @@ class PHPlot{
 	var $session_set = '';
 	var $draw_plot_area_background = '';
 
-	var $image_width  = 600;	//Total Width in Pixels (world coordinates)
-	var $image_height = 400; 	//Total Height in Pixels (world coordinates)
+	var $image_width;	//Total Width in Pixels 
+	var $image_height; 	//Total Height in Pixels
 	var $image_border_type = ''; //raised, plain, ''
 	var $x_left_margin;
 	var $y_top_margin;
@@ -36,12 +36,11 @@ class PHPlot{
 	var $yscale_type = 'linear';
 
 //Use for multiple plots per image
-	var	$background_done = 0; //Set to 1 after background image first drawn
 	var $print_image = 1;  //Used for multiple charts per image. 
-
 
 //Fonts
 	var $use_ttf  = 0;		  //Use TTF fonts (1) or not (0)
+	var $font_path = './';  //To be added 
 	var $font = './benjamingothic.ttf';
 
 	var $small_ttffont_size = 12; //
@@ -79,7 +78,7 @@ class PHPlot{
 	var $y_label_angle = 90;
 
 //Formats
-	var $file_format = 'gif';
+	var $file_format = 'png';
 	var $file_name = '';  //For output to a file instead of stdout
 
 //Plot Colors
@@ -135,9 +134,9 @@ class PHPlot{
 	var $legend = '';  //an array
 	var $legend_x_pos;
 	var $legend_y_pos;
-	var $title_txt = '';
-	var $y_label_txt = '';
-	var $x_label_txt = '';
+	var $title_txt = '       ';
+	var $y_label_txt = '     ';
+	var $x_label_txt = '     ';
 
 //DataAxis Labels (on each axis)
 	var $y_grid_label_type = 'data';    //data, none, time, other
@@ -170,6 +169,7 @@ class PHPlot{
 	function PHPlot($which_width=600,$which_height=400,$which_output_file="",$which_input_file="") {
 
 		$this->SetRGBArray('2'); 
+		$this->background_done = 0; //Set to 1 after background image first drawn
 
 		if ($which_output_file != "") { $this->SetOutputFile($which_output_file);  };
 
@@ -684,6 +684,11 @@ class PHPlot{
 	function SetPlotBgColor($which_color) {
 		$this->plot_bg_color= $which_color;
 		$this->ndx_plot_bg_color= $this->SetIndexColor($which_color);
+		return true;
+	}
+
+	function SetShading($which_s) { 
+		$this->shading = $which_s;
 		return true;
 	}
 
@@ -1440,7 +1445,6 @@ class PHPlot{
 		ImageLine($this->img,$this->plot_area[0]+1,$this->ytr($this->x_axis_position),
 				$this->xtr($this->plot_max_x)-1,$this->ytr($this->x_axis_position),$this->ndx_tick_color);
 
-
 		//X Ticks and Labels
 		if ($this->data_type != 'text-data') { //labels for text-data done at data drawing time for speed.
 			$this->DrawHorizontalTicks();
@@ -1756,11 +1760,11 @@ class PHPlot{
 				$lab_size = array($this->small_font_width*StrLen($lab), $this->small_font_height*3);
 				if ($this->x_datalabel_angle == 90) {
 					$y = $this->ytr($y_world) - $this->small_font_width*StrLen($lab); //in pixels
-					$x = $this->ytr($x_world) - $this->small_font_height;
+					$x = $this->xtr($x_world) - $this->small_font_height;
 					ImageStringUp($this->img, $this->small_font,$x, $y ,$lab, $this->axis_font);
 				} else {
 					$y = $this->ytr($y_world) - $this->small_font_height; //in pixels
-					$x = $this->ytr($x_world) - ($this->small_font_width*StrLen($lab))/2;
+					$x = $this->xtr($x_world) - ($this->small_font_width*StrLen($lab))/2;
 					ImageString($this->img, $this->small_font,$x, $y ,$lab, $this->axis_font);
 				}
 			}
@@ -1804,7 +1808,6 @@ class PHPlot{
 
 		ImageArc($this->img, $xpos, $ypos, $diameter, $diameter, 0, 360, $this->ndx_grid_color);
 
-		//foreach ...
 		reset($this->data_values);
 		while (list(, $row) = each($this->data_values)) {
 			//Get sum of each type
@@ -1828,11 +1831,9 @@ class PHPlot{
 			$i++;
 		}
 
-//echo "$i, $sumarr[0], $sumarr[1], $sumarr[2], $sumarr[3], $sumarr[4], $total<br>";
 		$color_index = 0;
 		$start_angle = 0;
 
-		//foreach($sumarr as $val)
 		reset($sumarr);
 		while (list(, $val) = each($sumarr)) {
 			if ($color_index >= count($this->ndx_data_color)) $color_index=0;  //data_color = array
@@ -2329,7 +2330,10 @@ class PHPlot{
 				} else {
 					// Draw Bars ($v)
 
-					$x1 = $x_now - $this->data_group_space + ($this->records_per_group-$k)*$this->record_bar_width;
+					//Draw R2L
+					//$x1 = $x_now - $this->data_group_space + ($this->records_per_group-$k)*$this->record_bar_width;
+					//Draw L2R
+					$x1 = $x_now - $this->data_group_space + ($k-1)*$this->record_bar_width;
 					$x2 = $x1 + $this->record_bar_width*$this->bar_width_adjust; 
 
 					if ($v < $this->x_axis_position) {
@@ -2346,15 +2350,15 @@ class PHPlot{
 					$bordercol = $this->ndx_data_border_color[$colbarcount];
 
 					if ((strval($v) != "") ) {   //Allow for missing Y data 
-						if ($this->shading == 1) {
+						if ($this->shading > 0) {
+							for($i=0;$i<($this->shading);$i++) { 
 							//Shading set in SetDefaultColors
-							ImageFilledRectangle($this->img, $x1+1, $y1-1, $x2+1, $y2-1, $this->ndx_i_light);
-							ImageFilledRectangle($this->img, $x1+2, $y1-2, $x2+2, $y2-2, $this->ndx_i_light);
+							ImageFilledRectangle($this->img, $x1+$i, $y1-$i, $x2+$i, $y2-$i, $this->ndx_i_light);
+							}
 						}
 
 						ImageFilledRectangle($this->img, $x1, $y1, $x2, $y2, $barcol);
 						ImageRectangle($this->img, $x1, $y1, $x2, $y2, $bordercol);
-						//ImageRectangle($this->img, $x1, $y1, $x2, $y2, $this->ndx_text_color);
 					} 
 
 					$color_index++;
