@@ -21,11 +21,11 @@ automatic values.
 <tr>
   <td colspan="2">
   <?php
-      if ($_GET['which_data_type'] == "text-linear")
+      if ($_GET['which_data_type'] == "text-data")
           include("data_sample1.php"); 
-      elseif ($_GET['which_data_type'] == "linear-linear")
+      elseif ($_GET['which_data_type'] == "data-data")
           include("data_sample2.php");
-      elseif ($_GET['which_data_type'] == "linear-linear-error")
+      elseif ($_GET['which_data_type'] == "data-data-error")
           include("data_sample3.php");
       elseif ($_GET['which_data_type'] == "function") 
           include("data_sample4.php");

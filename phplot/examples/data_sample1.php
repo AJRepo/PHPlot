@@ -1,13 +1,13 @@
 <p>
-Data type: <a href="format_chart.php?which_data_type=text-linear">text-linear</a>//
-<a href="format_chart.php?which_data_type=linear-linear">linear-linear</a>//
+Data type: <a href="format_chart.php?which_data_type=text-data">text-data</a>//
+<a href="format_chart.php?which_data_type=data-data">data-data</a>//
 <a href="format_chart.php?which_data_type=function">function</a>//
-<a href="format_chart.php?which_data_type=linear-linear-error">linear-linear-error</a><br />
+<a href="format_chart.php?which_data_type=data-data-error">data-data-error</a><br />
 </p>
 <p>
-Data: (Text-Linear)<br />
+Data type: (Text-data)<br />
 </p>
-<input type="hidden" name="which_data_type" value="text-linear" />
+<input type="hidden" name="which_data_type" value="text-data" />
 <table border=1>
  <tr>
   <td>title (x axis)</td><td>ydata 1</td><td>ydata 2</td>
@@ -47,11 +47,11 @@ Data: (Text-Linear)<br />
 <p>
 Graph type:
 <select name="which_plot_type">
-  <option value="bars">Bars (text-linear data only)</option>
+  <option value="bars">Bars (text-data data only)</option>
   <option value="lines">Lines</option>
-  <option value="pie">Pie (text-linear data only)</option>
+  <option value="pie">Pie (text-data data only)</option>
   <option value="linepoints">Line and points</option>
   <option value="points">Points</option>
-  <option value="area">Area (text-linear data only)</option>
+  <option value="area">Area (text-data data only)</option>
 </select>
 </p>

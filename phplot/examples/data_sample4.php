@@ -1,14 +1,14 @@
 <p>
 Data Type: 
-<a href="format_chart.php?which_data_type=text-linear">text-linear</a>//
-<a href="format_chart.php?which_data_type=linear-linear">linear-linear</a>//
+<a href="format_chart.php?which_data_type=text-data">text-data</a>//
+<a href="format_chart.php?which_data_type=data-data">data-data</a>//
 <a href="format_chart.php?which_data_type=function">function</a>//
-<a href="format_chart.php?which_data_type=linear-linear-error">linear-linear-error</a>
+<a href="format_chart.php?which_data_type=data-data-error">data-data-error</a>
 </p>
 <p>
 <pre>
 <input type="hidden" name="which_data_type" value="function" />
-Linear-linear as a function (just press submit)
+data-data as a function (just press submit)
 	$dx = ".3";
 	$max = 6.4;
 	$maxi = $max/$dx;

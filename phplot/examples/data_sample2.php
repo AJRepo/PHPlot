@@ -1,12 +1,12 @@
 <p>
 Data type: 
- <a href="format_chart.php?which_data_type=text-linear">text-linear</a>//
- <a href="format_chart.php?which_data_type=linear-linear">linear-linear</a>//
+ <a href="format_chart.php?which_data_type=text-data">text-data</a>//
+ <a href="format_chart.php?which_data_type=data-data">data-data</a>//
  <a href="format_chart.php?which_data_type=function">function</a>//
- <a href="format_chart.php?which_data_type=linear-linear-error">linear-linear-error</a>
+ <a href="format_chart.php?which_data_type=data-data-error">data-data-error</a>
 </p>
 <?php 
-//linear-linear as just data
+//data-data as just data
 		$data = array(
 			array("label 0", 0, 2, 5 ), 	
 			array("label 1", 2, 3, 4 ),
@@ -16,8 +16,8 @@ Data type:
 		);
 ?>
 <p>
-Data: (Linear-Linear)<br />
-<input type="hidden" name="which_data_type" value="linear-linear" />
+Data: (data-data)<br />
+<input type="hidden" name="which_data_type" value="data-data" />
 <table border=1>
  <tr>
   <td>Title (data label)</td><td>X data</td><td>Y data 1</td>
