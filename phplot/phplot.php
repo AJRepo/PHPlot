@@ -10,6 +10,8 @@ which in GD is relative to the origin at the upper left
 side of the image.
 */
 
+//PHPLOT Version 4.3.5
+
 //GLOBAL VARIABLES AND FUNCTIONS
 	$color_array = 1;  	//If this is set to 1 then include small list
 						//If 2 then include large list
@@ -105,6 +107,9 @@ class PHPlot{
 //Data
 	var $data_type = "text-data"; //text-data, data-data-error, data-data 
 	var $plot_type= "linepoints"; //bars, lines, linepoints, area, points, pie, thinbarline
+	var $line_width = 2;
+	var $line_style = array("solid","solid","solid","dashed"); //Solid or dashed lines
+
 	var $point_size = 10;
 	var $point_shape = "diamond"; //rect,circle,diamond,triangle,dot,line,halfline
 	var $error_bar_shape = "tee"; //tee, line
@@ -126,7 +131,6 @@ class PHPlot{
 	var $y_precision = "1";
 	var $x_precision = "1";
 	var $si_units = "";
-	var $line_width = 2;
 
 //Labels
 	var $legend;  //an array
@@ -746,6 +750,7 @@ class PHPlot{
 				$this->y_top_margin = $title_size[1] * 4;
 			} else { 
 				$this->y_top_margin = $title_size[1] * ($nbLines+3);
+			}
 			$this->y_bot_margin = $this->x_label_height ;
 			$this->x_left_margin = $this->y_label_width * 2 + $this->tick_length;
 			$this->x_right_margin = 33.0; // distance between right and end of x axis in pixels 
