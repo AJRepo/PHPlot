@@ -7,5 +7,6 @@ $graph->SetDataType("linear-linear");
 $graph->SetDataValues($example_data);
 //$graph->DoMovingAverage(4,1,1);
 $graph->DoScaleData(1,1);
+$graph->SetLegendPixels(100,100,"");
 $graph->DrawGraph();
 ?>

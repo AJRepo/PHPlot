@@ -88,7 +88,7 @@ class PHPlot{
 	var $y_label_angle = 90;
 
 //Formats
-	var $file_format = "png";
+	var $file_format = "gif";
 //Plot Colors
 	var $bg_color;
 	var $plot_bg_color;
@@ -124,6 +124,8 @@ class PHPlot{
 	var $si_units = "";
 //Labels
 	var $legend;  //an array
+	var $legend_x_pos;
+	var $legend_y_pos;
 	var $title_txt = "Title";
 	var $y_label_txt = "Y Data";
 	var $x_label_txt = "X Data";
@@ -182,6 +184,21 @@ class PHPlot{
 
 	function SetLegend($which_leg){
 		$this->legend = $which_leg;
+		return true;
+	}
+
+	function SetLegendPixels($which_x,$which_y,$which_type) { 
+		//which_type not yet used
+		$this->legend_x_pos = $which_x;
+		$this->legend_y_pos = $which_y;
+		return true;
+	}
+
+	function SetLegendWorld($which_x,$which_y,$which_type) { //
+		//which_type not yet used
+		//Must be called after scales are set up. 
+		$this->legend_x_pos = $this->xtr($which_x);
+		$this->legend_y_pos = $this->ytr($which_y);
 		return true;
 	}
 
@@ -2015,6 +2032,9 @@ class PHPlot{
 		if ((!$which_x1) || (!$which_y1) ) {
 			$box_start_x = $this->plot_area[2] - $this->small_font_width*($max_legend_length+4);
 			$box_start_y = $this->plot_area[1] + 4;
+		} else { 
+			$box_start_x = $which_x1;
+			$box_start_y = $which_y1;
 		}
 
 	//Lower Right
@@ -2042,7 +2062,7 @@ class PHPlot{
 			$y_pos = $box_start_y + $this->small_font_height*($i)*($line_spacing) + $vert_margin;
 
 			ImageString($this->img, $this->small_font,
-			$this->plot_area[2]-$this->small_font_width*(strlen($leg)+3),
+			$box_start_x + $this->small_font_width*( $max_legend_length - strlen($leg) + 1 ) ,
 			$y_pos,
 			$leg, $this->text_color);
 
@@ -2175,7 +2195,7 @@ class PHPlot{
 			}
 
 			if ($this->legend) {
-				$this->DrawLegend("","","");
+				$this->DrawLegend($this->legend_x_pos,$this->legend_y_pos,"");
 			}
 
 		}
