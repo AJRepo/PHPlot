@@ -18,7 +18,11 @@
 if (! defined(__FUNCTION__))
     define(__FUNCTION__, '__FUNCTION__ Requires at least PHP 4.3.0.');
 
+define ('MINY', -1);        // Indexes in $data (for DrawXDataLine())
+define ('MAXY', -2);
+
 error_reporting(E_ALL);
+
 
 class PHPlot {
 
@@ -99,7 +103,7 @@ class PHPlot {
     var $x_data_label_pos = 'plotdown';     // plotdown, plotup, both, plot, all, none
     var $y_data_label_pos = 'plotleft';     // plotleft, plotright, both, plot, all, none
 
-    var $draw_x_data_label_lines = FALSE;   // Draw a line from the data point to the axis?
+    var $draw_x_data_label_lines = TRUE;   // Draw a line from the data point to the axis?
     var $draw_y_data_label_lines = FALSE;   // TODO
 
     // Label types: (for tick, data and plot labels)
@@ -1173,7 +1177,8 @@ class PHPlot {
                         $error_message, 'center', 'center');
 
         $this->PrintImage();
-        return TRUE;
+        exit;
+//        return TRUE;
     }
 
 /////////////////////////////////////////////
@@ -1236,10 +1241,11 @@ class PHPlot {
 
     /*!
      * Sets type for tick and data labels on X axis.
+     * \note 'title' type left for backwards compatibility.
      */
     function SetXLabelType($which_xlt) 
     {
-        $this->x_label_type = $this->CheckOption($which_xlt, 'data, time', __FUNCTION__);
+        $this->x_label_type = $this->CheckOption($which_xlt, 'data, time, title', __FUNCTION__);
         return TRUE;
     }
 
@@ -1629,35 +1635,39 @@ class PHPlot {
     }
 
     /*!
-     * Assuming numerical indices might be useful if we replace foreachs with fors or do..whiles
-     * which sometimes are faster.
+     * Copy the array passed as data values. We convert to numerical indexes, for its
+     * use for (or while) loops, which sometimes are faster. Performance improvements
+     * vary from 28% to 49% in plot drawing functions.
      */
     function SetDataValues(&$which_dv) 
     {
-        /////// Copy the array passed into $data
-
         $this->num_data_rows = count($which_dv);
-        $this->total_records = 0;               // Perform some useful calculations too
+        $this->total_records = 0;               // Perform some useful calculations.
         $this->records_per_group = 1;           
         for ($i = 0, $recs = 0; $i < $this->num_data_rows; $i++) {
             // Copy
-            $this->data[$i] = array_values($which_dv[$i]);   // convert to numeric indices.
+            $this->data[$i] = array_values($which_dv[$i]);   // convert to numerical indices.
 
             // Compute some values
             $recs = count($this->data[$i]); 
             $this->total_records += $recs;
+
             if ($recs > $this->records_per_group)
                 $this->records_per_group = $recs;
 
             $this->num_recs[$i] = $recs;
         }
+    }
 
-        //////// Pad styles arrays for later use by plot drawing functions:
-        // This removes the need for $max_data_colors, etc. and $color_index = $color_index % $max_data_colors
-        // in DrawBars(), DrawLines(), etc.
-
-        // FIXME: arrays should be padded with themselves, to mimic previous behaviour.
-
+    /*!
+     * Pad styles arrays for later use by plot drawing functions:
+     * This removes the need for $max_data_colors, etc. and $color_index = $color_index % $max_data_colors
+     * in DrawBars(), DrawLines(), etc.
+     *
+     * FIXME: arrays should be padded with themselves, to mimic previous behaviour.
+     */
+    function PadArrays()
+    {
         $this->line_widths = array_pad($this->line_widths, $this->records_per_group, 1);
         $this->line_styles = array_pad($this->line_styles, $this->records_per_group, 'solid');
 
@@ -1771,8 +1781,8 @@ class PHPlot {
                 $this->PrintError("FindDataLimits(): Unknown data type '$data_type'.");
             break;
             }
-            $this->data[$i][] = $miny;      // This row's min Y, for DrawXDataLine
-            $this->data[$i][] = $maxy;      // This row's max Y, for DrawXDataLine
+            $this->data[$i][MINY] = $miny;      // This row's min Y, for DrawXDataLine()
+            $this->data[$i][MAXY] = $maxy;      // This row's max Y, for DrawXDataLine()
             $minminy = ($miny < $minminy) ? $miny : $minminy;   // global min
             $maxmaxy = ($maxy > $maxmaxy) ? $maxy : $maxmaxy;   // global max
         }
@@ -2415,7 +2425,7 @@ class PHPlot {
     }
 
     /*
-     * 
+     * \note Horizontal grid lines overwrite horizontal axis with y=0, so call this first, then DrawXAxis()
      */
     function DrawYAxis() 
     {
@@ -2423,9 +2433,9 @@ class PHPlot {
         $this->DrawYTicks();
 
         // Draw Y axis at X = y_axis_x_pixels
-        ImageLine($this->img, $this->y_axis_x_pixels, $this->plot_area[1], 
-                  $this->y_axis_x_pixels, $this->plot_area[3], $this->ndx_grid_color);
-
+      ImageLine($this->img, $this->y_axis_x_pixels, $this->plot_area[1], 
+                $this->y_axis_x_pixels, $this->plot_area[3], $this->ndx_grid_color);
+                  
         return TRUE;
     }
 
@@ -2496,7 +2506,7 @@ class PHPlot {
                             $this->plot_area[2] + $this->y_tick_length * 1.5, $which_ypix, 
                             $this->ndx_text_color, $which_ylab, 'left', 'center');
         }
-   } // Function _DrawYTick()
+   } // Function DrawYTick()
 
 
     /*!
@@ -2523,14 +2533,14 @@ class PHPlot {
             $delta_y = ($this->plot_max_y - $this->plot_min_y) / 10 ;
         }
 
-        // NOTE: When working with decimals, because of approximations when adding $delta_y, 
+        // NOTE: When working with floats, because of approximations when adding $delta_y, 
         // $y_tmp never equals $y_end  at the for loop, so one spurious line would  get drawn where 
         // not for the substraction to $y_end here.
         $y_tmp = (double)$this->plot_min_y;
         $y_end = (double)$this->plot_max_y - ($delta_y/2);
 
-        if (! $this->skip_bottom_tick)
-            $y_end += $delta_y;
+        if ($this->skip_bottom_tick)
+            $y_tmp += $delta_y;
 
         if ($this->skip_top_tick)
             $y_end -= $delta_y;
@@ -2641,6 +2651,7 @@ class PHPlot {
         return;
     } // function DrawXTicks
 
+
     /*!
      * 
      */
@@ -2682,10 +2693,10 @@ class PHPlot {
      * This is different from x_labels drawn by DrawXTicks() and care
      * should be taken not to draw both, as they'd probably overlap.
      * Calling of this function in DrawLines(), etc is decided after x_data_label_pos value.
-     * Leave last parameter as default, to avoid the drawing of vertical lines, no matter
-     * waht the setting is (for plots that need it)
+     * Leave the last parameter out, to avoid the drawing of vertical lines, no matter
+     * what the setting is (for plots that need it, like DrawSquared())
      */
-    function DrawXDataLabel($xlab, $xpos, $line=FALSE) 
+    function DrawXDataLabel($xlab, $xpos, $row=FALSE) 
     {
         $xlab = $this->FormatLabel('x', $xlab);
    
@@ -2701,8 +2712,8 @@ class PHPlot {
                             $this->plot_area[1] - $this->x_tick_length , 
                             $this->ndx_text_color, $xlab, 'center', 'top');
 
-        if ($line && $this->draw_x_data_label_lines)
-            $this->DrawXDataLine($xpos, $line);
+        if ($row && $this->draw_x_data_label_lines)
+            $this->DrawXDataLine($xpos, $row);
     }
     
     /*!
@@ -2710,8 +2721,8 @@ class PHPlot {
      * Which lines are drawn depends on the value of x_data_label_pos,
      * and whether this is at all done or not, on draw_x_data_label_lines
      *
-     * \param xpos position in pixels of the line.
-     * \param row index of the data row being drawn.
+     * \param xpos int position in pixels of the line.
+     * \param row int index of the data row being drawn.
      */
     function DrawXDataLine($xpos, $row) 
     {
@@ -2727,16 +2738,16 @@ class PHPlot {
         if ($this->x_data_label_pos == 'both') {
             ImageLine($this->img, $xpos, $this->plot_area[3], $xpos, $this->plot_area[1], $style);
         }         
-        // Lines coming from the plottom of the plot
+        // Lines coming from the bottom of the plot
         else if ($this->x_data_label_pos == 'plotdown') {
-            // See FindDataLimits() to see why the last index
-            $ypos = $this->ytr($this->data[$row][$this->num_recs[$row]+1]);
+            // See FindDataLimits() to see why 'MAXY' index.
+            $ypos = $this->ytr($this->data[$row][MAXY]);
             ImageLine($this->img, $xpos, $ypos, $xpos, $this->plot_area[3], $style);
         }
         // Lines coming from the top of the plot
         else if ($this->x_data_label_pos == 'plotup') {
-            // See FindDataLimits() to see why the last but one index.
-            $ypos = $this->ytr($this->data[$row][$this->num_recs[$row]]);
+            // See FindDataLimits() to see why 'MINY' index.
+            $ypos = $this->ytr($this->data[$row][MINY]);
             ImageLine($this->img, $xpos, $this->plot_area[1], $xpos, $ypos, $style);
         }
     } 
@@ -3376,11 +3387,11 @@ class PHPlot {
             $x_now_pixels = $this->xtr($x_now);             // Absolute coordinates
 
             if ($this->x_data_label_pos != 'none')          // Draw X Data labels?
-                $this->DrawXDataLabel($this->data[$row][0], $x_now_pixels); // note there is no last param.
+                $this->DrawXDataLabel($this->data[$row][0], $x_now_pixels); // notice there is no last param.
                 
             // Draw Lines
             for ($idx = 0; $record < $this->num_recs[$row]; $record++, $idx++) {
-                if (is_numeric($this->data[$row][$record])) {           //Allow for missing Y data 
+                if (is_numeric($this->data[$row][$record])) {               // Allow for missing Y data 
                     $y_now_pixels = $this->ytr($this->data[$row][$record]);
 
                     if ($start_lines[$idx] == TRUE) {
@@ -3507,6 +3518,8 @@ class PHPlot {
             $this->x_tick_pos = 'none';
         }
 
+        $this->PadArrays();                         // Pad color and style arrays to fit records per group.
+
         $this->DrawBackground();
 
         $this->DrawImageBorder();
@@ -3520,8 +3533,8 @@ class PHPlot {
 
         switch ($this->plot_type) {
         case 'bars':
-            $this->DrawXAxis();                 // We don't want the grid to overwrite bar charts
-            $this->DrawYAxis();                 // so we draw it first
+            $this->DrawYAxis();     // We don't want the grid to overwrite bar charts
+            $this->DrawXAxis();     // so we draw it first. Also, Y must be drawn before X (see DrawYAxis())
             $this->DrawBars();
             $this->DrawPlotBorder();
             break;
@@ -3577,8 +3590,8 @@ class PHPlot {
         }   // end switch
 
         if ($this->plot_type != 'pie' && $this->plot_type != 'bars') {
-            $this->DrawXAxis();
             $this->DrawYAxis();
+            $this->DrawXAxis();
             $this->DrawPlotBorder();
         }
         if ($this->legend)
@@ -3742,7 +3755,7 @@ class PHPlot {
     }
 
     /*!
-     * \deprecated  Use SetYTickLabelType()
+     * \deprecated  Use SetYLabelType()
      */
     function SetYGridLabelType($which_yglt) 
     {
@@ -3750,7 +3763,7 @@ class PHPlot {
     }
 
     /*!
-     * \deprecated  Use SetXTickLabelType()
+     * \deprecated  Use SetXLabelType()
      */
     function SetXGridLabelType($which_xglt) 
     {
