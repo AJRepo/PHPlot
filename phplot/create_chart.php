@@ -22,23 +22,27 @@ if ($which_data_type =="function") {
 
 }
 
+
 ////////////////////////////////////////////////
 
+//Required Settings 
 	include("phplot.php");
 	$graph = new PHPlot;
-
 	$graph->SetDataType($which_data_type);  //Must be first thing
-	$graph->SetUseTTF("0");
-	$graph->SetDrawYGrid("1"); // 1 = true
+
 	$graph->SetFileFormat("gif");
 	$graph->SetDataValues($data);
     $graph->SetImageArea($XSIZE_in, $YSIZE_in);
+
+//Optional Settings (Don't need them) 
+	$graph->SetPlotType($which_plot_type);
+	$graph->SetUseTTF("0");
 	$graph->SetVertTickIncrement($which_vti);
 	$graph->SetHorizTickIncrement($which_hti);
     $graph->SetLineWidth("1");
+	$graph->SetDrawYGrid("1"); // 1 = true
 	$graph->SetPointShape("$which_dot");
 	$graph->SetErrorBarShape("$which_error_type");
-	$graph->SetPlotType($which_plot_type);
 	$graph->SetXLabel($xlbl);
 	$graph->SetYLabel($ylbl);
 	$graph->SetTitle($title);
@@ -47,14 +51,17 @@ if ($which_data_type =="function") {
 		array("blue","green","yellow","red"),  //Data Colors
 		array("black")							//Border Colors
 	);  
-if ($maxy_in) { 
-	if ($which_data_type = "text_linear") { 
-		$graph->SetPlotAreaWorld(0,$miny_in,count($data),$maxy_in);
+	if ($maxy_in) { 
+		if ($which_data_type = "text_linear") { 
+			$graph->SetPlotAreaWorld(0,$miny_in,count($data),$maxy_in);
+		}
 	}
-}
+
+	$graph->SetLineStyles(array("dashed","dashed","solid","solid"));
+	$graph->SetLegend(array("A","Bee","Cee","Dee"));
 
 	//$graph->SetPlotAreaWorld(0,100,5.5,1000);
-	//$graph->SetPlotAreaWorld(0,-10,5,35);
+	//$graph->SetPlotAreaWorld(0,-10,6,35);
 	//$graph->SetPlotAreaPixels(150,50,600,400);
 
 /*

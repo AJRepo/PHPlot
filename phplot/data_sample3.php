@@ -3,7 +3,7 @@ Data Type: <A HREF="format_chart.php?which_data_type=text-linear">text-linear</A
 <A HREF="format_chart.php?which_data_type=function">function</A>//
 <A HREF="format_chart.php?which_data_type=linear-linear-error">linear-linear-error</A><br>
 <p>
-Data set as sin and cos.
+Data set as X, Y, Y+, Y-
 <?
 //linear-linear-error
 		$data = array(

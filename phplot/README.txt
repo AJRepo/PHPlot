@@ -32,8 +32,11 @@ or distributed by Microsoft.
 You can get a copy of the GNU GPL at http://www.gnu.org/copyleft/gpl.html
 You can get a copy of the PHP License at http://www.php.net/license.html
 
-Version History
+ 3.6.3 (fix in DrawBars)
+ 3.6.2 (adds DashedLine style for graphing data)
+ 3.6.0 (adds DrawLegend, and changes position of y labels)
+ 3.4.1 (same as 3.4.0 but for y axis also, adds 'none' as label type)
+ 3.4.0 (adds X data in unixtime printed with strftime and minor fixes) 
 Oct 25, 2000: Version 3.01: errorbars and different types of data
 Aug 15, 2000: Version 3: added dots, lines, area, and pie charts
 Aug 12, 1999: version 2: added bars that can be < 0
-
