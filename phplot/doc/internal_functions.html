@@ -7,12 +7,12 @@
 <h2>PHPlot Internal Functions</h2>
 
 <p><DT><B>DrawArea()</B>
-<DD>Internal Function: Draw an Area Chart. $data[] must already be defined as linear-linear
+<DD>Internal Function: Draw an Area Chart. $data[] must already be defined as data-data
 using $data[] = array("title",x,y1,y2,...) Points are placed at (x,y1), (x,y2), ...
 one x-point per $data[] element. <BR>Colors and border colors for each of the y1, y2, ... is set
 by <B>SetDataColors($which_data,$which_border)</B>
 This function is called if
-you use SetPlotType("area") and SetDataType("linear-linear")
+you use SetPlotType("area") and SetDataType("data-data")
 
 
 <p><DT><B>DrawAreaSeries()</B>
@@ -21,7 +21,7 @@ array("title",y1,y2,y3,...) The x axis is divided evenly, one x-point per
 $data[] element. <BR>Colors and border colors for each of the y1, y2, ... is set
 by <B>SetDataColors($which_data,$which_border)</B>
 This function is called if
-you use SetPlotType("area") and SetDataType("text-linear")
+you use SetPlotType("area") and SetDataType("text-data")
 
 <p><DT><B>DrawBackground()</B>
 <DD>Internal Function: Draw the full background of the image on image pointer. Should be used
@@ -35,7 +35,7 @@ array("title",y1,y2,y3,...) The x axis is divided evenly, one x-point per
 $data[] element. <BR>Colors and border colors for each of the y1, y2, ... is set
 by <B>SetDataColors($which_data,$which_border)</B>
 This function is called if
-you use SetPlotType("bars") and SetDataType("text-linear")
+you use SetPlotType("bars") and SetDataType("text-data")
 
 <p><DT><B>DrawDashedLine($x1,$y1,$x2,$y2,$dashed, $space, $color)</B>
 <DD>Internal Function: Called instead of ImageLine when line_style = 'dashed'
@@ -48,27 +48,27 @@ must already be defined as $data[] = array("title",x,y1,y2,...) Where the point
 occurs depends on both the X and Y values. <BR>Colors and border colors for each
 y1, y2, , ... is set by <B>SetDataColors($which_data,$which_border)</B>
 This function is called if
-you use SetPlotType("dots") and SetDataType("linear-linear")
+you use SetPlotType("dots") and SetDataType("data-data")
 
 <p><DT><B>DrawDotSeries()</B>
-<DD>Internal Function: Draw Dots as defined by <B>SetPointType</B> and data in text-linear format.
+<DD>Internal Function: Draw Dots as defined by <B>SetPointType</B> and data in text-data format.
 $data[] must already be defined as $data[] = array("title",y1,y2,...)
 The x axis is divided evenly, one x-point per $data[] element. <BR>
 Colors and border colors
 for each y1, y2, , ... is set by <B>SetDataColors($which_data,$which_border)</B>
 This function is called if
-you use SetPlotType("dots") and SetDataType("text-linear")
+you use SetPlotType("dots") and SetDataType("text-data")
 
 <p><DT><B>DrawDotsError()</B>
 <DD>Internal Function: Draw Dots and Error Bars as defined by <B>SetPointType</B> and
-data in linear-linear-error format. $data[] must already be defined
+data in data-data-error format. $data[] must already be defined
 as $data[] = array("label",x,y,error+,error-)
 Colors and border colors
 for each y1, y2, , ... is set by <B>SetDataColors($which_data,$which_border)</B>
 The shape of the error bars is defined by <B>SetErrorBarShape($which_ebs)</B>
 and <B>SetErrorBarSize($which_ebs)</B> <br>
 This function is called if
-you use SetPlotType("dots") and SetDataType("linear-linear-error")
+you use SetPlotType("dots") and SetDataType("data-data-error")
 
 <p><DT><B>DrawError($error_message)</B>
 <DD>Internal Function: Draw an internal error message printed on the Image directly.
@@ -82,8 +82,8 @@ all the parameters of the graph see <b>Set....</b> functions below.
 <p><DT><B>DrawHorizontalTicks()</B>
 <DD>Internal Function:  Draw the ticks on the X axis.
 The distance between ticks can be defined in a number of ways. <i>Note:
-that for text-linear data its best to let the program handle the
-distance between ticks - the default is  1.</i>  (Text-linear data is data where the data is evenly spaced over
+that for text-data data its best to let the program handle the
+distance between ticks - the default is  1.</i>  (Text-data data is data where the data is evenly spaced over
 the x axis, no x-value is entered)
 
 <p><DT><B>DrawImageBorder()</B>
@@ -94,44 +94,47 @@ generates the raised border look around the image.
 <DD>Internal Function: Draw the Title, X-axis label, and the Y-axis label. This
 really just calls DrawTitle, DrawXLabel, and DrawYLabel.
 
+<p><DT><B>DrawLegend(x,y,type)</B>
+<DD>Internal Function: Draw the Legend. See <b>SetLegendPixels()</b>
+
 <p><DT><B>DrawLines()</B>
-<DD>Internal Function: Draw lines in linear-linear format.
+<DD>Internal Function: Draw lines in data-data format.
 $data[] must already be defined
 as $data[] = array("label",x,y1,y2,....)
 Colors and border colors
 for each y1, y2, , ... is set by <B>SetDataColors($which_data,$which_border)</B>
 This function is called if
-you use SetPlotType("lines") and SetDataType("linear-linear")
+you use SetPlotType("lines") and SetDataType("data-data")
 <br>
 
 <p><DT><B>DrawLineSeries()</B>
-<DD>Internal Function: Draw lines in text-linear format.
+<DD>Internal Function: Draw lines in text-data format.
 $data[] must already be defined
 as $data[] = array("label",y1,y2,y3,....)
 The x axis is divided evenly, one x-point per
 $data[] element. <BR>Colors and border colors for each of the y1, y2, ... is set
 by <B>SetDataColors($which_data,$which_border)</B>
 This function is called if
-you use SetPlotType("lines") and SetDataType("text-linear")
+you use SetPlotType("lines") and SetDataType("text-data")
 
 <p><DT><B>DrawLinesError()</B>
 <DD>Internal Function: Lines and Error Bars as defined by <B>SetPointType</B> and
-data in linear-linear-error format. $data[] must already be defined
+data in data-data-error format. $data[] must already be defined
 as $data[] = array("label",x,y,error+,error-)
 Colors and border colors
 for each y1, y2, , ... is set by <B>SetDataColors($which_data,$which_border)</B>
 The shape of the error bars is defined by <B>SetErrorBarShape($which_ebs)</B>
 and <B>SetErrorBarSize($which_ebs)</B>
 This function is called if
-you use SetPlotType("lines") and SetDataType("linear-linear-error")
+you use SetPlotType("lines") and SetDataType("data-data-error")
 
 <p><DT><B>DrawPieChart()</B>
-<DD>Internal Function: Draw pie chart. Data is in text-linear format. $data[] must
+<DD>Internal Function: Draw pie chart. Data is in text-data format. $data[] must
 already been defined as $data[] = array("label",y1,y2,y3,...)<BR>
 Colors and border colors for each of the y1, y2, ... is set
 by <B>SetDataColors($which_data,$which_border)</B>
 This function is called if
-you use SetPlotType("pie") and SetDataType("text-linear")
+you use SetPlotType("pie") and SetDataType("text-data")
 
 <p><DT><B>DrawPlotAreaBackground()</B>
 <DD>Internal Function: Draw the Background - in the color as defined by <b>X</b>
@@ -214,7 +217,7 @@ Overridden by functions like <b>SetPlotBgColor</b>,
 <DD>Internal Function: 1 = Draw the Y grid. Anything else, don't draw the Y grid.
 
 <p><DT><B>SetEqualXCoord()</B>
-<DD>Internal Function: For text-linear graphs set the spacing between
+<DD>Internal Function: For text-data graphs set the spacing between
 data points on the x-axis.
 
 <p><DT><B>SetMargins()</B>

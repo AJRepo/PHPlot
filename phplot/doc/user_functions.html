@@ -43,7 +43,7 @@ entire set of points to be plotted is passed in as a <b>data array</b>
 E.g. Data_array = array(value_array_1,value_array_2,....) <p>
 See below for examples of the various data types: <br>
 
-<LI>text-linear: Data is displayed at equal spacing along the x-axis. Data
+<LI>text-data: Data is displayed at equal spacing along the x-axis. Data
 is passed in as a data array of value arrays. Each element of the data
 array is a position on the x-axis. The first element of the value array is
 the label for that x-axis position, every subsequent element of the value
@@ -61,8 +61,8 @@ Which will display data points at
 (1,1.1), (1,2), (1,3), (1,4), (2,2), (2,3)....<br>
 <IMG SRC="something.png">
 </LI>
-<LI>linear-linear:
-        X-Y data is passed in like text-linear except
+<LI>data-data:
+        X-Y data is passed in like text-data except
 that the second element of the value array is the position along the
 x axis of the data point(s). One data element would be $data[] = (title,x,y1,y2,y3,y4,...)
 or
@@ -77,7 +77,7 @@ $data = array(
 Notice that this is the same as in the previous example except that
 the  x,y data points are at (1.1,2), (1.1,3), (1.1,4), (2,3)...
 </LI>
-<LI>linear-linear-error:
+<LI>data-data-error:
 Again X-Y data is passed in as an array with each value
 array being (data_label,x_position,y_position,error_plus,error_minus)
 </LI>
@@ -172,6 +172,9 @@ default - prints as it is entered. <br>
 <p>
 
 
+<p><DT><b>SetXScaleType($which_xct)</b>
+<DD>Can be "log" or "linear".
+
 <p><DT><b>SetXTimeFormat($which_xtf)</b>
 <DD>User Function: Used for x_grid_label_type="time".
 For the format see the php manual for strftime().  It assumes the x-data values are unix timestamps, and displays them according to the passed format string.
@@ -190,6 +193,8 @@ $graph->SetXTimeFormat("%b %d") ;<br>
 <p><DT><B>SetYLabel($ylbl)</B>
 <DD>User Function: Set the label for the Y axis.
 
+<p><DT><b>SetYScaleType($which_xct)</b>
+<DD>Can be "log" or "linear".
 
 
 <hr>
@@ -206,6 +211,19 @@ not defined.<br>
 <DD>User Function: Set the color of the grid. Defaults to "black"
 $which_color can be either a name like "black" or an rgb color array
 array(int,int,int). <br>
+
+<p><DT><B>SetLegend($which_legend)</B>
+<DD>$which_legend is an array of text for display in a small box
+on the image. If you do not set the position with <b>SetLegendPixels()</b>
+then it puts it in the upper right hand side. 
+
+<p><DT><b>SetLegendPixels($which_x,$which_y,$which_type)</b>
+<DD>Pick the upper left corner of the legend box with
+$which_x and $which_y in pixels. $which_type is reserved
+for future use. 
+
+<p><DT><b>SetLegendWorld($which_x,$which_y,$which_type)</b>
+<DD>Untested and documentation not written. Have Fun!
 
 <p><DT><B>SetLightGridColor ($which_color)</B>
 <DD>User Function: There are two grid colors, this sets the

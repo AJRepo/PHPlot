@@ -41,7 +41,7 @@ class PHPlot{
 	var $y_bot_margin;
 	var $plot_area = array(5,5,600,400);
 	var $x_axis_position = 0;	//Where to draw the X_axis (world coordinates)
-	var $xscale_type = "linear";
+	var $xscale_type = "linear";  //linear or log
 	var $yscale_type = "linear";
 
 //Use for multiple plots per image
