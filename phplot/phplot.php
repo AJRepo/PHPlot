@@ -1037,8 +1037,6 @@ class PHPlot {
         $maxe = 0;  // Maximum value for the +error bar (assume error bars always > 0) 
         $maxt = 0;  // Maximum number of characters in text labels
         
-        reset($this->data_values);
-        
         foreach($this->data_values as $dat) {   // process each row of data
 
             $tmp = 0;
@@ -1051,7 +1049,7 @@ class PHPlot {
                     $maxt = ($val > $maxt) ? $val : $maxt;
 
                     //Find the relative Max and Min
-                    while (list($key, $val) = each($dat)) {
+                    foreach ($dat as $val) {
                         settype($val,"double");
                         $maxy = ($val > $maxy) ? $val : $maxy;
                         $miny = ($val < $miny) ? $val : $miny;
@@ -1072,7 +1070,7 @@ class PHPlot {
                     $maxx = ($val > $maxx) ? $val : $maxx;
                     $minx = ($val < $minx) ? $val : $minx;
 
-                    while (list($key, $val) = each($dat)) {
+                    foreach ($dat as $val) {
                         settype($val,"double");
                         $maxy = ($val > $maxy) ? $val : $maxy;
                         $miny = ($val < $miny) ? $val : $miny;
@@ -2839,47 +2837,50 @@ class PHPlot {
     }
 
     /*!
-     * Draws a styled dot. Uses world coordinates, not absolute
+     * Draws a styled dot. Uses world coordinates.
+     * Supported types: 'halfline', 'line', 'crosshair', 'rect', 'circle', 'dot',
+     * 'diamond', 'triangle'
      */
-    function DrawDot($x_world,$y_world,$dot_type,$color) {
+    function DrawDot($x_world, $y_world, $dot_type, $color) {
+    
         $half_point = $this->point_size / 2;
-        $x1 = $this->xtr($x_world) - $half_point;
-        $x2 = $this->xtr($x_world) + $half_point;
-        $y1 = $this->ytr($y_world) - $half_point;
-        $y2 = $this->ytr($y_world) + $half_point;
+        
+        $x_mid = $this->xtr($x_world);
+        $y_mid = $this->ytr($y_world);
+        
+        $x1 = $x_mid - $half_point;
+        $x2 = $x_mid + $half_point;
+        $y1 = $y_mid - $half_point;
+        $y2 = $y_mid + $half_point;
 
         switch ($dot_type) {
             case "halfline":
-                ImageFilledRectangle($this->img, $x1, $this->ytr($y_world), $this->xtr($x_world), $this->ytr($y_world), $color);
+                ImageLine($this->img, $x1, $y_mid, $x_mid, $y_mid, $color);
                 break;
             case "line":
-                ImageFilledRectangle($this->img, $x1, $this->ytr($y_world), $x2, $this->ytr($y_world), $color);
+                ImageLine($this->img, $x1, $y_mid, $x2, $y_mid, $color);
+                break;
+            case "crosshair":
+                ImageLine($this->img, $x1, $y_mid, $x2, $y_mid, $color);
+                ImageLine($this->img, $x_mid, $y1, $x_mid, $y2, $color);
                 break;
             case "rect":
                 ImageFilledRectangle($this->img, $x1, $y1, $x2, $y2, $color);
                 break;
             case "circle":
-                ImageArc($this->img, $x1 + $half_point, $y1 + $half_point, $this->point_size, $this->point_size, 0, 360, $color);
+                ImageArc($this->img, $x_mid, $y_mid, $this->point_size, $this->point_size, 
+                         0, 360, $color);
                 break;
             case "dot":
-                ImageArc($this->img, $x1 + $half_point, $y1 + $half_point, $this->point_size, $this->point_size, 0, 360, $color);
-                ImageFillToBorder($this->img, $x1 + $half_point, $y1 + $half_point, $color, $color);
+                ImageFilledArc($this->img, $x_mid, $y_mid, $this->point_size, $this->point_size, 
+                               0, 360, $color, IMG_ARC_PIE);
                 break;
             case "diamond":
-                $arrpoints = array(
-                    $x1,$y1 + $half_point,
-                    $x1 + $half_point, $y1,
-                    $x2,$y1 + $half_point,
-                    $x1 + $half_point, $y2
-                );
-
+                $arrpoints = array( $x1,$y_mid, $x_mid, $y1, $x2, $y_mid, $x_mid, $y2);
                 ImageFilledPolygon($this->img, $arrpoints, 4, $color);
                 break;
             case "triangle":
-                $arrpoints = array( $x1, $y1 + $half_point,
-                    $x2, $y1 + $half_point,
-                    $x1 + $half_point, $y2
-                );
+                $arrpoints = array( $x1, $y_mid, $x2, $y_mid, $x_mid, $y2);
                 ImageFilledPolygon($this->img, $arrpoints, 3, $color);
                 break;
             default:
@@ -2890,191 +2891,159 @@ class PHPlot {
     }
 
     /*!
-     * Data comes in as $data[]=("title",x,y,...);
-     * Set first and last datapoints of area
+     * Draw an area plot. Supported data types:
+     *      'text-data'
+     *      'data-data'
      * FIXME: there's a bug with left placement of areas. check the examples
+     * The bug is in min_x calculation in FindDataLimits() or in xtr()
      */
     function DrawArea() {
-        $i = 0;
-        
-        while ($i < $this->records_per_group) {
-            $posarr[$i][] =  $this->xtr($this->min_x);    //x initial
-            $posarr[$i][] =  $this->ytr($this->x_axis_position);     //y initial
-            $i++;
+    
+        // XXX: shouldn't this be elsewhere? (as in FindDataLimits or sth.?)
+        // text-data must be automatically placed along x-axis, starting at 0.5
+        if ($this->data_type == 'text-data')
+        {
+            $min_x = 0.5;
+            $max_x = $this->max_x + 0.5;
+        } else if ($this->data_type == 'data-data') {
+            $min_x = $this->min_x;
+            $max_x = $this->max_x;
         }
-
-        reset($this->data_values);
-        while (list($j, $row) = each($this->data_values)) {
-            $color_index = 0;
             
-            //foreach ($row as $v)
-            while (list($k, $v) = each($row)) {
-                if ($k == 0) {
-                    //Draw Data Labels
-                    $xlab = SubStr($v,0,$this->max_t);
-                } elseif ($k == 1) {
-                    $x = $this->xtr($v);
-                    // DrawXDataLabel interferes with Numbers on x-axis
-                    //$this->DrawXDataLabel($xlab,$x);
-                } else {
-                    // Create Array of points for later
-
-                    $y = $this->ytr($v);
-                    $posarr[$color_index][] = $x;
-                    $posarr[$color_index][] = $y;
-                    $color_index++;
-                }
-            }
+        // Calculate initial points
+        for ($i = 0; $i < $this->records_per_group; $i++) {
+            $posarr[$i][] =  $this->xtr($min_x);                    //x initial
+            $posarr[$i][] =  $this->ytr($this->x_axis_position);    //y initial
         }
+
+        $group = 0;
+        foreach ($this->data_values as $row) {
+            
+            // First extract the label
+            $lab = array_shift($row);
+                
+            // Do we have a value for 'X'?
+           if ($this->data_type == 'data-data') 
+                $x_now = array_shift($row);
+            else
+                $x_now = 0.5 + $group++;    // place text-data at X = 0.5, 1.5, 2.5, etc...
+            
+            $x_now_pixels = $this->xtr($x_now);
+            
+            // Draw X Data labels?
+            if ($this->x_data_label_pos != 'none')
+                $this->DrawXDataLabel($lab, $x_now_pixels);
+           
+            // Create array of points for imagefilledpolygon()
+            $i = 0;
+            foreach ($row as $val) {
+                $y_now_pixels = $this->ytr($val);
+                
+                $posarr[$i][] = $x_now_pixels;
+                $posarr[$i][] = $y_now_pixels;
+                
+                $i++;
+            }
+        }   // end foreach
 
         //Final_points
         for ($i = 0; $i < $this->records_per_group; $i++) {
-            $posarr[$i][] =  $this->xtr($this->max_x);            //x final
+            $posarr[$i][] =  $this->xtr($this->max_x);               //x final
             $posarr[$i][] =  $this->ytr($this->x_axis_position);     //y final
-           }
-
-        $color_index=0;
-
-        //foreach($posarr as $row)
-        reset($posarr);
-        while (list(, $row) = each($posarr)) {
-            if ($color_index >= count($this->ndx_data_color)) $color_index=0;
-            $barcol = $this->ndx_data_color[$color_index];
-            ImageFilledPolygon($this->img, $row, (count($row)) / 2, $barcol);
-            $color_index++;
         }
 
-    }
-
-    function DrawAreaSeries() {
-
-        //Set first and last datapoints of area
-        $i = 0;
-        while ($i < $this->records_per_group) {
-            $posarr[$i][] =  $this->xtr(.5);            //x initial
-            $posarr[$i][] =  $this->ytr($this->x_axis_position);     //y initial
-            $i++;
-        }
-
-        reset($this->data_values);
-        while (list($j, $row) = each($this->data_values)) {
-
+        // Reset the color index
+        $color_index = 0;
+        $max_data_colors = count($this->ndx_data_color);
         
-            $color_index = 0;
-            //foreach ($row as $v)
-            while (list($k, $v) = each($row)) {
-                if ($k == 0) {
-                    //Draw Data Labels
-                    $xlab = SubStr($v,0,$this->max_t);
-                    $this->DrawXDataLabel($xlab,$this->xtr($j + .5));
-                } else {
-                    // Create Array of points for later
-
-                    $x = round($this->xtr($j + .5 ));
-                    $y = round($this->ytr($v));
-                    $posarr[$color_index][] = $x;
-                    $posarr[$color_index][] = $y;
-                    $color_index++;
-                }
-            }
-        }
-
-        //Final_points
-        for ($i = 0; $i < $this->records_per_group; $i++) {
-            $posarr[$i][] =  round($this->xtr($this->max_x + .5));    //x final
-            $posarr[$i][] =  $this->ytr($this->x_axis_position);         //y final
-           }
-
-        $color_index=0;
-
-        //foreach($posarr as $row)
-        reset($posarr);
-        while (list(, $row) = each($posarr)) {
-            if ($color_index >= count($this->ndx_data_color)) $color_index=0;
-            $barcol = $this->ndx_data_color[$color_index];
-//echo "$row[0],$row[1],$row[2],$row[3],$row[4],$row[5],$row[6],$row[7],$row[8],$row[9],$row[10],$row[11],$row[12], $barcol<br>";
-            ImageFilledPolygon($this->img, $row, (count($row)) / 2, $barcol);
+        // Draw the poligons
+        foreach($posarr as $row) {
+            $color_index = $color_index % $max_data_colors;
+            
+            ImageFilledPolygon($this->img, $row, count($row) / 2, $this->ndx_data_color[$color_index]);
+            
             $color_index++;
         }
 
     }
 
+    /*!
+     * Data comes in as $data[]=("title",x,y,...);
+     */
     function DrawLines() {
-        //Data comes in as $data[]=("title",x,y,...);
-        $start_lines = 0;
+    
+        $start_lines = false;
+        $max_data_colors = count($this->ndx_data_color);
+        
+        // Set line width, revert it to 1, at the end
+        imagesetthickness($this->img, $this->line_width);
+        
         if ($this->data_type == "text-data") { 
             $lastx[0] = $this->xtr(0);
             $lasty[0] = $this->xtr(0);
         }
 
-        //foreach ($this->data_values as $row)
-        reset($this->data_values);
-        while (list($j, $row) = each($this->data_values)) {
+        foreach ($this->data_values as $row) {
 
+            // Reset color index
             $color_index = 0;
+            
+            // First extract the label
+            $lab = array_shift($row);
+                
+            // Do we have a value for 'X'?
+           if ($this->data_type == 'data-data') 
+                $x_now = array_shift($row);
+            else
+                $x_now = 0.5 + $group++;    // place text-data at X = 0.5, 1.5, 2.5, etc...
+            
+            $x_now_pixels = $this->xtr($x_now);
+ 
             $i = 0; 
-            //foreach ($row as $v)
-            while (list($k, $v) = each($row)) {
-                if ($k == 0) { 
-                    $xlab = SubStr($v,0,$this->max_t);
-                } elseif (($k == 1) && ($this->data_type == "data-data"))  { 
-                        $x_now = $this->xtr($v);
-                } else {
-                    //(double) $v;
-                    // Draw Lines
-                    if ($this->data_type == "text-data") { 
-                        $x_now = $this->xtr($j+.5); 
-                    } 
+            foreach ($row as $y_now) {
+                //(double) $v;
+                // Draw Lines
+                if (is_numeric($y_now)) {           //Allow for missing Y data 
+                
+                    $y_now_pixels = $this->ytr($y_now);
+                    
+                    $color_index = $color_index % $max_data_colors;
+                    
+                    $barcol = $this->ndx_data_color[$color_index];
 
-                    //if (is_numeric($v))  //PHP4 only
-                    if ((strval($v) != "") ) {   //Allow for missing Y data 
-                        $y_now = $this->ytr($v);
-                        if ($color_index >= count($this->ndx_data_color)) { $color_index=0;} ;
-                        $barcol = $this->ndx_data_color[$color_index];
-
-                        if ($this->line_style[$i] == "dashed")
-                            $this->SetDashedStyle($barcol, '4-3');
+                    if ($this->line_style[$i] == "dashed")
+                        $this->SetDashedStyle($barcol, '4-3');
                             
-                        if ($start_lines == 1) {
-                            for ($width = 0; $width < $this->line_width; $width++) {
-                                if ($this->line_style[$i] == "dashed") {
-                                    ImageLine($this->img, $x_now, $y_now + $width, $lastx[$i], $lasty[$i] + $width, 
-                                              IMG_COLOR_STYLED);
-                                } else {
-                                    ImageLine($this->img, $x_now, $y_now + $width, $lastx[$i], $lasty[$i] + $width, $barcol);
-                                }
-                            }
+                    if ($start_lines == true) {
+                        if ($this->line_style[$i] == "dashed") {
+                            ImageLine($this->img, $x_now_pixels, $y_now_pixels, $lastx[$i], $lasty[$i], 
+                                      IMG_COLOR_STYLED);
+                        } else {
+                            ImageLine($this->img, $x_now_pixels, $y_now_pixels, $lastx[$i], $lasty[$i], 
+                                      $barcol);
                         }
-                        $lastx[$i] = $x_now;
-                    } else { 
-                        $y_now = $lasty[$i];
-                        //Don't increment lastx[$i]
                     }
-                    //$bordercol = $this->ndx_data_border_color[$colbarcount];
+                    $lastx[$i] = $x_now_pixels;
+                } 
+                // data missing... don't increment lastx[$i]
+                else { 
+                    $y_now_pixels = $lasty[$i];
+                }
+                $lasty[$i] = $y_now_pixels;
+                $color_index++;
+                $i++;
+            }
+            $start_lines = true;
+        }   // end while
 
-                    $lasty[$i] = $y_now;
-                    $color_index++;
-                    $i++;
-                }
-                //Now we are assured an x_value
-                if ( ($this->draw_x_data_labels == 1) && ($k == 1) )  { //See "labels_note1 above.
-                    $this->DrawXDataLabel($xlab,$x_now);
-                }
-            } //while rows of data
-            $start_lines = 1;
-        }
+        // Leave it at one. XXX: is this necessary?
+        imagesetthickness($this->img, 1);                                      
     }
 
-        //Data comes in as $data[]=("title",x,y,e+,e-,y2,e2+,e2-,...);
-
-    function DrawLineSeries() {
-        //This function is replaced by DrawLines
-        //Tests have shown not much improvement in speed by having separate routines for DrawLineSeries and DrawLines
-        //For ease of programming I have combined them
-        return false;
-    } //function DrawLineSeries
-
-
+        
+    /*!    
+     * Data comes in as $data[]=("title",x,y,e+,e-,y2,e2+,e2-,...);
+     */
     function DrawBars() {
 
         if ($this->data_type != "text-data") { 
@@ -3082,7 +3051,7 @@ class PHPlot {
         }
 
         $xadjust = ($this->records_per_group * $this->record_bar_width )/4;
-
+// AQUI
         reset($this->data_values);
         while (list($j, $row) = each($this->data_values)) {
 
@@ -3220,11 +3189,7 @@ class PHPlot {
                 case "area":
                     $this->DrawPlotBorder();
                     $this->DrawLabels();
-                    if ( $this->data_type == "text-data") {
-                        $this->DrawAreaSeries();
-                    } else {
-                        $this->DrawArea();
-                    }
+                    $this->DrawArea();
                     break;
                 case "linepoints":
                     $this->DrawPlotBorder();
@@ -3490,6 +3455,16 @@ class PHPlot {
     function DrawDotSeries() {
         $this->DrawDots();
     }
+    
+    /*!
+     * \deprecated This method intended to improve performance by being specially 
+     * written for 'data-data'. However, the improvement didn't pay. Use DrawLines() instead
+     */
+    function DrawLineSeries() {
+        return false;
+    } //function DrawLineSeries
+
+
 
 
 }  // class PHPlot
