@@ -24,9 +24,9 @@ Data: (data-data)<br />
   <td>Y data 2</td><td>Y data 3</td>
  </tr>
  
-<?php 
-	for ($i=0; $i<5; $i++) {
-?>
+  <?php 
+    for ($i=0; $i<5; $i++) {
+  ?>
  <tr>
   <td>
    <input type="text" name="data_row0[<?php echo $i?>]" value="<?php echo $data[$i][0]?>" />
@@ -38,12 +38,12 @@ Data: (data-data)<br />
    <input type="text" name="data_row3[<?php echo $i?>]" value="<?php echo $data[$i][3]?>" size="3" />
   </td><td>
    <input type="text" name="data_row4[<?php echo $i?>]" value="<?php echo $data[$i][4]?>" size="3" />
-  </td><td>
+  </td>
  </tr>
  
-<?php 
-	}
-?>
+  <?php 
+    }
+  ?>
 
 </table>
 
