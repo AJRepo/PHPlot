@@ -1670,7 +1670,7 @@ class PHPlot {
                 break;
             case '4-3':
                 $style = array($which_ndxcol, $which_ndxcol, $which_ndxcol, $which_ndxcol,
-                               IMG_COLOR_TRANSPARENT, IMG_COLOR_TRANSPARENT, IMG_COLOR_TRANSPARENT));
+                               IMG_COLOR_TRANSPARENT, IMG_COLOR_TRANSPARENT, IMG_COLOR_TRANSPARENT);
                 break;
             default:
                 $this->DrawError("SetDashedStyle(): unknow style '$style' requested.");
@@ -2504,7 +2504,7 @@ class PHPlot {
             $mid_x = $xpos + ($radius/2 * cos(deg2rad($mid_angle))) ;
             $mid_y = $ypos + (- $radius/2 * sin(deg2rad($mid_angle)));
 
-            // FIXME? The '* 1.2' trick is to get labels a little more outwards so they
+            // XXX: The '* 1.2' trick is to get labels a little more outwards so they
             // get better centered in small sectors. It might screw things up sometimes (?) (MBD)
             $label_x = $xpos + ($radius*1.2 * cos(deg2rad($mid_angle))) * $this->label_scale_position;
             $label_y = $ypos + (- $radius*1.2 * sin(deg2rad($mid_angle))) * $this->label_scale_position;
