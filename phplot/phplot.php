@@ -638,7 +638,6 @@ class PHPlot {
 
     /*!
      * Sets the directory name to look into for TrueType fonts.
-     * TODO: use document root?
      */
     function SetTTFPath($which_path)
     {
@@ -834,8 +833,6 @@ class PHPlot {
      * 
      * \note Original multiple lines code submitted by Remi Ricard.
      * \note Original vertical code submitted by Marlin Viss.
-     *
-     * \TODO: passing $which_font array by value is probably quite slow. Use pass by reference.
      */
     function DrawText($which_font, $which_angle, $which_xpos, $which_ypos, $which_color, $which_text,
                       $which_halign = 'left', $which_valign = 'bottom') 
@@ -2358,7 +2355,6 @@ class PHPlot {
 
     /*!
      * Fills the plot area with a solid color
-     * TODO: Images? Patterns?
      */
     function DrawPlotAreaBackground() 
     {
@@ -2507,7 +2503,7 @@ class PHPlot {
     /*!
      * Draws Grid, Ticks and Tick Labels along X-Axis
      * Ticks and tick labels can be down of plot only, up of plot only, 
-     * both on up and down of plot [, or crossing a user defined X-axis (TODO)]
+     * both on up and down of plot, or crossing a user defined X-axis 
      *
      * \note Original vertical code submitted by Marlin Viss
      */
