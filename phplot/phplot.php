@@ -283,8 +283,7 @@ class PHPlot {
     /*!
      * Sets the default TrueType font and updates all fonts to that.
      */
-    function SetDefaultTTFont($which_font)
-    {
+    function SetDefaultTTFont($which_font) {
         if (is_file($which_font) && is_readable($which_font)) {
             $this->default_ttfont = $which_font;
             return $this->SetDefaultFonts();
@@ -292,7 +291,7 @@ class PHPlot {
             $this->PrintError("SetDefaultTTFont(): $which_font is not a valid font file.");
             return FALSE;
         }
-
+    }
         
     /*!
      * Sets fonts to their defaults
