@@ -10,8 +10,8 @@ Data type: (Text-data)<br />
 <input type="hidden" name="which_data_type" value="text-data" />
 <table border=1>
  <tr>
-  <td>title (x axis)</td><td>ydata 1</td><td>ydata 2</td>
-  <td>ydata 3</td> <td>ydata 4</td>
+  <td>Title (x axis)</td><td>Y data 1</td><td>Y data 2</td>
+  <td>Y data 3</td> <td>Y data 4</td>
  </tr>
  
 <?php 

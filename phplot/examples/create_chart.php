@@ -3,6 +3,15 @@
 
 //error_reporting(E_ALL);
 
+/*
+// Check if we are processing the form
+if (! array_key_exists('submit', $_POST)) {
+    echo "<p>This file is intended to be called from format_chart.php, the example-o-matic.".
+         "Please <a href=\"format_chart.php\">click here</a> to try it.</p>";
+    exit;
+}    
+*/
+
 extract ($_GET, EXTR_OVERWRITE);
 extract ($_POST, EXTR_OVERWRITE);
 
@@ -51,7 +60,8 @@ else if ($which_data_type == 'data-data-error') {
 
 //Optional Settings (Don't need them) 
 
-	$graph->SetTitle($title);
+//	$graph->SetTitle("This is a\n\rmultiple line title\n\rspanning three lines.");
+    $graph->SetTitle($title);
 	$graph->SetXTitle($xlbl, $which_xtitle_pos);
 	$graph->SetYTitle($ylbl, $which_ytitle_pos);
 	$graph->SetLegend(array("A","Bee","Cee","Dee"));
@@ -63,14 +73,20 @@ else if ($which_data_type == 'data-data-error') {
     
 	$graph->SetYTickIncrement($which_yti);
 	$graph->SetXTickIncrement($which_xti);
-    
-    $graph->SetLineWidth(1);
-    
-	$graph->SetGridParams($which_draw_grid, $which_dashed_grid);
-    $graph->SetTickLabelParams($which_xlabel_pos, $which_ylabel_pos, NULL, NULL);
+   
+    $graph->SetShading($which_shading);
+    $graph->SetLineWidth($which_line_width);
+    $graph->SetErrorBarLineWidth($which_errorbar_line_width);
 
+	$graph->SetGridParams($which_draw_grid, $which_dashed_grid);
+    $graph->SetTickLabelParams($which_xtick_label_pos, $which_ytick_label_pos, NULL, NULL);
+    $graph->SetDataLabelParams($which_xdata_label_pos, $which_ydata_label_pos, NULL, NULL);
+    
     $graph->SetXTickPos($which_xtick_pos);
     $graph->SetYTickPos($which_ytick_pos);
+
+    // Please remember that angles other than 90 are taken as 0 when working fith fixed fonts.
+    $graph->SetXLabelAngle($which_xlabel_angle);
 
 	$graph->SetLineStyles(array("dashed","dashed","solid","solid"));
 	$graph->SetPointShape($which_point);
@@ -87,7 +103,6 @@ else if ($which_data_type == 'data-data-error') {
 		}
 	}
 
-    $graph->SetShading($which_shading);
 /*
 //Even more settings
 
@@ -110,4 +125,5 @@ else if ($which_data_type == 'data-data-error') {
 */
 
       $graph->DrawGraph();
+      
 ?>
