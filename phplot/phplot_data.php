@@ -10,7 +10,7 @@
  * phplot by adding additional routines that can be used
  * to modify the data arrays.
  *
- * XXX data must be a *numerical* array, this could be enforced in SetDataValues() XXX
+ * Data must be a *numerical* array, this is enforced in SetDataValues() 
  */
 
 require_once("phplot.php");
@@ -100,22 +100,25 @@ class PHPlot_Data extends PHPlot
     } //function DoScaleData
 
 
-    /**
+    /*!
      * Computes a moving average of strength $interval for
      * data row number $datarow, where 0 denotes the first
      * row of y-data. 
      *
-     *  @param int    datarow  Index of the row whereupon to make calculations
-     *  @param int    interval Number of elements to use in average ("strength")
-     *  @param bool   show     Whether to tell about the moving average in the legend.
-     *  @param string color    Color for the line to be drawn. This color is darkened. Can be named or #RRGGBB.
-     *  @param int    width    Width of the line to be drawn.
+     *  \param int    datarow  Index of the row whereupon to make calculations
+     *  \param int    interval Number of elements to use in average ("strength")
+     *  \param bool   show     Whether to tell about the moving average in the legend.
+     *  \param string color    Color for the line to be drawn. This color is darkened. 
+     *                         Can be named or #RRGGBB.
+     *  \param int    width    Width of the line to be drawn.
      *
-     *  @note Original idea by Theimo Nagel
+     *  \note Original idea by Theimo Nagel
      */
-    function DoMovingAverage($datarow, $interval, $show=TRUE, $color=NULL, $width=3)
+    function DoMovingAverage($datarow, $interval, $show=TRUE, $color=NULL, $width=NULL)
     {
-        $off = 1;   //AQUI
+        $off = 1;               // Skip record #0 (data label) 
+        
+        $this->PadArrays();
         
         if ($interval == 0) {
             $this->DrawError('DoMovingAverage(): interval can\'t be 0');
@@ -123,13 +126,15 @@ class PHPlot_Data extends PHPlot
         }
 
         if ($datarow >= $this->records_per_group) {
-            $this->DrawError("DoMovingAverage(): Data row out of bounds ($datarow >= $this->num_data_rows)");
+            $this->DrawError("DoMovingAverage(): Data row out of bounds ($datarow >= $this->records_per_group)");
             return FALSE;
         }
         
         if ($this->data_type == 'text-data') {
-            $off++;
-        } elseif ($this->data_type != 'data-data') {
+            // Ok. No need to set the offset to skip more records.
+        } elseif ($this->data_type == 'data-data') {
+            $off++;             // first Y value at $data[][2]
+        } else {
             $this->DrawError('DoMovingAverage(): wrong data type!!');
             return FALSE;
         }
@@ -142,13 +147,13 @@ class PHPlot_Data extends PHPlot
         }
         // Set line width:
         if ($width) {
-            array_push($this->line_widths, 3);
+            array_push($this->line_widths, $width);
         } else {    
             array_push($this->line_widths,  $this->line_widths[$datarow] * 2);
         }
         // Show in legend?
         if ($show) {
-            $this->legend[$this->records_per_group-3] = "(MA[$datarow]:$interval)";
+            $this->legend[$this->records_per_group-1] = "(MA[$datarow]:$interval)";
         }
 
         $datarow += $off;
@@ -156,11 +161,11 @@ class PHPlot_Data extends PHPlot
             $storage[$i % $interval] = @ $this->data[$i][$datarow];
             $ma = array_sum($storage);
             $ma /= count($storage);
-            array_push($this->data[$i], $ma);
+            array_push($this->data[$i], $ma);   // Push the data onto the array
+            $this->num_recs[$i]++;              // Tell the drawing functions it is there
         }
-        
         $this->records_per_group++;
-        $this->FindDataLimits();
+//        $this->FindDataLimits();
         return TRUE;
     } //function DoMovingAverage()
 
