@@ -1,4 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!-- $Id$ -->
 <html>
 <head>
 	<title>PHPLOT Quick Start and Examples</title>
@@ -7,10 +8,11 @@
     <meta name="author" content="Miguel de Benito" />
 	<meta name="created" content="20010302;20371700" />
 	<meta name="changed" content="20040121;19341300" />
-	<meta name="description" content="phplot quick start and examples">
-	<meta name="keywords" content="phplot, graphs, images, php">
-	<meta name="robots" content="all">
-	<meta name="locale" content="en-us">
+	<meta name="description" content="phplot quick start and examples" />
+	<meta name="keywords" content="phplot, graphs, images, php" />
+	<meta name="robots" content="all" />
+	<meta name="locale" content="en-us" />
+    <link type="text/css" rel="stylesheet" href="style.css" />
 	<style>
 	<!--
 		pre { margin-left: 0.25cm; border: none; padding: 0cm; font-family: monospace, "white-space" }
@@ -22,16 +24,16 @@
 
 <h1>PHPlot Quick Start and Examples</h1>
 
-<p>Afan Ottenheimer</p>
-<p>January 7, 2001</p>
+<p>Afan Ottenheimer, January 7, 2001</p>
+<p>Miguel de Benito, January 21, 2004</p>
 <p><b>Contents</b></p>
-<p>
-  <a href="#intro">Introduction</a><br />
-  <a href="#some_examples">Some Examples</a><br />
-  <a href="#multiple">Multiple Graphs Per Image</a><br />
+<ul>
+  <li><a href="#intro">Introduction</a></li>
+  <li><a href="#first">First steps</a></li>
+  <li><a href="#lines">Multiples lines per graph</a></li>
+  <li><a href="#multiple">Multiple graphs per image</a></li>
   <br />
-  <br />
-</p>
+</ul>
 
 <h2><a name="intro"></a>Introduction</h2>
 
@@ -87,7 +89,6 @@ PHP script. Information on PHP can be found at <a href="http://www.php.net/">www
 Information about the GD library which PHP uses to create images can
 be found at <a href="http://www.boutell.com/">www.boutell.com</a>.
 More information about PHPlot can be found at <a href="www.phplot.com">www.PHPlot.com</a>.</p>
-<hr />
 
 <h2>Creating the Object</h2>
 
@@ -116,7 +117,7 @@ above.</p>
 
 
 <h2>Real World Examples</h2>
-<h3>Case 1: A simple graph</h3>
+<h3><a name="first"></a>Case 1: A simple graph</h3>
 
 <p>We will start with a simple line graph. </p>
 <table width="75%" border="1" bordercolor="#000000" cellpadding="4" cellspacing="0" bgcolor="#cccccc">
@@ -219,7 +220,8 @@ and &quot;\r &quot; to be interpreted as new line/new return
 characters for <i>SetTitle </i>you have to enclose the string in
 <b>double </b>quotes. 
 </p>
-<h3>Case 2: Multiple Lines per Graph </h3>
+
+<h3><a name="lines"></a>Case 2: Multiple Lines per Graph </h3>
 <p>Lets say we want to plot not just one
 dataset but several y values for each x position. With PHPlot it is
 easy to specify the multiple data lines by just passing in all the Y
@@ -273,8 +275,10 @@ Also the missing data point is skipped, this behaviour can be adjusted with
 create a graph in PHPlot. A nice start, but now we'd like to add some
 customization, namely different fonts, margins and types of graphs. 
 </p>
-<p><a href="#top"><img src="top.gif" name="graphic10" alt="top" align=bottom border=0>Back to top</a> </p>
-<h2>Customization</h2>
+<p><a href="#top"><img src="top.gif" alt="top" align=bottom border=0>Back to top</a> </p>
+
+
+<h3>Customization</h3>
 <p>Valid types of plots ( as of PHPlot 4.4.6) </p>
 <ul>
 	<li>bars</li>
@@ -301,9 +305,8 @@ or look in the examples directory that came with PHPlot.</p>
   <a href="#top"><img src="top.gif" alt="top" align="bottom" border="0" />Back to top </a> 
 </p>
 
-<p><a name="multiple"></a><font size=4 style="font-size: 16pt">
-<b>Case 3: Multiple Graphs per Image </b></font>
-</p>
+<h3><a name="multiple"></a> <b>Case 3: Multiple Graphs per Image </b></h3>
+
 <p>To create an image with several separate graphs
 on it is a straightforward process. As in the previous examples we
 first have to create an object (e.g. variable) but now we tell it to
@@ -435,20 +438,13 @@ axis origin that can be drawn. Not the device (pixel) coordinates
 which in GD are relative to the origin at the upper left
 side of the image.
 </p>
-<table width="100%" border="0" cellpadding="0" cellspacing="0">
-  <tr>
-    <td bgcolor="#6699cc">
-      <p><a name="pbacktop1"></a><a href="#top"><font color="#ffffff">Back to top</font></a>
-         <br />
-         <a href="index.php">Back to the index</a>
-       </p>
-    </td>
-  </tr>
-  <tr>
-    <td bgcolor="#6699cc">
-	  <p><font color="#ffffff">&copy; 2002 Afan Ottenheimer. All rights reserved. </font> </p>
-    </td>
-  </tr>
+<div style="background:#6699cc; color:#ffffff;">
+  <a href="#top">Back to top</a>
+  <br />
+  <a href="index.php">Back to the index</a><br />
+  &copy; 2002 Afan Ottenheimer. All rights reserved.</p>
+</div>
+<p class="foot">$Id$</p>
 </table>
 </body>
 </html>
