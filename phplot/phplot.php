@@ -2279,7 +2279,7 @@ class PHPlot {
     /*
      * 
      */
-    function DrawYAxis() 
+    function _DrawYAxis() 
     { 
         //Draw Line at left side or at this->y_axis_position
         if ($this->y_axis_position != '') {
@@ -2298,7 +2298,7 @@ class PHPlot {
     /*
      *
      */
-    function DrawXAxis() 
+    function _DrawXAxis() 
     {
         //Draw Tick and Label for Y axis
         $ylab =$this->_FormatLabel('y', $this->x_axis_position);
@@ -2320,7 +2320,7 @@ class PHPlot {
     }
 
     /*!
-     * Draw Just one Tick, called from _DrawYTicks() and DrawXAxis()
+     * Draw Just one Tick, called from _DrawYTicks() and _DrawXAxis()
      */
     function _DrawYTick($which_ylab, $which_ypix) 
     {
@@ -2509,9 +2509,6 @@ class PHPlot {
      */
     function _DrawPlotBorder() 
     {
-        $this->DrawYAxis();
-        $this->DrawXAxis();
-
         switch ($this->plot_border_type) {
         case "left" :
             ImageLine($this->img, $this->plot_area[0], $this->_ytr($this->plot_min_y),
@@ -3453,15 +3450,17 @@ class PHPlot {
         $this->_DrawTitle();
         $this->_DrawXTitle();
         $this->_DrawYTitle();
-        
+       
+        if ($this->plot_type != 'pie') {
+            $this->_DrawXAxis();
+            $this->_DrawYAxis();
+        }            
         switch ($this->plot_type) {
         case 'bars':
             $this->_DrawBars();
-            $this->_DrawPlotBorder();
             break;
         case 'thinbarline':
             $this->DrawThinBarLines();
-            $this->_DrawPlotBorder();
             break;
         case 'lines':
             if ( $this->data_type == "text-data") {
@@ -3471,11 +3470,9 @@ class PHPlot {
             } else {
                 $this->DrawLines();
             }
-            $this->_DrawPlotBorder();
             break;
         case 'area':
             $this->DrawArea();
-            $this->_DrawPlotBorder();
             break;
         case 'linepoints':
             if ( $this->data_type == "text-data") {
@@ -3488,7 +3485,6 @@ class PHPlot {
                 $this->DrawLines();
                 $this->DrawDots();
             }
-            $this->_DrawPlotBorder();
             break;
         case 'points';
             if ( $this->data_type == "text-data") {
@@ -3498,30 +3494,25 @@ class PHPlot {
             } else {
                 $this->DrawDots();
             }
-            $this->_DrawPlotBorder();
             break;
         case 'pie':
             // Pie charts can maximize image space usage.
             $this->SetPlotAreaPixels($this->safe_margin, $this->title_height,
                                      $this->image_width - $this->safe_margin,
                                      $this->image_height - $this->safe_margin);
-                                     
-            // If we had drawn this before, it probably was too small.
-            //if ($this->draw_plot_area_background)
-            //    $this->_DrawPlotAreaBackground();
-
             $this->DrawPieChart();
             break;
         case 'squared':
             $this->DrawSquared();
-            $this->_DrawPlotBorder();
             break;
         default:
             $this->_DrawBars();
-            $this->_DrawPlotBorder();
             break;
         }   // end switch
 
+        if ($this->plot_type != 'pie') {
+            $this->_DrawPlotBorder();
+        }
         if ($this->legend)
             $this->_DrawLegend($this->legend_x_pos, $this->legend_y_pos, '');
             
