@@ -1885,6 +1885,8 @@ class PHPlot {
      * FIXME: fix x_data_label_pos behaviour. Now we are leaving room for it AND x_tick_label_pos
      *        maybe it shouldn't be so...
      *
+     * FIXME: y_data_label_pos is not yet used...
+     *
      * TODO: add x_tick_label_width and y_tick_label_height and use them to calculate
      *       max_x_labels and max_y_labels, to be used by drawing functions to avoid overlapping.
      */
@@ -2579,13 +2581,16 @@ class PHPlot {
     {
         // Draw ticks, labels and grid
         $this->DrawXTicks();
-
-        //Draw Tick and Label for Y axis
+        
+        /* This tick and label tend to overlap with regular Y Axis labels, 
+         * as Mike Pullen pointed out.
+         *
+        //Draw Tick and Label for X axis
         if (! $this->skip_bottom_tick) { 
             $ylab =$this->FormatLabel('y', $this->x_axis_position);
             $this->DrawYTick($ylab, $this->x_axis_y_pixels);
         }
-
+        */
         //Draw X Axis at Y = x_axis_y_pixels
         ImageLine($this->img, $this->plot_area[0]+1, $this->x_axis_y_pixels,
                   $this->plot_area[2]-1, $this->x_axis_y_pixels, $this->ndx_grid_color);
