@@ -32,18 +32,26 @@ automatic values.
         <a href="format_chart.php?which_data_type=randfunction">randfunction</a> ]
     </p>
     <?php
-        if ($_GET['which_data_type'] == 'text-data')
-            include('data_sample1.php'); 
-        elseif ($_GET['which_data_type'] == 'data-data')
-            include('data_sample2.php');
-        elseif ($_GET['which_data_type'] == 'data-data-error')
-            include('data_sample3.php');
-        elseif ($_GET['which_data_type'] == 'function') 
-            include('data_sample4.php');
-        elseif ($_GET['which_data_type'] == 'randfunction')
-            include('data_sample5.php');
-        else
+        switch(@ $_GET['which_data_type']) {
+        case 'text-data':
             include('data_sample1.php');
+            break;
+        case 'data-data':
+            include('data_sample2.php');
+            break;
+        case 'data-data-error':
+            include('data_sample3.php');
+            break;
+        case 'function':
+            include('data_sample4.php');
+            break;
+        case 'randfunction':
+            include('data_sample5.php');
+            break;
+        default:
+            include('data_sample1.php');
+            break;
+        }
     ?>
   </td>
 </tr>
