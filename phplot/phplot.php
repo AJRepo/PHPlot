@@ -2345,7 +2345,6 @@ class PHPlot{
 			$lasty[0] = $this->xtr(0);
 		}
 
-		//foreach ($this->data_values as $row)
 		reset($this->data_values);
 		while (list($j, $row) = each($this->data_values)) {
 
