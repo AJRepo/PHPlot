@@ -1,11 +1,19 @@
 <?php
 /* $Id$ */
 
-///////////////////////////////////////////////
-//This file is meant only to be called from the
-//test page quick_start.php (or test_setup.php)
-//It will fail if called by itself.
-//////////////////////////////////////////////
+if (! isset($_GET['which_title'])) {
+echo <<<EOF
+<pre>
+           *************************************************
+           * This file is meant to be called only from the *
+           *                   <a href="test_setup.php">test page</a>                   *
+           * It will fail if called by itself.             *
+           *************************************************
+</pre>
+EOF
+;
+exit;
+}
 
 // From PHP 4.?, register_globals is off, take it into account (MBD)
 
