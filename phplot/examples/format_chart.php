@@ -188,16 +188,21 @@ automatic values.
 <tr>
   <td>Point Type:</td>
   <td>
-    <select name="which_dot">
-	  <option>diamond</option>
-  	  <option>rect</option>
-	  <option>circle</option>
-	  <option>triangle</option>
-      <option>dot</option>
-	  <option>line</option>
-	  <option>halfline</option>
+    <select name="which_point">
+	  <option value="diamond">Diamond</option>
+  	  <option value="rect">Square</option>
+	  <option value="circle">Circle</option>
+	  <option value="triangle">Triangle</option>
+      <option value="dot">Filled dot</option>
+	  <option value="line">Line</option>
+	  <option value="halfline">Half line</option>
+      <option value="crosshair" selected>Crosshair</option>
     </select>
   </td>
+</tr>
+<tr>
+  <td>Point Size:</td>
+  <td><input name="which_point_size" value="4" size="3" /></td>
 </tr>
 <tr>
   <td>File format:</td>
@@ -222,6 +227,8 @@ Please visit <a href="http://phplot.sourceforge.net">PHPlot's site</a>, the
 or see <a href="http://www.jeo.net/php/">more php code and examples</a> 
 by Afan Ottenheimer of jeonet.
 </p>
+
+<p><a href="../doc/index.html">Click here</a> to return to the documentation index.</p>
 
 <p class="foot">$Id$</p>
 </body>
