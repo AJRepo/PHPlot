@@ -101,9 +101,10 @@ class PHPlot{
 	var $label_color;
 	var $text_color;
 	var $i_light;
+
 //Data
-	var $data_type = "text-data"; // text-data, data-data-error, data-data, linear-text
-	var $plot_type= "linepoints";	//bars, lines, linepoints, area, points, pie
+	var $data_type = "text-data"; //text-data, data-data-error, data-data 
+	var $plot_type= "linepoints"; //bars, lines, linepoints, area, points, pie, thinbarline
 	var $point_size = 10;
 	var $point_shape = "diamond"; //rect,circle,diamond,triangle,dot,line,halfline
 	var $error_bar_shape = "tee"; //tee, line
@@ -125,6 +126,8 @@ class PHPlot{
 	var $y_precision = "1";
 	var $x_precision = "1";
 	var $si_units = "";
+	var $line_width = 2;
+
 //Labels
 	var $legend;  //an array
 	var $legend_x_pos;
@@ -132,18 +135,32 @@ class PHPlot{
 	var $title_txt = "Title\nThe test\ntest 2";
 	var $y_label_txt = "Y Data";
 	var $x_label_txt = "X Data";
-	var $y_grid_label_type = "data";  //data, none, time, other
-	var $x_grid_label_type = "data";  //data, title, none, time, other
-	var $draw_x_data_labels = "";  // 0=false, 1=true, ""=let program decide 
-	var $x_time_format = "%H:%m:%s"; //See http://www.php.net/manual/html/function.strftime.html
-	var $tick_length = "10";  //pixels
+
+//DataAxis Labels (on each axis)
+	var $y_grid_label_type = "data";    //data, none, time, other
+	var $y_grid_label_pos = "plotleft"; //plotleft, plotright, yaxis, both
+	var $x_grid_label_type = "data";    //data, title, none, time, other
+	var $draw_x_data_labels = "";       // 0=false, 1=true, ""=let program decide 
+	var $x_time_format = "%H:%m:%s";    //See http://www.php.net/manual/html/function.strftime.html
+	var $x_datalabel_maxlength = 10;    
+
+//Tick Formatting
+	var $tick_length = "10";   //pixels: tick length from axis left/downward
+	//tick_length2 to be implemented
+	//var $tick_length2 = "";  //pixels: tick length from axis line rightward/upward
+	var $draw_vert_ticks = 1;  //1 = draw ticks, 0 = don't draw ticks
+	var $num_vert_ticks = "";
+	var $vert_tick_increment ; //Set num_vert_ticks or vert_tick_increment, not both.
+	var $vert_tick_position = "both"; //plotright=(right of plot only), plotleft=(left of plot only), 
+								//both = (both left and right of plot), yaxis=(crosses y axis)
+
+//Grid Formatting
 	var $draw_x_grid = 0;
 	var $draw_y_grid = 1;
-	var $num_vert_ticks = "";
-	var $vert_tick_increment ;  //Set num_vert_ticks or vert_tick_increment, not both.
-	var $x_datalabel_maxlength = 10;
-	var $line_width = 2;
 
+
+//BEGIN CODE
+//////////////////////////////////////////////////////
 	function SetBrowserCache($which_browser_cache) {  //Submitted by Thiemo Nagel
 		$this->browser_cache = $which_browser_cache;
 		return true;
@@ -351,7 +368,7 @@ class PHPlot{
 	}
 
 	function SetPlotBorderType($which_pbt) {
-		$this->plot_border_type = $which_pbt; //left, anything else
+		$this->plot_border_type = $which_pbt; //left, none, anything else=full
 	}
 
 	function SetImageBorderType($which_sibt) {
@@ -417,11 +434,12 @@ class PHPlot{
 			ImageString($this->img, $this->small_font,
 			-($this->small_font_width*strlen($this->x_label_txt)/2.0) + $this->xtr(($this->plot_max_x+$this->plot_min_x)/2.0) ,
 			($this->ytr($this->plot_min_y) + $this->x_label_height/2),
-			$this->x_label_txt, $this->text_color);
+			$this->x_label_txt, $this->label_color);
 		}
 
 		return true;
 	}
+
 	function DrawYLabel() {
 		if ($this->use_ttf == 1) { 
 			$size = $this->TTFBBoxSize($this->y_label_ttffont_size, 90, $this->y_label_ttffont, $this->y_label_txt);
@@ -432,12 +450,10 @@ class PHPlot{
 		} else { 
    			ImageStringUp($this->img, $this->small_font,8,
 				(($this->small_font_width*strlen($this->y_label_txt)/2.0) +
-					$this->ytr(($this->plot_max_y + $this->plot_min_y)/2.0) ), $this->y_label_txt, $this->text_color);
+					$this->ytr(($this->plot_max_y + $this->plot_min_y)/2.0) ), $this->y_label_txt, $this->label_color);
 		}
 		return true;
 	}
-
-
 
 	function DrawTitle() {
 		$str = split("\n",$this->title_txt); //multiple lines submitted by Remi Ricard
@@ -720,17 +736,27 @@ class PHPlot{
 		// It thus depends on the current character size, set by SetCharacterHeight().
 		/////////////////////////////////////////////////////////////////
 
+		$str = split("\n",$this->title_txt); 
+		$nbLines = count($str); 
+
 //echo "SMargins:<br>";
 		if ($this->use_ttf == 1) {
 			$title_size = $this->TTFBBoxSize($this->title_ttffont_size, $this->title_angle, $this->title_ttffont, "X"); //An array
-			$this->y_top_margin = ($title_size[1] * 4);
+			if ($nbLines == 1) { 
+				$this->y_top_margin = $title_size[1] * 4;
+			} else { 
+				$this->y_top_margin = $title_size[1] * ($nbLines+3);
 			$this->y_bot_margin = $this->x_label_height ;
 			$this->x_left_margin = $this->y_label_width * 2 + $this->tick_length;
 			$this->x_right_margin = 33.0; // distance between right and end of x axis in pixels 
 		} else {
 			$title_size = array($this->title_font_width * strlen($this->plot_title),$this->title_font_height);
 			//$this->y_top_margin = ($title_size[1] * 4);
-			$this->y_top_margin = $title_size[1] * 4;
+			if ($nbLines == 1) { 
+				$this->y_top_margin = $title_size[1] * 4;
+			} else { 
+				$this->y_top_margin = $title_size[1] * ($nbLines+3);
+			}
 			if ($this->x_datalabel_angle == 90) {
 				$this->y_bot_margin = 76.0; // Must be integer
 			} else {
@@ -1069,12 +1095,14 @@ class PHPlot{
 				ImageLine($this->img, $this->plot_area[0],$this->ytr($this->plot_min_y),
 				    $this->plot_area[0],$this->ytr($this->plot_max_y),$this->grid_color);
 			break;
+			case "none":
+				//Draw No Border
+			break;
 			default:
 				ImageRectangle($this->img, $this->plot_area[0],$this->ytr($this->plot_min_y),
 					$this->plot_area[2],$this->ytr($this->plot_max_y),$this->grid_color);
 			break;
 		}
-		$this->DrawVerticalTicks();
 		$this->DrawYAxis();
 		$this->DrawXAxis();
 		return true;
@@ -1095,6 +1123,11 @@ class PHPlot{
 		$this->num_horiz_ticks = ""; //either use num_vert_ticks or vert_tick_increment, not both
 		return true;
 	}
+
+	function SetDrawVertTicks($which_dvt) {
+		$this->draw_vert_ticks = $which_dvt;
+		return true;
+	} 
 
 	function SetVertTickIncrement($which_ti) {
 		//Use either this or NumVertTicks to set where to place y tick marks
@@ -1122,6 +1155,10 @@ class PHPlot{
 		$this->vert_tick_increment = "";  //either use num_vert_ticks or vert_tick_increment, not both
 		return true;
 	}
+	function SetVertTickPosition($which_tp) {
+		$this->vert_tick_position = $which_tp; //plotleft, plotright, both, yaxis
+		return true;
+	}
 	function SetTickLength($which_tl) {
 		$this->tick_length = $which_tl;
 		return true;
@@ -1138,47 +1175,24 @@ class PHPlot{
 		ImageLine($this->img, $yaxis_x, $this->plot_area[1], 
 			$yaxis_x, $this->plot_area[3], $this->grid_color);
 
-		//Still to come: Tick marks
+		if ($this->draw_vert_ticks == 1) { 
+			$this->DrawVerticalTicks();
+		}
 
 	} //function DrawYAxis
 
 	function DrawXAxis() {
+		//Draw Tick and Label for Y axis
+		$ylab =$this->FormatYTickLabel($this->x_axis_position);
+		$this->DrawVerticalTick($ylab,$this->x_axis_position);
+
 		//Draw X Axis at Y=$x_axis_postion
-		ImageLine($this->img,(-$this->tick_length+$this->plot_area[0]),
-				$this->ytr($this->x_axis_position),$this->xtr($this->plot_min_x),$this->ytr($this->x_axis_position),$this->tick_color);
 		ImageLine($this->img,$this->plot_area[0]+1,$this->ytr($this->x_axis_position),
 				$this->xtr($this->plot_max_x)-1,$this->ytr($this->x_axis_position),$this->tick_color);
-		ImageLine($this->img,($this->xtr($this->plot_max_x)+$this->tick_length),
-				$this->ytr($this->x_axis_position),$this->xtr($this->plot_max_x-1),$this->ytr($this->x_axis_position),$this->grid_color);
 
-		switch ($this->y_grid_label_type) {
-			case "data":
-				$ylab = number_format($this->x_axis_position,$this->y_precision,".",",") . "$this->si_units";
-			break;
-			case "none":
-				$ylab = "";
-			break;
-			case "time":
-				$ylab = strftime($this->x_axis_position,$this->plot_min_y);
-			break;
-			case "right":
-				//$ylab = str_pad($y_tmp,$this->y_label_width," ",STR_PAD_LEFT); //Only in PHP4
-				$sstr = "%".strlen($this->plot_max_y)."s";
-				//$ylab = sprintf($sstr,$this->x_axis_position);
-			break;
-			default:
-				//Unchanged from whatever format is passed in
-				$ylab = $this->x_axis_position;
-			break;
-		}
-		//Y Axis Label
-		ImageString($this->img, $this->small_font,
-			( $this->plot_area[0] - $this->y_label_width - $this->tick_length/2),
-			( -($this->small_font_height/2.0) + $this->ytr($this->x_axis_position)),
-			$ylab, $this->text_color);
 
 		//X Ticks and Labels
-		if ($this->data_type != "text-data") { //labels for text-data is done at data drawing time for speed.
+		if ($this->data_type != "text-data") { //labels for text-data done at data drawing time for speed.
 			$this->DrawHorizontalTicks();
 		}
 		return true;
@@ -1288,7 +1302,41 @@ class PHPlot{
 
 	} // function DrawHorizontalTicks
 
-	function DrawVerticalTicks() {
+	function FormatYTickLabel($which_ylab) { 
+		switch ($this->y_grid_label_type) {
+			case "data":
+				$ylab = number_format($which_ylab,$this->y_precision,".",",") . "$this->si_units";
+			break;
+			case "none":
+				$ylab = "";
+			break;
+			case "time":
+				$ylab = strftime($this->y_time_format,$which_ylab);
+			break;
+			case "right":
+				//Make it right aligned
+				//$ylab = str_pad($which_ylab,$this->y_label_width," ",STR_PAD_LEFT); //PHP4 only
+				$sstr = "%".strlen($this->plot_max_y)."s";
+				$ylab = sprintf($sstr,$which_ylab);
+			break;
+			default:
+				//Unchanged from whatever format is passed in
+				$ylab = $which_ylab;
+			break;
+		}
+
+		return($ylab);
+
+	} //function FormatYTickLabel
+
+	function DrawVerticalTick($which_ylab,$which_ypos) {  //ylab in world coord.
+		//Draw Just one Tick, called from DrawVerticalTicks
+		//Ticks and datalables can be left of plot only, right of plot only, 
+		//  both on the left and right of plot, or crossing a user defined Y-axis
+		// 
+		//Its faster to draw both left and right ticks at same time
+		//  than first left and then right. 
+
 		if ($this->y_axis_position != "") { 
 			//Ticks and lables are drawn on the left border of yaxis
 			$yaxis_x = $this->xtr($this->y_axis_position);
@@ -1296,63 +1344,70 @@ class PHPlot{
 			//Ticks and lables are drawn on the left border of PlotArea.
 			$yaxis_x = $this->plot_area[0];
 		}
-		
-		//Left Bottom
-		//ImageLine($this->img,(-$this->tick_length+$this->xtr($this->plot_min_x)),
-		//		$this->ytr($this->plot_min_y),$this->xtr($this->plot_min_x),$this->ytr($this->plot_min_y),$this->tick_color);
-		ImageLine($this->img,(-$this->tick_length+$yaxis_x),
-				$this->plot_area[1],$this->xtr($this->plot_min_x),$this->plot_area[1],$this->tick_color);
 
-		switch ($this->y_grid_label_type) {
-			case "data":
-				$ylab = number_format($this->plot_min_y,$this->y_precision,".",",") . "$this->si_units";
-			break;
-			case "none":
-				$ylab = "";
-			break;
-			case "time":
-				$ylab = strftime($this->y_time_format,$this->plot_min_y);
-			break;
-			case "right":  //Right Aligned
-				//$ylab = str_pad($y_tmp,$this->y_label_width," ",STR_PAD_LEFT); //Only in PHP4
-				$sstr = "%".strlen($this->plot_max_y)."s";
-				$ylab = sprintf($sstr,$this->plot_min_y);
-			break;
-			default:
-				//Unchanged from whatever format is passed in
-				$ylab = $this->plot_min_y;
-			break;
+		$y_pixels = $this->ytr($which_ypos);
+
+		//Lines Across the Plot Area
+		if ($this->draw_y_grid == 1) {
+			ImageLine($this->img,$this->plot_area[0]+1,$y_pixels,
+				$this->plot_area[2]-1,$y_pixels,$this->light_grid_color);
 		}
-		ImageString($this->img,$this->small_font,
-			( $yaxis_x - $this->y_label_width - $this->tick_length/2),
-			( -($this->small_font_height/2.0) + $this->ytr($this->plot_min_y)),$ylab, $this->text_color);
 
-		//Right Bottom
-		ImageLine($this->img,($this->xtr($this->plot_max_x)+$this->tick_length),
-				$this->ytr($this->plot_min_y),$this->xtr($this->plot_max_x),
-				$this->ytr($this->plot_min_y),$this->tick_color);
+		//Ticks to the Left of the Plot Area
+		if (($this->vert_tick_position == "plotleft") || ($this->vert_tick_position == "both") ) { 
+			ImageLine($this->img,(-$this->tick_length+$yaxis_x),
+			$y_pixels,$yaxis_x,
+			$y_pixels, $this->tick_color);
+		}
 
-		//Bottom
-		ImageLine($this->img,$this->xtr($this->plot_min_x)+1,$this->ytr($this->plot_min_y),
-				$this->xtr($this->plot_max_x),$this->ytr($this->plot_min_y),$this->light_grid_color);
+		//Ticks to the Right of the Plot Area
+		if (($this->vert_tick_position == "plotright") || ($this->vert_tick_position == "both") ) { 
+			ImageLine($this->img,($this->plot_area[2]+$this->tick_length),
+			$y_pixels,$this->plot_area[2],
+			$y_pixels,$this->tick_color);
+		}
 
-		//Left Top
-		//ImageLine($this->img,(-$this->tick_length+$this->xtr($this->plot_min_x)),
-		//		$this->ytr($this->plot_max_y),$this->xtr($this->plot_min_x),$this->ytr($this->plot_max_y),$this->tick_color);
-		//$ylab = number_format($this->plot_max_y,$this->y_precision,".",",") . "$this->si_units";
-		//ImageString($this->img, $this->small_font,($this->plot_area[0] - $this->y_label_width - $this->tick_length/2),
-		//	( -($this->small_font_height/2.0) + $this->ytr($this->plot_max_y)),$ylab, $this->text_color);
+		//Ticks on the Y Axis 
+		if (($this->vert_tick_position == "yaxis") ) { 
+			ImageLine($this->img,($yaxis_x - $this->tick_length),
+			$y_pixels,$yaxis_x,$y_pixels,$this->tick_color);
+		}
 
-		//Right Top
-		//ImageLine($this->img,($this->xtr($this->plot_max_x)+$this->tick_length),
-		//		$this->ytr($this->plot_max_y),$this->xtr($this->plot_max_x-1),$this->ytr($this->plot_max_y),$this->tick_color);
+		//DataLabel
+		ImageString($this->img, $this->small_font,
+			($yaxis_x - $this->y_label_width - $this->tick_length/2),
+			( -($this->small_font_height/2.0) + $y_pixels),$which_ylab, $this->text_color);
+	}
 
-		//Top
-		//ImageLine($this->img,$this->xtr($this->plot_min_x)+1,$this->ytr($this->plot_max_y),
-		//		$this->xtr($this->plot_max_x)-1,$this->ytr($this->plot_max_y),$this->light_grid_color);
-		ImageLine($this->img,$this->plot_area[0]+1,$this->ytr($this->plot_max_y),
-				$this->xtr($this->plot_max_x)-1,$this->ytr($this->plot_max_y),$this->light_grid_color);
+	function DrawVerticalTicks() {
 
+		if ($this->skip_top_tick != 1) { //If tick increment doesn't hit the top 
+			//Left Top
+			//ImageLine($this->img,(-$this->tick_length+$this->xtr($this->plot_min_x)),
+			//		$this->ytr($this->plot_max_y),$this->xtr($this->plot_min_x),$this->ytr($this->plot_max_y),$this->tick_color);
+			//$ylab = $this->FormatYTickLabel($plot_max_y);
+
+			//Right Top
+			//ImageLine($this->img,($this->xtr($this->plot_max_x)+$this->tick_length),
+			//		$this->ytr($this->plot_max_y),$this->xtr($this->plot_max_x-1),$this->ytr($this->plot_max_y),$this->tick_color);
+
+			//Top
+			ImageLine($this->img,$this->plot_area[0]+1,$this->ytr($this->plot_max_y),
+					$this->plot_area[2]-1,$this->ytr($this->plot_max_y),$this->light_grid_color);
+
+		}
+
+		if ($this->skip_bottom_tick != 1) { 
+			//Right Bottom
+			ImageLine($this->img,($this->xtr($this->plot_max_x)+$this->tick_length),
+					$this->ytr($this->plot_min_y),$this->xtr($this->plot_max_x),
+					$this->ytr($this->plot_min_y),$this->tick_color);
+
+			//Bottom
+			ImageLine($this->img,$this->xtr($this->plot_min_x)+1,$this->ytr($this->plot_min_y),
+					$this->xtr($this->plot_max_x),$this->ytr($this->plot_min_y),$this->light_grid_color);
+		}
+		
 		// maxy is always > miny so delta_y is always positive
 		if ($this->vert_tick_increment) {
 			$delta_y = $this->vert_tick_increment;
@@ -1367,54 +1422,16 @@ class PHPlot{
 		SetType($y_tmp,"double");
 
 		while ($y_tmp <= $this->plot_max_y){
-			//$ylab = sprintf("%6.1f %s",$min_y,$si_units[0]);  //PHP2 past compatibility
 			//For log plots: 
 			if (($this->yscale_type == "log") && ($this->plot_min_y == 1) && 
 				($delta_y%10 == 0) && ($i == 0)) { 
 				$y_tmp = $y_tmp - 1; //Set first increment to 9 to get: 1,10,20,30,...
 			}
-			switch ($this->y_grid_label_type) {
-				case "data":
-					$ylab = number_format($y_tmp,$this->y_precision,".",",") . "$this->si_units";
-				break;
-				case "none":
-					$ylab = "";
-				break;
-				case "time":
-					$ylab = strftime($this->y_time_format,$y_tmp);
-				break;
-				case "right":
-					//Unchanged from whatever format is passed in
-					//$ylab = str_pad($y_tmp,$this->y_label_width," ",STR_PAD_LEFT); //PHP4 only
-					$sstr = "%".strlen($this->plot_max_y)."s";
-					$ylab = sprintf($sstr,$y_tmp);
-				break;
-				default:
-					//Unchanged from whatever format is passed in
-					$ylab = $y_tmp;
-				break;
-			}
-			$y_pixels = $this->ytr($y_tmp);
 
-			// gdStyled only supported with GD v3
-			//ImageLine($this->img,$this->xtr($this->plot_min_x),$this->ytr($y_tmp),$this->xtr($this->plot_max_x),$this->ytr($y_tmp),gdStyled);
-			if ($this->draw_y_grid == 1) {
-				ImageLine($this->img,$this->plot_area[0]+1,$y_pixels,
-					$this->plot_area[2]-1,$y_pixels,$this->light_grid_color);
-			}
+			$ylab = $this->FormatYTickLabel($y_tmp);
 
-			//Left Side Ticks
-			ImageLine($this->img,(-$this->tick_length+$yaxis_x),
-				$y_pixels,$yaxis_x,
-				$y_pixels, $this->tick_color);
+			$this->DrawVerticalTick($ylab,$y_tmp);
 
-			//Right Side Ticks
-			ImageLine($this->img,($this->plot_area[2]+$this->tick_length),
-				$y_pixels,$this->plot_area[2],
-				$y_pixels,$this->tick_color);
-
-			ImageString($this->img, $this->small_font,($yaxis_x - $this->y_label_width - $this->tick_length/2),
-				( -($this->small_font_height/2.0) + $y_pixels),$ylab, $this->text_color);
 			$i++;
 			$y_tmp += $delta_y;
 		}
@@ -1708,7 +1725,7 @@ class PHPlot{
 					$barcol = $this->col_data_color[$color_index];
 
 					//if (is_numeric($v))  //PHP4 only
-					if ($v != "") {   //Allow for missing Y data
+					if ((strval($v) != "") ) {   //Allow for missing Y data 
 						$this->DrawDot($xpos,$v,$this->point_shape,$barcol);
 					}
 					$color_index++;
@@ -1730,7 +1747,7 @@ class PHPlot{
 					$barcol = $this->col_data_color[$color_index];
 
 					//if (is_numeric($v))  //PHP4 only
-					if ($v != "") {   //Allow for missing Y data
+					if ((strval($v) != "") ) {   //Allow for missing Y data 
 						$this->DrawDot($j+.5,$v,$this->point_shape,$barcol);
 					}
 					$color_index++;
@@ -1987,13 +2004,15 @@ class PHPlot{
 				} elseif (($k == 1) && ($this->data_type == "data-data"))  { 
 						$x_now = $this->xtr($v);
 				} else {
+					//(double) $v;
 					// Draw Lines
 					if ($this->data_type == "text-data") { 
 						$x_now = $this->xtr($j+.5); 
 					} 
 
 					//if (is_numeric($v))  //PHP4 only
-					if ($v != "") {   //Allow for missing Y data
+					if ((strval($v) != "") ) {   //Allow for missing Y data 
+//echo "DEBUG: $v<br>";
 						$y_now = $this->ytr($v);
 						if ($color_index >= count($this->data_color)) { $color_index=0;} ;
 						$barcol = $this->col_data_color[$color_index];
@@ -2103,7 +2122,7 @@ class PHPlot{
 					$barcol = $this->col_data_color[$color_index];
 					$bordercol = $this->col_bar_border_color[$colbarcount];
 
-					if ($v != "") { //Allow for missing data
+					if ((strval($v) != "") ) {   //Allow for missing Y data 
 						if ($this->shading == 1) {
 							//Shading set in SetDefaultColors
 							ImageFilledRectangle($this->img, $x1+1, $y1-1, $x2+1, $y2-1, $this->i_light);

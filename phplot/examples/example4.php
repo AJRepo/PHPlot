@@ -1,9 +1,12 @@
 <?php    
 
+//Include the code
 include("../phplot.php");
+
+//Define the object
 $graph = new PHPlot;
 
-
+//Create some random data as ("label",X-position, Y-position, error+, error-)
 //linear-linear-error data 
 unset($data);
 $a = 4.62;
@@ -26,7 +29,12 @@ for ($i=0; $i<=30; $i++){
 	$data[] = array("$label[$i]",$i+1,$a,$b,$c);
 	
 }
+
+
+//Define the data for error bars
 	$graph->SetDataType("linear-linear-error");  //Must be first thing
+
+//Set the Graph particulars
 	$graph->SetPrecisionX(0);
 	$graph->SetPrecisionY(0);
 	$graph->SetUseTTF("0");
@@ -64,5 +72,8 @@ for ($i=0; $i<=30; $i++){
 		$graph->SetTitleColor(array(0,0,0)); // Can be array or name
 
 */
+
+
+//Draw the graph
     $graph->DrawGraph();
 ?>
