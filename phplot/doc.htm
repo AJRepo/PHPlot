@@ -1,163 +1,488 @@
-Documentation for PHPlot. <p>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<TITLE>Documentation for PHPlot</TITLE>
+</HEAD>
+<BODY>Documentation for PHPlot.<br>
+The functions below have been divided into two categories. 
+<UL>
+<LI>Internal Functions: These are the functions that you will not need to 
+look at unless you want to edit the raw phplot code itself. You can safely
+ignore these. <br>
+
+<LI>User Functions: These are the functions that are used to set the
+look and feel of a graph. These are the only ones you need to use if 
+you are using phplot.php to create the graphs for you. Not all of them 
+are required. See the included scripts for examples. 
+</UL> 
+
+<P>
+<DT><B>DrawArea()</B> 
+<DD>Internal Function: Draw an Area Chart. $data[] must already be defined as linear-linear 
+using $data[] = array("title",x,y1,y2,...) Points are placed at (x,y1), (x,y2), ...
+one x-point per $data[] element. <BR>Colors and border colors for each of the y1, y2, ... is set 
+by <B>SetDataColors($which_data,$which_border)</B> 
+This function is called if 
+you use SetPlotType("area") and SetDataType("linear-linear")
 
 
-	<DT><b>DrawAreaSeries()</b>
-		<DD> Draw an Area.
-	$data[] must already be defined as $data[] = array("title",y1,y2,y3,...)
-	The x axis is divided evenly, one x-point per $data[] element. <br>
-	Colors and border colors for each of the y1, y2, ... is set by <b>SetDataColors($which_data,$which_border)</b>
-	<DT><b>DrawBackground()</b>
-		<DD> Draw the full background of the image on image pointer. Should be used BEFORE
-		other Draw functions unless you really want to overwrite what you've done before. 
-		See <b>SetBackgroundColor</b> and <b>SetImageArea</b> for setting parameters.
-	<DT><b>DrawBars()</b>
-		<DD>Draw vertical bars. 
-	$data[] must already be defined as $data[] = array("title",y1,y2,y3,...)
-	The x axis is divided evenly, one x-point per $data[] element. <br>
-	Colors and border colors for each of the y1, y2, ... is set by <b>SetDataColors($which_data,$which_border)</b>
-	<DT><b>DrawDataLabel($lab,$x_world,$y_world)</b>
-		<DD>Draw a label at the world coordinates of x_world and y_world.  
-	<DT><b>DrawDots()</b>
-		<DD> Draw Dots as defined by <b>SetPointType</b> and data in x,y format.
-	$data[] must already be defined as $data[] = array("title",x,y1,y2,...)
-	Where the point occurs depends on both the X and Y values. <br>
-	Colors and border colors for each y1, y2, , ... is set by <b>SetDataColors($which_data,$which_border)</b>
-	<DT><b>DrawDotSeries()</b>
-		<DD> Draw Dots as defined by <b>SetPointType</b> and data in text-y format.
-	$data[] must already be defined as $data[] = array("title",y1,y2,...)
-	The x axis is divided evenly, one x-point per $data[] element. <br>
-	Colors and border colors for each y1, y2, , ... is set by <b>SetDataColors($which_data,$which_border)</b>
-	<DT><b>DrawDotsError()</b>
-		<DD> 
-	<DT><b>DrawDot($x_world,$y_world,$dot_type,$color)</b>
-		<DD> 
-	<DT><b>DrawError($error_message)</b>
-		<DD>
-	<DT><b>DrawGraph()</b>
-		<DD>
-	<DT><b>DrawHorizontalTicks()</b>
-		<DD> 
-	<DT><b>DrawImageBorder()</b>
-		<DD> 
-	<DT><b>DrawLabels()</b>
-		<DD>
-	<DT><b>DrawLines()</b>
-		<DD> 
-	<DT><b>DrawLineSeries()</b>
-		<DD> 
-	<DT><b>DrawLinesError()</b>
-		<DD> 
-	<DT><b>DrawPieChart()</b>
-		<DD> 
-	<DT><b>DrawPlotAreaBackground()</b>
-		<DD>
-	<DT><b>DrawPlotBorder()</b>
-		<DD> 
-	<DT><b>DrawTitle()</b>
-		<DD>
-	<DT><b>DrawVerticalTicks()</b>
-		<DD> 
-	<DT><b>DrawXAxis()</b>
-		<DD> 
-	<DT><b>DrawXDataLabel($xlab,$xpos)</b>
-		<DD> 
-	<DT><b>DrawXLabel()</b>
-		<DD>
-	<DT><b>DrawYErrorBar($x_world,$y_world,$error_height,$error_bar_type,$color)</b>
-		<DD> 
-	<DT><b>DrawYLabel()</b>
-		<DD>
-	<DT><b>FindDataLimits()</b>
-		<DD>
-	<DT><b>InitImage()</b>
-		<DD>
-	<DT><b>PrintImage()</b>
-		<DD>
-	<DT><b>SetBackgroundColor($which_color)</b>
-		<DD> 
-	<DT><b>SetCharacterHeight()</b>
-		<DD> 
-	<DT><b>SetColor($color_asked)</b>
-		<DD> 
-	<DT><b>SetDataColors($which_data,$which_border)</b>
-		<DD>
-	<DT><b>SetDataType($which_dt)</b>
-		<DD> 
-	<DT><b>SetDataValues($which_dv)</b>
-		<DD> 
-	<DT><b>SetDefaultColors()</b>
-		<DD>
-	<DT><b>SetDrawYGrid($which_dyg)</b>
-		<DD> 
-	<DT><b>SetEqualXCoord()</b>
-		<DD>
-	<DT><b>SetErrorBarShape($which_ebs)</b>
-		<DD>
-	<DT><b>SetErrorBarSize($which_ebs)</b>
-		<DD>
-	<DT><b>SetFileFormat($which_file_format)</b>
-		<DD>
-	<DT><b>SetGridColor ($which_color)</b>
-		<DD> 
-	<DT><b>SetHorizTickIncrement($which_ti)</b>
-		<DD> 
-	<DT><b>SetImageArea($which_iw,$which_ih)</b>
-		<DD>
-	<DT><b>SetLabels($xlbl,$ylbl,$title)</b>
-		<DD> 
-	<DT><b>SetLightGridColor ($which_color)</b>
-		<DD> 
-	<DT><b>SetLineWidth($which_lt)</b>
-		<DD> 
-	<DT><b>SetMargins()</b>
-		<DD> 
-	<DT><b>SetNewPlotAreaPixels($x1,$y1,$x2,$y2)</b>
-		<DD>
-	<DT><b>SetNumVertTicks($which_nt)</b>
-		<DD> 
-	<DT><b>SetPlotAreaPixels($x1,$y1,$x2,$y2)</b>
-		<DD>
-	<DT><b>SetPlotAreaWorld($xmin,$ymin,$xmax,$ymax)</b>
-		<DD>
-	<DT><b>SetPlotBgColor($which_color)</b>
-		<DD> 
-	<DT><b>SetPlotType($which_pt)</b>
-		<DD> 
-	<DT><b>SetPointShape($which_pt)</b>
-		<DD>
-	<DT><b>SetPointSize($which_ps)</b>
-		<DD>
-	<DT><b>SetPrecision($which_prec)</b>
-		<DD>
-	<DT><b>SetTextColor ($which_color)</b>
-		<DD> 
-	<DT><b>SetTickColor ($which_color)</b>
-		<DD> 
-	<DT><b>SetTickLength($which_tl)</b>
-		<DD> 
-	<DT><b>SetTitleColor($which_color)</b>
-		<DD> 
-	<DT><b>SetTitle($title)</b>
-		<DD> 
-	<DT><b>SetTranslation()</b>
-		<DD>
-	<DT><b>SetUseTTF($which_ttf)</b>
-		<DD>
-	<DT><b>SetVertTickIncrement($which_ti)</b>
-		<DD> 
-	<DT><b>SetXGridLabelType($which_xglt)</b>
-		<DD> 
-	<DT><b>SetXLabelHeight()</b>
-		<DD>
-	<DT><b>SetXLabel($xlbl)</b>
-		<DD> 
-	<DT><b>SetYLabelWidth()</b>
-		<DD>
-	<DT><b>SetYLabel($ylbl)</b>
-		<DD> 
-	<DT><b>TTFBBoxSize($size, $angle, $font, $string)</b>
-		<DD>
-	<DT><b>xtr($x_world)</b>
-		<DD> 
-	<DT><b>ytr($y_world)</b>
-		<DD>
+<DT><B>DrawAreaSeries()</B> 
+<DD>Internal Function: Draw an Area Chart. $data[] must already be defined as $data[] = 
+array("title",y1,y2,y3,...) The x axis is divided evenly, one x-point per 
+$data[] element. <BR>Colors and border colors for each of the y1, y2, ... is set 
+by <B>SetDataColors($which_data,$which_border)</B> 
+This function is called if 
+you use SetPlotType("area") and SetDataType("text-linear")
+
+<DT><B>DrawBackground()</B> 
+<DD>Internal Function: Draw the full background of the image on image pointer. Should be used 
+BEFORE other Draw functions unless you really want to overwrite what you've done 
+before. See <B>SetBackgroundColor</B> and <B>SetImageArea</B> for setting 
+parameters. 
+
+<DT><B>DrawBars()</B> 
+<DD>Internal Function: Draw vertical bars. $data[] must already be defined as $data[] = 
+array("title",y1,y2,y3,...) The x axis is divided evenly, one x-point per 
+$data[] element. <BR>Colors and border colors for each of the y1, y2, ... is set 
+by <B>SetDataColors($which_data,$which_border)</B> 
+This function is called if 
+you use SetPlotType("bars") and SetDataType("text-linear")
+
+<DT><B>DrawDataLabel($lab,$x_world,$y_world)</B> 
+<DD>User Function and Internal Function: Draw a label at the world coordinates of x_world and y_world. 
+
+<DT><B>DrawDots()</B> 
+<DD>Internal Function: Draw Dots as defined by <B>SetPointType</B> and data in x,y format. $data[] 
+must already be defined as $data[] = array("title",x,y1,y2,...) Where the point 
+occurs depends on both the X and Y values. <BR>Colors and border colors for each 
+y1, y2, , ... is set by <B>SetDataColors($which_data,$which_border)</B> 
+This function is called if 
+you use SetPlotType("dots") and SetDataType("linear-linear")
+
+<DT><B>DrawDotSeries()</B> 
+<DD>Internal Function: Draw Dots as defined by <B>SetPointType</B> and data in text-linear format. 
+$data[] must already be defined as $data[] = array("title",y1,y2,...) 
+The x axis is divided evenly, one x-point per $data[] element. <BR>
+Colors and border colors 
+for each y1, y2, , ... is set by <B>SetDataColors($which_data,$which_border)</B> 
+This function is called if 
+you use SetPlotType("dots") and SetDataType("text-linear")
+
+<DT><B>DrawDotsError()</B> 
+<DD>Internal Function: Draw Dots and Error Bars as defined by <B>SetPointType</B> and 
+data in linear-linear-error format. $data[] must already be defined
+as $data[] = array("label",x,y,error+,error-) 
+Colors and border colors 
+for each y1, y2, , ... is set by <B>SetDataColors($which_data,$which_border)</B> 
+The shape of the error bars is defined by <B>SetErrorBarShape($which_ebs)</B> 
+and <B>SetErrorBarSize($which_ebs)</B> <br>
+This function is called if 
+you use SetPlotType("dots") and SetDataType("linear-linear-error")
+
+<DT><B>DrawDot($x_world,$y_world,$dot_type,$color)</B> 
+<DD>User Function and Internal Function: Draw one dot at $x_world and $y_world where the world 
+coordinates (not pixel coordinates).
+
+<DT><B>DrawError($error_message)</B> 
+<DD>Internal Function: Draw an internal error message printed on the Image directly. 
+This way - if there is an error and the output is an image you 
+don't get the PHP "Header already sent" messages. 
+
+<DT><B>DrawGraph()</B> 
+<DD>Internal Function: This is th last function called after you have set up 
+all the parameters of the graph see <b>Set....</b> functions below. 
+
+<DT><B>DrawHorizontalTicks()</B> 
+<DD>Internal Function:  Draw the ticks on the X axis.
+The distance between ticks can be defined in a number of ways. <i>Note:
+that for text-linear data its best to let the program handle the
+distance between ticks - the default is  
+1.  (Text-linear data is data where the data is evenly spaced over
+the x axis, no x-value is entered)
+
+<DT><B>DrawImageBorder()</B> 
+<DD>Internal Function: Draw the border around the entire image. Currently this 
+generates the raised border look around the image. 
+
+<DT><B>DrawLabels()</B> 
+<DD>Internal Function: Draw the Title, X-axis label, and the Y-axis label. This
+really just calls DrawTitle, DrawXLabel, and DrawYLabel.
+
+<DT><B>DrawLines()</B> 
+<DD>Internal Function: Draw lines in linear-linear format. 
+$data[] must already be defined
+as $data[] = array("label",x,y1,y2,....) 
+Colors and border colors 
+for each y1, y2, , ... is set by <B>SetDataColors($which_data,$which_border)</B> 
+This function is called if 
+you use SetPlotType("lines") and SetDataType("linear-linear")
+<br>
+
+<DT><B>DrawLineSeries()</B> 
+<DD>Internal Function: Draw lines in text-linear format. 
+$data[] must already be defined
+as $data[] = array("label",y1,y2,y3,....) 
+The x axis is divided evenly, one x-point per 
+$data[] element. <BR>Colors and border colors for each of the y1, y2, ... is set 
+by <B>SetDataColors($which_data,$which_border)</B> 
+This function is called if 
+you use SetPlotType("lines") and SetDataType("text-linear")
+
+<DT><B>DrawLinesError()</B> 
+<DD>Internal Function: Lines and Error Bars as defined by <B>SetPointType</B> and 
+data in linear-linear-error format. $data[] must already be defined
+as $data[] = array("label",x,y,error+,error-) 
+Colors and border colors 
+for each y1, y2, , ... is set by <B>SetDataColors($which_data,$which_border)</B> 
+The shape of the error bars is defined by <B>SetErrorBarShape($which_ebs)</B> 
+and <B>SetErrorBarSize($which_ebs)</B>
+This function is called if 
+you use SetPlotType("lines") and SetDataType("linear-linear-error")
+
+<DT><B>DrawPieChart()</B> 
+<DD>Internal Function: Draw pie chart. Data is in text-linear format. $data[] must 
+already been defined as $data[] = array("label",y1,y2,y3,...)<BR>
+Colors and border colors for each of the y1, y2, ... is set 
+by <B>SetDataColors($which_data,$which_border)</B>
+This function is called if 
+you use SetPlotType("pie") and SetDataType("text-linear")
+
+<DT><B>DrawPlotAreaBackground()</B> 
+<DD>Internal Function: Draw the Background - in the color as defined by <b>X</b>
+and in an area as defined by <b>X</b>
+
+<DT><B>DrawPlotBorder()</B> 
+<DD>Internal Function: Draw the border around the
+plot area - (Note: this is NOT the full image).  This draws
+the rectangle as well as calling the functions 
+<b>DrawVerticalTicks()</b> and <b>DrawXAxis()</b>
+
+<DT><B>DrawTitle()</B> 
+<DD>Internal Function: This will draw the title as set by 
+<b>SetTitle</b> and 
+<b>SetTitleColor</b>. This is also affected by SetUseTTF
+to show how the title appears.
+
+
+<DT><B>DrawVerticalTicks()</B> 
+<DD>Internal Function: Called by DrawPlotBorder. The spacing between the ticks
+is automatically set unless you have previously set the increment
+by 
+	<B>SetNumVertTicks($which_nt)</B> 
+or 
+	<b>SetVertTickIncrements</b> but not both.
+
+<DT><B>DrawXAxis()</B> 
+<DD>Internal Function: Draw the horizontal X axis at the world position X=0.
+
+<DT><B>DrawXDataLabel($xlab,$xpos)</B> 
+<DD>User Function and Internal Function: Draw a data label on the x axis at world 
+position $xpos. The position below
+the x axis is set based on the size of the font, and (if
+using TTF) the maximum string length of the labels, and
+the angle at which the labels are printed. 
+
+<DT><B>DrawXLabel()</B> 
+<DD>Internal Function: Called from DrawLabels. Draws the label of the X-Axis. 
+
+<DT><B>DrawYErrorBar($x_world,$y_world,$error_height,$error_bar_type,$color)</B> 
+<DD>Internal Function: This is similar to DrawDot, but it draws error bars. 
+Draw one set of error bars at $x_world and $y_world where the 
+data is defined in world coordinates (not pixel coordinates).
+
+<DT><B>DrawYLabel()</B> 
+<DD>Internal Function: Called from DrawLabels. Draws the label of the Y-Axis. Its
+position is defined by the size of the font. Typically there is a
+two character height width around the plot area for drawing the
+labels.
+
+<DT><B>FindDataLimits()</B> 
+<DD>Internal Function: This must be called AFTER SetDataType.  It finds
+the maxima and minima for setting the scaling to be
+able to convert from world to pixel coordinates. 
+
+<DT><B>InitImage()</B> 
+<DD>Internal Function: An internal function called to set the 
+image pointer for GD. 
+
+<DT><B>PrintImage()</B> 
+<DD>Internal Function: An internal function which prints the image using the PHP
+functions Header("Content-type:...") and ImageGIF(), ImageJPEG(), 
+or ImagePNG() depending on what the setting is of $this->file_format.
+This is set by <b>SetFileFormat()</b>
+
+<DT><B>SetBackgroundColor($which_color)</B> 
+<DD>User Function: Set the color of the background of the entire image. 
+$which_color can be either a name like "black" or an rgb color array
+array(int,int,int). <br> It defaults to array(222,222,222) if
+not defined.<br>
+
+<DT><B>SetCharacterHeight()</B> 
+<DD>User Function: Not yet implemented
+
+<DT><B>SetColor($color_asked)</B> 
+<DD>Internal Function:  Translate from $color_asked to the index
+name color used in GD. 
+$color_asked can be either a name like "black" or an rgb color array
+array(int,int,int). <br> 
+
+<DT><B>SetDataColors($which_data,$which_border)</B> 
+<DD> If called with $which_data="" it defaults to
+           $which_data = array("blue","bisque",array(0,176,0));
+            $which_border = array("black");
+
+
+<DT><B>SetDataType($which_dt)</B> 
+<DD>User Function: PHPLOT can accept data in a number of different 
+formats. One main difference between PHPLOT and PGPLOT
+is that the x-y or x-y-error data should be passed in 
+with the data grouped together in an array. In PGPLOT
+you would have the X-values in one array and the Y-values
+in a second. This would sometimes lead to really strange
+graphs if for some reason one array was one data element 
+short. <p>
+
+Colors and border colors are set by <b>SetDataColors</b>. Why
+not have colors as part of the same array?  Because most
+data applications are used to putting out raw data and not 
+raw data + color information. <p>
+
+So in PHPLOT the datalabel,x-value,y-value and error are 
+grouped together as a <b>value array</b>. Then the 
+entire set of points to be plotted is passed in as a <b>data array</b>
+E.g. Data_array = array(value_array_1,value_array_2,....) <p>
+See below for examples of the various data types: <br>
+
+<LI>text-linear: Data is displayed at equal spacing along the x-axis. Data 
+is passed in as a data array of value arrays. Each element of the data 
+array is a position on the x-axis. The first element of the value array is 
+the label for that x-axis position, every subsequent element of the value 
+array is a y-value. 
+Example data<br>
+<pre>
+$data = array( 
+	array("label 1",1.1,2,3,4),
+	array("label 2",2,3,4,5),
+	array("label 3",5,6,7,8),
+	array("label 4",10,12,13,14)
+);
+</pre>
+Which will display data points at 
+(1,1.1), (1,2), (1,3), (1,4), (2,2), (2,3)....<br> 
+<IMG SRC="something.png">
+</LI>
+<LI>linear-linear: 
+        X-Y data is passed in like text-linear except 
+that the second element of the value array is the position along the 
+x axis of the data point(s). One data element would be $data[] = (title,x,y1,y2,y3,y4,...)
+or 
+<pre>
+$data = array( 
+	array("label 1",1.1,2,3,4),
+	array("label 2",2,3,4,5),
+	array("label 3",5,6,7,8),
+	array("label 4",10,12,13,14)
+);
+</pre>
+Notice that this is the same as in the previous example except that 
+the  x,y data points are at (1.1,2), (1.1,3), (1.1,4), (2,3)...
+</LI>
+<LI>linear-linear-error:
+Again X-Y data is passed in as an array with each value
+array being (data_label,x_position,y_position,error_plus,error_minus)
+</LI>
+
+<DT><B>SetDataValues($which_dv)</B> 
+<DD>Internal Function: Passes the raw data values into the class variable 
+$this->data_values.
+
+<DT><B>SetDefaultColors()</B> 
+<DD>Internal Function: Sets the default colors when first defining an image. 
+Overridden by functions like <b>SetPlotBgColor</b>,
+        <b>SetBackgroundColor</b>,
+        <b>SetTextColor</b>,
+        <b>SetGridColor</b>,
+        <b>SetLightGridColor</b>,
+        <b>SetTickColor</b>, and
+        <b>SetTitleColor</b>
+
+<DT><B>SetDrawYGrid($which_dyg)</B> 
+<DD>Internal Function: 1 = Draw the Y grid. Anything else, don't draw the Y grid. 
+
+<DT><B>SetEqualXCoord()</B> 
+<DD>Internal Function: For text-linear graphs set the spacing between
+data points on the x-axis. 
+
+<DT><B>SetErrorBarShape($which_ebs)</B> 
+<DD>User Function: Can be "tee" or "line." If it is tee, then
+the half-width of the tee is set by <b>SetErrorBarSize</b>
+
+<DT><B>SetErrorBarSize($which_ebs)</B> 
+<DD>User Function: Size in pixels of the Tee shape of the error bar.
+
+<DT><B>SetFileFormat($which_file_format)</B> 
+<DD>User Function: Set the format of the output graph. Supported formats
+are GIF, JPEG, and PNG.  You can only use those formats
+that are supported by your version of GD. For example, 
+if you use GD-1.8.3 you can not use GIF images. If you 
+use GD-1.2 you can not use PNG or JPEG images. 
+
+
+<DT><B>SetGridColor ($which_color)</B> 
+<DD>User Function: Set the color of the grid. Defaults to "black"
+$which_color can be either a name like "black" or an rgb color array
+array(int,int,int). <br> 
+
+
+<DT><B>SetHorizTickIncrement($which_ti)</B> 
+<DD>User Function: Set where to place the X-tick marks. 
+
+<DT><B>SetImageArea($which_iw,$which_ih)</B> 
+<DD>User Function: Sets the size of the image in pixels. 
+
+<DT><B>SetLabels($xlbl,$ylbl,$title)</B> 
+<DD>Internal Function and User Function: Set the text of the X, Y and Title labels. 
+If you want to just set the X-axis label you can use <b>SetXLabel</b>.
+
+<DT><B>SetLightGridColor ($which_color)</B> 
+<DD>User Function: There are two grid colors, this sets the 
+light grid color. 
+$which_color can be either a name like "black" or an rgb color array
+array(int,int,int). <br> It defaults to array(222,222,222) if
+not defined.<br>
+
+<DT><B>SetLineWidth($which_lt)</B> 
+<DD>User Function: Set the width of lines in pixels for graphs that use
+lines (linepoints and lines). Affects the size of the 
+error bar lines as well. 
+
+<DT><B>SetMargins()</B> 
+<DD>Internal Function: When the image is first created - set the margins
+    as the full area of the view surface (or panel),
+    less a margin of 4 character heights all round for labelling.
+    It thus depends on the current character size, set by SetCharacterHeight().
+
+<DT><B>SetNewPlotAreaPixels($x1,$y1,$x2,$y2)</B> 
+<DD>Reserved - not used yet. 
+
+<DT><B>SetNumVertTicks($which_nt)</B> 
+<DD>User Function: Use this or SetVertTickIncrements but not both.
+
+<DT><B>SetPlotAreaPixels($x1,$y1,$x2,$y2)</B> 
+<DD>User Function: You can use this to set the actual size in 
+pixels of the plot area on the image. 
+
+
+<DT><B>SetPlotAreaWorld($xmin,$ymin,$xmax,$ymax)</B> 
+<DD>User Function and Internal Function: You do not have to call this function as the 
+program will set the plot area automatically based on 
+max values of X and Y. <br> You can call this function
+as SetPlotAreaWorld("","","","") and it will set the 
+plot area based on max/min values of data. 
+
+<DT><B>SetPlotBgColor($which_color)</B> 
+<DD>User Function: Set the Background color of the area on which 
+the plot is defined. Called from <b>PlotAreaBackground</b><br>
+$which_color can be either a name like "black" or an rgb color array
+array(int,int,int). <br> It defaults to array(222,222,222) if
+not defined.
+
+
+<DT><B>SetPlotType($which_pt)</B> 
+<DD>User Function: Can be:  bars, lines, linepoints, area, dots, and pie
+
+<DT><B>SetPointShape($which_pt)</B> 
+<DD>User Function: Can be: rect,circle,diamond,triangle,dot,line,halfline
+
+<DT><B>SetPointSize($which_ps)</B> 
+<DD>User Function: Set the width of the displayed data point for 
+plot_type's that have data points. E.g. dots, linepoints
+This is an integer. For diamonds, values that are even
+make the diamond look better.  
+
+<DT><B>SetPrecisionX($which_prec)</B> 
+<DD>User Function: Set the precision of the data written to the X axis. 
+$which_prec is an integer which represents the number of digits
+displayed to the right of the decimal. This uses the number_format
+command in PHP.
+
+<DT><B>SetPrecisionY($which_prec)</B> 
+<DD>User Function: Set the precision of the data written to the Y axis. 
+$which_prec is an integer which represents the number of digits
+displayed to the right of the decimal. This uses the number_format
+command in PHP.
+
+<DT><B>SetTextColor ($which_color)</B> 
+<DD>User Function: Set the color of text written. It defaults to black if not called. 
+You can call this function multiple times - each time it changes the 
+color of text written. 
+$which_color can be either a name like "black" or an rgb color array
+array(int,int,int). <br> 
+
+<DT><B>SetTickColor ($which_color)</B> 
+<DD>User Function: Set the color of the ticks on the axes
+$which_color can be either a name like "black" or an rgb color array
+array(int,int,int). <br> 
+
+<DT><B>SetTickLength($which_tl)</B> 
+<DD>User Function: Set the length of the tick in pixels for the x axis and y axis. 
+$which_color can be either a name like "black" or an rgb color array
+array(int,int,int). <br> 
+
+<DT><B>SetTitleColor($which_color)</B> 
+<DD>User Function: Set the color of the title. 
+$which_color can be either a name like "black" or an rgb color array
+array(int,int,int). <br> 
+
+<DT><B>SetTitle($title)</B> 
+<DD>User Function: Set the title of the graph. Printed at the top 
+middle of the graph.
+
+<DT><B>SetTranslation()</B> 
+<DD>Internal Function: Calculate the scale and origin for translating from 
+world to pixel coordinates. This is an internal function, 
+not one that you'd use normally, but if you are going to 
+use it make sure you do it after SetDataType. 
+
+<DT><B>SetUseTTF($which_ttf)</B> 
+<DD>User Function: Call this as SetUseTTF(1) when you have TTF compiled into PHP
+otherwise call this as SetUseTTF(0)
+
+<DT><B>SetVertTickIncrement($which_ti)</B> 
+<DD>User Function: Set the distance between tick marks on the Y axis. $which_ti
+is in world coordinates. 
+
+<DT><B>SetXLabelHeight()</B> 
+<DD>Internal Function: This is an internal function that sets the 
+height of the X labels based on the maximum string
+length of the X data. It is used for positioning
+where the labels go relative to the x-axis. 
+
+
+<DT><B>SetXLabel($xlbl)</B> 
+<DD>User Function: Set the label for the X axis.
+
+<DT><B>SetYLabelWidth()</B> 
+<DD>Internal Function: Set the 
+width of the Y Label based on the maximum string
+length of the Y data. It is used for positioning
+where the labels go relative to the y-axis. 
+
+
+<DT><B>SetYLabel($ylbl)</B> 
+<DD>User Function: Set the label for the Y axis.
+
+<DT><B>TTFBBoxSize($size, $angle, $font, $string)</B> 
+<DD>Internal Function: Calculate the size of the box which encloses the
+text string <b>$string</b> using font <b>$font</b>,  
+angle <b>$angle</b> and size <b>$size</b>. This is
+an internal function which is not called unless use_ttf is
+set to 1. 
+
+<DT><B>xtr($x_world)</B> 
+<DD>Internal Function: Translate into x-pixels coordinates from x world coordinates.
+
+<DT><B>ytr($y_world)</B> 
+<DD>Internal Function: Translate into y-pixels coordinates from y world coordinates.
+
+</DL>
+</BODY></HTML>

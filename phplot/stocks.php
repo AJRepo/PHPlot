@@ -26,7 +26,8 @@ for ($i=0; $i<=30; $i++){
 	$data[] = array("$label[$i]",$i+1,$a,$b,$c);
 }
 	$graph->SetDataType("linear-linear-error");  //Must be first thing
-	$graph->SetPrecision(0);
+	$graph->SetPrecisionX(0);
+	$graph->SetPrecisionY(0);
 	$graph->SetUseTTF("0");
 	$graph->SetDrawYGrid("1"); // 1 = true
 	$graph->SetFileFormat("gif");

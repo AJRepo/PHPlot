@@ -29,6 +29,8 @@ function SetColor($color_asked) {
 
 class PHPlot{
 
+	var $is_inline = 0;
+
 	var $image_width  = 600;	//Total Width in Pixels (world coordinates)
 	var $image_height = 400; 	//Total Height in Pixels (world coordinates)
 	var $x_left_margin;
@@ -110,6 +112,11 @@ class PHPlot{
 	var $line_width = 2;
 
 
+	function SetIsInline($which_ii) {
+		$this->is_inline = $which_ii;
+		return true;
+	}
+
 	function SetUseTTF($which_ttf) {
 		$this->use_ttf = $which_ttf;
 		return true;
@@ -168,15 +175,21 @@ class PHPlot{
 	function PrintImage() {
 		switch($this->file_format) { 
 			case "png":
-				Header("Content-type: image/gif");
+				if ($this->is_inline == 0) { 
+					Header("Content-type: image/gif");
+				}
 				ImagePng($this->img);
 				break;
 			case "jpg":
-				Header("Content-type: image/gif");
+				if ($this->is_inline == 0) { 
+					Header("Content-type: image/gif");
+				}
 				ImageJPEG($this->img);
 				break;
 			case "gif":
-				Header("Content-type: image/gif");
+				if ($this->is_inline == 0) { 
+					Header("Content-type: image/gif");
+				}
 				ImageGif($this->img);
 				break;
 			default:
