@@ -42,6 +42,7 @@ class PHPlot{
 	var $y_bot_margin;
 	var $plot_area = array(5,5,600,400);
 	var $x_axis_position = 0;	//Where to draw the X_axis (world coordinates)
+	var $y_axis_position = "";  //Leave blank for Y axis at left of plot. (world coord.)
 	var $xscale_type = "linear";  //linear or log
 	var $yscale_type = "linear";
 
@@ -128,7 +129,7 @@ class PHPlot{
 	var $legend;  //an array
 	var $legend_x_pos;
 	var $legend_y_pos;
-	var $title_txt = "Title\nThe test";
+	var $title_txt = "Title\nThe test\ntest 2";
 	var $y_label_txt = "Y Data";
 	var $x_label_txt = "X Data";
 	var $y_grid_label_type = "data";  //data, none, time, other
@@ -229,6 +230,10 @@ class PHPlot{
 		return true;
 	}
 
+	function SetYAxisPosition($which_pos) {
+		$this->y_axis_position = $which_pos;
+		return true;
+	}
 	function SetXAxisPosition($which_pos) {
 		$this->x_axis_position = $which_pos;
 		return true;
@@ -446,7 +451,7 @@ class PHPlot{
 					$xpos, $ypos, $this->title_color, $this->title_ttffont, $this->title_txt); 
 			} else { 
 				ImageString($this->img, $this->title_font, 
-($this->plot_area[0] + $this->plot_area_width / 2) - (strlen($str[$i]) * $this->title_font_width/2), 
+					($this->plot_area[0] + $this->plot_area_width / 2) - (strlen($str[$i]) * $this->title_font_width/2), 
 					(2+$i)*$this->title_font_height, 
 					$str[$i], 
 					$this->title_color); 
@@ -1070,6 +1075,7 @@ class PHPlot{
 			break;
 		}
 		$this->DrawVerticalTicks();
+		$this->DrawYAxis();
 		$this->DrawXAxis();
 		return true;
 	}
@@ -1120,6 +1126,21 @@ class PHPlot{
 		$this->tick_length = $which_tl;
 		return true;
 	}
+
+	function DrawYAxis() { 
+		//Draw Line at left side or at this->y_axis_position
+		if ($this->y_axis_position != "") { 
+			$yaxis_x = $this->xtr($this->y_axis_position);
+		} else { 
+			$yaxis_x = $this->plot_area[0];
+		}
+
+		ImageLine($this->img, $yaxis_x, $this->plot_area[1], 
+			$yaxis_x, $this->plot_area[3], $this->grid_color);
+
+		//Still to come: Tick marks
+
+	} //function DrawYAxis
 
 	function DrawXAxis() {
 		//Draw X Axis at Y=$x_axis_postion
@@ -1268,11 +1289,18 @@ class PHPlot{
 	} // function DrawHorizontalTicks
 
 	function DrawVerticalTicks() {
-		//Ticks and lables are drawn on the left border of PlotArea.
+		if ($this->y_axis_position != "") { 
+			//Ticks and lables are drawn on the left border of yaxis
+			$yaxis_x = $this->xtr($this->y_axis_position);
+		} else { 
+			//Ticks and lables are drawn on the left border of PlotArea.
+			$yaxis_x = $this->plot_area[0];
+		}
+		
 		//Left Bottom
 		//ImageLine($this->img,(-$this->tick_length+$this->xtr($this->plot_min_x)),
 		//		$this->ytr($this->plot_min_y),$this->xtr($this->plot_min_x),$this->ytr($this->plot_min_y),$this->tick_color);
-		ImageLine($this->img,(-$this->tick_length+$this->plot_area[0]),
+		ImageLine($this->img,(-$this->tick_length+$yaxis_x),
 				$this->plot_area[1],$this->xtr($this->plot_min_x),$this->plot_area[1],$this->tick_color);
 
 		switch ($this->y_grid_label_type) {
@@ -1296,7 +1324,7 @@ class PHPlot{
 			break;
 		}
 		ImageString($this->img,$this->small_font,
-			( $this->plot_area[0] - $this->y_label_width - $this->tick_length/2),
+			( $yaxis_x - $this->y_label_width - $this->tick_length/2),
 			( -($this->small_font_height/2.0) + $this->ytr($this->plot_min_y)),$ylab, $this->text_color);
 
 		//Right Bottom
@@ -1368,23 +1396,24 @@ class PHPlot{
 			}
 			$y_pixels = $this->ytr($y_tmp);
 
-			//Left Side Ticks
-			ImageLine($this->img,(-$this->tick_length+$this->plot_area[0]),
-				$y_pixels,$this->plot_area[0],
-				$y_pixels, $this->tick_color);
-
-			//Right Side Ticks
-			ImageLine($this->img,($this->xtr($this->plot_max_x)+$this->tick_length),
-				$y_pixels,$this->plot_area[2],
-				$y_pixels,$this->tick_color);
-
 			// gdStyled only supported with GD v3
 			//ImageLine($this->img,$this->xtr($this->plot_min_x),$this->ytr($y_tmp),$this->xtr($this->plot_max_x),$this->ytr($y_tmp),gdStyled);
 			if ($this->draw_y_grid == 1) {
-				ImageLine($this->img,$this->xtr($this->plot_min_x),$y_pixels,
-					$this->xtr($this->plot_max_x),$y_pixels,$this->light_grid_color);
+				ImageLine($this->img,$this->plot_area[0]+1,$y_pixels,
+					$this->plot_area[2]-1,$y_pixels,$this->light_grid_color);
 			}
-			ImageString($this->img, $this->small_font,($this->plot_area[0] - $this->y_label_width - $this->tick_length/2),
+
+			//Left Side Ticks
+			ImageLine($this->img,(-$this->tick_length+$yaxis_x),
+				$y_pixels,$yaxis_x,
+				$y_pixels, $this->tick_color);
+
+			//Right Side Ticks
+			ImageLine($this->img,($this->plot_area[2]+$this->tick_length),
+				$y_pixels,$this->plot_area[2],
+				$y_pixels,$this->tick_color);
+
+			ImageString($this->img, $this->small_font,($yaxis_x - $this->y_label_width - $this->tick_length/2),
 				( -($this->small_font_height/2.0) + $y_pixels),$ylab, $this->text_color);
 			$i++;
 			$y_tmp += $delta_y;
