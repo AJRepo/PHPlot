@@ -722,17 +722,14 @@ class PHPlot{
 
 
 	function ReportError($error_message, $is_fatal) {
-	// INTERNAL and USER function
-	// Main function for error handling
-	// Outputs the error message to stdout if is_fatal is set
-	// otherwise the error message is output inside the generated image
-
-		if ($is_fatal) echo "<br><br><b>Fatal error</b>: $error_message<br><br>";
-		else $this->DrawError($error_message);
+		if ($is_fatal) { 
+			echo "<p><b>Fatal error</b>: $error_message<p>";
+		} else { 
+			$this->DrawError($error_message);
+		}
 	}
 
 	function DrawError($error_message) {
-	// INTERNAL function
 	// only to be executed by ReportError, does print the error message inline into
 	// the generated image
 

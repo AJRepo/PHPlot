@@ -190,6 +190,11 @@ functions Header("Content-type:...") and ImageGIF(), ImageJPEG(),
 or ImagePNG() depending on what the setting is of $this->file_format.
 This is set by <b>SetFileFormat()</b>
 
+<p><DT><b>ReportError</B>
+<DD>Internal and user function:
+     Main function for error handling
+     Outputs the error message to stdout if is_fatal is set
+     otherwise the error message is output inside the generated image
 
 
 <p><DT><B>SetColor($color_asked)</B>
