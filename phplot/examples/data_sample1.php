@@ -53,7 +53,7 @@ Graph type:
   <option value="pie">Pie (*)</option>
   <option value="linepoints">Line and points</option>
   <option value="points">Points</option>
-  <option value="area">Area (*)</option>
+  <option value="area">Area</option>
 </select>
 </p>
 <div style="text-align:right; font-size: smaller;">
