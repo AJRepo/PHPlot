@@ -71,7 +71,7 @@
     <li>Horizontal bars.</li>
     <li>Simple isometric 3D plots.</li>
     <li>Automatic placement of several plots in one image.</li>
-    <li>Better or automatica management of many drawing options (ticks, labels, etc.)</li>
+    <li>Better or automatic management of many drawing options (ticks, labels, etc.)</li>
     <li>Subclassing for optimisation: move features into subclasses for optional use 
         and leave a fast core.</li>
    </ul>
@@ -142,8 +142,8 @@ Description of the use and inner workings of PHPlot:
 <h3>The Authors</h3>
 <p>
 <ul>
-    <li>Please fill me...</li>
-    <li>Please fill me...</li>
+    <li>Afan Ottenheimer</li>
+    <li>Miguel de Benito</li>
     <li>Please fill me...</li>
     <li>Please fill me...</li>
 </p>

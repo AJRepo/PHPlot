@@ -13,11 +13,6 @@
 	<meta name="robots" content="all" />
 	<meta name="locale" content="en-us" />
     <link type="text/css" rel="stylesheet" href="style.css" />
-	<style>
-	<!--
-		pre { margin-left: 0.25cm; border: none; padding: 0cm; font-family: monospace, "white-space" }
-	-->
-	</style>
 </head>
 
 <body lang="en-us" bgcolor="#ffffff">
@@ -47,40 +42,41 @@ The PHP image generating library uses the GD library to create elementary
 shapes (elipse, line, rectangle, ...).  
 PHPlot is a graphics library which provides a means by which you can have your
 (PHP enabled) web server create and manipulate graphs as objects and
-display the completed graph as an image. 
+display the completed graph as an image. Data sets passed to PHPlot use a very 
+convenient way for database driven sites, in rows with y coordinate data.
 </p>
 
 <p>First, lets discuss how PHPlot works in general with some
 terminology. A PHPlot <i>image </i>can consist of several <i>graphs </i>,
 each graph consisting of several <i>elements</i>.
 You define an object (e.g. a variable like <code>$graph</code>),
-select the properties of the element that
-compose the graph and &quot;<i>Draw</i>&quot; what you want into the
-object. When you have the image the way you want it, you "<i>Print</i>"
-it whith <code>PrintImage</code>, which either inserts the image
+select the properties of the element that compose the graph and "<i>Draw</i>"
+what you want into the object. Tipically by selecting the plot type with
+<code>SetPlotType</code> and at the end calling <code>DrawGraph</code>. You
+can also directly invoke <code>PrintImage</code>, which either inserts the image
 into the data streaming to the client or writes it to disk. 
 </p>
-<p>There are <em>World coordinates</em>, which are the XY coordinates 
+<p>In PHPlot there are <em>World coordinates</em>, which are the XY coordinates 
 relative to the axis origin, in the units of the data set; and 
 <em>device (pixel)</em> coordinates which in GD are relative to the 
 origin at the upper left side of the image. 
 </p>
-<p>You can think of the &quot;Draw&quot; functions as shaping the
-image object and the &quot;Print&quot; function as the method of
+<p>You can think of the "Draw" functions as shaping the
+image object and the "Print" function as the method of
 finally creating the digital image. PHPlot is smart enough that if
-you only have one graph on an image, then the &quot;Print&quot; is
+you only have one graph on an image, then the "Print" is
 done for you automatically. If you do have multiple graphs per image
-then you'll need to use both the &quot;Draw&quot; and &quot;Print&quot;
+then you'll need to use both the "Draw" and "Print"
 functions. We'll talk about that a bit later. 
 </p>
 <p>Since PHP is a server scripted language you have several options
-for how you can &quot;Print&quot; the image. You can:</p>
+for how you can "Print" the image. You can:</p>
 <ol>
 	<li>Write the image as a file on the server. (You specify a file
 	name and can specify caching as well)</li>
 	<li>Have the raw data stream out within an HTML file, as &lt;IMG
-	SRC=&quot;my_PHPlot_code.php&quot;&gt;</li>
-	<li>Precede the raw data with Apache image headers and call the
+	SRC="my_PHPlot_code.php"&gt;</li>
+	<li>Precede the raw data with html image headers and call the
 	script directly (showing up as an image) e.g.
 	http://somewhere/my_PHPlot_code2.php .</li>
 </ol>
@@ -94,7 +90,7 @@ More information about PHPlot can be found at <a href="www.phplot.com">www.PHPlo
 
 <p>You create a PHPlot object by first including the code to be used
 and then defining the variable:</p>
-<table width="75%" border="1" bordercolor="#000000" cellpadding="4" cellspacing="0" frame="hsides" bgcolor="#cccccc">
+<table class="box">
   <tr>
     <td>
 	  <pre>&lt;?php
@@ -111,16 +107,15 @@ $graph = new PHPlot();   // here we define the variable graph
 information about the object and manipulate the object. In these
 following examples, <code>$graph</code> is the variable/object we created
 above.</p>
-<p>
-  <a href="#top"><img src="top.gif" alt="top" align="bottom" border="0" />Back to top </a> 
-</p>
+
+<p> <a href="#top">Back to top</a> </p>
 
 
 <h2>Real World Examples</h2>
 <h3><a name="first"></a>Case 1: A simple graph</h3>
 
 <p>We will start with a simple line graph. </p>
-<table width="75%" border="1" bordercolor="#000000" cellpadding="4" cellspacing="0" bgcolor="#cccccc">
+<table class="box">
   <tr>
     <td>
       <pre>&lt;?php
@@ -191,7 +186,7 @@ A couple of things to note:
 the size, the title and the x/y axis labels. All we need to do is modify 
 the variable <code>$graph</code> before printing the image. We achieve this with:
 </p>
-<table width="75%" border="1" bordercolor="#000000" cellpadding="4" cellspacing="0" bgcolor="#cccccc">
+<table class="box">
   <tr>
     <td>
       <pre>&lt;?php            
@@ -200,7 +195,7 @@ include ('./phplot.php');
 //create an graph object 300x250 pixels
 $graph = new PHPlot(300,250); 
 //Set titles
-$graph-&gt;SetTitle(&quot;Title\n\rSubtitle&quot;);
+$graph-&gt;SetTitle("Title\n\rSubtitle");
 $graph-&gt;SetXTitle('X data');
 $graph-&gt;SetYTitle('Y data');
 
@@ -215,8 +210,8 @@ $graph-&gt;SetYTitle('Y data');
  <img src="imgs/qstart_fig2.png" name="graphic1" align="bottom" border="0"><br />
  Figure 2 
 </p>
-<p>Note that in order for the &quot;\n&quot;
-and &quot;\r &quot; to be interpreted as new line/new return
+<p>Note that in order for the "\n"
+and "\r " to be interpreted as new line/new return
 characters for <i>SetTitle </i>you have to enclose the string in
 <b>double </b>quotes. 
 </p>
@@ -231,7 +226,7 @@ we specify array('label', y<sub>1</sub>, y<sub>2</sub>, y<sub>3</sub>,
 <br />
 Now our data will have three Y values for each position on the X axis
 </p>
-<table width="75%" border="1" bordercolor="#000000" cellpadding="4" cellspacing="0" bgcolor="#cccccc">
+<table class="box">
   <tr>
     <td>
       <pre>&lt;?php
@@ -242,7 +237,7 @@ include('./phplot.php');
 $graph = new PHPlot(300,250);
 
 //Set titles
-$graph-&gt;SetTitle(&quot;Title\n\rSubtitle&quot;);
+$graph-&gt;SetTitle("Title\n\rSubtitle");
 $graph-&gt;SetXTitle('X data');
 $graph-&gt;SetYTitle('Y data');
 
@@ -275,7 +270,7 @@ Also the missing data point is skipped, this behaviour can be adjusted with
 create a graph in PHPlot. A nice start, but now we'd like to add some
 customization, namely different fonts, margins and types of graphs. 
 </p>
-<p><a href="#top"><img src="top.gif" alt="top" align=bottom border=0>Back to top</a> </p>
+<p><a href="#top">Back to top</a> </p>
 
 
 <h3>Customization</h3>
@@ -295,43 +290,43 @@ customization, namely different fonts, margins and types of graphs.
 We'll look at that command with bars and lines in the next example when we look at
 multiple graphs per image. 
 </p>
-<p>As we discussed before - there are several ways we can manipulate
+<p>As we discussed before, there are several ways we can manipulate
 the look/feel of the graph object. As we go further we will introduce
 some of these types in addition to some of
 the more advanced features of PHPlot. For more specialized examples
 and a complete list of functions see <a href="www.phplot.com">www.PHPlot.com</a>
-or look in the examples directory that came with PHPlot.</p>
-<p>
-  <a href="#top"><img src="top.gif" alt="top" align="bottom" border="0" />Back to top </a> 
+or look in the examples directory that came with PHPlot.
 </p>
+
+<p> <a href="#top">Back to top</a> </p>
 
 <h3><a name="multiple"></a> <b>Case 3: Multiple Graphs per Image </b></h3>
 
 <p>To create an image with several separate graphs
 on it is a straightforward process. As in the previous examples we
 first have to create an object (e.g. variable) but now we tell it to
-<i>not</i> Print the image at the same time as the draw command. Now
-we want it to wait for the explicit <i>PrintImage </i>command. To
-tell PHPlot this is the way we want to work – we use the
+<i>not</i> print the image at the same time as the draw command. Now
+we want it to wait for the explicit <code>PrintImage</code> function call. 
+To tell PHPlot this is the way we want to work, we use the
 <code>SetPrintImage</code> function.
 <code>SetPrintImage(TRUE)</code> is the default, and tells to draw the image
 when <code>DrawGraph</code> is called. To turn this
 off we use <code>SetPrintImage(FALSE)</code>.</p>
 <p>Now we will draw several images entirely within one object. That
-means that if we set a value for one graph There are a couple of
+means that if we set a value for one graph, there will be a couple of
 other commands we will need. 
 </p>
 <p>To specify in pixels the placement of each graph we use
-<i>SetNewPlotAreaPixels</i>. The format is
-SetNewPlotAreaPixels(<i>upper_left_x, upper_left_y, lower_right_x,
-lower_right_y</i>) . Again we are using the GD coordinates where 0,0
+<code>SetNewPlotAreaPixels</code>. The format is
+<code>SetNewPlotAreaPixels(upper_left_x, upper_left_y, lower_right_x,
+lower_right_y)</code> . Again we are using the GD coordinates where 0,0
 is the upper left corner of the image. 
 </p>
 <p>In more detail:</p>
-<table width="75%" border="1" bordercolor="#000000" cellpadding="4" cellspacing="0" bgcolor="#cccccc">
+<table class="box">
   <tr>
-    <td width=100% valign=top bgcolor="#cccccc">
-      <pre style="margin-left: 3.04cm">&lt;?php
+    <td>
+      <pre>&lt;?php
 include('./PHPlot.php');  // here we include the PHPlot code 
 $graph = new PHPlot(400,250);   // here we define the variable $graph 
 $graph-&gt;SetPrintImage(0); //Don't draw the image yet
@@ -356,9 +351,9 @@ $graph-&gt;PrintImage();
 
 <p>Lets now create an image with 2 graphs on it with some example data.  </p>
 
-<table width=75% border=1 bordercolor="#000000" cellpadding=4 cellspacing=0 frame=hsides bgcolor="#cccccc">
+<table class="box">
   <tr>
-    <td width=100% valign=top bgcolor="#cccccc">
+    <td>
       <pre>&lt;?php
 //Include the code
 include('./phplot.php');
@@ -378,15 +373,15 @@ $example_data = array(
      array('g',7)
 );
 
-$graph-&gt;SetDataType(&quot;text-data&quot;);  //Must be called before SetDataValues
+$graph-&gt;SetDataType("text-data");  //Must be called before SetDataValues
 
 $graph-&gt;SetDataValues($example_data);
 $graph-&gt;SetYTickIncrement(2);  //a smaller graph now - so we set a new tick increment
 
 $graph-&gt;SetXLabelAngle(90);
-$graph-&gt;SetXTitle(&quot;&quot;);
-$graph-&gt;SetYTitle(&quot;Price&quot;);
-$graph-&gt;SetPlotType(&quot;lines&quot;);
+$graph-&gt;SetXTitle("");
+$graph-&gt;SetYTitle("Price");
+$graph-&gt;SetPlotType("lines");
 $graph-&gt;SetLineWidth(1);
 
 $graph-&gt;SetNewPlotAreaPixels(70,10,375,100);  // where do we want the graph to go
@@ -405,14 +400,14 @@ $example_data = array(
      array('g',70,20,30)
 );
 
-$graph-&gt;SetDataType(&quot;text-data&quot;);  //Must be called before SetDataValues
+$graph-&gt;SetDataType("text-data");  //Must be called before SetDataValues
 
 $graph-&gt;SetDataValues($example_data);
 
-$graph-&gt;SetXTitle(&quot;&quot;);
-$graph-&gt;SetYTitle(&quot;Verbal Cues&quot;);
+$graph-&gt;SetXTitle("");
+$graph-&gt;SetYTitle("Verbal Cues");
 $graph-&gt;SetYTickIncrement(10);
-$graph-&gt;SetPlotType(&quot;bars&quot;);
+$graph-&gt;SetPlotType("bars");
 $graph-&gt;SetXLabelAngle(0);  //have to re-set as defined above
 
 $graph-&gt;SetNewPlotAreaPixels(70,120,375,220);
