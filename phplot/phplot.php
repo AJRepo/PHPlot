@@ -118,23 +118,27 @@ class PHPlot {
     var $legend_y_pos = '';
 
 
-//Tick Formatting
+//Ticks
     var $x_tick_length = 5;                 // tick length in pixels for upper/lower axis
     var $y_tick_length = 5;                 // tick length in pixels for left/right axis
-    var $x_tick_cross = 3;                 // ticks cross x axis this many pixels
-    var $y_tick_cross = 3;                 // ticks cross y axis this many pixels
     
-    var $num_y_ticks = '';
-    var $y_tick_increment = '';             // Set num_y_ticks or y_tick_increment, not both.
+    var $x_tick_cross = 3;                  // ticks cross x axis this many pixels
+    var $y_tick_cross = 3;                  // ticks cross y axis this many pixels
+    
+    var $x_tick_pos = 'plotdown';           // plotdown, plotup, both, xaxis, none 
     var $y_tick_pos = 'plotleft';           // plotright, plotleft, both, yaxis, none 
     
     var $num_x_ticks = '';
+    var $num_y_ticks = '';
+    
     var $x_tick_increment = '';             // Set num_x_ticks or x_tick_increment, not both.
-    var $x_tick_pos = 'plotdown';           // plotdown, plotup, both, xaxis, none 
+    var $y_tick_increment = '';             // Set num_y_ticks or y_tick_increment, not both.
     
     var $skip_top_tick = FALSE;
     var $skip_bottom_tick = FALSE;
-
+    var $skip_left_tick = FALSE;
+    var $skip_right_tick = FALSE;
+        
 //Grid Formatting
     var $draw_x_grid = FALSE;
     var $draw_y_grid = TRUE;
@@ -928,7 +932,6 @@ class PHPlot {
 
     /*!
      * Sets output format.
-     * TODO: Maybe a single SetOutputFormat() in which to specify file format,
      * inline condition, cacheable, etc.
      */
     function SetFileFormat($which_file_format) 
@@ -1127,7 +1130,111 @@ class PHPlot {
         return TRUE;
     }
 
+/////////////////////////////////////////////
+///////////                            LABELS
+/////////////////////////////////////////////
 
+
+    /*!
+     * Sets position for X labels following data points.
+     */
+    function SetXDataLabelPos($which_xdlp) 
+    {
+        //$this->x_data_label_pos = $this->_CheckOption($which_xdlp, 'plotdown, plotup, both, xaxis, all, none',
+        //                                              __FUNCTION__);
+        $this->x_data_label_pos = $which_xdlp;
+        if ($which_xdlp != 'none')
+            $this->x_tick_label_pos == 'none';
+            
+        return TRUE;
+    }
+    
+    /*!
+     * Sets position for Y labels following data points.
+     */
+    function SetYDataLabelPos($which_ydlp) 
+    {
+      //$this->y_data_label_pos = $this->_CheckOption($which_ydlp, 'plotleft, plotright, both, yaxis, all, none',
+      //                                              __FUNCTION__);
+        $this->y_data_label_pos = $which_ydlp;
+        if ($which_ydlp != 'none')
+            $this->y_tick_label_pos == 'none';
+            
+        return TRUE;
+    }
+
+   
+    /*!
+     * Sets position for X labels following ticks (hence grid lines)
+     */
+    function SetXTickLabelPos($which_xtlp) 
+    {
+        //$this->x_tick_label_pos = $this->_CheckOption($which_xtlp, 'plotdown, plotup, both, xaxis, all, none',
+        //                                              __FUNCTION__);
+        $this->x_tick_label_pos = $which_xtlp;
+        if ($which_xtlp != 'none')
+            $this->x_data_label_pos == 'none';
+            
+        return TRUE;
+    }
+    
+    /*!
+     * Sets position for Y labels following ticks (hence grid lines)
+     */
+    function SetYTickLabelPos($which_ytlp) 
+    {
+      //$this->y_tick_label_pos = $this->_CheckOption($which_ytlp, 'plotleft, plotright, both, yaxis, all, none',
+      //                                              __FUNCTION__);
+        $this->y_tick_label_pos = $which_ytlp;
+        if ($which_ytlp != 'none')
+            $this->y_data_label_pos == 'none';
+            
+        return TRUE;
+    }
+    
+    /*!
+     * Sets type for tick and data labels on X axis.
+     */
+    function SetXLabelType($which_xlt) 
+    {
+        //$this->x_label_type = $this->_CheckOption($which_xlt, 'data, title, time', __FUNCTION__);
+        $this->x_label_type = $which_xlt;
+        return TRUE;
+    }
+    
+    /*!
+     * Sets type for tick and data labels on Y axis.
+     */
+    function SetYLabelType($which_ylt) 
+    {
+        //$this->y_label_type = $this->_CheckOption($which_ylt, 'data, time', __FUNCTION__);
+        $this->y_label_type = $which_ylt;
+        return TRUE;
+    }
+
+    function SetXTimeFormat($which_xtf) 
+    {
+        $this->x_time_format = $which_xtf;
+        return TRUE;
+    }
+    function SetYTimeFormat($which_ytf) 
+    {
+        $this->y_time_format = $which_ytf;
+        return TRUE;
+    }
+
+    function SetXLabelAngle($which_xla) 
+    {
+        $this->x_label_angle = $which_xla;
+        return TRUE;
+    }
+
+    function SetYLabelAngle($which_yla)
+    {
+        $this->y_label_angle = $which_yla;
+        return TRUE;
+    }
+ 
 /////////////////////////////////////////////
 ///////////                              MISC
 /////////////////////////////////////////////
@@ -1137,7 +1244,6 @@ class PHPlot {
      *
      *****************                       __FUNCTION__ needs PHP 4.3.0
      *
-     * CHECK Set*LabelParams():
      * Checks the valididy of an option.
      *  \param which_opt  String to check.
      *  \param which_acc  String of accepted choices.
@@ -1245,101 +1351,29 @@ class PHPlot {
     }
 
     /*!
-     * Sets parameters for Data labels (labels following data points):
-     *    Horizontal placement,
-     *    Vertical placement,
-     *    Horizontal labels type (time, data, etc...)
-     *    Vertical labels type (...)
      */
-    function SetDataLabelParams($which_xpos, $which_ypos, $which_xtype, $which_ytype) 
+    function SetDrawYGrid($which_dyg) 
     {
-             
-        $this->x_data_label_pos = $which_xpos;
-        $this->y_data_label_pos = $which_ypos;
-        $this->x_label_type = $which_xtype;
-        $this->y_label_type = $which_ytype;
-        
-        /*
-        $this->x_data_label_pos = $this->_CheckOption($which_xpos, 'plotdown, plotup, both, plot, all, none',
-                                                      __FUNCTION__);
-        $this->y_data_label_pos = $this->_CheckOption($which_ypos, 'plotleft, plotright, both, plot, all, none',
-                                                      __FUNCTION__);
-        $this->x_label_type = $this->_CheckOption($which_xtype, 'data, title, time', __FUNCTION__);
-        $this->y_label_type = $this->_CheckOption($which_ytype, 'data, time', __FUNCTION__);
-        */
-        
-        // Decide whether to show tick labels or not. Never if data labels are to be shown
-        if ($this->x_data_label_pos !== 'none')
-            $this->x_tick_label_pos == 'none';
-                    
-        if ($this->y_data_label_pos !== 'none')
-            $this->y_tick_label_pos == 'none';
-       
-    }
-    /*!
-     * Sets parameters for Tick labels (labels next to axis ticks, following the grid subdivisions)
-     *    Horizontal placement,
-     *    Vertical placement,
-     *    Horizontal labels type (time, data, etc...)
-     *    Vertical labels type (...)
-     */
-     function SetTickLabelParams($which_xpos, $which_ypos, $which_xtype, $which_ytype) 
-     {
-             
-        $this->x_tick_label_pos = $which_xpos;
-        $this->y_tick_label_pos = $which_ypos;
-        $this->x_label_type = $which_xtype;
-        $this->y_label_type = $which_ytype;
-        
-        /*
-        $this->x_tick_label_pos = $this->_CheckOption($which_xpos, 'plotdown, plotup, both, xaxis, all, none',
-                                                      __FUNCTION__);
-        $this->y_tick_label_pos = $this->_CheckOption($which_ypos, 'plotleft, plotright, both, yaxis, all, none',
-                                                      __FUNCTION__);
-        $this->x_label_type = $this->_CheckOption($which_xtype, 'data, title, time', __FUNCTION__);
-        $this->y_label_type = $this->_CheckOption($which_ytype, 'data, time', __FUNCTION__);
-        */
-
-        // Decide whether to show data labels or not. Never if tick labels are to be shown
-        if ($this->x_tick_label_pos !== 'none')
-            $this->x_data_label_pos == 'none';
-                    
-        if ($this->y_tick_label_pos !== 'none')
-            $this->y_data_label_pos == 'none';
-
+        $this->draw_y_grid = $which_dyg;
         return TRUE;
     }
-
+    
     /*!
-     * Sets grid parameters
      */
-    function SetGridParams($which_dg, $which_dsh = TRUE)
+    function SetDrawXGrid($which_dxg) 
     {
-        switch ($which_dg) {
-        case 'x':
-            $this->draw_x_grid = TRUE;
-            $this->draw_y_grid = FALSE;
-            break;
-        case 'y':
-            $this->draw_x_grid = FALSE;
-            $this->draw_y_grid = TRUE;
-            break;
-        case 'both':
-            $this->draw_x_grid = TRUE;
-            $this->draw_y_grid = TRUE;
-            break;
-        case 'none':
-            $this->draw_x_grid = FALSE;
-            $this->draw_y_grid = FALSE;
-            break;
-        default:
-            $this->PrintError("SetGridParams(): unknown grid selection: '$which_dg'");
-            return FALSE;
-        }
+        $this->draw_x_grid = $which_dxg;
+        return TRUE;
+    }
+    
+    /*!
+     */
+    function SetDrawDashedGrid($which_dsh) 
+    {
         $this->dashed_grid = $which_dsh;
-        
         return TRUE;
     }
+
 
     /*!
      * Sets the graph's title.
@@ -1451,29 +1485,7 @@ class PHPlot {
         return TRUE;
     }
 
-    function SetXTimeFormat($which_xtf) 
-    {
-        $this->x_time_format = $which_xtf;
-        return TRUE;
-    }
-    function SetYTimeFormat($which_ytf) 
-    {
-        $this->y_time_format = $which_ytf;
-        return TRUE;
-    }
-    
-    function SetXLabelAngle($which_xla) 
-    {
-        $this->x_label_angle = $which_xla;
-        return TRUE;
-    }
-
-    function SetYLabelAngle($which_yla)
-    {
-        $this->y_label_angle = $which_yla;
-        return TRUE;
-    }
-    
+  
     function SetXScaleType($which_xst) 
     { 
         $this->xscale_type = $which_xst;
@@ -1729,7 +1741,6 @@ class PHPlot {
     /*!
      * Calculates image margins on the fly from title positions and sizes,
      * and tick labels positions and sizes.
-     * \todo: add variable y_label_angle?
      *
      * FIXME: fix x_data_label_pos behaviour. Now we are leaving room for it AND x_tick_label_pos
      *        maybe it shouldn't be so...
@@ -1789,13 +1800,19 @@ class PHPlot {
         
         if ($this->x_title_pos == 'plotdown' || $this->x_title_pos == 'both')
             $this->y_bot_margin += $this->x_title_height;
-            
-        if ($this->x_tick_label_pos == 'plotdown' || $this->x_tick_label_pos == 'both')            
-            $this->y_bot_margin += $this->x_tick_label_height;
-
+ 
         if ($this->x_tick_pos == 'plotdown' || $this->x_tick_pos == 'both')
             $this->y_bot_margin += $this->x_tick_length * 2;
 
+        if ($this->x_tick_pos == 'xaxis' && ($this->x_axis_position == '' || $this->x_axis_position == 0))
+            $this->y_bot_margin += $this->x_tick_length * 2;
+        
+        if ($this->x_tick_label_pos == 'plotdown' || $this->x_tick_label_pos == 'both')            
+            $this->y_bot_margin += $this->x_tick_label_height;
+
+        if ($this->x_tick_label_pos == 'xaxis' && ($this->x_axis_position == '' || $this->x_axis_position == 0))
+            $this->y_bot_margin += $this->x_tick_label_height;
+           
         if ($this->x_data_label_pos == 'plotdown' || $this->x_data_label_pos == 'both')
             $this->y_bot_margin += $this->x_tick_label_height;
            
@@ -1996,15 +2013,30 @@ class PHPlot {
         
         // User provided y axis position?
         if ($this->y_axis_position != '') { 
+            // Make sure we draw our axis inside the plot
+            $this->y_axis_position = ($this->y_axis_position < $this->plot_min_x) 
+                                     ? $this->plot_min_x : $this->y_axis_position;
+            $this->y_axis_position = ($this->y_axis_position > $this->plot_max_x) 
+                                     ? $this->plot_max_x : $this->y_axis_position;
             $this->y_axis_x_pixels = $this->_xtr($this->y_axis_position);
         } else { 
-            $this->y_axis_x_pixels = $this->plot_area[0];
+            // Default to bottom axis
+            $this->y_axis_x_pixels = $this->_xtr($this->plot_min_x);
         }
         // User provided x axis position?
         if ($this->x_axis_position != '') { 
+            // Make sure we draw our axis inside the plot
+            $this->x_axis_position = ($this->x_axis_position < $this->plot_min_y) 
+                                     ? $this->plot_min_y : $this->x_axis_position;
+            $this->x_axis_position = ($this->x_axis_position > $this->plot_max_y) 
+                                     ? $this->plot_max_y : $this->x_axis_position;
             $this->x_axis_y_pixels = $this->_ytr($this->x_axis_position);
         } else { 
-            $this->x_axis_y_pixels = $this->plot_area[3];
+            if ($this->yscale_type == 'log')
+                $this->x_axis_y_pixels = $this->_ytr(1);
+            else 
+                // Default to left axis
+                $this->x_axis_y_pixels = $this->_ytr($this->plot_min_y);
         }
 
     } // function _CalcTranslation()
@@ -2098,14 +2130,6 @@ class PHPlot {
 ///////////////                         TICKS
 /////////////////////////////////////////////    
 
-/********** 
-
-    TODO?: Group Tick functions in 
-    
-        SetTickParams($which_xpos, $which_xinc, $which_xnum, $which_ypos, $which_yinc, $which_ynum)
-
-**************/
-   
     /*!
      * Use either this or SetNumXTicks() to set where to place x tick marks
      */
@@ -2452,28 +2476,19 @@ class PHPlot {
         }
 
         $y_tmp = (double)$this->plot_min_y;
-       
-        if ($this->skip_bottom_tick) { 
-            $y_tmp += $delta_y;
-        }
+        $y_end = (double)$this->plot_max_y;
         
-        if ($this->skip_top_tick) {
-            $end = $this->plot_max_y - 0.000000001;         // FIXME?? Dirty ...
-        } else {
-            $end = $this->plot_max_y;
-        }
+        if (! $this->skip_bottom_tick)
+            $y_end += $delta_y;
         
-/* MBD: this screws things up... ?
-        //For log plots: set first increment to 9 to get: 1, 10, 20, 30, ...
-        if (($this->yscale_type == 'log') && ($this->plot_min_y == 1) && ($delta_y % 10 == 0) && ($y_tmp == 1)) { 
-            $y_tmp = $y_tmp - 1; 
-        }
-*/
-        for (;$y_tmp < $end; $y_tmp += $delta_y) {
+        if ($this->skip_top_tick)
+            $y_end += $delta_y;
+        
+        for (;$y_tmp < $y_end; $y_tmp += $delta_y) {
             $ylab = $this->_FormatLabel('y', $y_tmp);
             $y_pixels = $this->_ytr($y_tmp);
 
-            // Draw grid lines
+            // Horizontal grid line
             if ($this->draw_y_grid) {
                 ImageLine($this->img, $this->plot_area[0]+1, $y_pixels, $this->plot_area[2]-1, $y_pixels, $style);
             }
@@ -2492,9 +2507,6 @@ class PHPlot {
      * Ticks and tick labels can be down of plot only, up of plot only, 
      * both on up and down of plot [, or crossing a user defined X-axis (TODO)]
      *
-     * \fixme lefmost tick stuff should be corrected, maybe introduced into the loop
-     *        despite any necessary ifs (not to overwrite the axis with the grid)
-     *        inside. Upper and right ticks have to be drawn too.
      * \note Original vertical code submitted by Marlin Viss
      */
     function _DrawXTicks() 
@@ -2507,18 +2519,6 @@ class PHPlot {
             $style = $this->ndx_light_grid_color;
         }
         
-/* sometimes this overlaps, and maybe it isn't that necessary...        XXX XXX XXX XXX 
-        // Leftmost Tick
-        ImageLine($this->img, $this->plot_area[0],
-                $this->plot_area[3]+$this->x_tick_length,
-                $this->plot_area[0], $this->plot_area[3], $this->ndx_tick_color);
-                
-        $xlab = $this->_FormatLabel('x', 0);
-        
-        $this->DrawText($this->x_label_font, $this->x_label_angle, $this->plot_area[0], 
-                        $this->plot_area[3] + $this->x_tick_length*1.5, $this->ndx_text_color, 
-                        $xlab, 'center', 'bottom');
-*/
         // Calculate x increment between ticks
         if ($this->x_tick_increment) {
             $delta_x = $this->x_tick_increment;
@@ -2528,9 +2528,18 @@ class PHPlot {
             $delta_x =($this->plot_max_x - $this->plot_min_x) / 10 ;
         }
 
-        $x_tmp = (double)($this->plot_min_x + $delta_x);  //Don't overwrite left Y axis 
+        $x_tmp = (double)($this->plot_min_x);
+        $x_end = $this->plot_max_x;
+        
+        // Should the leftmos tick be drawn?
+        if ($this->skip_left_tick)
+            $x_tmp += $delta_x;
 
-        for (;$x_tmp < $this->plot_max_x; $x_tmp += $delta_x) { // We use '<' not to overwrite rightmost y axis
+        // And the rightmost?
+        if (! $this->skip_right_tick)
+            $x_end += $delta_x;
+            
+        for (;$x_tmp < $x_end; $x_tmp += $delta_x) { 
             $xlab = $this->_FormatLabel('x', $x_tmp);
             $x_pixels = $this->_xtr($x_tmp);
             
@@ -2669,7 +2678,7 @@ class PHPlot {
         $max_len = 0;
         foreach ($this->legend as $leg) {
             $len = strlen($leg);
-            $max_len = max($max_len, $len);
+            $max_len = ($len > $max_len) ? $len : $max_len;
         }
         $max_len += 5;          // Leave room for the boxes and margins
         
@@ -3784,66 +3793,35 @@ class PHPlot {
     }
 
     /*!
-     * \deprecated  Use SetTickLabelParams()
+     * \deprecated  Use SetYTickLabelType()
      */
     function SetYGridLabelType($which_yglt) 
     {
-        $this->SetTickLabelParams($this->x_tick_label_pos, $this->y_tick_label_pos, 
-                                  $this->x_label_type, $which_yglt);
-        return TRUE;
+        return $this->SetYTickLabelType($which_yglt);
     }
 
     /*!
-     * \deprecated  Use SetTickLabelParams()
+     * \deprecated  Use SetXTickLabelType()
      */
     function SetXGridLabelType($which_xglt) 
     {
-        $this->SetTickLabelParams($this->x_tick_label_pos, $this->y_tick_label_pos, $which_xglt, 
-                                  $this->y_label_type);
-        return TRUE;
+        return $this->SetXTickLabelType($which_xglt);
     }
     /*!
-     * \deprecated  Use SetTickLabelParams()
+     * \deprecated Use SetYTickLabelPos()
      */
     function SetYGridLabelPos($which_yglp) 
     {
-        $this->SetTickLabelParams($this->x_tick_label_pos, $which_yglp, $this->x_label_type, 
-                                  $this->y_label_type);
-        return TRUE;
+        return $this->SetYTickLabelPos($which_yglp);
     }
     /*!
-     * \deprecated Use SetTickLabelParams()
+     * \deprecated Use SetXTickLabelPos()
      */
     function SetXGridLabelPos($which_xglp) 
     {
-        $this->SetTickLabelParams($which_xglp, $this->y_tick_label_pos, $this->x_label_type, 
-                                  $this->y_label_type);
-        return TRUE;
+        return $this->SetXTickLabelPos($which_xglp);
     }
 
-    /*!
-     * \deprecated Use SetGridParams()
-     */
-    function SetDrawYGrid($which_dyg) 
-    {
-        $this->draw_y_grid = $which_dyg;  // 1 = TRUE or anything else = FALSE
-    }
-    
-    /*!
-     * \deprecated use SetGridParams()
-     */
-    function SetDrawXGrid($which_dxg) 
-    {
-        $this->draw_x_grid = $which_dxg;  // 1 = TRUE or anything else = FALSE
-    }
-    
-    /*!
-     * \deprecated Use SetGridParams()
-     */
-    function SetDashedGrid($which_dsh) 
-    {
-        $this->dashed_grid = $which_dsh;    // 1 = TRUE, 0 = FALSE
-    }
 
     /*!
      * \deprecated Use SetXtitle()
@@ -3883,16 +3861,14 @@ class PHPlot {
      * Draw Labels (not grid labels) on X Axis, following data points. Default position is 
      * down of plot. Care must be taken not to draw these and x_tick_labels as they'd probably overlap.
      *
-     * \deprecated Use SetDataLabelParams() instead
+     * \deprecated Use SetXDataLabelPos()
      */
     function SetDrawXDataLabels($which_dxdl) 
     {
         if ($which_dxdl == '1' )
-            $this->SetDataLabelParams('plotdown', $this->y_data_label_pos, 
-                                      $this->x_label_type, $this->y_label_type);
+            $this->SetXDataLabelPos('plotdown');
         else
-            $this->SetDataLabelParams('none', $this->y_data_label_pos, 
-                                      $this->x_label_type, $this->y_label_type);
+            $this->SetXDataLabelPos('none');
     }
 
     /*!
