@@ -19,7 +19,7 @@
 //PHPLOT Version 4.?.?
 //Requires PHP 4 or later 
 
-//error_reporting(E_ALL);
+error_reporting(E_ALL);
 
 class PHPlot {
 
@@ -160,16 +160,16 @@ class PHPlot {
     var $y_tick_label_width;
 
 //Tick Formatting
-    var $htick_length = 5;                  // pixels: tick length for upper/lower axis
-    var $vtick_length = 5;                  // pixels: tick length for left/right axis
+    var $x_tick_length = 5;                 // pixels: tick length for upper/lower axis
+    var $y_tick_length = 5;                 // pixels: tick length for left/right axis
     
-    var $num_vert_ticks = '';
-    var $vert_tick_increment='';            // Set num_vert_ticks or vert_tick_increment, not both.
-    var $vert_tick_position = 'plotleft';   // plotright, plotleft,both, yaxis, none (MBD)
+    var $num_y_ticks = '';
+    var $y_tick_increment='';               // Set num_y_ticks or y_tick_increment, not both.
+    var $y_tick_position = 'plotleft';      // plotright, plotleft,both, yaxis, none (MBD)
     
-    var $num_horiz_ticks='';
-    var $horiz_tick_increment='';           // Set num_horiz_ticks or horiz_tick_increment, not both.
-    var $horiz_tick_position = 'plotdown';  // plotdown, plotup, both, none (MBD)
+    var $num_x_ticks='';
+    var $x_tick_increment='';               // Set num_x_ticks or x_tick_increment, not both.
+    var $x_tick_position = 'plotdown';      // plotdown, plotup, both, none (MBD)
     
     var $skip_top_tick = '0';
     var $skip_bottom_tick = '0';
@@ -676,6 +676,35 @@ class PHPlot {
         }
         return true;
     }
+    
+    /*! 
+     * Prints an error message to stdout and dies 
+     */
+    function PrintError($error_message) {
+        echo "<p><b>Fatal error</b>: $error_message<p>";
+        die;
+    }
+
+    /*!
+     * Prints an error message inline into the generated image and draws it.
+     * Defaults to centered position (MBD)
+     */
+    function DrawError($error_message,$where_x=NULL,$where_y=NULL) {
+        if (($this->img) == "")
+            $this->InitImage();
+        
+        $ypos = (! $where_y) ? $this->image_height/2 : $where_y;
+        $xpos = (! $where_x) ? $this->image_width/2 : $where_x;
+        ImageRectangle($this->img, 0,0, $this->image_width, $this->image_height,
+                       ImageColorAllocate($this->img,255,255,255));
+       
+        $this->DrawText($this->generic_font, 0, $xpos, $ypos, ImageColorAllocate($this->img,0,0,0),
+                        $error_message, 'center', 'center');
+
+        $this->PrintImage();
+        return true;
+    }
+
 
 /////////////////////////////////////////////
 ///////////                              MISC
@@ -708,41 +737,49 @@ class PHPlot {
         $this->draw_x_data_labels = $which_dxdl;  // 1=true or anything else=false
     }
 
-    function SetDrawYGrid($which_dyg) {
-        $this->draw_y_grid = $which_dyg;  // 1=true or anything else=false
+    /*
+     * Sets parameters for Tick labels (data labels next to axis ticks)
+     */
+     function SetTickLabelParams($which_xpos, $which_ypos, $which_xtype, $which_ytype) {
+        $this->x_tick_label_pos = $which_xpos;
+        $this->y_tick_label_pos = $which_ypos;
+        $this->x_tick_label_type = $which_xtype;
+        $this->y_tick_label_type = $which_ytype;
+        return true;
     }
 
-    function SetDrawXGrid($which_dxg) {
-        $this->draw_x_grid = $which_dxg;  // 1=true or anything else=false
-    }
-
-    function SetDashedGrid($which_dsh) {
+    /*!
+     * Sets grid parameters
+     */
+    function SetGridParams($which_dg, $which_dsh=1)
+    {
+        switch ($which_dg) {
+            case 'x':
+                $this->draw_x_grid = 1;
+                $this->draw_y_grid = 0;
+                break;
+            case 'y':
+                $this->draw_y_grid = 1;
+                $this->draw_x_grid = 0;
+                break;
+            case 'both':
+                $this->draw_x_grid = 1;
+                $this->draw_y_grid = 1;
+                break;
+            case 'none':
+                $this->draw_x_grid = 0;
+                $this->draw_y_grid = 0;
+                break;
+            default:
+                $this->PrintError("SetGridParams(): unknown grid selection: '$which_dg'");
+                return FALSE;
+        }
         $this->dashed_grid = $which_dsh;    // 1 = true, 0 = false
         if ($which_dsh)
             $this->SetDashedStyle($this->ndx_light_grid_color);
+        return TRUE;
     }
 
-    function SetYGridLabelType($which_yglt) {
-        $this->y_tick_label_type = $which_yglt;
-        return true;
-    }
-    
-    function SetXGridLabelType($which_xglt) {
-        $this->x_tick_label_type = $which_xglt;
-        return true;
-    }
-
-    function SetYGridLabelPos($which_yglp) {
-        $this->y_tick_label_pos = $which_yglp;
-        return true;
-    }
-
-    function SetXGridLabelPos($which_xglp) {
-        $this->x_tick_label_pos = $which_xglp;
-        return true;
-    }
-    
-    
     /*!
      * Sets the graph's title.
      */
@@ -762,9 +799,12 @@ class PHPlot {
     }
     
     /*!
-     * Sets the X axis title.
+     * Sets the X axis title and position.
      */
-    function SetXTitle($which_xtitle) {
+    function SetXTitle($which_xtitle, $which_xpos='plotdown') {
+
+        $this->x_title_pos = $which_xpos;
+        
         $this->x_title_txt = $which_xtitle;
         
         $str = split("\n", $which_xtitle);
@@ -782,9 +822,12 @@ class PHPlot {
     
    
     /*!
-     * Sets the Y axis title.
+     * Sets the Y axis title and position.
      */
-    function SetYTitle($which_ytitle) {
+    function SetYTitle($which_ytitle, $which_ypos='plotleft') {
+
+        $this->y_title_pos = $which_ypos;
+
         $this->y_title_txt = $which_ytitle;
         
         $str = split("\n", $which_ytitle);
@@ -799,17 +842,7 @@ class PHPlot {
         
         return true;
     }
-    
-    function SetXTitlePos($xpos) {
-        $this->x_title_pos = $xpos;
-        return true;
-    }
-    
-    function SetYTitlePos($xpos) {
-        $this->y_title_pos = $xpos;
-        return true;
-    }
-   
+
     function SetShading($which_s) { 
         $this->shading = $which_s;
         return true;
@@ -1072,7 +1105,7 @@ class PHPlot {
             $this->y_top_margin += $this->x_title_height + $this->safe_margin;
             
         if ($this->x_tick_label_pos == 'plotup' || $this->x_tick_label_pos == 'both')
-            $this->y_top_margin += $this->x_tick_label_height + $this->htick_length * 2;
+            $this->y_top_margin += $this->x_tick_label_height + $this->x_tick_length * 2;
 
         // Lower title and tick labels
         $this->y_bot_margin = $this->safe_margin * 2; // FIXME (this *2 should not be here)
@@ -1081,7 +1114,7 @@ class PHPlot {
             $this->y_bot_margin += $this->x_title_height;
             
         if ($this->x_tick_label_pos == 'plotdown' || $this->x_tick_label_pos == 'both')            
-            $this->y_bot_margin += $this->x_tick_label_height + $this->htick_length * 2;
+            $this->y_bot_margin += $this->x_tick_label_height + $this->x_tick_length * 2;
 
         // Left title and tick labels
         $this->x_left_margin = $this->safe_margin;
@@ -1090,7 +1123,7 @@ class PHPlot {
             $this->x_left_margin += $this->y_title_width;
             
         if ($this->y_tick_label_pos == 'plotleft' || $this->y_tick_label_pos == 'both')
-            $this->x_left_margin += $this->y_tick_label_width + $this->vtick_length * 2;
+            $this->x_left_margin += $this->y_tick_label_width + $this->y_tick_length * 2;
             
         // Right title and tick labels
         $this->x_right_margin = $this->safe_margin;
@@ -1099,7 +1132,7 @@ class PHPlot {
             $this->x_right_margin += $this->y_title_width + $this->safe_margin;
             
         if ($this->y_tick_label_pos == 'plotright' || $this->y_tick_label_pos == 'both')
-            $this->x_right_margin += $this->y_tick_label_width + $this->vtick_length * 2;
+            $this->x_right_margin += $this->y_tick_label_width + $this->y_tick_length * 2;
         
 
         $this->x_tot_margin = $this->x_left_margin + $this->x_right_margin;
@@ -1209,34 +1242,6 @@ class PHPlot {
     } //function SetPlotAreaWorld
    
    
-    /*! 
-     * Prints an error message to stdout and dies 
-     */
-    function PrintError($error_message) {
-        echo "<p><b>Fatal error</b>: $error_message<p>";
-        die;
-    }
-
-    /*!
-     * Prints an error message inline into the generated image 
-     * Defaults to centered position (MBD)
-     */
-    function DrawError($error_message,$where_x=NULL,$where_y=NULL) {
-        if (($this->img) == "")
-            $this->InitImage();
-        
-        $ypos = (! $where_y) ? $this->image_height/2 : $where_y;
-        $xpos = (! $where_x) ? $this->image_width/2 : $where_x;
-        ImageRectangle($this->img, 0,0, $this->image_width, $this->image_height,
-                       ImageColorAllocate($this->img,255,255,255));
-       
-        $this->DrawText($this->generic_font, 0, $xpos, $ypos, ImageColorAllocate($this->img,0,0,0),
-                        $error_message, 'center', 'center');
-
-        $this->PrintImage();
-        return true;
-    }
-
     /*!
      * Returns an array with the size of the bounding box of an
      * arbitrarily placed (rotated) TrueType text string.
@@ -1652,55 +1657,63 @@ class PHPlot {
 ///////////////                         TICKS
 /////////////////////////////////////////////    
 
+/********** 
 
+    TODO?: Group Tick functions in 
+    
+        SetTickParams($which_xpos, $which_xinc, $which_xnum, $which_ypos, $which_yinc, $which_ynum)
+
+**************/
    
-    function SetHorizTickIncrement($which_ti) {
+    function SetXTickIncrement($which_ti) {
         //Use either this or NumHorizTicks to set where to place x tick marks
         if ($which_ti) {
-            $this->horiz_tick_increment = $which_ti;  //world coordinates
+            $this->x_tick_increment = $which_ti;  //world coordinates
         } else {
             if (!$this->max_x) {
                 $this->FindDataLimits();  //Get maxima and minima for scaling
             }
-            //$this->horiz_tick_increment = ( ceil($this->max_x * 1.2) - floor($this->min_x * 1.2) )/10;
-            $this->horiz_tick_increment =  ($this->plot_max_x  - $this->plot_min_x  )/10;
+            //$this->x_tick_increment = ( ceil($this->max_x * 1.2) - floor($this->min_x * 1.2) )/10;
+            $this->x_tick_increment =  ($this->plot_max_x  - $this->plot_min_x  )/10;
         }
-        $this->num_horiz_ticks = ''; //either use num_vert_ticks or vert_tick_increment, not both
+        $this->num_x_ticks = ''; //either use num_y_ticks or y_tick_increment, not both
         return true;
     }
 
-    function SetVertTickIncrement($which_ti) {
+    function SetYTickIncrement($which_ti) {
         //Use either this or NumVertTicks to set where to place y tick marks
         if ($which_ti) {
-            $this->vert_tick_increment = $which_ti;  //world coordinates
+            $this->y_tick_increment = $which_ti;  //world coordinates
         } else {
             if (!$this->max_y) {
                 $this->FindDataLimits();  //Get maxima and minima for scaling
             }
-            //$this->vert_tick_increment = ( ceil($this->max_y * 1.2) - floor($this->min_y * 1.2) )/10;
-            $this->vert_tick_increment =  ($this->plot_max_y  - $this->plot_min_y  )/10;
+            //$this->y_tick_increment = ( ceil($this->max_y * 1.2) - floor($this->min_y * 1.2) )/10;
+            $this->y_tick_increment =  ($this->plot_max_y  - $this->plot_min_y  )/10;
         }
-        $this->num_vert_ticks = ''; //either use num_vert_ticks or vert_tick_increment, not both
+        $this->num_y_ticks = ''; //either use num_y_ticks or y_tick_increment, not both
         return true;
     }
 
-    function SetNumHorizTicks($which_nt) {
-        $this->num_horiz_ticks = $which_nt;
-        $this->horiz_tick_increment = '';  //either use num_horiz_ticks or horiz_tick_increment, not both
+
+
+    function SetNumXTicks($which_nt) {
+        $this->num_x_ticks = $which_nt;
+        $this->x_tick_increment = '';  //either use num_x_ticks or x_tick_increment, not both
         return true;
     }
-    function SetNumVertTicks($which_nt) {
-        $this->num_vert_ticks = $which_nt;
-        $this->vert_tick_increment = '';  //either use num_vert_ticks or vert_tick_increment, not both
+    function SetNumYTicks($which_nt) {
+        $this->num_y_ticks = $which_nt;
+        $this->y_tick_increment = '';  //either use num_y_ticks or y_tick_increment, not both
         return true;
     }
     
-    function SetVertTickPos($which_tp) { 
-        $this->vert_tick_position = $which_tp;  //plotleft, plotright, both, yaxis, none
+    function SetYTickPos($which_tp) { 
+        $this->y_tick_position = $which_tp;  //plotleft, plotright, both, yaxis, none
         return true;
     }
-    function SetHorizTickPos($which_tp) { 
-        $this->horiz_tick_position = $which_tp; //plotdown, plotup, both, none
+    function SetXTickPos($which_tp) { 
+        $this->x_tick_position = $which_tp; //plotdown, plotup, both, none
         return true;
     }
 
@@ -1709,13 +1722,13 @@ class PHPlot {
         return true;
     }
 
-    function SetHTickLength($which_ln) {
-        $this->htick_length = $which_ln;
+    function SetXTickLength($which_ln) {
+        $this->x_tick_length = $which_ln;
         return true;
     }
     
-    function SetVTickLength($which_ln) {
-        $this->vtick_length = $which_ln;
+    function SetYTickLength($which_ln) {
+        $this->y_tick_length = $which_ln;
         return true;
     }
     
@@ -1934,7 +1947,7 @@ class PHPlot {
         // Lower title
         if ($this->x_title_pos == 'plotdown' || $this->x_title_pos == 'both') {
            $ypos = $this->ytr($this->plot_min_y) + $this->x_tick_label_height + 
-                   $this->htick_length*2 + $this->safe_margin;
+                   $this->x_tick_length*2 + $this->safe_margin;
             $this->DrawText($this->x_title_font, $this->x_title_angle,
                             $xpos, $ypos, $this->ndx_title_color, $this->x_title_txt,'center');
         } 
@@ -1992,11 +2005,8 @@ class PHPlot {
         ImageLine($this->img, $yaxis_x, $this->plot_area[1], 
             $yaxis_x, $this->plot_area[3], $this->ndx_grid_color);
 
-        // Draw ticks, if any
-        if ($this->vert_tick_position != 'none') { 
-            $this->DrawVerticalTicks();
-        }
-
+        // Draw ticks, labels and grid, if any
+        $this->DrawYTicks();
     }
     
     /*
@@ -2006,25 +2016,25 @@ class PHPlot {
         //Draw Tick and Label for Y axis
         $ylab =$this->FormatTickLabel('y',$this->x_axis_position);
         if ($this->skip_bottom_tick != 1) { 
-            $this->DrawVerticalTick($ylab,$this->x_axis_position);
+            $this->DrawYTick($ylab,$this->x_axis_position);
         }
 
         //Draw X Axis at Y=$x_axis_postion
         ImageLine($this->img,$this->plot_area[0]+1,$this->ytr($this->x_axis_position),
                 $this->xtr($this->plot_max_x)-1,$this->ytr($this->x_axis_position),$this->ndx_tick_color);
 
-        //X Ticks and Labels
+        // Draw ticks, labels and grid
         // FIXME: With text-data, the vertical grid never gets drawn. (MBD)
-//        if ($this->data_type != 'text-data') { //labels for text-data done at data drawing time for speed.
-            $this->DrawHorizontalTicks();
-//        }
+        //if ($this->data_type != 'text-data') { //labels for text-data done at data drawing time for speed.
+            $this->DrawXTicks();
+        //}
         return true;
     }
 
     /*!
-     * Draw Just one Tick, called from DrawVerticalTicks()
+     * Draw Just one Tick, called from DrawYTicks()
      */
-    function DrawVerticalTick($which_ylab, $which_ypos) {
+    function DrawYTick($which_ylab, $which_ypos) {
     
         if ($this->y_axis_position != "") { 
             //Ticks and lables are drawn on the left border of yaxis
@@ -2047,35 +2057,35 @@ class PHPlot {
         }
 
         //Ticks to the Left of the Plot Area
-        if (($this->vert_tick_position == "plotleft") || ($this->vert_tick_position == "both") ) { 
-            ImageLine($this->img,(-$this->htick_length+$yaxis_x),
+        if (($this->y_tick_position == "plotleft") || ($this->y_tick_position == "both") ) { 
+            ImageLine($this->img,(-$this->x_tick_length+$yaxis_x),
                       $y_pixels,$yaxis_x,
                       $y_pixels, $this->ndx_tick_color);
         }
 
         //Ticks to the Right of the Plot Area
-        if (($this->vert_tick_position == "plotright") || ($this->vert_tick_position == "both") ) { 
-            ImageLine($this->img,($this->plot_area[2]+$this->htick_length),
+        if (($this->y_tick_position == "plotright") || ($this->y_tick_position == "both") ) { 
+            ImageLine($this->img,($this->plot_area[2]+$this->x_tick_length),
                       $y_pixels,$this->plot_area[2],
                       $y_pixels,$this->ndx_tick_color);
         }
         
         //Ticks on the Y Axis 
-        if (($this->vert_tick_position == "yaxis") ) { 
-            ImageLine($this->img,$yaxis_x - $this->vtick_length, $y_pixels,$yaxis_x,$y_pixels,$this->ndx_tick_color);
+        if (($this->y_tick_position == "yaxis") ) { 
+            ImageLine($this->img,$yaxis_x - $this->y_tick_length, $y_pixels,$yaxis_x,$y_pixels,$this->ndx_tick_color);
         }
 
         // Labels to the left of the plot area
         if ($this->y_tick_label_pos == 'plotleft' || $this->y_tick_label_pos == 'both') {
-            $this->DrawText($this->y_label_font, 0, $yaxis_x - $this->vtick_length * 1.5, 
+            $this->DrawText($this->y_label_font, 0, $yaxis_x - $this->y_tick_length * 1.5, 
                             $y_pixels, $this->ndx_text_color, $which_ylab, 'right', 'center');
         }
         // Labels to the right of the plot area
         if ($this->y_tick_label_pos == 'plotright' || $this->y_tick_label_pos == 'both') {
-            $this->DrawText($this->y_label_font, 0, $this->plot_area[2] + $this->vtick_length * 2,
+            $this->DrawText($this->y_label_font, 0, $this->plot_area[2] + $this->y_tick_length * 1.5,
                             $y_pixels, $this->ndx_text_color, $which_ylab, 'left', 'center');
         }
-   }       // Function DrawVerticalTick()
+   }       // Function DrawYTick()
 
 
     /*!
@@ -2083,7 +2093,7 @@ class PHPlot {
      * Ticks and ticklabels can be left of plot only, right of plot only, 
      * both on the left and right of plot, or crossing a user defined Y-axis
      */
-    function DrawVerticalTicks() {
+    function DrawYTicks() {
 
         if ($this->skip_top_tick != 1) { //If tick increment doesn't hit the top 
             //Left Top
@@ -2128,10 +2138,10 @@ class PHPlot {
         }
         
         // maxy is always > miny so delta_y is always positive
-        if ($this->vert_tick_increment) {
-            $delta_y = $this->vert_tick_increment;
-        } elseif ($this->num_vert_ticks) {
-            $delta_y = ($this->plot_max_y - $this->plot_min_y) / $this->num_vert_ticks;
+        if ($this->y_tick_increment) {
+            $delta_y = $this->y_tick_increment;
+        } elseif ($this->num_y_ticks) {
+            $delta_y = ($this->plot_max_y - $this->plot_min_y) / $this->num_y_ticks;
         } else {
             $delta_y =($this->plot_max_y - $this->plot_min_y) / 10 ;
         }
@@ -2151,14 +2161,14 @@ class PHPlot {
 
             $ylab = $this->FormatTickLabel('y',$y_tmp);
 
-            $this->DrawVerticalTick($ylab,$y_tmp);
+            $this->DrawYTick($ylab,$y_tmp);
 
             $y_tmp += $delta_y;
         }
 
         return true;
 
-    } // function DrawVerticalTicks
+    } // function DrawYTicks
 
 
     /*!
@@ -2171,24 +2181,24 @@ class PHPlot {
      *        inside. Upper and right ticks have to be drawn too.
      * \note Original vertical code submitted by Marlin Viss
      */
-    function DrawHorizontalTicks() {
+    function DrawXTicks() {
     
         // Leftmost Tick
         ImageLine($this->img,$this->plot_area[0],
-                $this->plot_area[3]+$this->htick_length,
+                $this->plot_area[3]+$this->x_tick_length,
                 $this->plot_area[0],$this->plot_area[3],$this->ndx_tick_color);
                 
         $xlab = $this->FormatTickLabel('x', 0);
         
         $this->DrawText($this->x_label_font, $this->x_label_angle, $this->plot_area[0], 
-                        $this->plot_area[3] + $this->htick_length*2, $this->ndx_text_color, 
+                        $this->plot_area[3] + $this->x_tick_length*1.5, $this->ndx_text_color, 
                         $xlab, 'center', 'bottom');
 
         // Calculate x increment between ticks
-        if ($this->horiz_tick_increment) {
-            $delta_x = $this->horiz_tick_increment;
-        } elseif ($this->num_horiz_ticks) {
-            $delta_x = ($this->plot_max_x - $this->plot_min_x) / $this->num_horiz_ticks;
+        if ($this->x_tick_increment) {
+            $delta_x = $this->x_tick_increment;
+        } elseif ($this->num_x_ticks) {
+            $delta_x = ($this->plot_max_x - $this->plot_min_x) / $this->num_x_ticks;
         } else {
             $delta_x =($this->plot_max_x - $this->plot_min_x) / 10 ;
         }
@@ -2202,14 +2212,14 @@ class PHPlot {
             $x_pixels = $this->xtr($x_tmp);
 
             // Bottom Tick
-            if ($this->horiz_tick_position == 'plotdown' || $this->horiz_tick_position == 'both') {
-                  ImageLine($this->img,$x_pixels,$this->plot_area[3] + $this->htick_length,
-                    $x_pixels,$this->plot_area[3], $this->ndx_tick_color);
+            if ($this->x_tick_position == 'plotdown' || $this->x_tick_position == 'both') {
+                  ImageLine($this->img,$x_pixels,$this->plot_area[3] + $this->x_tick_length,
+                            $x_pixels,$this->plot_area[3], $this->ndx_tick_color);
             }
             // Top Tick
-            if ($this->horiz_tick_position == 'plotup' || $this->horiz_tick_position == 'both') {
-                ImageLine($this->img, $x_pixels, $this->plot_area[1] - $this->htick_length,
-                    $x_pixels, $this->plot_area[1], $this->ndx_tick_color);
+            if ($this->x_tick_position == 'plotup' || $this->x_tick_position == 'both') {
+                ImageLine($this->img, $x_pixels, $this->plot_area[1] - $this->x_tick_length,
+                          $x_pixels, $this->plot_area[1], $this->ndx_tick_color);
             }
             
             // Vertical grid lines
@@ -2226,19 +2236,19 @@ class PHPlot {
             // Lower X axis tick labels
             if ($this->x_tick_label_pos == 'plotdown' || $this->x_tick_label_pos == 'both') {
                 $this->DrawText($this->x_label_font, $this->x_label_angle, $x_pixels, 
-                                $this->plot_area[3] + $this->htick_length * 2, $this->ndx_text_color, 
+                                $this->plot_area[3] + $this->x_tick_length*1.5, $this->ndx_text_color, 
                                 $xlab, 'center', 'bottom');
             }
             // Upper X axis tick labels
             if ($this->x_tick_label_pos == 'plotup' || $this->x_tick_label_pos == 'both') {
                 $this->DrawText($this->x_label_font, $this->x_label_angle, $x_pixels, 
-                                $this->plot_area[1] - $this->htick_length * 2, $this->ndx_text_color, 
+                                $this->plot_area[1] - $this->x_tick_length*1.5, $this->ndx_text_color, 
                                 $xlab, 'center', 'top');
             }
             $x_tmp += $delta_x;
         }
 
-    } // function DrawHorizontalTicks
+    } // function DrawXTicks
 
     /*!
      * 
@@ -2315,7 +2325,7 @@ class PHPlot {
    
     /*!
      * Draws the data label associated with a point in the plot.
-     * This is different from x_labels drawn by DrawHorizontalTicks() and care
+     * This is different from x_labels drawn by DrawXTicks() and care
      * should be taken not to draw both, as they'd probably overlap.
      * Calling of this function in DrawLines(), etc is triggered by draw_datalabels
      */
@@ -3062,7 +3072,9 @@ class PHPlot {
                         $this->DrawPlotAreaBackground();
 
                     $this->DrawPieChart();
-                    $this->DrawLabels();
+                    // Pie charts don't need x/y titles...
+                    $this->DrawTitle();
+                    //$this->DrawLabels();
                     break;
                 default:
                     $this->DrawPlotBorder();
@@ -3085,32 +3097,75 @@ class PHPlot {
 /////////////////////////////////////////////
    
     /*!
-     * Deprecated, use SetVertTickPos('none') instead.
+     * Deprecated, use SetYTickPos('none') instead.
      */
     function SetDrawVertTicks($which_dvt) {
         if ($which_dvt != 1)
-            $this->SetVertTickPos('none');
+            $this->SetYTickPos('none');
         return true;
     } 
         
     /*!
-     * Deprecated, use SetHorizTickPos('none') instead.
+     * Deprecated, use SetXTickPos('none') instead.
      */
     function SetDrawHorizTicks($which_dht) {
         if ($which_dht != 1)
-           $this->SetHorizTickPos('none');
+           $this->SetXTickPos('none');
         return true;
     }
     
     /*!
-     * Deprecated, use SetFont() instead.
+     * \deprecated Use SetNumXTicks instead.
+     */
+    function SetNumHorizTicks($n) {
+        return $this->SetNumXTicks($n);
+    }
+
+    /*!
+     * \deprecated Use SetNumYTicks instead.
+     */
+    function SetNumVertTicks($n) {
+        return $this->SetNumYTicks($n);
+    }
+    
+    /*!
+     * \deprecated Use SetXTickIncrement() instead.
+     */
+    function SetHorizTickIncrement($inc) {
+        return $this->SetXTickIncrement($inc);
+    }
+    
+   
+    /*!
+     * \deprecated Use SetYTickIncrement() instead.
+     */
+    function SetVertTickIncrement($inc) {
+        return $this->SetYTickIncrement($inc);
+    }
+    
+    /*!
+     * \deprecated Use SetYTickPos() instead.
+     */
+    function SetVertTickPosition($which_tp) { 
+        return $this->SetYTickPos($which_tp); 
+    }
+    
+    /*!
+     * \deprecated Use SetXTickPos() instead.
+     */
+    function SetHorizTickPosition($which_tp) { 
+        return $this->SetXTickPos($which_tp); 
+    }
+
+    /*!
+     * \deprecated Use SetFont() instead.
      */
     function SetTitleFontSize($which_size) {
         return $this->SetFont('title', $which_size);
     }
     
     /*!
-     * Deprecated, use SetFont() instead.
+     * \deprecated Use SetFont() instead.
      */
     function SetAxisFontSize($which_size) {
         $this->SetFont('x_label', $which_size);
@@ -3118,53 +3173,40 @@ class PHPlot {
     }
     
     /*!
-     * Deprecated, use SetFont() instead.
+     * \deprecated Use SetFont() instead.
      */
     function SetSmallFontSize($which_size) {
         return $this->SetFont('generic', $which_size);
     }
 
     /*!
-     * Deprecated, use SetFont() instead.
+     * \deprecated Use SetFont() instead.
      */
     function SetXLabelFontSize($which_size) {
         return $this->SetFont('x_title', $which_size);
     }
     
     /*!
-     * Deprecated, use SetFont() instead.
+     * \deprecated Use SetFont() instead.
      */
     function SetYLabelFontSize($which_size) {
         return $this->SetFont('y_title', $which_size);
     }
 
     /*!
-     * Deprecated, use SetXTitle() instead.
+     * \deprecated Use SetXTitle() instead.
      */ 
     function SetXLabel($which_xlab) {
         return $this->SetXTitle($which_xlab);
     }
 
     /*!
-     * Deprecated, use SetYTitle() instead.
+     * Deprecated Use SetYTitle() instead.
      */ 
     function SetYLabel($which_ylab) {
         return $this->SetYTitle($which_ylab);
     }   
-    /*!
-     * Deprecated, use SetVertTickPos() instead.
-     */
-    function SetVertTickPosition($which_tp) { 
-        return $this->SetVertTickPosition($which_tp); 
-    }
     
-    /*!
-     * Deprecated, use SetVertTickPos() instead.
-     */
-    function SetHorizTickPosition($which_tp) { 
-        return $this->SetHorizTickPosition($which_tp); 
-    }
-
     /*!
      * Deprecated.
      */
@@ -3177,16 +3219,83 @@ class PHPlot {
     }
 
     /*!
-     * Deprecated, use SetHTickLength() and SetVTickLength() instead.
+     * \deprecated Use SetXTickLength() and SetYTickLength() instead.
      */
     function SetTickLength($which_tl) {
-        $this->SetHTickLength($which_tl);
-        $this->SetVTickLength($which_tl);
+        $this->SetXTickLength($which_tl);
+        $this->SetYTickLength($which_tl);
         return true;
     }
 
+    /*!
+     * \deprecated, use SetTickLabelParams()
+     */
+    function SetYGridLabelType($which_yglt) {
+        $this->SetTickLabelParams($this->x_tick_label_pos, $this->y_tick_label_pos, $this->x_tick_label_type, $which_yglt);
+        return true;
+    }
 
+    /*!
+     * \deprecated, use SetTickLabelParams()
+     */
+    function SetXGridLabelType($which_xglt) {
+        $this->SetTickLabelParams($this->x_tick_label_pos, $this->y_tick_label_pos, $which_xglt, $this->y_tick_label_type);
+        return true;
+    }
+    /*!
+     * \deprecated, use SetTickLabelParams()
+     */
+    function SetYGridLabelPos($which_yglp) {
+        $this->SetTickLabelParams($this->x_tick_label_pos, $which_yglp, $this->x_tick_label_type, $this->y_tick_label_type);
+        return true;
+    }
+    /*!
+     * \deprecated, use SetTickLabelParams()
+     */
+    function SetXGridLabelPos($which_xglp) {
+        $this->SetTickLabelParams($which_xglp, $this->y_tick_label_pos, $this->x_tick_label_type, $this->y_tick_label_type);
+        return true;
+    }
 
+    /*!
+     * \deprecated. use SetGridParams()
+     */
+    function SetDrawYGrid($which_dyg) {
+        $this->draw_y_grid = $which_dyg;  // 1=true or anything else=false
+    }
+    
+    /*!
+     * \deprecated. use SetGridParams()
+     */
+    function SetDrawXGrid($which_dxg) {
+        $this->draw_x_grid = $which_dxg;  // 1=true or anything else=false
+    }
+    
+    /*!
+     * \deprecated. use SetGridParams()
+     */
+    function SetDashedGrid($which_dsh) {
+        $this->dashed_grid = $which_dsh;    // 1 = true, 0 = false
+        if ($which_dsh)
+            $this->SetDashedStyle($this->ndx_light_grid_color);
+    }
+
+    /*!
+     * \deprecated, use SetXtitle()
+     */
+    function SetXTitlePos($xpos) {
+        $this->x_title_pos = $xpos;
+        return true;
+    }
+    
+    /*!
+     * \deprecated, use SetYTitle()
+     */
+    function SetYTitlePos($xpos) {
+        $this->y_title_pos = $xpos;
+        return true;
+    }
+    
 
 }  // class PHPlot
 
