@@ -1,28 +1,28 @@
 <?php
 /*
 Copyright (C) 2000 Afan Ottenheimer.  Released under
-the GPL and PHP licenses as stated in the the README file which 
-should have been included with this document. 
+the GPL and PHP licenses as stated in the the README file which
+should have been included with this document.
 
-This is an subclass for phplot.php and should only be 
+This is an subclass for phplot.php and should only be
 called after phplot.ini has been called. This extends
 phplot by adding additional routines that can be used
-to modify the data arrays. 
+to modify the data arrays.
 */
 
-class PHPlot_Data extends PHPlot { 
+class PHPlot_Data extends PHPlot {
 
 function DoScaleData($even, $show_in_legend) {
 	// will scale all data rows
 	// maybe later I will do a function that only scales some rows
-	// if $even is true, Data will be scaled with "even" factors. Submitted by Theimo Nagel
+	// if $even is true, Data will be scaled with "even" factors. Submitted by Thiemo Nagel
 		$offset = 0;
 		unset($max);
-		if ($this->data_type == 'text-linear') { 
+		if ($this->data_type == 'text-linear') {
 			$offset++;
-		} elseif ($this->data_type != 'linear-linear') { 
-			DrawError('wrong data type!!'); 
-			return false; 
+		} elseif ($this->data_type != 'linear-linear') {
+			DrawError('wrong data type!!');
+			return false;
 		}
 
 		// Determine maxima for each data row in array $max
@@ -39,7 +39,7 @@ function DoScaleData($even, $show_in_legend) {
 
 		// Get maximum of the maxima in $maxmax
 		$maxmax = 0;
-		while (list($key, $val) = each($max)) { 
+		while (list($key, $val) = each($max)) {
 			if ($maxmax < $val) $maxmax = $val;
 		}
 
@@ -50,14 +50,14 @@ function DoScaleData($even, $show_in_legend) {
 		// determine amplification factor $amplify
 		reset($max);
 		while (list($key, $val) = each($max)) {
-			if ($val == 0 || $val == $maxmax) { 
+			if ($val == 0 || $val == $maxmax) {
 				$amplify[$key] = 1;  // no divide by zero
 			} else {
 				if ($even) {
 					$amp = pow(10,round(log10($maxmax / $val))-1);
-					if ($amp*$val*5 < $maxmax) { 
+					if ($amp*$val*5 < $maxmax) {
 						$amp *= 5;
-					} elseif ($amp*$val*2 < $maxmax) { 
+					} elseif ($amp*$val*2 < $maxmax) {
 						$amp *= 2;
 					}
 				} else {
@@ -86,10 +86,10 @@ function DoScaleData($even, $show_in_legend) {
 			$i++;
 		}
 
-		//Re-Scale Veritcal Ticks if not already set
-		if ( !$this->vert_tick_increment) { 
+		//Re-Scale Vertical Ticks if not already set
+		if ( !$this->vert_tick_increment) {
 			$this->SetVertTickIncrement("") ;
-		} 
+		}
 
 		return true;
 	} //function DoScaleData
@@ -99,18 +99,18 @@ function DoScaleData($even, $show_in_legend) {
 		//data row number $datarow, where 0 denotes the first
 		//row of y-data. Submitted by Theimo Nagel
 
-		if ($interval == 0) { 
-			DrawError('DoMovingAverages: interval can\'t be 0'); 
-			return false; 
+		if ($interval == 0) {
+			DrawError('DoMovingAverages: interval can\'t be 0');
+			return false;
 		}
 
 		if ($show_in_legend) $this->legend[$datarow] .= " (MA: $interval)";
 
-		if ($this->data_type == 'text-linear') { 
+		if ($this->data_type == 'text-linear') {
 			$datarow++;
-		} elseif ($this->data_type != 'linear-linear') { 
-			DrawError('DoMovingAverages: wrong data type!!'); 
-			return false; 
+		} elseif ($this->data_type != 'linear-linear') {
+			DrawError('DoMovingAverages: wrong data type!!');
+			return false;
 		}
 
 		reset($this->data_values);
@@ -134,5 +134,5 @@ function DoScaleData($even, $show_in_legend) {
 	} //function DoMovingAverage
 
 
-} //class PHPlot_Data extends PHPlot  
+} //class PHPlot_Data extends PHPlot
 ?>
