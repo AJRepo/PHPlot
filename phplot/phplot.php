@@ -256,7 +256,7 @@ class PHPlot{
 		}
 	}
 
-	function SetLegendPixels($which_x,$which_y,$which_type) { 
+	function SetLegendPixels($which_x,$which_y,$which_type="") { 
 		//which_type not yet used
 		$this->legend_x_pos = $which_x;
 		$this->legend_y_pos = $which_y;
@@ -271,13 +271,11 @@ class PHPlot{
 		$this->legend_y_pos = $this->ytr($which_y);
 		return true;
 	}
-//* ***************************************
+
 	function SetFileFormat($which_file_format) {
 		$asked = strtolower($which_file_format);
-		if( $asked =="jpg" || $asked =="png" || $asked =="gif" || $asked == "wbmp") 
-		{
-			if (function_exists("ImageTypes"))
-			{
+		if( $asked =="jpg" || $asked =="png" || $asked =="gif" || $asked == "wbmp") {
+			if (function_exists("ImageTypes")) {
 				if( $asked=="jpg" && !(ImageTypes() & IMG_JPG) )
 				  return false;
 				elseif( $asked=="png" && !(ImageTypes() & IMG_PNG) ) 
@@ -289,9 +287,9 @@ class PHPlot{
 			}
 			$this->file_format=$asked;
 			return true;
-		}
-		else
+		} else {
 		  return false;
+		}
 	}	
 
 /* *************************************** 

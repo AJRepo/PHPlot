@@ -4,12 +4,12 @@
 //testing function quick_start.php. It will fail
 //if called by itself.
 //////////////////////////////////////////////
-include("../phplot.php");
+include('../phplot.php');
 $graph = new PHPlot;
-include("./data.php");
+include('./data.php');
 $graph->SetTitle("$which_title");
 $graph->SetDataValues($example_data);
-$graph->SetIsInline("1");
+$graph->SetIsInline('1');
 $graph->SetFileFormat("$file_format");
 $graph->DrawGraph();
 ?>
