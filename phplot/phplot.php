@@ -19,7 +19,7 @@
 //PHPLOT Version 4.?.?
 //Requires PHP 4.0.6 or later 
 
-//error_reporting(E_ALL);
+error_reporting(E_ALL);
 
 class PHPlot {
 
@@ -41,7 +41,7 @@ class PHPlot {
     var $x_right_margin;
     var $y_bot_margin;
     
-    var $plot_area = array(5,5,600,400);        // ?? (MBD)
+    var $plot_area = array(5, 5, 600, 400);        // ?? (MBD)
     
     var $x_axis_position = 0;       // Where to draw the X_axis (world coordinates)
     var $y_axis_position = '';      // Leave blank for Y axis at left of plot. (world coord.)
@@ -80,9 +80,8 @@ class PHPlot {
 
 //Plot Colors
     var $shading = 0;
-    var $color_array = 2;                   // 1 = include small list, 2 = include large list
-                                            // array =  define your own color translation. 
-                                            // See rgb.inc.php and SetRGBArray
+    var $color_array = 'small';             // 'small', 'large' or array (define your own colors)
+                                            // See rgb.inc.php and SetRGBArray()
     var $bg_color;
     var $plot_bg_color;
     var $grid_color;
@@ -145,13 +144,14 @@ class PHPlot {
 
 //Labels
     // There are two types of labels in PHPlot:
-    //      Tick labels: they follow the grid, next to ticks in axis.   (DONE)
-    //                   they are drawn at grid drawing time, by DrawXTicks() and DrawYTicks()
-    //      Data labels: they follow the data points, and can be placed on the axis or the plot (x/y)  (TODO)
-    //                   they are drawn at graph plotting time, by DrawDataLabel(), called by DrawLines(), etc.
-    //                   DrawDataLabel() also draws H/V lines to datapoints depending on draw_*_data_label_line
+    //    Tick labels: they follow the grid, next to ticks in axis.   (DONE)
+    //                 they are drawn at grid drawing time, by DrawXTicks() and DrawYTicks()
+    //    Data labels: they follow the data points, and can be placed on the axis or the plot (x/y)  (TODO)
+    //                 they are drawn at graph plotting time, by DrawDataLabel(), called by DrawLines(), etc.
+    //                 DrawDataLabel() also draws H/V lines to datapoints depending on draw_*_data_label_line
     
-    var $draw_x_data_labels = '';           // Draw X Labels (after datapoint values) [0,1, '' = let program decide]
+    var $draw_x_data_labels = '';           // Draw X Labels (after datapoint values)
+                                            // [0, 1, '' = let program decide]
 
     // Data Labels: TODO (MBD)
     var $x_data_label_pos = 'plotdown';     // plotdown, plotup, updown, plot, all, none
@@ -184,11 +184,11 @@ class PHPlot {
     var $y_tick_length = 5;                 // pixels: tick length for left/right axis
     
     var $num_y_ticks = '';
-    var $y_tick_increment='';               // Set num_y_ticks or y_tick_increment, not both.
-    var $y_tick_pos = 'plotleft';           // plotright, plotleft,both, yaxis, none (MBD)
+    var $y_tick_increment = '';               // Set num_y_ticks or y_tick_increment, not both.
+    var $y_tick_pos = 'plotleft';           // plotright, plotleft, both, yaxis, none (MBD)
     
-    var $num_x_ticks='';
-    var $x_tick_increment='';               // Set num_x_ticks or x_tick_increment, not both.
+    var $num_x_ticks = '';
+    var $x_tick_increment = '';               // Set num_x_ticks or x_tick_increment, not both.
     var $x_tick_pos = 'plotdown';           // plotdown, plotup, both, none (MBD)
     
     var $skip_top_tick = '0';
@@ -201,12 +201,19 @@ class PHPlot {
     var $dashed_grid = 1;                   // 0 = false, 1 true (MBD)
 
 
+//////////////////////////////////////////////////////
 //BEGIN CODE
 //////////////////////////////////////////////////////
-    //Constructor: Setup Img pointer, Colors and Size of Image, and font sizes
-    function PHPlot($which_width=600,$which_height=400,$which_output_file="",$which_input_file="") {
-    
-        $this->SetRGBArray('2'); 
+
+    /*!
+     * Constructor: Setup Img pointer, Colors and Size of Image, and font sizes
+     */
+    function PHPlot($which_width = 600, $which_height = 400, $which_output_file="", $which_input_file="") {
+        // Register our "destructor" (MBD)
+        register_shutdown_function(array(&$this, '_PHPlot'));
+        
+        $this->SetRGBArray($this->color_array); 
+        
         $this->background_done = 0; //Set to 1 after background image first drawn
 
         if ($which_output_file != "")
@@ -229,7 +236,6 @@ class PHPlot {
         }
         
         $this->SetIndexColors();
-    
         
         // Init some font-related variables:
         $this->SetDefaultFonts();
@@ -238,16 +244,30 @@ class PHPlot {
         $this->SetYTitle('');
        
         //Solid or dashed lines
-        $this->line_style = array('solid','solid','dashed','dashed','solid', 'solid','dashed','dashed');
+        $this->line_style = array('solid', 'solid', 'dashed', 'dashed', 'solid', 'solid', 'dashed', 'dashed');
 
     }
 
-    //Set up the image and colors
+    /*!
+     * Destructor. Image resources not deallocated are memory hogs, I think
+     * it is safer to automatically call imagedestroy upon script termination than
+     * do it ourselves.
+     */
+    function _PHPlot () {
+        ImageDestroy($this->img);
+        return;
+    }
+
+    /*! 
+     * Set up the image resource 'img'
+     */
     function InitImage() {
         //if ($this->img) { 
         //    ImageDestroy($this->img);
         //}
         $this->img = ImageCreate($this->image_width, $this->image_height);
+        if (! $this->img)
+            $this->PrintError("InitImage(): Could not create image resource");
         return true;
     }
 
@@ -259,6 +279,10 @@ class PHPlot {
         return true;
     }
 
+    /*!
+     * Whether to show the final image or not
+     * MBD: uh? what for?
+     */
     function SetPrintImage($which_pi) {
         $this->print_image = $which_pi;
         return true;
@@ -334,8 +358,8 @@ class PHPlot {
             $this->SetFont('legend', 2);
             $this->SetFont('x_label', 1);
             $this->SetFont('y_label', 1);           
-            $this->SetFont('x_title', 2);
-            $this->SetFont('y_title', 2);
+            $this->SetFont('x_title', 3);
+            $this->SetFont('y_title', 3);
         }
         
         return TRUE;
@@ -344,14 +368,14 @@ class PHPlot {
     /*!
      * Sets Fixed/Truetype font parameters.
      *  \param $which_elem Is the element whose font is to be changed.
-     *         It can be one of 'title', 'legend','generic', 
+     *         It can be one of 'title', 'legend', 'generic', 
      *         'x_label', 'y_label', x_title' or 'y_title'
      *  \param $which_font Can be a number (for fixed font sizes) or 
      *         a string with the filename when using TTFonts.
      *  \param $which_size Point size (TTF only)
      * Calculates and updates internal height and width variables.
      */
-    function SetFont($which_elem, $which_font, $which_size=12) {
+    function SetFont($which_elem, $which_font, $which_size = 12) {
     
         // TTF:
         if ($this->use_ttf) {
@@ -401,7 +425,7 @@ class PHPlot {
         
         // Fixed fonts:
         if ($which_font > 5 || $which_font < 0) {
-            $this->DrawError("SetFont(): Non-TTF font size must be 1,2,3,4 or 5");
+            $this->DrawError("SetFont(): Non-TTF font size must be 1, 2, 3, 4 or 5");
             return FALSE;
         }
         
@@ -476,7 +500,7 @@ class PHPlot {
      * of the legend's upper/leftmost corner.
      *  $which_type not yet used (TODO)
      */
-    function SetLegendPixels($which_x,$which_y,$which_type) { 
+    function SetLegendPixels($which_x, $which_y, $which_type) { 
         $this->legend_x_pos = $which_x;
         $this->legend_y_pos = $which_y;
         
@@ -488,7 +512,7 @@ class PHPlot {
      * upper/leftmost corner. MUST be called after scales are set up.
      *   $which_type not yet used (TODO)
      */
-    function SetLegendWorld($which_x,$which_y,$which_type='') { 
+    function SetLegendWorld($which_x, $which_y, $which_type = '') { 
         if ($this->scale_is_set != 1) 
             $this->CalcTranslation();
             
@@ -534,26 +558,25 @@ class PHPlot {
 
 
     function SetInputFile($which_input_file) { 
-        //$this->SetFileFormat($which_frmt);
         $size = GetImageSize($which_input_file);
         $input_type = $size[2]; 
 
-        switch($input_type) {  //After SetFileFormat is in lower case
-            case "1":
+        switch($input_type) {
+            case 1:
                 $im = @ImageCreateFromGIF ($which_input_file);
                 if (!$im) { // See if it failed 
                     $this->PrintError("Unable to open $which_input_file as a GIF");
                     return false;
                 }
             break;
-            case "3":
+            case 3:
                 $im = @ImageCreateFromPNG ($which_input_file); 
                 if (!$im) { // See if it failed 
                     $this->PrintError("Unable to open $which_input_file as a PNG");
                     return false;
                 }
             break;
-            case "2":
+            case 2:
                 $im = @ImageCreateFromJPEG ($which_input_file); 
                 if (!$im) { // See if it failed 
                     $this->PrintError("Unable to open $which_input_file as a JPG");
@@ -561,7 +584,7 @@ class PHPlot {
                 }
             break;
             default:
-                $this->PrintError('Please select wbmp,gif,jpg, or png for image type!');
+                $this->PrintError('SetInputFile(): Please select gif, jpg, or png for image type!');
                 return false;
             break;
         }
@@ -610,7 +633,7 @@ class PHPlot {
                     Header('Content-type: image/png');
                 }
                 if ($this->is_inline == 1 && $this->output_file != "") {
-                    ImagePng($this->img,$this->output_file);
+                    ImagePng($this->img, $this->output_file);
                 } else {
                     ImagePng($this->img);
                 }
@@ -620,7 +643,7 @@ class PHPlot {
                     Header('Content-type: image/jpeg');
                 }
                 if ($this->is_inline == 1 && $this->output_file != "") {
-                    ImageJPEG($this->img,$this->output_file);
+                    ImageJPEG($this->img, $this->output_file);
                 } else {
                     ImageJPEG($this->img);
                 }
@@ -630,28 +653,27 @@ class PHPlot {
                     Header('Content-type: image/gif');
                 }
                 if ($this->is_inline == 1 && $this->output_file != "") {
-                    ImageGIF($this->img,$this->output_file);
+                    ImageGIF($this->img, $this->output_file);
                 } else {
                     ImageGIF($this->img);
                 }
 
                 break;
-            case "wbmp":
+            case "wbmp":        // wireless bitmap, 2 bit.
                 if ($this->is_inline == 0) {
                     Header('Content-type: image/wbmp');
                 }
                 if ($this->is_inline == 1 && $this->output_file != "") {
-                    ImageWBMP($this->img,$this->output_file);
+                    ImageWBMP($this->img, $this->output_file);
                 } else {
                     ImageWBMP($this->img);
                 }
 
                 break;
             default:
-                $this->PrintError('Please select an image type!<br>');
+                $this->PrintError('PrintImage(): Please select an image type!');
                 break;
         }
-        ImageDestroy($this->img);
         return true;
     }
 
@@ -660,7 +682,6 @@ class PHPlot {
      * TODO: Images? Patterns?
      */
     function DrawBackground() {
-        //if ($this->img == "") { $this->InitImage(); };
         if ($this->background_done == 0) { //Don't draw it twice if drawing two plots on one image
             ImageFilledRectangle($this->img, 0, 0,
                 $this->image_width, $this->image_height, $this->ndx_bg_color);
@@ -675,20 +696,26 @@ class PHPlot {
     function DrawImageBorder() {
         switch ($this->image_border_type) {
             case "raised":
-                ImageLine($this->img,0,0,$this->image_width-1,0,$this->ndx_i_light);
-                ImageLine($this->img,1,1,$this->image_width-2,1,$this->ndx_i_light);
-                ImageLine($this->img,0,0,0,$this->image_height-1,$this->ndx_i_light);
-                ImageLine($this->img,1,1,1,$this->image_height-2,$this->ndx_i_light);
-                ImageLine($this->img,$this->image_width-1,0,$this->image_width-1,$this->image_height-1,$this->ndx_i_dark);
-                ImageLine($this->img,0,$this->image_height-1,$this->image_width-1,$this->image_height-1,$this->ndx_i_dark);
-                ImageLine($this->img,$this->image_width-2,1,$this->image_width-2,$this->image_height-2,$this->ndx_i_dark);
-                ImageLine($this->img,1,$this->image_height-2,$this->image_width-2,$this->image_height-2,$this->ndx_i_dark);
+                ImageLine($this->img, 0, 0, $this->image_width-1, 0, $this->ndx_i_light);
+                ImageLine($this->img, 1, 1, $this->image_width-2, 1, $this->ndx_i_light);
+                ImageLine($this->img, 0, 0, 0, $this->image_height-1, $this->ndx_i_light);
+                ImageLine($this->img, 1, 1, 1, $this->image_height-2, $this->ndx_i_light);
+                ImageLine($this->img, $this->image_width-1, 0, $this->image_width-1,
+                          $this->image_height-1, $this->ndx_i_dark);
+                ImageLine($this->img, 0, $this->image_height-1, $this->image_width-1,
+                          $this->image_height-1, $this->ndx_i_dark);
+                ImageLine($this->img, $this->image_width-2, 1, $this->image_width-2,
+                          $this->image_height-2, $this->ndx_i_dark);
+                ImageLine($this->img, 1, $this->image_height-2, $this->image_width-2,
+                          $this->image_height-2, $this->ndx_i_dark);
             break;
             case "plain":
-                ImageLine($this->img,0,0,$this->image_width,0,$this->ndx_i_dark);
-                ImageLine($this->img,$this->image_width-1,0,$this->image_width-1,$this->image_height,$this->ndx_i_dark);
-                ImageLine($this->img,$this->image_width-1,$this->image_height-1,0,$this->image_height-1,$this->ndx_i_dark);
-                ImageLine($this->img,0,0,0,$this->image_height,$this->ndx_i_dark);
+                ImageLine($this->img, 0, 0, $this->image_width, 0, $this->ndx_i_dark);
+                ImageLine($this->img, $this->image_width-1, 0, $this->image_width-1,
+                          $this->image_height, $this->ndx_i_dark);
+                ImageLine($this->img, $this->image_width-1, $this->image_height-1, 0, $this->image_height-1,
+                          $this->ndx_i_dark);
+                ImageLine($this->img, 0, 0, 0, $this->image_height, $this->ndx_i_dark);
             break;
             default:
             break;
@@ -708,16 +735,16 @@ class PHPlot {
      * Prints an error message inline into the generated image and draws it.
      * Defaults to centered position (MBD)
      */
-    function DrawError($error_message,$where_x=NULL,$where_y=NULL) {
+    function DrawError($error_message, $where_x = NULL, $where_y = NULL) {
         if (($this->img) == "")
             $this->InitImage();
         
         $ypos = (! $where_y) ? $this->image_height/2 : $where_y;
         $xpos = (! $where_x) ? $this->image_width/2 : $where_x;
-        ImageRectangle($this->img, 0,0, $this->image_width, $this->image_height,
-                       ImageColorAllocate($this->img,255,255,255));
+        ImageRectangle($this->img, 0, 0, $this->image_width, $this->image_height,
+                       ImageColorAllocate($this->img, 255, 255, 255));
        
-        $this->DrawText($this->generic_font, 0, $xpos, $ypos, ImageColorAllocate($this->img,0,0,0),
+        $this->DrawText($this->generic_font, 0, $xpos, $ypos, ImageColorAllocate($this->img, 0, 0, 0),
                         $error_message, 'center', 'center');
 
         $this->PrintImage();
@@ -730,7 +757,7 @@ class PHPlot {
 /////////////////////////////////////////////
 
     function SetPlotBorderType($which_pbt) {
-        $this->plot_border_type = $which_pbt; //left, none, anything else=full
+        $this->plot_border_type = $which_pbt; //left, none, anything else = full
     }
 
     function SetImageBorderType($which_sibt) {
@@ -738,7 +765,7 @@ class PHPlot {
     }
 
     function SetDrawPlotAreaBackground($which_dpab) {
-        $this->draw_plot_area_background = $which_dpab;  // 1=true or anything else=false
+        $this->draw_plot_area_background = $which_dpab;  // 1 = true or anything else = false
     }
 
     /*!
@@ -780,7 +807,7 @@ class PHPlot {
     /*!
      * Sets grid parameters
      */
-    function SetGridParams($which_dg, $which_dsh=1)
+    function SetGridParams($which_dg, $which_dsh = 1)
     {
         switch ($which_dg) {
             case 'x':
@@ -829,7 +856,7 @@ class PHPlot {
     /*!
      * Sets the X axis title and position.
      */
-    function SetXTitle($which_xtitle, $which_xpos='plotdown') {
+    function SetXTitle($which_xtitle, $which_xpos = 'plotdown') {
 
         $this->x_title_pos = $which_xpos;
         
@@ -852,7 +879,7 @@ class PHPlot {
     /*!
      * Sets the Y axis title and position.
      */
-    function SetYTitle($which_ytitle, $which_ypos='plotleft') {
+    function SetYTitle($which_ytitle, $which_ypos = 'plotleft') {
 
         $this->y_title_pos = $which_ypos;
 
@@ -877,7 +904,7 @@ class PHPlot {
     }
     
     function SetPlotType($which_pt) {
-        $accepted = "bars,lines,linepoints,area,points,pie,thinbarline";
+        $accepted = "bars, lines, linepoints, area, points, pie, thinbarline";
         $asked = trim($which_pt);
         if (eregi($asked, $accepted)) {
             $this->plot_type = $which_pt;
@@ -977,7 +1004,7 @@ class PHPlot {
 
     function SetPointSize($which_ps) {
         //in pixels
-        SetType($which_ps,'integer');
+        SetType($which_ps, 'integer');
         $this->point_size = $which_ps;
 
         if ($this->point_shape == "diamond" or $this->point_shape == "triangle") {
@@ -998,8 +1025,8 @@ class PHPlot {
      * Needed by: CalcXHeights(), CalcYWidths(), (FILLME)
      * Text-Data is different than data-data graphs. For them what
      * we have, instead of X values, is # of records equally spaced on data.
-     * text-data is passed in as $data[] = (title,y1,y2,y3,y4,...)
-     * data-data is passed in as $data[] = (title,x,y1,y2,y3,y4,...) 
+     * text-data is passed in as $data[] = (title, y1, y2, y3, y4, ...)
+     * data-data is passed in as $data[] = (title, x, y1, y2, y3, y4, ...) 
      */
     function FindDataLimits() {
         $this->number_x_points = count($this->data_values);
@@ -1012,6 +1039,7 @@ class PHPlot {
                 $maxy = $miny;
                 // Automagically decide whether to show data labels or not
                 // ie: never if tick labels are to be shown
+                // FIXME
                 if ($this->x_tick_label_pos != 'none')
                     $this->x_data_label_pos == 'none';
                     
@@ -1045,21 +1073,21 @@ class PHPlot {
 
             switch ($this->data_type) {
                 case "text-data":
-                case "text-data-once":
+                case "text-data-once":      // this one is for some pie charts, see DrawPieChart()
                     // Extract maximum text length
                     $val = strlen(array_shift($dat));
                     $maxt = ($val > $maxt) ? $val : $maxt;
 
                     //Find the relative Max and Min
                     foreach ($dat as $val) {
-                        settype($val,"double");
+                        settype($val, "double");
                         $maxy = ($val > $maxy) ? $val : $maxy;
                         $miny = ($val < $miny) ? $val : $miny;
                         $tmp++;
                     }
                     break;
                 case "data-data":  
-                    // X-Y data is passed in as $data[] = (title,x,y,y2,y3,...) 
+                    // X-Y data is passed in as $data[] = (title, x, y, y2, y3, ...) 
                     // which you can use for multi-dimentional plots.
 
                     // Extract maximum text length
@@ -1073,14 +1101,14 @@ class PHPlot {
                     $minx = ($val < $minx) ? $val : $minx;
 
                     foreach ($dat as $val) {
-                        settype($val,"double");
+                        settype($val, "double");
                         $maxy = ($val > $maxy) ? $val : $maxy;
                         $miny = ($val < $miny) ? $val : $miny;
                         $tmp++;
                     }
                     break;
                 case "data-data-error":  //Assume 2-D for now, can go higher
-                    //Regular X-Y data is passed in as $data[] = (title,x,y,error+,error-,y2,error2+,error2-)
+                    //Regular X-Y data is passed in as $data[] = (title, x, y, error+, error-, y2, error2+, error2-)
                     
                     // Extract maximum text length
                     $val = strlen(array_shift($dat));
@@ -1093,7 +1121,7 @@ class PHPlot {
                     $minx = ($val < $minx) ? $val : $minx;
 
                     while (list($key, $val) = each($dat)) {
-                        settype($val,'double');
+                        settype($val, 'double');
                         if ($key%3 == 0) {
                             $maxy = ($val > $maxy) ? $val : $maxy;
                             $miny = ($val < $miny) ? $val : $miny;
@@ -1130,14 +1158,17 @@ class PHPlot {
     /*!
      * Calculates image margins on the fly from title positions and sizes,
      * and tick labels positions and sizes
-     * \fixme: when ticks are not to be drawn, CalcMargin() doesn't count them, 
-     *  but DrawYTicks() and DrawXTicks() do when placing data labels, so they overlap.
-     *  A solution may be to set *_tick_length to zero when *_tick_pos == 'none'
      */
     function CalcMargins() {
 
+        // These two used to be in DrawGraph(), but I think they make more sense here
+        
+        $this->CalcXHeights();      // Get data for bottom/upper margin
+        $this->CalcYWidths();       // Get data for left/right margin
+
+
         // Upper title, ticks and tick labels
-        $this->y_top_margin = $this->safe_margin + $this->title_height + $this->safe_margin;
+        $this->y_top_margin = $this->title_height + $this->safe_margin * 2;
 
         if ($this->x_title_pos == 'plotup' || $this->x_title_pos == 'both')
             $this->y_top_margin += $this->x_title_height + $this->safe_margin;
@@ -1149,7 +1180,7 @@ class PHPlot {
             $this->y_top_margin += $this->x_tick_length * 2;
             
         // Lower title, ticks and tick labels
-        $this->y_bot_margin = $this->safe_margin * 2; // FIXME (this *2 should not be here)
+        $this->y_bot_margin = $this->safe_margin * 2; 
         
         if ($this->x_title_pos == 'plotdown' || $this->x_title_pos == 'both')
             $this->y_bot_margin += $this->x_title_height;
@@ -1161,7 +1192,7 @@ class PHPlot {
             $this->y_bot_margin += $this->x_tick_length * 2;
             
         // Left title, ticks and tick labels
-        $this->x_left_margin = $this->safe_margin;
+        $this->x_left_margin = $this->safe_margin*2;
         
         if ($this->y_title_pos == 'plotleft' || $this->y_title_pos == 'both')
             $this->x_left_margin += $this->y_title_width;
@@ -1173,7 +1204,7 @@ class PHPlot {
             $this->x_left_margin += $this->y_tick_length * 2;
 
         // Right title, ticks and tick labels
-        $this->x_right_margin = $this->safe_margin;
+        $this->x_right_margin = $this->safe_margin*2;
         
         if ($this->y_title_pos == 'plotright' || $this->y_title_pos == 'both')
             $this->x_right_margin += $this->y_title_width + $this->safe_margin;
@@ -1189,21 +1220,21 @@ class PHPlot {
         $this->y_tot_margin = $this->y_top_margin + $this->y_bot_margin;
 
         //If data has already been analysed then set translation
-        if ($this->plot_max_x && $this->plot_max_y && $this->plot_area_width ) 
-            $this->CalcTranslation();
+//        if ($this->plot_max_x && $this->plot_max_y && $this->plot_area_width ) 
+//            $this->CalcTranslation();
             
     }
 
 
-    function SetMarginsPixels($which_lm,$which_rm,$which_tm,$which_bm) { 
+    function SetMarginsPixels($which_lm, $which_rm, $which_tm, $which_bm) { 
         //Set the plot area using margins in pixels (left, right, top, bottom)
-        $this->SetNewPlotAreaPixels($which_lm,$which_tm,($this->image_width - $which_rm),($this->image_height - $which_bm));
+        $this->SetNewPlotAreaPixels($which_lm, $which_tm, ($this->image_width - $which_rm), ($this->image_height - $which_bm));
         return true;
     }
 
-    function SetNewPlotAreaPixels($x1,$y1,$x2,$y2) {
-        //Like in GD 0,0 is upper left set via pixel Coordinates
-        $this->plot_area = array($x1,$y1,$x2,$y2);
+    function SetNewPlotAreaPixels($x1, $y1, $x2, $y2) {
+        //Like in GD 0, 0 is upper left set via pixel Coordinates
+        $this->plot_area = array($x1, $y1, $x2, $y2);
         $this->plot_area_width = $this->plot_area[2] - $this->plot_area[0];
         $this->plot_area_height = $this->plot_area[3] - $this->plot_area[1];
         $this->y_top_margin = $this->plot_area[1];
@@ -1213,13 +1244,13 @@ class PHPlot {
         return true;
     }
 
-    function SetPlotAreaPixels($x1,$y1,$x2,$y2) {
-        //Like in GD 0,0 is upper left
+    function SetPlotAreaPixels($x1, $y1, $x2, $y2) {
+        //Like in GD 0, 0 is upper left
         if (!$this->x_tot_margin) {
             $this->CalcMargins();
         }
         if ($x2 && $y2) {
-            $this->plot_area = array($x1,$y1,$x2,$y2);
+            $this->plot_area = array($x1, $y1, $x2, $y2);
         } else {
             $this->plot_area = array($this->x_left_margin, $this->y_top_margin,
                                 $this->image_width - $this->x_right_margin,
@@ -1233,7 +1264,7 @@ class PHPlot {
 
     }
 
-    function SetPlotAreaWorld($xmin,$ymin,$xmax,$ymax) {
+    function SetPlotAreaWorld($xmin, $ymin, $xmax, $ymax) {
         if (($xmin == "")  && ($xmax == "")) {
             //For automatic setting of data we need $this->max_x
                 if (!$this->max_y) {
@@ -1243,7 +1274,7 @@ class PHPlot {
                     $xmax = $this->max_x + 1 ;  //valid for BAR CHART TYPE GRAPHS ONLY
                     $xmin = 0 ;                 //valid for BAR CHART TYPE GRAPHS ONLY
                 } else {
-                    $xmax = $this->max_x * 1.02;
+                    $xmax = $this->max_x * 1.;  // *1.02
                     $xmin = $this->min_x;
                 }
 
@@ -1346,7 +1377,7 @@ class PHPlot {
     function CalcYWidths() {
     
         //the "." is for space. It isn't actually printed
-        $ylab = number_format($this->max_y, $this->y_precision, ".", ",") . $this->si_units . ".";
+        $ylab = number_format($this->max_y, $this->y_precision, ".", ", ") . $this->si_units . ".";
         
         // TTF
         if ($this->use_ttf) {
@@ -1369,7 +1400,8 @@ class PHPlot {
      */
     function SetEqualXCoord() {
 
-        $space = ($this->plot_area[2] - $this->plot_area[0]) / ($this->number_x_points * 2) * $this->group_frac_width;
+        $space = ($this->plot_area[2] - $this->plot_area[0]) / ($this->number_x_points * 2) *
+                 $this->group_frac_width;
         $group_width = $space * 2;
         $bar_width = $group_width / $this->records_per_group;
         //I think that eventually this space variable will be replaced by just graphing x.
@@ -1455,20 +1487,20 @@ class PHPlot {
      * Sets/reverts all colors
      */
     function SetDefaultColors() {
-        $this->i_light = array(194,194,194);
-        $this->i_dark =  array(100,100,100);
-        $this->SetPlotBgColor(array(222,222,222));
-        $this->SetBackgroundColor(array(200,222,222)); //can use rgb values or "name" values
+        $this->i_light = array(194, 194, 194);
+        $this->i_dark =  array(100, 100, 100);
+        $this->SetPlotBgColor(array(222, 222, 222));
+        $this->SetBackgroundColor(array(200, 222, 222)); //can use rgb values or "name" values
         $this->SetLabelColor('black');
         $this->SetTextColor('black');
         $this->SetGridColor('black');
-        $this->SetLightGridColor(array(175,175,175));
+        $this->SetLightGridColor(array(175, 175, 175));
         $this->SetTickColor('black');
-        $this->SetTitleColor(array(0,0,0)); // Can be array or name
-        $this->data_color = array('blue','green','yellow','red','orange','SkyBlue','violet',
-                                  'azure1', 'YellowGreen','gold','orchid','maroon','plum');
-        $this->error_bar_color = array('blue','green','yellow','red','orange', 'SkyBlue','violet',
-                                  'azure1','YellowGreen','gold','orchid','maroon','plum');
+        $this->SetTitleColor(array(0, 0, 0)); // Can be array or name
+        $this->data_color = array('blue', 'green', 'yellow', 'red', 'orange', 'SkyBlue', 'violet',
+                                  'azure1', 'YellowGreen', 'gold', 'orchid', 'maroon', 'plum');
+        $this->error_bar_color = array('blue', 'green', 'yellow', 'red', 'orange', 'SkyBlue', 'violet',
+                                  'azure1', 'YellowGreen', 'gold', 'orchid', 'maroon', 'plum');
         $this->data_border_color = array('black');
 
         $this->session_set = 1;          //Mark it down for PHP session() usage.
@@ -1529,52 +1561,53 @@ class PHPlot {
             //User Defined Array
             $this->rgb_array = $which_color_array;
             return true;
-        } elseif ($which_color_array == 2) { //Use the small predefined color array
-        $this->rgb_array = array(
-            "white"          => array(255, 255, 255),
-            "snow"           => array(255, 250, 250),
-            "PeachPuff"      => array(255, 218, 185),
-            "ivory"          => array(255, 255, 240),
-            "lavender"       => array(230, 230, 250),
-            "black"          => array(  0,   0,   0),
-            "DimGrey"        => array(105, 105, 105),
-            "gray"           => array(190, 190, 190),
-            "grey"           => array(190, 190, 190),
-            "navy"           => array(  0,   0, 128),
-            "SlateBlue"      => array(106,  90, 205),
-            "blue"           => array(  0,   0, 255),
-            "SkyBlue"        => array(135, 206, 235),
-            "cyan"           => array(  0, 255, 255),
-            "DarkGreen"      => array(  0, 100,   0),
-            "green"          => array(  0, 255,   0),
-            "YellowGreen"    => array(154, 205,  50),
-            "yellow"         => array(255, 255,   0),
-            "orange"         => array(255, 165,   0),
-            "gold"           => array(255, 215,   0),
-            "peru"           => array(205, 133,  63),
-            "beige"          => array(245, 245, 220),
-            "wheat"          => array(245, 222, 179),
-            "tan"            => array(210, 180, 140),
-            "brown"          => array(165,  42,  42),
-            "salmon"         => array(250, 128, 114),
-            "red"            => array(255,   0,   0),
-            "pink"           => array(255, 192, 203),
-            "maroon"         => array(176,  48,  96),
-            "magenta"        => array(255,   0, 255),
-            "violet"         => array(238, 130, 238),
-            "plum"           => array(221, 160, 221),
-            "orchid"         => array(218, 112, 214),
-            "purple"         => array(160,  32, 240),
-            "azure1"         => array(240, 255, 255),
-            "aquamarine1"    => array(127, 255, 212)
-            );
+        } elseif ($which_color_array == 'small') { //Use the small predefined color array
+            $this->rgb_array = array(
+                "white"          => array(255, 255, 255),
+                "snow"           => array(255, 250, 250),
+                "PeachPuff"      => array(255, 218, 185),
+                "ivory"          => array(255, 255, 240),
+                "lavender"       => array(230, 230, 250),
+                "black"          => array(  0,   0,   0),
+                "DimGrey"        => array(105, 105, 105),
+                "gray"           => array(190, 190, 190),
+                "grey"           => array(190, 190, 190),
+                "navy"           => array(  0,   0, 128),
+                "SlateBlue"      => array(106,  90, 205),
+                "blue"           => array(  0,   0, 255),
+                "SkyBlue"        => array(135, 206, 235),
+                "cyan"           => array(  0, 255, 255),
+                "DarkGreen"      => array(  0, 100,   0),
+                "green"          => array(  0, 255,   0),
+                "YellowGreen"    => array(154, 205,  50),
+                "yellow"         => array(255, 255,   0),
+                "orange"         => array(255, 165,   0),
+                "gold"           => array(255, 215,   0),
+                "peru"           => array(205, 133,  63),
+                "beige"          => array(245, 245, 220),
+                "wheat"          => array(245, 222, 179),
+                "tan"            => array(210, 180, 140),
+                "brown"          => array(165,  42,  42),
+                "salmon"         => array(250, 128, 114),
+                "red"            => array(255,   0,   0),
+                "pink"           => array(255, 192, 203),
+                "maroon"         => array(176,  48,  96),
+                "magenta"        => array(255,   0, 255),
+                "violet"         => array(238, 130, 238),
+                "plum"           => array(221, 160, 221),
+                "orchid"         => array(218, 112, 214),
+                "purple"         => array(160,  32, 240),
+                "azure1"         => array(240, 255, 255),
+                "aquamarine1"    => array(127, 255, 212)
+                );
             return true;
-        } elseif ($which_color_array == 1)  { 
+        } elseif ($which_color_array === 'large')  { 
             include("./rgb.inc.php"); //Get large $ColorArray
             $this->rgb_array = $RGBArray;
         } else { 
-            $this->rgb_array = array("white" =>array(255,255,255), "black" => array(0,0,0));
-            exit;
+            $this->rgb_array = array("white" =>array(255, 255, 255), "black" => array(0, 0, 0));
+            // MBD: why was this here?
+            //exit;
         }
 
         return true;
@@ -1617,21 +1650,21 @@ class PHPlot {
 
     
     function SetTransparentColor($which_color) { 
-        ImageColorTransparent($this->img,$this->SetIndexColor($which_color));
+        ImageColorTransparent($this->img, $this->SetIndexColor($which_color));
         return true;
     }
 
     function SetRgbColor($color_asked) {
-        //Returns an array in R,G,B format 0-255
-        if ($color_asked == "") { $color_asked = array(0,0,0); };
+        //Returns an array in R, G, B format 0-255
+        if ($color_asked == "") { $color_asked = array(0, 0, 0); };
 
         if ( count($color_asked) == 3 ) { //already array of 3 rgb
                $ret_val =  $color_asked;
         } else { // is asking for a color by string
-            if(substr($color_asked,0,1) == "#") {  //asking in #FFFFFF format. 
+            if(substr($color_asked, 0, 1) == "#") {  //asking in #FFFFFF format. 
                 // [#790745] 'Hex color problem' fixed. (MBD)
-                $ret_val =  array(hexdec(substr($color_asked,1,2)), hexdec(substr($color_asked,3,2)), 
-                                  hexdec(substr($color_asked,5,2)));
+                $ret_val =  array(hexdec(substr($color_asked, 1, 2)), hexdec(substr($color_asked, 3, 2)), 
+                                  hexdec(substr($color_asked, 5, 2)));
             } else { 
                 $ret_val =  $this->rgb_array[$color_asked];
             }
@@ -1639,11 +1672,11 @@ class PHPlot {
         return $ret_val;
     }
 
-    function SetDataColors($which_data=NULL, $which_border=NULL) {
+    function SetDataColors($which_data = NULL, $which_border = NULL) {
         //Set the data to be displayed in a particular color
         if (! $which_data) {
-            $which_data = array('blue','green','yellow','red','orange','SkyBlue','violet',
-                                'azure1', 'YellowGreen','gold','orchid','maroon','plum');
+            $which_data = array('blue', 'green', 'yellow', 'red', 'orange', 'SkyBlue', 'violet',
+                                'azure1', 'YellowGreen', 'gold', 'orchid', 'maroon', 'plum');
             $which_border = array('black');
         }
 
@@ -1711,7 +1744,7 @@ class PHPlot {
      * Sets the style before drawing a dashed line. Defaults to $this->default_dashed_style
      * (3 dots colored, 3 transparent)
      */
-    function SetDashedStyle($which_ndxcol, $which_style=NULL)
+    function SetDashedStyle($which_ndxcol, $which_style = NULL)
     {
         $which_style = ($which_style == NULL) ? $this->default_dashed_style : $which_style;
         
@@ -1821,12 +1854,12 @@ class PHPlot {
         return true;
     }
     
-/////////////////////////////////////////////
-////////////////                  TRANSLATION
-/////////////////////////////////////////////
+//////////////////////////////////////////////
+////////////////       SCALING AND TRANSLATION
+//////////////////////////////////////////////
 
     /*!
-     * Calculates translation stuff...
+     * Calculates scaling stuff...
      */
     function CalcTranslation() {
         if ($this->xscale_type == "log") { 
@@ -1840,7 +1873,7 @@ class PHPlot {
             $this->yscale = ($this->plot_area_height)/($this->plot_max_y - $this->plot_min_y);
         }
 
-        // GD defines x=0 at left and y=0 at TOP so -/+ respectively
+        // GD defines x = 0 at left and y = 0 at TOP so -/+ respectively
         if ($this->xscale_type == "log") { 
             $this->plot_origin_x = $this->plot_area[0] - ($this->xscale * log10($this->plot_min_x) );
         } else { 
@@ -1853,7 +1886,7 @@ class PHPlot {
         }
 
         $this->scale_is_set = 1;
-    } // function CalcTranslation
+    } // function CalcTranslation()
 
 
     /*!
@@ -1879,7 +1912,8 @@ class PHPlot {
      */
     function ytr($y_world) {
         if ($this->yscale_type == "log") { 
-            $y_pixels =  $this->plot_origin_y - log10($y_world) * $this->yscale ;  //minus because GD defines y=0 at top. doh!
+            //minus because GD defines y = 0 at top. doh!
+            $y_pixels =  $this->plot_origin_y - log10($y_world) * $this->yscale ;  
         } else { 
             $y_pixels =  $this->plot_origin_y - $y_world * $this->yscale ;  
         }
@@ -1890,23 +1924,16 @@ class PHPlot {
 ////////////////////                  DRAWING
 /////////////////////////////////////////////
 
-    /*
-    function CheckBounds(&$xpos, &$ypos) {
-        $xpos = ($xpos < 0) ? 0 : (($xpos > $this->image_width) ? $this->image_width : $xpos);
-        $ypos = ($ypos < 0) ? 0 : (($ypos > $this->image_height) ? $this->image_height : $ypos);
-    }
-    */
-    
     /*!
      * Draws a string of text. Horizontal and vertical alignment are relative to 
      * to the drawing. That is: vertical text (90 deg) gets centered along y-axis 
-     * with v_align='center', and adjusted to the left of x-axis with h_align = 'right',
+     * with v_align = 'center', and adjusted to the left of x-axis with h_align = 'right',
      * 
      * \note Original multiple lines code submitted by Remi Ricard.
      * \note Original vertical code submitted by Marlin Viss.
      */
     function DrawText($which_font, $which_angle, $which_xpos, $which_ypos, $which_color, $which_text,
-                      $which_halign='left', $which_valign='bottom') {
+                      $which_halign = 'left', $which_valign = 'bottom') {
 
         $interl = 2;      // Pixels between lines (TODO: add method)
         
@@ -1929,8 +1956,8 @@ class PHPlot {
         // Fixed fonts:
         else { 
             // Split the text in its lines, and count them
-            $which_text = ereg_replace("\r","",$which_text);
-            $str = split("\n",$which_text);
+            $which_text = ereg_replace("\r", "", $which_text);
+            $str = split("\n", $which_text);
             $nlines = count($str);
             
             // Vertical text:
@@ -2010,7 +2037,7 @@ class PHPlot {
         $ypos = $this->safe_margin;
         
         $this->DrawText($this->title_font, $this->title_angle, $xpos, $ypos,
-                        $this->ndx_title_color, $this->title_txt,'center'); 
+                        $this->ndx_title_color, $this->title_txt, 'center'); 
          
         return true; 
 
@@ -2031,16 +2058,13 @@ class PHPlot {
         if ($this->x_title_pos == 'plotup' || $this->x_title_pos == 'both') {
             $ypos = $this->safe_margin + $this->title_height + $this->safe_margin;
             $this->DrawText($this->x_title_font, $this->x_title_angle,
-                            $xpos, $ypos, $this->ndx_title_color, $this->x_title_txt,'center');
+                            $xpos, $ypos, $this->ndx_title_color, $this->x_title_txt, 'center');
         }
         // Lower title
         if ($this->x_title_pos == 'plotdown' || $this->x_title_pos == 'both') {
-           $ypos = $this->ytr($this->plot_min_y) + $this->x_tick_length*2 + $this->safe_margin;
-            // Leave room for tick labels?
-            if ($this->x_tick_label_pos == 'plotdown' || $this->x_tick_label_pos == 'both')
-                $ypos += $this->x_tick_label_height;
+            $ypos = $this->image_height - $this->x_title_height - $this->safe_margin;
             $this->DrawText($this->x_title_font, $this->x_title_angle,
-                            $xpos, $ypos, $this->ndx_title_color, $this->x_title_txt,'center');
+                            $xpos, $ypos, $this->ndx_title_color, $this->x_title_txt, 'center');
         } 
         return true;
     }
@@ -2077,8 +2101,8 @@ class PHPlot {
      * TODO: Images? Patterns?
      */
     function DrawPlotAreaBackground() {
-        ImageFilledRectangle($this->img,$this->plot_area[0],
-            $this->plot_area[1],$this->plot_area[2],$this->plot_area[3],
+        ImageFilledRectangle($this->img, $this->plot_area[0],
+            $this->plot_area[1], $this->plot_area[2], $this->plot_area[3],
             $this->ndx_plot_bg_color);
     }
 
@@ -2105,14 +2129,14 @@ class PHPlot {
      */
     function DrawXAxis() {
         //Draw Tick and Label for Y axis
-        $ylab =$this->FormatTickLabel('y',$this->x_axis_position);
+        $ylab =$this->FormatTickLabel('y', $this->x_axis_position);
         if ($this->skip_bottom_tick != 1) { 
-            $this->DrawYTick($ylab,$this->x_axis_position);
+            $this->DrawYTick($ylab, $this->x_axis_position);
         }
 
-        //Draw X Axis at Y=$x_axis_postion
-        ImageLine($this->img,$this->plot_area[0]+1,$this->ytr($this->x_axis_position),
-                $this->xtr($this->plot_max_x)-1,$this->ytr($this->x_axis_position),$this->ndx_tick_color);
+        //Draw X Axis at Y = $x_axis_postion
+        ImageLine($this->img, $this->plot_area[0]+1, $this->ytr($this->x_axis_position),
+                $this->xtr($this->plot_max_x)-1, $this->ytr($this->x_axis_position), $this->ndx_tick_color);
 
         // Draw ticks, labels and grid
         // FIXME: With text-data, the vertical grid never gets drawn and sometimes
@@ -2141,30 +2165,30 @@ class PHPlot {
         //Lines Across the Plot Area
         if ($this->draw_y_grid) {
             if ($this->dashed_grid) {
-                ImageLine($this->img,$this->plot_area[0]+1,$y_pixels, $this->plot_area[2]-1,$y_pixels, IMG_COLOR_STYLED);
+                ImageLine($this->img, $this->plot_area[0]+1, $y_pixels, $this->plot_area[2]-1, $y_pixels, IMG_COLOR_STYLED);
             } else {
-                ImageLine($this->img,$this->plot_area[0]+1,$y_pixels, $this->plot_area[2]-1,
-                          $y_pixels,$this->ndx_light_grid_color);
+                ImageLine($this->img, $this->plot_area[0]+1, $y_pixels, $this->plot_area[2]-1,
+                          $y_pixels, $this->ndx_light_grid_color);
             }
         }
 
         //Ticks to the Left of the Plot Area
         if (($this->y_tick_pos == "plotleft") || ($this->y_tick_pos == "both") ) { 
-            ImageLine($this->img,(-$this->x_tick_length+$yaxis_x),
-                      $y_pixels,$yaxis_x,
+            ImageLine($this->img, (-$this->x_tick_length+$yaxis_x),
+                      $y_pixels, $yaxis_x,
                       $y_pixels, $this->ndx_tick_color);
         }
 
         //Ticks to the Right of the Plot Area
         if (($this->y_tick_pos == "plotright") || ($this->y_tick_pos == "both") ) { 
-            ImageLine($this->img,($this->plot_area[2]+$this->x_tick_length),
-                      $y_pixels,$this->plot_area[2],
-                      $y_pixels,$this->ndx_tick_color);
+            ImageLine($this->img, ($this->plot_area[2]+$this->x_tick_length),
+                      $y_pixels, $this->plot_area[2],
+                      $y_pixels, $this->ndx_tick_color);
         }
         
         //Ticks on the Y Axis 
         if (($this->y_tick_pos == "yaxis") ) { 
-            ImageLine($this->img,$yaxis_x - $this->y_tick_length, $y_pixels,$yaxis_x,$y_pixels,$this->ndx_tick_color);
+            ImageLine($this->img, $yaxis_x - $this->y_tick_length, $y_pixels, $yaxis_x, $y_pixels, $this->ndx_tick_color);
         }
 
         // Labels to the left of the plot area
@@ -2188,48 +2212,42 @@ class PHPlot {
     function DrawYTicks() {
 
         // Sets the line style for IMG_COLOR_STYLED lines (grid)
-        if ($this->dashed_grid)
+        if ($this->dashed_grid) {
             $this->SetDashedStyle($this->ndx_light_grid_color);
-            
+            $style = IMG_COLOR_STYLED;
+        } else {
+            $style = $this->ndx_light_grid_color;
+        }
+        
         if ($this->skip_top_tick != 1) { //If tick increment doesn't hit the top 
             //Left Top
-            //ImageLine($this->img,(-$this->tick_length+$this->xtr($this->plot_min_x)),
-            //        $this->ytr($this->plot_max_y),$this->xtr($this->plot_min_x),$this->ytr($this->plot_max_y),
+            //ImageLine($this->img, (-$this->tick_length+$this->xtr($this->plot_min_x)),
+            //        $this->ytr($this->plot_max_y), $this->xtr($this->plot_min_x), $this->ytr($this->plot_max_y),
             //        $this->ndx_tick_color);
             //$ylab = $this->FormatYTickLabel($plot_max_y);
 
             //Right Top
-            //ImageLine($this->img,($this->xtr($this->plot_max_x)+$this->tick_length),
-            //        $this->ytr($this->plot_max_y),$this->xtr($this->plot_max_x-1),$this->ytr($this->plot_max_y),
+            //ImageLine($this->img, ($this->xtr($this->plot_max_x)+$this->tick_length),
+            //        $this->ytr($this->plot_max_y), $this->xtr($this->plot_max_x-1), $this->ytr($this->plot_max_y),
             //        $this->ndx_tick_color);
 
             //Draw Grid Line at Top
             if ($this->draw_y_grid) {
-                if ($this->dashed_grid) {
-                    ImageLine($this->img,$this->plot_area[0]+1,$this->ytr($this->plot_max_y),
-                              $this->plot_area[2]-1,$this->ytr($this->plot_max_y), IMG_COLOR_STYLED);
-                } else {
-                    ImageLine($this->img,$this->plot_area[0]+1,$this->ytr($this->plot_max_y),
-                              $this->plot_area[2]-1,$this->ytr($this->plot_max_y),$this->ndx_light_grid_color);
-                }
+                ImageLine($this->img, $this->plot_area[0]+1, $this->ytr($this->plot_max_y),
+                              $this->plot_area[2]-1, $this->ytr($this->plot_max_y), $style);
             }
         }
 
         if ($this->skip_bottom_tick != 1) { 
             //Right Bottom
-            //ImageLine($this->img,($this->xtr($this->plot_max_x)+$this->tick_length),
-            //        $this->ytr($this->plot_min_y),$this->xtr($this->plot_max_x),
-            //        $this->ytr($this->plot_min_y),$this->ndx_tick_color);
+            //ImageLine($this->img, ($this->xtr($this->plot_max_x)+$this->tick_length),
+            //        $this->ytr($this->plot_min_y), $this->xtr($this->plot_max_x),
+            //        $this->ytr($this->plot_min_y), $this->ndx_tick_color);
 
             //Draw Grid Line at Bottom of Plot
             if ($this->draw_y_grid) {
-                if ($this->dashed_grid) {
-                    ImageLine($this->img,$this->xtr($this->plot_min_x)+1,$this->ytr($this->plot_min_y),
-                              $this->xtr($this->plot_max_x),$this->ytr($this->plot_min_y), IMG_COLOR_STYLED);
-                } else {
-                    ImageLine($this->img,$this->xtr($this->plot_min_x)+1,$this->ytr($this->plot_min_y),
-                              $this->xtr($this->plot_max_x),$this->ytr($this->plot_min_y), $this->ndx_light_grid_color);
-                }
+                ImageLine($this->img, $this->xtr($this->plot_min_x)+1, $this->ytr($this->plot_min_y),
+                          $this->xtr($this->plot_max_x), $this->ytr($this->plot_min_y), $style);
             }
         }
         
@@ -2243,7 +2261,7 @@ class PHPlot {
         }
 
         $y_tmp = $this->plot_min_y;
-        SetType($y_tmp,'double');
+        settype($y_tmp, 'double');
         if ($this->skip_bottom_tick == 1) { 
             $y_tmp += $delta_y;
         }
@@ -2252,12 +2270,12 @@ class PHPlot {
             //For log plots: 
             if (($this->yscale_type == "log") && ($this->plot_min_y == 1) && 
                 ($delta_y%10 == 0) && ($y_tmp == $this->plot_min_y)) { 
-                $y_tmp = $y_tmp - 1; //Set first increment to 9 to get: 1,10,20,30,...
+                $y_tmp = $y_tmp - 1; //Set first increment to 9 to get: 1, 10, 20, 30, ...
             }
 
-            $ylab = $this->FormatTickLabel('y',$y_tmp);
+            $ylab = $this->FormatTickLabel('y', $y_tmp);
 
-            $this->DrawYTick($ylab,$y_tmp);
+            $this->DrawYTick($ylab, $y_tmp);
 
             $y_tmp += $delta_y;
         }
@@ -2280,20 +2298,25 @@ class PHPlot {
     function DrawXTicks() {
     
         // Sets the line style for IMG_COLOR_STYLED lines (grid)
-        if ($this->dashed_grid)
+        if ($this->dashed_grid) {
             $this->SetDashedStyle($this->ndx_light_grid_color);
+            $style = IMG_COLOR_STYLED;
+        } else {
+            $style = $this->ndx_light_grid_color;
+        }
         
+/* sometimes this overlaps, and maybe it isn't that necessary...        
         // Leftmost Tick
-        ImageLine($this->img,$this->plot_area[0],
+        ImageLine($this->img, $this->plot_area[0],
                 $this->plot_area[3]+$this->x_tick_length,
-                $this->plot_area[0],$this->plot_area[3],$this->ndx_tick_color);
+                $this->plot_area[0], $this->plot_area[3], $this->ndx_tick_color);
                 
         $xlab = $this->FormatTickLabel('x', 0);
         
         $this->DrawText($this->x_label_font, $this->x_label_angle, $this->plot_area[0], 
                         $this->plot_area[3] + $this->x_tick_length*1.5, $this->ndx_text_color, 
                         $xlab, 'center', 'bottom');
-
+*/
         // Calculate x increment between ticks
         if ($this->x_tick_increment) {
             $delta_x = $this->x_tick_increment;
@@ -2304,17 +2327,17 @@ class PHPlot {
         }
 
         $x_tmp = $this->plot_min_x + $delta_x;  //Don't overwrite left Y axis 
-        SetType($x_tmp,'double');
+        SetType($x_tmp, 'double');
 
-        while ($x_tmp < $this->plot_max_x) {    // Was '<=', now '<' not to overwrite rightmost y axis
+        while ($x_tmp < $this->plot_max_x) {    // Was '< = ', now '<' not to overwrite rightmost y axis
         
             $xlab = $this->FormatTickLabel('x', $x_tmp);
             $x_pixels = $this->xtr($x_tmp);
 
             // Bottom Tick
             if ($this->x_tick_pos == 'plotdown' || $this->x_tick_pos == 'both') {
-                  ImageLine($this->img,$x_pixels,$this->plot_area[3] + $this->x_tick_length,
-                            $x_pixels,$this->plot_area[3], $this->ndx_tick_color);
+                  ImageLine($this->img, $x_pixels, $this->plot_area[3] + $this->x_tick_length,
+                            $x_pixels, $this->plot_area[3], $this->ndx_tick_color);
             }
             // Top Tick
             if ($this->x_tick_pos == 'plotup' || $this->x_tick_pos == 'both') {
@@ -2324,13 +2347,7 @@ class PHPlot {
             
             // Vertical grid lines
             if ($this->draw_x_grid == 1) {
-                if ($this->dashed_grid == 1) {
-                    ImageLine($this->img,$x_pixels,$this->plot_area[1], $x_pixels,$this->plot_area[3], 
-                              IMG_COLOR_STYLED);
-                } else {
-                    ImageLine($this->img,$x_pixels,$this->plot_area[1], $x_pixels,$this->plot_area[3], 
-                              $this->ndx_light_grid_color);
-                }        
+                ImageLine($this->img, $x_pixels, $this->plot_area[1], $x_pixels, $this->plot_area[3], $style);
             }
 
             // Lower X axis tick labels
@@ -2356,15 +2373,15 @@ class PHPlot {
     function DrawPlotBorder() {
         switch ($this->plot_border_type) {
             case "left" :
-                ImageLine($this->img, $this->plot_area[0],$this->ytr($this->plot_min_y),
-                    $this->plot_area[0],$this->ytr($this->plot_max_y),$this->ndx_grid_color);
+                ImageLine($this->img, $this->plot_area[0], $this->ytr($this->plot_min_y),
+                    $this->plot_area[0], $this->ytr($this->plot_max_y), $this->ndx_grid_color);
             break;
             case "none":
                 //Draw No Border
             break;
             default:
-                ImageRectangle($this->img, $this->plot_area[0],$this->ytr($this->plot_min_y),
-                    $this->plot_area[2],$this->ytr($this->plot_max_y),$this->ndx_grid_color);
+                ImageRectangle($this->img, $this->plot_area[0], $this->ytr($this->plot_min_y),
+                    $this->plot_area[2], $this->ytr($this->plot_max_y), $this->ndx_grid_color);
             break;
         }
         $this->DrawYAxis();
@@ -2384,25 +2401,24 @@ class PHPlot {
                     $lab = $this->data_values[$which_lab][0];
                     break;
                 case "data":
-                    $lab = number_format($this->plot_min_x,$this->x_precision,".",",") . "$this->si_units";
+                    $lab = number_format($this->plot_min_x, $this->x_precision, ".", ", ") . "$this->si_units";
                     break;
                 case "none":
                     $lab = '';
                     break;
                 case "time":  //Time formatting suggested by Marlin Viss
-                    $lab = strftime($this->x_time_format,$this->plot_min_x);
+                    $lab = strftime($this->x_time_format, $which_lab);
                     break;
                 default:
                     //Unchanged from whatever format is passed in
-                    // FIXME!
-                    $lab = $which_lab; //$this->plot_min_x;
+                    $lab = $which_lab;
                 break;
             }    
             break;
         case 'y':
             switch ($this->y_tick_label_type) {
                 case "data":
-                    $lab = number_format($which_lab, $this->y_precision,".",",") . "$this->si_units";
+                    $lab = number_format($which_lab, $this->y_precision, ".", ", ") . "$this->si_units";
                     break;
                 case "none":
                     $lab = '';
@@ -2416,7 +2432,7 @@ class PHPlot {
                     break;
             }
             break;
-        case 'plot':
+        case 'plot':        // TODO TODO fill me...
             switch ($this->plot_label_type) {
                 case '':
                 case '':
@@ -2455,7 +2471,7 @@ class PHPlot {
      *
      * \note Base code submitted by Marlin Viss
      */
-    function DrawLegend($which_x1,$which_y1,$which_boxtype) {
+    function DrawLegend($which_x1, $which_y1, $which_boxtype) {
     
         // Find maximum legend label length
         $max_legend_length = 0;
@@ -2487,10 +2503,10 @@ class PHPlot {
 
 
         // Draw outer box
-        ImageFilledRectangle($this->img, $box_start_x, $box_start_y,$box_end_x, $box_end_y, $this->ndx_bg_color);
-        ImageRectangle($this->img, $box_start_x, $box_start_y,$box_end_x, $box_end_y, $this->ndx_grid_color);
+        ImageFilledRectangle($this->img, $box_start_x, $box_start_y, $box_end_x, $box_end_y, $this->ndx_bg_color);
+        ImageRectangle($this->img, $box_start_x, $box_start_y, $box_end_x, $box_end_y, $this->ndx_grid_color);
 
-        $color_index=0;
+        $color_index = 0;
         $max_color_index = count($this->ndx_data_color) - 1;
         
         $dot_left_x = $box_end_x - $this->legend_font['width'] * 2;
@@ -2512,7 +2528,7 @@ class PHPlot {
             
             $color_index++;
             if ($color_index > $max_color_index) 
-                $color_index=0;
+                $color_index = 0;
         }
     } // Function DrawLegend
 
@@ -2546,7 +2562,7 @@ class PHPlot {
         }
         // Or only one column per row, one pie slice per row?
         // FIXME: find a better name for this?
-        else if ($this->data_type === 'text-data-once') {
+        else if ($this->data_type == 'text-data-once') {
             $i = 0;
             foreach ($this->data_values as $row) {
                 // Set the legend to column labels
@@ -2587,7 +2603,7 @@ class PHPlot {
                 else                
                     $slicecol = $this->ndx_data_dark_color[$color_index];
             
-                $label_txt = number_format(($val / $total * 100), $this->y_precision, ".", ",") . "%";
+                $label_txt = number_format(($val / $total * 100), $this->y_precision, ".", ", ") . "%";
                 $val = 360 * ($val / $total);
 
                 // NOTE that imagefilledarc measures angles CLOCKWISE (go figure why),
@@ -2707,7 +2723,7 @@ class PHPlot {
 
     /*!
      * Supported data format: data-data-error 
-     * ( data comes in as array("title",x,y,error+,error-,y2,error2+,error2-,...) )
+     * ( data comes in as array("title", x, y, error+, error-, y2, error2+, error2-, ...) )
      */
     function DrawDotsError() {
        
@@ -2740,15 +2756,15 @@ class PHPlot {
                 if ($key%3 == 0) {
                     $color_index = $color_index % $max_data_colors;
                     
-                    $barcol = $this->ndx_data_color[$color_index];
-                    $error_barcol = $this->ndx_error_bar_color[$color_index];
+                    $color = $this->ndx_data_color[$color_index];
+                    $error_color = $this->ndx_error_bar_color[$color_index];
 
                     $y_now = $val;
-                    $this->DrawDot($x_now, $y_now, $this->point_shape, $barcol);
+                    $this->DrawDot($x_now, $y_now, $this->point_shape, $color);
                     
                     $color_index++;
                 } elseif ($key%3 == 1) {
-                    $this->DrawYErrorBar($x_now,$y_now, $val, $this->error_bar_shape, $error_color);
+                    $this->DrawYErrorBar($x_now, $y_now, $val, $this->error_bar_shape, $error_color);
                 } elseif ($key%3 == 2) {
                     $this->DrawYErrorBar($x_now, $y_now, -$val, $this->error_bar_shape, $error_color);
                 }
@@ -2803,7 +2819,7 @@ class PHPlot {
 
 
     /*!
-     * A clean,fast routine for when you just want charts like stock volume charts
+     * A clean, fast routine for when you just want charts like stock volume charts
      * Data must be data-data since I didn't see a graphing need for equally spaced thin lines. 
      * If you want it, then submit a feature request at 
      * http://sourceforge.net/projects/phplot/ or write to afan@jeo.net and we might add it
@@ -2818,6 +2834,7 @@ class PHPlot {
 
         $max_data_colors = count($this->ndx_data_color);
         
+        $cnt = 0;
         foreach ($this->data_values as $row) {
         
             // Reset color index
@@ -2830,7 +2847,7 @@ class PHPlot {
             if ($this->data_type == 'data-data') 
                 $x_now = array_shift($row);
             else
-                $x_now = 0.5 + $i++;    // place text-data at X = 0.5, 1.5, 2.5, etc...
+                $x_now = 0.5 + $cnt++;    // place text-data at X = 0.5, 1.5, 2.5, etc...
             
             $x_now_pixels = $this->xtr($x_now);
             
@@ -2922,7 +2939,7 @@ class PHPlot {
                                0, 360, $color, IMG_ARC_PIE);
                 break;
             case "diamond":
-                $arrpoints = array( $x1,$y_mid, $x_mid, $y1, $x2, $y_mid, $x_mid, $y2);
+                $arrpoints = array( $x1, $y_mid, $x_mid, $y1, $x2, $y_mid, $x_mid, $y2);
                 ImageFilledPolygon($this->img, $arrpoints, 4, $color);
                 break;
             case "triangle":
@@ -3011,10 +3028,10 @@ class PHPlot {
             $color_index++;
         }
 
-    }
+    } // function DrawArea()
 
     /*!
-     * Data comes in as $data[]=("title",x,y,...);
+     * Data comes in as $data[] = ("title", x, y, ...);
      */
     function DrawLines() {
     
@@ -3028,9 +3045,9 @@ class PHPlot {
             $lastx[0] = $this->xtr(0);
             $lasty[0] = $this->xtr(0);
         }
-
+        $cnt = 0;
         foreach ($this->data_values as $row) {
-
+            
             // Reset color index
             $color_index = 0;
             
@@ -3041,13 +3058,16 @@ class PHPlot {
            if ($this->data_type == 'data-data') 
                 $x_now = array_shift($row);
             else
-                $x_now = 0.5 + $group++;    // place text-data at X = 0.5, 1.5, 2.5, etc...
+                $x_now = 0.5 + $cnt++;    // place text-data at X = 0.5, 1.5, 2.5, etc...
             
             $x_now_pixels = $this->xtr($x_now);
+            
+             // Draw X Data labels?
+            if ($this->x_data_label_pos != 'none')
+                $this->DrawXDataLabel($lab, $x_now_pixels);
  
             $i = 0; 
             foreach ($row as $y_now) {
-                //(double) $v;
                 // Draw Lines
                 if (is_numeric($y_now)) {           //Allow for missing Y data 
                 
@@ -3086,7 +3106,7 @@ class PHPlot {
 
         
     /*!    
-     * Data comes in as $data[]=("title",x,y,e+,e-,y2,e2+,e2-,...);
+     * Data comes in as $data[] = ("title", x, y, e+, e-, y2, e2+, e2-, ...);
      */
     function DrawBars() {
 
@@ -3095,63 +3115,68 @@ class PHPlot {
         }
 
         $xadjust = ($this->records_per_group * $this->record_bar_width )/4;
-// AQUI
+        
         reset($this->data_values);
         while (list($j, $row) = each($this->data_values)) {
 
             $color_index = 0;
             $colbarcount = 0;
-            $x_now = $this->xtr($j+.5);
-
+            $x_now = $this->xtr($j+0.5);     // place text-data at X = 0.5, 1.5, 2.5, etc...
+            
+            // First extract the "title" of the row
+            $lab = array_shift($row);
+            
+            // Draw it?
+            if ($this->x_data_label_pos != 'none')
+                $this->DrawXDataLabel($lab, $x_now);
+ 
             while (list($k, $v) = each($row)) {
-                if ($k == 0) {
-                    //Draw Data Labels
-                    $xlab = SubStr($v,0,$this->max_t);
-                    $this->DrawXDataLabel($xlab,$x_now);
+                // Draw Bars ($v)
+                $x1 = $x_now - $this->data_group_space + $k*$this->record_bar_width;
+                $x2 = $x1 + $this->record_bar_width*$this->bar_width_adjust; 
+
+                if ($v < $this->x_axis_position) {
+                    $y1 = $this->ytr($this->x_axis_position);
+                    $y2 = $this->ytr($v);
                 } else {
-                    // Draw Bars ($v)
-                    $x1 = $x_now - $this->data_group_space + ($k-1)*$this->record_bar_width;
-                    $x2 = $x1 + $this->record_bar_width*$this->bar_width_adjust; 
+                    $y1 = $this->ytr($v);
+                    $y2 = $this->ytr($this->x_axis_position);
+                }
 
-                    if ($v < $this->x_axis_position) {
-                        $y1 = $this->ytr($this->x_axis_position);
-                        $y2 = $this->ytr($v);
-                    } else {
-                        $y1 = $this->ytr($v);
-                        $y2 = $this->ytr($this->x_axis_position);
-                    }
-
-                    if ($color_index >= count($this->ndx_data_color)) $color_index=0;
-                    if ($colbarcount >= count($this->ndx_data_border_color)) $colbarcount=0;
-                    $barcol = $this->ndx_data_color[$color_index];
-                    $bordercol = $this->ndx_data_border_color[$colbarcount];
+                if ($color_index >= count($this->ndx_data_color)) $color_index = 0;
+                if ($colbarcount >= count($this->ndx_data_border_color)) $colbarcount = 0;
+                $barcol = $this->ndx_data_color[$color_index];
+                $bordercol = $this->ndx_data_border_color[$colbarcount];
                     
-                    if (is_numeric($v)) {   //Allow for missing Y data 
-                        for($i=0;$i < $this->shading; $i++) { 
-                            //Shading set in SetDefaultColor
-                            ImageFilledRectangle($this->img, $x1+$i, $y1-$i, $x2+$i, $y2-$i, 
-                                                 $this->ndx_data_dark_color[$color_index]);
-                            }
-
-                        ImageFilledRectangle($this->img, $x1, $y1, $x2, $y2, $barcol);
-                        if (!$this->shading)
-                            ImageRectangle($this->img, $x1, $y1, $x2, $y2, $bordercol);
+                // Allow for missing Y data 
+                if (is_numeric($v)) {
+                    for($i = 0;$i < $this->shading; $i++) { 
+                        ImageFilledRectangle($this->img, $x1+$i, $y1-$i, $x2+$i, $y2-$i, 
+                                             $this->ndx_data_dark_color[$color_index]);
+                        }
+                        
+                    ImageFilledRectangle($this->img, $x1, $y1, $x2, $y2, $barcol);
+                    
+                    if (!$this->shading) {
+                        ImageRectangle($this->img, $x1, $y1, $x2, $y2, $bordercol);
+                    }
 /*                        if ($this->draw_x_data_labels == '1') { // ajo
                             $y1 = $this->ytr($this->label_scale_position * $v);
                             $this->DrawText($this->x_title_font, $this->x_title_angle,
                                 $x1+$this->record_bar_width/2, $y1, $this->ndx_title_color, 
-                                $v,'center','top');
+                                $v, 'center', 'top');
                         }
 */                        
-                    } 
-
-                    $color_index++;
-                    $colbarcount++;
-                }
-            }
-        }
+                } 
+                $color_index++;
+                $colbarcount++;
+            }   // end while
+        }   // end while
     } //function DrawBars    
 
+    /*!
+     *
+     */
     function DrawGraph() {
 
         if ($this->img == "") {
@@ -3162,133 +3187,128 @@ class PHPlot {
         if (! is_array($this->data_values)) {
             $this->DrawBackground();
             $this->DrawError("DrawGraph(): No array of data in \$data_values");
-        } else {
-            // Didn't the constructor already set data_color? (MBD)
-            /*
-            if (! $this->data_color) {
-                $this->SetDataColors(array('blue','green','yellow','red','orange','blue'),array('black'));
-            }
-            */
-            $this->FindDataLimits();        //Get maxima and minima for scaling
-            // Check for empty data sets:
-            if ($this->data_count == 0) {
-                $this->DrawError('Empty data set');
-                if ($this->print_image == 1) { 
-                    $this->PrintImage();
+            return;
+        }
+        // Didn't the constructor already set data_color? (MBD)
+        /*
+        if (! $this->data_color) {
+            $this->SetDataColors(array('blue', 'green', 'yellow', 'red', 'orange', 'blue'), array('black'));
+        }
+        */
+        $this->FindDataLimits();        //Get maxima and minima for scaling
+        
+        // Check for empty data sets:
+        if ($this->data_count == 0) {
+            $this->DrawError('Empty data set');
+            return;
+        }
+
+        $this->CalcMargins();        // Calculate margins
+
+        // MBD: ??
+        if (!$this->plot_area_width) 
+            $this->SetPlotAreaPixels('', '', '', '');        //Set Margins
+
+        if (!$this->plot_max_y)   //If not set by user call SetPlotAreaWorld,
+            $this->SetPlotAreaWorld('', '', '', '');
+
+        if ($this->data_type == "text-data")
+            $this->SetEqualXCoord();
+
+        $this->SetPointSize($this->point_size);
+
+        $this->DrawBackground();
+        
+        $this->DrawImageBorder();
+
+        $this->CalcTranslation();
+
+        if ($this->draw_plot_area_background == 1)
+            $this->DrawPlotAreaBackground();
+       
+        //$foo = "$this->max_y, $this->min_y, $new_miny, $new_maxy, $this->x_margin_height";
+        //ImageString($this->img, 4, 20, 20, $foo, $this->ndx_text_color);
+
+        switch ($this->plot_type) {
+            case "bars":
+                $this->DrawPlotBorder();
+                $this->DrawLabels();
+                $this->DrawBars();
+                $this->DrawXAxis();
+                break;
+            case "thinbarline":
+                $this->DrawPlotBorder();
+                $this->DrawLabels();
+                $this->DrawThinBarLines();
+                break;
+            case "lines":
+                $this->DrawPlotBorder();
+                $this->DrawLabels();
+                if ( $this->data_type == "text-data") {
+                    $this->DrawLines();
+                } elseif ( $this->data_type == "data-data-error") {
+                    $this->DrawLinesError();
+                } else {
+                    $this->DrawLines();
                 }
-                return;
-            }
+                break;
+            case "area":
+                $this->DrawPlotBorder();
+                $this->DrawLabels();
+                $this->DrawArea();
+                break;
+            case "linepoints":
+                $this->DrawPlotBorder();
+                $this->DrawLabels();
+                if ( $this->data_type == "text-data") {
+                    $this->DrawLines();
+                    $this->DrawDots();
+                } elseif ( $this->data_type == "data-data-error") {
+                    $this->DrawLinesError();
+                    $this->DrawDotsError();
+                } else {
+                    $this->DrawLines();
+                    $this->DrawDots();
+                }
+                break;
+            case "points";
+                $this->DrawPlotBorder();
+                $this->DrawLabels();
+                if ( $this->data_type == "text-data") {
+                    $this->DrawDots();
+                } elseif ( $this->data_type == "data-data-error") {
+                    $this->DrawDotsError();
+                } else {
+                    $this->DrawDots();
+                }
+                break;
+            case "pie":
+                // Pie charts can maximize image space usage. (MBD)
+                $this->SetPlotAreaPixels($this->safe_margin, $this->title_height,
+                                         $this->image_width - $this->safe_margin,
+                                         $this->image_height - $this->safe_margin);
+                                         
+                // If we have drawn this before, it probably is too small.
+                if ($this->draw_plot_area_background == 1)
+                    $this->DrawPlotAreaBackground();
 
-            $this->CalcXHeights();      // Get data for bottom/upper margin
+                $this->DrawPieChart();
+                $this->DrawLabels();
+                break;
+            default:
+                $this->DrawPlotBorder();
+                $this->DrawLabels();
+                $this->DrawBars();
+                break;
+        }   // end switch
 
-            $this->CalcYWidths();       // Get data for left/right margin
-
-            $this->CalcMargins();        // Calculate margins
-            // MBD: ??
-            if (!$this->plot_area_width) 
-                $this->SetPlotAreaPixels('','','','');        //Set Margins
-
-            if (!$this->plot_max_y)   //If not set by user call SetPlotAreaWorld,
-                $this->SetPlotAreaWorld('','','','');
-
-            if ($this->data_type == "text-data")
-                $this->SetEqualXCoord();
-
-            $this->SetPointSize($this->point_size);
-
-            $this->DrawBackground();
+        if ($this->legend)
+            $this->DrawLegend($this->legend_x_pos, $this->legend_y_pos, '');
             
-            $this->DrawImageBorder();
-
-            $this->CalcTranslation();
-
-            if ($this->draw_plot_area_background == 1)
-                $this->DrawPlotAreaBackground();
-           
-            //$foo = "$this->max_y, $this->min_y, $new_miny, $new_maxy, $this->x_margin_height";
-            //ImageString($this->img, 4, 20, 20, $foo, $this->ndx_text_color);
-
-            switch ($this->plot_type) {
-                case "bars":
-                    $this->DrawPlotBorder();
-                    $this->DrawLabels();
-                    $this->DrawBars();
-                    $this->DrawXAxis();
-                    break;
-                case "thinbarline":
-                    $this->DrawPlotBorder();
-                    $this->DrawLabels();
-                    $this->DrawThinBarLines();
-                    break;
-                case "lines":
-                    $this->DrawPlotBorder();
-                    $this->DrawLabels();
-                    if ( $this->data_type == "text-data") {
-                        $this->DrawLines();
-                    } elseif ( $this->data_type == "data-data-error") {
-                        $this->DrawLinesError();
-                    } else {
-                        $this->DrawLines();
-                    }
-                    break;
-                case "area":
-                    $this->DrawPlotBorder();
-                    $this->DrawLabels();
-                    $this->DrawArea();
-                    break;
-                case "linepoints":
-                    $this->DrawPlotBorder();
-                    $this->DrawLabels();
-                    if ( $this->data_type == "text-data") {
-                        $this->DrawLines();
-                        $this->DrawDots();
-                    } elseif ( $this->data_type == "data-data-error") {
-                        $this->DrawLinesError();
-                        $this->DrawDotsError();
-                    } else {
-                        $this->DrawLines();
-                        $this->DrawDots();
-                    }
-                    break;
-                case "points";
-                    $this->DrawPlotBorder();
-                    $this->DrawLabels();
-                    if ( $this->data_type == "text-data") {
-                        $this->DrawDots();
-                    } elseif ( $this->data_type == "data-data-error") {
-                        $this->DrawDotsError();
-                    } else {
-                        $this->DrawDots();
-                    }
-                    break;
-                case "pie":
-                    // Pie charts can maximize image space usage. (MBD)
-                    $this->SetPlotAreaPixels($this->safe_margin, $this->title_height,
-                                             $this->image_width - $this->safe_margin,
-                                             $this->image_height - $this->safe_margin);
-                                             
-                    // If we had drawn this before, it'd probably be too small.
-                    if ($this->draw_plot_area_background == 1)
-                        $this->DrawPlotAreaBackground();
-
-                    $this->DrawPieChart();
-                    $this->DrawLabels();
-                    break;
-                default:
-                    $this->DrawPlotBorder();
-                    $this->DrawLabels();
-                    $this->DrawBars();
-                    break;
-            }
-
-            if ($this->legend) {
-                $this->DrawLegend($this->legend_x_pos,$this->legend_y_pos,'');
-            }
-        }
-        if ($this->print_image == 1) { 
+        if ($this->print_image)
             $this->PrintImage();
-        }
-    } //function DrawGraph
+
+    } //function DrawGraph()
 
 /////////////////////////////////////////////
 //////////////////                 DEPRECATED
@@ -3408,7 +3428,7 @@ class PHPlot {
     /*!
      * Deprecated.
      */
-    function SetImageArea($which_iw,$which_ih) {
+    function SetImageArea($which_iw, $which_ih) {
         //Note this is now an Internal function - please set w/h via PHPlot()
         $this->image_width = $which_iw;
         $this->image_height = $which_ih;
@@ -3429,7 +3449,8 @@ class PHPlot {
      * \deprecated, use SetTickLabelParams()
      */
     function SetYGridLabelType($which_yglt) {
-        $this->SetTickLabelParams($this->x_tick_label_pos, $this->y_tick_label_pos, $this->x_tick_label_type, $which_yglt);
+        $this->SetTickLabelParams($this->x_tick_label_pos, $this->y_tick_label_pos, 
+                                  $this->x_tick_label_type, $which_yglt);
         return true;
     }
 
@@ -3437,21 +3458,24 @@ class PHPlot {
      * \deprecated, use SetTickLabelParams()
      */
     function SetXGridLabelType($which_xglt) {
-        $this->SetTickLabelParams($this->x_tick_label_pos, $this->y_tick_label_pos, $which_xglt, $this->y_tick_label_type);
+        $this->SetTickLabelParams($this->x_tick_label_pos, $this->y_tick_label_pos, $which_xglt, 
+                                  $this->y_tick_label_type);
         return true;
     }
     /*!
      * \deprecated, use SetTickLabelParams()
      */
     function SetYGridLabelPos($which_yglp) {
-        $this->SetTickLabelParams($this->x_tick_label_pos, $which_yglp, $this->x_tick_label_type, $this->y_tick_label_type);
+        $this->SetTickLabelParams($this->x_tick_label_pos, $which_yglp, $this->x_tick_label_type, 
+                                  $this->y_tick_label_type);
         return true;
     }
     /*!
      * \deprecated, use SetTickLabelParams()
      */
     function SetXGridLabelPos($which_xglp) {
-        $this->SetTickLabelParams($which_xglp, $this->y_tick_label_pos, $this->x_tick_label_type, $this->y_tick_label_type);
+        $this->SetTickLabelParams($which_xglp, $this->y_tick_label_pos, $this->x_tick_label_type, 
+                                  $this->y_tick_label_type);
         return true;
     }
 
@@ -3459,14 +3483,14 @@ class PHPlot {
      * \deprecated. use SetGridParams()
      */
     function SetDrawYGrid($which_dyg) {
-        $this->draw_y_grid = $which_dyg;  // 1=true or anything else=false
+        $this->draw_y_grid = $which_dyg;  // 1 = true or anything else = false
     }
     
     /*!
      * \deprecated. use SetGridParams()
      */
     function SetDrawXGrid($which_dxg) {
-        $this->draw_x_grid = $which_dxg;  // 1=true or anything else=false
+        $this->draw_x_grid = $which_dxg;  // 1 = true or anything else = false
     }
     
     /*!
@@ -3507,9 +3531,5 @@ class PHPlot {
         return false;
     } //function DrawLineSeries
 
-
-
-
 }  // class PHPlot
-
 ?>
