@@ -36,8 +36,8 @@ class PHPlot {
 
     var $safe_margin = 5;               // Extra margin used in several places. In pixels
 
-    var $x_axis_position = '';           // Where to draw both axis (world coordinates),
-    var $y_axis_position = '';           // leave blank for X axis at 0 and Y axis at left of plot.
+    var $x_axis_position = '';          // Where to draw both axis (world coordinates),
+    var $y_axis_position = '';          // leave blank for X axis at 0 and Y axis at left of plot.
 
     var $xscale_type = 'linear';        // linear, log
     var $yscale_type = 'linear';
@@ -182,7 +182,12 @@ class PHPlot {
 //////////////////////////////////////////////////////
 
     /*!
-     * Constructor: Setup img resource, colors and size of the image, and font sizes
+     * Constructor: Setup img resource, colors and size of the image, and font sizes.
+     * 
+     * \param which_width       int    Image width in pixels.
+     * \param which_height      int    Image height in pixels.
+     * \param which_output_file string Filename for output.
+     * \param which_input_fule  string Path to a file to be used as background.
      */
     function PHPlot($which_width=600, $which_height=400, $which_output_file=NULL, $which_input_file=NULL) 
     {
@@ -212,7 +217,7 @@ class PHPlot {
             $this->SetOutputFile($which_output_file);
 
         if ($which_input_file)
-            $this->SetInputFile($which_input_file) ;
+            $this->SetInputFile($which_input_file);
         else {
             $this->image_width = $which_width;
             $this->image_height = $which_height;
@@ -237,6 +242,7 @@ class PHPlot {
      * Destructor. Image resources not deallocated can be memory hogs, I think
      * it is safer to automatically call imagedestroy upon script termination than
      * do it ourselves.
+     * See notes in the constructor code.
      */
     function _PHPlot () 
     {
@@ -251,6 +257,8 @@ class PHPlot {
 
     /*!
      * Returns an index to a color passed in as anything (string, hex, rgb)
+     *
+     * \param which_color * Color (can be '#AABBCC', 'Colorname', or array(r,g,b))
      */
     function SetIndexColor($which_color) 
     {
@@ -263,8 +271,9 @@ class PHPlot {
         }
     }
 
+
     /*!
-     * Returns an index to a slightly darker color than that requested. 
+     * Returns an index to a slightly darker color than the one requested. 
      */
     function SetIndexDarkColor($which_color) 
     {
@@ -287,7 +296,7 @@ class PHPlot {
      * as they are lost with every script execution, else, sets the default colors by name or value and
      * then updates indices too.
      *
-     ************ FIXME! This is too slow
+     * FIXME! This is too slow.
      *
      */
     function SetDefaultStyles() 
@@ -319,6 +328,9 @@ class PHPlot {
     }
 
 
+    /*
+     *
+     */
     function SetBackgroundColor($which_color) 
     {
         $this->bg_color= $which_color;
@@ -326,6 +338,9 @@ class PHPlot {
         return TRUE;
     }
 
+    /*
+     *
+     */
     function SetPlotBgColor($which_color) 
     {
         $this->plot_bg_color= $which_color;
@@ -333,13 +348,19 @@ class PHPlot {
         return TRUE;
     }
 
-    function SetTitleColor($which_color) 
+   /*
+    *
+    */
+   function SetTitleColor($which_color) 
     {
         $this->title_color= $which_color;
         $this->ndx_title_color= $this->SetIndexColor($this->title_color);
         return TRUE;
     }
 
+    /*
+     *
+     */
     function SetTickColor ($which_color) 
     {
         $this->tick_color= $which_color;
@@ -347,6 +368,10 @@ class PHPlot {
         return TRUE;
     }
 
+    
+    /*
+     *
+     */
     function SetLabelColor ($which_color) 
     {
         $this->label_color = $which_color;
@@ -354,6 +379,10 @@ class PHPlot {
         return TRUE;
     }
 
+    
+    /*
+     *
+     */
     function SetTextColor ($which_color) 
     {
         $this->text_color= $which_color;
@@ -361,6 +390,10 @@ class PHPlot {
         return TRUE;
     }
 
+    
+    /*
+     *
+     */
     function SetLightGridColor ($which_color) 
     {
         $this->light_grid_color= $which_color;
@@ -368,6 +401,10 @@ class PHPlot {
         return TRUE;
     }
 
+    
+    /*
+     *
+     */
     function SetGridColor ($which_color) 
     {
         $this->grid_color = $which_color;
@@ -375,6 +412,10 @@ class PHPlot {
         return TRUE;
     }
 
+    
+    /*
+     *
+     */
     function SetImageBorderColor($which_color)
     {
         $this->i_border = $which_color;
@@ -382,19 +423,30 @@ class PHPlot {
         $this->ndx_i_border_dark = $this->SetIndexDarkColor($this->i_border);
         return TRUE;
     }
+
+    
+    /*
+     *
+     */   
     function SetTransparentColor($which_color) 
     { 
         ImageColorTransparent($this->img, $this->SetIndexColor($which_color));
         return TRUE;
     }
+    
 
+    /*!
+     * Sets the array of colors to be used. It can be user defined, small predefined or large included.
+     *
+     * \param which_color_array If an array, the used as color array. If a string can 
+     *        be one of 'small' or 'large'.
+     */
     function SetRGBArray ($which_color_array) 
     { 
-        if ( is_array($which_color_array) ) { 
-            //User Defined Array
+        if ( is_array($which_color_array) ) {           // User defined array
             $this->rgb_array = $which_color_array;
             return TRUE;
-        } elseif ($which_color_array == 'small') { //Use the small predefined color array
+        } elseif ($which_color_array == 'small') {      // Small predefined color array
             $this->rgb_array = array(
                 'white'          => array(255, 255, 255),
                 'snow'           => array(255, 250, 250),
@@ -434,10 +486,10 @@ class PHPlot {
                 'aquamarine1'    => array(127, 255, 212)
                 );
             return TRUE;
-        } elseif ($which_color_array === 'large')  { 
-            include("./rgb.inc.php");           //Get large $ColorArray
+        } elseif ($which_color_array === 'large')  {    // Large color array
+            include("./rgb.inc.php");
             $this->rgb_array = $RGBArray;
-        } else { 
+        } else {                                        // Default to black and white only.
             $this->rgb_array = array('white' => array(255, 255, 255), 'black' => array(0, 0, 0));
         }
 
@@ -446,7 +498,8 @@ class PHPlot {
 
     /*!
      * Returns an array in R, G, B format 0-255
-     *   \param color_asked Array(R,G,B) or string in '#AABBCC' format
+     *
+     *  \param color_asked array(R,G,B) or string (named color or '#AABBCC')
      */
     function SetRGBColor($color_asked) 
     {
@@ -529,7 +582,6 @@ class PHPlot {
     } // function SetErrorBarColors()
 
 
-
     /*!
      * Sets the default dashed style.
      *  \param which_style A string specifying order of colored and transparent dots, 
@@ -564,6 +616,7 @@ class PHPlot {
 
         return TRUE;
     }
+
 
     /*!
      * Sets the style before drawing a dashed line. Defaults to $this->default_dashed_style
