@@ -7,6 +7,8 @@
 </head>
 <body>
 
+<?php include("nav.html"); ?>
+
 <h2>PHPlot graphic formats test</h2>
 
 <p>
