@@ -1,12 +1,12 @@
-<!doctype html public "-//w3c//dtd html 3.2//en">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8">
 	<title>PHPLOT Quick Start and Examples</title>
-	<meta name="generator" content="openoffice.org 1.0.1  (linux)">
-	<meta name="author" content="a o">
-	<meta name="created" content="20010302;20371700">
-	<meta name="changed" content="20030421;11040300">
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="author" content="Afan Ottenheimer" />
+    <meta name="author" content="Miguel de Benito" />
+	<meta name="created" content="20010302;20371700" />
+	<meta name="changed" content="20040121;19341300" />
 	<meta name="description" content="phplot quick start and examples">
 	<meta name="keywords" content="phplot, graphs, images, php">
 	<meta name="robots" content="all">
@@ -17,39 +17,51 @@
 	-->
 	</style>
 </head>
+
 <body lang="en-us" bgcolor="#ffffff">
-<h1 style="page-break-before: always">PHPlot Quick Start and Examples</h1>
+
+<h1>PHPlot Quick Start and Examples</h1>
+
 <p>Afan Ottenheimer</p>
 <p>January 7, 2001</p>
 <p><b>Contents</b></p>
-<p style="margin-bottom: 0cm"><a href="#intro">Introduction</a> <br><a href="#some_examples">Some
-Examples</a> <br><a href="#multiple">Multiple Graphs Per Image</a></p>
-<p><br><br>
+<p>
+  <a href="#intro">Introduction</a><br />
+  <a href="#some_examples">Some Examples</a><br />
+  <a href="#multiple">Multiple Graphs Per Image</a><br />
+  <br />
+  <br />
 </p>
+
 <h2><a name="intro"></a>Introduction</h2>
-<p>Many web sites have wanted to create real-time or dynamic charts
-and graphs. Many users have found PHP a great way for this dynamic
+
+<p>Many web sites need to create real-time or dynamic charts and graphs.
+from live data sets. Many users have found PHP a great way for this dynamic
 creation of images using the GD library and there have been several
-good articles describing this () () (). The
-advantage of using the server to create an image (server side
-scripting) is that one does not have to worry about browser
-compatibility or client operating system compatibility issues. The
-PHP image generating library uses the GD library to create elementary
-shapes (elipse, line, rectangle, ...).  PHPlot
-is a graphics library that provide a means by which you can have your
+good articles describing this [] [] []. The advantage of using the server
+to create an image (server side scripting) is that one does not have to 
+worry about browser compatibility or client operating system compatibility issues.
+The PHP image generating library uses the GD library to create elementary
+shapes (elipse, line, rectangle, ...).  
+PHPlot is a graphics library which provides a means by which you can have your
 (PHP enabled) web server create and manipulate graphs as objects and
 display the completed graph as an image. 
 </p>
+
 <p>First, lets discuss how PHPlot works in general with some
-terminology. A PHPlot <i>image </i>can
-consist of several <i>graphs </i>- each graph consisting of several
-<i>elements</i>. You define an object (e.g.
-a variable like $graph) select the properties of the element that
+terminology. A PHPlot <i>image </i>can consist of several <i>graphs </i>,
+each graph consisting of several <i>elements</i>.
+You define an object (e.g. a variable like <code>$graph</code>),
+select the properties of the element that
 compose the graph and &quot;<i>Draw</i>&quot; what you want into the
-object. When you have the image the way you want it, you “<i>Print</i>”
-the <i>image </i>– (e.g <i>PrintImage</i>)
-which either inserts the image in real time into the data streaming
-to the client or writes it to disk. 
+object. When you have the image the way you want it, you "<i>Print</i>"
+it whith <code>PrintImage</code>, which either inserts the image
+into the data streaming to the client or writes it to disk. 
+</p>
+<p>There are <em>World coordinates</em>, which are the XY coordinates 
+relative to the axis origin, in the units of the data set; and 
+<em>device (pixel)</em> coordinates which in GD are relative to the 
+origin at the upper left side of the image. 
 </p>
 <p>You can think of the &quot;Draw&quot; functions as shaping the
 image object and the &quot;Print&quot; function as the method of
@@ -60,59 +72,57 @@ then you'll need to use both the &quot;Draw&quot; and &quot;Print&quot;
 functions. We'll talk about that a bit later. 
 </p>
 <p>Since PHP is a server scripted language you have several options
-for how you can &quot;Print&quot; the image. You can</p>
+for how you can &quot;Print&quot; the image. You can:</p>
 <ol>
-	<li><p>Write the image as a file on the server. (You specify a file
-	name and can specify caching as well)</p>
-	<li><p>Have the raw data stream out within an HTML file, as &lt;IMG
-	SRC=&quot;my_PHPlot_code.php&quot;&gt;</p>
-	<li><p>Precede the raw data with Apache image headers and call the
+	<li>Write the image as a file on the server. (You specify a file
+	name and can specify caching as well)</li>
+	<li>Have the raw data stream out within an HTML file, as &lt;IMG
+	SRC=&quot;my_PHPlot_code.php&quot;&gt;</li>
+	<li>Precede the raw data with Apache image headers and call the
 	script directly (showing up as an image) e.g.
-	http://somewhere/my_PHPlot_code2.php .</p>
+	http://somewhere/my_PHPlot_code2.php .</li>
 </ol>
-<p>This document explains how to create a plots using PHPlot from a
+<p>This document explains how to create plots using PHPlot from a
 PHP script. Information on PHP can be found at <a href="http://www.php.net/">www.php.net</a>.
 Information about the GD library which PHP uses to create images can
 be found at <a href="http://www.boutell.com/">www.boutell.com</a>.
 More information about PHPlot can be found at <a href="www.phplot.com">www.PHPlot.com</a>.</p>
-<hr>
-<h2>Defining the Object</h2>
+<hr />
+
+<h2>Creating the Object</h2>
+
 <p>You create a PHPlot object by first including the code to be used
 and then defining the variable:</p>
-<table width=75% border=1 bordercolor="#000000" cellpadding=4 cellspacing=0 frame=hsides bgcolor="#cccccc">
-	<col width=256*>
-	<tr>
-		<td width=100% valign=top bgcolor="#cccccc">
-			<pre style="margin-left: 3.04cm">&lt;?php
+<table width="75%" border="1" bordercolor="#000000" cellpadding="4" cellspacing="0" frame="hsides" bgcolor="#cccccc">
+  <tr>
+    <td>
+	  <pre>&lt;?php
 include('./phplot.php');  // here we include the PHPlot code 
 $graph = new PHPlot();   // here we define the variable graph 
 
 //Rest of code goes below
 ?&gt;</pre>
-		</td>
-	</tr>
+    </td>
+  </tr>
 </table>
-<p style="margin-left: 0.99cm; margin-bottom: 0cm; line-height: 100%">
-<br>
-</p>
-<p style="margin-bottom: 0.51cm; line-height: 100%">The above code
-assigns the PHPlot object to the variable <i>$graph</i>.</p>
+<p>The above code assigns the PHPlot object to the variable <code>$graph</code>.</p>
 <p>Now we have created a PHPlot graph object, we can access
 information about the object and manipulate the object. In these
-following examples, <i>$graph</i> is the variable/object we created
+following examples, <code>$graph</code> is the variable/object we created
 above.</p>
-<p><a href="#top"><img src="top.gif" name="graphic7" alt="top" align=bottom width=18 height=8 border=0></a><a href="#top">Back
-to top</a> 
+<p>
+  <a href="#top"><img src="top.gif" alt="top" align="bottom" border="0" />Back to top </a> 
 </p>
+
+
 <h2>Real World Examples</h2>
 <h3>Case 1: A simple graph</h3>
-<p>We will start with a simple line graph. 
-</p>
-<table width=75% border=1 bordercolor="#000000" cellpadding=4 cellspacing=0 frame=hsides bgcolor="#cccccc">
-	<col width=256*>
-	<tr>
-		<td width=100% valign=top bgcolor="#cccccc">
-			<pre>&lt;?php
+
+<p>We will start with a simple line graph. </p>
+<table width="75%" border="1" bordercolor="#000000" cellpadding="4" cellspacing="0" bgcolor="#cccccc">
+  <tr>
+    <td>
+      <pre>&lt;?php
 //Include the code
 include('./PHPlot.php');
 
@@ -133,86 +143,57 @@ $graph-&gt;SetDataValues($example_data);
 
 //Draw it
 $graph-&gt;DrawGraph(); // remember, since in this example we have one graph, PHPlot 
-                     // does the <i>PrintImage </i>part for you 
+                        // does the <i>PrintImage </i>part for you 
 ?&gt;</pre>
-		</td>
-	</tr>
+    </td>
+  </tr>
 </table>
-<dl>
-	<dt style="margin-bottom: 0.51cm"><br><br>
-	</dt></dl>
-<p align=left style="margin-bottom: 0cm">
-And that's it! What we get is the following graph: 
-</p>
-<p align=center><br><br>
-</p>
-<p align=center><img src="imgs/qstart_fig1.png" name="fig1" alt="figure 1" align=bottom width=300 height=250 border=0><br>Figure
-1</p>
-<dd style="margin-left: 0cm; margin-bottom: 0.51cm">That's a great
+<p> And that's it! What we get is the following graph: </p>
+<div align=center>
+  <img src="imgs/qstart_fig1.png" name="fig1" alt="figure 1" align="bottom" border="0">
+  <br />Figure 1
+</div>
+<p>That's a great
 start, but now we'd like to specify the width and height of the
 image. 
-</dd><h3>
-Case 1a: Different Size Images and Titles</h3>
-<dd style="margin-left: 0cm; margin-bottom: 0.51cm">Lets say we want
-it to have a width of 300 and a height of 250 pixels. So instead of
-having the line 
-</dd><dl>
-	<dl>
-		<dl>
-			<dl>
-				<dl>
-					<dd style="margin-left: 0.99cm; margin-bottom: 0.51cm">
-					$graph = new PHPlot(); 
-					</dd></dl>
-			</dl>
-		</dl>
-	</dl>
-</dl>
-<dd style="margin-left: 0cm; margin-bottom: 0.51cm">
-we replace is with 
-</dd><dl>
-	<dl>
-		<dl>
-			<dl>
-				<dl>
-					<dd style="margin-left: 0.99cm; margin-bottom: 0.51cm">
-					$graph = new PHPlot(300,250); 
-					</dd></dl>
-			</dl>
-		</dl>
-	</dl>
-</dl>
-<dd style="margin-left: 0cm; margin-bottom: 0.51cm">
+</p>
+
+<h3>Case 1a: Different Size Images and Titles</h3>
+<p>
+Lets say we want it to have a width of 300 and a height of 250 pixels.
+So instead of having the line <br /><br />
+    <code>$graph = new PHPlot();</code> <br /><br />
+we replace it with <br /><br />
+    <code>$graph = new PHPlot(300,250);</code><br /><br />
 and you have specified the size in pixels of the image to be created.
-A couple of things to note: 
-</dd>
-<ul><li><dd>
-	The default is to <i>not </i>use TTF fonts. 
-	</dd><li><dd>
-	Since there was only one graph on the image we didn't have to
+A couple of things to note:
+</p>
+<ul>
+  <li>The default is <em>not </em> to use TTF fonts. </li>
+  <li>Since there was only one graph on the image we didn't have to
 	specify PrintImage, DrawGraph took care of it for us. 
-	</dd><li><dd>
+  </li>
+  <li>
 	We did not specify the data type. If you do not specify the data
-	type PHPlot assumes &quot;text-data.&quot; 
-	</dd><li><dd>
-	We did not specify the file type (gif,
-	png, jpg, ...) .
+	type PHPlot assumes <code>text-data</code>. 
+  </li>
+  <li>
+	We did not specify the file type (gif, png, jpg, ...) .
 	As of PHPlot 4.4.3 PHPlot assumes PNG image formats. 
-	</dd><li><dd style="margin-bottom: 0.51cm">
+  </li>
+  <li>
 	The data is passed in as an array of arrays. This may seem awkward
 	now, but as we add functionality this will be beneficial. 
-	</dd></ul>
-<dd style="margin-left: 0cm; margin-bottom: 0.51cm">Ok,
-now we're ready to add some customization to the plot. Lets change
-the size, the title and the x/y axis labels.</dd><p>
-To do this all we need to modify the variable $graph before printing
-the image. We do so with the lines 
+  </li> 
+</ul>
+<p>Ok, now we're ready to add some customization to the plot. Let's change
+the size, the title and the x/y axis labels. All we need to do is modify 
+the variable <code>$graph</code> before printing the image. We achieve this with:
 </p>
-<table width=75% border=1 bordercolor="#000000" cellpadding=4 cellspacing=0 frame=hsides bgcolor="#cccccc">
-	<col width=256*>
-	<tr>
-		<td width=100% valign=top bgcolor="#cccccc">
-			<pre style="margin-left: 3.21cm">&lt;?php            
+<table width="75%" border="1" bordercolor="#000000" cellpadding="4" cellspacing="0" bgcolor="#cccccc">
+  <tr>
+    <td>
+      <pre>&lt;?php            
 include ('./phplot.php');
 
 //create an graph object 300x250 pixels
@@ -226,39 +207,32 @@ $graph-&gt;SetYTitle('Y data');
 
 
 ?&gt;</pre>
-		</td>
-	</tr>
+    </td>
+  </tr>
 </table>
-<dl>
-	<dt style="margin-bottom: 0.51cm"><br><br>
-	</dt></dl>
 <p align=center>
-<img src="imgs/qstart_fig2.png" name="graphic1" align=bottom width=300 height=250 border=0><br>Figure
-2 
+ <img src="imgs/qstart_fig2.png" name="graphic1" align="bottom" border="0"><br />
+ Figure 2 
 </p>
-<p style="margin-bottom: 0cm">Note that in order for the &quot;\n&quot;
+<p>Note that in order for the &quot;\n&quot;
 and &quot;\r &quot; to be interpreted as new line/new return
 characters for <i>SetTitle </i>you have to enclose the string in
 <b>double </b>quotes. 
 </p>
-<p style="margin-bottom: 0cm"><br>
-</p>
-<h3>Case 2: Multiple Lines per Graph 
-</h3>
-<dd style="margin-left: 0cm">Lets say we want to plot not just one
+<h3>Case 2: Multiple Lines per Graph </h3>
+<p>Lets say we want to plot not just one
 dataset but several y values for each x position. With PHPlot it is
 easy to specify the multiple data lines by just passing in all the Y
 values for a given X value at once. So instead of array('label', y)
 we specify array('label', y<sub>1</sub>, y<sub>2</sub>, y<sub>3</sub>,
 ...) 
-</dd><dd style="margin-left: 0cm; margin-bottom: 0.51cm">
+<br />
 Now our data will have three Y values for each position on the X axis
-</dd>
-<table width=75% border=1 bordercolor="#000000" cellpadding=4 cellspacing=0 frame=hsides bgcolor="#cccccc">
-	<col width=256*>
-	<tr>
-		<td width=100% valign=top bgcolor="#cccccc">
-			<pre>&lt;?php
+</p>
+<table width="75%" border="1" bordercolor="#000000" cellpadding="4" cellspacing="0" bgcolor="#cccccc">
+  <tr>
+    <td>
+      <pre>&lt;?php
 //Include the code
 include('./phplot.php');
 
@@ -286,68 +260,35 @@ $graph-&gt;SetDataValues($example_data);
 //Draw it
 $graph-&gt;DrawGraph();
 ?&gt;</pre>
-		</td>
-	</tr>
+    </td>
+  </tr>
 </table>
-<dl>
-	<dt style="margin-bottom: 0.51cm"><br><br>
-	</dt></dl>
-<p align=left style="margin-bottom: 0cm">
-Which gives us 
-</p>
-<p align=center><img src="imgs/qstart_fig3.png" name="graphic2" align=bottom width=300 height=250 border=0><br>Figure
-3</p>
-<p align=left style="margin-bottom: 0cm"><br>
-</p>
-<p style="margin-bottom: 0cm">Notice that each set of Y data gets a different color.
+<p>Which gives us: </p>
+<p align=center><img src="imgs/qstart_fig3.png" name="graphic2" align=bottom border="0"><br />Figure 3</p>
+<p>Notice that each set of Y data gets a different color.
 Also the missing data point is skipped, this behaviour can be adjusted with
 <code>SetDrawBrokenLines(TRUE);</code>
 </p>
-<p style="margin-bottom: 0cm"><br>
-</p>
-<p style="margin-bottom: 0cm">This gives you the basics of how to
+<p>This gives you the basics of how to
 create a graph in PHPlot. A nice start, but now we'd like to add some
 customization, namely different fonts, margins and types of graphs. 
 </p>
-<p style="margin-bottom: 0cm"><br>
-</p>
-<p style="margin-bottom: 0cm"><br>
-</p>
-<p style="margin-bottom: 0cm"><a href="#top"><img src="top.gif" name="graphic10" alt="top" align=bottom width=18 height=8 border=0></a><a href="#top">Back
-to top</a> 
-</p>
-<p style="margin-bottom: 0cm"><br>
-</p>
+<p><a href="#top"><img src="top.gif" name="graphic10" alt="top" align=bottom border=0>Back to top</a> </p>
 <h2>Customization</h2>
-<p style="margin-bottom: 0cm">Valid types of plots ( as of PHPlot
-4.4.6) 
-</p>
-<p style="margin-bottom: 0cm"><br>
-</p>
+<p>Valid types of plots ( as of PHPlot 4.4.6) </p>
 <ul>
-	<li><p style="margin-bottom: 0cm">bars 
-	</p>
-	<li><p style="margin-bottom: 0cm">lines 
-	</p>
-	<li><p style="margin-bottom: 0cm">linepoints
-	(a faster way of plotting when you want both points and lines)</p>
-	<li><p style="margin-bottom: 0cm">area 
-	</p>
-	<li><p style="margin-bottom: 0cm">points 
-	</p>
-	<li><p style="margin-bottom: 0cm">pie 
-	</p>
-	<li><p style="margin-bottom: 0cm">thinbarline
-	(sometimes also called impulse) 
-	</p>
-	<li><p style="margin-bottom: 0cm">error bar (which can also be used
-	for stock market data graphs)</p>
+	<li>bars</li>
+	<li>lines</li>
+	<li>linepoints (a faster way of plotting when you want both points and lines)</li>
+	<li>area</li> 
+	<li>points</li>
+	<li>pie</li>
+	<li>thinbarline (sometimes also called impulse) </li>
+	<li>error bar (which can also be used for stock market data graphs)</li>
+    <li>squared (for binary data) </li>
 </ul>
-<p><br><br>
-</p>
-<p style="font-style: normal">You specify which type with the
-<i>SetPlotType </i>command. We'll look at
-that command with bars and lines in the next example when we look at
+<p>You specify which type with the <code>SetPlotType</code> function.
+We'll look at that command with bars and lines in the next example when we look at
 multiple graphs per image. 
 </p>
 <p>As we discussed before - there are several ways we can manipulate
@@ -356,26 +297,12 @@ some of these types in addition to some of
 the more advanced features of PHPlot. For more specialized examples
 and a complete list of functions see <a href="www.phplot.com">www.PHPlot.com</a>
 or look in the examples directory that came with PHPlot.</p>
-<table width=100% border=0 cellpadding=0 cellspacing=0>
-	<tr>
-		<td bgcolor="#6699cc">
-			<p><a name="pbacktop"></a><a href="#top"><font color="#ffffff">Back
-			to top</font></a> 
-			</p>
-		</td>
-	</tr>
-	<tr>
-		<td bgcolor="#6699cc">
-			<p><font color="#ffffff">&copy; 2002 Afan Ottenheimer. All rights
-			reserved. </font>
-			</p>
-		</td>
-	</tr>
-</table>
-<p><br><br>
+<p>
+  <a href="#top"><img src="top.gif" alt="top" align="bottom" border="0" />Back to top </a> 
 </p>
-<p style="margin-bottom: 0cm"><a name="multiple"></a><font size=4 style="font-size: 16pt"><b>Case
-3: Multiple Graphs per Image </b></font>
+
+<p><a name="multiple"></a><font size=4 style="font-size: 16pt">
+<b>Case 3: Multiple Graphs per Image </b></font>
 </p>
 <p>To create an image with several separate graphs
 on it is a straightforward process. As in the previous examples we
@@ -397,12 +324,11 @@ SetNewPlotAreaPixels(<i>upper_left_x, upper_left_y, lower_right_x,
 lower_right_y</i>) . Again we are using the GD coordinates where 0,0
 is the upper left corner of the image. 
 </p>
-<p style="font-style: normal">In more detail</p>
-<table width=75% border=1 bordercolor="#000000" cellpadding=4 cellspacing=0 frame=hsides bgcolor="#cccccc">
-	<col width=256*>
-	<tr>
-		<td width=100% valign=top bgcolor="#cccccc">
-			<pre style="margin-left: 3.04cm">&lt;?php
+<p>In more detail:</p>
+<table width="75%" border="1" bordercolor="#000000" cellpadding="4" cellspacing="0" bgcolor="#cccccc">
+  <tr>
+    <td width=100% valign=top bgcolor="#cccccc">
+      <pre style="margin-left: 3.04cm">&lt;?php
 include('./PHPlot.php');  // here we include the PHPlot code 
 $graph = new PHPlot(400,250);   // here we define the variable $graph 
 $graph-&gt;SetPrintImage(0); //Don't draw the image yet
@@ -421,20 +347,16 @@ $graph-&gt;DrawGraph();  //Draw the second graph to the image
 //Print the image with both graphs
 $graph-&gt;PrintImage();
 ?&gt;</pre>
-		</td>
-	</tr>
+    </td>
+  </tr>
 </table>
-<p style="margin-left: 0.99cm; margin-bottom: 0cm; line-height: 100%">
-<br>
-</p>
-<p style="margin-bottom: 0.51cm; font-style: normal; line-height: 100%">
-Lets now create an image with 2 graphs on it with some example data. 
-</p>
+
+<p>Lets now create an image with 2 graphs on it with some example data.  </p>
+
 <table width=75% border=1 bordercolor="#000000" cellpadding=4 cellspacing=0 frame=hsides bgcolor="#cccccc">
-	<col width=256*>
-	<tr>
-		<td width=100% valign=top bgcolor="#cccccc">
-			<pre>&lt;?php
+  <tr>
+    <td width=100% valign=top bgcolor="#cccccc">
+      <pre>&lt;?php
 //Include the code
 include('./phplot.php');
 
@@ -466,10 +388,9 @@ $graph-&gt;SetLineWidth(1);
 
 $graph-&gt;SetNewPlotAreaPixels(70,10,375,100);  // where do we want the graph to go
 $graph-&gt;DrawGraph(); // remember, since we said not to draw yet, PHPlot 
-                     // still needs a <i>PrintImage </i>command to write an image.</pre><p style="margin-bottom: 0cm">
-			<br>
-			</p>
-			<pre>//Now do the second chart on the same image
+                     // still needs a <i>PrintImage </i>command to write an image.</pre>
+<p><br /></p>                     
+<pre>//Now do the second chart on the same image
 unset($example_data);  //we are re-using $example_data (to save memory), but you don't have to
 $example_data = array(
      array('a',30,40,20),
@@ -498,40 +419,36 @@ $graph-&gt;DrawGraph();
 //Print the image
 $graph-&gt;PrintImage();
 ?&gt;</pre>
-		</td>
-	</tr>
+    </td>
+  </tr>
 </table>
+<p>
 <br />
 <br />
-<p>Which gives us: </p>
+Which gives us: </p>
 <p align="center">
-    <img src="imgs/qstart_fig4.png" name="graphic3" align="left" width="350" height="250" border="0" />
-    <br />Figure 4 
-</p>
-<p>You must remenber that world Coordinates are the XY coordinates relative to the
+<img src="imgs/qstart_fig4.png" name="graphic3" align="top" border="0" />
+<br />
+Figure 4<br />
+<p>You must remember that world Coordinates are the XY coordinates relative to the
 axis origin that can be drawn. Not the device (pixel) coordinates
 which in GD are relative to the origin at the upper left
 side of the image.
 </p>
-<br />
-<br />
-<br />
-<table width=100% border=0 cellpadding=0 cellspacing=0>
-	<col width=256*>
-	<tr>
-		<td width=100% bgcolor="#6699cc">
-			<p><a name="pbacktop1"></a><a href="#top"><font color="#ffffff">Back
-			to top</font></a> 
-			</p>
-		</td>
-	</tr>
-	<tr>
-		<td width=100% bgcolor="#6699cc">
-			<p><font color="#ffffff">&copy; 2002 Afan Ottenheimer. All rights
-			reserved. </font>
-			</p>
-		</td>
-	</tr>
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+  <tr>
+    <td bgcolor="#6699cc">
+      <p><a name="pbacktop1"></a><a href="#top"><font color="#ffffff">Back to top</font></a>
+         <br />
+         <a href="index.php">Back to the index</a>
+       </p>
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor="#6699cc">
+	  <p><font color="#ffffff">&copy; 2002 Afan Ottenheimer. All rights reserved. </font> </p>
+    </td>
+  </tr>
 </table>
 </body>
 </html>
