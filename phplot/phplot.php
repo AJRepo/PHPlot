@@ -60,7 +60,7 @@ class PHPlot{
 	var $small_font_width = 6.0; // width in pixels (2=6,3=8,4=8)
 	var $small_font_height = 8.0; // height in pixels (2=8,3=10,4=12)
 
-	//////////   Title
+	//////////   Fonts:Title
 	var $title_ttffont = "./benjamingothic.ttf";
 	var $title_ttffont_size = 14;
 	var $title_angle= 0;
@@ -69,24 +69,23 @@ class PHPlot{
 	var $title_font_width = 8.0; // width in pixels for non-ttf
 	var $title_font_height = 12.0; // height in pixels for non-ttf
 
-	//////////////  Axis
+	//////////////  Fonts:Axis
 	var $axis_ttffont = "./benjamingothic.ttf";
 	var $axis_ttffont_size = 8;
 	var $x_datalabel_angle = 45;
-	var $y_label_angle = 90;
 	//non-ttf
 	var $axis_font = 2;
 	var $axis_font_width = 6.0; // width in pixels for non-ttf
 	var $axis_font_height = 10.0; // height in pixels for non-ttf
 
-	//////////////// Labels
+	//////////////// Fonts:Labels (Axis Titles)
 	var $x_label_ttffont = "./benjamingothic.ttf";
 	var $x_label_ttffont_size = "12";
-	var $x_label_ttffont_angle = "0";
+	var $x_label_angle = "0";
 
 	var $y_label_ttffont = "./benjamingothic.ttf";
 	var $y_label_ttffont_size = "12";
-	var $x_label_ttffont_angle = "90";
+	var $y_label_angle = 90;
 
 //Formats
 	var $file_format = "png";
@@ -385,10 +384,10 @@ class PHPlot{
 
 	function DrawXLabel() {
 		if ($this->use_ttf == 1) { 
-			$size = $this->TTFBBoxSize($this->x_label_ttffont_size, 0, $this->x_label_ttffont, $this->x_label_txt);
+			$size = $this->TTFBBoxSize($this->x_label_ttffont_size, $this->x_label_angle, $this->x_label_ttffont, $this->x_label_txt);
 			$xpos = -($size[0])/2 + $this->xtr(($this->plot_max_x + $this->plot_min_x)/2.0) ;
 			$ypos = $this->ytr($this->plot_min_y) + $size[1] + $this->x_label_height/2.0;
-			ImageTTFText($this->img, $this->x_label_ttffont_size, 0,
+			ImageTTFText($this->img, $this->x_label_ttffont_size, $this->x_label_angle,
 					$xpos, $ypos, $this->label_color, $this->x_label_ttffont, $this->x_label_txt);
 		} else { 
 			ImageString($this->img, $this->small_font,
@@ -1997,7 +1996,7 @@ class PHPlot{
 		}
 	} //function DrawBars
 
-	function DrawLegend() {
+	function DrawLegend($which_x1,$which_y1,$which_boxtype) {
 		//Base code submitted by Marlin Viss
 		$max_legend_length=0;
 		reset($this->legend);
@@ -2007,14 +2006,22 @@ class PHPlot{
 				$max_legend_length = $len;
 			}
 		}
-		$box_start_y = $this->plot_area[1]+4; //Upper left
-		$box_start_x = $this->plot_area[2]-$this->small_font_width*($max_legend_length+4); //Upper Left
+
 		$line_spacing = 1.25;
 		$vert_margin = $this->small_font_height/2 ;
-		$box_end_y = $box_start_y +$this->small_font_height*(count($this->legend)+1) + 2*$vert_margin; //Lower Right
-		//$box_end_x = $this->plot_area[2]-5; //equivalent to the next line
-		$box_end_x = $box_start_x + $this->small_font_width*($max_legend_length+4) - 5; //Lower Right
 		$dot_height = $this->small_font_height*$line_spacing - 1;
+
+	//Upper Left
+		if ((!$which_x1) || (!$which_y1) ) {
+			$box_start_x = $this->plot_area[2] - $this->small_font_width*($max_legend_length+4);
+			$box_start_y = $this->plot_area[1] + 4;
+		}
+
+	//Lower Right
+		$box_end_y = $box_start_y + $this->small_font_height*(count($this->legend)+1) + 2*$vert_margin; 
+		//$box_end_x = $this->plot_area[2] - 5;
+		$box_end_x = $box_start_x + $this->small_font_width*($max_legend_length+4) - 5;
+
 
 	// Draw box for legend
 		ImageFilledRectangle($this->img,
@@ -2168,7 +2175,7 @@ class PHPlot{
 			}
 
 			if ($this->legend) {
-				$this->DrawLegend();
+				$this->DrawLegend("","","");
 			}
 
 		}
