@@ -134,6 +134,5 @@ function DoScaleData($even, $show_in_legend) {
 	} //function DoMovingAverage
 
 
-}
-
+} //class PHPlot_Data extends PHPlot  
 ?>

@@ -47,15 +47,16 @@ class PHPlot{
 
 	var $small_ttffont_size = 12; // 
 	//non-ttf
+
 	var $small_font = 2; // fonts = 1,2,3,4 or 5 
-	var $small_font_width = 6.0; // width in pixels (2=6,3=8)
-	var $small_font_height = 8.0; // height in pixels (2=8,3=10)
+	var $small_font_width = 6.0; // width in pixels (2=6,3=8,4=8)
+	var $small_font_height = 8.0; // height in pixels (2=8,3=10,4=12)
 
 	var $title_ttffont = "./benjamingothic.ttf";
 	var $title_ttffont_size = 14;
 	var $title_angle= 0;
 	//non-ttf
-	var $title_font = "4";
+	var $title_font = "4"; // fonts = 1,2,3,4,5
 	var $title_font_width = 8.0; // width in pixels for non-ttf
 	var $title_font_height = 12.0; // height in pixels for non-ttf
 
@@ -89,6 +90,7 @@ class PHPlot{
 
 	var $data_color = ""; //array("blue","green","yellow",array(0,0,0));
 	var $data_border_color = array("black");
+	var $plot_border_type = "left";
 	var $number_x_points;
 	var $plot_min_x; // Max and min of the plot area
 	var $plot_max_x; // Max and min of the plot area
@@ -103,7 +105,7 @@ class PHPlot{
 //Labels
 	var $legend;  //an array
 	var $title_txt = "Title";
-	var $y_label_txt = "Y Data";
+	var $y_label_txt = "";
 	var $x_label_txt = "X Data";
 	var $y_grid_label_type = "data";  //data, none, time, other
 	var $x_grid_label_type = "data";  //data, title, none, time, other
@@ -129,6 +131,22 @@ class PHPlot{
 
 	function SetUseTTF($which_ttf) {
 		$this->use_ttf = $which_ttf;
+		return true;
+	}
+
+	function SetTitleFontSize($which_tfs) { 
+		//TTF
+		$this->title_ttffont_size = $which_tfs; //pt size
+
+		//Non-TTF settings
+		if (($which_tfs > 5) && (!$this->use_ttf)) { 
+			$this->DrawError('Non-TTF font size must be 1,2,3,4 or 5');
+			return false;
+		} else { 
+			$this->title_font = $which_tfs;
+			$this->title_font_height = $which_tfs*3; // height in pixels (just an estimate)
+			$this->title_font_width = $which_tfs+4; // width in pixels (just an estimate)
+		}
 		return true;
 	}
 
@@ -243,15 +261,31 @@ class PHPlot{
 	}
 
 	function DrawImageBorder() { 
-		ImageLine($this->img,0,0,$this->image_width-1,0,$this->i_light);
-		ImageLine($this->img,1,1,$this->image_width-2,1,$this->i_light);
-		ImageLine($this->img,0,0,0,$this->image_height-1,$this->i_light);
-		ImageLine($this->img,1,1,1,$this->image_height-2,$this->i_light);
-		ImageLine($this->img,$this->image_width-1,0,$this->image_width-1,$this->image_height-1,$this->i_dark);
-		ImageLine($this->img,0,$this->image_height-1,$this->image_width-1,$this->image_height-1,$this->i_dark);
-		ImageLine($this->img,$this->image_width-2,1,$this->image_width-2,$this->image_height-2,$this->i_dark);
-		ImageLine($this->img,1,$this->image_height-2,$this->image_width-2,$this->image_height-2,$this->i_dark);
+		switch ($this->image_border_type) { 
+			case "raised":
+				ImageLine($this->img,0,0,$this->image_width-1,0,$this->i_light);
+				ImageLine($this->img,1,1,$this->image_width-2,1,$this->i_light);
+				ImageLine($this->img,0,0,0,$this->image_height-1,$this->i_light);
+				ImageLine($this->img,1,1,1,$this->image_height-2,$this->i_light);
+				ImageLine($this->img,$this->image_width-1,0,$this->image_width-1,$this->image_height-1,$this->i_dark);
+				ImageLine($this->img,0,$this->image_height-1,$this->image_width-1,$this->image_height-1,$this->i_dark);
+				ImageLine($this->img,$this->image_width-2,1,$this->image_width-2,$this->image_height-2,$this->i_dark);
+				ImageLine($this->img,1,$this->image_height-2,$this->image_width-2,$this->image_height-2,$this->i_dark);
+			break;
+			case "plain":
+				ImageLine($this->img,0,0,$this->image_width,0,$this->i_dark);
+				ImageLine($this->img,$this->image_width-1,0,$this->image_width-1,$this->image_height,$this->i_dark);
+				ImageLine($this->img,$this->image_width-1,$this->image_height-1,0,$this->image_height-1,$this->i_dark);
+				ImageLine($this->img,0,0,0,$this->image_height,$this->i_dark);
+			break;
+			default:
+			break;
+		}
 		return true;
+	}
+
+	function SetImageBorderType($which_sibt) { 
+		$this->image_border_type = $which_sibt;
 	}
 
 	function SetDrawYGrid($which_dyg) { 
@@ -324,7 +358,7 @@ class PHPlot{
 					$xpos, $ypos, $this->title_color, $this->title_ttffont, $this->title_txt);
 		} else { 
 			ImageString($this->img, $this->title_font,
-				($this->plot_area[0] + $this->plot_area_width / 2) - (strlen($this->title_txt) * $this->title_font),
+				($this->plot_area[0] + $this->plot_area_width / 2) - (strlen($this->title_txt) * $this->title_font_width/2),
 				2*$this->title_font_height,
 				$this->title_txt,
 				$this->title_color);
@@ -348,6 +382,9 @@ class PHPlot{
 		return true;
 	}
 	function SetPlotBgColor($which_color) { 
+		if (($this->img) == "") {
+			$this->InitImage();
+		}
 		list($r, $g, $b) = SetColor($which_color);
 		$this->plot_bg_color=ImageColorAllocate($this->img, $r, $g, $b);
 		return true;
@@ -681,12 +718,16 @@ class PHPlot{
 
 
 	function DrawError($error_message) {
+		if (($this->img) == "") $this->InitImage(); 
+
 		$ypos = $this->image_height/2;
 		if ($this->use_ttf == 1) { 
 			ImageTTFText($this->img, $this->small_ttffont_size, 0, $xpos, $ypos, ImageColorAllocate($this->img,0,0,0), $this->axis_ttffont, $error_message);
 		} else { 
 			ImageString($this->img, $this->small_font,1,$ypos,$error_message, ImageColorAllocate($this->img,0,0,0));
 		}
+		
+		$this->PrintImage();
 		return true;
 	}
 
@@ -851,10 +892,16 @@ class PHPlot{
 	}
 
 	function DrawPlotBorder() { 
-		//ImageRectangle($this->img, $this->xtr($this->plot_min_x),$this->ytr($this->plot_min_y),
-		//	$this->xtr($this->plot_max_x),$this->ytr($this->plot_max_y),$this->grid_color);
-		ImageRectangle($this->img, $this->plot_area[0],$this->ytr($this->plot_min_y),
-			$this->plot_area[2],$this->ytr($this->plot_max_y),$this->grid_color);
+		switch ($this->plot_border_type) { 
+			case "left" :
+				ImageLine($this->img, $this->plot_area[0],$this->ytr($this->plot_min_y),
+				    $this->plot_area[0],$this->ytr($this->plot_max_y),$this->grid_color);
+			break;
+			default: 
+				ImageRectangle($this->img, $this->plot_area[0],$this->ytr($this->plot_min_y),
+					$this->plot_area[2],$this->ytr($this->plot_max_y),$this->grid_color);
+			break;
+		}
 		$this->DrawVerticalTicks();
 		$this->DrawXAxis();
 		return true;
@@ -920,6 +967,11 @@ class PHPlot{
 			case "time":  
 				$ylab = strftime($this->x_axis_position,$this->plot_min_y);
 			break;
+			case "right":
+				//$ylab = str_pad($y_tmp,$this->y_label_width," ",STR_PAD_LEFT); //Only in PHP4
+				$sstr = "%".strlen($this->plot_max_y)."s";
+				//$ylab = sprintf($sstr,$this->x_axis_position);
+			break;
 			default:
 				//Unchanged from whatever format is passed in
 				$ylab = $this->x_axis_position;
@@ -944,6 +996,7 @@ class PHPlot{
 		ImageLine($this->img,$this->plot_area[0],
 				$this->plot_area[3]+$this->tick_length,
 				$this->plot_area[0],$this->plot_area[3],$this->tick_color);
+
 		switch ($this->x_grid_label_type) { 
 			case "title": 
 				$xlab = $this->data_values[0][0];
@@ -1059,6 +1112,11 @@ class PHPlot{
 			case "time":  
 				$ylab = strftime($this->y_time_format,$this->plot_min_y);
 			break;
+			case "right":  //Right Aligned
+				//$ylab = str_pad($y_tmp,$this->y_label_width," ",STR_PAD_LEFT); //Only in PHP4
+				$sstr = "%".strlen($this->plot_max_y)."s";
+				$ylab = sprintf($sstr,$this->plot_min_y);
+			break;
 			default:
 				//Unchanged from whatever format is passed in
 				$ylab = $this->plot_min_y;
@@ -1119,6 +1177,12 @@ class PHPlot{
 				case "time":  
 					$ylab = strftime($this->y_time_format,$y_tmp);
 				break;
+				case "right":
+					//Unchanged from whatever format is passed in
+					//$ylab = str_pad($y_tmp,$this->y_label_width," ",STR_PAD_LEFT); //PHP4 only
+					$sstr = "%".strlen($this->plot_max_y)."s";
+					$ylab = sprintf($sstr,$y_tmp);
+				break;
 				default:
 					//Unchanged from whatever format is passed in
 					$ylab = $y_tmp;
@@ -1126,10 +1190,12 @@ class PHPlot{
 			}
 			$y_pixels = $this->ytr($y_tmp);
 	
-			//ImageLine($this->img,(-$this->tick_length+$this->xtr($this->plot_min_x)),
+			//Left Side Ticks
 			ImageLine($this->img,(-$this->tick_length+$this->plot_area[0]),
 				$y_pixels,$this->plot_area[0],
 				$y_pixels, $this->tick_color);
+
+			//Right Side Ticks
 			ImageLine($this->img,($this->xtr($this->plot_max_x)+$this->tick_length),
 				$y_pixels,$this->plot_area[2],
 				$y_pixels,$this->tick_color);
