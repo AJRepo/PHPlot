@@ -89,7 +89,7 @@ class PHPlot {
 //Labels
     // There are two types of labels in PHPlot:
     //    Tick labels: they follow the grid, next to ticks in axis.   (DONE)
-    //                 they are drawn at grid drawing time, by _DrawXTicks() and _DrawYTicks()
+    //                 they are drawn at grid drawing time, by DrawXTicks() and DrawYTicks()
     //    Data labels: they follow the data points, and can be placed on the axis or the plot (x/y)  (TODO)
     //                 they are drawn at graph plotting time, by DrawDataLabel(), called by DrawLines(), etc.
     //                 Draw*DataLabel() also draws H/V lines to datapoints depending on draw_*_data_label_line
@@ -1000,37 +1000,37 @@ class PHPlot {
 /////////////////////////////////////////////
 
     /*!
-     * Sets output format.
-     * inline condition, cacheable, etc.
+     * Sets output file format.
      */
-    function SetFileFormat($which_file_format) 
+    function SetFileFormat($format) 
     {
-        // I know rewriting this was unnecessary, but it didn't work for me, I don't
-        // understand why. 
-        $asked = strtolower($which_file_format);
+        $asked = $this->CheckOption($format, 'jpg, png, gif, wbmp', __FUNCTION__);
+        
         switch ($asked) {
         case 'jpg':
             if (imagetypes() & IMG_JPG)
+                $this->file_format = 'jpg';
                 return TRUE;
             break;
         case 'png':
             if (imagetypes() & IMG_PNG)
+                $this->file_format = 'png';
                 return TRUE;
             break;
         case 'gif':
             if (imagetypes() & IMG_GIF)
+                $this->file_format = 'gif';
                 return TRUE;
             break;
         case 'wbmp':
             if (imagetypes() & IMG_WBMP)
+                $this->file_format = 'wbmp';
                 return TRUE;
             break;
         default:
-            $this->PrintError("SetFileFormat(): Unrecognized option '$which_file_format'");
+            $this->PrintError("SetFileFormat():File format '$which_file_format' not supported");
             return FALSE;
         }
-        $this->PrintError("SetFileFormat():File format '$which_file_format' not supported");
-        return FALSE;
     }    
 
 
@@ -1998,7 +1998,7 @@ class PHPlot {
 
     /*!
      * Sets the limits for the plot area. If no arguments are supplied, uses
-     * values calculated from _CalcMargins();
+     * values calculated from CalcMargins();
      * Like in GD, (0,0) is upper left
      *
      * This resets the scale if SetPlotAreaWorld() was already called
@@ -2035,25 +2035,20 @@ class PHPlot {
      */
     function SetPlotAreaWorld($xmin=NULL, $ymin=NULL, $xmax=NULL, $ymax=NULL) 
     {
-        if ((! $xmin)  && (! $xmax) ) {
-            // For automatic setting of data we need data limits
-            if (! isset($this->data_limits_done)) {
+        if ((! $xmin)  && (! $ymax) ) {
+            if (! isset($this->data_limits_done)) { // For automatic setting of data we need data limits
                 $this->FindDataLimits() ;
             }
-            if ($this->data_type == 'text-data') {
-                $xmax = $this->max_x + 1 ;  // valid for BAR CHART TYPE GRAPHS ONLY
-                $xmin = 0 ;                 // valid for BAR CHART TYPE GRAPHS ONLY
+            if ($this->data_type == 'text-data') {  // Valid for data without X values only.
+                $xmax = $this->max_x + 1 ;
+                $xmin = 0 ;
             } else {
                 $xmax = $this->max_x;
                 $xmin = $this->min_x;
             }
 
             $ymax = ceil($this->max_y * 1.1);
-            if ($this->min_y < 0) {
-                $ymin = floor($this->min_y * 1.1);
-            } else {
-                $ymin = 0;
-            }
+            $ymin = floor($this->min_y * 0.9);
         }
 
         $this->plot_min_x = $xmin;
@@ -2062,8 +2057,7 @@ class PHPlot {
         if ($ymin == $ymax) {
             $ymax += 1;
         }
-        if ($this->yscale_type == 'log') { 
-            //extra error checking
+        if ($this->yscale_type == 'log') {             //extra error checking
             if ($ymin <= 0) { 
                 $ymin = 1;
             }
@@ -2344,6 +2338,24 @@ class PHPlot {
     function SetSkipBottomTick($skip) 
     {
         $this->skip_bottom_tick = (bool)$skip;
+        return TRUE;
+    }
+
+    /*!
+     * \param skip bool
+     */ 
+    function SetSkipLeftTick($skip)
+    {
+        $this->skip_left_tick = (bool)$skip;
+        return TRUE;
+    }
+
+    /*!
+     * \param skip bool
+     */
+    function SetSkipRightTick($skip) 
+    {
+        $this->skip_right_tick = (bool)$skip;
         return TRUE;
     }
 
@@ -3934,7 +3946,7 @@ class PHPlot {
     }
 
     /*!
-     * \deprecated Calculates maximum X-Axis label height. Now inside _CalcMargins()
+     * \deprecated Calculates maximum X-Axis label height. Now inside CalcMargins()
      */
     function CalcXHeights() 
     {
