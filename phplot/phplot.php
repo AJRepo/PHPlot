@@ -140,7 +140,7 @@ class PHPlot{
 
 		//Non-TTF settings
 		if (($which_tfs > 5) && (!$this->use_ttf)) {
-			$this->DrawError('Non-TTF font size must be 1,2,3,4 or 5');
+			$this->ReportError('Non-TTF font size must be 1,2,3,4 or 5',0);
 			return false;
 		} else {
 			$this->title_font = $which_tfs;
@@ -700,7 +700,7 @@ class PHPlot{
 //echo "$this->plot_min_x, $this->plot_max_x, $this->plot_min_y, $this->plot_max_y";
 //exit;
 		if ($ymax <= $ymin) {
-			$this->DrawError("Error in Data - max not gt min");
+			$this->ReportError("Error in Data - max not gt min",0);
 		}
 
 //Set the boundaries of the box for plotting in world coord
@@ -717,7 +717,21 @@ class PHPlot{
 	}
 
 
+	function ReportError($error_message, $is_fatal) {
+	// INTERNAL and USER function
+	// Main function for error handling
+	// Outputs the error message to stdout if is_fatal is set
+	// otherwise the error message is output inside the generated image
+
+		if ($is_fatal) echo "<br><br><b>Fatal error</b>: $error_message<br><br>";
+		else $this->DrawError($error_message);
+	}
+
 	function DrawError($error_message) {
+	// INTERNAL function
+	// only to be executed by ReportError, does print the error message inline into
+	// the generated image
+
 		if (($this->img) == "") $this->InitImage();
 
 		$ypos = $this->image_height/2;
@@ -1936,7 +1950,7 @@ class PHPlot{
 		}
 		if (! is_array($this->data_values)) {
 			$this->DrawBackground();
-			$this->DrawError("No array of data in \$data_values");
+			$this->ReportError("No array of data in \$data_values",0);
 		} else {
 			if (!$this->data_color) {
 				$this->SetDataColors(array("blue","green","yellow","red","orange"),array("black"));
