@@ -2064,11 +2064,19 @@ class PHPlot {
                 $xmax = $this->max_x;
         }
 
+        // Leave room above and below the highest and lowest data points.
+        
         if (! $ymin) {
-            $ymin = ceil($this->min_y * 1.1);
+            if ($this->min_y < 0)
+                $ymin = ceil($this->min_y * 1.1);
+            else
+                $ymin = floor($this->min_y * 0.9);
         }    
         if (! $ymax) {
-            $ymax = ceil($this->max_y * 1.1);
+            if ($this->max_y < 0)
+                $ymax = floor($this->max_y * 0.9);
+            else
+                $ymax = ceil($this->max_y * 1.1);
         }
         
         // Error checking
@@ -3483,7 +3491,7 @@ class PHPlot {
                 $this->DrawYErrorBar($x_now, $y_now, -$val, $this->error_bar_shape, 
                                      $this->ndx_error_bar_colors[$idx]);
 
-                // Update indices:
+                // Update indexes:
                 $start_lines[$idx] = TRUE;   // Tells us if we already drew the first column of points, 
                                              // thus having $lastx and $lasty ready for the next column.
                 $lastx[$idx] = $x_now_pixels;
@@ -3492,7 +3500,7 @@ class PHPlot {
         }   // end for
 
         ImageSetThickness($this->img, 1);   // Revert to original state for lines to be drawn later.
-    }   // function DrawErrorLines()
+    }   // function DrawLinesError()
 
 
 
