@@ -3,12 +3,7 @@
 <html>
 <head>
    <title>PHPlot graphic formats test</title>
-   <style type="text/css">
-    <!--
-    td { text-align:center; }
-    .hdr { font-weight: bold; }
-    -->
-   </style>
+   <link type="text/css" rel="stylesheet" href="../doc/style.css" />
 </head>
 <body>
 
@@ -27,7 +22,7 @@ linked into PHP. You should see at least one of the four images below.
     if (! imagetypes() & IMG_PNG )  
     	echo "PNG NOT ENABLED";
     else
-	    echo "<img src=\"inline_image.php?file_format=png&which_title=YES_PNG_IS_ENABLED\" />";
+	    echo "<img src=\"inline_image.php?which_format=png&which_title=YES_PNG_IS_ENABLED\" />";
     
 ?>
 </td></tr>
@@ -37,7 +32,7 @@ linked into PHP. You should see at least one of the four images below.
     if (! imagetypes() & IMG_JPG )
         echo "JPEG NOT ENABLED";
     else
-	    echo "<img src=\"inline_image.php?file_format=jpg&which_title=YES_JPG_IS_ENABLED\" />";
+	    echo "<img src=\"inline_image.php?which_format=jpg&which_title=YES_JPG_IS_ENABLED\" />";
 ?>
 </td></tr>
 <tr><td class="hdr">GIF graphics</td></tr>
@@ -46,7 +41,7 @@ linked into PHP. You should see at least one of the four images below.
     if (! imagetypes() & IMG_GIF)
 	    echo "GIF NOT ENABLED";
     else
-	    echo "<img src=\"inline_image.php?file_format=gif&which_title=YES_GIF_IS_ENABLED\" />";
+	    echo "<img src=\"inline_image.php?which_format=gif&which_title=YES_GIF_IS_ENABLED\" />";
 ?>
 </td></tr>
 <tr><td class="hdr">BMP graphics</td></tr>
@@ -55,7 +50,7 @@ linked into PHP. You should see at least one of the four images below.
     if (! imagetypes() & IMG_WBMP)
 	    echo "BMP NOT ENABLED";
     else
-	    echo "<img src=\"inline_image.php?file_format=wbmp&which_title=YES_WBMP_IS_ENABLED\" />";
+	    echo "<img src=\"inline_image.php?which_format=wbmp&which_title=YES_WBMP_IS_ENABLED\" />";
 ?>
 </td></tr>
 </table>
