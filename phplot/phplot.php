@@ -162,7 +162,7 @@ class PHPlot {
     var $data_border_colors = array('black');
 
     var $line_widths = 1;                  // single value or array
-    var $line_styles = array('solid', 'dashed');   // single value or array
+    var $line_styles = array('solid', 'solid', 'dashed');   // single value or array
     var $dashed_style = '2-4';              // colored dots-transparent dots
 
     var $point_size = 5;
@@ -300,19 +300,22 @@ class PHPlot {
      * as they are lost with every script execution, else, sets the default colors by name or value and
      * then updates indices too.
      *
-     * FIXME! This is too slow.
+     * FIXME Isn't this too slow?
      *
      */
     function SetDefaultStyles() 
     {
+        /* Some of the Set*() functions use default values when they get no parameters. */
+
         if (! isset($this->session_set)) {
             // If sessions are enabled, this variable will be preserved, so upon future executions, we
-            // will have it set, as well as color names (not color indices, that's why we need to rebuild them)
+            // will have it set, as well as color names (though not color indices, that's why we 
+            // need to rebuild them)
             $this->session_set = TRUE;
 
             // These only need to be set once
-            $this->SetLineWidths($this->line_widths);
-            $this->SetLineStyles($this->line_styles);
+            $this->SetLineWidths();
+            $this->SetLineStyles();
             $this->SetDefaultDashedStyle($this->dashed_style);
             $this->SetPointSize($this->point_size);
         }
@@ -326,9 +329,9 @@ class PHPlot {
         $this->SetLightGridColor($this->light_grid_color);
         $this->SetTickColor($this->tick_color);
         $this->SetTitleColor($this->title_color);
-        $this->SetDataColors($this->data_colors);
-        $this->SetErrorBarColors($this->error_bar_colors);
-        $this->SetDataBorderColors($this->data_border_colors);
+        $this->SetDataColors();
+        $this->SetErrorBarColors();
+        $this->SetDataBorderColors();
     }
 
 
@@ -440,7 +443,8 @@ class PHPlot {
     
 
     /*!
-     * Sets the array of colors to be used. It can be user defined, small predefined or large included.
+     * Sets the array of colors to be used. It can be user defined, a small predefined one 
+     * or a large one included from 'rgb.inc.php'.
      *
      * \param which_color_array If an array, the used as color array. If a string can 
      *        be one of 'small' or 'large'.
@@ -528,7 +532,9 @@ class PHPlot {
      */
     function SetDataColors($which_data = NULL, $which_border = NULL) 
     {
-        if (! is_array($which_data)) {
+        if (is_null($which_data) && is_array($this->data_colors)) {
+            // use already set data_colors
+        } else if (! is_array($which_data)) {
             $this->data_colors = ($which_data) ? array($which_data) : array('blue', 'red', 'green', 'orange');
         } else {
             $this->data_colors = $which_data;
@@ -551,7 +557,10 @@ class PHPlot {
      */
     function SetDataBorderColors($which_br = NULL)
     {
-        if (! is_array($which_br)) { 
+        if (is_null($which_br) && is_array($this->data_border_colors)) {
+            // use already set data_border_colors
+        } else if (! is_array($which_br)) {
+            // Create new array with specified color
             $this->data_border_colors = ($which_br) ? array($which_br) : array('black');
         } else {
             $this->data_border_colors = $which_br;
@@ -570,7 +579,9 @@ class PHPlot {
      */
     function SetErrorBarColors($which_err = NULL)
     {
-        if (! is_array($which_err)) {
+        if (is_null($which_err) && is_array($this->error_bar_colors)) {
+            // use already set error_bar_colors
+        } else if (! is_array($which_err)) {
             $this->error_bar_colors = ($which_err) ? array($which_err) : array('black');
         } else {
             $this->error_bar_colors = $which_err;
@@ -602,7 +613,7 @@ class PHPlot {
             return FALSE;
         }
 
-        // Build the string to be eval()ed later by _SetDashedStyle()
+        // Build the string to be eval()uated later by SetDashedStyle()
         $this->default_dashed_style = 'array( ';
 
         $t = 0;
@@ -628,21 +639,24 @@ class PHPlot {
      */
     function SetDashedStyle($which_ndxcol)
     {
+        // See SetDefaultDashedStyle() to understand this.
         eval ("\$style = $this->default_dashed_style;");
         return imagesetstyle($this->img, $style);
     }
 
 
     /*!
-     * Sets line widths on a per-line basis
+     * Sets line widths on a per-line basis.
      */
     function SetLineWidths($which_lw=NULL) 
     {
-        // Did we get an array with line widths?
-        if (is_array($which_lw)) {
+        if (is_null($which_lw)) {
+            // Do nothing, use default value.
+        } else if (is_array($which_lw)) {
+            // Did we get an array with line widths?
             $this->line_widths = $which_lw;
         } else {
-            $this->line_widths = ($which_lw) ? array($which_lw) : array(1);
+            $this->line_widths = array($which_lw);
         }
         return TRUE;
     }
@@ -650,10 +664,12 @@ class PHPlot {
     /*!
      *
      */
-    function SetLineStyles($which_ls)
+    function SetLineStyles($which_ls=NULL)
     {
-        // Did we get an array with line styles?
-        if (! is_array($which_ls)) {
+        if (is_null($which_ls)) {
+            // Do nothing, use default value.
+        } else if (! is_array($which_ls)) {
+            // Did we get an array with line styles?
             $this->line_styles = $which_ls;
         } else {
             $this->line_styles = ($which_ls) ? array($which_ls) : array('solid');
@@ -1316,7 +1332,7 @@ class PHPlot {
 
 
     /*!
-     *  Submitted by Thiemo Nagel
+     *  \note Submitted by Thiemo Nagel
      */
     function SetBrowserCache($which_browser_cache) 
     {
@@ -1334,15 +1350,18 @@ class PHPlot {
     }
 
     /*!
-     * Expects an array with the names to be written in the graph's legend.
+     * Sets the graph's legend. If argument is not an array, appends it to the legend.
      */
     function SetLegend($which_leg)
     {
-        if (is_array($which_leg)) { 
+        if (is_array($which_leg)) {             // use array
             $this->legend = $which_leg;
             return TRUE;
-        } else { 
-            $this->DrawError('SetLegend(): Argument must be an array.');
+        } else if (! is_null($which_leg)) {     // append string
+            $this->legend[] = $which_leg;
+            return TRUE;
+        } else {
+            $this->DrawError("SetLegend(): argument must not be null.");
             return FALSE;
         }
     }
@@ -1377,19 +1396,24 @@ class PHPlot {
     }
 
     /*!
-     * left, sides, none, full
+     * Accepted values are: left, sides, none, full
      */
     function SetPlotBorderType($which_pbt) 
     {
-        $this->plot_border_type = $which_pbt;
+        $this->plot_border_type = $this->CheckOption($which_pbt, 'left, sides, none, full', __FUNCTION__);
     }
 
+    /*!
+     * Accepted values are: raised, plain
+     */
     function SetImageBorderType($which_sibt) 
     {
-        $this->image_border_type = $which_sibt; //raised, plain
+        $this->image_border_type = $this->CheckOption($which_sibt, 'raised, plain', __FUNCTION__);
     }
 
-
+    /*!
+     *
+     */
     function SetDrawPlotAreaBackground($which_dpab) 
     {
         $this->draw_plot_area_background = $which_dpab;  // TRUE or FALSE
@@ -1663,24 +1687,19 @@ class PHPlot {
      * Pad styles arrays for later use by plot drawing functions:
      * This removes the need for $max_data_colors, etc. and $color_index = $color_index % $max_data_colors
      * in DrawBars(), DrawLines(), etc.
-     *
-     * FIXME: arrays should be padded with themselves, to mimic previous behaviour.
      */
     function PadArrays()
     {
-        $this->line_widths = array_pad($this->line_widths, $this->records_per_group, 1);
-        $this->line_styles = array_pad($this->line_styles, $this->records_per_group, 'solid');
+        array_pad_array($this->line_widths, $this->records_per_group);
+        array_pad_array($this->line_styles, $this->records_per_group);
 
-        $this->max_data_colors = count($this->data_colors);
-        if ($this->max_data_colors < $this->records_per_group) {
-           $this->SetDataColors(array_pad($this->data_colors, $this->records_per_group, 'blue'),
-                                array_pad($this->data_border_colors, $this->records_per_group, 'black')); 
-        }
+        array_pad_array($this->data_colors, $this->records_per_group);
+        array_pad_array($this->data_border_colors, $this->records_per_group); 
+        array_pad_array($this->error_bar_colors, $this->records_per_group);
 
-        $this->max_error_bar_colors = count($this->error_bar_colors);
-        if ($this->max_error_bar_colors < $this->records_per_group) {
-            $this->SetErrorBarColors(array_pad($this->error_bar_colors, $this->records_per_group, 'blue'));
-        }
+        $this->SetDataColors();
+        $this->SetDataBorderColors();
+        $this->SetErrorBarColors();
 
         return TRUE;
     }
@@ -2147,6 +2166,9 @@ class PHPlot {
         case 'x':
         case 'plotx':
             switch ($this->x_label_type) {
+            case 'title':
+                $lab = $this->data[$which_lab][0];
+                break;
             case 'data':
                 $lab = number_format($which_lab, $this->x_precision, '.', ', ').$this->data_units_text;
                 break;
@@ -2839,9 +2861,19 @@ class PHPlot {
             if ($color_index > $max_color_index) 
                 $color_index = 0;
         }
-    } // Function _DrawLegend()
+    } // Function DrawLegend()
 
 
+    /*!
+     * TODO Draws a legend over (or below) an axis of the plot.
+     */
+    function DrawAxisLegend()
+    {
+        // Calculate available room
+        // Calculate length of all items (boxes included)
+        // Calculate number of lines and room it would take. FIXME: this should be known in CalcMargins()
+        // Draw.
+    }
 
 /////////////////////////////////////////////
 ////////////////////             PLOT DRAWING
@@ -2904,7 +2936,7 @@ class PHPlot {
         } else {
             $diam2 = $diameter;
         }
-        
+        $max_data_colors = count ($this->data_colors);
         for ($h = $this->shading; $h >= 0; $h--) {
             $color_index = 0;
             $start_angle = 0;
@@ -3972,4 +4004,24 @@ class PHPlot {
         ImageLine($this->img, $x1, $y1, $x2, $y2, IMG_COLOR_STYLED);
     }        
 }  // class PHPlot
+
+
+
+//////////////////////// 
+
+
+/*!
+ * Pads an array with another or with itself.
+ *  \param arr array  Original array (reference)
+ *  \param size int   Size of the resulting array.
+ *  \param arr2 array If specified, array to use for padding. If unspecified, pad with $arr.
+ */
+function array_pad_array(&$arr, $size, $arr2=NULL)
+{
+    if (! is_array($arr2)) {
+        $arr2 = $arr;                           // copy the original array
+    }
+    while (count($arr) < $size)
+        $arr = array_merge($arr, $arr2);        // append until done
+}
 ?>
