@@ -30,7 +30,7 @@ if ($which_data_type =="function") {
 	$graph = new PHPlot;
 	$graph->SetDataType($which_data_type);  //Must be first thing
 
-	$graph->SetFileFormat("gif");
+	$graph->SetFileFormat("png");
 	$graph->SetDataValues($data);
     $graph->SetImageArea($XSIZE_in, $YSIZE_in);
 
@@ -52,7 +52,7 @@ if ($which_data_type =="function") {
 		array("black")							//Border Colors
 	);  
 	if ($maxy_in) { 
-		if ($which_data_type = "text_linear") { 
+		if ($which_data_type = "text-linear") { 
 			$graph->SetPlotAreaWorld(0,$miny_in,count($data),$maxy_in);
 		}
 	}

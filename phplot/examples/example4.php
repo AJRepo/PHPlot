@@ -6,7 +6,7 @@ $graph = new PHPlot;
 
 //linear-linear-error data 
 unset($data);
-$a = 9.62;
+$a = 4.62;
 srand ((double) microtime() * 1000);
 ////////////////////////////////////////////////
 /////Note: for $label[5] to appear on the X axis,
@@ -21,21 +21,22 @@ $label[25] = "Day 25";
 $label[30] = "Day 30";
 for ($i=0; $i<=30; $i++){ 
 	$a += rand(-1, 2);
-	$b = rand(0,1);
-	$c = rand(0,1);
+	$b = $a*rand(0,1)/10;
+	$c = $a*rand(0,1)/10;
 	$data[] = array("$label[$i]",$i+1,$a,$b,$c);
+	
 }
 	$graph->SetDataType("linear-linear-error");  //Must be first thing
 	$graph->SetPrecisionX(0);
 	$graph->SetPrecisionY(0);
 	$graph->SetUseTTF("0");
 	$graph->SetDrawYGrid("1"); // 1 = true
-	$graph->SetFileFormat("gif");
 	$graph->SetDataValues($data);
     $graph->SetImageArea(600, 400);
 	$graph->SetVertTickIncrement("");
 	$graph->SetHorizTickIncrement(1);
     $graph->SetLineWidth("1");
+	$graph->SetYScaleType("log");
 	$graph->SetPointShape("halfline");
 	$graph->SetErrorBarShape("line");
 	$graph->SetPlotType("points");
@@ -48,7 +49,7 @@ for ($i=0; $i<=30; $i++){
 		array("black")							//Border Colors
 	);  
 
-	//$graph->SetPlotAreaWorld(0,0,32,30);
+	//$graph->SetPlotAreaWorld(0,5,32,30);
 	//$graph->SetPlotAreaPixels(150,50,600,400);
 
 /*

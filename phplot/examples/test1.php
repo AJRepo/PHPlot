@@ -29,7 +29,6 @@ for ($i=0; $i<=30; $i++){
 	$graph->SetDataType($which_data_type);  //Must be first thing
 	$graph->SetUseTTF("0");
 	$graph->SetDrawYGrid("1"); // 1 = true
-	$graph->SetFileFormat("gif");
 	$graph->SetDataValues($data);
     $graph->SetImageArea($XSIZE_in, $YSIZE_in);
 	$graph->SetVertTickIncrement($which_vti);

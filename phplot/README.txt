@@ -1,8 +1,8 @@
 This routine is a class for creating scientific and business
 charts. To run the test data extract the files with
-	tar -zxvf phplot-3.01.tar.gz 
+	tar -zxvf phplot-4.0.1.tar.gz 
 and then point your browser to 
-	format-chart.php.
+	examples/format-chart.php.
 
 There are some configuration settings that you will need
 to make based on your setup. 
@@ -10,7 +10,9 @@ to make based on your setup.
 1. File Type: Depending on the version of GD you are using, 
 you may or may not have GIF or PNG file ability. That is 
 set with the function. 
-	SetFileFormat("<filetype>") where filetype is png, gif, jpeg, ...
+	SetFileFormat("<filetype>") where <filetype> is png, gif, jpeg, ...
+or edit the file phplot.php and make the line
+	var $file_format = "<filetype>";
 
 2. TTF: If you have TTF installed then use 
 	SetUseTTF("1");

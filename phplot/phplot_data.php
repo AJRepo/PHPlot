@@ -18,9 +18,9 @@ class PHPlot_Data extends PHPlot {
 	// if $even is true, Data will be scaled with "even" factors. Submitted by Thiemo Nagel
 		$offset = 0;
 		unset($max);
-		if ($this->data_type == 'text-linear') {
+		if ($this->data_type == 'text-data') {
 			$offset++;
-		} elseif ($this->data_type != 'linear-linear') {
+		} elseif ($this->data_type != 'data-data') {
 			$this->DrawError('wrong data type!!');
 			return false;
 		}
@@ -106,9 +106,9 @@ class PHPlot_Data extends PHPlot {
 
 		if ($show_in_legend) $this->legend[$datarow] .= " (MA: $interval)";
 
-		if ($this->data_type == 'text-linear') {
+		if ($this->data_type == 'text-data') {
 			$datarow++;
-		} elseif ($this->data_type != 'linear-linear') {
+		} elseif ($this->data_type != 'data-data') {
 			$this->DrawError('DoMovingAverages: wrong data type!!');
 			return false;
 		}
@@ -139,9 +139,9 @@ function DoRemoveDataSet($index) {
 // removes the DataSet of number $index
 
 	$offset = 1;
-	if ($this->data_type == 'linear-linear') {
+	if ($this->data_type == 'data-data') {
 		$offset++;
-	} elseif ($this->data_type != 'text-linear') {
+	} elseif ($this->data_type != 'text-data') {
 		$this->DrawError('wrong data type!!');
 		return false;
 	}
@@ -168,9 +168,9 @@ function DoDivision($x,$y) {
 // and deletes row y
 
 	$offset = 1;
-	if ($this->data_type == 'linear-linear') {
+	if ($this->data_type == 'data-data') {
 		$offset++;
-	} elseif ($this->data_type != 'text-linear') {
+	} elseif ($this->data_type != 'text-data') {
 		$this->DrawError('wrong data type!!');
 		return false;
 	}

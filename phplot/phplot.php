@@ -44,6 +44,10 @@ class PHPlot{
 	var $xscale_type = "linear";
 	var $yscale_type = "linear";
 
+//Use for multiple plots per image
+	var	$background_done = 0; //Set to 1 after background image first drawn
+	var $print_image = 1;  //Used for multiple charts per image. 
+
 
 //Fonts
 	var $use_ttf  = 0;		  //Use TTF fonts (1) or not (0)
@@ -56,6 +60,7 @@ class PHPlot{
 	var $small_font_width = 6.0; // width in pixels (2=6,3=8,4=8)
 	var $small_font_height = 8.0; // height in pixels (2=8,3=10,4=12)
 
+	//////////   Title
 	var $title_ttffont = "./benjamingothic.ttf";
 	var $title_ttffont_size = 14;
 	var $title_angle= 0;
@@ -64,6 +69,7 @@ class PHPlot{
 	var $title_font_width = 8.0; // width in pixels for non-ttf
 	var $title_font_height = 12.0; // height in pixels for non-ttf
 
+	//////////////  Axis
 	var $axis_ttffont = "./benjamingothic.ttf";
 	var $axis_ttffont_size = 8;
 	var $x_datalabel_angle = 45;
@@ -72,8 +78,18 @@ class PHPlot{
 	var $axis_font = 2;
 	var $axis_font_width = 6.0; // width in pixels for non-ttf
 	var $axis_font_height = 10.0; // height in pixels for non-ttf
+
+	//////////////// Labels
+	var $x_label_ttffont = "./benjamingothic.ttf";
+	var $x_label_ttffont_size = "12";
+	var $x_label_ttffont_angle = "0";
+
+	var $y_label_ttffont = "./benjamingothic.ttf";
+	var $y_label_ttffont_size = "12";
+	var $x_label_ttffont_angle = "90";
+
 //Formats
-	var $file_format = "gif";
+	var $file_format = "png";
 //Plot Colors
 	var $bg_color;
 	var $plot_bg_color;
@@ -81,11 +97,12 @@ class PHPlot{
 	var $light_grid_color;
 	var $tick_color;
 	var $title_color;
+	var $label_color;
 	var $text_color;
 	var $i_light;
 //Data
-	var $data_type = "text-linear"; // text-linear, linear-linear-error, linear-linear, linear-text
-	var $plot_type= "linepoints";	//bars, lines, linepoints, area, dots, pie
+	var $data_type = "text-data"; // text-data, data-data-error, data-data, linear-text
+	var $plot_type= "linepoints";	//bars, lines, linepoints, area, points, pie
 	var $point_size = 10;
 	var $point_shape = "diamond"; //rect,circle,diamond,triangle,dot,line,halfline
 	var $error_bar_shape = "tee"; //tee, line
@@ -109,22 +126,27 @@ class PHPlot{
 //Labels
 	var $legend;  //an array
 	var $title_txt = "Title";
-	var $y_label_txt = "";
+	var $y_label_txt = "Y Data";
 	var $x_label_txt = "X Data";
 	var $y_grid_label_type = "data";  //data, none, time, other
 	var $x_grid_label_type = "data";  //data, title, none, time, other
+	var $draw_x_data_labels = "";  // 0=false, 1=true, ""=let program decide 
 	var $x_time_format = "%H:%m:%s"; //See http://www.php.net/manual/html/function.strftime.html
 	var $tick_length = "10";  //pixels
 	var $draw_x_grid = 0;
 	var $draw_y_grid = 1;
 	var $num_vert_ticks = "";
 	var $vert_tick_increment ;  //Set num_vert_ticks or vert_tick_increment, not both.
-	var $x_datalabel_maxlength = 20;
+	var $x_datalabel_maxlength = 10;
 	var $line_width = 2;
-
 
 	function SetBrowserCache($which_browser_cache) {  //Submitted by Thiemo Nagel
 		$this->browser_cache = $which_browser_cache;
+		return true;
+	}
+
+	function SetPrintImage($which_pi) {
+		$this->print_image = $which_pi;
 		return true;
 	}
 
@@ -197,6 +219,19 @@ class PHPlot{
 		$this->x_time_format = $which_xtf;
 		return true;
 	}
+	function SetXDataLabelAngle($which_xdla) { 
+		$this->x_datalabel_angle = $which_xdla;
+		return true;
+	}
+	function SetXScaleType($which_xst) { 
+		$this->xscale_type = $which_xst;
+		return true;
+	}
+	function SetYScaleType($which_yst) { 
+		$this->yscale_type = $which_yst;
+		return true;
+	}
+
 	function SetPrecisionX($which_prec) {
 		$this->x_precision = $which_prec;
 		return true;
@@ -209,6 +244,7 @@ class PHPlot{
 	function SetDefaultColors() {
 		$this->SetPlotBgColor(array(222,222,222));
 		$this->SetBackgroundColor(array(200,222,222)); //can use rgb values or "name" values
+		$this->SetLabelColor("black");
 		$this->SetTextColor("black");
 		$this->SetGridColor("black");
 		$this->SetLightGridColor(array(175,175,175));
@@ -259,8 +295,11 @@ class PHPlot{
 		if (($this->img) == "") {
 			$this->InitImage();
 		}
-		ImageFilledRectangle($this->img, 0, 0,
-			$this->image_width, $this->image_height, $this->bg_color);
+		if ($this->background_done == 0) { //Don't draw it twice if drawing two plots on one image
+			ImageFilledRectangle($this->img, 0, 0,
+				$this->image_width, $this->image_height, $this->bg_color);
+			$this->background_done = 1;
+		}
 		return true;
 	}
 
@@ -294,6 +333,10 @@ class PHPlot{
 
 	function SetImageBorderType($which_sibt) {
 		$this->image_border_type = $which_sibt;
+	}
+
+	function SetDrawXDataLabels($which_dxdl) {
+		$this->draw_x_data_labels = $which_dxdl;  // 1=true or anything else=false
 	}
 
 	function SetDrawYGrid($which_dyg) {
@@ -341,17 +384,33 @@ class PHPlot{
 	}
 
 	function DrawXLabel() {
-		ImageString($this->img, $this->small_font,
+		if ($this->use_ttf == 1) { 
+			$size = $this->TTFBBoxSize($this->x_label_ttffont_size, 0, $this->x_label_ttffont, $this->x_label_txt);
+			$xpos = -($size[0])/2 + $this->xtr(($this->plot_max_x + $this->plot_min_x)/2.0) ;
+			$ypos = $this->ytr($this->plot_min_y) + $size[1] + $this->x_label_height/2.0;
+			ImageTTFText($this->img, $this->x_label_ttffont_size, 0,
+					$xpos, $ypos, $this->label_color, $this->x_label_ttffont, $this->x_label_txt);
+		} else { 
+			ImageString($this->img, $this->small_font,
 			-($this->small_font_width*strlen($this->x_label_txt)/2.0) + $this->xtr(($this->plot_max_x+$this->plot_min_x)/2.0) ,
 			($this->ytr($this->plot_min_y) + $this->x_label_height/2),
 			$this->x_label_txt, $this->text_color);
+		}
 
 		return true;
 	}
 	function DrawYLabel() {
-   		ImageStringUp($this->img, $this->small_font,8,
-			(($this->small_font_width*strlen($this->y_label_txt)/2.0) +
-				$this->ytr(($this->plot_max_y + $this->plot_min_y)/2.0) ), $this->y_label_txt, $this->text_color);
+		if ($this->use_ttf == 1) { 
+			$size = $this->TTFBBoxSize($this->y_label_ttffont_size, 90, $this->y_label_ttffont, $this->y_label_txt);
+			$ypos = ($size[1])/2 + $this->ytr(($this->plot_max_y + $this->plot_min_y)/2.0) ;
+			$xpos = 8 + $size[0];
+			ImageTTFText($this->img, $this->y_label_ttffont_size, 90,
+					$xpos, $ypos, $this->label_color, $this->y_label_ttffont, $this->y_label_txt);
+		} else { 
+   			ImageStringUp($this->img, $this->small_font,8,
+				(($this->small_font_width*strlen($this->y_label_txt)/2.0) +
+					$this->ytr(($this->plot_max_y + $this->plot_min_y)/2.0) ), $this->y_label_txt, $this->text_color);
+		}
 		return true;
 	}
 
@@ -416,6 +475,15 @@ class PHPlot{
 		return true;
 	}
 
+	function SetLabelColor ($which_color) {
+		if (($this->img) == "") {
+			$this->InitImage();
+		}
+		list($r, $g, $b) = SetColor($which_color);
+		$this->label_color=ImageColorAllocate($this->img, $r, $g, $b);
+		return true;
+	}
+
 	function SetTextColor ($which_color) {
 		if (($this->img) == "") {
 			$this->InitImage();
@@ -449,12 +517,13 @@ class PHPlot{
 	}
 
 	function SetPlotType($which_pt) {
-		$accepted = "bars,lines,linepoints,area,dots,pie";
+		$accepted = "bars,lines,linepoints,area,points,pie,thinbarline";
 		$asked = trim($which_pt);
 		if (eregi($asked, $accepted)) {
 			$this->plot_type = $which_pt;
 			return true;
 		} else {
+			$this->DrawError("$which_pt not an acceptable plot type");
 			return false;
 		}
 	}
@@ -468,13 +537,16 @@ class PHPlot{
 		$this->number_x_points = count($this->data_values);
 
 		switch ($this->data_type) {
-			case "text-linear":
+			case "text-data":
 				$minx = 0; //valid for BAR CHART TYPE GRAPHS ONLY
 				$maxx = $this->number_x_points - 1 ;  //valid for BAR CHART TYPE GRAPHS ONLY
 				$miny = (double) $this->data_values[0][1];
 				$maxy = $miny;
+				if ($this->draw_x_data_labels == "") { 
+					$this->draw_x_data_labels = 1;  //labels_note1: prevent both data labels and x-axis labels being both drawn and overlapping
+				}
 			break;
-			default:  //Everything else: linear-linear, etc.
+			default:  //Everything else: data-data, etc.
 				$maxx = $this->data_values[0][1];
 				$minx = $maxx;
 				$miny = $this->data_values[0][2];
@@ -489,13 +561,12 @@ class PHPlot{
 		reset($this->data_values);
 		while (list($dat_key, $dat) = each($this->data_values)) {  //for each X barchart setting
 		//foreach($this->data_values as $dat)  //can use foreach only in php4
-//ajo
 
 			$tmp = 0;
 			$total_records += count($dat) - 1; // -1 for label
 
 			switch ($this->data_type) {
-				case "text-linear":
+				case "text-data":
 					//Find the relative Max and Min
 
 					while (list($key, $val) = each($dat)) {
@@ -511,7 +582,7 @@ class PHPlot{
 						$tmp++;
 					}
 				break;
-				case "linear-linear":  //X-Y data is passed in as $data[] = (title,x,y,y2,y3,...) which you can use for multi-dimentional plots.
+				case "data-data":  //X-Y data is passed in as $data[] = (title,x,y,y2,y3,...) which you can use for multi-dimentional plots.
 
 					while (list($key, $val) = each($dat)) {
 						if ($key == 1) {  //$dat[0] = label
@@ -533,7 +604,7 @@ class PHPlot{
 					}
 					$tmp = $tmp - 1; //# records per group
 				break;
-				case "linear-linear-error":  //Assume 2-D for now, can go higher
+				case "data-data-error":  //Assume 2-D for now, can go higher
 				//Regular X-Y data is passed in as $data[] = (title,x,y,error+,error-,y2,error2+,error2-)
 
 					while (list($key, $val) = each($dat)) {
@@ -634,7 +705,6 @@ class PHPlot{
 		}
 	}
 
-/*
 	function SetNewPlotAreaPixels($x1,$y1,$x2,$y2) {
 		//Like in GD 0,0 is upper left set via pixel Coordinates
 		$this->plot_area = array($x1,$y1,$x2,$y2);
@@ -645,7 +715,6 @@ class PHPlot{
 		}
 		return true;
 	}
-*/
 
 	function SetPlotAreaPixels($x1,$y1,$x2,$y2) {
 		//Like in GD 0,0 is upper left
@@ -678,7 +747,7 @@ class PHPlot{
 				if (!$this->max_y) {
 					$this->FindDataLimits() ;
 				}
-				if ($this->data_type == "text-linear") { //labels for text-linear is done at data drawing time for speed.
+				if ($this->data_type == "text-data") { //labels for text-data is done at data drawing time for speed.
 					$xmax = $this->max_x + 1 ;  //valid for BAR CHART TYPE GRAPHS ONLY
 					$xmin = 0 ; 				//valid for BAR CHART TYPE GRAPHS ONLY
 				} else {
@@ -717,7 +786,7 @@ class PHPlot{
 //echo "$this->plot_min_x, $this->plot_max_x, $this->plot_min_y, $this->plot_max_y";
 //exit;
 		if ($ymax <= $ymin) {
-			$this->DrawError("Error in Data - max not gt min");
+			$this->DrawError('Error in Data - max not gt min');
 		}
 
 //Set the boundaries of the box for plotting in world coord
@@ -731,7 +800,7 @@ class PHPlot{
 
 		return true;
 
-	}
+	} //function SetPlotAreaWorld
 
 
 	function PrintError($error_message) {
@@ -743,7 +812,7 @@ class PHPlot{
 	// prints the error message inline into
 	// the generated image
 
-		if (($this->img) == "") $this->InitImage();
+		if (($this->img) == "") { $this->InitImage(); } ;
 
 		$ypos = $this->image_height/2;
 		if ($this->use_ttf == 1) {
@@ -777,7 +846,7 @@ class PHPlot{
 
 		if ($this->use_ttf == 1) {
 			//Space for the X Label
-			$size = $this->TTFBBoxSize($this->axis_ttffont_size, 0, $this->axis_ttffont, $this->x_label_txt);
+			$size = $this->TTFBBoxSize($this->x_label_ttffont_size, 0, $this->axis_ttffont, $this->x_label_txt);
 			$tmp = $size[1];
 
 			//$string = Str_Repeat("m", $this->x_datalabel_maxlength);
@@ -786,10 +855,11 @@ class PHPlot{
 			  $i++;
 			}
 
-			//Space for the axis labels
+			//Space for the axis data labels
 			$size = $this->TTFBBoxSize($this->axis_ttffont_size, $this->x_datalabel_angle, $this->axis_ttffont, $string);
 
-			$this->x_label_height = 2*$tmp + $size[1];
+			$this->x_label_height = 2*$tmp + $size[1] + 4;
+//echo "$this->x_label_height = 3*$tmp + $size[1]<br>";
 //echo "$tmp, $size[1]<br>";
 //exit;
 
@@ -872,7 +942,12 @@ class PHPlot{
 
 
 	function SetDataType($which_dt) {
-		$this->data_type = $which_dt; //text-linear, linear-linear, linear-linear-error
+		//The next three lines are for past compatibility.
+		if ($which_dt == "text-linear") { $which_dt = "text-data"; };
+		if ($which_dt == "linear-linear") { $which_dt = "data-data"; };
+		if ($which_dt == "linear-linear-error") { $which_dt = "data-data-error"; };
+
+		$this->data_type = $which_dt; //text-data, data-data, data-data-error
 		return true;
 	}
 
@@ -1009,7 +1084,7 @@ class PHPlot{
 			$ylab, $this->text_color);
 
 		//X Ticks and Labels
-		if ($this->data_type != "text-linear") { //labels for text-linear is done at data drawing time for speed.
+		if ($this->data_type != "text-data") { //labels for text-data is done at data drawing time for speed.
 			$this->DrawHorizontalTicks();
 		}
 		return true;
@@ -1194,8 +1269,8 @@ class PHPlot{
 			//$ylab = sprintf("%6.1f %s",$min_y,$si_units[0]);  //PHP2 past compatibility
 			//For log plots: 
 			if (($this->yscale_type == "log") && ($this->plot_min_y == 1) && 
-				($delta_y == 10) && ($y_tmp == 11)) { 
-				$y_tmp = 10; //Set first increment to 9 to get: 1,10,20,30,...
+				($delta_y%10 == 0) && ($i == 0)) { 
+				$y_tmp = $y_tmp - 1; //Set first increment to 9 to get: 1,10,20,30,...
 			}
 			switch ($this->y_grid_label_type) {
 				case "data":
@@ -1330,7 +1405,7 @@ class PHPlot{
 			if ($this->use_ttf) {
 				$xlab_size = $this->TTFBBoxSize($this->axis_ttffont_size,
 					$this->x_datalabel_angle, $this->axis_ttffont, $xlab); //An array
-				$y = $this->plot_area[3] + $xlab_size[1] + 2;  //in pixels
+				$y = $this->plot_area[3] + $xlab_size[1] + 4;  //in pixels
 				$x = $xpos - $xlab_size[0]/2;
 				ImageTTFText($this->img, $this->axis_ttffont_size,
 					$this->x_datalabel_angle, $x, $y, $this->text_color, $this->axis_ttffont, $xlab);
@@ -1535,7 +1610,7 @@ class PHPlot{
 			}
 		}
 
-	}
+	} //function DrawDots
 
 	function DrawDotSeries() {
 		//foreach ($this->data_values as $row) {
@@ -1555,6 +1630,37 @@ class PHPlot{
 		}
 
 	}
+
+	function DrawThinBarLines() {
+		//A clean,fast routine for when you just want charts like stock volume charts
+		//Data must be text-data since I didn't see a graphing need for equally spaced thin lines. 
+		//If you want it - then write to afan@jeo.net and I might add it. 
+
+		if ($this->data_type != "data-data") { $this->DrawError('Data Type for ThinBarLines must be data-data'); };
+		$y1 = $this->ytr($this->x_axis_position);
+
+		reset($this->data_values);
+		while (list(, $row) = each($this->data_values)) {
+			$color_index = 0;
+			while (list($k, $v) = each($row)) {
+				if ($k == 0) {
+						$xlab = $v;
+				} elseif ($k == 1) {
+					$xpos = $this->xtr($v);
+					if ( ($this->draw_x_data_labels == 1) )  { //See "labels_note1 above.
+						$this->DrawXDataLabel($xlab,$xpos);
+					}
+				} else {
+					if ($color_index >= count($this->data_color)) $color_index=0;
+					$barcol = $this->col_data_color[$color_index];
+
+					ImageLine($this->img,$xpos,$y1,$xpos,$this->ytr($v),$barcol);
+					$color_index++;
+				}
+			}
+		}
+
+	}  //function DrawThinBarLines
 
 	function DrawYErrorBar($x_world,$y_world,$error_height,$error_bar_type,$color) {
 		$x1 = $this->xtr($x_world);
@@ -1745,6 +1851,10 @@ class PHPlot{
 	function DrawLines() {
 		//Data comes in as $data[]=("title",x,y,...);
 		$start_lines = 0;
+		if ($this->data_type == "text-data") { 
+			$lastx[0] = $this->xtr(0);
+			$lasty[0] = $this->xtr(0);
+		}
 
 		//foreach ($this->data_values as $row)
 		reset($this->data_values);
@@ -1754,19 +1864,17 @@ class PHPlot{
 			$i = 0;
 			//foreach ($row as $v)
 			while (list($k, $v) = each($row)) {
-				if ($k == 0)  {
-					if ( $this->draw_x_data_labels == 1) {
-						$xlab = SubStr($v,0,$this->x_datalabel_maxlength);
-						$this->DrawXDataLabel($xlab,$this->xtr($row[1]));
-					}
-				} elseif ($k == 1) {
-					$x_now = $this->xtr($v);
+				if ($k == 0) { 
+					$xlab = SubStr($v,0,$this->x_datalabel_maxlength);
+				} elseif (($k == 1) && ($this->data_type == "data-data"))  { 
+						$x_now = $this->xtr($v);
 				} else {
 					// Draw Lines
 
 					$y_now = $this->ytr($v);
+					if ($this->data_type == "text-data") { $x_now = $this->xtr($j+.5); } ;
 
-					if ($color_index >= count($this->data_color)) $color_index=0;
+					if ($color_index >= count($this->data_color)) { $color_index=0;} ;
 					$barcol = $this->col_data_color[$color_index];
 
 					if ($start_lines == 1) {
@@ -1785,7 +1893,11 @@ class PHPlot{
 					$color_index++;
 					$i++;
 				}
-			}
+				//Now we are assured an x_value
+				if ( ($this->draw_x_data_labels == 1) && ($k == 1) )  { //See "labels_note1 above.
+					$this->DrawXDataLabel($xlab,$x_now);
+				}
+			} //while rows of data
 			$start_lines = 1;
 		}
 	}
@@ -1793,57 +1905,10 @@ class PHPlot{
 		//Data comes in as $data[]=("title",x,y,e+,e-,y2,e2+,e2-,...);
 
 	function DrawLineSeries() {
-		//Like DrawBars - but use lines. Data comes in as $data[]=("title",y1,y2,y3,...);
-		$start_lines = 0;
-		$lastx[0] = 0;
-		$lasty[0] = 0;
-
-		//Not ok for Series Plots
-		//$this->DrawHorizontalTicks();
-
-		//foreach ($this->data_values as $row) {
-		reset($this->data_values);
-		while (list($j, $row) = each($this->data_values)) {
-
-			$color_index = 0;
-			$i = 0;
-			//foreach ($row as $v) {
-			while (list($k, $v) = each($row)) {
-				if ($k == 0) {
-					//Draw Data Labels
-					$xlab = SubStr($v,0,$this->x_datalabel_maxlength);
-					$this->DrawXDataLabel($xlab,$this->xtr($j + .5));
-				} else {
-					// Draw Lines
-
-					$x1 = $this->xtr($j + .5 );
-					$x2 = $this->xtr($j - .5);
-					$y1 = $this->ytr($v);
-
-					if ($color_index >= count($this->data_color)) $color_index=0;
-					$barcol = $this->col_data_color[$color_index];
-
-					if ($start_lines == 1) {
-						for ($width = 0; $width < $this->line_width; $width++) {
-							if ($this->line_style[$i] == "dashed") {
-								$this->DrawDashedLine($x1, $y1 + $width, $x2, $lasty[$i] + $width, 3,4, $barcol);
-							} else {
-								ImageLine($this->img, $x1, $y1 + $width, $x2, $lasty[$i] + $width, $barcol);
-							}
-						}
-					}
-
-					$bordercol = $this->col_bar_border_color[$colbarcount];
-
-					$lastx[$i] = $x1;
-					$lasty[$i] = $y1;
-
-					$color_index++;
-					$i++;
-				}
-			}
-			$start_lines = 1;
-		}
+		//This function is replaced by DrawLines
+		//Tests have shown not much improvement in speed by having separate routines for DrawLineSeries and DrawLines
+		//For ease of programming I have combined them
+		return false;
 	} //function DrawLineSeries
 
 	function DrawDashedLine ($x1pix,$y1pix,$x2pix,$y2pix,$dash_length,$dash_space,$color) {
@@ -1874,6 +1939,10 @@ class PHPlot{
 	} // function DrawDashedLine
 
 	function DrawBars() {
+
+		if ($this->data_type != "text-data") { 
+			$this->DrawError('Bar plots must be text-data: use function SetDataType("text-data")');
+		}
 
 		$start_pos = $this->plot_area[0] + $this->data_group_space / 2;
 		$xadjust = ($this->records_per_group * $this->record_bar_width )/2;
@@ -2016,7 +2085,7 @@ class PHPlot{
 				$this->SetPlotAreaWorld("","","","");
 			}
 
-			if ($this->data_type == "text-linear") {
+			if ($this->data_type == "text-data") {
 				$this->SetEqualXCoord();
 			}
 
@@ -2037,12 +2106,17 @@ class PHPlot{
 					$this->DrawLabels();
 					$this->DrawBars();
 					break;
+				case "thinbarline":
+					$this->DrawPlotBorder();
+					$this->DrawLabels();
+					$this->DrawThinBarLines();
+					break;
 				case "lines":
 					$this->DrawPlotBorder();
 					$this->DrawLabels();
-					if ( $this->data_type == "text-linear") {
-						$this->DrawLineSeries();
-					} elseif ( $this->data_type == "linear-linear-error") {
+					if ( $this->data_type == "text-data") {
+						$this->DrawLines();
+					} elseif ( $this->data_type == "data-data-error") {
 						$this->DrawLinesError();
 					} else {
 						$this->DrawLines();
@@ -2051,7 +2125,7 @@ class PHPlot{
 				case "area":
 					$this->DrawPlotBorder();
 					$this->DrawLabels();
-					if ( $this->data_type == "text-linear") {
+					if ( $this->data_type == "text-data") {
 						$this->DrawAreaSeries();
 					} else {
 						$this->DrawArea();
@@ -2060,10 +2134,10 @@ class PHPlot{
 				case "linepoints":
 					$this->DrawPlotBorder();
 					$this->DrawLabels();
-					if ( $this->data_type == "text-linear") {
-						$this->DrawLineSeries();
+					if ( $this->data_type == "text-data") {
+						$this->DrawLines();
 						$this->DrawDotSeries();
-					} elseif ( $this->data_type == "linear-linear-error") {
+					} elseif ( $this->data_type == "data-data-error") {
 						$this->DrawLinesError();
 						$this->DrawDotsError();
 					} else {
@@ -2074,9 +2148,9 @@ class PHPlot{
 				case "points";
 					$this->DrawPlotBorder();
 					$this->DrawLabels();
-					if ( $this->data_type == "text-linear") {
+					if ( $this->data_type == "text-data") {
 						$this->DrawDotSeries();
-					} elseif ( $this->data_type == "linear-linear-error") {
+					} elseif ( $this->data_type == "data-data-error") {
 						$this->DrawDotsError();
 					} else {
 						$this->DrawDots();
@@ -2098,7 +2172,9 @@ class PHPlot{
 			}
 
 		}
-		$this->PrintImage();
+		if ($this->print_image == 1) { 
+			$this->PrintImage();
+		}
 	} //function DrawGraph
 
  }
