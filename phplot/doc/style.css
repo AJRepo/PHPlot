@@ -1,0 +1,17 @@
+/* Style sheet for PHPlot */
+
+.foot { 
+    text-align:right; 
+    font-style:italic; 
+    font-size:smaller;
+    width:100%;
+    background:#CCCCCC;
+    color:#000000;
+    }
+.hdr { text-align:center; font-weight: bold; }
+
+h2 { border-bottom: 1px dashed; } 
+h3 { border-bottom: 1px dotted; margin-left:1em;}
+
+img { padding: 0.5em; }
+
