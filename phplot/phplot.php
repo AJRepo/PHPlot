@@ -1389,7 +1389,7 @@ class PHPlot {
      */
     function SetLegendWorld($which_x, $which_y, $which_type=NULL) 
     { 
-        if (! $this->scale_is_set) 
+        if (! isset($this->scale_is_set)) 
             $this->CalcTranslation();
 
         $this->legend_x_pos = $this->xtr($which_x);
@@ -1611,11 +1611,14 @@ class PHPlot {
     function SetPrecisionX($which_prec) 
     {
         $this->x_precision = $which_prec;
+        $this->SetXLabelType('data');
         return TRUE;
     }
+    
     function SetPrecisionY($which_prec) 
     {
         $this->y_precision = $which_prec;
+        $this->SetYLabelType('data');
         return TRUE;
     }
 
@@ -2244,7 +2247,7 @@ class PHPlot {
                 $lab = @ $this->data[$which_lab][0];
                 break;
             case 'data':
-                $lab = number_format($which_lab, $this->x_precision, '.', ', ').$this->data_units_text;
+                $lab = number_format($which_lab, $this->x_precision, '.', ',').$this->data_units_text;
                 break;
             case 'time':
                 $lab = strftime($this->x_time_format, $which_lab);
@@ -2259,7 +2262,7 @@ class PHPlot {
         case 'ploty':
             switch ($this->y_label_type) {
             case 'data':
-                $lab = number_format($which_lab, $this->y_precision, '.', ', ').$this->data_units_text;
+                $lab = number_format($which_lab, $this->y_precision, '.', ',').$this->data_units_text;
                 break;
             case 'time':
                 $lab = strftime($this->y_time_format, $which_lab);
