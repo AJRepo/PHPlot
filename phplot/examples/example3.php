@@ -16,10 +16,10 @@ $graph->SetDataType("data-data");
 
 //Load the data into the data array
 $graph->SetDataValues($example_data);
-//$graph->DoMovingAverage(4,1,1);
+$graph->DoMovingAverage(4,2,TRUE);
 
 //Call Scaling Function (in phplot_data.php)
-$graph->DoScaleData(1,1);
+//$graph->DoScaleData(1,1);
 
 //Draw a Legend at pixel location 100,100
 $graph->SetLegendPixels(100,100,"");

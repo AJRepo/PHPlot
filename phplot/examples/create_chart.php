@@ -1,7 +1,7 @@
 <?php    
 /* $Id$ */
 
-//error_reporting(E_ALL);
+error_reporting(E_ALL);
 
 /*
 // Check if we are processing the form
@@ -91,7 +91,7 @@ else if ($which_data_type == 'data-data-error') {
 
     
     $graph->SetShading($which_shading);
-    //$graph->SetLineWidth($which_line_width);
+    $graph->SetLineWidth($which_line_width);
     $graph->SetErrorBarLineWidth($which_errorbar_line_width);
 
     $graph->SetDrawDashedGrid($which_dashed_grid);

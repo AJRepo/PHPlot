@@ -6,7 +6,7 @@
 </head>
 <body>
 
-<div class="nav"> [ <a href="../doc/index.html">Go to the index</a> ] </div>
+<div class="nav"> [ <a href="../doc/index.php">Go to the index</a> ] </div>
 
 <h2>PHPlot test graph form</h2>
 
