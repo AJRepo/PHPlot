@@ -1,4 +1,4 @@
-<?php 
+<?php
 ///////////////////////////////////////////////
 //This file is meant only to be called from the
 //testing function quick_start.php. It will fail

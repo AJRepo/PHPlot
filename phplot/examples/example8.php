@@ -1,4 +1,4 @@
-<?php 
+<?php
 include("./data_date2.php");
 include("../phplot.php");
 $graph = new PHPlot(600,400);
@@ -21,12 +21,11 @@ $graph->SetErrorBarShape("line");
 $graph->SetPointShape("halfline");
 $graph->SetYScaleType("log");
 $graph->SetLineWidth(1);
-//$graph->SetDrawXDataLabels(1);
 $graph->SetPlotAreaWorld(883634400,1,915095000,140);
 
 $graph->DrawGraph();
 ?>
-<?
+<?php
 //Now do the second chart on the image
 unset($example_data);
 $graph->SetPrintImage(1); //Now draw the image 
@@ -50,6 +49,8 @@ $graph->SetPlotType("thinbarline");
 //Set how to display the x-axis ticks
 $graph->SetXTimeFormat("%b %y");
 $graph->SetHorizTickIncrement(2679000);
+$graph->SetXAxisPosition(0);  //Have to reset it after log plots
+
 //Set Plot to go from x = Jan 1 1998, to x = Dec 31 1998
 //	and from y = 0 to y = 90
 $graph->SetPlotAreaWorld(883634400,0,915095000,90);

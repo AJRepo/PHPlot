@@ -7,7 +7,7 @@ Mandatory Settings: <br>
 <INPUT TYPE="TEXT" NAME="XSIZE_in" VALUE="600"> Width of Graph in Pixels<br>
 <INPUT TYPE="TEXT" NAME="YSIZE_in" VALUE="400"> Height of Graph in Pixels<br>
 <p>
-<?php  
+<?php
 if ($which_data_type=="text-linear") { 
 	include("data_sample1.php"); 
 } elseif ($which_data_type=="linear-linear") { 

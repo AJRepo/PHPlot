@@ -4,7 +4,7 @@ Data Type: <A HREF="format_chart.php?which_data_type=text-linear">text-linear</A
 <A HREF="format_chart.php?which_data_type=linear-linear-error">linear-linear-error</A><br>
 <p>
 Data set as X, Y, Y+, Y-
-<?php 
+<?php
 //linear-linear-error
 		$data = array(
 			array("label 0", 0, 1, .5, .1 ), 	
@@ -18,7 +18,7 @@ Data: (linear-linear)<br>
 <INPUT TYPE="hidden" NAME="which_data_type" VALUE="linear-linear-error">
 <TABLE border=1>
 <TR><TD>Title (data lablel)</TD><TD>Xdata</TD><TD>Ydata 1</TD><TD>Error +</TD><TD>Error -</TD></TR>
-<?php 
+<?php
 	for ($i=0; $i<5; $i++) {
 ?>
 <tr>
@@ -41,7 +41,7 @@ Data: (linear-linear)<br>
 <br>
 </TD><TD>
 </TR>
-<?php 
+<?php
 	}
 ?>
 </TABLE>

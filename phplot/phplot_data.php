@@ -15,6 +15,7 @@ class PHPlot_Data extends PHPlot {
 
 	//Constructor
 	function PHPlot_Data() { 
+		Error_Reporting(0); //Otherwise PHP complains $this->img not defined.
 		if ($this->img == "") { 
 			$this->PHPlot();
 		}

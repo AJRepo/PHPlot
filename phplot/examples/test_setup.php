@@ -10,7 +10,7 @@ This page will test to see if you have GD and PHP set up to
 view images correctly. You should see at least one
 of the three images below. 
 <p>
-<?php 
+<?php
 /* *************************
 error_reporting(4);
 $im_test = ImageCreate(2,2);
@@ -23,7 +23,7 @@ exit;
 <TABLE border=1>
 <TR><TD>Test to see if GIF graphs work</TD></TR>
 <TR><TD>
-<?php 
+<?php
 $im_test = ImageCreate(1,1);
 echo "<!--";
 if (! ImageGif($im_test)) { 
@@ -33,7 +33,7 @@ if (! ImageGif($im_test)) {
 	echo "-->";
 	?>
 	<IMG SRC="inline_image.php?file_format=gif&which_title=YES_GIF_IS_ENABLED"></TD></TR>
-	<?php 
+	<?php
 }
 ImageDestroy($im_test);
 ?>
@@ -42,7 +42,7 @@ ImageDestroy($im_test);
 <TABLE border=1>
 <TR><TD>Test to see if PNG graphs work</TD></TR>
 <TR><TD>
-<?php 
+<?php
 $im_test = ImageCreate(1,1);
 echo "<!--";
 if (! ImagePng($im_test) ) { 
@@ -53,7 +53,7 @@ if (! ImagePng($im_test) ) {
 	echo "-->";
 	?>
 	<IMG SRC="inline_image.php?file_format=png&which_title=YES_PNG_IS_ENABLED"></TD></TR>
-	<?php 
+	<?php
 }
 ImageDestroy($im_test);
 ?>
@@ -62,14 +62,14 @@ ImageDestroy($im_test);
 <TABLE border=1>
 <TR><TD>Test to see if JPEG graphs work</TD></TR>
 <TR><TD>
-<?php 
+<?php
 $im_test = ImageCreate(1,1);
 if (! ImageJPEG($im_test) ) { 
 	echo "JPEG NOT ENABLED";
 } else { 
 	?>
 	<IMG SRC="inline_image.php?file_format=jpg&which_title=YES_JPG_IS_ENABLED"></TD></TR>
-	<?php 
+	<?php
 }
 ImageDestroy($im_test);
 ?>

@@ -9,7 +9,7 @@ Data: (text-linear)<br>
 <TR><TD>Title (x axis)</TD><TD>Ydata 1</TD><TD>Ydata 2</TD>
 <TD>Ydata 3</TD>
 <TD>Ydata 4</TD></TR>
-<?
+<?php 
 	srand ((double) microtime() * 12341234);
 	$a = 25;
 	$b = 10;

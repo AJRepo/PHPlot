@@ -22,6 +22,7 @@ $label[15] = "Day 15";
 $label[20] = "Day 20";
 $label[25] = "Day 25";
 $label[30] = "Day 30";
+Error_Reporting(0);
 for ($i=0; $i<=30; $i++){ 
 	$a += rand(-1, 2);
 	$b = $a*rand(0,1)/10;
