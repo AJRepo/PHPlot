@@ -1190,7 +1190,7 @@ class PHPlot {
         $this->x_data_label_pos = $this->CheckOption($which_xdlp, 'plotdown, plotup, both, xaxis, all, none',
                                                       __FUNCTION__);
         if ($which_xdlp != 'none')
-            $this->x_tick_label_pos == 'none';
+            $this->x_tick_label_pos = 'none';
 
         return TRUE;
     }
@@ -1203,7 +1203,7 @@ class PHPlot {
         $this->y_data_label_pos = $this->CheckOption($which_ydlp, 'plotleft, plotright, both, yaxis, all, none',
                                                       __FUNCTION__);
         if ($which_ydlp != 'none')
-            $this->y_tick_label_pos == 'none';
+            $this->y_tick_label_pos = 'none';
 
         return TRUE;
     }
@@ -1230,7 +1230,7 @@ class PHPlot {
         $this->y_tick_label_pos = $this->CheckOption($which_ytlp, 'plotleft, plotright, both, yaxis, all, none',
                                                       __FUNCTION__);
         if ($which_ytlp != 'none')
-            $this->y_data_label_pos == 'none';
+            $this->y_data_label_pos = 'none';
 
         return TRUE;
     }
