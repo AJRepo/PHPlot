@@ -27,16 +27,16 @@ Data type: (Text-data)<br />
 ?>
  <tr>
   <td>
-   <input type="text" name="data_row0[<?php echo $i?>]" value="Year <?php echo $i?>">
+   <input type="text" name="data_row0[<?php echo $i?>]" value="Year <?php echo $i?>" />
   </td><td>
-   <input type="text" name="data_row1[<?php echo $i?>]" value="<?php echo $a?>" size="2">
+   <input type="text" name="data_row1[<?php echo $i?>]" value="<?php echo $a?>" size="3" />
   </td><td>
-   <input type="text" name="data_row2[<?php echo $i?>]" value="<?php echo $b?>" size="2">
+   <input type="text" name="data_row2[<?php echo $i?>]" value="<?php echo $b?>" size="3" />
   </td><td>
-   <input type="text" name="data_row3[<?php echo $i?>]" value="<?php echo $c?>" size="2">
+   <input type="text" name="data_row3[<?php echo $i?>]" value="<?php echo $c?>" size="3" />
   </td><td>
-   <input type="text" name="data_row4[<?php echo $i?>]" value="<?php echo $c+1?>" size="2">
-  </td><td>
+   <input type="text" name="data_row4[<?php echo $i?>]" value="<?php echo $c+1?>" size="3" />
+  </td>
  </tr>
 <?php 
 	}
@@ -47,11 +47,17 @@ Data type: (Text-data)<br />
 <p>
 Graph type:
 <select name="which_plot_type">
-  <option value="bars">Bars (text-data data only)</option>
+  <option value="bars">Bars (*)</option>
+  <option value="thinbarline">Thin bars</option>
   <option value="lines">Lines</option>
-  <option value="pie">Pie (text-data data only)</option>
+  <option value="pie">Pie (*)</option>
   <option value="linepoints">Line and points</option>
   <option value="points">Points</option>
-  <option value="area">Area (text-data data only)</option>
+  <option value="area">Area (*)</option>
 </select>
 </p>
+<div style="text-align:right; font-size: smaller;">
+Please note when writing your application that the graph <br />
+types marked with an asterisk only support the data <br />
+type for this form, "text-data".
+</div>
