@@ -2365,7 +2365,7 @@ class PHPlot{
 						}
 
 						ImageFilledRectangle($this->img, $x1, $y1, $x2, $y2, $barcol);
-						ImageRectangle($this->img, $x1, $y1, $x2, $y2, $this->bordercol);
+						ImageRectangle($this->img, $x1, $y1, $x2, $y2, $bordercol);
 					} 
 
 					$start_pos = $start_pos + $this->record_bar_width;
