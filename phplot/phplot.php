@@ -37,6 +37,12 @@
  *
  * Silly things:
  *   + Many formatting changes.
+ *
+ * [ MBD sat nov 22 01:41:10 CET 2003 ]
+ *   + Bug #790745 fixed. Thx. to the poster.
+ *   + DrawError() now accepts position and centers text
+ *   + '[423202] Catch error on empty arrays' solved. No more 'divide by zero's
+ *   + Some (random) doxygen comments inserted. It might be a good idea for auto-docs. 
  */
 
 
@@ -147,8 +153,9 @@ class PHPlot {
     var $error_bar_line_width = '';     // If set, then use it, else use $line_width for thickness
     var $error_bar_color = ''; 
     var $data_values;
-
-    var $plot_border_type = 'full';     //left, none, full
+    var $data_count;                    // Internal.
+    
+    var $plot_border_type = 'full';     // left, none, full
     var $plot_area_width = '';
     var $number_x_points;
     var $plot_min_x = '';               // Max and min of the plot area
@@ -840,11 +847,15 @@ class PHPlot {
         }
     }
 
+    /*!
+     * Analizes data and sets up internal maxima and minima
+     * Needed by: (FILLME)
+     */
     function FindDataLimits() {
-        //Text-Data is different than data-data graphs. For them what
+        // Text-Data is different than data-data graphs. For them what
         // we have, instead of X values, is # of records equally spaced on data.
-        //text-data is passed in as $data[] = (title,y1,y2,y3,y4,...)
-        //data-data is passed in as $data[] = (title,x,y1,y2,y3,y4,...) 
+        // text-data is passed in as $data[] = (title,y1,y2,y3,y4,...)
+        // data-data is passed in as $data[] = (title,x,y1,y2,y3,y4,...) 
 
         $this->number_x_points = count($this->data_values);
 
@@ -979,7 +990,7 @@ class PHPlot {
             $this->records_per_group = 1;
         }
 
-        //$this->data_count = $total_records ;
+        $this->data_count = $total_records;
     } // function FindDataLimits
 
 
@@ -1124,10 +1135,11 @@ class PHPlot {
             $this->DrawError('Error in Data - max not gt min');
         }
 
-//Set the boundaries of the box for plotting in world coord
-//        if (!$this->x_tot_margin) { //We need to know the margins before we can calculate scale
-//            $this->SetMargins();
-//        }
+        // Set the boundaries of the box for plotting in world coord
+        //if (!$this->x_tot_margin) { //We need to know the margins before we can calculate scale
+        //    $this->SetMargins();
+        //    }
+        
         //For this we have to reset the scale
         if ($this->plot_area_width) {
             $this->SetTranslation();
@@ -1136,34 +1148,49 @@ class PHPlot {
         return true;
 
     } //function SetPlotAreaWorld
-
-
+   
+   
+    /*! 
+     * Prints an error message to stdout and dies 
+     */
     function PrintError($error_message) {
-    // prints the error message to stdout and die
         echo "<p><b>Fatal error</b>: $error_message<p>";
         die;
     }
 
-    function DrawError($error_message) {
-    // prints the error message inline into
-    // the generated image
-
-        if (($this->img) == "") { $this->InitImage(); } ;
-
-        $ypos = $this->image_height/2;
-
+    /*!
+     * Private.
+     * Prints an error message inline into the generated image 
+     * Defaults to centered position (MBD)
+     */
+    function DrawError($error_message,$where_x=NULL,$where_y=NULL) {
+        if (($this->img) == "")
+            $this->InitImage();
+        
+        $ypos = (! $where_y) ? $this->image_height/2 : $where_y;
+        $xpos = (! $where_x) ? $this->image_width/2 : $where_x;
+        
         if ($this->use_ttf == 1) {
+            // TODO: Center TTF text (MBD)
             ImageRectangle($this->img, 0,0,$this->image_width,$this->image_height,ImageColorAllocate($this->img,255,255,255));
-            ImageTTFText($this->img, $this->small_ttffont_size, 0, $xpos, $ypos, ImageColorAllocate($this->img,0,0,0), $this->axis_ttffont, $error_message);
+            ImageTTFText($this->img, $this->small_ttffont_size, 0, $xpos, $ypos, ImageColorAllocate($this->img,0,0,0), 
+                         $this->small_ttffont, $error_message);
         } else {
+            $xpos -= strlen($error_message) * $this->small_font_width;
+            
             ImageRectangle($this->img, 0,0,$this->image_width,$this->image_height,ImageColorAllocate($this->img,255,255,255));
-            ImageString($this->img, $this->small_font,1,$ypos,$error_message, ImageColorAllocate($this->img,0,0,0));
+            ImageString($this->img, $this->small_font,$xpos,$ypos,$error_message, ImageColorAllocate($this->img,0,0,0));
         }
 
         $this->PrintImage();
         return true;
     }
 
+    /*!
+     * Private.
+     * Returns an array with the size of the bounding box of an
+     * arbitrarily placed (rotated) TrueType text string.
+     */
     function TTFBBoxSize($size, $angle, $font, $string) {
 
         //Assume angle < 90
@@ -1442,7 +1469,9 @@ class PHPlot {
                $ret_val =  $color_asked;
         } else { // is asking for a color by string
             if(substr($color_asked,0,1) == "#") {  //asking in #FFFFFF format. 
-                $ret_val =  array(hexdec(substr($color_asked,1,2)), hexdec(substr($color_asked,3,2)), hexdec(substr($color,5,2)));
+                // [#790745] 'Hex color problem' fixed. (MBD)
+                $ret_val =  array(hexdec(substr($color_asked,1,2)), hexdec(substr($color_asked,3,2)), 
+                                  hexdec(substr($color_asked,5,2)));
             } else { 
                 $ret_val =  $this->rgb_array[$color_asked];
             }
@@ -2686,7 +2715,16 @@ class PHPlot {
             }
             */
             $this->FindDataLimits();        //Get maxima and minima for scaling
-            
+
+            // Check for empty data sets:
+            if ($this->data_count == 0) {
+                $this->DrawError('Empty data set');
+                if ($this->print_image == 1) { 
+                    $this->PrintImage();
+                }
+                return;
+            }
+
             $this->SetXLabelHeight();       //Get data for bottom/upper margin
 
             $this->SetYLabelWidth();        //Get data for left/right margin
