@@ -41,6 +41,10 @@ class PHPlot{
 	var $y_bot_margin;
 	var $plot_area = array(5,5,600,400);
 	var $x_axis_position = 0;	//Where to draw the X_axis (world coordinates)
+	var $xscale_type = "log";
+	var $yscale_type = "log";
+
+
 //Fonts
 	var $use_ttf  = 0;		  //Use TTF fonts (1) or not (0)
 	var $font = "./benjamingothic.ttf";
@@ -80,7 +84,7 @@ class PHPlot{
 	var $text_color;
 	var $i_light;
 //Data
-	var $data_type = "text-linear"; // text-linear, linear-linear-error, linear-linear, log-linear, log-log, linear-text
+	var $data_type = "text-linear"; // text-linear, linear-linear-error, linear-linear, linear-text
 	var $plot_type= "linepoints";	//bars, lines, linepoints, area, dots, pie
 	var $point_size = 10;
 	var $point_shape = "diamond"; //rect,circle,diamond,triangle,dot,line,halfline
@@ -697,6 +701,15 @@ class PHPlot{
 		if ($ymin == $ymax) {
 			$ymax += 1;
 		}
+		if ($this->yscale_type == "log") { 
+			//extra error checking
+			if ($ymin <= 0) { 
+				$ymin = 1;
+			} 
+			if ($ymax <= 0) { 
+				$this->PrintError('Log plots need data greater than 0');
+			}
+		}
 		$this->plot_min_y = $ymin;
 		$this->plot_max_y = $ymax;
 
@@ -1179,6 +1192,11 @@ class PHPlot{
 
 		while ($y_tmp <= $this->plot_max_y){
 			//$ylab = sprintf("%6.1f %s",$min_y,$si_units[0]);  //PHP2 past compatibility
+			//For log plots: 
+			if (($this->yscale_type == "log") && ($this->plot_min_y == 1) && 
+				($delta_y == 10) && ($y_tmp == 11)) { 
+				$y_tmp = 10; //Set first increment to 9 to get: 1,10,20,30,...
+			}
 			switch ($this->y_grid_label_type) {
 				case "data":
 					$ylab = number_format($y_tmp,$this->y_precision,".",",") . "$this->si_units";
@@ -1229,12 +1247,34 @@ class PHPlot{
 	} // function DrawVerticalTicks
 
 	function SetTranslation() {
-		$this->xscale = ($this->plot_area_width)/($this->plot_max_x - $this->plot_min_x);
-		$this->yscale = ($this->plot_area_height)/($this->plot_max_y - $this->plot_min_y);
+		if ($this->xscale_type == "log") { 
+			$this->xscale = ($this->plot_area_width)/(log10($this->plot_max_x) - log10($this->plot_min_x));
+
+			//echo "DEBUG: $this->xscale = ($this->plot_area_width)/(log10($this->plot_max_x) - log10($this->plot_min_x))<br>";
+			//exit;
+
+		} else { 
+			$this->xscale = ($this->plot_area_width)/($this->plot_max_x - $this->plot_min_x);
+		}
+		if ($this->yscale_type == "log") { 
+			$this->yscale = ($this->plot_area_height)/(log10($this->plot_max_y) - log10($this->plot_min_y));
+			//echo "$this->yscale = ($this->plot_area_height)/(log10($this->plot_max_y) - log10($this->plot_min_y))<br>";
+			//exit;
+		} else { 
+			$this->yscale = ($this->plot_area_height)/($this->plot_max_y - $this->plot_min_y);
+		}
 
 		// GD defines x=0 at left and y=0 at TOP so -/+ respectively
-		$this->plot_origin_x = $this->plot_area[0] - ($this->xscale * $this->plot_min_x);
-		$this->plot_origin_y = $this->plot_area[3] + ($this->yscale * $this->plot_min_y);
+		if ($this->xscale_type == "log") { 
+			$this->plot_origin_x = $this->plot_area[0] - ($this->xscale * log10($this->plot_min_x) );
+		} else { 
+			$this->plot_origin_x = $this->plot_area[0] - ($this->xscale * $this->plot_min_x);
+		}
+		if ($this->yscale_type == "log") { 
+			$this->plot_origin_y = $this->plot_area[3] + ($this->yscale * log10($this->plot_min_y));
+		} else { 
+			$this->plot_origin_y = $this->plot_area[3] + ($this->yscale * $this->plot_min_y);
+		}
 	} // function SetTranslation
 
 	function xtr($x_world) {
@@ -1242,14 +1282,21 @@ class PHPlot{
 	//The pixel coordinates are those of the ENTIRE image, not just the plot_area
 		//$x_pixels =  $this->x_left_margin + ($this->image_width - $this->x_tot_margin)*(($x_world - $this->plot_min_x) / ($this->plot_max_x - $this->plot_min_x)) ;
 		//which with a little bit of math reduces to ...
-		$x_pixels =  $this->plot_origin_x + $x_world * $this->xscale ;
+		if ($this->xscale_type == "log") { 
+			$x_pixels =  $this->plot_origin_x + log10($x_world) * $this->xscale ;
+		} else { 
+			$x_pixels =  $this->plot_origin_x + $x_world * $this->xscale ;
+		}
 		return($x_pixels);
 	}
 
 	function ytr($y_world) {
 		// translate y world coord into pixel coord
-		//$yscale = ($image_height - $y_tot_margin)/($maxy-$miny); // Maximum Height in Screen Units
-		$y_pixels =  $this->plot_origin_y - $y_world * $this->yscale ;  //minus because GD defines y=0 at top. doh!
+		if ($this->yscale_type == "log") { 
+			$y_pixels =  $this->plot_origin_y - log10($y_world) * $this->yscale ;  //minus because GD defines y=0 at top. doh!
+		} else { 
+			$y_pixels =  $this->plot_origin_y - $y_world * $this->yscale ;  
+		}
 		return ($y_pixels);
 	}
 
