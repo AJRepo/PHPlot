@@ -7,8 +7,13 @@
 </head>
 <body>
 
-<?php include("nav.html"); ?>
+<div class="nav"> [ <a href="../doc/index.html">Go to the index</a> ] </div>
 
+<h2>PHPlot test graph form</h2>
+
+<p>Use this form to test many different options of PHPlot. You can test
+every graph type supported for any of four different data types. You can
+tweak as you like or you can leave everything as is and press "Submit" for
 <h2>PHPlot graphic formats test</h2>
 
 <p>
