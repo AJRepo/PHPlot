@@ -29,3 +29,14 @@ h3 { border-bottom: 1px dotted; margin-left:1em;}
 
 img { padding: 0.5em; }
 
+.box { 
+    background-color: #cccccc; 
+    color: #000000; 
+    border:1px solid; 
+    width:75%; 
+    margin:2em;
+    font-size:smaller;
+    }
+    
+pre { font-family: monospace, "white-space" }
+        
