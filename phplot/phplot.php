@@ -16,10 +16,11 @@
  */
 
 
-//PHPLOT Version 4.?.?
-//Requires PHP 4.0.6 or later 
+// PHPLOT Version 4.?.?
+// Requires PHP 4.0.6 or later (CHECK THIS)
 
 error_reporting(E_ALL);
+//require_once('debug.php');
 
 class PHPlot {
 
@@ -778,8 +779,10 @@ class PHPlot {
     function SetDrawXDataLabels($which_dxdl) {
         //XXX: Remove this line afterwards
         $this->draw_x_data_labels = $which_dxdl;
-        if ($which_dxdl)
+        if ($which_dxdl == '1' )
             $this->x_data_label_pos = 'plotdown';
+        else
+            $this->x_data_label_pos = 'none';
             
     }
 
@@ -858,6 +861,9 @@ class PHPlot {
      * Sets the X axis title and position.
      */
     function SetXTitle($which_xtitle, $which_xpos = 'plotdown') {
+    
+        if ($which_xtitle == '')
+            $which_xpos = 'none';
 
         $this->x_title_pos = $which_xpos;
         
@@ -882,6 +888,9 @@ class PHPlot {
      */
     function SetYTitle($which_ytitle, $which_ypos = 'plotleft') {
 
+        if ($which_ytitle == '')
+            $which_ypos = 'none';
+            
         $this->y_title_pos = $which_ypos;
 
         $this->y_title_txt = $which_ytitle;
@@ -1196,7 +1205,7 @@ class PHPlot {
         $this->x_left_margin = $this->safe_margin*2;
         
         if ($this->y_title_pos == 'plotleft' || $this->y_title_pos == 'both')
-            $this->x_left_margin += $this->y_title_width;
+            $this->x_left_margin += $this->y_title_width + $this->safe_margin;
             
         if ($this->y_tick_label_pos == 'plotleft' || $this->y_tick_label_pos == 'both')
             $this->x_left_margin += $this->y_tick_label_width;
@@ -1904,7 +1913,7 @@ class PHPlot {
         } else { 
             $x_pixels =  $this->plot_origin_x + $x_world * $this->xscale ;
         }
-        return($x_pixels);
+        return round($x_pixels);
     }
 
 
@@ -1918,7 +1927,7 @@ class PHPlot {
         } else { 
             $y_pixels =  $this->plot_origin_y - $y_world * $this->yscale ;  
         }
-        return ($y_pixels);
+        return round($y_pixels);
     }
 
 /////////////////////////////////////////////
@@ -2306,7 +2315,7 @@ class PHPlot {
             $style = $this->ndx_light_grid_color;
         }
         
-/* sometimes this overlaps, and maybe it isn't that necessary...        
+/* sometimes this overlaps, and maybe it isn't that necessary...        XXX XXX XXX XXX 
         // Leftmost Tick
         ImageLine($this->img, $this->plot_area[0],
                 $this->plot_area[3]+$this->x_tick_length,
@@ -2958,29 +2967,19 @@ class PHPlot {
      * Draw an area plot. Supported data types:
      *      'text-data'
      *      'data-data'
-     * FIXME: there's a bug with left placement of areas. check the examples
-     * The bug is in min_x calculation in FindDataLimits() or in xtr()
+     * NOTE: This function used to add first and last data values even on incomplete
+     *       sets. That is not the behaviour now. As for missing data in between, 
+     *       there are two posibilities: replace the point with one on the X axis (previous
+     *       way), or forget about it and use the preceding and following ones to draw the polygon.
+     *       There is the possibility to use both, we just need to add the method to set
+     *       it. Something like SetMissingDataBehaviour(), for example.
      */
     function DrawArea() {
     
-        // XXX: shouldn't this be elsewhere? (as in FindDataLimits or sth.?)
-        // text-data must be automatically placed along x-axis, starting at 0.5
-        if ($this->data_type == 'text-data')
-        {
-            $min_x = 0.5;
-            $max_x = $this->max_x + 0.5;
-        } else if ($this->data_type == 'data-data') {
-            $min_x = $this->min_x;
-            $max_x = $this->max_x;
-        }
-            
-        // Calculate initial points
-        for ($i = 0; $i < $this->records_per_group; $i++) {
-            $posarr[$i][] =  $this->xtr($min_x);                    //x initial
-            $posarr[$i][] =  $this->ytr($this->x_axis_position);    //y initial
-        }
-
-        $group = 0;
+        $max_data_colors = count($this->ndx_data_color);
+        $x_axis_pos = $this->ytr($this->x_axis_position);
+        
+        $cnt = 0;
         foreach ($this->data_values as $row) {
             
             // First extract the label
@@ -2990,53 +2989,76 @@ class PHPlot {
            if ($this->data_type == 'data-data') 
                 $x_now = array_shift($row);
             else
-                $x_now = 0.5 + $group++;    // place text-data at X = 0.5, 1.5, 2.5, etc...
+                $x_now = 0.5 + $cnt++;    // place text-data at X = 0.5, 1.5, 2.5, etc...
             
             $x_now_pixels = $this->xtr($x_now);
             
             // Draw X Data labels?
             if ($this->x_data_label_pos != 'none')
                 $this->DrawXDataLabel($lab, $x_now_pixels);
-           
+            
             // Create array of points for imagefilledpolygon()
             $i = 0;
-            foreach ($row as $val) {
-                $y_now_pixels = $this->ytr($val);
-                
-                $posarr[$i][] = $x_now_pixels;
-                $posarr[$i][] = $y_now_pixels;
-                
+            foreach ($row as $y_now) {
+                if (is_numeric($y_now)) {     // If there's missing data do nothing.
+                    $y_now_pixels = $this->ytr($y_now);
+                    $posarr[$i][] = $x_now_pixels;
+                    $posarr[$i][] = $y_now_pixels;
+                    $num_points[$i] = isset($num_points[$i]) ? $num_points[$i]+1 : 1;
+                } else {
+                    // Just to get the idea, see the note above
+                    if (isset ($incomplete_data_defaults_to_x_axis)) {
+                        $posarr[$i][] = $x_now_pixels;
+                        $posarr[$i][] = $x_axis_pos;
+                        $num_points[$i] = isset($num_points[$i]) ? $num_points[$i]+1 : 1;
+                    }
+                }
                 $i++;
-            }
+           }
         }   // end foreach
 
-        //Final_points
         for ($i = 0; $i < $this->records_per_group; $i++) {
-            $posarr[$i][] =  $this->xtr($this->max_x);               //x final
-            $posarr[$i][] =  $this->ytr($this->x_axis_position);     //y final
+            // Prepend initial points. X = first point's X, Y = x_axis_pos
+            $x = $posarr[$i][0];
+            array_unshift($posarr[$i], $x, $x_axis_pos);
+            // Append final points. X = last point's X, Y = x_axis_pos
+            $x = $posarr[$i][count($posarr[$i])-2];
+            array_push($posarr[$i], $x, $x_axis_pos);
+            
+            $num_points[$i] += 2;
         }
-
+        
         // Reset the color index
         $color_index = 0;
-        $max_data_colors = count($this->ndx_data_color);
         
         // Draw the poligons
-        foreach($posarr as $row) {
+        for($cnt = 0; $cnt < $this->records_per_group ; $cnt++) {
             $color_index = $color_index % $max_data_colors;
-            
-            ImageFilledPolygon($this->img, $row, count($row) / 2, $this->ndx_data_color[$color_index]);
-            
+            ImageFilledPolygon($this->img, $posarr[$cnt], $num_points[$cnt], 
+                               $this->ndx_data_color[$color_index]);
             $color_index++;
         }
 
     } // function DrawArea()
 
+
     /*!
-     * Data comes in as $data[] = ("title", x, y, ...);
+     * Draw Lines. Supported data-types:
+     *      'data-data', 
+     *      'text-data'
+     * NOTE: Please see the note regarding incomplete data sets on DrawArea()
+     * NOTE2: I'll remove all this debug crap, I promise. :)
      */
     function DrawLines() {
-    
-        $start_lines = false;
+   
+        // debug stuff
+        //$dbg = new Logger();
+        
+        // This will tell us if lines have already begun to be drawn.
+        // It is an array to keep separate information for every line, for with a single
+        // variable we could sometimes get "undefined offset" errors and no plot...
+        $start_lines = array_fill(0, count($this->data_values[0]) - 1, false);
+        
         $max_data_colors = count($this->ndx_data_color);
         
         // Set line width, revert it to 1, at the end
@@ -3048,6 +3070,7 @@ class PHPlot {
         }
         $cnt = 0;
         foreach ($this->data_values as $row) {
+            //$dbg->write("---- Data Row #$cnt ----\n");
             
             // Reset color index
             $color_index = 0;
@@ -3067,18 +3090,23 @@ class PHPlot {
             if ($this->x_data_label_pos != 'none')
                 $this->DrawXDataLabel($lab, $x_now_pixels);
  
+            //$dbg->write("Current label: $lab, current plot x: $x_now, canvas x = $x_now_pixels.\n");
+            
             $i = 0; 
             foreach ($row as $y_now) {
+                //$dbg->write("  Processing data column for line $i.\n");
                 // Draw Lines
                 if (is_numeric($y_now)) {           //Allow for missing Y data 
-                
                     $y_now_pixels = $this->ytr($y_now);
+                    
+                    //$dbg->write("    Found numeric value: $y_now. Canvas y: $y_now_pixels.\n");
                     
                     $color_index = $color_index % $max_data_colors;
                     
                     $color = $this->ndx_data_color[$color_index];
 
-                    if ($start_lines == true) {
+                    if ($start_lines[$i] == true) {
+                        //$dbg->write("    This line already started, plotting from [".$lastx[$i].",".$lasty[$i]."] to [".$x_now_pixels.",".$y_now_pixels."]\n");
                         if ($this->line_style[$i] == "dashed") {
                             $this->SetDashedStyle($color, '4-3');
                             ImageLine($this->img, $x_now_pixels, $y_now_pixels, $lastx[$i], $lasty[$i], 
@@ -3088,21 +3116,22 @@ class PHPlot {
                                       $color);
                         }
                     }
+                    $lasty[$i] = $y_now_pixels;
                     $lastx[$i] = $x_now_pixels;
+                    $start_lines[$i] = true;
+                    //$dbg->write("    Done with this column, \$lastx[$i] = ".$lastx[$i].", \$lasty[$i] = ".$lasty[$i]."\n");
                 } 
-                // data missing... don't increment lastx[$i]
-                else {  
-                    $y_now_pixels = @ $lasty[$i];       // FIXME: undefined offset...
+                // Y data missing... don't do anything
+                else {
+                    //$dbg->write("    Data for this column missing. \$y_now = $y_now.\n");
                 }
-                $lasty[$i] = $y_now_pixels;
                 $color_index++;
                 $i++;
             }
-            $start_lines = true;
         }   // end while
 
         // Leave it at one, as we'll later draw the legend.
-        imagesetthickness($this->img, 1);                                      
+        imagesetthickness($this->img, 1); 
     } // function DrawLines()
 
         
