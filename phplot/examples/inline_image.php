@@ -1,15 +1,18 @@
 <?php
 ///////////////////////////////////////////////
 //This file is meant only to be called from the
-//testing function quick_start.php. It will fail
-//if called by itself.
+//test page quick_start.php (or test_setup.php)
+//It will fail if called by itself.
 //////////////////////////////////////////////
+
+// From PHP 4.?, register_globals is off, take it into account (MBD)
+
 include('../phplot.php');
 $graph = new PHPlot;
 include('./data.php');
-$graph->SetTitle("$which_title");
+$graph->SetTitle("$_GET[which_title]");
 $graph->SetDataValues($example_data);
 $graph->SetIsInline('1');
-$graph->SetFileFormat("$file_format");
+$graph->SetFileFormat("$_GET[file_format]");
 $graph->DrawGraph();
 ?>
