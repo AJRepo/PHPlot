@@ -787,7 +787,7 @@ class PHPlot {
             $path = $this->ttf_path.'/'.$which_font;
 
             if (! is_file($path) || ! is_readable($path) ) {
-                $this->DrawError("SetFont(): True Type font $path doesn't exist");
+                $this->DrawError("SetFont(): Font $path doesn't exist");
                 return FALSE;
             }
 
@@ -3797,9 +3797,10 @@ class PHPlot {
 
                     //Draw the Value If you want it IN the bar use valign=bottom, 
                     //               if you want it on top use valign=top and push up a bit
-                    if ( $this->y_data_label_pos == 'plotin' ) 
-                        $this->DrawDataLabel('',NULL,$row,$this->data[$row][$record],'',$this->data[$row][$record],
-                                         'left','top',2+($x2-$x1)/2,-10);
+                    //FIXME: if the next bar chart is higher than the number the number is put behind the next bar
+                    if ( $this->y_data_label_pos == 'plotin' && $this->data[$row][$record] != 0 ) 
+                        $this->DrawDataLabel('',NULL,$row+0.5,$this->data[$row][$record],'',$this->data[$row][$record],
+                                         'center','top',$idx*($x2-$x1)/2,-10);
 
                 }
             }   // end for
@@ -3809,6 +3810,7 @@ class PHPlot {
 
     /*!
      * Data comes in as array("title", x, y, y2, y3, ...)
+                    //FIXME: if the next bar chart is higher than the number the number is put behind the next bar
      * \note Original stacked bars idea by Laurent Kruk < lolok at users.sourceforge.net >
      */
     function DrawStackedBars()
