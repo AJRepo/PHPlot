@@ -30,7 +30,7 @@ if ($which_data_type =="function") {
 	$graph = new PHPlot;
 	$graph->SetDataType($which_data_type);  //Must be first thing
 
-	$graph->SetFileFormat("png");
+	//$graph->SetFileFormat("png");
 	$graph->SetDataValues($data);
     $graph->SetImageArea($XSIZE_in, $YSIZE_in);
 

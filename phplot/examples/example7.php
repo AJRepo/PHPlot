@@ -12,7 +12,7 @@ $graph->SetYLabel("Volume");
 $graph->SetVertTickIncrement(20);
 $graph->SetHorizTickIncrement(2679000);
 $graph->SetXTimeFormat("%b %y");
-$graph->SetDataValues($data_level);
+$graph->SetDataValues($example_data);
 $graph->SetPlotType("lines");
 $graph->SetErrorBarShape("line");
 $graph->SetPointShape("halfline");

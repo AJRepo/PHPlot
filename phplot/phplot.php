@@ -344,11 +344,11 @@ class PHPlot{
 	}
 
 	function SetPlotBorderType($which_pbt) {
-		$this->plot_border_type = $which_pbt;
+		$this->plot_border_type = $which_pbt; //left, anything else
 	}
 
 	function SetImageBorderType($which_sibt) {
-		$this->image_border_type = $which_sibt;
+		$this->image_border_type = $which_sibt; //raised, plain
 	}
 
 	function SetDrawXDataLabels($which_dxdl) {
@@ -1051,6 +1051,12 @@ class PHPlot{
 			$this->vert_tick_increment =  ($this->plot_max_y  - $this->plot_min_y  )/10;
 		}
 		$this->num_vert_ticks = ""; //either use num_vert_ticks or vert_tick_increment, not both
+		return true;
+	}
+
+	function SetNumHorizTicks($which_nt) {
+		$this->num_horiz_ticks = $which_nt;
+		$this->horiz_tick_increment = "";  //either use num_horiz_ticks or horiz_tick_increment, not both
 		return true;
 	}
 
