@@ -23,18 +23,28 @@ automatic values.
         
 <tr>
   <td colspan="2">
-  <?php
-      if ($_GET['which_data_type'] == "text-data")
-          include("data_sample1.php"); 
-      elseif ($_GET['which_data_type'] == "data-data")
-          include("data_sample2.php");
-      elseif ($_GET['which_data_type'] == "data-data-error")
-          include("data_sample3.php");
-      elseif ($_GET['which_data_type'] == "function") 
-          include("data_sample4.php");
-      else
-          include("data_sample1.php");
-  ?>
+    <p>
+      Data type: [
+        <a href="format_chart.php?which_data_type=text-data">text-data</a> |
+        <a href="format_chart.php?which_data_type=data-data">data-data</a> |
+        <a href="format_chart.php?which_data_type=function">function</a> |
+        <a href="format_chart.php?which_data_type=data-data-error">data-data-error</a> |
+        <a href="format_chart.php?which_data_type=randfunction">randfunction</a> ]
+    </p>
+    <?php
+        if ($_GET['which_data_type'] == 'text-data')
+            include('data_sample1.php'); 
+        elseif ($_GET['which_data_type'] == 'data-data')
+            include('data_sample2.php');
+        elseif ($_GET['which_data_type'] == 'data-data-error')
+            include('data_sample3.php');
+        elseif ($_GET['which_data_type'] == 'function') 
+            include('data_sample4.php');
+        elseif ($_GET['which_data_type'] == 'randfunction')
+            include('data_sample5.php');
+        else
+            include('data_sample1.php');
+    ?>
   </td>
 </tr>
         <tr><td colspan="2" class="hdr"><input name="submit" type="submit" /></td></tr>

@@ -18,8 +18,8 @@ extract ($_POST, EXTR_OVERWRITE);
 
 //Sample functions
 
-//data-data as a function
-if ($which_data_type =="function") { 
+// data-data as a function
+if ($which_data_type == 'function') { 
 	//Put function here
 	$dx = ".3";
 	$max = 6.4;
@@ -30,22 +30,31 @@ if ($which_data_type =="function") {
 		$data[$i] = array("", $x, $a*sin($x),$a*cos($x),$a*cos($x+1)); 	
 	}
 	$which_data_type = "data-data";
-} 
-// MBD, goes with data_sample3.php, $num_data_rows is set there
+}
+// data-data-error as a random function
+else if ($which_data_type == 'randfunction') {
+    srand ((double) microtime() * 1000000);
+    $a = 9.62;
+    $label[0] = "October"; $label[5] = "Day 5"; $label[10] = "Day 10";
+    $label[15] = "Day 15"; $label[20] = "Day 20"; $label[25] = "Day 25";
+    
+    for ($i = 0; $i <= 30; $i++) {
+        $a += rand(-1, 2);
+        $b = rand(0,1);
+        $c = rand(0,1);
+        $data[] = @ array($label[$i],$i+1,$a,$b,$c);
+    }
+    $which_data_type = 'data-data-error';
+}
+// MBD, this is for data_sample3.php, $num_data_rows is set there
 else if ($which_data_type == 'data-data-error') {
-    for ($i = 0; $i < $num_data_rows; $i++)
+    for ($i = 0; $i < $num_data_rows; $i++) {
         eval ("\$data[\$i] = \$data_row$i; ");
-/*        
-    header("Content: text/html");
-    echo "<pre>";
-    print_r ($data);
-    echo "</pre>";
-*/    
+    }      
 } else { 
-	while (list($key, $val) = each($data_row0)) {
-		$data[$key] = array($data_row0[$key],$data_row1[$key],$data_row2[$key],$data_row3[$key],$data_row4[$key]); 	
+    foreach($data_row0 as $key=>$val) {
+		$data[$key] = array($data_row0[$key],$data_row1[$key],$data_row2[$key],$data_row3[$key],$data_row4[$key]);
 	}
-
 }
 
 
@@ -99,6 +108,9 @@ else if ($which_data_type == 'data-data-error') {
         $graph->SetDrawXGrid(TRUE);
         $graph->SetDrawYGrid(TRUE);
         break;
+    case 'none':
+        $graph->SetDrawXGrid(FALSE);
+        $graph->SetDrawYGrid(FALSE);
     }    
     
     $graph->SetXTickLabelPos($which_xtick_label_pos);
