@@ -86,6 +86,7 @@ class PHPlot {
     var $plot_bg_color;
     var $grid_color;
     var $light_grid_color;
+    var $very_light_grid_color;             // TODO: to be used by DrawDataLabels()'s lines
     var $tick_color;
     var $title_color;
     var $label_color;
@@ -97,7 +98,7 @@ class PHPlot {
 //Data
     var $data_type = 'text-data';           // text-data, data-data-error, data-data 
     var $plot_type= 'linepoints';           // bars, lines, linepoints, area, points, pie, thinbarline
-    var $line_width = 1;
+    var $line_width = 1;                    // TODO: remove, use setimagethickness()
     var $line_style = NULL;                 // array, 'solid' or 'dashed' lines
     
     var $data_color = NULL;                 // array, to be set by the constructor
@@ -111,7 +112,7 @@ class PHPlot {
     var $point_shape = 'diamond';           // rect, circle, diamond, triangle, dot, line, halfline
     var $error_bar_shape = 'tee';           // 'tee' or 'line'
     var $error_bar_size = 5;                // right left size of tee
-    var $error_bar_line_width = '';         // If set, then use it, else use $line_width for thickness
+    var $error_bar_line_width = '';         // If set, then use it, else use $line_width for thickness (TODO:remove, see above)
     var $error_bar_color = ''; 
     var $data_values;
     var $data_count;
@@ -131,14 +132,6 @@ class PHPlot {
     var $x_precision = '1';
     var $si_units = '';
 
-//Labels
-    var $draw_plot_labels = 0;              // Draw Labels next to datapoints
-    var $draw_x_data_labels = '';           // Draw X Labels (after datapoint values) [0,1, '' = let program decide]
-
-    var $legend = '';                       // An array with legend titles
-    var $legend_x_pos = '';
-    var $legend_y_pos = '';
-
 // Titles
     var $title_txt = '';
     
@@ -147,8 +140,32 @@ class PHPlot {
     
     var $y_title_txt = '';
     var $y_title_pos = 'plotleft';          // plotleft, plotright, both, none
+
+
+//Labels
+    // There are two types of labels in PHPlot:
+    //      Tick labels: they follow the grid, next to ticks in axis.   (DONE)
+    //                   they are drawn at grid drawing time, by DrawXTicks() and DrawYTicks()
+    //      Data labels: they follow the data points, and can be placed on the axis or the plot (x/y)  (TODO)
+    //                   they are drawn at graph plotting time, by DrawDataLabel(), called by DrawLines(), etc.
+    //                   DrawDataLabel() also draws H/V lines to datapoints depending on draw_*_data_label_line
     
-//DataAxis Labels (on each axis)
+    var $draw_x_data_labels = '';           // Draw X Labels (after datapoint values) [0,1, '' = let program decide]
+
+    // Data Labels: TODO (MBD)
+    var $x_data_label_pos = 'plotdown';     // plotdown, plotup, updown, plot, all, none
+    var $y_data_label_pos = 'plotleft';     // plotleft, plotright, updown, plot, all, none
+   
+    var $draw_x_data_label_line = 1;        // Draw a line from the data point to the axis? TODO (MBD)
+    var $draw_y_data_label_line = 1;
+    
+    var $legend = '';                       // An array with legend titles
+    var $legend_x_pos = '';
+    var $legend_y_pos = '';
+
+    
+    // Tick Labels
+    // TODO: rename *_tick_label_type to *_label_type (they're to be used by data labels too)
     var $x_tick_label_type = 'data';        // data, title, time, other, none
     var $x_tick_label_pos = 'plotdown';     // plotdown, plotup, both, none
 
@@ -167,11 +184,11 @@ class PHPlot {
     
     var $num_y_ticks = '';
     var $y_tick_increment='';               // Set num_y_ticks or y_tick_increment, not both.
-    var $y_tick_pos = 'plotleft';      // plotright, plotleft,both, yaxis, none (MBD)
+    var $y_tick_pos = 'plotleft';           // plotright, plotleft,both, yaxis, none (MBD)
     
     var $num_x_ticks='';
     var $x_tick_increment='';               // Set num_x_ticks or x_tick_increment, not both.
-    var $x_tick_pos = 'plotdown';      // plotdown, plotup, both, none (MBD)
+    var $x_tick_pos = 'plotdown';           // plotdown, plotup, both, none (MBD)
     
     var $skip_top_tick = '0';
     var $skip_bottom_tick = '0';
@@ -447,7 +464,7 @@ class PHPlot {
             $this->legend = $which_leg;
             return true;
         } else { 
-            $this->DrawError('Error: SetLegend argument must be an array');
+            $this->DrawError('SetLegend(): Argument must be an array.');
             return false;
         }
     }
@@ -723,22 +740,32 @@ class PHPlot {
     }
 
     /*!
-     * Draw Labels next to datapoints
+     * Draw Labels (not grid labels) on X Axis, following data points
+     * Care must be taken not to draw these and x_tick_labels as they'd probably overlap.
+     *
+     * \deprecated Use SetDataLabelParams() instead
      */
-    function SetDrawPlotLabels($which_ddl) {
-        $this->draw_plot_labels = $which_ddl;  // 1=true or anything else=false
+    function SetDrawXDataLabels($which_dxdl) {
+        //XXX: Remove this line afterwards
+        $this->draw_x_data_labels = $which_dxdl;
+        if ($which_dxdl)
+            $this->x_data_label_pos = 'plotdown';
+            
     }
 
     /*!
-     * Draw Labels (not grid labels) on X Axis, following data points
-     * Care must be taken not to draw these and x_tick_labels as they'd probably overlap.
+     * Sets parameters for Data labels (labels following data points)
      */
-    function SetDrawXDataLabels($which_dxdl) {
-        $this->draw_x_data_labels = $which_dxdl;  // 1=true or anything else=false
+    function SetDataLabelParams($which_xpos, $which_ypos, $which_xtype, $which_ytpe) {
+        $this->x_data_label_pos = $which_xpos;
+        $this->y_data_label_pos = $which_ypos;
+        // XXX: this left so for later replacement by x_label_type and y_label_type
+        $this->x_tick_label_type = $which_xtype;
+        $this->y_tick_label_type = $which_ytype;
     }
 
-    /*
-     * Sets parameters for Tick labels (data labels next to axis ticks)
+    /*!
+     * Sets parameters for Tick labels (labels next to axis ticks, following the grid subdivisions)
      */
      function SetTickLabelParams($which_xpos, $which_ypos, $which_xtype, $which_ytype) {
         $this->x_tick_label_pos = $which_xpos;
@@ -982,17 +1009,26 @@ class PHPlot {
                 $maxx = $this->number_x_points - 1 ;  //valid for BAR TYPE GRAPHS ONLY
                 $miny = (double) $this->data_values[0][1];
                 $maxy = $miny;
+                // Automagically decide whether to show data labels or not
+                // ie: never if tick labels are to be shown
+                if ($this->x_tick_label_pos != 'none')
+                    $this->x_data_label_pos == 'none';
+                    
+                if ($this->y_tick_label_pos != 'none')
+                    $this->y_data_label_pos == 'none';
+/* XXX: REMOVE ME                    
                 if ($this->draw_x_data_labels == '') { 
                     $this->draw_x_data_labels = 0;
                 }
-            break;
+*/                
+                break;
             default:  //Everything else: data-data, etc.
                 $maxx = $this->data_values[0][1];
                 $minx = $maxx;
                 $miny = $this->data_values[0][2];
                 $maxy = $miny;
                 $maxy = $miny;
-            break;
+                break;
         }
 
         $max_records_per_group = 0;
@@ -1343,20 +1379,23 @@ class PHPlot {
     }
 
 
-
+    /*!
+     *  text-data: ('label', y1, y2, y3, ...)
+     *  data-data: ('label', x, y1, y2, y3, ...)
+     *  data-data-error: ('label', x1, y1, e1+, e2-, y2, e2+, e2-, y3, e3+, e3-, ...)
+     */
     function SetDataType($which_dt) {
         //The next three lines are for past compatibility.
         if ($which_dt == "text-linear") { $which_dt = "text-data"; };
         if ($which_dt == "linear-linear") { $which_dt = "data-data"; };
         if ($which_dt == "linear-linear-error") { $which_dt = "data-data-error"; };
 
-        $this->data_type = $which_dt; //text-data, data-data, data-data-error
+        $this->data_type = $which_dt;
         return true;
     }
 
     function SetDataValues($which_dv) {
         $this->data_values = $which_dv;
-//echo $this->data_values
         return true;
     }
     
@@ -2311,8 +2350,10 @@ class PHPlot {
     /*!
      * [ MBD mié nov 19 19:34:11 CET 2003 ]
      */
-    function FormatTickLabel($which_axis, $which_lab) { 
-        if ($which_axis == 'x') {
+    function FormatTickLabel($which_kind, $which_lab) { 
+
+        switch ($which_kind) {
+        case 'x':
             switch ($this->x_tick_label_type) {
                 case "title":
                     $lab = $this->data_values[$which_lab][0];
@@ -2331,8 +2372,9 @@ class PHPlot {
                     // FIXME!
                     $lab = $which_lab; //$this->plot_min_x;
                 break;
-            }
-        } else if ($which_axis == 'y') {
+            }    
+            break;
+        case 'y':
             switch ($this->y_tick_label_type) {
                 case "data":
                     $lab = number_format($which_lab, $this->y_precision,".",",") . "$this->si_units";
@@ -2343,19 +2385,26 @@ class PHPlot {
                 case "time":
                     $lab = strftime($this->y_time_format, $which_lab);
                     break;
-                case "right":
-                    //Make it right aligned
-                    $lab = str_pad($which_lab,$this->y_margin_width," ",STR_PAD_LEFT);
-                    break;
                 default:
                     //Unchanged from whatever format is passed in
                     $lab = $which_lab;
                     break;
             }
-        }
+            break;
+        case 'plot':
+            switch ($this->plot_label_type) {
+                case '':
+                case '':
+                default:
+                    break;
+            }
+            default;
+        default:
+            $this->PrintError("FormatTickLabel(): Unknown label type $which_type");
+            return NULL;
+        } 
         
         return($lab);
-
     } //function FormatTickLabel
 
    
@@ -2365,11 +2414,17 @@ class PHPlot {
      * should be taken not to draw both, as they'd probably overlap.
      * Calling of this function in DrawLines(), etc is triggered by draw_datalabels
      */
-    function DrawXDataLabel($xlab,$xpos) {
+    function DrawXDataLabel($xlab, $xpos) {
+//        if ($this->x_tick_pos... //AQUI
         $this->DrawText($this->x_label_font, $this->x_label_angle, $xpos, $this->plot_area[3], 
                         $this->ndx_text_color, $xlab, 'center', 'bottom');
     }
-    
+
+/*    
+    function DrawPlotLabel($xlab, $xpos, $ypos) {
+        $this->DrawText($this->x_label_font, $this->x_label_angle, $xpos, $this
+*/
+
     /*!
      * Draws the graph legend
      *
@@ -2526,159 +2581,250 @@ class PHPlot {
 
     }
 
+    /*!
+     * Draw lines with error bars - data comes in as 
+     *      array("label", x, y, error+, error-, y2, error2+, error2-, ...);
+     * FIXME FIXME: There's a bug with multiple lines...
+     */
     function DrawLinesError() {
-        //Draw Lines with Error Bars - data comes in as array("title",x,y,error+,error-,y2,error2+,error2-,...);
-        $start_lines = 0;
-
-        reset($this->data_values);
-        while (list(, $row) = each($this->data_values)) {
+    
+        $start_lines = FALSE;
+        
+        $max_data_colors = count($this->ndx_data_color);
+        
+        foreach($this->data_values as $row) {
+            
             $color_index = 0;
-            $i = 0;
 
+            // First extract the text label
+            $lab = array_shift($row);
+            
+            // Do we have a value for X?
+            if ($this->data_type == 'data-data-error')
+                $x_now = array_shift($row);
+            else if ($this->data_type == 'text-data')
+                $x_now = 0.5;     // World coordinates for first automatically placed point 
+            else
+                $this->DrawError("DrawLinesError(): Data type '$this->data_type' not supported.");
+                
+            // Absolute coordinates:
+            $x_now_pixels = $this->xtr($x_now);
+                
+            // Draw X data label/line?:
+            if ($this->x_data_label_pos != 'none')
+               $this->DrawXDataLabel($lab, $x_now_pixels);
+               
+            // Now go for Y, E+, E-
+            
+            // Would this be faster? Would the gain be significant?
+            // foreach($row as $val) {
+            // if ($i == 0)...
+            // if ($i == 1)...
+            // if ($i == 2)...
+            // $i = $i%3;
+            // }
+            $i = 0;
             while (list($key, $val) = each($row)) {
-                if ($key == 0) {
-                    $lab = $val;
-                } elseif ($key == 1) {
-                    $x_now = $val;
-                    $x_now_pixels = $this->xtr($x_now); //Use a bit more memory to save 2N operations.
-                } elseif ($key%3 == 2) {
+                // Y
+                if ($key%3 == 0) {
                     $y_now = $val;
                     $y_now_pixels = $this->ytr($y_now);
 
-                    //Draw Data Label
-                    if ( $this->draw_plot_labels == 1) {
-                        // TODO: Check if this works (MBD)
-                        $this->DrawText($this->generic_font, 0, $x_now, $y_now, $this->ndx_text_color,
-                                        $lab, 'center', 'top');
-                    }
-
-                    if ($color_index >= count($this->ndx_data_color)) { $color_index=0;};
+                    $color_index = $color_index % $max_data_colors;
+                        
                     $barcol = $this->ndx_data_color[$color_index];
                     $error_barcol = $this->ndx_error_bar_color[$color_index];
 
-                    if ($start_lines == 1) {
-                        for ($width = 0; $width < $this->line_width; $width++) {
-                            ImageLine($this->img, $x_now_pixels, $y_now_pixels + $width,
-                                $lastx[$i], $lasty[$i] + $width, $barcol);
-                        }
+                    if ($start_lines) {
+                        imagesetthickness($this->img, $this->line_width);
+                        ImageLine($this->img, $x_now_pixels, $y_now_pixels, $lastx[$i], $lasty[$i], $barcol);
+                        ImageSetThickness($this->img, 1);   // Revert to original state (for data label lines).
                     }
-
+                    
                     $lastx[$i] = $x_now_pixels;
                     $lasty[$i] = $y_now_pixels;
                     $color_index++;
                     $i++;
-                    $start_lines = 1;
-                } elseif ($key%3 == 0) {
-                    $this->DrawYErrorBar($x_now,$y_now,$val,$this->error_bar_shape,$error_barcol);
-                } elseif ($key%3 == 1) {
-                    $this->DrawYErrorBar($x_now,$y_now,-$val,$this->error_bar_shape,$error_barcol);
+                } 
+                // Error+
+                elseif ($key%3 == 1) {
+                    $this->DrawYErrorBar($x_now, $y_now, $val, $this->error_bar_shape, $error_barcol);
+                } 
+                // Error-
+                elseif ($key%3 == 2) {
+                    $this->DrawYErrorBar($x_now, $y_now, -$val, $this->error_bar_shape, $error_barcol);
                 }
-            }
-        }
-    }
+            }   // end while
+            $start_lines = TRUE;   // Tells us if we already drew the first column of points, 
+                                   // thus having $lastx and $lasty ready for the next column.
+        }   // end foreach
+    }   // function DrawErrorLines()
 
+
+    /*!
+     * Supported data format: data-data-error 
+     * ( data comes in as array("title",x,y,error+,error-,y2,error2+,error2-,...) )
+     */
     function DrawDotsError() {
-        //Draw Dots - data comes in as array("title",x,y,error+,error-,y2,error2+,error2-,...);
-        reset($this->data_values);
-        while (list(, $row) = each($this->data_values)) {
+       
+        $max_data_colors = count($this->ndx_data_color);
+        
+        foreach ($this->data_values as $row) {
+        
+            // First extract the label
+            $lab = array_shift($row);
+           
+            // Do we have a value for X?
+            if ($this->data_type == 'data-data-error') {
+                // Read it
+                $x_now = array_shift($row);
+                
+                // Draw X data labels?
+                if ($this->x_data_label_pos != 'none') {
+                    $x_now_pixels = $this->xtr($x_now);
+                    $this->DrawXDataLabel($lab, $x_now_pixels);
+                }                    
+            } else {
+                // TODO? Add 'text-data-error' ? What purpose could that serve?
+                $this->DrawError("DrawDotsError(): Data type '$this->data_type' not supported for this plot.");
+            }
+            
+            // Reset color index 
             $color_index = 0;
-            //foreach ($row as $v) 
+            
             while (list($key, $val) = each($row)) {
-                if ($key == 0) {
-                } elseif ($key == 1) {
-                    $xpos = $val;
-                } elseif ($key%3 == 2) {
-                    if ($color_index >= count($this->ndx_data_color)) $color_index=0;
+                if ($key%3 == 0) {
+                    $color_index = $color_index % $max_data_colors;
+                    
                     $barcol = $this->ndx_data_color[$color_index];
                     $error_barcol = $this->ndx_error_bar_color[$color_index];
-                    $ypos = $val;
 
+                    $y_now = $val;
+                    $this->DrawDot($x_now, $y_now, $this->point_shape, $barcol);
+                    
                     $color_index++;
-                    $this->DrawDot($xpos,$ypos,$this->point_shape,$barcol);
-                } elseif ($key%3 == 0) {
-                    $this->DrawYErrorBar($xpos,$ypos,$val,$this->error_bar_shape,$error_barcol);
                 } elseif ($key%3 == 1) {
-                    $mine = $val ;
-                    $this->DrawYErrorBar($xpos,$ypos,-$val,$this->error_bar_shape,$error_barcol);
+                    $this->DrawYErrorBar($x_now,$y_now, $val, $this->error_bar_shape, $error_color);
+                } elseif ($key%3 == 2) {
+                    $this->DrawYErrorBar($x_now, $y_now, -$val, $this->error_bar_shape, $error_color);
                 }
             }
         }
+    } // function DrawDotsError()
 
-    }
-
+    /*
+     * Supported data types: 
+     *  - data-data ("title", x, y1, y2, y3, ...)
+     *  - text-data ("title", y1, y2, y3, ...)
+     */
     function DrawDots() {
-        //Draw Dots - data comes in as array("title",x,y1,y2,y3,...);
-        reset($this->data_values);
-        while (list($j, $row) = each($this->data_values)) {
-            $color_index = 0;
-            //foreach ($row as $v) 
-            while (list($k, $v) = each($row)) {
-                if ($k == 0) {
-                } elseif (($k == 1) && ($this->data_type == "data-data"))  { 
-                    $xpos = $v;
-                } else {
-                    if ($this->data_type == "text-data") { 
-                        $xpos = ($j+.5); 
-                    } 
-                    if ($color_index >= count($this->ndx_data_color)) $color_index=0;
-                    $barcol = $this->ndx_data_color[$color_index];
+    
+        // FIXME: What's wrong with these?
+        //if ($this->data_type != "data-data" || $this->data_type != "text-data")
+        //    $this->DrawError("DrawDots(): Data type '$this->data_type' not supported for this plot.");
+            
+        $i = 0; 
+        $max_data_colors = count($this->ndx_data_color);
+        foreach ($this->data_values as $row) {
 
-                    //if (is_numeric($v))  //PHP4 only
-                    if ((strval($v) != "") ) {   //Allow for missing Y data 
-                        $this->DrawDot($xpos,$v,$this->point_shape,$barcol);
-                    }
-                    $color_index++;
-                }
+            // Reset color index
+            $color_index = 0;
+            
+            // First extract the label
+            $lab = array_shift($row);
+            
+            // Do we have a value for 'X'?
+            if ($this->data_type == 'data-data') 
+                $x_now = array_shift($row);
+            else
+                $x_now = 0.5 + $i++;    // place text-data at X = 0.5, 1.5, 2.5, etc...
+            
+            $x_now_pixels = $this->xtr($x_now);
+            
+            // Draw X Data labels?
+            if ($this->x_data_label_pos != 'none')
+                $this->DrawXDataLabel($lab, $x_now_pixels);
+            
+            // Proceed with Y values
+            foreach ($row as $val) {
+                $color_index = $color_index % $max_data_colors;
+                
+                if (is_numeric($val))   //Allow for missing Y data 
+                    $this->DrawDot($x_now, $val, $this->point_shape, $this->ndx_data_color[$color_index]);
+                    
+                $color_index++;
             }
         }
-
     } //function DrawDots
 
-    function DrawDotSeries() {
-        //Depreciated: Use DrawDots
-        $this->DrawDots();
-    }
 
+    /*!
+     * A clean,fast routine for when you just want charts like stock volume charts
+     * Data must be data-data since I didn't see a graphing need for equally spaced thin lines. 
+     * If you want it, then submit a feature request at 
+     * http://sourceforge.net/projects/phplot/ or write to afan@jeo.net and we might add it
+     */
     function DrawThinBarLines() {
-        //A clean,fast routine for when you just want charts like stock volume charts
-        //Data must be text-data since I didn't see a graphing need for equally spaced thin lines. 
-        //If you want it - then write to afan@jeo.net and I might add it. 
 
-        if ($this->data_type != "data-data") { $this->DrawError('Data Type for ThinBarLines must be data-data'); };
+        //FIXME: Again, what's wrong with this check?
+        //if ($this->data_type != "data-data") 
+        //    $this->DrawError("DrawThinBarLines(): Data type '$this->data_type' not supported for this plot.");
+            
         $y1 = $this->ytr($this->x_axis_position);
 
-        reset($this->data_values);
-        while (list(, $row) = each($this->data_values)) {
+        $max_data_colors = count($this->ndx_data_color);
+        
+        foreach ($this->data_values as $row) {
+        
+            // Reset color index
             $color_index = 0;
-            while (list($k, $v) = each($row)) {
-                if ($k == 0) {
-                        $xlab = $v;
-                } elseif ($k == 1) {
-                    $xpos = $this->xtr($v);
-                    if ( ($this->draw_x_data_labels == 1) )  { //See "labels_note1 above.
-                        $this->DrawXDataLabel($xlab,$xpos);
-                    }
-                } else {
-                    if ($color_index >= count($this->ndx_data_color)) $color_index=0;
-                    $barcol = $this->ndx_data_color[$color_index];
-
-                    ImageLine($this->img,$xpos,$y1,$xpos,$this->ytr($v),$barcol);
+            
+            // First extract the label
+            $lab = array_shift($row);
+            
+            // Do we have a value for 'X'?
+            if ($this->data_type == 'data-data') 
+                $x_now = array_shift($row);
+            else
+                $x_now = 0.5 + $i++;    // place text-data at X = 0.5, 1.5, 2.5, etc...
+            
+            $x_now_pixels = $this->xtr($x_now);
+            
+            // Draw X Data labels?
+            if ($this->x_data_label_pos != 'none')
+                $this->DrawXDataLabel($lab, $x_now_pixels);
+            
+            foreach ($row as $val) {
+                    $color_index = $color_index % $max_data_colors;
+                    
+                    // Draws a line from user defined x axis position up to ytr($val)
+                    ImageLine($this->img, $x_now_pixels, $y1, $x_now_pixels, $this->ytr($val),
+                              $this->ndx_data_color[$color_index]);
+                    
                     $color_index++;
-                }
             }
         }
-
     }  //function DrawThinBarLines
 
-    function DrawYErrorBar($x_world,$y_world,$error_height,$error_bar_type,$color) {
+    /*!
+     *
+     */
+    // TODO TODO: add a parameter to show datalabels next to error bars?
+    function DrawYErrorBar($x_world, $y_world, $error_height, $error_bar_type, $color) {
+
+        /* TODO??? sth like this.
+        if ($this->x_data_label_pos == 'plot') {
+            $this->DrawText($this->error_font, 90, $x1, $y2, 
+                            $color, $label, 'center', 'top');
+        */
+        
         $x1 = $this->xtr($x_world);
         $y1 = $this->ytr($y_world);
         $y2 = $this->ytr($y_world+$error_height) ;
 
-        for ($width = 0; $width < $this->error_bar_line_width; $width++) {
-            ImageLine($this->img, $x1+$width, $y1 , $x1+$width, $y2, $color);
-            ImageLine($this->img, $x1-$width, $y1 , $x1-$width, $y2, $color);
-        }
+        ImageSetThickness($this->img, $this->error_bar_line_width);
+        ImageLine($this->img, $x1, $y1 , $x1, $y2, $color);
+        
         switch ($error_bar_type) {
             case "line":
                 break;
@@ -2692,6 +2838,9 @@ class PHPlot {
         return true;
     }
 
+    /*!
+     * Draws a styled dot. Uses world coordinates, not absolute
+     */
     function DrawDot($x_world,$y_world,$dot_type,$color) {
         $half_point = $this->point_size / 2;
         $x1 = $this->xtr($x_world) - $half_point;
@@ -2717,7 +2866,6 @@ class PHPlot {
                 ImageFillToBorder($this->img, $x1 + $half_point, $y1 + $half_point, $color, $color);
                 break;
             case "diamond":
-
                 $arrpoints = array(
                     $x1,$y1 + $half_point,
                     $x1 + $half_point, $y1,
@@ -2741,10 +2889,14 @@ class PHPlot {
         return true;
     }
 
+    /*!
+     * Data comes in as $data[]=("title",x,y,...);
+     * Set first and last datapoints of area
+     * FIXME: there's a bug with left placement of areas. check the examples
+     */
     function DrawArea() {
-        //Data comes in as $data[]=("title",x,y,...);
-        //Set first and last datapoints of area
         $i = 0;
+        
         while ($i < $this->records_per_group) {
             $posarr[$i][] =  $this->xtr($this->min_x);    //x initial
             $posarr[$i][] =  $this->ytr($this->x_axis_position);     //y initial
@@ -2754,6 +2906,7 @@ class PHPlot {
         reset($this->data_values);
         while (list($j, $row) = each($this->data_values)) {
             $color_index = 0;
+            
             //foreach ($row as $v)
             while (list($k, $v) = each($row)) {
                 if ($k == 0) {
@@ -2805,6 +2958,8 @@ class PHPlot {
 
         reset($this->data_values);
         while (list($j, $row) = each($this->data_values)) {
+
+        
             $color_index = 0;
             //foreach ($row as $v)
             while (list($k, $v) = each($row)) {
@@ -2968,7 +3123,7 @@ class PHPlot {
 
                         ImageFilledRectangle($this->img, $x1, $y1, $x2, $y2, $barcol);
                         ImageRectangle($this->img, $x1, $y1, $x2, $y2, $bordercol);
-                        if ($this->draw_plot_labels == '1') { // ajo
+                        if ($this->draw_x_data_labels == '1') { // ajo
                             $y1 = $this->ytr($this->label_scale_position * $v);
                             $this->DrawText($this->x_title_font, $this->x_title_angle,
                                 $x1+$this->record_bar_width/2, $y1, $this->ndx_title_color, 
@@ -3097,7 +3252,7 @@ class PHPlot {
                     }
                     break;
                 case "pie":
-                    // Pie charts can maximize image space usage
+                    // Pie charts can maximize image space usage. (MBD)
                     $this->SetPlotAreaPixels($this->safe_margin, $this->title_height,
                                              $this->image_width - $this->safe_margin,
                                              $this->image_height - $this->safe_margin);
@@ -3329,6 +3484,13 @@ class PHPlot {
         return true;
     }
     
+    /*!
+     * Deprecated: Use DrawDots
+     */
+    function DrawDotSeries() {
+        $this->DrawDots();
+    }
+
 
 }  // class PHPlot
 
