@@ -57,7 +57,8 @@ class PHPlot {
     var $use_ttf  = false;              // Use True Type Fonts?
     var $ttf_path = '.';                // Default path to look in for TT Fonts. (MBD)
     var $default_ttfont = 'benjamingothic.ttf';
-    
+    var $line_spacing = 4;              // Pixels between lines.
+
     // These are hashes with keys 'font', 'size', 'width', and 'height'
     // You need only to worry about SetFont() usage
     var $generic_font;
@@ -73,7 +74,7 @@ class PHPlot {
     var $x_label_angle = 0;
     var $x_title_angle = 0;                 // This shouldn't be changed!
     var $y_title_angle = 90;                // Nor this.
-    
+
 //Formats
     var $file_format = 'png';
     var $output_file = '';                  // For output to a file instead of stdout
@@ -211,7 +212,7 @@ class PHPlot {
         
         $this->SetRGBArray($this->color_array); 
         
-        $this->background_done = false; //Set to 1 after background image first drawn
+        $this->background_done = false;     // Set to true after background image first drawn
 
         if ($which_output_file != "")
             $this->SetOutputFile($which_output_file);
@@ -221,8 +222,11 @@ class PHPlot {
         else {
             $this->image_width = $which_width;
             $this->image_height = $which_height;
+    
+            $this->img = ImageCreate($this->image_width, $this->image_height);
+            if (! $this->img)
+                $this->PrintError("PHPlot(): Could not create image resource");
 
-            $this->InitImage();
         }
 
         // For sessions
@@ -257,40 +261,365 @@ class PHPlot {
         return;
     }
 
-    /*! 
-     * Set up the image resource 'img'
+ 
+/////////////////////////////////////////////    
+//////////////                         COLORS
+/////////////////////////////////////////////
+
+    /*!
+     * Internal Method called to set colors and preserve state
+     * These are the colors of the image that are used. They are initialized
+     * to work with sessions and PHP. 
      */
-    function InitImage() {
-        //if ($this->img) { 
-        //    ImageDestroy($this->img);
-        //}
-        $this->img = ImageCreate($this->image_width, $this->image_height);
-        if (! $this->img)
-            $this->PrintError("InitImage(): Could not create image resource");
+    function SetIndexColors() { 
+        $this->ndx_i_light = $this->SetIndexColor($this->i_light);
+        $this->ndx_i_dark  = $this->SetIndexColor($this->i_dark);
+        $this->ndx_bg_color= $this->SetIndexColor($this->bg_color);
+        $this->ndx_plot_bg_color= $this->SetIndexColor($this->plot_bg_color);
+
+        $this->ndx_title_color= $this->SetIndexColor($this->title_color);
+        $this->ndx_tick_color= $this->SetIndexColor($this->tick_color);
+        $this->ndx_title_color= $this->SetIndexColor($this->label_color);
+        $this->ndx_text_color= $this->SetIndexColor($this->text_color);
+        $this->ndx_light_grid_color= $this->SetIndexColor($this->light_grid_color);
+        $this->ndx_grid_color= $this->SetIndexColor($this->grid_color);
+
+        unset($ndx_error_bar_color);
+        $i = 0; 
+        foreach($this->error_bar_color as $col) {
+          $this->ndx_error_bar_color[$i] = $this->SetIndexColor($col);
+            $i++;
+        }
+        
+        unset($ndx_data_border_color);
+        $i = 0;
+        foreach($this->data_border_color as $col) {
+            $this->ndx_data_border_color[$i] = $this->SetIndexColor($col);
+            $i++;
+        }
+        
+        unset($ndx_data_color);
+        $i = 0;
+        foreach ($this->data_color as $col) {
+            $this->ndx_data_color[$i] = $this->SetIndexColor($col);
+            $i++;
+        }
+        // MBD: testing
+        unset ($ndx_data_dark_color);
+        $i = 0;
+        foreach ($this->data_color as $col)
+            $this->ndx_data_dark_color[$i++] = $this->SetIndexDarkColor($col);
+            
         return true;
     }
 
+
     /*!
-     *  Submitted by Thiemo Nagel
+     * Sets/reverts all colors
      */
-    function SetBrowserCache($which_browser_cache) {
-        $this->browser_cache = $which_browser_cache;
+    function SetDefaultColors() {
+        $this->i_light = array(194, 194, 194);
+        $this->i_dark =  array(100, 100, 100);
+        $this->SetPlotBgColor(array(222, 222, 222));
+        $this->SetBackgroundColor(array(200, 222, 222)); //can use rgb values or "name" values
+        $this->SetLabelColor('black');
+        $this->SetTextColor('black');
+        $this->SetGridColor('black');
+        $this->SetLightGridColor(array(175, 175, 175));
+        $this->SetTickColor('black');
+        $this->SetTitleColor(array(0, 0, 0)); // Can be array or name
+        $this->data_color = array('blue', 'green', 'yellow', 'red', 'orange', 'SkyBlue', 'violet',
+                                  'azure1', 'YellowGreen', 'gold', 'orchid', 'maroon', 'plum');
+        $this->error_bar_color = array('blue', 'green', 'yellow', 'red', 'orange', 'SkyBlue', 'violet',
+                                  'azure1', 'YellowGreen', 'gold', 'orchid', 'maroon', 'plum');
+        $this->data_border_color = array('black');
+
+        $this->session_set = 1;          //Mark it down for PHP session() usage.
+    }
+
+
+    function SetBackgroundColor($which_color) {
+        $this->bg_color= $which_color;
+        $this->ndx_bg_color= $this->SetIndexColor($which_color);
+        return true;
+    }
+    
+    function SetPlotBgColor($which_color) {
+        $this->plot_bg_color= $which_color;
+        $this->ndx_plot_bg_color= $this->SetIndexColor($which_color);
         return true;
     }
 
-    /*!
-     * Whether to show the final image or not
-     * MBD: uh? what for?
-     */
-    function SetPrintImage($which_pi) {
-        $this->print_image = $which_pi;
+    function SetTitleColor($which_color) {
+        $this->title_color= $which_color;
+        $this->ndx_title_color= $this->SetIndexColor($which_color);
         return true;
     }
+
+    function SetTickColor ($which_color) {
+        $this->tick_color= $which_color;
+        $this->ndx_tick_color= $this->SetIndexColor($which_color);
+        return true;
+    }
+
+    function SetLabelColor ($which_color) {
+        $this->label_color= $which_color;
+        $this->ndx_title_color= $this->SetIndexColor($which_color);
+        return true;
+    }
+
+    function SetTextColor ($which_color) {
+        $this->text_color= $which_color;
+        $this->ndx_text_color= $this->SetIndexColor($which_color);
+        return true;
+    }
+
+    function SetLightGridColor ($which_color) {
+        $this->light_grid_color= $which_color;
+        $this->ndx_light_grid_color= $this->SetIndexColor($which_color);
+        return true;
+    }
+
+    function SetGridColor ($which_color) {
+        $this->grid_color = $which_color;
+        $this->ndx_grid_color= $this->SetIndexColor($which_color);
+        return true;
+    }
+
+
+    function SetRGBArray ($which_color_array) { 
+        if ( is_array($which_color_array) ) { 
+            //User Defined Array
+            $this->rgb_array = $which_color_array;
+            return true;
+        } elseif ($which_color_array == 'small') { //Use the small predefined color array
+            $this->rgb_array = array(
+                "white"          => array(255, 255, 255),
+                "snow"           => array(255, 250, 250),
+                "PeachPuff"      => array(255, 218, 185),
+                "ivory"          => array(255, 255, 240),
+                "lavender"       => array(230, 230, 250),
+                "black"          => array(  0,   0,   0),
+                "DimGrey"        => array(105, 105, 105),
+                "gray"           => array(190, 190, 190),
+                "grey"           => array(190, 190, 190),
+                "navy"           => array(  0,   0, 128),
+                "SlateBlue"      => array(106,  90, 205),
+                "blue"           => array(  0,   0, 255),
+                "SkyBlue"        => array(135, 206, 235),
+                "cyan"           => array(  0, 255, 255),
+                "DarkGreen"      => array(  0, 100,   0),
+                "green"          => array(  0, 255,   0),
+                "YellowGreen"    => array(154, 205,  50),
+                "yellow"         => array(255, 255,   0),
+                "orange"         => array(255, 165,   0),
+                "gold"           => array(255, 215,   0),
+                "peru"           => array(205, 133,  63),
+                "beige"          => array(245, 245, 220),
+                "wheat"          => array(245, 222, 179),
+                "tan"            => array(210, 180, 140),
+                "brown"          => array(165,  42,  42),
+                "salmon"         => array(250, 128, 114),
+                "red"            => array(255,   0,   0),
+                "pink"           => array(255, 192, 203),
+                "maroon"         => array(176,  48,  96),
+                "magenta"        => array(255,   0, 255),
+                "violet"         => array(238, 130, 238),
+                "plum"           => array(221, 160, 221),
+                "orchid"         => array(218, 112, 214),
+                "purple"         => array(160,  32, 240),
+                "azure1"         => array(240, 255, 255),
+                "aquamarine1"    => array(127, 255, 212)
+                );
+            return true;
+        } elseif ($which_color_array === 'large')  { 
+            include("./rgb.inc.php"); //Get large $ColorArray
+            $this->rgb_array = $RGBArray;
+        } else { 
+            $this->rgb_array = array("white" =>array(255, 255, 255), "black" => array(0, 0, 0));
+            // MBD: why was this here?
+            //exit;
+        }
+
+        return true;
+    }
+
+    function SetColor($which_color) { 
+        //obsoleted by SetRGBColor
+        SetRgbColor($which_color);
+        return true;
+    }
+    
+    /*!
+     * Returns an index to a color passed in as anything (string, hex, rgb)
+     */
+    function SetIndexColor($which_color) {
+        list ($r, $g, $b) = $this->SetRgbColor($which_color);  //Translate to RGB
+        $index = ImageColorExact($this->img, $r, $g, $b);
+        if ($index == -1) {
+            return ImageColorResolve($this->img, $r, $g, $b);
+        } else {
+            return $index;
+        }
+    }
+    
+    /*!
+     * Returns an index to a slightly darker color than that requested. (MBD)
+     */
+    function SetIndexDarkColor($which_color) {
+        list ($r, $g, $b) = $this->SetRGBColor($which_color);
+        $r -= 0x30;     $r = ($r < 0) ? 0 : $r;
+        $g -= 0x30;     $g = ($g < 0) ? 0 : $g;
+        $b -= 0x30;     $b = ($b < 0) ? 0 : $b;
+        $index = ImageColorExact($this->img, $r, $g, $b);
+        if ($index == -1) {
+            return ImageColorResolve($this->img, $r, $g, $b);
+        } else {
+            return $index;
+        }
+    }
+
+    
+    function SetTransparentColor($which_color) { 
+        ImageColorTransparent($this->img, $this->SetIndexColor($which_color));
+        return true;
+    }
+
+    function SetRgbColor($color_asked) {
+        //Returns an array in R, G, B format 0-255
+        if ($color_asked == "") { $color_asked = array(0, 0, 0); };
+
+        if ( count($color_asked) == 3 ) { //already array of 3 rgb
+               $ret_val =  $color_asked;
+        } else { // is asking for a color by string
+            if(substr($color_asked, 0, 1) == "#") {  //asking in #FFFFFF format. 
+                $ret_val =  array(hexdec(substr($color_asked, 1, 2)), hexdec(substr($color_asked, 3, 2)), 
+                                  hexdec(substr($color_asked, 5, 2)));
+            } else { 
+                $ret_val =  $this->rgb_array[$color_asked];
+            }
+        }
+        return $ret_val;
+    }
+
+    /*!
+     * Set the data to be displayed in a particular color
+     */
+    function SetDataColors($which_data = NULL, $which_border = NULL) {
+        if (! $which_data) {
+            $which_data = array('blue', 'green', 'yellow', 'red', 'orange', 'SkyBlue', 'violet',
+                                'azure1', 'YellowGreen', 'gold', 'orchid', 'maroon', 'plum');
+            $which_border = array('black');
+        }
+
+        $this->data_color = $which_data;            //an array
+        $this->data_border_color = $which_border;   //an array
+
+        unset($this->ndx_data_color);
+        reset($this->data_color);  //data_color can be an array of colors, one for each thing plotted
+        //while (list(, $col) = each($this->data_color)) 
+        $i = 0;
+        while (list(, $col) = each($which_data)) {
+            $this->ndx_data_color[$i] = $this->SetIndexColor($col);
+            $i++;
+        }
+
+        // border_color
+        //If we are also going to put a border on the data (bars, dots, area, ...)
+        //    then lets also set a border color as well.
+        //foreach($this->data_border_color as $col) 
+        unset($this->ndx_data_border_color);
+        reset($this->data_border_color);
+        $i = 0;
+        while (list(, $col) = each($this->data_border_color)) {
+            $this->ndx_data_border_color[$i] = $this->SetIndexColor($col);
+            $i++;
+        }
+
+        //Set color of the error bars to be that of data if not already set. 
+        if (!$this->error_bar_color) { 
+                reset($which_data);
+                $this->SetErrorBarColors($which_data);
+        }
+
+        return true;
+
+    } //function SetDataColors
+
+    function SetErrorBarColors($which_data) {
+
+     //Set the data to be displayed in a particular color
+
+     if ($which_data) {
+        $this->error_bar_color = $which_data;  //an array
+        unset($this->ndx_error_bar_color);
+        reset($this->error_bar_color);  //data_color can be an array of colors, one for each thing plotted
+        $i = 0;
+        while (list(, $col) = each($this->error_bar_color)) {
+            $this->ndx_error_bar_color[$i] = $this->SetIndexColor($col);
+            $i++;
+        }
+        return true;
+      }
+      return false;
+    } //function SetErrorBarColors
+
+
+    /*!
+     * \todo Check for valid input?
+     */
+    function SetDefaultDashedStyle($which_style) {
+        $this->default_dashed_style = $which_style;
+    }
+    
+    /*!
+     * Sets the style before drawing a dashed line. Defaults to $this->default_dashed_style
+     * (3 dots colored, 3 transparent)
+     */
+    function SetDashedStyle($which_ndxcol, $which_style = NULL)
+    {
+        $which_style = ($which_style == NULL) ? $this->default_dashed_style : $which_style;
+        
+        switch ($which_style) {
+            case '3-3':
+               $style = array($which_ndxcol, $which_ndxcol, $which_ndxcol,
+                              IMG_COLOR_TRANSPARENT, IMG_COLOR_TRANSPARENT, IMG_COLOR_TRANSPARENT);
+               break;
+            case '3-2-1-2':
+               $style = array($which_ndxcol, $which_ndxcol, $which_ndxcol,
+                              IMG_COLOR_TRANSPARENT, IMG_COLOR_TRANSPARENT,
+                              $which_ndxcol,
+                              IMG_COLOR_TRANSPARENT, IMG_COLOR_TRANSPARENT);
+               break;
+            case '1-1':
+                $style = array($which_ndxcol, IMG_COLOR_TRANSPARENT);
+                break;
+            case '4-3':
+                $style = array($which_ndxcol, $which_ndxcol, $which_ndxcol, $which_ndxcol,
+                               IMG_COLOR_TRANSPARENT, IMG_COLOR_TRANSPARENT, IMG_COLOR_TRANSPARENT);
+                break;
+            default:
+                $this->DrawError("SetDashedStyle(): unknow style '$style' requested.");
+                return false;
+        }
+        
+        return imagesetstyle($this->img, $style);
+    }
+    
 
 /////////////////////////////////////////////
 //////////////                          FONTS
 /////////////////////////////////////////////
 
+
+    /*!
+     * Sets number of pixels between lines of the same text.
+     */
+    function SetLineSpacing($which_spc) {
+        $this->line_spacing = $which_spc;
+    }
+
+    
     /*!
      * Enables use of TrueType fonts in the graph. Font initialisation methods
      * depend on this setting, so when called, SetUseTTF() resets the font
@@ -472,56 +801,127 @@ class PHPlot {
         return TRUE;
     }
     
-
-    
-/////////////////////////////////
-
-
-    function SetLineStyles($which_sls){
-        $this->line_style = $which_sls;
-        return true;
-    }
-
-    /*!
-     * Expects an array with the names to be written in the graph's legend.
-     */
-    function SetLegend($which_leg){
-        if (is_array($which_leg)) { 
-            $this->legend = $which_leg;
-            return true;
-        } else { 
-            $this->DrawError('SetLegend(): Argument must be an array.');
-            return false;
-        }
-    }
-
-    /*!
-     * Specifies the absolute (relative to image's up/left corner) position
-     * of the legend's upper/leftmost corner.
-     *  $which_type not yet used (TODO)
-     */
-    function SetLegendPixels($which_x, $which_y, $which_type) { 
-        $this->legend_x_pos = $which_x;
-        $this->legend_y_pos = $which_y;
-        
-        return true;
-    }
-
-    /*!
-     * Specifies the relative (to graph's origin) position of the legend's
-     * upper/leftmost corner. MUST be called after scales are set up.
-     *   $which_type not yet used (TODO)
-     */
-    function SetLegendWorld($which_x, $which_y, $which_type = '') { 
-        if ($this->scale_is_set != 1) 
-            $this->CalcTranslation();
-            
-        $this->legend_x_pos = $this->xtr($which_x);
-        $this->legend_y_pos = $this->ytr($which_y);
-        
-        return true;
-    }
    
+    /*!
+     * Returns an array with the size of the bounding box of an
+     * arbitrarily placed (rotated) TrueType text string.
+     */
+    function TTFBBoxSize($size, $angle, $font, $string) {
+
+        // First, assume angle < 90
+        $arr = ImageTTFBBox($size, 0, $font, $string);
+        $flat_width  = $arr[2] - $arr[0];
+        $flat_height = abs($arr[3] - $arr[5]);
+
+        // Now the bounding box
+        $angle = deg2rad($angle);
+        $width  = ceil(abs($flat_width*cos($angle) + $flat_height*sin($angle))); //Must be integer
+        $height = ceil(abs($flat_width*sin($angle) + $flat_height*cos($angle))); //Must be integer
+        
+        return array($width, $height);
+    }
+
+
+    /*!
+     * Draws a string of text. Horizontal and vertical alignment are relative to 
+     * to the drawing. That is: vertical text (90 deg) gets centered along y-axis 
+     * with v_align = 'center', and adjusted to the left of x-axis with h_align = 'right',
+     * 
+     * \note Original multiple lines code submitted by Remi Ricard.
+     * \note Original vertical code submitted by Marlin Viss.
+     */
+    function DrawText($which_font, $which_angle, $which_xpos, $which_ypos, $which_color, $which_text,
+                      $which_halign = 'left', $which_valign = 'bottom') {
+
+        // TTF:
+        if ($this->use_ttf) { 
+            $size = $this->TTFBBoxSize($which_font['size'], $which_angle, $which_font['font'], $which_text); 
+            $rads = deg2rad($which_angle);
+
+            if ($which_valign == 'center')
+                $which_ypos += $size[1]/2;
+
+            if ($which_valign == 'bottom')
+                $which_ypos += $size[1];
+            
+            if ($which_halign == 'center')
+                $which_xpos -= $size[0]/2;
+            
+            if ($which_halign == 'left')
+                $which_xpos += $size[0]*sin($rads);
+                
+            if ($which_halign == 'right')
+                $which_xpos -= $size[0]*cos($rads);
+                
+            ImageTTFText($this->img, $which_font['size'], $which_angle, 
+                         $which_xpos, $which_ypos, $which_color, $which_font['font'], $which_text); 
+        }
+        // Fixed fonts:
+        else { 
+            // Split the text in its lines, and count them
+            $which_text = ereg_replace("\r", "", $which_text);
+            $str = split("\n", $which_text);
+            $nlines = count($str);
+            
+            // Vertical text:
+            // (Remember the alignment convention with vertical text)
+            if ($which_angle == 90) {
+                // The text goes around $which_xpos.
+                if ($which_halign == 'center') 
+                    $which_xpos -= ($nlines * ($which_font['height'] + $this->line_spacing))/2;
+
+                // Left alignment requires no modification to $xpos...
+                // Right-align it. $which_xpos designated the rightmost x coordinate.
+                else if ($which_halign == 'right')
+                    $which_xpos += ($nlines * ($which_font['height'] + $this->line_spacing));
+                    
+                $ypos = $which_ypos;
+                for($i = 0; $i < $nlines; $i++) { 
+                    // Center the text vertically around $which_ypos (each line)
+                    if ($which_valign == 'center')
+                        $ypos = $which_ypos + (strlen($str[$i]) * $which_font['width']) / 2;
+                    // Make the text finish (vertically) at $which_ypos
+                    if ($which_valign == 'bottom')
+                        $ypos = $which_ypos + strlen($str[$i]) * $which_font['width'];
+                        
+                    ImageStringUp($this->img, $which_font['font'],
+                                  $i * ($which_font['height'] + $this->line_spacing) + $which_xpos, 
+                                  $ypos, $str[$i], $which_color);
+                } 
+            } 
+            // Horizontal text:
+            else {
+                // The text goes above $which_ypos
+                if ($which_valign == 'top')
+                    $which_ypos = $which_ypos - ($nlines * ($which_font['height'] + $this->line_spacing));
+                // The text is centered around $which_ypos
+                if ($which_valign == 'center')
+                    $which_ypos -= ($nlines * ($which_font['height'] + $this->line_spacing))/2;
+                // valign = 'center' requires no modification
+                
+                $xpos = $which_xpos;
+                for($i = 0; $i < $nlines; $i++) { 
+                    // center the text around $which_xpos
+                    if ($which_halign == 'center')
+                        $xpos = $which_xpos - (strlen($str[$i]) * $which_font['width'])/2;
+                    // make the text finish at $which_xpos
+                    if ($which_halign == 'right')
+                        $xpos = $which_xpos - strlen($str[$i]) * $which_font['width'];
+                        
+                    ImageString($this->img, $which_font['font'], $xpos, 
+                                $i * ($which_font['height'] + $this->line_spacing) + $which_ypos,
+                                $str[$i], $which_color);
+                }                 
+            }
+        } 
+        return true; 
+
+    }
+
+
+/////////////////////////////////////////////
+///////////            INPUT / OUTPUT CONTROL
+/////////////////////////////////////////////
     /*!
      * Sets output format.
      * TODO: Maybe a single SetOutputFormat() in which to specify file format,
@@ -557,6 +957,9 @@ class PHPlot {
     }    
 
 
+    /*!
+     * Selects an input file to be used as background for the whole graph.
+     */
     function SetInputFile($which_input_file) { 
         $size = GetImageSize($which_input_file);
         $input_type = $size[2]; 
@@ -593,6 +996,10 @@ class PHPlot {
         $this->image_width = $size[0];
         $this->image_height = $size[1];
 
+        // Deallocate any resources previously allocated
+        if ($this->img)
+            imagedestroy($this->img);
+            
         $this->img = $im;
 
         return true;
@@ -679,53 +1086,6 @@ class PHPlot {
         //return true;
     }
 
-    /*!
-     * Fills the background of the image with a solid color
-     */
-    function DrawBackground() {
-        if (! $this->background_done) {     //Don't draw it twice if drawing two plots on one image
-            ImageFilledRectangle($this->img, 0, 0, $this->image_width, $this->image_height, 
-                                 $this->ndx_bg_color);
-            $this->background_done = true;
-        }
-        return true;
-    }
-
-    /*!
-     * Draws a border around the final image.
-     */
-    function DrawImageBorder() {
-        switch ($this->image_border_type) {
-            case 'raised':
-                ImageLine($this->img, 0, 0, $this->image_width-1, 0, $this->ndx_i_light);
-                ImageLine($this->img, 1, 1, $this->image_width-2, 1, $this->ndx_i_light);
-                ImageLine($this->img, 0, 0, 0, $this->image_height-1, $this->ndx_i_light);
-                ImageLine($this->img, 1, 1, 1, $this->image_height-2, $this->ndx_i_light);
-                ImageLine($this->img, $this->image_width-1, 0, $this->image_width-1,
-                          $this->image_height-1, $this->ndx_i_dark);
-                ImageLine($this->img, 0, $this->image_height-1, $this->image_width-1,
-                          $this->image_height-1, $this->ndx_i_dark);
-                ImageLine($this->img, $this->image_width-2, 1, $this->image_width-2,
-                          $this->image_height-2, $this->ndx_i_dark);
-                ImageLine($this->img, 1, $this->image_height-2, $this->image_width-2,
-                          $this->image_height-2, $this->ndx_i_dark);
-                break;
-            case 'plain':
-                ImageLine($this->img, 0, 0, $this->image_width, 0, $this->ndx_i_dark);
-                ImageLine($this->img, $this->image_width-1, 0, $this->image_width-1,
-                          $this->image_height, $this->ndx_i_dark);
-                ImageLine($this->img, $this->image_width-1, $this->image_height-1, 0, $this->image_height-1,
-                          $this->ndx_i_dark);
-                ImageLine($this->img, 0, 0, 0, $this->image_height, $this->ndx_i_dark);
-                break;
-            case 'none':
-                break;
-            default:
-                return false;
-        }
-        return true;
-    }
-    
     /*! 
      * Prints an error message to stdout and dies 
      */
@@ -739,9 +1099,10 @@ class PHPlot {
      * Defaults to centered position (MBD)
      */
     function DrawError($error_message, $where_x = NULL, $where_y = NULL) {
-        if (($this->img) == "")
-            $this->InitImage();
-        
+        if (! $this->img)
+            $this->PrintError("DrawError(): Warning, no image resource allocated. ".
+                              "The message to be written was: ".$error_message);
+                              
         $ypos = (! $where_y) ? $this->image_height/2 : $where_y;
         $xpos = (! $where_x) ? $this->image_width/2 : $where_x;
         ImageRectangle($this->img, 0, 0, $this->image_width, $this->image_height,
@@ -758,6 +1119,69 @@ class PHPlot {
 /////////////////////////////////////////////
 ///////////                              MISC
 /////////////////////////////////////////////
+
+
+    /*!
+     *  Submitted by Thiemo Nagel
+     */
+    function SetBrowserCache($which_browser_cache) {
+        $this->browser_cache = $which_browser_cache;
+        return true;
+    }
+
+    /*!
+     * Whether to show the final image or not
+     * MBD: uh? what for?
+     */
+    function SetPrintImage($which_pi) {
+        $this->print_image = $which_pi;
+        return true;
+    }
+ 
+    function SetLineStyles($which_sls){
+        $this->line_style = $which_sls;
+        return true;
+    }
+
+    /*!
+     * Expects an array with the names to be written in the graph's legend.
+     */
+    function SetLegend($which_leg){
+        if (is_array($which_leg)) { 
+            $this->legend = $which_leg;
+            return true;
+        } else { 
+            $this->DrawError('SetLegend(): Argument must be an array.');
+            return false;
+        }
+    }
+
+    /*!
+     * Specifies the absolute (relative to image's up/left corner) position
+     * of the legend's upper/leftmost corner.
+     *  $which_type not yet used (TODO)
+     */
+    function SetLegendPixels($which_x, $which_y, $which_type) { 
+        $this->legend_x_pos = $which_x;
+        $this->legend_y_pos = $which_y;
+        
+        return true;
+    }
+
+    /*!
+     * Specifies the relative (to graph's origin) position of the legend's
+     * upper/leftmost corner. MUST be called after scales are set up.
+     *   $which_type not yet used (TODO)
+     */
+    function SetLegendWorld($which_x, $which_y, $which_type = '') { 
+        if ($this->scale_is_set != 1) 
+            $this->CalcTranslation();
+            
+        $this->legend_x_pos = $this->xtr($which_x);
+        $this->legend_y_pos = $this->ytr($which_y);
+        
+        return true;
+    }
 
     function SetPlotBorderType($which_pbt) {
         $this->plot_border_type = $which_pbt; //left, none, anything else = full
@@ -784,6 +1208,7 @@ class PHPlot {
         $this->y_data_label_pos = $which_ypos;
         $this->x_label_type = $which_xtype;
         $this->y_label_type = $which_ytype;
+        
         // Decide whether to show tick labels or not. Never if data labels are to be shown
         if ($this->x_data_label_pos !== 'none')
             $this->x_tick_label_pos == 'none';
@@ -882,7 +1307,7 @@ class PHPlot {
         
         if ($this->use_ttf) {
             $size = $this->TTFBBoxSize($this->x_title_font['size'], 0, $this->x_title_font['font'], $which_xtitle);
-            $this->x_title_height = $size[0] * $this->x_title_lines;
+            $this->x_title_height = $size[1] * $this->x_title_lines;
         } else {
             $this->x_title_height = $this->y_title_font['height'] * $this->x_title_lines;
         }
@@ -907,7 +1332,8 @@ class PHPlot {
         $this->y_title_lines = count($str);
         
         if ($this->use_ttf) {
-            $size = $this->TTFBBoxSize($this->y_title_font['size'], 90, $this->y_title_font['font'], $which_ytitle);
+            $size = $this->TTFBBoxSize($this->y_title_font['size'], 90, $this->y_title_font['font'], 
+                                       $which_ytitle);
             $this->y_title_width = $size[1] * $this->y_title_lines;
         } else {
             $this->y_title_width = $this->y_title_font['height'] * $this->y_title_lines;
@@ -957,11 +1383,11 @@ class PHPlot {
         return true;
     }
 
-    
     function SetXScaleType($which_xst) { 
         $this->xscale_type = $which_xst;
         return true;
     }
+    
     function SetYScaleType($which_yst) { 
         $this->yscale_type = $which_yst;
         if ($this->x_axis_position <= 0) { 
@@ -1004,14 +1430,19 @@ class PHPlot {
         return true;
     }
 
+    /*!
+     * Can be one of: 'tee', 'line'
+     */
     function SetErrorBarShape($which_ebs) {
-        //in pixels
         $this->error_bar_shape = $which_ebs;
         return true;
     }
 
+    /*!
+     * Can be one of: 'halfline', 'line', 'plus', 'cross', 'rect', 'circle', 'dot',
+     * 'diamond', 'triangle', 'trianglemid'
+     */
     function SetPointShape($which_pt) {
-        //in pixels
         $this->point_shape = $which_pt;
         return true;
     }
@@ -1030,9 +1461,9 @@ class PHPlot {
     }
 
     
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-
+//////////////////////////////////////////////////
+///////////                          DATA ANALYSIS
+//////////////////////////////////////////////////
    
     /*!
      * Analizes data and sets up internal maxima and minima
@@ -1355,31 +1786,6 @@ class PHPlot {
         return true;
 
     } //function SetPlotAreaWorld
-   
-   
-    /*!
-     * Returns an array with the size of the bounding box of an
-     * arbitrarily placed (rotated) TrueType text string.
-     */
-    function TTFBBoxSize($size, $angle, $font, $string) {
-
-        // First, assume angle < 90
-        $arr = ImageTTFBBox($size, 0, $font, $string);
-        $flat_width  = $arr[2] - $arr[0];
-        $flat_height = abs($arr[3] - $arr[5]);
-
-        // Now the bounding box
-        $angle = deg2rad($angle);
-        $width  = ceil(abs($flat_width*cos($angle) + $flat_height*sin($angle))); //Must be integer
-        $height = ceil(abs($flat_width*sin($angle) + $flat_height*cos($angle))); //Must be integer
-/*        
-        echo "<pre>\nFont: $font\nText:\n  $string\nWidth: $width px.   Height: $height px.   ".
-             "Angle: ".rad2deg($angle)." deg.\n</pre>";
-        if ($width == 0 && $height == 0)
-           echo "<pre>".print_r($arr, true)."</pre>";
-*/           
-        return array($width, $height);
-    }
 
 
     /*!
@@ -1419,350 +1825,57 @@ class PHPlot {
         return true;
     }
     
-/////////////////////////////////////////////    
-//////////////                         COLORS
-/////////////////////////////////////////////
-
     /*!
-     * Internal Method called to set colors and preserve state
-     * These are the colors of the image that are used. They are initialized
-     * to work with sessions and PHP. 
+     * Formats a tick or data label.
+     *
+     * \note Time formatting suggested by Marlin Viss
      */
-    function SetIndexColors() { 
-        $this->ndx_i_light = $this->SetIndexColor($this->i_light);
-        $this->ndx_i_dark  = $this->SetIndexColor($this->i_dark);
-        $this->ndx_bg_color= $this->SetIndexColor($this->bg_color);
-        $this->ndx_plot_bg_color= $this->SetIndexColor($this->plot_bg_color);
+    function FormatLabel($which_pos, $which_lab) { 
 
-        $this->ndx_title_color= $this->SetIndexColor($this->title_color);
-        $this->ndx_tick_color= $this->SetIndexColor($this->tick_color);
-        $this->ndx_title_color= $this->SetIndexColor($this->label_color);
-        $this->ndx_text_color= $this->SetIndexColor($this->text_color);
-        $this->ndx_light_grid_color= $this->SetIndexColor($this->light_grid_color);
-        $this->ndx_grid_color= $this->SetIndexColor($this->grid_color);
-
-        unset($ndx_error_bar_color);
-        $i = 0; 
-        foreach($this->error_bar_color as $col) {
-          $this->ndx_error_bar_color[$i] = $this->SetIndexColor($col);
-            $i++;
-        }
-        
-        unset($ndx_data_border_color);
-        $i = 0;
-        foreach($this->data_border_color as $col) {
-            $this->ndx_data_border_color[$i] = $this->SetIndexColor($col);
-            $i++;
-        }
-        
-        unset($ndx_data_color);
-        $i = 0;
-        foreach ($this->data_color as $col) {
-            $this->ndx_data_color[$i] = $this->SetIndexColor($col);
-            $i++;
-        }
-        // MBD: testing
-        unset ($ndx_data_dark_color);
-        $i = 0;
-        foreach ($this->data_color as $col)
-            $this->ndx_data_dark_color[$i++] = $this->SetIndexDarkColor($col);
-            
-        return true;
-    }
-
-
-    /*!
-     * Sets/reverts all colors
-     */
-    function SetDefaultColors() {
-        $this->i_light = array(194, 194, 194);
-        $this->i_dark =  array(100, 100, 100);
-        $this->SetPlotBgColor(array(222, 222, 222));
-        $this->SetBackgroundColor(array(200, 222, 222)); //can use rgb values or "name" values
-        $this->SetLabelColor('black');
-        $this->SetTextColor('black');
-        $this->SetGridColor('black');
-        $this->SetLightGridColor(array(175, 175, 175));
-        $this->SetTickColor('black');
-        $this->SetTitleColor(array(0, 0, 0)); // Can be array or name
-        $this->data_color = array('blue', 'green', 'yellow', 'red', 'orange', 'SkyBlue', 'violet',
-                                  'azure1', 'YellowGreen', 'gold', 'orchid', 'maroon', 'plum');
-        $this->error_bar_color = array('blue', 'green', 'yellow', 'red', 'orange', 'SkyBlue', 'violet',
-                                  'azure1', 'YellowGreen', 'gold', 'orchid', 'maroon', 'plum');
-        $this->data_border_color = array('black');
-
-        $this->session_set = 1;          //Mark it down for PHP session() usage.
-    }
-
-
-    function SetBackgroundColor($which_color) {
-        $this->bg_color= $which_color;
-        $this->ndx_bg_color= $this->SetIndexColor($which_color);
-        return true;
-    }
-    
-    function SetPlotBgColor($which_color) {
-        $this->plot_bg_color= $which_color;
-        $this->ndx_plot_bg_color= $this->SetIndexColor($which_color);
-        return true;
-    }
-
-    function SetTitleColor($which_color) {
-        $this->title_color= $which_color;
-        $this->ndx_title_color= $this->SetIndexColor($which_color);
-        return true;
-    }
-
-    function SetTickColor ($which_color) {
-        $this->tick_color= $which_color;
-        $this->ndx_tick_color= $this->SetIndexColor($which_color);
-        return true;
-    }
-
-    function SetLabelColor ($which_color) {
-        $this->label_color= $which_color;
-        $this->ndx_title_color= $this->SetIndexColor($which_color);
-        return true;
-    }
-
-    function SetTextColor ($which_color) {
-        $this->text_color= $which_color;
-        $this->ndx_text_color= $this->SetIndexColor($which_color);
-        return true;
-    }
-
-    function SetLightGridColor ($which_color) {
-        $this->light_grid_color= $which_color;
-        $this->ndx_light_grid_color= $this->SetIndexColor($which_color);
-        return true;
-    }
-
-    function SetGridColor ($which_color) {
-        $this->grid_color = $which_color;
-        $this->ndx_grid_color= $this->SetIndexColor($which_color);
-        return true;
-    }
-
-
-    function SetRGBArray ($which_color_array) { 
-        if ( is_array($which_color_array) ) { 
-            //User Defined Array
-            $this->rgb_array = $which_color_array;
-            return true;
-        } elseif ($which_color_array == 'small') { //Use the small predefined color array
-            $this->rgb_array = array(
-                "white"          => array(255, 255, 255),
-                "snow"           => array(255, 250, 250),
-                "PeachPuff"      => array(255, 218, 185),
-                "ivory"          => array(255, 255, 240),
-                "lavender"       => array(230, 230, 250),
-                "black"          => array(  0,   0,   0),
-                "DimGrey"        => array(105, 105, 105),
-                "gray"           => array(190, 190, 190),
-                "grey"           => array(190, 190, 190),
-                "navy"           => array(  0,   0, 128),
-                "SlateBlue"      => array(106,  90, 205),
-                "blue"           => array(  0,   0, 255),
-                "SkyBlue"        => array(135, 206, 235),
-                "cyan"           => array(  0, 255, 255),
-                "DarkGreen"      => array(  0, 100,   0),
-                "green"          => array(  0, 255,   0),
-                "YellowGreen"    => array(154, 205,  50),
-                "yellow"         => array(255, 255,   0),
-                "orange"         => array(255, 165,   0),
-                "gold"           => array(255, 215,   0),
-                "peru"           => array(205, 133,  63),
-                "beige"          => array(245, 245, 220),
-                "wheat"          => array(245, 222, 179),
-                "tan"            => array(210, 180, 140),
-                "brown"          => array(165,  42,  42),
-                "salmon"         => array(250, 128, 114),
-                "red"            => array(255,   0,   0),
-                "pink"           => array(255, 192, 203),
-                "maroon"         => array(176,  48,  96),
-                "magenta"        => array(255,   0, 255),
-                "violet"         => array(238, 130, 238),
-                "plum"           => array(221, 160, 221),
-                "orchid"         => array(218, 112, 214),
-                "purple"         => array(160,  32, 240),
-                "azure1"         => array(240, 255, 255),
-                "aquamarine1"    => array(127, 255, 212)
-                );
-            return true;
-        } elseif ($which_color_array === 'large')  { 
-            include("./rgb.inc.php"); //Get large $ColorArray
-            $this->rgb_array = $RGBArray;
-        } else { 
-            $this->rgb_array = array("white" =>array(255, 255, 255), "black" => array(0, 0, 0));
-            // MBD: why was this here?
-            //exit;
-        }
-
-        return true;
-    }
-
-    function SetColor($which_color) { 
-        //obsoleted by SetRGBColor
-        SetRgbColor($which_color);
-        return true;
-    }
-    
-    /*!
-     * Returns an index to a color passed in as anything (string, hex, rgb)
-     */
-    function SetIndexColor($which_color) {
-        list ($r, $g, $b) = $this->SetRgbColor($which_color);  //Translate to RGB
-        $index = ImageColorExact($this->img, $r, $g, $b);
-        if ($index == -1) {
-            return ImageColorResolve($this->img, $r, $g, $b);
-        } else {
-            return $index;
-        }
-    }
-    
-    /*!
-     * Returns an index to a slightly darker color than that requested. (MBD)
-     */
-    function SetIndexDarkColor($which_color) {
-        list ($r, $g, $b) = $this->SetRGBColor($which_color);
-        $r -= 0x30;     $r = ($r < 0) ? 0 : $r;
-        $g -= 0x30;     $g = ($g < 0) ? 0 : $g;
-        $b -= 0x30;     $b = ($b < 0) ? 0 : $b;
-        $index = ImageColorExact($this->img, $r, $g, $b);
-        if ($index == -1) {
-            return ImageColorResolve($this->img, $r, $g, $b);
-        } else {
-            return $index;
-        }
-    }
-
-    
-    function SetTransparentColor($which_color) { 
-        ImageColorTransparent($this->img, $this->SetIndexColor($which_color));
-        return true;
-    }
-
-    function SetRgbColor($color_asked) {
-        //Returns an array in R, G, B format 0-255
-        if ($color_asked == "") { $color_asked = array(0, 0, 0); };
-
-        if ( count($color_asked) == 3 ) { //already array of 3 rgb
-               $ret_val =  $color_asked;
-        } else { // is asking for a color by string
-            if(substr($color_asked, 0, 1) == "#") {  //asking in #FFFFFF format. 
-                // [#790745] 'Hex color problem' fixed. (MBD)
-                $ret_val =  array(hexdec(substr($color_asked, 1, 2)), hexdec(substr($color_asked, 3, 2)), 
-                                  hexdec(substr($color_asked, 5, 2)));
-            } else { 
-                $ret_val =  $this->rgb_array[$color_asked];
+        switch ($which_pos) {
+        case 'x':
+        case 'plotx':
+            switch ($this->x_label_type) {
+                case "title":
+                    $lab = @ $this->data_values[$which_lab][0];
+                    break;
+                case "data":
+                    $lab = number_format($this->plot_min_x, $this->x_precision, ".", ", ") . "$this->si_units";
+                    break;
+                case "time":
+                    $lab = strftime($this->x_time_format, $which_lab);
+                    break;
+                default:
+                    // Unchanged from whatever format it is passed in
+                    $lab = $which_lab;
+                break;
+            }    
+            break;
+        case 'y':
+        case 'ploty':
+            switch ($this->y_label_type) {
+                case "data":
+                    $lab = number_format($which_lab, $this->y_precision, ".", ", ") . "$this->si_units";
+                    break;
+                case "time":
+                    $lab = strftime($this->y_time_format, $which_lab);
+                    break;
+                default:
+                    // Unchanged from whatever format it is passed in
+                    $lab = $which_lab;
+                    break;
             }
-        }
-        return $ret_val;
-    }
-
-    function SetDataColors($which_data = NULL, $which_border = NULL) {
-        //Set the data to be displayed in a particular color
-        if (! $which_data) {
-            $which_data = array('blue', 'green', 'yellow', 'red', 'orange', 'SkyBlue', 'violet',
-                                'azure1', 'YellowGreen', 'gold', 'orchid', 'maroon', 'plum');
-            $which_border = array('black');
-        }
-
-        $this->data_color = $which_data;            //an array
-        $this->data_border_color = $which_border;   //an array
-
-        unset($this->ndx_data_color);
-        reset($this->data_color);  //data_color can be an array of colors, one for each thing plotted
-        //while (list(, $col) = each($this->data_color)) 
-        $i = 0;
-        while (list(, $col) = each($which_data)) {
-            $this->ndx_data_color[$i] = $this->SetIndexColor($col);
-            $i++;
-        }
-
-        // border_color
-        //If we are also going to put a border on the data (bars, dots, area, ...)
-        //    then lets also set a border color as well.
-        //foreach($this->data_border_color as $col) 
-        unset($this->ndx_data_border_color);
-        reset($this->data_border_color);
-        $i = 0;
-        while (list(, $col) = each($this->data_border_color)) {
-            $this->ndx_data_border_color[$i] = $this->SetIndexColor($col);
-            $i++;
-        }
-
-        //Set color of the error bars to be that of data if not already set. 
-        if (!$this->error_bar_color) { 
-                reset($which_data);
-                $this->SetErrorBarColors($which_data);
-        }
-
-        return true;
-
-    } //function SetDataColors
-
-    function SetErrorBarColors($which_data) {
-
-     //Set the data to be displayed in a particular color
-
-     if ($which_data) {
-        $this->error_bar_color = $which_data;  //an array
-        unset($this->ndx_error_bar_color);
-        reset($this->error_bar_color);  //data_color can be an array of colors, one for each thing plotted
-        $i = 0;
-        while (list(, $col) = each($this->error_bar_color)) {
-            $this->ndx_error_bar_color[$i] = $this->SetIndexColor($col);
-            $i++;
-        }
-        return true;
-      }
-      return false;
-    } //function SetErrorBarColors
-
-
-    /*!
-     * \todo Check for valid input?
-     */
-    function SetDefaultDashedStyle($which_style) {
-        $this->default_dashed_style = $which_style;
-    }
-    
-    /*!
-     * Sets the style before drawing a dashed line. Defaults to $this->default_dashed_style
-     * (3 dots colored, 3 transparent)
-     */
-    function SetDashedStyle($which_ndxcol, $which_style = NULL)
-    {
-        $which_style = ($which_style == NULL) ? $this->default_dashed_style : $which_style;
+            break;
+        default:
+            $this->PrintError("FormatLabel(): Unknown label type $which_type");
+            return NULL;
+        } 
         
-        switch ($which_style) {
-            case '3-3':
-               $style = array($which_ndxcol, $which_ndxcol, $which_ndxcol,
-                              IMG_COLOR_TRANSPARENT, IMG_COLOR_TRANSPARENT, IMG_COLOR_TRANSPARENT);
-               break;
-            case '3-2-1-2':
-               $style = array($which_ndxcol, $which_ndxcol, $which_ndxcol,
-                              IMG_COLOR_TRANSPARENT, IMG_COLOR_TRANSPARENT,
-                              $which_ndxcol,
-                              IMG_COLOR_TRANSPARENT, IMG_COLOR_TRANSPARENT);
-               break;
-            case '1-1':
-                $style = array($which_ndxcol, IMG_COLOR_TRANSPARENT);
-                break;
-            case '4-3':
-                $style = array($which_ndxcol, $which_ndxcol, $which_ndxcol, $which_ndxcol,
-                               IMG_COLOR_TRANSPARENT, IMG_COLOR_TRANSPARENT, IMG_COLOR_TRANSPARENT);
-                break;
-            default:
-                $this->DrawError("SetDashedStyle(): unknow style '$style' requested.");
-                return false;
-        }
-        
-        return imagesetstyle($this->img, $style);
-    }
-    
-    
+        return($lab);
+    } //function FormatLabel
+
+
+
 /////////////////////////////////////////////    
 ///////////////                         TICKS
 /////////////////////////////////////////////    
@@ -1911,103 +2024,54 @@ class PHPlot {
 /////////////////////////////////////////////
 ////////////////////                  DRAWING
 /////////////////////////////////////////////
+    
+    /*!
+     * Fills the background of the image with a solid color
+     */
+    function DrawBackground() {
+        if (! $this->background_done) {     //Don't draw it twice if drawing two plots on one image
+            ImageFilledRectangle($this->img, 0, 0, $this->image_width, $this->image_height, 
+                                 $this->ndx_bg_color);
+            $this->background_done = true;
+        }
+        return true;
+    }
 
     /*!
-     * Draws a string of text. Horizontal and vertical alignment are relative to 
-     * to the drawing. That is: vertical text (90 deg) gets centered along y-axis 
-     * with v_align = 'center', and adjusted to the left of x-axis with h_align = 'right',
-     * 
-     * \note Original multiple lines code submitted by Remi Ricard.
-     * \note Original vertical code submitted by Marlin Viss.
+     * Draws a border around the final image.
      */
-    function DrawText($which_font, $which_angle, $which_xpos, $which_ypos, $which_color, $which_text,
-                      $which_halign = 'left', $which_valign = 'bottom') {
-
-        $interl = 2;      // Pixels between lines (TODO: add method)
-        
-        // TTF:
-        if ($this->use_ttf) { 
-            $size = $this->TTFBBoxSize($which_font['size'], $which_angle, $which_font['font'], $which_text); 
-            $rads = deg2rad($which_angle);
-
-            if ($which_valign == 'center')
-                $which_ypos += $size[1]/2;
-
-            if ($which_valign == 'bottom')
-                $which_ypos += $size[1];
-            
-            if ($which_halign == 'center')
-                $which_xpos -= $size[0]/2;
-            
-            if ($which_halign == 'left')
-                $which_xpos += $size[0]*sin($rads);
-                
-            if ($which_halign == 'right')
-                $which_xpos -= $size[0]*cos($rads);
-                
-            ImageTTFText($this->img, $which_font['size'], $which_angle, 
-                         $which_xpos, $which_ypos, $which_color, $which_font['font'], $which_text); 
+    function DrawImageBorder() {
+        switch ($this->image_border_type) {
+            case 'raised':
+                ImageLine($this->img, 0, 0, $this->image_width-1, 0, $this->ndx_i_light);
+                ImageLine($this->img, 1, 1, $this->image_width-2, 1, $this->ndx_i_light);
+                ImageLine($this->img, 0, 0, 0, $this->image_height-1, $this->ndx_i_light);
+                ImageLine($this->img, 1, 1, 1, $this->image_height-2, $this->ndx_i_light);
+                ImageLine($this->img, $this->image_width-1, 0, $this->image_width-1,
+                          $this->image_height-1, $this->ndx_i_dark);
+                ImageLine($this->img, 0, $this->image_height-1, $this->image_width-1,
+                          $this->image_height-1, $this->ndx_i_dark);
+                ImageLine($this->img, $this->image_width-2, 1, $this->image_width-2,
+                          $this->image_height-2, $this->ndx_i_dark);
+                ImageLine($this->img, 1, $this->image_height-2, $this->image_width-2,
+                          $this->image_height-2, $this->ndx_i_dark);
+                break;
+            case 'plain':
+                ImageLine($this->img, 0, 0, $this->image_width, 0, $this->ndx_i_dark);
+                ImageLine($this->img, $this->image_width-1, 0, $this->image_width-1,
+                          $this->image_height, $this->ndx_i_dark);
+                ImageLine($this->img, $this->image_width-1, $this->image_height-1, 0, $this->image_height-1,
+                          $this->ndx_i_dark);
+                ImageLine($this->img, 0, 0, 0, $this->image_height, $this->ndx_i_dark);
+                break;
+            case 'none':
+                break;
+            default:
+                return false;
         }
-        // Fixed fonts:
-        else { 
-            // Split the text in its lines, and count them
-            $which_text = ereg_replace("\r", "", $which_text);
-            $str = split("\n", $which_text);
-            $nlines = count($str);
-            
-            // Vertical text:
-            // (Remember the alignment convention with vertical text)
-            if ($which_angle == 90) {
-                // The text goes around $which_xpos.
-                if ($which_halign == 'center') 
-                    $which_xpos -= ($nlines * ($which_font['height'] + $interl))/2;
-
-                // Left alignment requires no modification to $xpos...
-                // Right-align it. $which_xpos designated the rightmost x coordinate.
-                else if ($which_halign == 'right')
-                    $which_xpos += ($nlines * ($which_font['height'] + $interl));
-                    
-                $ypos = $which_ypos;
-                for($i = 0; $i < $nlines; $i++) { 
-                    // Center the text vertically around $which_ypos (each line)
-                    if ($which_valign == 'center')
-                        $ypos = $which_ypos + (strlen($str[$i]) * $which_font['width']) / 2;
-                    // Make the text finish (vertically) at $which_ypos
-                    if ($which_valign == 'bottom')
-                        $ypos = $which_ypos + strlen($str[$i]) * $which_font['width'];
-                        
-                    ImageStringUp($this->img, $which_font['font'],
-                                  $i * ($which_font['height'] + $interl) + $which_xpos, 
-                                  $ypos, $str[$i], $which_color);
-                } 
-            } 
-            // Horizontal text:
-            else {
-                // The text goes above $which_ypos
-                if ($which_valign == 'top')
-                    $which_ypos = $which_ypos - ($nlines * ($which_font['height'] + $interl));
-                // The text is centered around $which_ypos
-                if ($which_valign == 'center')
-                    $which_ypos -= ($nlines * ($which_font['height'] + $interl))/2;
-                // valign = 'center' requires no modification
-                
-                $xpos = $which_xpos;
-                for($i = 0; $i < $nlines; $i++) { 
-                    // center the text around $which_xpos
-                    if ($which_halign == 'center')
-                        $xpos = $which_xpos - (strlen($str[$i]) * $which_font['width'])/2;
-                    // make the text finish at $which_xpos
-                    if ($which_halign == 'right')
-                        $xpos = $which_xpos - strlen($str[$i]) * $which_font['width'];
-                        
-                    ImageString($this->img, $which_font['font'], $xpos, 
-                                $i * ($which_font['height'] + $interl) + $which_ypos, $str[$i], $which_color);
-                }                 
-            }
-        } 
-        return true; 
-
+        return true;
     }
+
 
     /*!
      * Adds the title to the graph.
@@ -2377,53 +2441,6 @@ class PHPlot {
         return true;
     }
 
-    /*!
-     *
-     */
-    function FormatLabel($which_pos, $which_lab) { 
-
-        switch ($which_pos) {
-        case 'x':
-        case 'plotx':
-            switch ($this->x_label_type) {
-                case "title":
-                    $lab = @ $this->data_values[$which_lab][0];
-                    break;
-                case "data":
-                    $lab = number_format($this->plot_min_x, $this->x_precision, ".", ", ") . "$this->si_units";
-                    break;
-                case "time":  //Time formatting suggested by Marlin Viss
-                    $lab = strftime($this->x_time_format, $which_lab);
-                    break;
-                default:
-                    //Unchanged from whatever format is passed in
-                    $lab = $which_lab;
-                break;
-            }    
-            break;
-        case 'y':
-        case 'ploty':
-            switch ($this->y_label_type) {
-                case "data":
-                    $lab = number_format($which_lab, $this->y_precision, ".", ", ") . "$this->si_units";
-                    break;
-                case "time":
-                    $lab = strftime($this->y_time_format, $which_lab);
-                    break;
-                default:
-                    //Unchanged from whatever format is passed in
-                    $lab = $which_lab;
-                    break;
-            }
-            break;
-        default:
-            $this->PrintError("FormatLabel(): Unknown label type $which_type");
-            return NULL;
-        } 
-        
-        return($lab);
-    } //function FormatLabel
-
    
     /*!
      * Draws the data label associated with a point in the plot.
@@ -2477,8 +2494,6 @@ class PHPlot {
         }
         $max_len += 5;          // Leave room for the boxes and margins
         
-        $line_spacing = 4;      // In pixels
-        
         /////// Calculate legend labels sizes:  FIXME - dirty hack - FIXME
         // TTF:
         if ($this->use_ttf) {
@@ -2496,8 +2511,8 @@ class PHPlot {
             $char_h = $this->legend_font['height'];
         }
         
-        $v_margin = $char_h/2;                   // Between vertical borders and labels
-        $dot_height = $char_h + $line_spacing;   // Height of the small colored boxes
+        $v_margin = $char_h/2;                         // Between vertical borders and labels
+        $dot_height = $char_h + $this->line_spacing;   // Height of the small colored boxes
         $width = $char_w * $max_len;
 
         //////// Calculate box size
@@ -2537,7 +2552,7 @@ class PHPlot {
             ImageRectangle($this->img, $dot_left_x, $y_pos + 1, $dot_right_x,
                            $y_pos + $dot_height-1, $this->ndx_text_color);
                 
-            $y_pos += $char_h + $line_spacing;
+            $y_pos += $char_h + $this->line_spacing;
             
             $color_index++;
             if ($color_index > $max_color_index) 
@@ -3639,6 +3654,21 @@ class PHPlot {
         $this->DrawXTitle();
         $this->DrawYTitle();
     }
+    
+    /*! 
+     * Set up the image resource 'img'
+     * \deprecated The constructor should init 'img'
+     */
+    function InitImage() {
+        //if ($this->img) { 
+        //    ImageDestroy($this->img);
+        //}
+        $this->img = ImageCreate($this->image_width, $this->image_height);
+        if (! $this->img)
+            $this->PrintError("InitImage(): Could not create image resource");
+        return true;
+    }
+
     
 }  // class PHPlot
 ?>
