@@ -2051,13 +2051,13 @@ class PHPlot {
             $this->FindDataLimits() ;
         }
  
-        if ( $xmin === NULL) {
+        if ($xmin === NULL || $xmin === '') {
             if ($this->data_type == 'text-data')  // Valid for data without X values only.
                 $xmin = 0;
             else
                 $xmin = $this->min_x;
         }
-        if ( $xmax === NULL) {
+        if ($xmax == NULL || $xmax === '') {
             if ($this->data_type == 'text-data')  // Valid for data without X values only.
                 $xmax = $this->max_x + 1;
             else
@@ -2066,13 +2066,13 @@ class PHPlot {
 
         // Leave room above and below the highest and lowest data points.
         
-        if ( $ymin === NULL) {
+        if ($ymin === NULL || $ymin === '') {
             if ($this->min_y < 0)
                 $ymin = ceil($this->min_y * 1.1);
             else
                 $ymin = floor($this->min_y * 0.9);
         }    
-        if ( $ymax === NULL) {
+        if ($ymax === NULL || $ymax === '') {
             if ($this->max_y < 0)
                 $ymax = floor($this->max_y * 0.9);
             else
@@ -2295,7 +2295,6 @@ class PHPlot {
             if (! isset($this->data_limits_done)) {
                 $this->FindDataLimits();  //Get maxima and minima for scaling
             }
-            //$this->x_tick_increment = ( ceil($this->max_x * 1.2) - floor($this->min_x * 1.2) )/10;
             $this->x_tick_increment =  ($this->plot_max_x  - $this->plot_min_x  )/10;
         }
         $this->num_x_ticks = ''; //either use num_y_ticks or y_tick_increment, not both
@@ -2316,7 +2315,6 @@ class PHPlot {
             if (! isset($this->plot_max_y))
                 $this->SetPlotAreaWorld();
 
-            //$this->y_tick_increment = ( ceil($this->max_y * 1.2) - floor($this->min_y * 1.2) )/10;
             $this->y_tick_increment =  ($this->plot_max_y  - $this->plot_min_y  )/10;
         }
         $this->num_y_ticks = ''; //either use num_y_ticks or y_tick_increment, not both
@@ -2645,6 +2643,7 @@ class PHPlot {
      * Draws Grid, Ticks and Tick Labels along Y-Axis
      * Ticks and ticklabels can be left of plot only, right of plot only, 
      * both on the left and right of plot, or crossing a user defined Y-axis
+     * TODO: marks at whole numbers (-10, 10, 20, 30 ...) no matter where the plot begins (-3, 4.7, etc.)
      */
     function DrawYTicks() 
     {
@@ -3584,7 +3583,7 @@ class PHPlot {
 
             $x_now_pixels = $this->xtr(0.5 + $row);         // Place text-data at X = 0.5, 1.5, 2.5, etc...
 
-            if ($this->x_data_label_pos != 'none')          // Draw X Data labels?
+            if ($this->x_data_label_pos != 'none')          // Draw X Data labels? TODO:labels on top of bars.
                 $this->DrawXDataLabel($this->data[$row][0], $x_now_pixels);
 
             // Draw the bar
@@ -3600,7 +3599,7 @@ class PHPlot {
                         $y1 = $this->ytr($this->data[$row][$record]);
                         $y2 = $this->x_axis_y_pixels;
                     }
-
+                    
                     if ($this->shading) {                           // Draw the shade?
                         ImageFilledPolygon($this->img, array($x1, $y1, 
                                                        $x1 + $this->shading, $y1 - $this->shading,
