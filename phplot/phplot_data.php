@@ -13,15 +13,17 @@
  * XXX data_values must be a *numerical* array, this could be enforced in SetDataValues() XXX
  */
 
+require_once("phplot.php");
+
 class PHPlot_Data extends PHPlot 
 {
     /*!
      * Constructor
      */
-    function PHPlot_Data()
+    function PHPlot_Data($which_width=600, $which_height=400, $which_output_file=NULL, $which_input_file=NULL)
     { 
         if (! isset($this->img)) { 
-            $this->PHPlot();
+            $this->PHPlot($which_width, $which_height, $which_output_file, $which_input_file);
         }
     }
     
@@ -45,12 +47,12 @@ class PHPlot_Data extends PHPlot
         // Determine maxima for each data row in array $max
         // Put maximum of the maxima in $maxmax
         $maxmax = 0;
-        for($i=0; $i < $this->num_data_values); $i++) {
+        for($i=0; $i < $this->num_data_rows; $i++) {
             $rowsize = count($this->data_values[$i]);
             for ($j=$offset; $j < $rowsize; $j++) {
-                if ($this->data_values[$i][$j] > $max[$j])
+                if ($this->data_values[$i][$j] > @ $max[$j])
                     $max[$j] = $this->data_values[$i][$j];
-                if ($max[$j] > $maxmax) 
+                if (@ $max[$j] > $maxmax) 
                     $maxmax = $max[$j];
             }
         }
@@ -76,13 +78,13 @@ class PHPlot_Data extends PHPlot
                 $amplify[$i] = $amp;
             }
             if ($amplify[$i] != 1 && $show_in_legend) 
-                $this->legend[$i] .= "*$amplify[$i]";
+                @ $this->legend[$i] .= "*$amplify[$i]";
         }
 
         // Amplify data
         // On my machine, running 1000 iterations over 1000 rows of 12 elements each,
         // the for loops were 43.2% faster (MBD)
-        for ($i = 0; $i < $this->num_data_values; $i++) {
+        for ($i = 0; $i < $this->num_data_rows; $i++) {
             $rowsize = count($this->data_values[$i]);
             for ($j=$offset; $j < $rowsize; $j++) {
                 $this->data_values[$i][$j] *= $amplify[$j];
@@ -90,27 +92,39 @@ class PHPlot_Data extends PHPlot
         }
 
         //Re-Scale Vertical Ticks if not already set
-        if ( !$this->vert_tick_increment) {
-            $this->SetVertTickIncrement("") ;
+        if ( ! $this->y_tick_increment) {
+            $this->SetYTickIncrement() ;
         }
 
         return TRUE;
     } //function DoScaleData
 
 
-    /*!
+    /**
      * Computes a moving average of strength $interval for
      * data row number $datarow, where 0 denotes the first
      * row of y-data. 
-     * \note Original idea by Theimo Nagel
+     *
+     *  @param int    datarow  Index of the row whereupon to make calculations
+     *  @param int    interval Number of elements to use in average ("strength")
+     *  @param bool   show     Whether to tell about the moving average in the legend.
+     *  @param string color    Color for the line to be drawn. This color is darkened. Can be named or #RRGGBB.
+     *  @param int    width    Width of the line to be drawn.
+     *
+     *  @note Original idea by Theimo Nagel
      */
-    function DoMovingAverage($datarow, $interval, $show_in_legend)
+    function DoMovingAverage($datarow, $interval, $show=TRUE, $color=NULL, $width=3)
     {
         if ($interval == 0) {
             $this->DrawError('DoMovingAverage(): interval can\'t be 0');
             return FALSE;
         }
 
+        if ($datarow >= $this->num_data_rows) {
+            $this->DrawError("DoMovingAverage(): Data row out of bounds ($datarow >= $this->num_data_rows)");
+            return FALSE;
+        }
+        
         if ($this->data_type == 'text-data') {
             $datarow++;
         } elseif ($this->data_type != 'data-data') {
@@ -118,22 +132,40 @@ class PHPlot_Data extends PHPlot
             return FALSE;
         }
         
-        if ($show_in_legend) {
-            $this->legend[$datarow] .= " (MA: $interval)";
+        // Set color:
+        if ($color) {
+            array_push($this->ndx_data_colors, $this->SetIndexDarkColor($color));
+        } else {
+            array_push($this->ndx_data_colors, $this->SetIndexDarkColor($this->data_colors[$datarow]));
+        }
+        // Set line width:
+        if ($width) {
+            array_push($this->line_widths, 3);
+        } else {    
+            array_push($this->line_widths,  $this->line_widths[$datarow] * 2);
+        }
+        // Show in legend?
+        if ($show) {
+            $this->legend[$this->num_data_rows] = "(MA[$datarow]:$interval)";
         }
 
-        for ($i=0;$i < $this->num_data_values; $i++) {
+        for ($i=0;$i < $this->num_data_rows; $i++) {
             $storage[$i % $interval] = @ $this->data_values[$i][$datarow];
             $ma = array_sum($storage);
             $ma /= count($storage);
-            $this->data_values[$i][$datarow] = $ma;
+            $this->data_values[$i][$this->num_data_rows] = $ma;
         }
+        
+        $this->num_data_rows++;
+        $this->FindDataLimits();
         return TRUE;
-    } //function DoMovingAverage
+    } //function DoMovingAverage()
 
-    /*!
-     * Computes an exponentially smoothed moving average
-     * $perc is the "smoothing percentage"
+
+    /**
+     * Computes an exponentially smoothed moving average.
+     * @param int perc "smoothing percentage"
+     * FIXME!!! I haven't checked this.
      */
     function DoExponentialMovingAverage($datarow, $perc, $show_in_legend)
     {
@@ -149,15 +181,16 @@ class PHPlot_Data extends PHPlot
         }
 
         $storage[0] = $this->data_values[0][$datarow];
-        for ($i=1;$i < $this->num_data_values; $i++) {
+        for ($i=1;$i < $this->num_data_rows; $i++) {
             $storage[$i] = @ $storage[$i-1] + $perc * ($this->data_values[$i][$datarow] - $storage[$i-1]);
             $ma = array_sum($storage);
             $ma /= count($storage);
             $this->data_values[$i][$datarow] = $ma;
         }
         return TRUE;
-   
-    }
+    } // function DoExponentialMovingAverage()
+
+    
     /*!
      * Removes the DataSet of number $index
      */
