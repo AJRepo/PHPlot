@@ -12,6 +12,14 @@ to modify the data arrays.
 
 class PHPlot_Data extends PHPlot {
 
+
+	//Constructor
+	function PHPlot_Data() { 
+		if ($this->img == "") { 
+			$this->PHPlot();
+		}
+	}
+
 	function DoScaleData($even, $show_in_legend) {
 	// will scale all data rows
 	// maybe later I will do a function that only scales some rows

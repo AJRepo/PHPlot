@@ -6,13 +6,13 @@ include("../phplot.php");
 include("../phplot_data.php");
 
 //Define the object
-$graph = new PHPlot_Data;
+$graph = new PHPlot_Data();
 
 //Define some data
 include("./data.php");
 
 //Set the data type 
-$graph->SetDataType("linear-linear");
+$graph->SetDataType("data-data");
 
 //Load the data into the data array
 $graph->SetDataValues($example_data);
@@ -25,7 +25,7 @@ $graph->DoScaleData(1,1);
 $graph->SetLegendPixels(100,100,"");
 
 //have no labels on Y axis
-$graph->SetYGridLabelType("none");
+//$graph->SetYGridLabelType("none");
 
 //Print that puppy!
 $graph->DrawGraph();

@@ -1,10 +1,9 @@
 <?
 include("../phplot.php");
-$graph = new PHPlot;
+$graph = new PHPlot(600,200);
 include("./data_date.php");
 $graph->SetDataType("data-data");  //Must be called before SetDataValues
 
-$graph->SetImageArea(600,200);
 $graph->SetXGridLabelType("time");
 $graph->SetXDataLabelAngle(90);
 $graph->SetXLabel("");
