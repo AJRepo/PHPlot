@@ -50,6 +50,7 @@ Graph type:
   <option value="bars">Bars (*)</option>
   <option value="thinbarline">Thin bars</option>
   <option value="lines">Lines</option>
+  <option value="squared">Squared lines</option>
   <option value="pie">Pie (*)</option>
   <option value="linepoints">Line and points</option>
   <option value="points">Points</option>

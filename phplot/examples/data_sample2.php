@@ -50,9 +50,10 @@ Data: (data-data)<br />
 <p>
 Graph type:
 <select name="which_plot_type">
- <option value="area">Area</option>
- <option value="lines">Lines</option>
- <option value="linepoints">Line and points</option>
- <option value="points">Points</option>
+  <option value="area">Area</option>
+  <option value="lines">Lines</option>
+  <option value="squared">Squared lines</option>
+  <option value="linepoints">Line and points</option>
+  <option value="points">Points</option>
 </select>
 </p>
