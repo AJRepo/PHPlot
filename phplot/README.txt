@@ -1,6 +1,6 @@
 This routine is a class for creating scientific and business
 charts. To run the test data extract the files with
-	tar -zxvf phplot-4.0.1.tar.gz 
+	tar -zxvf phplot-4.0.2.tar.gz 
 and then point your browser to 
 	examples/format-chart.php.
 
@@ -25,7 +25,7 @@ This has been tested with PHP3, PHP4, GD1.2 and GD 3.8.
 To start with a test see format_chart.php
 
 
-/* Copyright (C) 1998,1999,2000 Afan Ottenheimer, afan@jeo.net
+/* Copyright (C) 1998,1999,2000,2001 Afan Ottenheimer, afan@jeo.net
 This is distributed with NO WARRANTY and under the terms of the GNU GPL
 and PHP.
 If you use it - a cookie or some credit would be nice.

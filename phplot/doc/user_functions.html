@@ -90,6 +90,10 @@ image can be drawn.
 <p><DT><B>SetPlotType($which_pt)</B>
 <DD>User Function: Can be:  bars, lines, linepoints, area, points, and pie
 
+<p><DT><B>SetErrorBarLineWidth($width)</B>
+<DD>Width of the Error Bars in Pixels. If not set then 
+uses "line_width" to set the width of the error_bar lines.
+
 <p><DT><B>SetFileFormat($which_file_format)</B>
 <DD>User Function: Set the format of the output graph. Supported formats
 are GIF, JPEG, and PNG.  You can only use those formats
@@ -119,6 +123,9 @@ the half-width of the tee is set by <b>SetErrorBarSize</b>
 
 <p><DT><B>SetImageArea($which_iw,$which_ih)</B>
 <DD>User Function: Sets the size of the image in pixels.
+
+<p><DT><B>SetNumHorizTicks($which_nt)</B>
+<DD>User Function: Use this or SetHorizTickIncrements but not both.
 
 <p><DT><B>SetNumVertTicks($which_nt)</B>
 <DD>User Function: Use this or SetVertTickIncrements but not both.
@@ -157,6 +164,10 @@ array(int,int,int). <br>
 <p><DT><B>SetTitle($title)</B>
 <DD>User Function: Set the title of the graph. Printed at the top
 middle of the graph.
+
+<p><DT><B>SetHorizTickIncrement($which_ti)</B>
+<DD>User Function: Set the distance between tick marks on the X axis. $which_ti
+is in world coordinates.
 
 <p><DT><B>SetVertTickIncrement($which_ti)</B>
 <DD>User Function: Set the distance between tick marks on the Y axis. $which_ti

@@ -1,6 +1,6 @@
 <?php
 /*
-Copyright (C) 1998, 1999, 2000 Afan Ottenheimer.  Released under
+Copyright (C) 1998, 1999, 2000, 2001 Afan Ottenheimer.  Released under
 the GPL and PHP licenses as stated in the the README file which
 should have been included with this document.
 
@@ -19,6 +19,7 @@ side of the image.
 
 function SetColor($color_asked) {
 	global $ColorArray;
+
 	if ( count($color_asked) == 3 ) { //already array of 3 rgb
 	   	$ret_val =  $color_asked;
 	} else { // is asking for a color by name
@@ -106,6 +107,7 @@ class PHPlot{
 	var $point_shape = "diamond"; //rect,circle,diamond,triangle,dot,line,halfline
 	var $error_bar_shape = "tee"; //tee, line
 	var $error_bar_size = 5; //right left size of tee
+	var $error_bar_line_width = ""; //If set then use it, else use $line_width for thickness
 	var $data_values;
 
 	var $data_color = ""; //array("blue","green","yellow",array(0,0,0));
@@ -573,6 +575,8 @@ class PHPlot{
 
 		$max_records_per_group = 0;
 		$total_records = 0;
+		$mine = 0; //Maximum value for the -error bar (assume error bars always > 0) 
+		$maxe = 0; //Maximum value for the +error bar (assume error bars always > 0) 
 
 		reset($this->data_values);
 		while (list($dat_key, $dat) = each($this->data_values)) {  //for each X barchart setting
@@ -640,19 +644,19 @@ class PHPlot{
 							}
 						} elseif ($key%3 == 0) {
 							SetType($val,"double");
-							if ($val > $maxe_plus) {
+							if ($val > $maxe) {
 								$maxe = $val ;
 							}
 						} elseif ($key%3 == 1) {
 							SetType($val,"double");
-							if ($val > $maxe_minus) {
+							if ($val > $mine) {
 								$mine = $val ;
 							}
 						}
 						$tmp++;
 					}
-					$maxy = $maxy + $maxe_plus;
-					$miny = $miny - $maxe_minus; //assume error bars are always > 0
+					$maxy = $maxy + $maxe;
+					$miny = $miny - $mine; //assume error bars are always > 0
 
 				break;
 				default:
@@ -696,18 +700,18 @@ class PHPlot{
 			$this->y_top_margin = ($title_size[1] * 4);
 			$this->y_bot_margin = $this->x_label_height ;
 			$this->x_left_margin = $this->y_label_width * 2 + $this->tick_length;
-			$this->x_right_margin = 33.0; /* distance between right and end of x axis in pixels */
+			$this->x_right_margin = 33.0; // distance between right and end of x axis in pixels 
 		} else {
 			$title_size = array($this->title_font_width * strlen($this->plot_title),$this->title_font_height);
 			//$this->y_top_margin = ($title_size[1] * 4);
 			$this->y_top_margin = $title_size[1] * 4;
 			if ($this->x_datalabel_angle == 90) {
-				$this->y_bot_margin = 76.0; /* Must be integer */
+				$this->y_bot_margin = 76.0; // Must be integer
 			} else {
-				$this->y_bot_margin = 66.0; /* Must be integer */
+				$this->y_bot_margin = 66.0; // Must be integer
 			}
-			$this->x_left_margin = 77.0; /* distance between left and start of x axis in pixels */
-			$this->x_right_margin = 33.0; /* distance between right and end of x axis in pixels */
+			$this->x_left_margin = 77.0; // distance between left and start of x axis in pixels
+			$this->x_right_margin = 33.0; // distance between right and end of x axis in pixels
 		}
 
 //echo "$this->x_label_height<br>";
@@ -986,7 +990,6 @@ class PHPlot{
 		$this->data_color = $which_data;  //an array
 		$this->border_color = $which_border;  //an array
 
-		//foreach($this->data_color as $col) {
 		reset($this->data_color);  //data_color can be an array of colors, one for each thing plotted
 		while (list(, $col) = each($this->data_color)) {
 			list($r, $g, $b) = SetColor($col);
@@ -1003,9 +1006,36 @@ class PHPlot{
 			$this->col_data_border_color[] = ImageColorAllocate($this->img, $r, $g, $b);
 		}
 
+		//Set color of the error bars to be that of data if not already set. 
+		if (!$this->error_bar_color) { 
+				reset($which_data);
+				$this->SetErrorBarColors($which_data);
+		}
+
 		return true;
 
 	}
+
+	function SetErrorBarColors($which_data) {
+
+	 //Set the data to be displayed in a particular color
+	 if ($this->img == "") {
+	    $this->InitImage();
+	 }
+
+	 if ($which_data) {
+	    $this->error_bar_color = $which_data;  //an array
+		unset($this->col_error_bar_color);
+	    reset($this->error_bar_color);  //data_color can be an array of colors, one for each thing plotted
+	    while (list(, $col) = each($this->error_bar_color)) {
+	      list($r, $g, $b) = SetColor($col);
+	      $this->col_error_bar_color[] = ImageColorAllocate($this->img, $r, $g, $b);
+	    }
+	    return true;
+	  }
+	  return false;
+    } //function SetErrorBarColors
+
 
 	function DrawPlotBorder() {
 		switch ($this->plot_border_type) {
@@ -1025,7 +1055,7 @@ class PHPlot{
 
 
 	function SetHorizTickIncrement($which_ti) {
-		//Use either this or NumVertTicks to set where to place x tick marks
+		//Use either this or NumHorizTicks to set where to place x tick marks
 		if ($which_ti) {
 			$this->horiz_tick_increment = $which_ti;  //world coordinates
 		} else {
@@ -1274,7 +1304,7 @@ class PHPlot{
 		ImageLine($this->img,$this->plot_area[0]+1,$this->ytr($this->plot_max_y),
 				$this->xtr($this->plot_max_x)-1,$this->ytr($this->plot_max_y),$this->light_grid_color);
 
-		/* maxy is always > miny so delta_y is always positive */
+		// maxy is always > miny so delta_y is always positive
 		if ($this->vert_tick_increment) {
 			$delta_y = $this->vert_tick_increment;
 		} elseif ($this->num_vert_ticks) {
@@ -1553,8 +1583,9 @@ class PHPlot{
 						$this->DrawDataLabel($lab,$x_now,$y_now);
 					}
 
-					if ($color_index >= count($this->data_color)) $color_index=0;
+					if ($color_index >= count($this->data_color)) { $color_index=0;};
 					$barcol = $this->col_data_color[$color_index];
+					$error_barcol = $this->col_error_bar_color[$color_index];
 
 //echo "start = $start_lines<br>";
 					if ($start_lines == 1) {
@@ -1570,10 +1601,9 @@ class PHPlot{
 					$i++;
 					$start_lines = 1;
 				} elseif ($key%3 == 0) {
-					$this->DrawYErrorBar($x_now,$y_now,$val,$this->error_bar_shape,$barcol);
+					$this->DrawYErrorBar($x_now,$y_now,$val,$this->error_bar_shape,$error_barcol);
 				} elseif ($key%3 == 1) {
-					$mine = $val ;
-					$this->DrawYErrorBar($x_now,$y_now,-$val,$this->error_bar_shape,$barcol);
+					$this->DrawYErrorBar($x_now,$y_now,-$val,$this->error_bar_shape,$error_barcol);
 				}
 			}
 		}
@@ -1594,6 +1624,7 @@ class PHPlot{
 				} elseif ($key%3 == 2) {
 					if ($color_index >= count($this->data_color)) $color_index=0;
 					$barcol = $this->col_data_color[$color_index];
+					$error_barcol = $this->col_error_bar_color[$color_index];
 					$ypos = $val;
 //$ytmp = $val;
 //echo "two: $val, $xpos, $ypos, <br>";
@@ -1601,11 +1632,11 @@ class PHPlot{
 					$color_index++;
 					$this->DrawDot($xpos,$ypos,$this->point_shape,$barcol);
 				} elseif ($key%3 == 0) {
-					$this->DrawYErrorBar($xpos,$ypos,$val,$this->error_bar_shape,$barcol);
+					$this->DrawYErrorBar($xpos,$ypos,$val,$this->error_bar_shape,$error_barcol);
 //echo "three: $val, $xpos, $ypos, $xtmp, $ytmp<br>";
 				} elseif ($key%3 == 1) {
 					$mine = $val ;
-					$this->DrawYErrorBar($xpos,$ypos,-$val,$this->error_bar_shape,$barcol);
+					$this->DrawYErrorBar($xpos,$ypos,-$val,$this->error_bar_shape,$error_barcol);
 				}
 			}
 		}
@@ -1626,7 +1657,10 @@ class PHPlot{
 					if ($color_index >= count($this->data_color)) $color_index=0;
 					$barcol = $this->col_data_color[$color_index];
 
-					$this->DrawDot($xpos,$v,$this->point_shape,$barcol);
+					//if (is_numeric($v))  //PHP4 only
+					if ($v != "") {   //Allow for missing Y data
+						$this->DrawDot($xpos,$v,$this->point_shape,$barcol);
+					}
 					$color_index++;
 				}
 			}
@@ -1645,7 +1679,10 @@ class PHPlot{
 					if ($color_index >= count($this->data_color)) $color_index=0;
 					$barcol = $this->col_data_color[$color_index];
 
-					$this->DrawDot($j+.5,$v,$this->point_shape,$barcol);
+					//if (is_numeric($v))  //PHP4 only
+					if ($v != "") {   //Allow for missing Y data
+						$this->DrawDot($j+.5,$v,$this->point_shape,$barcol);
+					}
 					$color_index++;
 				}
 			}
@@ -1689,7 +1726,7 @@ class PHPlot{
 		$y1 = $this->ytr($y_world);
 		$y2 = $this->ytr($y_world+$error_height) ;
 
-		for ($width = 0; $width < $this->line_width; $width++) {
+		for ($width = 0; $width < $this->error_bar_line_width; $width++) {
 			ImageLine($this->img, $x1+$width, $y1 , $x1+$width, $y2, $color);
 			ImageLine($this->img, $x1-$width, $y1 , $x1-$width, $y2, $color);
 		}
@@ -1755,8 +1792,17 @@ class PHPlot{
 		return true;
 	}
 
-	function SetLineWidth($which_lt) {
-		$this->line_width = $which_lt;
+	function SetErrorBarLineWidth($which_seblw) {
+		$this->error_bar_line_width = $which_seblw;
+		return true;
+	}
+
+
+	function SetLineWidth($which_lw) {
+		$this->line_width = $which_lw;
+		if (!$this->error_bar_line_width) { 
+			$this->error_bar_line_width = $which_lw;
+		}
 		return true;
 	}
 
@@ -1883,7 +1929,7 @@ class PHPlot{
 		while (list($j, $row) = each($this->data_values)) {
 
 			$color_index = 0;
-			$i = 0;
+			$i = 0; 
 			//foreach ($row as $v)
 			while (list($k, $v) = each($row)) {
 				if ($k == 0) { 
@@ -1892,25 +1938,32 @@ class PHPlot{
 						$x_now = $this->xtr($v);
 				} else {
 					// Draw Lines
+					if ($this->data_type == "text-data") { 
+						$x_now = $this->xtr($j+.5); 
+					} 
 
-					$y_now = $this->ytr($v);
-					if ($this->data_type == "text-data") { $x_now = $this->xtr($j+.5); } ;
+					//if (is_numeric($v))  //PHP4 only
+					if ($v != "") {   //Allow for missing Y data
+						$y_now = $this->ytr($v);
+						if ($color_index >= count($this->data_color)) { $color_index=0;} ;
+						$barcol = $this->col_data_color[$color_index];
 
-					if ($color_index >= count($this->data_color)) { $color_index=0;} ;
-					$barcol = $this->col_data_color[$color_index];
-
-					if ($start_lines == 1) {
-						for ($width = 0; $width < $this->line_width; $width++) {
-							if ($this->line_style[$i] == "dashed") {
-								$this->DrawDashedLine($x_now, $y_now + $width, $lastx[$i], $lasty[$i] + $width, 4,4, $barcol);
-							} else {
-								ImageLine($this->img, $x_now, $y_now + $width, $lastx[$i], $lasty[$i] + $width, $barcol);
+						if ($start_lines == 1) {
+							for ($width = 0; $width < $this->line_width; $width++) {
+								if ($this->line_style[$i] == "dashed") {
+									$this->DrawDashedLine($x_now, $y_now + $width, $lastx[$i], $lasty[$i] + $width, 4,4, $barcol);
+								} else {
+									ImageLine($this->img, $x_now, $y_now + $width, $lastx[$i], $lasty[$i] + $width, $barcol);
+								}
 							}
 						}
+						$lastx[$i] = $x_now;
+					} else { 
+						$y_now = $lasty[$i];
+						//Don't increment lastx[$i]
 					}
 					$bordercol = $this->col_bar_border_color[$colbarcount];
 
-					$lastx[$i] = $x_now;
 					$lasty[$i] = $y_now;
 					$color_index++;
 					$i++;
@@ -2000,15 +2053,17 @@ class PHPlot{
 					$barcol = $this->col_data_color[$color_index];
 					$bordercol = $this->col_bar_border_color[$colbarcount];
 
-					if ($this->shading == 1) {
-						//Shading set in SetDefaultColors
-						ImageFilledRectangle($this->img, $x1+1, $y1-1, $x2+1, $y2-1, $this->i_light);
-						ImageFilledRectangle($this->img, $x1+2, $y1-2, $x2+2, $y2-2, $this->i_light);
-					}
+					if ($v != "") { //Allow for missing data
+						if ($this->shading == 1) {
+							//Shading set in SetDefaultColors
+							ImageFilledRectangle($this->img, $x1+1, $y1-1, $x2+1, $y2-1, $this->i_light);
+							ImageFilledRectangle($this->img, $x1+2, $y1-2, $x2+2, $y2-2, $this->i_light);
+						}
 
-					ImageFilledRectangle($this->img, $x1, $y1, $x2, $y2, $barcol);
-					//ImageRectangle($this->img, $x1, $y1, $x2, $y2, $bordercol);
-					ImageRectangle($this->img, $x1, $y1, $x2, $y2, $this->text_color);
+						ImageFilledRectangle($this->img, $x1, $y1, $x2, $y2, $barcol);
+						//ImageRectangle($this->img, $x1, $y1, $x2, $y2, $bordercol);
+						ImageRectangle($this->img, $x1, $y1, $x2, $y2, $this->text_color);
+					} 
 
 					$start_pos = $start_pos + $this->record_bar_width;
 					$color_index++;

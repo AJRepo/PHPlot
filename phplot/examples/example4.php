@@ -35,7 +35,7 @@ for ($i=0; $i<=30; $i++){
     $graph->SetImageArea(600, 400);
 	$graph->SetVertTickIncrement("");
 	$graph->SetHorizTickIncrement(1);
-    $graph->SetLineWidth("1");
+    $graph->SetErrorBarLineWidth(1);
 	$graph->SetYScaleType("log");
 	$graph->SetPointShape("halfline");
 	$graph->SetErrorBarShape("line");
@@ -44,6 +44,7 @@ for ($i=0; $i<=30; $i++){
 	$graph->SetXLabel("Day");
 	$graph->SetYLabel("index");
 	$graph->SetTitle("Stock Market Data");
+	//$graph->SetErrorBarColors(array("blue","red","green","black"));
 	$graph->SetDataColors(
 		array("blue","green","yellow","red"),  //Data Colors
 		array("black")							//Border Colors
