@@ -1,5 +1,7 @@
 <?php    
 
+extract ($_GET, EXTR_OVERWRITE);
+extract ($_POST, EXTR_OVERWRITE);
 
 //Sample functions
 
@@ -27,12 +29,11 @@ if ($which_data_type =="function") {
 
 //Required Settings 
 	include("../phplot.php");
-	$graph = new PHPlot;
+	$graph = new PHPlot($XSIZE_in, $YSIZE_in);
 	$graph->SetDataType($which_data_type);  //Must be first thing
 
 	//$graph->SetFileFormat("png");
 	$graph->SetDataValues($data);
-    $graph->SetImageArea($XSIZE_in, $YSIZE_in);
 
 //Optional Settings (Don't need them) 
 	$graph->SetPlotType($which_plot_type);
