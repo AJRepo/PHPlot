@@ -19,12 +19,12 @@
 //PHPLOT Version 4.?.?
 //Requires PHP 4 or later 
 
-error_reporting(E_ALL);
+//error_reporting(E_ALL);
 
 class PHPlot {
 
     var $is_inline = 0;             // 0 = Sends headers, 1 = sends just raw image data
-    var $browser_cache = '1';       // 0 = Sends headers for browser to not cache the image, 
+    var $browser_cache = 0;         // 0 = Sends headers for browser to not cache the image, 
                                     // (i.e. 0 = don't let browser cache image)
                                     // (only if is_inline = 0 also)
     var $session_set = '';          // Do not change
@@ -218,9 +218,14 @@ class PHPlot {
         }
         
         $this->SetIndexColors();
-       
-        $this->SetDefaultFonts();
+    
         
+        // Init some font-related variables:
+        $this->SetDefaultFonts();
+        $this->SetTitle('');
+        $this->SetXTitle('');
+        $this->SetYTitle('');
+       
         //Solid or dashed lines
         $this->line_style = array('solid','solid','dashed','dashed','solid', 'solid','dashed','dashed');
 
@@ -315,7 +320,8 @@ class PHPlot {
     /*!
      * Sets Fixed/Truetype font parameters.
      *  \param $which_elem Is the element whose font is to be changed.
-     *         It can be one of 'title', 'axis', 'data', 'legend','generic','x_title' or 'y_title'
+     *         It can be one of 'title', 'legend','generic', 
+     *         'x_label', 'y_label', x_title' or 'y_title'
      *  \param $which_font Can be a number (for fixed font sizes) or 
      *         a string with the filename when using TTFonts.
      *  \param $which_size Point size (TTF only)
@@ -475,23 +481,32 @@ class PHPlot {
      * inline condition, cacheable, etc.
      */
     function SetFileFormat($which_file_format) {
+        // I know rewriting this was unnecessary, but it didn't work for me, I don't
+        // understand why. (MBD)
         $asked = strtolower($which_file_format);
-        if( $asked =="jpg" || $asked =="png" || $asked =="gif" || $asked =="wbmp" ) {
-            if( $asked=="jpg" && !(imagetypes() & IMG_JPG) )
+        switch ($asked) {
+            case 'jpg':
+                if (imagetypes() & IMG_JPG)
+                    return TRUE;
+                break;
+            case 'png':
+                if (imagetypes() & IMG_PNG)
+                    return TRUE;
+                break;
+            case 'gif':
+                if (imagetypes() & IMG_GIF)
+                    return TRUE;
+                break;
+            case 'wbmp':
+                if (imagetypes() & IMG_WBMP)
+                    return TRUE;
+                break;
+            default:
+                $this->PrintError("SetFileFormat(): Unrecognized option '$which_file_format'");
                 return false;
-            elseif( $asked=="png" && !(imagetypes() & IMG_PNG) ) 
-                return false;
-            elseif( $asked=="gif" && !(imagetypes() & IMG_GIF) )     
-                return false;
-            elseif( $asked=="wbmp" && !(imagetypes() & IMG_WBMP) )     
-                return false;
-            else {
-                $this->img_format=$asked;
-                return true;
-            }
         }
-        else
-            return false;
+        $this->PrintError("SetFileFormat():File format '$which_file_format' not supported");
+        return FALSE;
     }    
 
 
@@ -554,7 +569,8 @@ class PHPlot {
     
 
     /*!
-     * Performs the actual outputting of the generated graph
+     * Performs the actual outputting of the generated graph, and
+     * destroys the image resource.
      */
     function PrintImage() {
 
@@ -1197,7 +1213,6 @@ class PHPlot {
     }
 
     /*!
-     * Private.
      * Prints an error message inline into the generated image 
      * Defaults to centered position (MBD)
      */
@@ -1207,17 +1222,15 @@ class PHPlot {
         
         $ypos = (! $where_y) ? $this->image_height/2 : $where_y;
         $xpos = (! $where_x) ? $this->image_width/2 : $where_x;
-        
+        ImageRectangle($this->img, 0,0, $this->image_width, $this->image_height,
+                       ImageColorAllocate($this->img,255,255,255));
+       
         if ($this->use_ttf == 1) {
-            // TODO: Center TTF text (MBD)
-            ImageRectangle($this->img, 0,0,$this->image_width,$this->image_height,ImageColorAllocate($this->img,255,255,255));
-            ImageTTFText($this->img, $this->generic_ttfont_size, 0, $xpos, $ypos, ImageColorAllocate($this->img,0,0,0), 
-                         $this->ttf_font, $error_message);
+            $this->DrawText($this->generic_ttfont, 0, $xpos, $ypos, ImageColorAllocate($this->img,0,0,0),
+                            $this->generic_ttfont_size, $error_message, 'center', 'center');
         } else {
-            $xpos -= strlen($error_message) * $this->generic_font_width;
-            
-            ImageRectangle($this->img, 0,0,$this->image_width,$this->image_height,ImageColorAllocate($this->img,255,255,255));
-            ImageString($this->img, $this->generic_font,$xpos,$ypos,$error_message, ImageColorAllocate($this->img,0,0,0));
+            $this->DrawText($this->generic_font, 0, $xpos, $ypos, ImageColorAllocate($this->img,0,0,0),
+                            NULL, $error_message, 'center', 'center');
         }
 
         $this->PrintImage();
@@ -1775,7 +1788,105 @@ class PHPlot {
 ////////////////////                  DRAWING
 /////////////////////////////////////////////
 
-     function DrawLabels() {
+    /*
+    function CheckBounds(&$xpos, &$ypos) {
+        $xpos = ($xpos < 0) ? 0 : (($xpos > $this->image_width) ? $this->image_width : $xpos);
+        $ypos = ($ypos < 0) ? 0 : (($ypos > $this->image_height) ? $this->image_height : $ypos);
+    }
+    */
+    
+    /*!
+     * Draws a string of text. Horizontal and vertical alignment are relative to 
+     * to the drawing. That is: vertical text (90 deg) gets centered along y-axis 
+     * with v_align='center', and adjusted to the left of x-axis with h_align = 'right',
+     * 
+     * \note Original multiple lines code submitted by Remi Ricard.
+     * \note Original vertical code submitted by Marlin Viss.
+     */
+    function DrawText($which_font,$which_angle,$which_xpos,$which_ypos,$which_color,$which_size,$which_text,
+                      $which_halign='left', $which_valign='bottom') {
+
+        $height = ImageFontHeight($which_font);
+        $width = ImageFontWidth($which_font);
+
+        $interl = 2;      // Pixels between lines (TODO: add method)
+        
+        // TTF:  FIXME: Does alignement work for 90 deg?
+        if ($this->use_ttf) { 
+            $size = $this->TTFBBoxSize($which_size, $which_angle, $which_font, $which_text); 
+            
+            if ($which_valign == 'bottom')
+                $which_ypos += $height;
+            
+            if ($which_halign == 'center')
+                $which_xpos -= $size[0]/2;
+            
+            if ($which_halign == 'right')
+                $which_xpos -= $size[0];
+                
+            ImageTTFText($this->img, $which_size, $which_angle, 
+                $which_xpos, $which_ypos, $which_color, $which_font, $which_text); 
+        }
+        // Fixed fonts:
+        else { 
+            // Split the text in its lines, and count them
+            $which_text = ereg_replace("\r","",$which_text);
+            $str = split("\n",$which_text);
+            $nlines = count($str);
+            
+            // Vertical text:
+            // (Remember the alignment covention with vertical text)
+            if ($which_angle == 90) {
+                // The text goes around $which_xpos.
+                if ($which_halign == 'center') 
+                    $which_xpos -= ($nlines * ($height + $interl))/2;
+
+                // Left alignment requires no modification to $xpos...
+                // Right-align it. $which_xpos designated the rightmost x coordinate.
+                else if ($which_halign == 'right')
+                    $which_xpos += ($nlines * ($height + $interl));
+                    
+                $ypos = $which_ypos;
+                for($i = 0; $i < $nlines; $i++) { 
+                    // Center the text vertically around $which_ypos (each line)
+                    if ($which_valign == 'center')
+                        $ypos = $which_ypos + (strlen($str[$i]) * $width) / 2;
+                    // Make the text finish (vertically) at $which_ypos
+                    if ($which_valign == 'bottom')
+                        $ypos = $which_ypos + strlen($str[$i]) * $width;
+                        
+                    ImageStringUp($this->img, $which_font, $i*($height+$interl) + $which_xpos, $ypos, $str[$i], $which_color);
+                } 
+            } 
+            // Horizontal text:
+            else {
+                // The text goes above $which_ypos
+                if ($which_valign == 'top')
+                    $which_ypos = $which_ypos - ($nlines * ($height + $interl));
+                // The text is centered around $which_ypos
+                if ($which_valign == 'center')
+                    $which_ypos -= ($nlines * ($height + $interl))/2;
+                // valign = 'center' requires no modification
+                
+                $xpos = $which_xpos;
+                for($i = 0; $i < $nlines; $i++) { 
+                    // center the text around $which_xpos
+                    if ($which_halign == 'center')
+                        $xpos = $which_xpos - (strlen($str[$i]) * $width)/2;
+                    // make the text finish at $which_xpos
+                    if ($which_halign == 'right')
+                        $xpos = $which_xpos - strlen($str[$i]) * $width;
+                        
+                    ImageString($this->img, $which_font, $xpos, $i*($height+$interl) + $which_ypos, $str[$i], $which_color);
+                }                 
+            }
+        } 
+        return true; 
+
+    }
+
+
+    function DrawLabels() {
         $this->DrawTitle();
         $this->DrawXTitle();
         $this->DrawYTitle();
@@ -1788,7 +1899,11 @@ class PHPlot {
     function DrawTitle() {
 
         // Center of the plot area
-        $xpos = ($this->plot_area[0] + $this->plot_area_width / 2);
+        //$xpos = ($this->plot_area[0] + $this->plot_area_width / 2);
+        
+        // Center of the image:
+        $xpos = $this->image_width / 2;
+        
         // Place it at almost at the top
         $ypos = $this->safe_margin;
         
@@ -1862,91 +1977,40 @@ class PHPlot {
         // TTF
         if ($this->use_ttf == 1) { 
             // Center the title to the plot
-            $size = $this->TTFBBoxSize($this->y_title_ttfont_size, 90, $this->y_title_ttfont, $this->y_title_txt);
-            $ypos = $size[1]/2 + $this->ytr(($this->plot_max_y + $this->plot_min_y)/2.0);
+            $ypos = $this->ytr(($this->plot_max_y + $this->plot_min_y)/2.0);
             
             if ($this->y_title_pos == 'plotleft' || $this->y_title_pos == 'both') {
                 $xpos = $this->safe_margin;
                 $this->DrawText($this->y_title_ttfont, 90, $xpos, $ypos, 
-                                $this->ndx_title_color, $this->y_title_ttfont_size, $this->y_title_txt);
+                                $this->ndx_title_color, $this->y_title_ttfont_size, $this->y_title_txt,'left','center');
             }
             if ($this->y_title_pos == 'plotright' || $this->y_title_pos == 'both') {
                 $xpos = $this->image_width - $this->safe_margin - $this->y_title_width - $this->safe_margin;
                 $this->DrawText($this->y_title_ttfont, 90, $xpos, $ypos, 
-                                $this->ndx_title_color, $this->y_title_ttfont_size, $this->y_title_txt);
+                                $this->ndx_title_color, $this->y_title_ttfont_size, $this->y_title_txt,'left','center');
             }
             
         } 
         // Fixed font
         else {
-            // Center the title vertically to the plot
-            // FIXME! with multiple lines, only max lenght on a single line should be used
-            $ypos = ($this->y_title_font_width * strlen($this->y_title_txt)/2.0) +
-                     $this->ytr(($this->plot_max_y + $this->plot_min_y)/2.0);
-                     
+            // Center the title vertically to the plot (MBD FIXME: why doesn't it work?)
+            //$ypos = $this->plot_area_height/2;
+            $ypos = $this->image_height /2;
             if ($this->y_title_pos == 'plotleft' || $this->y_title_pos == 'both') {
                 $xpos = $this->safe_margin;
-                $this->DrawText($this->y_title_font, 90, $xpos, $ypos, 
-                            $this->ndx_title_color, NULL, $this->y_title_txt, 'center');
+                $this->DrawText($this->y_title_font, 90, $xpos, $ypos, $this->ndx_title_color, 
+                                NULL, $this->y_title_txt, 'left', 'center');
             }
             if ($this->y_title_pos == 'plotright' || $this->y_title_pos == 'both') {
                 $xpos = $this->image_width - $this->safe_margin - $this->y_title_width - $this->safe_margin;
-                $this->DrawText($this->y_title_font, 90, $xpos, $ypos,
-                                $this->ndx_title_color, NULL, $this->y_title_txt, 'center');
+                $this->DrawText($this->y_title_font, 90, $xpos, $ypos, $this->ndx_title_color, 
+                                NULL, $this->y_title_txt, 'left', 'center');
             }
         }
         
         return true;
     }
 
-    /*!
-     * Draws a string of text
-     */
-    function DrawText($which_font,$which_angle,$which_xpos,$which_ypos,$which_color,$which_size,$which_text,
-                      $which_halign='left',$which_valign='') {
-
-        $height = ImageFontHeight($which_font);
-        $width = ImageFontWidth($which_font);
-
-        if ($this->use_ttf == 1 ) { 
-            $size = $this->TTFBBoxSize($which_size, $which_angle, $which_font, $which_text); 
-            
-            if ($which_valign == 'bottom') { 
-                $which_ypos = $which_ypos + $height;
-            }
-            
-            if ($which_halign == 'center') { 
-                $which_xpos = $which_xpos - $size[0]/2;
-            }
-            ImageTTFText($this->img, $which_size, $which_angle, 
-                $which_xpos, $which_ypos, $which_color, $which_font, $which_text); 
-        } else { 
-            if ($which_valign == 'top') { 
-                $which_ypos = $which_ypos - $height;
-            }
-            
-            $which_text = ereg_replace("\r","",$which_text);
-            $str = split("\n",$which_text); //multiple lines submitted by Remi Ricard
-            
-            if ($which_angle == 90) {  //Vertical Code Submitted by Marlin Viss
-                for($i=0;$i<count($str);$i++) { 
-                    ImageStringUp($this->img, $which_font, ($i*$height + $which_xpos), $which_ypos, $str[$i], $which_color);
-                } 
-            } else {
-                for($i=0;$i<count($str);$i++) { 
-                    if ($which_halign == 'center') { 
-                        $xpos = $which_xpos - strlen($str[$i]) * $width/2;
-                        ImageString($this->img, $which_font, $xpos, ($i*$height + $which_ypos), $str[$i], $which_color);
-                    } else { 
-                        ImageString($this->img, $which_font, $which_xpos, ($i*$height + $which_ypos), $str[$i], $which_color); 
-                    }
-                } 
-            }
-
-        } 
-        return true; 
-
-    }
 
     /*!
      * Fills the plot area with a solid color
@@ -2045,28 +2109,33 @@ class PHPlot {
             ImageLine($this->img,$yaxis_x - $this->vtick_length, $y_pixels,$yaxis_x,$y_pixels,$this->ndx_tick_color);
         }
 
-        $ywidtmp = strlen($which_ylab) * $this->y_label_font_width + $this->vtick_length;
-        $dhgh = $this->y_label_font_height / 2.0;
-
         // Labels:
         // TTF:
         if ($this->use_ttf) {
-            // TODO: Implement TTF (MBD)
-            //ajo working
-            //$this->DrawText($this->y_title_ttfont, 0,($yaxis_x - $this->y_margin_width - $this->tick_length/2),
-            //        $y_pixels, $this->ndx_text_color, $this->y_label_ttfont_size, $which_ylab);
+            //Labels to the left of the plot area
+            if ($this->y_tick_label_pos == 'plotleft' || $this->y_tick_label_pos == 'both') {
+                $this->DrawText($this->y_label_ttfont, 0, $yaxis_x - $this->vtick_length * 1.5, 
+                                $y_pixels, $this->ndx_text_color, $this->y_label_ttfont_size, 
+                                $which_ylab, 'right', 'center');
+            }
+            //Labels to the right of the plot area
+            if ($this->y_tick_label_pos == 'plotright' || $this->y_tick_label_pos == 'both') {
+                $this->DrawText($this->y_label_font, 0, $this->plot_area[2] + $this->vtick_length * 2,
+                                $y_pixels, $this->ndx_text_color, $this->y_label_ttfont_size,
+                                $which_ylab, 'left', 'center');
+            }
         } 
         // Fixed Fonts:
         else {
             //Labels to the left of the plot area
             if ($this->y_tick_label_pos == 'plotleft' || $this->y_tick_label_pos == 'both') {
-                ImageString($this->img, $this->y_label_font, $yaxis_x - $ywidtmp, 
-                            $y_pixels - $dhgh, $which_ylab, $this->ndx_text_color);
+                $this->DrawText($this->y_label_font, 0, $yaxis_x - $this->vtick_length * 1.5, 
+                                $y_pixels, $this->ndx_text_color, NULL, $which_ylab, 'right', 'center');
             }
             //Labels to the right of the plot area
             if ($this->y_tick_label_pos == 'plotright' || $this->y_tick_label_pos == 'both') {
-                 ImageString($this->img, $this->y_label_font, $this->plot_area[2] + $this->vtick_length * 1.5, 
-                             $y_pixels - $dhgh, $which_ylab, $this->ndx_text_color);
+                $this->DrawText($this->y_label_font, 0, $this->plot_area[2] + $this->vtick_length * 2,
+                                $y_pixels, $this->ndx_text_color, NULL, $which_ylab, 'left', 'center');
             }
         }
    }       // Function DrawVerticalTick()
@@ -2082,12 +2151,14 @@ class PHPlot {
         if ($this->skip_top_tick != 1) { //If tick increment doesn't hit the top 
             //Left Top
             //ImageLine($this->img,(-$this->tick_length+$this->xtr($this->plot_min_x)),
-            //        $this->ytr($this->plot_max_y),$this->xtr($this->plot_min_x),$this->ytr($this->plot_max_y),$this->ndx_tick_color);
+            //        $this->ytr($this->plot_max_y),$this->xtr($this->plot_min_x),$this->ytr($this->plot_max_y),
+            //        $this->ndx_tick_color);
             //$ylab = $this->FormatYTickLabel($plot_max_y);
 
             //Right Top
             //ImageLine($this->img,($this->xtr($this->plot_max_x)+$this->tick_length),
-            //        $this->ytr($this->plot_max_y),$this->xtr($this->plot_max_x-1),$this->ytr($this->plot_max_y),$this->ndx_tick_color);
+            //        $this->ytr($this->plot_max_y),$this->xtr($this->plot_max_x-1),$this->ytr($this->plot_max_y),
+            //        $this->ndx_tick_color);
 
             //Draw Grid Line at Top
             if ($this->draw_y_grid == 1) {
@@ -2158,7 +2229,10 @@ class PHPlot {
      * Ticks and tick labels can be down of plot only, up of plot only, 
      * both on up and down of plot [, or crossing a user defined X-axis (TODO)]
      *
-     * \fixme lefmost tick stuff should be corrected
+     * \fixme lefmost tick stuff should be corrected, maybe introduced into the loop
+     *        despite any necessary ifs (not to overwrite the axis with the grid)
+     *        inside. Upper and right ticks have to be drawn too.
+     * \note Original vertical code submitted by Marlin Viss
      */
     function DrawHorizontalTicks() {
     
@@ -2169,21 +2243,16 @@ class PHPlot {
                 
         $xlab = $this->FormatTickLabel('x', 0);
         
-        if ($this->x_label_angle == 90) { 
-            $xpos = $this->plot_area[0] - $this->x_label_font_height/2;
-            $ypos = $this->x_label_font_width*strlen($xlab) + $this->plot_area[3] + $this->htick_length*2;
-            ImageStringUp($this->img, $this->x_label_font, $xpos, $ypos, $xlab, $this->ndx_text_color);
+        if ($this->use_ttf) {
+            $this->DrawText($this->x_label_ttfont, $this->x_label_angle, $this->plot_area[0], 
+                            $this->plot_area[3] + $this->htick_length*2, $this->ndx_text_color, 
+                            $this->x_label_ttfont_size, $xlab, 'center', 'bottom');
         } else {
-            $xpos = $this->plot_area[0] - $this->x_label_font_width*strlen($xlab)/2 ;
-            $ypos = $this->plot_area[3] + $this->x_label_font_height;
-            ImageString($this->img, $this->x_label_font,$xpos, $ypos, $xlab, $this->ndx_text_color);
-        }
+             $this->DrawText($this->x_label_font, $this->x_label_angle, $this->plot_area[0], 
+                            $this->plot_area[3] + $this->htick_length*2, $this->ndx_text_color, 
+                            NULL, $xlab, 'center', 'bottom');
+        }          
 
-        //Will be changed to allow for TTF fonts in data as well.
-        //$this->DrawText($this->x_label_font, $this->x_label_angle, $xpos, $ypos, $this->ndx_title_color, '', $xlab); 
-
-        // End of leftmost tick
-        
         // Calculate x increment between ticks
         if ($this->horiz_tick_increment) {
             $delta_x = $this->horiz_tick_increment;
@@ -2193,9 +2262,7 @@ class PHPlot {
             $delta_x =($this->plot_max_x - $this->plot_min_x) / 10 ;
         }
 
-        $i = 0;
         $x_tmp = $this->plot_min_x + $delta_x;  //Don't overwrite left Y axis 
-        
         SetType($x_tmp,'double');
 
         while ($x_tmp < $this->plot_max_x) {    // Was '<=', now '<' not to overwrite rightmost y axis
@@ -2226,31 +2293,34 @@ class PHPlot {
             }
 
             // X Axis tick labels
-            // Vertical Code Submitted by Marlin Viss
+            // TTF:
+            if ($this->use_ttf) {
+                if ($this->x_tick_label_pos == 'plotdown' || $this->x_tick_label_pos == 'both') {
+                    $this->DrawText($this->x_label_ttfont, $this->x_label_angle, $x_pixels, 
+                                    $this->plot_area[3] + $this->htick_length * 2, $this->ndx_text_color, 
+                                    $this->x_label_ttfont_size, $xlab, 'center', 'bottom');
+                }
 
-            $len = $this->x_label_font_width*strlen($xlab);
-            
-            if ($this->x_label_angle == 90) {          // Vertical labels
-                if ($this->x_tick_label_pos == 'plotdown' || $this->x_tick_label_pos == 'both') {
-                    ImageStringUp($this->img, $this->x_label_font, $x_pixels - $this->x_label_font_height/2, 
-                                  $this->plot_area[3] + $len + $this->htick_length, $xlab, $this->ndx_text_color);
-                }
                 if ($this->x_tick_label_pos == 'plotup' || $this->x_tick_label_pos == 'both') {
-                    ImageStringUp($this->img, $this->x_label_font, $x_pixels - $this->x_label_font_height/2,
-                                  $this->plot_area[1] - $this->htick_length, $xlab, $this->ndx_text_color);                   
+                    $this->DrawText($this->x_label_ttfont, $this->x_label_angle, $x_pixels, 
+                                    $this->plot_area[1] - $this->htick_length * 2, $this->ndx_text_color, 
+                                    $this->x_label_ttfont_size, $xlab, 'center', 'top');
                 }
-            } else {                                      // Horizontal Labels
+            } 
+            // Fixed fonts:
+            else {
                 if ($this->x_tick_label_pos == 'plotdown' || $this->x_tick_label_pos == 'both') {
-                    ImageString($this->img, $this->x_label_font, $x_pixels - $len/2, 
-                                $this->x_label_font_height + $this->plot_area[3],$xlab, $this->ndx_text_color);
-                    }
+                    $this->DrawText($this->x_label_font, $this->x_label_angle, $x_pixels, 
+                                    $this->plot_area[3] + $this->htick_length * 2, $this->ndx_text_color, 
+                                    NULL, $xlab, 'center', 'bottom');
+                }
+
                 if ($this->x_tick_label_pos == 'plotup' || $this->x_tick_label_pos == 'both') {
-                    ImageString($this->img, $this->x_label_font, $x_pixels - $len/2 , 
-                                $this->plot_area[1] - $this->x_label_font_height - $this->htick_length, 
-                                $xlab, $this->ndx_text_color);
+                    $this->DrawText($this->x_label_font, $this->x_label_angle, $x_pixels, 
+                                    $this->plot_area[1] - $this->htick_length * 2, $this->ndx_text_color, 
+                                    NULL, $xlab, 'center', 'top');
                 }
             }
-            $i++;
             $x_tmp += $delta_x;
         }
 
@@ -2336,106 +2406,85 @@ class PHPlot {
      * Calling of this function in DrawLines(), etc is triggered by draw_datalabels
      */
     function DrawXDataLabel($xlab,$xpos) {
-        //xpos comes in in PIXELS not in world coordinates.
-        //Draw an x data label centered at xlab
         if ($this->use_ttf) {
-            //An array
-            $xlab_size = $this->TTFBBoxSize($this->x_label_ttfont_size, $this->x_label_angle, $this->x_label_ttfont, $xlab);
-            //in pixels
-            $y = $this->plot_area[3] + $xlab_size[1] + 4;
-            $x = $xpos - $xlab_size[0]/2;
-            ImageTTFText($this->img, $this->x_label_ttfont_size, $this->x_label_angle, 
-                         $x, $y, $this->ndx_text_color, $this->x_label_ttfont, $xlab);
+            $this->DrawText($this->x_label_ttfont, $this->x_label_angle, $xpos, $this->plot_area[3], 
+                            $this->ndx_text_color, $this->x_label_ttfont_size, $xlab, 'center', 'bottom');       
         } else {
-            $xlab_size = array($this->x_label_font_width  * strlen($xlab), $this->x_label_font_height * 3);
-            
-            if ($this->x_label_angle == 90) {
-                $y = $this->plot_area[3] + $this->x_label_font_width * strlen($xlab); 
-                $x = $xpos - $this->x_label_font_height;
-                ImageStringUp($this->img, $this->x_label_font_height,$x, $y ,$xlab, $this->ndx_text_color);
-            } else {
-                $y = $this->plot_area[3] + $this->x_label_font_height;
-                $x = $xpos - ($this->x_label_font_width * strlen($xlab))/2;
-                ImageString($this->img, $this->x_label_font,$x, $y ,$xlab, $this->ndx_text_color);
-            }
+            $this->DrawText($this->x_label_font, $this->x_label_angle, $xpos, $this->plot_area[3], 
+                            $this->ndx_text_color, NULL, $xlab, 'center', 'bottom');
         }
     }
     
     /*!
-     * FIXME: the box isn't perfect yet.
+     * Draws the graph legend
+     *
+     * \note Base code submitted by Marlin Viss
      */
     function DrawLegend($which_x1,$which_y1,$which_boxtype) {
-        //Base code submitted by Marlin Viss
-        $max_legend_length=0;
-        reset($this->legend);
-        while (list(,$leg) = each($this->legend)) {
+    
+        // Find maximum legend label length
+        $max_legend_length = 0;
+        
+        foreach ($this->legend as $leg) {
             $len = strlen($leg);
             if ($max_legend_length < $len) {
                 $max_legend_length = $len;
             }
         }
 
-        $line_spacing = 1.25;
-        $vert_margin = $this->generic_font_height/2 ;
-        $dot_height = $this->generic_font_height*$line_spacing - 1;
-
-    //Upper Left
-        if ((!$which_x1) || (!$which_y1) ) {
-            $box_start_x = $this->plot_area[2] - $this->generic_font_width*($max_legend_length+4);
+        $line_spacing = 4;                                  // In pixels
+        $v_margin = $this->legend_font_height/2;            // Between vertical borders and labels
+        $dot_height = $this->legend_font_height + $line_spacing;    // Small boxes' size
+        $width = $this->legend_font_width*($max_legend_length+4);   // Legend's with.
+        
+        // upper Left
+        if ( (! $which_x1) || (! $which_y1) ) {
+            $box_start_x = $this->plot_area[2] - $width;
             $box_start_y = $this->plot_area[1] + 4;
         } else { 
             $box_start_x = $which_x1;
             $box_start_y = $which_y1;
         }
 
-    //Lower Right
-        // MBD: fixed Bug [527867]
-        $box_end_y = $box_start_y + $dot_height*(count($this->legend)+1) + 2*$vert_margin; 
-        //$box_end_x = $this->plot_area[2] - 5;
-        $box_end_x = $box_start_x + $this->generic_font_width*($max_legend_length+4) - 5;
+        // Lower right corner
+        $box_end_y = $box_start_y + $dot_height*(count($this->legend)) + 2*$v_margin; 
+        $box_end_x = $box_start_x + $width - 5;
 
 
-    // Draw box for legend
-        ImageFilledRectangle($this->img,
-            $box_start_x, $box_start_y,$box_end_x, $box_end_y, 
-            $this->ndx_bg_color);
-        ImageRectangle($this->img,
-            $box_start_x, $box_start_y,$box_end_x, $box_end_y, 
-            $this->ndx_grid_color);
+        // Draw outer box
+        ImageFilledRectangle($this->img, $box_start_x, $box_start_y,$box_end_x, $box_end_y, $this->ndx_bg_color);
+        ImageRectangle($this->img, $box_start_x, $box_start_y,$box_end_x, $box_end_y, $this->ndx_grid_color);
 
         $color_index=0;
-        $i = 0;
-
-        reset($this->legend);
-
-        while (list(,$leg) = each($this->legend)) {
-            $y_pos = $box_start_y + $this->generic_font_height*($i)*($line_spacing) + $vert_margin;
-
-            ImageString($this->img, $this->generic_font,
-                $box_start_x + $this->generic_font_width*( $max_legend_length - strlen($leg) + 1 ) ,
-                $y_pos,
-                $leg, $this->ndx_text_color);
-
-            if ($color_index >= count($this->ndx_data_color)) $color_index=0;
-    // Draw a box in the data color
-            ImageFilledRectangle($this->img,
-                $box_end_x - $this->generic_font_width*2,
-                $y_pos + 1, $box_end_x - $this->generic_font_width,
-                $y_pos + $dot_height,
-                $this->ndx_data_color[$color_index]);
-
-            ImageRectangle($this->img,
-                $box_end_x - $this->generic_font_width*2,
-                $y_pos + 1, $box_end_x - $this->generic_font_width,
-                $y_pos + $dot_height,
-                $this->ndx_text_color);
-            $i++;
+        $max_color_index = count($this->ndx_data_color) - 1;
+        
+        $dot_left_x = $box_end_x - $this->legend_font_width * 2;
+        $dot_right_x = $box_end_x - $this->legend_font_width;
+        $y_pos = $box_start_y + $v_margin;
+        
+        foreach ($this->legend as $leg) {
+            // Text right aligned to the little box
+            $this->DrawText($this->legend_font, 0, $dot_left_x, $y_pos, $this->ndx_text_color,
+                            NULL, $leg, 'right');
+            // Draw a box in the data color
+            ImageFilledRectangle($this->img, $dot_left_x, $y_pos + 1, $dot_right_x,
+                                 $y_pos + $dot_height-1, $this->ndx_data_color[$color_index]);
+            // Draw a rectangle around the box
+            ImageRectangle($this->img, $dot_left_x, $y_pos + 1, $dot_right_x,
+                           $y_pos + $dot_height-1, $this->ndx_text_color);
+                
+            $y_pos += $this->legend_font_height + $line_spacing;
+            
             $color_index++;
+            if ($color_index > $max_color_index) 
+                $color_index=0;
         }
-    } //function DrawLegend
+    } // Function DrawLegend
 
-
-    
+   
+    /*!
+     *
+     */
     function DrawPieChart() {
         //$pi = '3.14159265358979323846';
         $xpos = $this->plot_area[0] + $this->plot_area_width/2;
@@ -2503,9 +2552,7 @@ class PHPlot {
             // FIXME? The '* 1.2' trick is to get labels a little more outwards so they
             // get better centered in small sectors. It might screw things up sometimes (?) (MBD)
             $label_x = $xpos + ($radius*1.2 * cos(deg2rad($mid_angle))) * $this->label_scale_position;
-            $label_x -= ($this->generic_font_width * strlen($label_txt))/2.0;
             $label_y = $ypos + (- $radius*1.2 * sin(deg2rad($mid_angle))) * $this->label_scale_position;
-            $label_y -= $this->generic_font_height/2.0;
 
             $out_x = $xpos + $out_x;
             $out_y = $ypos + $out_y;
@@ -2515,11 +2562,11 @@ class PHPlot {
             ImageFillToBorder($this->img, $mid_x, $mid_y, $this->ndx_grid_color, $slicecol);
 
             if ($this->use_ttf) {
-                ImageTTFText($this->img, $this->axis_ttfont_size, 0, $label_x, $label_y, 
-                             $this->ndx_grid_color, $this->axis_ttfont, $label_txt);
+                $this->DrawText($this->generic_ttfont, 0, $label_x, $label_y, $this->ndx_grid_color,
+                                $this->generic_ttfont_size, $label_txt, 'center', 'center');
             } else {
-                ImageString($this->img, $this->generic_font, $label_x, $label_y, $label_txt,
-                            $this->ndx_grid_color);
+                $this->DrawText($this->generic_font, 0, $label_x, $label_y, $this->ndx_grid_color,
+                                NULL, $label_txt, 'center', 'center');           
             }
 
             $start_angle = $val;
