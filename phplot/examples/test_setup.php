@@ -20,24 +20,6 @@ exit;
 **************************** */
 ?>
 
-<TABLE border=1>
-<TR><TD>Test to see if GIF graphs work</TD></TR>
-<TR><TD>
-<?php
-$im_test = ImageCreate(1,1);
-echo "<!--";
-if (! ImageGif($im_test)) { 
-	echo "-->";
-	echo "GIF NOT ENABLED<br>";
-} else { 
-	echo "-->";
-	?>
-	<IMG SRC="inline_image.php?file_format=gif&which_title=YES_GIF_IS_ENABLED"></TD></TR>
-	<?php
-}
-ImageDestroy($im_test);
-?>
-</TABLE>
 <p>
 <TABLE border=1>
 <TR><TD>Test to see if PNG graphs work</TD></TR>
@@ -69,6 +51,25 @@ if (! ImageJPEG($im_test) ) {
 } else { 
 	?>
 	<IMG SRC="inline_image.php?file_format=jpg&which_title=YES_JPG_IS_ENABLED"></TD></TR>
+	<?php
+}
+ImageDestroy($im_test);
+?>
+</TABLE>
+
+<TABLE border=1>
+<TR><TD>Test to see if GIF graphs work</TD></TR>
+<TR><TD>
+<?php
+$im_test = ImageCreate(1,1);
+echo "<!--";
+if (! ImageGif($im_test)) { 
+	echo "-->";
+	echo "GIF NOT ENABLED<br>";
+} else { 
+	echo "-->";
+	?>
+	<IMG SRC="inline_image.php?file_format=gif&which_title=YES_GIF_IS_ENABLED"></TD></TR>
 	<?php
 }
 ImageDestroy($im_test);
