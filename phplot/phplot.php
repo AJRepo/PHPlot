@@ -1938,12 +1938,13 @@ class PHPlot{
 				$max_legend_length = $len;
 			}
 		}
-		$box_start_y = $this->plot_area[1]+4;
-		$box_start_x = $this->plot_area[2]-$this->small_font_width*($max_legend_length+4);
+		$box_start_y = $this->plot_area[1]+4; //Upper left
+		$box_start_x = $this->plot_area[2]-$this->small_font_width*($max_legend_length+4); //Upper Left
 		$line_spacing = 1.25;
 		$vert_margin = $this->small_font_height/2 ;
-		$box_end_y = $box_start_y +$this->small_font_height*(count($this->legend)+1) + 2*$vert_margin;
-		$box_end_x = $this->plot_area[2]-5;
+		$box_end_y = $box_start_y +$this->small_font_height*(count($this->legend)+1) + 2*$vert_margin; //Lower Right
+		//$box_end_x = $this->plot_area[2]-5; //equivalent to the next line
+		$box_end_x = $box_start_x + $this->small_font_width*($max_legend_length+4) - 5; //Lower Right
 		$dot_height = $this->small_font_height*$line_spacing - 1;
 
 	// Draw box for legend
