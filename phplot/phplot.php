@@ -10,7 +10,7 @@ which in GD is relative to the origin at the upper left
 side of the image.
 */
 
-//PHPLOT Version 4.4.1
+//PHPLOT Version 4.4.3
 //Requires PHP 3.0.2 or later 
 
 
@@ -159,7 +159,9 @@ class PHPlot{
 	//Constructor: Setup Img pointer, Colors and Size of Image
 	function PHPlot($which_width=600,$which_height=400,$which_output_file="",$which_input_file="") {
 
-		$this->SetRGBArray("2"); 
+		error_reporting(0);
+
+		$this->SetRGBArray('2'); 
 
 		if ($which_output_file != "") { $this->SetOutputFile($which_output_file);  };
 
@@ -2363,8 +2365,7 @@ class PHPlot{
 						}
 
 						ImageFilledRectangle($this->img, $x1, $y1, $x2, $y2, $barcol);
-						//ImageRectangle($this->img, $x1, $y1, $x2, $y2, $bordercol);
-						ImageRectangle($this->img, $x1, $y1, $x2, $y2, $this->ndx_text_color);
+						ImageRectangle($this->img, $x1, $y1, $x2, $y2, $this->bordercol);
 					} 
 
 					$start_pos = $start_pos + $this->record_bar_width;
