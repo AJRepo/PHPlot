@@ -36,17 +36,19 @@ if ($which_data_type =="function") {
 	$graph->SetDataValues($data);
 
 //Optional Settings (Don't need them) 
-	$graph->SetFileFormat($which_file_format);
+	$graph->SetFileFormat($which_fileformat);
 	$graph->SetPlotType($which_plot_type);
-	$graph->SetUseTTF("0");
+//	$graph->SetUseTTF(1);
 	$graph->SetVertTickIncrement($which_vti);
 	$graph->SetHorizTickIncrement($which_hti);
     $graph->SetLineWidth("1");
 	$graph->SetDrawYGrid("1"); // 1 = true
 	$graph->SetPointShape($which_dot);
-	$graph->SetErrorBarShape($which_error_type);
-	$graph->SetXLabel($xlbl);
-	$graph->SetYLabel($ylbl);
+	@ $graph->SetErrorBarShape($which_error_type);
+	$graph->SetXTitle($xlbl);
+    $graph->SetXTitlePos('both');
+	$graph->SetYTitle($ylbl);
+    $graph->SetYTitlePos('both');
 	$graph->SetTitle($title);
 	$graph->SetXAxisPosition($which_xap);
     
