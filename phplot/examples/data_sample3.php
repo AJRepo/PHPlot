@@ -1,46 +1,52 @@
 <p>
  Data type: 
- <a href="format_chart.php?which_data_type=text-linear">text-linear</a>//
- <a href="format_chart.php?which_data_type=linear-linear">linear-linear</a>//
+ <a href="format_chart.php?which_data_type=text-data">text-data</a>//
+ <a href="format_chart.php?which_data_type=data-data">data-data</a>//
  <a href="format_chart.php?which_data_type=function">function</a>//
- <a href="format_chart.php?which_data_type=linear-linear-error">linear-linear-error</a>
+ <a href="format_chart.php?which_data_type=data-data-error">data-data-error</a>
 </p>
 <p>
-Data set as X, Y, Y+, Y- <br />
+Data set as X, Y, E+, E-, Y2, E2+, E2-,... <br />
 <?php
-//linear-linear-error
+//data-data-error
+        $num_rows = 6;
 		$data = array(
-			array("label 0", 0, 1, .5, .1 ), 	
-			array("label 1", 2, 5, .5, .4 ),
-			array("label 2", 3, 2, .1, .1 ),
-			array("label 3", 4, 5, .5, .5 ),
-			array("label 4", 5, 1, .1, .1 )
+			array("label 0", 0, 1, .5, .1, 1,  .2, .1), 	
+			array("label 1", 2, 5, .5, .4, 2,  .1, .3),
+			array("label 2", 3, 2, .1, .1, 3,  .3, .1),
+			array("label 3", 4, 5, .5, .5, 3.5,.1, .2),
+			array("label 4", 5, 1, .1, .1, 5,  .1, .1),
+            array("label 5", 6, 2, .1, .2, 0,  .2, .3)
 		);
 ?>
-Data: (Linear-Linear)
+Data type: (data-data-error)
 </p>
-<input type="hidden" name="which_data_type" value="linear-linear-error" />
+<input type="hidden" name="which_data_type" value="data-data-error" />
 <table border=1>
- <tr><td>Title (data label)</td><td>X data</td><td>Y data 1</td><td>Error +</td><td>Error -</td></tr>
- <?php
-    for ($i=0; $i<5; $i++) {
- ?>
+ <tr><td>Title (data label)</td><td>X data</td> 
+  <td>Y data 1</td><td>Error +</td><td>Error -</td><td>Y data 2</td><td>Error +</td><td>Error -</td>
+ </tr>
  <tr>
   <td>
-   <input type="text" name="data_row0[<?php echo $i; ?>]" value="<?php echo $data[$i][0]; ?>" />
-  </td><td>
-   <input type="text" name="data_row1[<?php echo $i; ?>]" value="<?php echo $data[$i][1]; ?>" size="3"/>
-  </td><td>
-   <input type="text" name="data_row2[<?php echo $i; ?>]" value="<?php echo $data[$i][2]; ?>" size="3" />
-  </td><td>
-   <input type="text" name="data_row3[<?php echo $i; ?>]" value="<?php echo $data[$i][3]; ?>" size="3" />
-  </td><td>
-   <input type="text" name="data_row4[<?php echo $i; ?>]" value="<?php echo $data[$i][4]; ?>" size="3" />
+  
+   <?php
+    // MBD: All this is more complicated than before, but allows for easy adding of rows and columns
+    echo "<input type=\"hidden\" name=\"num_data_rows\" value=\"$num_rows\" />";
+    
+    for ($i = 0; $i < $num_rows; $i++) {
+        // The label input element must be bigger.
+        $lines[0] = "<input type=\"text\" name=\"data_row".$i."[0]\" value=\"".$data[$i][0]."\" size=\"10\" />\n";
+        
+        // Show <input>s for the rest of the columns
+        for ($j=1; $j<8; $j++)
+            $lines[$j] = "<input type=\"text\" name=\"data_row".$i."[$j]\" value=\"".$data[$i][$j]."\" size=\"3\" />\n";
+        $groups[$i] = join('</td><td>', $lines);
+    }
+    echo join("</tr><tr><td>\n", $groups);
+    ?>
+    
   </td>
  </tr>
- <?php
-    }
- ?>
 </table>
 
 <p>
