@@ -27,6 +27,7 @@
   <li><a href="#first">First steps</a></li>
   <li><a href="#lines">Multiples lines per graph</a></li>
   <li><a href="#multiple">Multiple graphs per image</a></li>
+  <li><a href="#ttf">TTF Fonts</a></li>
   <br />
 </ul>
 
@@ -100,7 +101,7 @@ $graph =& new PHPlot();   // here we define the variable graph
 </div>
 
 <p>The above code assigns the PHPlot object to the variable <code>$graph</code>. Please,
-use that '&' to create a reference, it is needed by phplot's approximation of a destructor,
+use that '&amp;' to create a reference, it is needed by phplot's approximation of a destructor,
 a facility unavailable in PHP4.</p>
 
 <p> <a href="#top">Back to top</a> </p>
@@ -116,7 +117,7 @@ a facility unavailable in PHP4.</p>
 include('./PHPlot.php');
 
 //Define the object
-$graph =& new PHPlot();
+$graph =&amp; new PHPlot();
 
 //Define some data
 $example_data = array(
@@ -343,7 +344,7 @@ is the upper left corner of the image.
 <div class="box">
 <pre>&lt;?php
 include('./PHPlot.php');  // here we include the PHPlot code
-$graph =& new PHPlot(400,250);   // here we define the variable $graph
+$graph =&amp; new PHPlot(400,250);   // here we define the variable $graph
 $graph-&gt;SetPrintImage(0); //Don't draw the image yet
 
 //....Data and Values for first graph here .....
@@ -444,6 +445,32 @@ axis origin that can be drawn. Not the device (pixel) coordinates
 which in GD are relative to the origin at the upper left
 side of the image.
 </p>
+
+<h3><a name="ttf">Case 4: Adding TTF Fonts</a></h3>
+<p>
+If you have TTF compiled into PHP then you also have the 
+ability with PHPLot to use TTF fonts for nice fonts as well as nifty
+effects like having the labels rotated at various angles. To do this 
+all we need is at minimum functions: SetUseTTF(bool) and SetDefaultTTFont(string)
+
+</p>
+
+<div class="box">
+<pre>&lt;?php
+//rest of code above
+
+//lets add a TTF font found here './fonts/benjamingothic.ttf'
+$graph-&gt;SetUseTTF(1);
+$graph-&gt;SetDefaultTTFont('./fonts/benjamingothic.ttf');
+
+//and now we can also have the data labels at 45 degrees
+$graph-&gt;SetXLabelAngle(45);
+
+//rest of code below
+
+?&gt;</pre>
+</div>
+
 
 <div style="background:#6699cc; color:#ffffff;">
   <a href="#top">Back to top</a> <br />
