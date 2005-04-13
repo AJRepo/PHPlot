@@ -671,7 +671,7 @@ class PHPlot {
     {
         if (is_null($which_ls)) {
             // Do nothing, use default value.
-        } else if (! is_array($which_ls)) {
+        } else if ( is_array($which_ls)) {
             // Did we get an array with line styles?
             $this->line_styles = $which_ls;
         } else {
