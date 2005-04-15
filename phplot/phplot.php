@@ -2124,16 +2124,10 @@ class PHPlot {
         // Leave room above and below the highest and lowest data points.
 
         if ($ymin === NULL || $ymin === '') {
-            if ($this->min_y < 0)
-                $ymin = ceil($this->min_y * 1.1);
-            else
-                $ymin = floor($this->min_y * 0.9);
+            $ymin = floor($this->min_y - abs($this->min_y) * 0.1);
         }
         if ($ymax === NULL || $ymax === '') {
-            if ($this->max_y < 0)
-                $ymax = floor($this->max_y * 0.9);
-            else
-                $ymax = ceil($this->max_y * 1.1);
+            $ymax = ceil($this->max_y + abs($this->max_y) * 0.1);
         }
 
         // Error checking
