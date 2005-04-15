@@ -1507,7 +1507,7 @@ class PHPlot {
             $size = $this->TTFBBoxSize($this->x_title_font['size'], 0, $this->x_title_font['font'], $which_xtitle);
             $this->x_title_height = $size[1] * $lines;
         } else {
-            $this->x_title_height = ($this->y_title_font['height'] + $spacing) * $lines;
+            $this->x_title_height = ($this->x_title_font['height'] + $spacing) * $lines;
         }
 
         return TRUE;
