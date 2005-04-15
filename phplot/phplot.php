@@ -703,8 +703,7 @@ class PHPlot {
     function SetUseTTF($which_ttf)
     {
         $this->use_ttf = $which_ttf;
-        if ($which_ttf)
-            $this->SetDefaultFonts();
+        $this->SetDefaultFonts();
         return TRUE;
     }
 
@@ -727,16 +726,15 @@ class PHPlot {
 
     /*!
      * Sets the default TrueType font and updates all fonts to that.
+     * The default font might be a full path, or relative to the TTFPath,
+     * so let SetFont check that it exists.
+     * Side effect: enable use of TrueType fonts.
      */
     function SetDefaultTTFont($which_font)
     {
-        if (is_file($which_font) && is_readable($which_font)) {
-            $this->default_ttfont = $which_font;
-            return $this->SetDefaultFonts();
-        } else {
-            $this->PrintError("SetDefaultTTFont(): $which_font is not a valid font file.");
-            return FALSE;
-        }
+        $this->default_ttfont = $which_font;
+        $this->SetUseTTF(TRUE);
+        return TRUE;
     }
 
     /*!
@@ -746,15 +744,13 @@ class PHPlot {
     {
         // TTF:
         if ($this->use_ttf) {
-            //$this->SetTTFPath(dirname($_SERVER['PHP_SELF']));
-            $this->SetTTFPath(getcwd());
-            $this->SetFont('generic', $this->default_ttfont, 8);
-            $this->SetFont('title', $this->default_ttfont, 14);
-            $this->SetFont('legend', $this->default_ttfont, 8);
-            $this->SetFont('x_label', $this->default_ttfont, 6);
-            $this->SetFont('y_label', $this->default_ttfont, 6);
-            $this->SetFont('x_title', $this->default_ttfont, 10);
-            $this->SetFont('y_title', $this->default_ttfont, 10);
+            $this->SetFont('generic', '', 8);
+            $this->SetFont('title', '', 14);
+            $this->SetFont('legend', '', 8);
+            $this->SetFont('x_label', '', 6);
+            $this->SetFont('y_label', '', 6);
+            $this->SetFont('x_title', '', 10);
+            $this->SetFont('y_title', '', 10);
         }
         // Fixed:
         else {
@@ -776,7 +772,8 @@ class PHPlot {
      *         It can be one of 'title', 'legend', 'generic',
      *         'x_label', 'y_label', x_title' or 'y_title'
      *  \param $which_font Can be a number (for fixed font sizes) or
-     *         a string with the filename when using TTFonts.
+     *         a string with the font pathname or filename when using TTFonts.
+     *         For TTFonts, an empty string means use the default font.
      *  \param $which_size Point size (TTF only)
      * Calculates and updates internal height and width variables.
      */
@@ -784,11 +781,18 @@ class PHPlot {
     {
         // TTF:
         if ($this->use_ttf) {
-            $path = $this->ttf_path.'/'.$which_font;
+            // Empty font name means use the default font.
+            if (empty($which_font))
+                $which_font = $this->default_ttfont;
+            $path = $which_font;
 
-            if (! is_file($path) || ! is_readable($path) ) {
-                $this->DrawError("SetFont(): True Type font $path doesn't exist");
-                return FALSE;
+            // First try the font name directly, if not then try with path.
+            if (!is_file($path) || !is_readable($path)) {
+                $path = $this->ttf_path . '/' . $which_font;
+                if (!is_file($path) || !is_readable($path)) {
+                    $this->DrawError("SetFont(): Can't find TrueType font $which_font");
+                    return FALSE;
+                }
             }
 
             switch ($which_elem) {
@@ -1169,6 +1173,9 @@ class PHPlot {
         $xpos = (! $where_x) ? $this->image_width/2 : $where_x;
         ImageRectangle($this->img, 0, 0, $this->image_width, $this->image_height,
                        ImageColorAllocate($this->img, 255, 255, 255));
+
+        // Switch to built-in fonts, in case of error with TrueType fonts:
+        $this->SetUseTTF(FALSE);
 
         $this->DrawText($this->generic_font, 0, $xpos, $ypos, ImageColorAllocate($this->img, 0, 0, 0),
                         $error_message, 'center', 'center');
