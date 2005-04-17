@@ -3,7 +3,7 @@
 /* $Id$ */
 
 /*
- * PHPLOT Version 5.0.rc1
+ * PHPLOT Version 5.0.rc2-cvs
  * Copyright (C) 1998, 1999, 2000, 2001 Afan Ottenheimer.  Released under
  * the GPL and PHP licenses as stated in the the README file which should
  * have been included with this document.
@@ -4413,10 +4413,13 @@ class PHPlot {
         $this->image_height = $size[1];
 
         // Deallocate any resources previously allocated
-        if ($this->img)
+        if (isset($this->img))
             imagedestroy($this->img);
 
         $this->img = $im;
+
+        // Do not overwrite the input file with the background color.
+        $this->background_done = TRUE;
 
         return TRUE;
 
