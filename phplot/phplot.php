@@ -1249,9 +1249,6 @@ class PHPlot {
     {
         $this->y_tick_label_pos = $this->CheckOption($which_ytlp, 'plotleft, plotright, both, yaxis, all, none',
                                                       __FUNCTION__);
-        if ($which_ytlp != 'none')
-            $this->y_data_label_pos = 'none';
-
         return TRUE;
     }
 
@@ -1931,8 +1928,6 @@ class PHPlot {
      *
      * FIXME: fix x_data_label_pos behaviour. Now we are leaving room for it AND x_tick_label_pos
      *        maybe it shouldn't be so...
-     *
-     * FIXME: y_data_label_pos is not yet used...
      *
      * TODO: add x_tick_label_width and y_tick_label_height and use them to calculate
      *       max_x_labels and max_y_labels, to be used by drawing functions to avoid overlapping.
