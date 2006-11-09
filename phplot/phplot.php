@@ -1832,10 +1832,12 @@ class PHPlot {
         $maxe = 0;  // Maximum value for the +error bar (assume error bars always > 0)
         $maxt = 0;  // Maximum number of characters in text labels
 
-        $minminy = $miny;
-        $maxmaxy = $maxy;
-
-        if ($this->plot_type == 'stackedbars') { $maxmaxy = $minminy = 0; }
+        if ($this->plot_type == 'stackedbars') {
+            $maxmaxy = $minminy = 0;
+        } else {
+            $minminy = $miny;
+            $maxmaxy = $maxy;
+        }
 
         // Process each row of data
         for ($i=0; $i < $this->num_data_rows; $i++) {
@@ -1844,14 +1846,16 @@ class PHPlot {
             $val = @ strlen($this->data[$i][$j++]);
             $maxt = ($val > $maxt) ? $val : $maxt;
 
-
-            if ($this->plot_type == 'stackedbars') { $maxy = $miny = 0; }
-
             switch ($this->data_type) {
             case 'text-data':           // Data is passed in as (title, y1, y2, y3, ...)
             case 'text-data-single':    // This one is for some pie charts
                 // $numrecs = @ count($this->data[$i]);
-                $miny = $maxy = (double)$this->data[$i][$j];
+                $maxy = (double)$this->data[$i][$j++];
+                if ($this->plot_type == 'stackedbars') {
+                    $miny = 0;
+                } else {
+                    $miny = $maxy;
+                }
                 for (; $j < $this->num_recs[$i]; $j++) {
                     $val = (double)$this->data[$i][$j];
                     if ($this->plot_type == 'stackedbars') {
@@ -1868,7 +1872,7 @@ class PHPlot {
                 $maxx = ($val > $maxx) ? $val : $maxx;
                 $minx = ($val < $minx) ? $val : $minx;
 
-                $miny = $maxy = (double)$this->data[$i][$j];
+                $miny = $maxy = (double)$this->data[$i][$j++];
                 // $numrecs = @ count($this->data[$i]);
                 for (; $j < $this->num_recs[$i]; $j++) {
                     $val = (double)$this->data[$i][$j];
