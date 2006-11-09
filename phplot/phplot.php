@@ -3793,6 +3793,9 @@ class PHPlot {
                         $y2 = $this->x_axis_y_pixels;
                     }
 
+                    // Draw the bar
+                    ImageFilledRectangle($this->img, $x1, $y1, $x2, $y2, $this->ndx_data_colors[$idx]);
+
                     if ($this->shading) {                           // Draw the shade?
                         ImageFilledPolygon($this->img, array($x1, $y1,
                                                        $x1 + $this->shading, $y1 - $this->shading,
@@ -3806,13 +3809,11 @@ class PHPlot {
                     else {
                         ImageRectangle($this->img, $x1, $y1, $x2,$y2, $this->ndx_data_border_colors[$idx]);
                     }
-                    // Draw the bar
-                    ImageFilledRectangle($this->img, $x1, $y1, $x2, $y2, $this->ndx_data_colors[$idx]);
 
                     //Draw the Value If you want it IN the bar use valign=bottom, 
                     //               if you want it on top use valign=top and push up a bit
                     //FIXME: if the next bar chart is higher than the number the number is put behind the next bar
-                                        if ( $this->y_data_label_pos == 'plotin' && $this->data[$row][$record] != 0 ) 
+                    if ( $this->y_data_label_pos == 'plotin' && $this->data[$row][$record] != 0 )
                         $this->DrawDataLabel('',NULL,$row+0.5,$this->data[$row][$record],'',$this->data[$row][$record],
                                          'center','top',$idx*($x2-$x1)/2,-10);
 
@@ -3852,6 +3853,9 @@ class PHPlot {
                     $y2 = $this->ytr($this->x_axis_position + $oldv);
                     $oldv += abs($this->data[$row][$record]);
 
+                    // Draw the bar
+                    ImageFilledRectangle($this->img, $x1, $y1, $x2, $y2, $this->ndx_data_colors[$idx]);
+
                     if ($this->shading) {                           // Draw the shade?
                         ImageFilledPolygon($this->img, array($x1, $y1,
                                                        $x1 + $this->shading, $y1 - $this->shading,
@@ -3865,9 +3869,6 @@ class PHPlot {
                     else {
                         ImageRectangle($this->img, $x1, $y1, $x2,$y2, $this->ndx_data_border_colors[$idx]);
                     }
-                    // Draw the bar
-                    ImageFilledRectangle($this->img, $x1, $y1, $x2, $y2, $this->ndx_data_colors[$idx]);
-
                 }
             }   // end for
         }   // end for
