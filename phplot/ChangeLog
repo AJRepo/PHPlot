@@ -2,6 +2,45 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2006-11-09 (lbayuk)
+    * Fixes for bug 1446523:
+      + Wrong variable name in deprecated SetAxisFontSize()
+      + Fails to properly handle error if SetDataValues() was never
+        called, or not called with a data array.
+
+    * Fix for bug 1117122: Pie Chart ignores SetPlotAreaPixels
+      Don't let DrawGraph recalculate the plot area for pie charts if the
+      user already set it with SetPlotAreaPixels.
+
+      NOTE: This fix may slightly change the appearance of some pie charts,
+      whether or not they use SetPlotAreaPixels.
+
+    * Fix for bug 1103992: Wrong max Y calculated for stackedbars
+      Changes FindDataLimits to calculate max Y correctly. It was counting
+      the first Y value in each record twice, which is always wrong but
+      only affected stackedbars because the Y values are summed.
+
+    * Fix for bug 1096199: Wrong error bar colors in DrawDotsError.
+      Rewrites DrawDotsError to make it work like DrawLinesError to
+      correctly increment the record and color indexes.
+      Also fixes uninitialized x_now_pixels.
+
+    * Fix for bug 1096197: No borders on unshaded Draw[Stacked]Bars
+      Unshaded Bars and StackedBars covered the border with the rectangle.
+      The fix is to draw the rectangle, then the border.
+
+      NOTE: This fix changes chart appearance. Bars and Stacked Bars
+      will now get a black border around each bar by default, if you
+      turn off the 3D-shading. If you want borderless, unshaded bars
+      you need to use SetDataBorderColors to set the data border colors
+      to be the same as the data colors.
+
+    * Fix for bug 1333164: Negative data values, if string variables, result
+      in unfilled bars. The problem was a string-to-string compare of a
+      negative number with the empty string x_axis_position. Fixed by
+      initializing x_axis_y_pixels to 0 if SetXAxisPosition was not used.
+
+
 2005-04-17 (afan)
     * Fix for bug [ 1161072 ] SetInputFile warning, background overwrite
 
