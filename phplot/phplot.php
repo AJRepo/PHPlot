@@ -3893,8 +3893,16 @@ class PHPlot {
 
         $this->CalcMargins();                       // Calculate margins
 
-        if (! isset($this->plot_area_width))        // Set plot area pixel values (plot_area[])
-            $this->SetPlotAreaPixels();
+        if (! isset($this->plot_area_width)) {      // Set plot area pixel values (plot_area[])
+            if ($this->plot_type == 'pie') {
+                // Pie charts can maximize image space usage.
+                $this->SetPlotAreaPixels($this->safe_margin, $this->title_height + $this->safe_margin,
+                                         $this->image_width - $this->safe_margin,
+                                         $this->image_height - $this->safe_margin);
+            } else {
+                $this->SetPlotAreaPixels();
+            }
+        }
 
         if (! isset($this->plot_max_y))             // Set plot area world values (plot_max_x, etc.)
             $this->SetPlotAreaWorld();
@@ -3919,10 +3927,6 @@ class PHPlot {
 
         // Pie charts are drawn differently, handle them first
         if ($this->plot_type == 'pie') {
-            // Pie charts can maximize image space usage.
-            $this->SetPlotAreaPixels($this->safe_margin, $this->title_height,
-                                     $this->image_width - $this->safe_margin,
-                                     $this->image_height - $this->safe_margin);
             $this->DrawPieChart();
 
             if ($this->legend)
