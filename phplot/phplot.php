@@ -2241,15 +2241,17 @@ class PHPlot {
                                      ? $this->plot_min_y : $this->x_axis_position;
             $this->x_axis_position = ($this->x_axis_position > $this->plot_max_y)
                                      ? $this->plot_max_y : $this->x_axis_position;
-            $this->x_axis_y_pixels = $this->ytr($this->x_axis_position);
+        } elseif ($this->yscale_type == 'log') {
+            $this->x_axis_position = 1;
         } else {
-            if ($this->yscale_type == 'log')
-                $this->x_axis_y_pixels = $this->ytr(1);
-            else
-                // Default to axis at 0 or plot_min_y (should be 0 anyway, from SetPlotAreaWorld())
-                $this->x_axis_y_pixels = ($this->plot_min_y <= 0) && (0 <= $this->plot_max_y)
-                                         ? $this->ytr(0) : $this->ytr($this->plot_min_y);
+            // Default to axis at 0 or plot_min_y (should be 0 anyway, from SetPlotAreaWorld())
+            // Note x_axis_position must be set because DrawBars and others expect a number.
+            if ($this->plot_min_y <= 0 && 0 <= $this->plot_max_y)
+                $this->x_axis_position = 0;
+            else 
+                $this->x_axis_position = $this->plot_min_y;
         }
+        $this->x_axis_y_pixels = $this->ytr($this->x_axis_position);
 
     } // function CalcTranslation()
 
