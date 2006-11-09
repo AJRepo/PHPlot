@@ -3878,8 +3878,8 @@ class PHPlot {
             return FALSE;
         }
 
-        if (! is_array($this->data)) {
-            $this->DrawError("DrawGraph(): No array of data in \$data");
+        if (empty($this->data) || ! is_array($this->data)) {
+            $this->DrawError("DrawGraph(): No data array");
             return FALSE;
         }
 
@@ -4088,7 +4088,7 @@ class PHPlot {
     function SetAxisFontSize($which_size)
     {
         $this->SetFont('x_label', $which_size);
-        $this->SetFont('y_label', $whic_size);
+        $this->SetFont('y_label', $which_size);
     }
 
     /*!
