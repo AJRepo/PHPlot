@@ -3291,34 +3291,36 @@ class PHPlot {
      */
     function DrawDotsError()
     {
-        $this->CheckOption($this->data_type, 'data-data-error', __FUNCTION__);
+        if ($this->data_type != 'data-data-error') {
+            $this->DrawError("DrawDotsError(): Data type '$this->data_type' not supported.");
+            return FALSE;
+        }
 
         for($row = 0, $cnt = 0; $row < $this->num_data_rows; $row++) {
             $record = 1;                                // Skip record #0 (title)
 
-            // Do we have a value for X?
-            if ($this->data_type == 'data-data-error')
-                $x_now = $this->data[$row][$record++];  // Read it, advance record index
-            else
-                $x_now = 0.5 + $cnt++;                  // Place text-data at X = 0.5, 1.5, 2.5, etc...
+            $x_now = $this->data[$row][$record++];  // Read it, advance record index
+
+            $x_now_pixels = $this->xtr($x_now);             // Absolute coordinates.
 
             // Draw X Data labels?
             if ($this->x_data_label_pos != 'none')
                 $this->DrawXDataLabel($this->data[$row][0], $x_now_pixels, $row);
 
-            while ($record < $this->num_recs[$row]) {
+            // Now go for Y, E+, E-
+            for ($idx = 0; $record < $this->num_recs[$row]; $idx++) {
                     // Y:
-                    $y_now = $this->data[$row][$record];
-                    $this->DrawDot($x_now, $y_now, $record, $this->ndx_data_colors[$record++]);
+                    $y_now = $this->data[$row][$record++];
+                    $this->DrawDot($x_now, $y_now, $idx, $this->ndx_data_colors[$idx]);
 
                     // Error +
-                    $val = $this->data[$row][$record];
+                    $val = $this->data[$row][$record++];
                     $this->DrawYErrorBar($x_now, $y_now, $val, $this->error_bar_shape,
-                                         $this->ndx_error_bar_colors[$record++]);
+                                         $this->ndx_error_bar_colors[$idx]);
                     // Error -
-                    $val = $this->data[$row][$record];
+                    $val = $this->data[$row][$record++];
                     $this->DrawYErrorBar($x_now, $y_now, -$val, $this->error_bar_shape,
-                                         $this->ndx_error_bar_colors[$record++]);
+                                         $this->ndx_error_bar_colors[$idx]);
             }
         }
     } // function DrawDotsError()
