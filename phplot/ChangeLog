@@ -1,0 +1,77 @@
+This is the Change Log for PHPlot.
+The project home page is http://sourceforge.net/projects/phplot/
+-----------------------------------------------------------------------------
+
+2005-04-17 (afan)
+    * Fix for bug [ 1161072 ] SetInputFile warning, background overwrite
+
+    * Bug 1182672 fixed
+
+2005-04-15 (afan)
+    * fix for bug: [ 1182666 ] Y Auto-scale rounds in wrong direction
+
+    * Fix for bugs 1144644 TrueType font path problems and 1106328 TTF
+      path/filename inconsistency
+
+    * Fix Bug: [ 1117120 ] X Title sizing uses Y Title font height
+
+2005-04-13 (afan)
+    * Error in SetLineStyles() - does not accept an array argument
+
+
+2005-03-29 (afan)
+    * Small typo fixed in SetYDataLabelPos
+
+    * Update SetDataLabelPos: For past compatability we accept plotleft,
+      ...but pass it to SetTickLabelPos
+
+2005-03-26 (afan)
+    * Change to line 3802: data lables now work with multiple bars with *$idx
+
+2005-03-25 (afan)
+    * Added Function DrawDataLabels to put data labels in world coords,
+      added call from DrawBars and modified SetYDataLabelPos to flag
+      whether or not to call DrawDataLabels.
+
+2005-01-20 (migueldb)
+    * Many bugfixes reported and solved by L. J. Bayuk. Thanks!
+      + fixed bug #1096190
+      + FindDataLimits(): fixed bug #1096192
+      + CalcTranslation(): fixed bug #1101317
+      + DrawImageBorder(): fixed bug 1096200
+      + DrawXDataLabel(): fixed bug 1099879
+      + DrawDots(): fixed bug #1096194
+
+===== Released as 5.0rc2 =====
+
+2004-10-24 (migueldb)
+    * array_merge_php4(): added to cope with the bug introduced by
+        the change in array_merge() from PHP4 to PHP5 (I haven't verified this)
+    * Fixed some divisions by zero, thanks to an old bug report.
+
+2004-09-09 (migueldb)
+    * SetPointSize(): deprecated
+    * SetPointSizes(): added as replacement for SetPointSize().
+      Now able to set point sizes on a per line basis.
+    * SetPointShape(): deprecated.
+    * SetPointShapes(): added as replacement for SetPointShape().
+      Now able to set point shape on a per line basis.
+    * DrawDot(): now needs record number to decide which dot shape and
+      size to draw.
+    * CalcMargins(): dirty fix for x data label placing.
+    * tile_img(): fixed tile placement.
+
+2004-06-14 (migueldb)
+    * SetXTickLabelPos() and others: more on the bug reported by Jo Demol.
+    * Fixed bug reported by Jo Demol.
+
+2004-05-11 (migueldb)
+    * SetBgImage(): added.
+    * SetPlotAreaBgImage(): added.
+    * SetInputFile(): deprecated.
+    * DrawBackground(): now accepts images as backgrounds.
+    * DrawPlotAreaBackground(): now accepts images as backgrounds.
+    * tile_img(): internal method added.
+
+..........
+Editor's Note: For older changes to PHPlot, please see the CVS logs.
