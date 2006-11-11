@@ -1171,14 +1171,14 @@ class PHPlot {
 
         $ypos = (! $where_y) ? $this->image_height/2 : $where_y;
         $xpos = (! $where_x) ? $this->image_width/2 : $where_x;
-        ImageRectangle($this->img, 0, 0, $this->image_width, $this->image_height,
+        ImageFilledRectangle($this->img, 0, 0, $this->image_width, $this->image_height,
                        ImageColorAllocate($this->img, 255, 255, 255));
 
         // Switch to built-in fonts, in case of error with TrueType fonts:
         $this->SetUseTTF(FALSE);
 
         $this->DrawText($this->generic_font, 0, $xpos, $ypos, ImageColorAllocate($this->img, 0, 0, 0),
-                        $error_message, 'center', 'center');
+                        wordwrap($error_message), 'center', 'center');
 
         $this->PrintImage();
         exit;
