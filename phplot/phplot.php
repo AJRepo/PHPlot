@@ -1646,7 +1646,7 @@ class PHPlot {
     /*!
      * Sets point shape for each data set via an array.
      * Shape can be one of: 'halfline', 'line', 'plus', 'cross', 'rect', 'circle', 'dot',
-     * 'diamond', 'triangle', 'trianglemid'
+     * 'diamond', 'triangle', 'trianglemid', or 'none'.
      */
     function SetPointShapes($which_pt)
     {
@@ -1664,7 +1664,7 @@ class PHPlot {
         {
             // TODO, better check, per element rectification
             $this->CheckOption($shape,
-               'halfline, line, plus, cross, rect, circle, dot, diamond, triangle, trianglemid',
+               'halfline, line, plus, cross, rect, circle, dot, diamond, triangle, trianglemid, none',
                 __FUNCTION__);
         }
 
@@ -3298,6 +3298,9 @@ class PHPlot {
             return FALSE;
         }
 
+        // Suppress duplicate X data labels in linepoints mode; let DrawLinesError() do them.
+        $do_labels = ($this->plot_type != 'linepoints');
+
         for($row = 0, $cnt = 0; $row < $this->num_data_rows; $row++) {
             $record = 1;                                // Skip record #0 (title)
 
@@ -3306,7 +3309,7 @@ class PHPlot {
             $x_now_pixels = $this->xtr($x_now);             // Absolute coordinates.
 
             // Draw X Data labels?
-            if ($this->x_data_label_pos != 'none')
+            if ($this->x_data_label_pos != 'none' && $do_labels)
                 $this->DrawXDataLabel($this->data[$row][0], $x_now_pixels, $row);
 
             // Now go for Y, E+, E-
@@ -3337,6 +3340,9 @@ class PHPlot {
     {
         $this->CheckOption($this->data_type, 'text-data, data-data', __FUNCTION__);
 
+        // Suppress duplicate X data labels in linepoints mode; let DrawLines() do them.
+        $do_labels = ($this->plot_type != 'linepoints');
+
         for ($row = 0, $cnt = 0; $row < $this->num_data_rows; $row++) {
             $rec = 1;                    // Skip record #0 (data label)
 
@@ -3349,7 +3355,7 @@ class PHPlot {
             $x_now_pixels = $this->xtr($x_now);
 
             // Draw X Data labels?
-            if ($this->x_data_label_pos != 'none')
+            if ($this->x_data_label_pos != 'none' && $do_labels)
                 $this->DrawXDataLabel($this->data[$row][0], $x_now_pixels, $row);
 
             // Proceed with Y values
@@ -3491,6 +3497,8 @@ class PHPlot {
             $arrpoints = array( $x1, $y1, $x2, $y1, $x_mid, $y_mid);
             ImageFilledPolygon($this->img, $arrpoints, 3, $color);
             break;
+        case 'none':
+            break;
         default:
             ImageFilledRectangle($this->img, $x1, $y1, $x2, $y2, $color);
             break;
@@ -3600,6 +3608,8 @@ class PHPlot {
                 $this->DrawXDataLabel($this->data[$row][0], $x_now_pixels, $row);
 
             for ($idx = 0; $record < $this->num_recs[$row]; $record++, $idx++) {
+                if (($line_style = $this->line_styles[$idx]) == 'none')
+                    continue; //Allow suppressing entire line, useful with linepoints
                 if (is_numeric($this->data[$row][$record])) {           //Allow for missing Y data
                     $y_now_pixels = $this->ytr($this->data[$row][$record]);
 
@@ -3607,7 +3617,7 @@ class PHPlot {
                         // Set line width, revert it to normal at the end
                         ImageSetThickness($this->img, $this->line_widths[$idx]);
 
-                        if ($this->line_styles[$idx] == 'dashed') {
+                        if ($line_style == 'dashed') {
                             $this->SetDashedStyle($this->ndx_data_colors[$idx]);
                             ImageLine($this->img, $x_now_pixels, $y_now_pixels, $lastx[$idx], $lasty[$idx],
                                       IMG_COLOR_STYLED);
@@ -3658,6 +3668,8 @@ class PHPlot {
 
             // Now go for Y, E+, E-
             for ($idx = 0; $record < $this->num_recs[$row]; $idx++) {
+                if (($line_style = $this->line_styles[$idx]) == 'none')
+                    continue; //Allow suppressing entire line, useful with linepoints
                 // Y
                 $y_now = $this->data[$row][$record++];
                 $y_now_pixels = $this->ytr($y_now);
@@ -3665,7 +3677,7 @@ class PHPlot {
                 if ($start_lines[$idx] == TRUE) {
                     ImageSetThickness($this->img, $this->line_widths[$idx]);
 
-                    if ($this->line_styles[$idx] == 'dashed') {
+                    if ($line_style == 'dashed') {
                         $this->SetDashedStyle($this->ndx_data_colors[$idx]);
                         ImageLine($this->img, $x_now_pixels, $y_now_pixels, $lastx[$idx], $lasty[$idx],
                                   IMG_COLOR_STYLED);
@@ -3971,7 +3983,7 @@ class PHPlot {
                 $this->DrawLines();
             }
             break;
-        case 'linepoints':          // FIXME !!! DrawXDataLabel gets called in DrawLines() and DrawDots()
+        case 'linepoints':
             if ( $this->data_type == 'data-data-error') {
                 $this->DrawLinesError();
                 $this->DrawDotsError();
