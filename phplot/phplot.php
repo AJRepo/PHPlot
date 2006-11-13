@@ -3,14 +3,14 @@
 /* $Id$ */
 
 /*
- * PHPLOT Version 5.0.rc2-cvs
- * Copyright (C) 1998, 1999, 2000, 2001 Afan Ottenheimer.  Released under
+ * PHPLOT Version 5.0rc3
+ * Copyright (C) 1998-2006 Afan Ottenheimer.  Released under
  * the GPL and PHP licenses as stated in the the README file which should
  * have been included with this document.
  *
  * Recent (2003-2004) work by Miguel de Benito Delgado <nonick AT vodafone DOT es>
  *
- * Requires PHP 4.2.0 or later (CHECK THIS)
+ * Requires PHP 4.3.0 or later
  */
 
 if (! defined(__FUNCTION__))
