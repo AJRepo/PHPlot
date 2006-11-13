@@ -2,6 +2,36 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2006-11-13 (lbayuk)
+    * Fix for bug 1437912: x-axis label misalignment [bar charts]
+      The calculations were redone from scratch.
+      New control variable 'bar_extra_space', which works in addition to
+      'group_frac_width' to control how much extra space is around the bars.
+      Made bar widths match for 'stackedbars' and 1-bar-per-group 'bars'.
+
+      NOTE: This changes the appearance of charts. bars in 'stackedbars'
+      will now be thinner, and bars in 'bars' graphs will be thicker. I
+      saw no reason for them being different before.
+
+      This fix required fixing the positioning on the new bar data labels,
+      which was off before.  The bar data labels will now be centered.
+      Additional fixes to bar chart data labels:
+         For negative values, the label will center under the bar.
+         Fixed X-adjustment to account for shading.
+         Fixed to not suppress the data label if the value is 0.
+
+
+2006-11-10 (lbayuk)
+    * Fix for bug 1594457: DrawError text wrap and background fix
+      Do error image white background correctly, and word-wrap the text.
+
+    * Fix for bug 1594458: Suppress lines or points in 'linepoints' 
+      Don't draw X data labels twice for 'linepoints'.
+      Allow SetPointShapes value 'none' to suppress points, and allow
+      SetLineStyles value 'none' to suppress lines. This allows a 'linepoints'
+      graph to mix lines only, points only, and both on the same graph.
+
+
 2006-11-09 (lbayuk)
     * Fixes for bug 1446523:
       + Wrong variable name in deprecated SetAxisFontSize()
