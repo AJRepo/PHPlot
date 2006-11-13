@@ -66,7 +66,8 @@ class PHPlot {
     var $plot_type= 'linepoints';           // bars, lines, linepoints, area, points, pie, thinbarline, squared
 
     var $label_scale_position = 0.5;        // Shifts data labes in pie charts. 1 = top, 0 = bottom
-    var $group_frac_width = 0.7;            // value from 0 to 1 = width of bar groups
+    var $group_frac_width = 0.7;            // Bars use this fraction (0 to 1) of a group's space
+    var $bar_extra_space = 0.5;             // Number of extra bar's worth of space in a group
     var $bar_width_adjust = 1;              // 1 = bars of normal width, must be > 0
 
     var $y_precision = 1;
@@ -2170,14 +2171,36 @@ class PHPlot {
      */
     function CalcBarWidths()
     {
-        $group_width = ($this->plot_area[2] - $this->plot_area[0]) /
-                      $this->num_data_rows * $this->group_frac_width;
-        if ($this->plot_type == 'bars') {
-            $this->record_bar_width = $group_width / $this->records_per_group;
-        } else if ($this->plot_type == 'stackedbars') {
-            $this->record_bar_width = $group_width;
+        // group_width is the width of a group, including padding
+        $group_width = $this->plot_area_width / $this->num_data_rows;
+
+        // Actual number of bar spaces in the group. This includes the drawn bars, and
+        // 'bar_extra_space'-worth of extra bars.
+        // Note that 'records_per_group' includes the label, so subtract one to get
+        // the number of points in the group. 'stackedbars' have 1 bar space per group.
+        if ($this->plot_type == 'stackedbars') {
+          $num_spots = 1 + $this->bar_extra_space;
+        } else {
+          $num_spots = $this->records_per_group - 1 + $this->bar_extra_space;
         }
-        $this->data_group_space = $group_width / 2;
+
+        // record_bar_width is the width of each bar's allocated area.
+        // If bar_width_adjust=1 this is the width of the bar, otherwise
+        // the bar is centered inside record_bar_width.
+        // The equation is:
+        //   group_frac_width * group_width = record_bar_width * num_spots
+        $this->record_bar_width = $this->group_frac_width * $group_width / $num_spots;
+
+        // Note that the extra space due to group_frac_width and bar_extra_space will be
+        // evenly divided on each side of the group: the drawn bars are centered in the group.
+
+        // Within each bar's allocated space, if bar_width_adjust=1 the bar fills the 
+        // space, otherwise it is centered.
+        // This is the actual drawn bar width:
+        $this->actual_bar_width = $this->record_bar_width * $this->bar_width_adjust;
+        // This is the gap on each side of the bar (0 if bar_width_adjust=1):
+        $this->bar_adjust_gap = ($this->record_bar_width - $this->actual_bar_width) / 2;
+
         return TRUE;
     }
 
@@ -3785,26 +3808,34 @@ class PHPlot {
             return FALSE;
         }
 
+        // This is the X offset from the bar group's label center point to the left side of the first bar
+        // in the group. See also CalcBarWidths above.
+        $x_first_bar = (($this->records_per_group - 1) * $this->record_bar_width) / 2 - $this->bar_adjust_gap;
+
         for ($row = 0; $row < $this->num_data_rows; $row++) {
             $record = 1;                                    // Skip record #0 (data label)
 
             $x_now_pixels = $this->xtr(0.5 + $row);         // Place text-data at X = 0.5, 1.5, 2.5, etc...
 
-            if ($this->x_data_label_pos != 'none')          // Draw X Data labels? TODO:labels on top of bars.
+            if ($this->x_data_label_pos != 'none')          // Draw X Data labels?
                 $this->DrawXDataLabel($this->data[$row][0], $x_now_pixels);
 
-            // Draw the bar
+            // Lower left X of first bar in the group:
+            $x1 = $x_now_pixels - $x_first_bar;
+
+            // Draw the bars in the group:
             for ($idx = 0; $record < $this->num_recs[$row]; $record++, $idx++) {
                 if (is_numeric($this->data[$row][$record])) {       // Allow for missing Y data
-                    $x1 = $x_now_pixels - $this->data_group_space + ($idx * $this->record_bar_width);
-                    $x2 = $x1 + ($this->bar_width_adjust * $this->record_bar_width);
+                    $x2 = $x1 + $this->actual_bar_width;
 
                     if ($this->data[$row][$record] < $this->x_axis_position) {
                         $y1 = $this->x_axis_y_pixels;
                         $y2 = $this->ytr($this->data[$row][$record]);
+                        $upgoing_bar = False;
                     } else {
                         $y1 = $this->ytr($this->data[$row][$record]);
                         $y2 = $this->x_axis_y_pixels;
+                        $upgoing_bar = True;
                     }
 
                     // Draw the bar
@@ -3824,14 +3855,23 @@ class PHPlot {
                         ImageRectangle($this->img, $x1, $y1, $x2,$y2, $this->ndx_data_border_colors[$idx]);
                     }
 
-                    //Draw the Value If you want it IN the bar use valign=bottom, 
-                    //               if you want it on top use valign=top and push up a bit
-                    //FIXME: if the next bar chart is higher than the number the number is put behind the next bar
-                    if ( $this->y_data_label_pos == 'plotin' && $this->data[$row][$record] != 0 )
-                        $this->DrawDataLabel('',NULL,$row+0.5,$this->data[$row][$record],'',$this->data[$row][$record],
-                                         'center','top',$idx*($x2-$x1)/2,-10);
+                    // Draw optional data labels above the bars (or below, for negative values).
+                    if ( $this->y_data_label_pos == 'plotin') {
+                        if ($upgoing_bar) {
+                          $v_align = 'top';
+                          $y_offset = -5 - $this->shading;
+                        } else {
+                          $v_align = 'bottom';
+                          $y_offset = 2;
+                        }
+                        $this->DrawDataLabel('', NULL, $row+0.5, $this->data[$row][$record], '',
+                                $this->data[$row][$record], 'center', $v_align,
+                                ($idx + 0.5) * $this->record_bar_width - $x_first_bar, $y_offset);
+                    }
 
                 }
+                // Step to next bar in group:
+                $x1 += $this->record_bar_width;
             }   // end for
         }   // end for
     } //function DrawBars
@@ -3848,6 +3888,9 @@ class PHPlot {
             return FALSE;
         }
 
+        // This is the X offset from the bar's label center point to the left side of the bar.
+        $x_first_bar = $this->record_bar_width / 2 - $this->bar_adjust_gap;
+
         for ($row = 0; $row < $this->num_data_rows; $row++) {
             $record = 1;                                    // Skip record #0 (data label)
 
@@ -3856,12 +3899,14 @@ class PHPlot {
             if ($this->x_data_label_pos != 'none')          // Draw X Data labels?
                 $this->DrawXDataLabel($this->data[$row][0], $x_now_pixels);
 
+            // Lower left and lower right X of the bars in this group:
+            $x1 = $x_now_pixels - $x_first_bar;
+            $x2 = $x1 + $this->actual_bar_width;
+
             // Draw the bars
             $oldv = 0;
             for ($idx = 0; $record < $this->num_recs[$row]; $record++, $idx++) {
                 if (is_numeric($this->data[$row][$record])) {       // Allow for missing Y data
-                    $x1 = $x_now_pixels - $this->data_group_space;
-                    $x2 = $x_now_pixels + $this->data_group_space;
 
                     $y1 = $this->ytr(abs($this->data[$row][$record]) + $oldv);
                     $y2 = $this->ytr($this->x_axis_position + $oldv);
