@@ -1,40 +1,105 @@
-This is a class for creating scientific and business charts.
-To start extract the files with
+This is the README file for PHPlot
+Last updated for PHPlot-5.0rc3 on 2006-11-13
+The project home page is http://sourceforge.net/projects/phplot/
+-----------------------------------------------------------------------------
 
-    tar zxvf phplot-5.0rc2.tar.gz
+OVERVIEW:
 
-and then point your browser to
+PHPlot is a PHP class for creating scientific and business charts.
 
-    doc/index.php.
+The release documentation contains only summary information. For more
+complete information, refer to the PHPlot Reference Manual available on the
+Sourceforge project web site.
 
-There are some configuration settings that you will need to make
-based on your setup.
 
-1. File Type: Depending on the version of GD you are using,
-   you may or may not be able to use GIF or PNG. That is
-   set with the function.
+CONTENTS:
 
-        SetFileFormat("<filetype>") where <filetype> is png, gif, jpeg, ...
+   ChangeLog  . . . . . . . . . . . Lists all changes to the sources
+   LICENSE.GPL  . . . . . . . . . . License file
+   LICENSE.PHP_3_0  . . . . . . . . License file
+   NEWS.txt . . . . . . . . . . . . Highlights changes in releases
+   README.txt   . . . . . . . . . . This file
+   phplot.php   . . . . . . . . . . The main PHPlot source file
+   phplot_data.php  . . . . . . . . Auxiliary and extended functions
+   rgb.inc.php  . . . . . . . . . . Optional extended color table
 
-   or edit the file phplot.php and change the line
 
-        var $file_format = "<filetype>";
+REQUIREMENTS:
 
-2. TTF: If you have TTF installed then use (and read the docs)
+You need a recent version of PHP: 4.3.0 or higher. You are advised to use
+the latest stable release of PHP 4. (Testing with PHP 5 is not complete
+at this time.)
 
-        SetUseTTF(TRUE);
+You need the GD extension to PHP either built in to PHP or loaded as a
+module. Refer to the PHP documentation for more information - see the
+Image Functions chapter in the PHP Manual.
 
-   otherwise use
+If you want to display PHPlot charts on a web site, you need a PHP-enabled
+web server. You can also use the PHP CLI interface without a web server.
 
-        SetUseTTF(FALSE);
+If you want to use TrueType fonts on your charts, you need to have TrueType
+support in GD, and some TrueType font files. PHPlot does not include any
+TrueType font files. By default, PHPlot uses a simple built-in font.
 
-Everything else should be independent of what version you are using.
-This has been tested with PHP3, PHP4, GD1.2 and GD 3.8.
 
-To start please see doc/index.php. There you'll find examples, tests and
-some introductory documents.
+INSTALLATION:
 
---------------------------
+Unpack the distribution. (If you are reading this file, you have probably
+already done that.)
+
+Installation of PHPlot simply involves copying three script files somewhere
+your PHP application scripts will be able to find them. The scripts are:
+     phplot.php
+     phplot_data.php
+     rgb.inc.php
+(Only phplot.php is necessary for most graphs.)
+Make sure the protections on these files allow the web server to read them.
+
+The ideal place is a directory outside your web server document area,
+and on your PHP include path. You can add to the include path in the PHP
+configuration file; consult the PHP manual for details.
+
+
+
+TESTING:
+
+You can test your installation by creating the following two files somewhere
+in your web document area. First, the HTML file:
+
+------------ simpleplot.html ----------------------------
+<html>
+<head>
+<title>Hello, PHPlot!</title>
+</head>
+<body>
+<h1>PHPlot Test</h1>
+<img src="simpleplot.php">
+</body>
+</html>
+---------------------------------------------------------
+
+Second, in the same directory, the image file producing PHP script file.
+Depending on where you installed phplot.php, you may need to specify a path
+in the 'require' line below.
+
+------------ simpleplot.php -----------------------------
+<?php
+require 'phplot.php';
+$plot =& new PHPlot();
+$data = array(array('', 0, 0), array('', 1, 9));
+$plot->SetDataValues($data);
+$plot->SetDataType('data-data');
+$plot->DrawGraph();
+---------------------------------------------------------
+
+Access the URL to 'simpleplot.html' in your web browser. If you see a
+simple graph, you have successfully installed PHPlot. If you see no
+graph, check your web server error log for more information.
+
+
+COPYRIGHT and LICENSE:
+
+PHPlot is Copyright (C) 1998-2006 Afan Ottenheimer
 
 This is distributed with NO WARRANTY and under the terms of the GNU GPL
 and PHP licenses. If you use it - a cookie or some credit would be nice.
