@@ -70,7 +70,7 @@ ChangeLog file for information about all changes and bug fixes.
   narrower in bar graphs compared to the same data plotted as a stacked
   bar.) As a result, bar graph bars will now be drawn with wider bars, and
   stackedbar graph bars will be narrower. You can adjust this with the new
-  class varaible bar_extra_space.     [Bug # 1437912]
+  class variable bar_extra_space.     [Bug # 1437912]
 
 + Dot shapes and sizes were off by 1 or 2 slots in the array of shapes or
   sizes. After the fix, you may get different dot shapes or sizes per
