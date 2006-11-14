@@ -2,6 +2,8 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+===== Released as 5.0rc3 =====
+
 2006-11-13 (lbayuk)
     * Fix for bug 1437912: x-axis label misalignment [bar charts]
       The calculations were redone from scratch.
