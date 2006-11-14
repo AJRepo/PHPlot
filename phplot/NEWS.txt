@@ -35,8 +35,6 @@ The emphasis for this release is bug fixing, so there are few new features.
     line for that plot (and only draw the point markers).
   [Bug # 1594458]
 
-+ There is a new feature for bar chart data labels.
-
 + Bar charts can have data labels above the bar with the value. Turn
   these on with SetYDataLabelPos('plotin'). This is somewhat experimental,
   since there isn't a lot of room for labels on top of the bars and you
