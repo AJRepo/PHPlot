@@ -2,6 +2,47 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2006-12-02 (lbayuk)
+    * Fixes for bug 1605555: Y Data Labels use wrong font and not formatted.
+      Use y_label_font (not x_label_font) for Y Data Labels.
+      Use the formatted value for the label, not the original text.
+      (This applies to bar charts only, with the new Y data labels.)
+
+    * One fix for bug 1208054: Localization of number format.
+      If number formatting is enabled with 'data' format type, PHPlot previously
+      used dot for decimal point and comma for thousands separator, and there
+      was no way to change it.
+      
+      This fix adds a new function:
+               SetNumberFormat($decimal_point, $thousands_separator)
+      to set the separators.  In addition, if that function is not used,
+      PHPlot will now try to use locale-dependent separators. If locale
+      information is not available, it will fall back to the old defaults
+      of dot and comma.
+
+      Note: This change may have some negative effects. 1) If your locale is
+      "C" or "Posix", you might not get a thousands separator now by default.
+      You should be using a more specific locale. 2) If your PHP script is
+      forcing a specific locale with setlocale(), PHPlot will probaby undo
+      that because it uses setlocale(LC_ALL, '') to import locale information
+      from the environment.  We have to do that, or a locale set through
+      the environment is ignored. But it will override a manually set locale.
+
+    * Fix for bug 937944: X/Y Tick Counts
+      PHPlot could draw one too few Y tick marks, and one too many X tick marks.
+
+      Changed the code to stop drawing X (Y) tick marks when the current X (Y)
+      value exceeds the maximum X (Y) value plus a small fudge factor. The fudge
+      factor accounts for cumulative error when repeatedly adding a delta to
+      the X (Y) value.
+
+      Notes: The bug report was writting about Y tick counts only, but X tick
+      counts can also be wrong. The proposed fix in the bug report does not
+      work in all cases.
+
+      This fix changes the appearance of many plots which were missing the
+      top-most Y tick mark. The extra X-tick mark problem is less common.
+
 ===== Released as 5.0rc3 =====
 
 2006-11-13 (lbayuk)
