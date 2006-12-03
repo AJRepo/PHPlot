@@ -3001,8 +3001,7 @@ class PHPlot {
 
     /*!
      * Draws the data label associated with a point in the plot at specified x/y world position.
-     * Calling of this function in DrawLines(), etc is decided after x_data_label_pos value.
-     * what the setting is (for plots that need it, like DrawSquared())
+     * This is currently only used for Y data labels for bar charts.
      */
     function DrawDataLabel($which_font, $which_angle, $x_world, $y_world, $which_color, $which_text,
                       $which_halign = 'center', $which_valign = 'top', $x_adjustment=0, $y_adjustment=0) 
@@ -3022,7 +3021,7 @@ class PHPlot {
         $y_pixels = $this->ytr($y_world) + $y_adjustment;
 
         $this->DrawText($which_font, $which_angle, $x_pixels, $y_pixels,
-                        $which_color, $which_text, $which_halign, $which_valign);
+                        $which_color, $data_label, $which_halign, $which_valign);
 
         return TRUE;
 
@@ -3864,7 +3863,7 @@ class PHPlot {
                           $v_align = 'bottom';
                           $y_offset = 2;
                         }
-                        $this->DrawDataLabel('', NULL, $row+0.5, $this->data[$row][$record], '',
+                        $this->DrawDataLabel($this->y_label_font, NULL, $row+0.5, $this->data[$row][$record], '',
                                 $this->data[$row][$record], 'center', $v_align,
                                 ($idx + 0.5) * $this->record_bar_width - $x_first_bar, $y_offset);
                     }
