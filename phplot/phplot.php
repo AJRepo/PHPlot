@@ -2875,10 +2875,9 @@ class PHPlot {
         }
 
         // NOTE: When working with floats, because of approximations when adding $delta_y,
-        // $y_tmp never equals $y_end  at the for loop, so one spurious line would  get drawn where
-        // not for the substraction to $y_end here.
+        // $y_tmp may not quite reach $y_end, or may exceed it very slightly, so apply a "fudge" factor.
         $y_tmp = (double)$this->plot_min_y;
-        $y_end = (double)$this->plot_max_y - ($delta_y/2);
+        $y_end = (double)$this->plot_max_y + ($this->plot_max_y - $this->plot_min_y) / 10000.0;
 
         if ($this->skip_bottom_tick)
             $y_tmp += $delta_y;
@@ -2886,7 +2885,7 @@ class PHPlot {
         if ($this->skip_top_tick)
             $y_end -= $delta_y;
 
-        for (;$y_tmp < $y_end; $y_tmp += $delta_y) {
+        for (;$y_tmp <= $y_end; $y_tmp += $delta_y) {
             $ylab = $this->FormatLabel('y', $y_tmp);
             $y_pixels = $this->ytr($y_tmp);
 
@@ -2929,20 +2928,19 @@ class PHPlot {
         }
 
         // NOTE: When working with decimals, because of approximations when adding $delta_x,
-        // $x_tmp never equals $x_end  at the for loop, so one spurious line would  get drawn where
-        // not for the substraction to $x_end here.
+        // $x_tmp may not quite reach $x_end, or may exceed it very slightly, so apply a "fudge" factor.
         $x_tmp = (double)$this->plot_min_x;
-        $x_end = (double)$this->plot_max_x - ($delta_x/2);
+        $x_end = (double)$this->plot_max_x + ($this->plot_max_x - $this->plot_min_x) / 10000.0;
 
         // Should the leftmost tick be drawn?
         if ($this->skip_left_tick)
             $x_tmp += $delta_x;
 
         // And the rightmost?
-        if (! $this->skip_right_tick)
-            $x_end += $delta_x;
+        if ($this->skip_right_tick)
+            $x_end -= $delta_x;
 
-        for (;$x_tmp < $x_end; $x_tmp += $delta_x) {
+        for (;$x_tmp <= $x_end; $x_tmp += $delta_x) {
             $xlab = $this->FormatLabel('x', $x_tmp);
             $x_pixels = $this->xtr($x_tmp);
 
