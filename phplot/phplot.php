@@ -1283,6 +1283,13 @@ class PHPlot {
         return TRUE;
     }
 
+    function SetNumberFormat($decimal_point, $thousands_sep)
+    {
+        $this->decimal_point = $decimal_point;
+        $this->thousands_sep = $thousands_sep;
+    }
+
+
     function SetXLabelAngle($which_xla)
     {
         $this->x_label_angle = $which_xla;
@@ -1797,6 +1804,30 @@ class PHPlot {
         return TRUE;
     }
 
+    /*
+     * Format a floating-point number.
+     * This is like PHP's number_format, but uses class variables for separators.
+     * The separators will default to locale-specific values, if available.
+     */
+    function number_format($number, $decimals=0)
+    {
+        if (!isset($this->decimal_point) || !isset($this->thousands_sep)) {
+            // Load locale-specific values from environment:
+            @setlocale(LC_ALL, '');
+            // Fetch locale settings:
+            $locale = @localeconv();
+            if (!empty($locale) && isset($locale['decimal_point']) &&
+                    isset($locale['thousands_sep'])) {
+              $this->decimal_point = $locale['decimal_point'];
+              $this->thousands_sep = $locale['thousands_sep'];
+            } else {
+              // Locale information not available.
+              $this->decimal_point = '.';
+              $this->thousands_sep = ',';
+            }
+        }
+        return number_format($number, $decimals, $this->decimal_point, $this->thousands_sep);
+    }
 
 //////////////////////////////////////////////////////////
 ///////////         DATA ANALYSIS, SCALING AND TRANSLATION
@@ -2327,7 +2358,7 @@ class PHPlot {
                 $lab = @ $this->data[$which_lab][0];
                 break;
             case 'data':
-                $lab = number_format($which_lab, $this->x_precision, '.', ',').$this->data_units_text;
+                $lab = $this->number_format($which_lab, $this->x_precision).$this->data_units_text;
                 break;
             case 'time':
                 $lab = strftime($this->x_time_format, $which_lab);
@@ -2342,7 +2373,7 @@ class PHPlot {
         case 'ploty':
             switch ($this->y_label_type) {
             case 'data':
-                $lab = number_format($which_lab, $this->y_precision, '.', ',').$this->data_units_text;
+                $lab = $this->number_format($which_lab, $this->y_precision).$this->data_units_text;
                 break;
             case 'time':
                 $lab = strftime($this->y_time_format, $which_lab);
@@ -3270,7 +3301,7 @@ class PHPlot {
                 else
                     $slicecol = $this->ndx_data_dark_colors[$color_index];
 
-                $label_txt = number_format(($val / $total * 100), $this->y_precision, '.', ', ') . '%';
+                $label_txt = $this->number_format(($val / $total * 100), $this->y_precision) . '%';
                 $val = 360 * ($val / $total);
 
                 // NOTE that imagefilledarc measures angles CLOCKWISE (go figure why),
