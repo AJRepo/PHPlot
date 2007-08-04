@@ -2,6 +2,12 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2007-08-04 (lbayuk)
+    * New feature: control legend text and color box alignment.
+      Adds a new function SetLegendStyle to adjust the alignment of the
+      text and the color boxes inside the legend.
+      Based on part of bug 1208054, contributed by David Hernández Sanz.
+
 2006-12-02 (lbayuk)
     * Fixes for bug 1605555: Y Data Labels use wrong font and not formatted.
       Use y_label_font (not x_label_font) for Y Data Labels.
