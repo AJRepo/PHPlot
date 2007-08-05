@@ -1,0 +1,223 @@
+<!-- $Id$
+     Installation chapter for PHPlot Reference Manual
+-->
+<chapter id="install">
+<title>PHPlot Installation</title>
+
+<abstract>
+  <para>
+This chapter explains how to install PHPlot.
+  </para>
+</abstract>
+
+<sect1 id="install-prereq">
+<title>Prerequisites</title>
+<para>
+Before you can use PHPlot, you need a recent version of PHP with the GD
+extension.  PHPlot is known to require at least PHP version 4.3.0, but you
+should always use the latest available version of either the PHP4 or PHP5
+releases.
+</para>
+
+<para>
+If you want to display PHPlot charts on a web site, you need a PHP-enabled
+web server. You can also use PHPlot with the PHP CLI (command line interface)
+without a web server.
+</para>
+
+<para>
+You need the GD extension to PHP either built in to PHP or loaded as a
+module. The version of GD which is bundled with recent versions of PHP
+will work fine.
+</para>
+
+<para>
+If you aren't sure what extensions you have in PHP, create this PHP
+script called <filename>phpinfo.php</filename> somewhere in
+your web server's document tree:
+<programlisting>
+&lt;?php phpinfo(); ?&gt;
+</programlisting>
+Access this page with your browser to view your PHP configuration.
+Look for the section labeled 'gd'. If you have no 'gd' section in the
+PHP Info output, you don't have the required 'gd' extension. Consult the
+PHP documentation to find out how to get it.
+Here's what the GD section of the PHP Info listing might look like:
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="images/gdinfo.png" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>GD section of PHP Info listing</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+</para>
+
+<para>
+The text in the 'gd' section of the PHP Info output will tell you what
+version of GD you have (you need 2.0 or higher), and what output formats it
+supports.
+Check the table for <emphasis>PNG Support</emphasis>,
+since PNG is the default output format for PHPlot.
+If you want to create GIF or JPEG (JPG) format images,
+check the table to see if they are available.
+If the image formats you want are not available, you will have to rebuild PHP.
+</para>
+
+<para>
+Another thing to look for in the 'gd' section of the PHP Info output is
+<emphasis>FreeType Support</emphasis>. If you have it enabled, you can use
+TrueType fonts in PHPlot. If your GD does not have FreeType support
+enabled, you can still make decent-looking plots with PHPlot, using the
+built-in GD fonts. Note that even if you have FreeType Support enabled,
+you need some actual TrueType font files in order to use TrueType fonts
+with PHPlot.  PHPlot does not include any TrueType font files.
+</para>
+
+<para>
+While you have the PHP Info report up, look in the Configuration section
+for PHP Core, at the top of the report, and make a note of the
+<literal>include_path</literal> setting.
+If you have a local include directory in this path, you can use it for
+installing PHPlot, as described below.
+</para>
+
+<note>
+  <para>
+Don't leave the <filename>phpinfo.php</filename> file in your web server
+document tree, as there may be security implications in the information it
+tells people about your web server.
+  </para>
+</note>
+
+<para>
+Once you have a web server with PHP and the GD extension, you are ready to
+install PHPlot.
+</para>
+
+</sect1>
+
+<sect1 id="install-install">
+<title>Installing</title>
+<para>
+Unpack the PHPlot distribution into a convenient directory. Recent releases
+of PHPlot are available both as ZIP files, and as gzip-compressed TAR files.
+Use whichever format is more convenient for you. In the example below, the
+TAR format is unpacked.
+<screen>
+$ tar -xvzf phplot-5.*.tar.gz
+$ cd phplot-5.*
+</screen>
+(Use the appropriate filename.)
+Check the distribution for README and/or INSTALL files which may contain
+newer instructions.
+</para>
+
+<para>
+The main source file for PHPlot is <filename>phplot.php</filename>.
+There are some configuration settings you can make at the top of this file
+using a text editor.
+An example would be to change the default output format from PNG to GIF.
+For most installations, no changes are needed. But if you want to use
+TrueType fonts in your plot images, you can make it easier by changing the
+following two default values in phplot.php:
+<variablelist>
+  <varlistentry>
+    <term>$ttf_path</term>
+    <listitem>
+      <para>
+This should be set to the pathname of the directory where you keep TrueType
+fonts. Setting this here means scripts can find the fonts without calling
+<xref linkend="SetTTFPath" /> or including a full pathname to the font file.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>$default_ttfont</term>
+    <listitem>
+      <para>
+This should be set to the filename of the TrueType font you want to use as a
+default for plots which enable TrueType fonts. You can specify just
+a filename without path, and the font will be found in the $ttf_path
+directory set above, or you can specify the full pathname of the font file.
+This provides a default for <xref linkend="SetDefaultTTFont" />.
+      </para>
+    </listitem>
+  </varlistentry>
+</variablelist>
+For example, you might change the settings in phplot.php to look like this:
+<programlisting>
+  var $ttf_path = '/usr/local/share/fonts/truetype';
+  var $default_ttfont = 'arial.ttf';
+</programlisting>
+</para>
+
+<para>
+Installation of PHPlot simply involves copying three script files somewhere
+your PHP application scripts will be able to find them. The scripts are:
+<filename>phplot.php</filename>,
+<filename>phplot_data.php</filename>,
+and <filename>rgb.inc.php</filename>.
+Make sure the protections on these files allow the web server to read them.
+For example:
+<screen>
+$ chmod 644 *.php
+</screen>
+</para>
+
+<para>
+Then, simply copy the three files into a directory where PHP scripts
+will be able to include them.
+The ideal place is a directory outside your web server
+document area, and on your PHP include path (that you noted above in
+the PHP Info report). You can add to the include path
+in the PHP configuration file; consult the PHP manual for details.
+For example, if <filename>/usr/local/share/php</filename> is on
+your PHP include path, you can install PHPlot with:
+<screen>
+$ cp phplot.php phplot_data.php rgb.inc.php /usr/local/share/php
+</screen>
+</para>
+
+</sect1>
+
+<sect1 id="install-next">
+<title>Next Step</title>
+<para>
+You can test PHPlot with any of the examples in <xref linkend="examples" />,
+or by entering this minimal script into a file called (for example)
+<filename>plottest.php</filename>.
+<programlisting>
+&lt;?php
+require 'phplot.php';
+$data = array(array('', 10), array('', 1));
+$plot =&amp; new PHPlot();
+$plot-&gt;SetDataValues($data);
+$plot-&gt;SetTitle('First Test Plot');
+$plot-&gt;DrawGraph();
+</programlisting>
+Access this script through your browser, and you should see a very simple
+plot. Note: Since PHPlot returns image data, not text, you will generally
+not see error messages in the output. If a script using PHPlot has a
+syntax error, or calls an undefined function, you will get a blank page
+returned, and you will probably have to check the web server error log
+for the reason.
+You might find that debugging your PHPlot applications is easier using
+the PHP CLI (command line interface),
+as described at the start of <xref linkend="examples" />.
+</para>
+
+<para>
+If you are installing PHPlot for use by some web application (rather than
+to develop your own applications), proceed with that application's setup
+instructions. If you want to develop your own applications using PHPlot, you
+can start by looking at some of the examples in <xref linkend="examples" />,
+or go right to the introductory material in <xref linkend="starting" />.
+Experienced programmers may want to skip right to <xref linkend="concepts" />
+to learn about PHPlot concepts and features in depth.
+</para>
+</sect1>
+
+</chapter>

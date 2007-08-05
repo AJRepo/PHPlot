@@ -1,0 +1,5541 @@
+<!-- $Id$
+     Reference section for PHPlot Reference Manual
+
+  Note: Part I is <part>, Part II is a <reference>, so force the label.
+-->
+<reference label="II" id="reference">
+<title>PHPlot Function Reference</title>
+
+<partintro id="refintro">
+<abstract>
+  <para>
+This part of the PHPlot Reference Manual
+contains the reference information for the PHPlot functions.
+Note that all the functions (except the class constructor) are implemented
+as methods of the class PHPlot, and are therefore called through an object
+which is an instance of the class. In this text, <literal>$plot</literal> is
+used to represent an instance of the PHPlot class.
+  </para>
+</abstract>
+</partintro>
+
+<refentry id="DrawGraph">
+  <refmeta>
+    <refentrytitle>DrawGraph</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>DrawGraph</refname>
+    <refpurpose>Draw the current graph onto the image</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;DrawGraph()
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>DrawGraph</function> actually draws the current graph onto the
+image. That is, until DrawGraph is used, nothing happens except the
+recording of settings and data.
+DrawGraph also outputs the image with <xref linkend="PrintImage" />,
+unless <xref linkend="SetPrintImage" /> was used.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <para>
+None
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="PHPlot">
+  <refmeta>
+    <refentrytitle>PHPlot</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>PHPlot</refname>
+    <refpurpose>Construct a new PHPlot Class Object</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot &amp;= new PHPlot(<optional><parameter>$width</parameter></optional>, <optional><parameter>$height</parameter></optional>, <optional><parameter>$output_file</parameter></optional>, <optional><parameter>$input_file</parameter></optional>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+This is the class constructor for PHPlot. It creates a new plot object and
+initializes all internal settings to default values.
+    </para>
+    <para>
+The created object should always be assigned as a reference, so that the
+PHPlot destructor works properly.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$width</replaceable></term>
+        <listitem>
+          <para>
+Optional width of the plot image, in pixels. Default is 600.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>$height</replaceable></term>
+        <listitem>
+          <para>
+Optional height of the plot image, in pixels. Default is 400.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>$output_file</replaceable></term>
+        <listitem>
+          <para>
+Optional name of a file where the image output will be written.
+This is the same as using <xref linkend="SetOutputFile" />.
+Default is no output file, meaning the image is written to standard output
+(that is, sent back to the browser).
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>$input_file</replaceable></term>
+        <listitem>
+          <para>
+Optional name of a file to use as a starting image. This becomes the
+background for the plot.  If an input_file is given, any width and height
+given to the constructor are ignored, and the size of the image in the
+named input_file are the plot image size.  Default is no input file,
+meaning a blank image will be created at the given or default width and
+height.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Return Value</title>
+    <para>
+Returns an object, an instance of the PHPlot class. The return value should
+be assigned with the reference (&amp;) operator as shown above.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The output_file will be ignored unless <xref linkend="SetIsInline" />(True) is
+called.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="PrintImage">
+  <refmeta>
+    <refentrytitle>PrintImage</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>PrintImage</refname>
+    <refpurpose>Output the generated graph image and clean up the
+internal storage space.</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;PrintImage()
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>PrintImage</function> outputs the generated graph image and
+cleans up the internal storage space used.
+Output goes to the browser by default, or to the output file set by
+<xref linkend="SetOutputFile" />.
+    </para>
+    <para>
+Using PrintImage is not normally needed,
+since <xref linkend="DrawGraph" /> calls PrintImage unless it was
+told not to using <xref linkend="SetPrintImage" />.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <para>
+None
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetBackgroundColor">
+  <refmeta>
+    <refentrytitle>SetBackgroundColor</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetBackgroundColor</refname>
+    <refpurpose>Sets the overall background color.</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetBackgroundColor(<parameter>$color</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetBackgroundcolor</function> sets the overall background
+color. This is the color of the background of the whole image.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$color</replaceable></term>
+        <listitem>
+          <para>
+Color value to use.
+See <xref linkend="conc-colors" /> for more on color values.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The default background color is white.
+Background image overrides background color;
+background color is ignored if a background image was set with
+<xref linkend="SetBgImage" />.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetBgImage">
+  <refmeta>
+    <refentrytitle>SetBgImage</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetBgImage</refname>
+    <refpurpose>Set a graphic file to be used in the graph background</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetBgImage(<parameter>$input_file</parameter>, <optional><parameter>$mode</parameter></optional>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetBgImage</function> sets an image file to be used as the graph
+background. The image can be scaled or tiled to fit.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$input_file</replaceable></term>
+        <listitem>
+          <para>
+Path to the file to be used. The file can be any type allowed by GD, which
+usually includes JPEG, GIF, and PNG.
+          </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><replaceable>$mode</replaceable></term>
+        <listitem>
+          <para>
+Optional display mode for the background image: one of the strings
+'centeredtile', 'tile', or 'scale'. The default is 'centeredtile'.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+If a background image has been set, background color (set with
+<xref linkend="SetBackgroundColor" />) is ignored.
+    </para>
+    <para>
+SetBgImage sets a background for the entire image area, while
+<xref linkend="SetPlotAreaBgImage" /> sets a background for
+the plot area (generally, the area between the axes).
+If both are used, the plot area background overlays that portion
+of the overall background.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetBrowserCache">
+  <refmeta>
+    <refentrytitle>SetBrowserCache</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetBrowserCache</refname>
+    <refpurpose>Control browser-side image caching</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetBrowserCache(<parameter>$browser_cache</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetBrowserCache</function> controls whether to allow the browser
+to cache the image generated by PHPlot.
+By default, PHPlot sends out HTTP headers to tell the browser not to cache
+the generated image, since it is assumed that the image is generated from
+dynamic data and a cached copy would not be accurate. You can use this
+function to allow the browser to cache the image.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$browser_cache</replaceable></term>
+        <listitem>
+          <para>
+True to allow the browser to cache the image; False to not allow the
+browser to cache the image.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+</refentry>
+
+<refentry id="SetDataBorderColors">
+  <refmeta>
+    <refentrytitle>SetDataBorderColors</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetDataBorderColors</refname>
+    <refpurpose>Set the rectangle border color on bars and stacked bars</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetDataBorderColors(<parameter>$border</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetDataBorderColors</function> sets the color used for the
+borders of the bars and stacked bars for plot types 'bars' and
+'stackedbars'. The borders are only drawn if shading is turned off
+with <xref linkend="SetShading" />; the default is to draw bars with
+a drop-shadow for a 3-D look and no borders.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$border</replaceable></term>
+        <listitem>
+          <para>
+The desired color for the data borders.
+If this is an array, it sets the color for each data set sequentially from
+the array.
+If this is a single value, it sets the color for all data sets to that.
+See <xref linkend="conc-colors" /> for more on color values.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+If this function is never called, and <xref linkend="SetShading" /> is called
+to turn shading off, then all data borders are black.
+    </para>
+    <para>
+This is only used for plot types 'bars' and 'stackedbars', and only if shading
+is turned off.
+    </para>
+    <para>
+If you want flat (unshaded), borderless bars, call SetShading(0) to turn
+off the shading, and call SetDataBorderColors with the same color (or color
+array) that you use with <xref linkend="SetDataColors" />.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetDataColors">
+  <refmeta>
+    <refentrytitle>SetDataColors</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetDataColors</refname>
+    <refpurpose>Set the colors for plotting data sets</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetDataColors(<parameter>$data_colors</parameter>, <optional><parameter>$border</parameter></optional>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetDataColors</function> sets the colors used for plotting the
+data.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$data_colors</replaceable></term>
+        <listitem>
+          <para>
+An array of color values, one for each data set. For other possibilities,
+see Notes.
+See <xref linkend="conc-colors" /> for more on color values.
+          </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><replaceable>$border</replaceable></term>
+        <listitem>
+          <para>
+Argument provided for backward compatibility.
+Use <xref linkend="SetDataBorderColors" /> instead.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+Usually the <parameter>$data_colors</parameter> argument is an array of colors,
+one for each data set to be plotted. For example:
+<programlisting>
+$plot-&gt;SetDataColors(array('red', 'green', 'blue'));
+$plot-&gt;SetDataType('data-data');
+$plot-&gt;SetDataValues(array( array('', 1, 4, 10, 5),
+                            array('', 2, 6, 20, 3)));
+</programlisting>
+This will plot a red line from (1,4) to (2,6), a green line from (1,10) to
+(2,20), and a blue line from (1,5) to (2,3).
+    </para>
+    <para>
+If <parameter>$data_colors</parameter> is not an array, but a single color
+value, then that color will be used for all data sets.
+However, the array(r,g,b) notation is not allowed in
+this case (because it looks like an array of 3 separate color values).
+    </para>
+    <para>
+If <parameter>$data_colors</parameter> is an empty string,
+the following 4 colors are used: blue red green orange.
+    </para>
+    <para>
+If SetDataColors is never called, the default colors in order are:
+SkyBlue, green, orange, blue, orange, red, violet, and azure1.
+Note that for some reason orange appears twice. If you are plotting more
+than 4 data sets, you should call SetDataColors to set distinctive colors.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetDataType">
+  <refmeta>
+    <refentrytitle>SetDataType</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetDataType</refname>
+    <refpurpose>Indicate the format of the data array</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetDataType(<parameter>$dt</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetDataType</function> tells PHPlot how to interpret the data
+array set with <xref linkend="SetDataValues" />.
+More information on data types can be found in <xref linkend="conc-datatypes" />.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$dt</replaceable></term>
+        <listitem>
+          <para>
+The data array format type, which must be one of the following values:
+            <informaltable>
+              <tgroup cols="2">
+                <?dbhtml table-summary="Available data types"?>
+                <thead>
+                  <row>
+                    <entry>Format</entry>
+                    <entry>Description</entry>
+                  </row>
+                </thead>
+                <tbody>
+                  <row>
+                    <entry>text-data</entry>
+                    <entry>Each data array entry is an array with a label,
+                      followed by one or more Y values.</entry>
+                  </row>
+                  <row>
+                    <entry>data-data</entry>
+                    <entry>Each data array entry is an array with a label,
+                      an X value, then one or more Y values.</entry>
+                  </row>
+                  <row>
+                    <entry>data-data-error</entry>
+                    <entry>Each data array entry is an array with a label,
+                      an X value, then one or more triplets of Y value,
+                      error in the positive directory, and error in the
+                      negative direction.</entry>
+                  </row>
+                  <row>
+                    <entry>text-data-single</entry>
+                    <entry>This is used only for pie charts. Each data
+                      array entry is an array with a label and a single
+                      data value.</entry>
+                  </row>
+                </tbody>
+              </tgroup>
+            </informaltable>
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The default data type is <literal>text-data</literal>.
+    </para>
+    <para>
+An example of a <literal>text-data</literal> data array is:
+<programlisting>
+     $data = array(  array('Jan', 100, 150, 200),
+                     array('Feb', 110, 140, 210),
+                     array('Mar', 120, 145, 200),
+                     array('Apr', 110, 160, 220) );
+</programlisting>
+This defines the data for 3 plots with 4 points on each, and a month name
+as label for each point.
+    </para>
+
+    <para>
+An example of a <literal>data-data</literal> data array is:
+<programlisting>
+     $data = array(  array('', 2, 15),
+                     array('', 4, 14),
+                     array('', 6, 10),
+                     array('', 8, 20) );
+</programlisting>
+Here the labels are empty strings, next are the X values, then a single
+set of Y values (1 plot).
+    </para>
+
+    <para>
+An example of a <literal>data-data-error</literal> data array is:
+<programlisting>
+     $data = array(  array('1999', 1, 23.5, 5, 3),
+                     array('2000', 2, 20.1, 4, 4),
+                     array('2001', 3, 19.1, 3, 4),
+                     array('2002', 4, 16.8, 4, 3) );
+</programlisting>
+Here the labels are years, next are the X values 1-4, then a single
+set of Y values with error ranges between 3 and 5 for each point.
+    </para>
+
+    <para>
+An example of a <literal>text-data-single</literal> data array,
+used only for pie charts, is:
+<programlisting>
+     $data = array(  array('', 10),
+                     array('', 40),
+                     array('', 50) );
+</programlisting>
+Here the labels are empty (they aren't used with a pie chart anyway),
+and 3 slices with relative weights of 10, 40, and 50 are defined.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetDataValues">
+  <refmeta>
+    <refentrytitle>SetDataValues</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetDataValues</refname>
+    <refpurpose>Set the data array for plotting</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetDataValues(<parameter>$dv</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetDataValues</function> sets the data array which contains the
+data values to be plotted. Use of this function is required.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$dv</replaceable></term>
+        <listitem>
+          <para>
+The data array, containing values according to the data type format
+set by <xref linkend="SetDataType" />.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+</refentry>
+
+<refentry id="SetDefaultDashedStyle">
+  <refmeta>
+    <refentrytitle>SetDefaultDashedStyle</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetDefaultDashedStyle</refname>
+    <refpurpose>Sets the on/off pattern for dashed lines.</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetDefaultDashedStyle(<parameter>$style</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetDefaultDashedStyle</function> sets the line style for dashed
+lines. That is, it customizes the look of dashed lines by specifying the
+dash and gap lengths.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$style</replaceable></term>
+        <listitem>
+          <para>
+A string specifying the number of alternating colored and transparent dots,
+in order. For example, '4-3' means 4 colored, 3 transparent;
+'2-3-1-2' means 2 colored, 3 transparent, 1 colored, 2 transparent.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The default dashed style is '2-4', meaning 2 pixels drawn, followed by a
+gap of 4 pixels.
+    </para>
+    <para>
+All dashed lines on a plot must use the same dashed style.
+Dashed lines are used for the grid (unless disabled with
+<xref linkend="SetDrawDashedGrid" />), and for any data sets with
+line style set to dashed with <xref linkend="SetLineStyles" />.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetDefaultTTFont">
+  <refmeta>
+    <refentrytitle>SetDefaultTTFont</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetDefaultTTFont</refname>
+    <refpurpose>Set the default TrueType font</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetDefaultTTFont(<parameter>$font</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetDefaultTTFont</function> sets the default TrueType font,
+resets all text elements to use that font, and enables TrueType fonts.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$font</replaceable></term>
+        <listitem>
+          <para>
+Name of the TrueType font file to use as default. Specify either a
+filename in the default TrueType font directory, or a full pathname to the
+font file.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+Starting after PHPlot-5.0rc2, the behavior of this function changed.
+It now accepts either a filename (which must be in the default TrueType
+font directory as set with <xref linkend="SetTTFPath" />), or a full
+pathname. In addition, it automatically enables TrueType font usage
+as if <xref linkend="SetUseTTF" />(True) was called.
+    </para>
+    <para>
+This function resets all elements to use the named font and default sizes,
+so it undoes all prior <xref linkend="SetFont" /> calls.
+    </para>
+    <para>
+Change the font used by individual text elements with <xref linkend="SetFont" />
+after using SetDefaultTTFont.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetDrawBrokenLines">
+  <refmeta>
+    <refentrytitle>SetDrawBrokenLines</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetDrawBrokenLines</refname>
+    <refpurpose>Sets whether lines should be broken at missing data</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetDrawBrokenLines(<parameter>$bl</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetDrawBrokenLines</function> determines how to plot lines with
+missing data points (that is, missing Y values). By default, PHPlot will
+act as if the point does not exist, connecting the points before and after
+the missing datum in the usual way. Use SetDrawBrokenLines to leave a gap
+between the points before and after missing data instead.
+    </para>
+    <para>
+This only applies to 'lines' and 'squared' plot types.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$bl</replaceable></term>
+        <listitem>
+          <para>
+True to break the lines at missing Y data points. False to connect the
+lines around missing data.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The default is to ignore missing data and connect lines around missing points.
+    </para>
+    <para>
+A missing Y value can be represented in the data array by an empty string.
+(Anything non-numeric works.)
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetDrawDashedGrid">
+  <refmeta>
+    <refentrytitle>SetDrawDashedGrid</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetDrawDashedGrid</refname>
+    <refpurpose>Use solid or dashed lines for the grid</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetDrawDashedGrid(<parameter>$ddg</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetDrawDashedGrid</function> determines whether the grid
+will be drawn with solid or dashed lines. The default is to used
+dashed lines.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$ddg</replaceable></term>
+        <listitem>
+          <para>
+True to use dashed lines, False to use solid lines.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+</refentry>
+
+
+<refentry id="SetDrawPlotAreaBackground">
+  <refmeta>
+    <refentrytitle>SetDrawPlotAreaBackground</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetDrawPlotAreaBackground</refname>
+    <refpurpose>Enables drawing of a plot area background color</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetDrawPlotAreaBackground(<parameter>$dpab</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetDrawPlotAreaBackground</function> enables or disables drawing
+of a solid fill color behind the plot area (the area inside the axes,
+typically). By default, no plot area background color is used, which
+results in the overall image background color applying to the plot area.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$dpab</replaceable></term>
+        <listitem>
+          <para>
+If True, draw the plot area background color. If False, ignore the plot
+area background color.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The actual color which will be drawn in the plot area background
+is set with <xref linkend="SetPlotBgColor" />.
+    </para>
+    <para>
+Plot area background color is ignored if a plot area background image was
+set with <xref linkend="SetPlotAreaBgImage" />.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetDrawXDataLabelLines">
+  <refmeta>
+    <refentrytitle>SetDrawXDataLabelLines</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetDrawXDataLabelLines</refname>
+    <refpurpose>Draw data lines</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetDrawXDataLabelLines(<parameter>$dxdl</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetDrawXDataLabelLines</function> enables drawing of data label
+lines from the X axis up to the data point. To use data label lines, you
+generally want to turn off ticks, tick labels, and X grid.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$dxdl</replaceable></term>
+        <listitem>
+          <para>
+True to draw the data label lines, False to not draw the lines.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+Data label lines only work with these plot types: lines, points, linepoints,
+and thinbarline.
+Data label lines don't work with these plot types: pie, area, squared,
+bars, and stackedbars, because the data label line would be covered or
+obscured by the data.
+    </para>
+    <para>
+By default, data label lines are not drawn.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetDrawXGrid">
+  <refmeta>
+    <refentrytitle>SetDrawXGrid</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetDrawXGrid</refname>
+    <refpurpose>Whether or not to draw the X grid lines</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetDrawXGrid(<parameter>$dxg</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetDrawXGrid</function> enables or disables the drawing of the X
+grid lines. (The X grid lines are the vertical lines which intersect the
+X axis and are parallel to the Y axis.)
+The default is to not draw the X grid.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$dxg</replaceable></term>
+        <listitem>
+          <para>
+True to draw the X grid lines, False to not draw the X grid lines.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+<xref linkend="SetLightGridColor" /> sets the color of the grid lines.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetDrawYDataLabelLines">
+  <refmeta>
+    <refentrytitle>SetDrawYDataLabelLines</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetDrawYDataLabelLines</refname>
+    <refpurpose>Not implemented</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetDrawYDataLabelLines(<parameter>$dydl</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetDrawYDataLabelLines</function> is not implemented.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+Y data label lines are not currently implemented.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetDrawYGrid">
+  <refmeta>
+    <refentrytitle>SetDrawYGrid</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetDrawYGrid</refname>
+    <refpurpose>Whether or not to draw the Y grid lines</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetDrawYGrid(<parameter>$dyg</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetDrawYGrid</function> enables or disables the drawing of the Y
+grid lines. (The Y grid lines are the horizontal lines which intersect the
+Y axis and are parallel to the X axis.)
+The default is to draw the Y grid.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$dyg</replaceable></term>
+        <listitem>
+          <para>
+True to draw the Y grid lines, False to not draw the Y grid lines.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+<xref linkend="SetLightGridColor" /> sets the color of the grid lines.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetErrorBarColors">
+  <refmeta>
+    <refentrytitle>SetErrorBarColors</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetErrorBarColors</refname>
+    <refpurpose>Sets the colors used for data error bars</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetErrorBarColors(<parameter>$error_bar_colors</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetErrorBarColors</function> sets the colors used for each
+data set's error bars, in the same way <xref linkend="SetDataColors" />
+sets the colors used for the data plot itself.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$error_bar_colors</replaceable></term>
+        <listitem>
+          <para>
+An array of color values, one for each data set's error bars.
+Or, a single color value to use for all data set error bars.
+See <xref linkend="conc-colors" /> for more on color values.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The default array of error bar colors contains the same 8 colors as
+the data colors array:
+SkyBlue, green, orange, blue, orange, red, violet, and azure1.
+If you change the data colors with <xref linkend="SetDataColors" />,
+you probably want to change the error bar colors to the same array.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetErrorBarLineWidth">
+  <refmeta>
+    <refentrytitle>SetErrorBarLineWidth</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetErrorBarLineWidth</refname>
+    <refpurpose>Set the line width used for error bars</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetErrorBarLineWidth(<parameter>$seblw</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetErrorBarLineWidth</function> sets the line width used for
+error bars. This width is used to draw the vertical lines indicating the
+error range in the positive and negative direction, and also the tees
+(if enabled) and the top and bottom.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$seblw</replaceable></term>
+        <listitem>
+          <para>
+Desired width in pixels of the lines used to draw error bars.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The default is to use 1 pixel wide lines.
+    </para>
+    <para>
+This is only used with <literal>data-data-error</literal> plot data type.
+    </para>
+    <para>
+All lines in a plot use the same error bar width.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetErrorBarShape">
+  <refmeta>
+    <refentrytitle>SetErrorBarShape</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetErrorBarShape</refname>
+    <refpurpose>Select line or tee-style error bars</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetErrorBarShape(<parameter>$ebs</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetErrorBarShape</function> selects the shape used for error
+indicators. Two shapes are available: 'tee' puts a short horizontal line at
+the top and bottom of each error bar, and 'line' does not.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$ebs</replaceable></term>
+        <listitem>
+          <para>
+Error bar shape: either 'tee' or 'line'.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The default error bar shape is 'tee'.
+    </para>
+    <para>
+This is only used with <literal>data-data-error</literal> plot data type.
+    </para>
+    <para>
+All lines in a plot use the same error bar shape.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetErrorBarSize">
+  <refmeta>
+    <refentrytitle>SetErrorBarSize</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetErrorBarSize</refname>
+    <refpurpose>Set the size of the error bar tee.</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetErrorBarSize(<parameter>$ebs</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetErrorBarSize</function> sets the length of the 'tee' drawn at
+the top and bottom of error bars, if the error bar shape is set to 'tee'
+with <xref linkend="SetErrorBarShape" /> (or defaulted to 'tee').
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$ebs</replaceable></term>
+        <listitem>
+          <para>
+Error bar tee length in pixels.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The default size is 5 pixels.
+    </para>
+    <para>
+This is only used with <literal>data-data-error</literal> plot data type,
+and with error bar shape 'tee'.
+    </para>
+    <para>
+All lines in a plot use the same error bar size.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetFileFormat">
+  <refmeta>
+    <refentrytitle>SetFileFormat</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetFileFormat</refname>
+    <refpurpose>Select the graphic image format generated by PHPlot</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetFileFormat(<parameter>$format</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetFileFormat</function> selects a graphic image format from the
+available image formats. Depending on how PHP and/or GD were built on your
+system, available formats include JPEG, PNG, GIF, and WBMP.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$format</replaceable></term>
+        <listitem>
+          <para>
+What graphic image format to use: 'jpg', 'png', 'gif', or 'wbmp'.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The default file format is 'png'.
+    </para>
+    <para>
+Depending on how GD was built, not all of these formats will be available.
+You can use <literal>phpinfo()</literal> to see what formats are supported
+by your PHP/GD installation.
+    </para>
+    <para>
+JPEG is generally a bad choice for this type of image, as the lossy
+compression reduces the quality of lines and text.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetFont">
+  <refmeta>
+    <refentrytitle>SetFont</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetFont</refname>
+    <refpurpose>Select which font to use for a plot element</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetFont(<parameter>$elem</parameter>, <parameter>$font</parameter>, <parameter>$size</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetFont</function> selects the font and size to use for one plot
+element (for example, the title). This functions works differently depending
+on whether or not you are using TrueType fonts. If using TrueType fonts,
+call either <xref linkend="SetDefaultTTFont" /> or <xref linkend="SetUseTTF" />
+before calling SetFont.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+
+      <varlistentry>
+        <term><replaceable>$elem</replaceable></term>
+        <listitem>
+          <para>
+The name of the element to change the font for. Use one of the following
+strings: 'title', 'legend', 'generic', 'x_label', 'y_label', 'x_title',
+or 'y_title'. (The 'generic' font is currently used for pie chart
+percentage labels and error message images.)
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>$font</replaceable></term>
+        <listitem>
+          <para>
+Selects the font to use. For TrueType fonts, this is the filename
+(without path, if the font file is in the default TrueType font
+directory as set with <xref linkend="SetTTFPath" />, or a full
+pathname) of the TrueType font file. An empty string or NULL can be
+used to keep the same TrueType font and change the size.
+For built-in GD fonts, this is a number between 1 and 5 which selects one
+of the built-in GD fonts.  Font 1 is the smallest, and font 5 is the
+largest.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>$size</replaceable></term>
+        <listitem>
+          <para>
+The font size in points for TrueType fonts. Ignored for built-in GD fonts.
+See note below.
+          </para>
+        </listitem>
+      </varlistentry>
+
+
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+When using built-in GD fonts, the default fonts are shown in the following
+table, where font 1 is the smallest font and font 5 is the biggest font.
+      <informaltable>
+        <tgroup cols="2">
+          <?dbhtml table-summary="Default built-in fonts"?>
+          <thead>
+            <row>
+              <entry>Element</entry>
+              <entry>Default Built-in Font</entry>
+            </row>
+          </thead>
+          <tbody>
+            <row> <entry>generic</entry> <entry>2</entry> </row>
+            <row> <entry>legend</entry>  <entry>2</entry> </row>
+            <row> <entry>title</entry>   <entry>5</entry> </row>
+            <row> <entry>x_label</entry> <entry>1</entry> </row>
+            <row> <entry>y_label</entry> <entry>1</entry> </row>
+            <row> <entry>x_title</entry> <entry>3</entry> </row>
+            <row> <entry>y_title</entry> <entry>3</entry> </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+    </para>
+    <para>
+When using TrueType fonts, the default font sizes are shown in the following
+table. Use <xref linkend="SetDefaultTTFont" /> to set the default TrueType font.
+      <informaltable>
+        <tgroup cols="2">
+          <?dbhtml table-summary="Default TrueType font sizes"?>
+          <thead>
+            <row>
+              <entry>Element</entry>
+              <entry>Default TrueType Font Size (points)</entry>
+            </row>
+          </thead>
+          <tbody>
+            <row> <entry>generic</entry> <entry>8</entry> </row>
+            <row> <entry>legend</entry>  <entry>8</entry> </row>
+            <row> <entry>title</entry>   <entry>14</entry> </row>
+            <row> <entry>x_label</entry> <entry>6</entry> </row>
+            <row> <entry>y_label</entry> <entry>6</entry> </row>
+            <row> <entry>x_title</entry> <entry>10</entry> </row>
+            <row> <entry>y_title</entry> <entry>10</entry> </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+    </para>
+
+    <para>
+Starting after PHPlot-5.0rc2, the behavior of this function changed
+when used with TrueType fonts.
+It now first tries to find the font using the supplied name. If the
+font is not found that way, it tries again prefixed with the default
+TrueType font directory as set with <xref linkend="SetTTFPath" />.
+    </para>
+
+    <para>
+Although PHP documents the TrueType font sizes as being given in points
+(where there are about 72 points per inch), it doesn't know the output
+device resolution, so it just assumes a fixed resolution of 72 pixels per
+inch.  As a result, the TrueType font size argument actually measures the
+approximate font height in pixels. For example, if you use $size=18,
+the text will be about 18 pixels high in the user's browser. The actual
+size seen by the user will depend on the resolution of the user's display.
+On a 72 pixels per inch display, the text size will be 18 points, but at
+96 pixels per inch it would only be 13.5 points.
+    </para>
+
+  </refsect1>
+</refentry>
+
+<refentry id="SetGridColor">
+  <refmeta>
+    <refentrytitle>SetGridColor</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetGridColor</refname>
+    <refpurpose>Set the color used for the axes and borders</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetGridColor(<parameter>$color</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetGridColor</function> sets the color used for the X and Y
+axes, the plot border, the legend border, and pie chart percentage labels
+(but not the grid).
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$color</replaceable></term>
+        <listitem>
+          <para>
+Color value to use.
+See <xref linkend="conc-colors" /> for more on color values.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The default color is black.
+    </para>
+    <para>
+This doesn't actually set the color used by the grid; for that see
+<xref linkend="SetLightGridColor" />. We have no idea why this is so.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetImageBorderColor">
+  <refmeta>
+    <refentrytitle>SetImageBorderColor</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetImageBorderColor</refname>
+    <refpurpose>Set image border color, if enabled</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetImageBorderColor(<parameter>$color</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetImageBorderColor</function> sets the color to use for a
+border around the entire image.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$color</replaceable></term>
+        <listitem>
+          <para>
+Color value to use.
+See <xref linkend="conc-colors" /> for more on color values.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The image border is only drawn if <xref linkend="SetImageBorderType" /> is
+called with a type of 'plain' or 'raised'; by default there is no border.
+If the border is enabled but no color is set, the default color is
+gray (194,194,194).
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetImageBorderType">
+  <refmeta>
+    <refentrytitle>SetImageBorderType</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetImageBorderType</refname>
+    <refpurpose>Draw a border around the image</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetImageBorderType(<parameter>$sibt</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetImageBorderType</function> controls the drawing of a border
+around the entire image. By default, no border is drawn.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$sibt</replaceable></term>
+        <listitem>
+          <para>
+A string indicating the desired border type: 'raised' or 'plain'.
+A plain border is 1 pixel wide. A raised border is 2 pixels wide, with the
+bottom and left side drawn in a darker color.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The color of the image border is set with <xref linkend="SetImageBorderColor" />.
+By default, no image border is drawn.
+    </para>
+    <para>
+It can be useful to have a border drawn around images when embedded in an
+HTML page. An alternative to this function is to use the BORDER attribute
+in the IMG tag when embedding the image. With that attribute, you can also
+control the border width.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetIsInline">
+  <refmeta>
+    <refentrytitle>SetIsInline</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetIsInline</refname>
+    <refpurpose>Set the output image to be <quote>inline</quote> - without HTTP headers</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetIsInline(<parameter>$is_inline</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetIsInline</function> determines if HTTP headers are sent along
+with the output image or not. By default, HTTP headers are sent,
+identifying the image type for browsers. If PHPlot output is not being
+directed to a browser, or in other special-purpose applications, you can
+turn off the HTTP content type header using this function.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$is_inline</replaceable></term>
+        <listitem>
+          <para>
+True to suppress HTTP content type headers, False to include the headers.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The default is to include the headers. However, the PHP CLI (command line
+interface) never outputs headers, so using this function is not necessary
+if you are using the PHP CLI to create image files by redirecting standard
+output to a file.
+    </para>
+    <para>
+You must call SetIsInline(True) if you are sending PHPlot output to a file
+with <xref linkend="SetOutputFile" />, or by supplying a filename argument to
+the <xref linkend="PHPlot" /> constructor.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetLabelColor">
+  <refmeta>
+    <refentrytitle>SetLabelColor</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetLabelColor</refname>
+    <refpurpose>Do not use</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetLabelColor(<parameter>$color</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetLabelColor</function> should not be used.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$color</replaceable></term>
+        <listitem>
+          <para>
+Color to use.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+This function should not be used. It duplicates <xref linkend="SetTitleColor" />.
+Data labels currently use the color set with <xref linkend="SetTextColor" />.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetLabelScalePosition">
+  <refmeta>
+    <refentrytitle>SetLabelScalePosition</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetLabelScalePosition</refname>
+    <refpurpose>Position pie-chart percentage labels</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetLabelScalePosition(<parameter>$blp</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetLabelScalePosition</function> adjusts the position of the pie
+chart data labels which show the percentage values of the slices.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$blp</replaceable></term>
+        <listitem>
+          <para>
+Position factor for pie chart labels. This is a floating point number
+between 0 and 1.0. The initial value is 0.5, which places the labels
+outside the circumference of the pie.
+Smaller values move the labels in to the center,
+and larger values move them out from the center.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+This affects pie charts only. The maximum value is 1.0 but as that value is
+approached the labels will move off the page. The minimum value is 0 which
+makes the labels pile up in the center of the pie.
+    </para>
+    <para>
+The labels always display percentages. If you want to display numeric data
+for each slice, try putting it in the legend with <xref linkend="SetLegend" />.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetLegend">
+  <refmeta>
+    <refentrytitle>SetLegend</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetLegend</refname>
+    <refpurpose>Add text to a legend box</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetLegend(<parameter>$leg</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetLegend</function> sets the text to be displayed in the legend.
+A legend is usually needed when a graph contains multiple plots (that is,
+more than one data set), to identify the purpose of the different data sets
+plotted.  The legend text consists of multiple lines, with each line
+identifying one plot (one data set) on the graph. PHPlot adds an
+identifying color box next to each line in the legend.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$leg</replaceable></term>
+        <listitem>
+          <para>
+An array with each element containing the text for one line of the legend.
+Or, if not an array, the one line to be appended to the legend. See notes.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The legend text needs to contain one line of text for each data set plotted
+on the graph, in the same order as the data array.
+You can supply all the legend lines in a single call to SetLegend as an
+array, or you can build up the legend one line at a time with multiple
+calls to SetLegend, supplying one line per call (in the same order as
+the data sets in the data array).
+    </para>
+    <para>
+By default, no legend is displayed.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetLegendPixels">
+  <refmeta>
+    <refentrytitle>SetLegendPixels</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetLegendPixels</refname>
+    <refpurpose>Position the legend on the image (device coordinates)</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetLegendPixels(<parameter>$x</parameter>, <parameter>$y</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetLegendPixels</function> lets you position the legend on the
+image, using device coordinates, rather than letting PHPlot position it for you.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$x</replaceable></term>
+        <term><replaceable>$y</replaceable></term>
+        <listitem>
+          <para>
+Absolute device coordinates of the upper left corner of the legend box.
+The units are pixels and the origin is in the upper left corner of the image.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+See also <xref linkend="SetLegendWorld" />.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetLegendWorld">
+  <refmeta>
+    <refentrytitle>SetLegendWorld</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetLegendWorld</refname>
+    <refpurpose>Position the legend on the image (world coordinates)</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetLegendWorld(<parameter>$x</parameter>, <parameter>$y</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetLegendWorld</function> lets you position the legend on the
+image, using world coordinates, rather than letting PHPlot position it for you.
+(World coordinates are the coordinate space of your data points.)
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$x</replaceable></term>
+        <term><replaceable>$y</replaceable></term>
+        <listitem>
+          <para>
+World coordinates of the upper left corner of the legend box.
+The units and origin are the same as the data you are plotting.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The data array, axis types, and any other setting which affects the scale of
+the data must be set up before this function is used, so that PHPlot can
+properly scale the coordinates.
+    </para>
+    <para>
+See also <xref linkend="SetLegendPixels" />.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetLightGridColor">
+  <refmeta>
+    <refentrytitle>SetLightGridColor</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetLightGridColor</refname>
+    <refpurpose>Set the color for grid lines</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetLightGridColor(<parameter>$color</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetLightGridColor</function> sets the color used for the X and Y
+grid lines.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$color</replaceable></term>
+        <listitem>
+          <para>
+Color value to use.
+See <xref linkend="conc-colors" /> for more on color values.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+This function, not <xref linkend="SetGridColor" />, sets the color for the
+grid lines.
+The default color is gray.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetLineSpacing">
+  <refmeta>
+    <refentrytitle>SetLineSpacing</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetLineSpacing</refname>
+    <refpurpose>Set spacing between lines of multi-line elements</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetLineSpacing(<parameter>$spc</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetLineSpacing</function> sets the number of pixels between lines
+of a multi-line text element. Multiple lines can be specified in titles,
+for example, by placing a newline between lines (for example: "Line 1\nLine
+2"). Line spacing also affects the legend.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$spc</replaceable></term>
+        <listitem>
+          <para>
+Desired line spacing in pixels.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+Line spacing apparently does not apply when using TrueType fonts, except
+for the legend. In the legend, SetLineSpacing spreads out the lines of the
+legend, and stretches the color boxes accordingly.
+    </para>
+    <para>
+The default line spacing is 4 pixels.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetLineStyles">
+  <refmeta>
+    <refentrytitle>SetLineStyles</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetLineStyles</refname>
+    <refpurpose>Set the line style (solid or dashed) for each data set</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetLineStyles(<parameter>$ls</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetLineStyles</function> selects the line style for each plotted
+data set.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$ls</replaceable></term>
+        <listitem>
+          <para>
+An array of strings, each either 'solid', for solid lines; 'dashed', for
+dashed lines, or 'none', to suppress the lines (see notes).
+Or, a single value of 'solid' or 'dashed' to apply to all data sets.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The line style for dashed lines can be set with
+<xref linkend="SetDefaultDashedStyle" />.
+    </para>
+    <para>
+By default, the line styles are 'solid', 'solid', and 'dashed'.
+(As with all style arrays, PHPlot duplicates the array as needed for the
+number of data sets to be plotted.)
+This means the 3rd and 6th data sets will plot as dashed lines unless you
+use SetLineStyles to change it.
+    </para>
+    <para>
+A line style can be set to 'none' to suppress the line for that data set.
+This is only useful with 'linepoints' plot types, and results in a 'points'
+plot type for that data set: markers only, but no lines.
+(This is available with PHPlot-5.0rc3 and higher.)
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetLineWidths">
+  <refmeta>
+    <refentrytitle>SetLineWidths</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetLineWidths</refname>
+    <refpurpose>Set line width (thickness) for each data set</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetLineWidths(<parameter>$lw</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetLineWidths</function> sets the desired line width to be used
+when plotting each data set.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$lw</replaceable></term>
+        <listitem>
+          <para>
+An array of line widths in pixels, one for each data set to be plotted.
+Or, a single value to be used for all data sets.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+By default, all data set plot lines are 1 pixel wide.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetMarginsPixels">
+  <refmeta>
+    <refentrytitle>SetMarginsPixels</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetMarginsPixels</refname>
+    <refpurpose>Set margins around the plot area</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetMarginsPixels(<parameter>$lm</parameter>, <parameter>$rm</parameter>, <parameter>$tm</parameter>, <parameter>$bm</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetMarginsPixels</function> sets the margins around the plot area,
+overriding the automatic margin size calculation.
+The four margins are specified independently and in pixels.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$lm</replaceable></term>
+        <listitem>
+          <para>
+The left margin, in pixels.
+          </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><replaceable>$rm</replaceable></term>
+        <listitem>
+          <para>
+The right margin, in pixels.
+          </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><replaceable>$tm</replaceable></term>
+        <listitem>
+          <para>
+The top margin, in pixels.
+          </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><replaceable>$bm</replaceable></term>
+        <listitem>
+          <para>
+The bottom margin, in pixels.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+By default, the margin sizes are automatically calculated based on the
+amount of room needed (for the axis labels, tick labels, and tick marks).
+    </para>
+    <para>
+The upper left corner of the plot area is at device coordinates
+(Left_Margin, Top_Margin).
+The lower right corner of the plot area is at device coordinates
+(Image_Width - Right_Margin, Image_Height - Bottom_Margin).
+    </para>
+    <para>
+Calling <function>SetMarginsPixels</function> causes PHPlot to forget
+a plot area set with <xref linkend="SetPlotAreaPixels" />.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetNumXTicks">
+  <refmeta>
+    <refentrytitle>SetNumXTicks</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetNumXTicks</refname>
+    <refpurpose>Set the number of X tick marks</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetNumXTicks(<parameter>$nt</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetNumXTicks</function> sets the exact number of tick marks to
+draw on the X axis.
+You can use either this function or <xref linkend="SetXTickIncrement" />
+(but not both) to control the tick mark spacing.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$nt</replaceable></term>
+        <listitem>
+          <para>
+Integer number of tick marks to draw.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+If neither <function>SetNumXTicks</function> nor 
+<xref linkend="SetXTickIncrement" /> is used, the tick mark interval
+is calculated as 1/10th of the X data range.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetNumYTicks">
+  <refmeta>
+    <refentrytitle>SetNumYTicks</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetNumYTicks</refname>
+    <refpurpose>Set the number of Y tick marks</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetNumYTicks(<parameter>$nt</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetNumYTicks</function> sets the exact number of tick marks to
+draw on the Y axis.
+You can use either this function or <xref linkend="SetYTickIncrement" />
+(but not both) to control the tick mark spacing.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$nt</replaceable></term>
+        <listitem>
+          <para>
+Integer number of tick marks to draw.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+If neither <function>SetNumYTicks</function> nor 
+<xref linkend="SetYTickIncrement" /> is used, the tick mark interval
+is calculated as 1/10th of the Y data range.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetOutputFile">
+  <refmeta>
+    <refentrytitle>SetOutputFile</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetOutputFile</refname>
+    <refpurpose>Redirect PHPlot output to a file</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetOutputFile(<parameter>$output_file</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetOutputFile</function> arranges for image output to be sent to
+a file instead of to the browser (or standard output). By default, output
+is sent to the browser (or standard output, if running from the command
+line).
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$output_file</replaceable></term>
+        <listitem>
+          <para>
+Pathname of the file to write the image data into.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The output file will only be produced if <xref linkend="SetIsInline" />(True) is
+called.
+    </para>
+    <para>
+By default, there is no output file, and the image is written to the browser
+or standard output.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetPlotAreaBgImage">
+  <refmeta>
+    <refentrytitle>SetPlotAreaBgImage</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetPlotAreaBgImage</refname>
+    <refpurpose>Set a graphic file to be used in the plot area background</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetPlotAreaBgImage(<parameter>$input_file</parameter>, <optional><parameter>$mode</parameter></optional>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetPlotAreaBgImage</function> sets an image file to be used as
+the plot area background. The image can be scaled or tiled to fit.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$input_file</replaceable></term>
+        <listitem>
+          <para>
+Path to the file to be used. The file can be any type allowed by GD, which
+usually includes JPEG, GIF, and PNG.
+          </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><replaceable>$mode</replaceable></term>
+        <listitem>
+          <para>
+Optional display mode for the background image: one of the strings
+'centeredtile', 'tile', or 'scale'. The default is 'tile'.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+If a background image has been set, background color (set with
+<xref linkend="SetPlotBgColor" />) is ignored.
+    </para>
+    <para>
+SetPlotAreaBgImage sets a background for the plot area, while
+<xref linkend="SetBgImage" /> sets a background for the entire image area.
+If both are used, the plot area background overlays that portion
+of the overall background.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetPlotAreaPixels">
+  <refmeta>
+    <refentrytitle>SetPlotAreaPixels</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetPlotAreaPixels</refname>
+    <refpurpose>Set the limits for the plot area in device coordinates</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetPlotAreaPixels(<parameter>$x1</parameter>, <parameter>$y1</parameter>, <parameter>$x2</parameter>, <parameter>$y2</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetPlotAreaPixels</function> sets area to be used for the plot
+within the image, in device coordinates.
+(Device coordinates are GD coordinates, with the origin at the top left
+of the image, X values increase to the right, Y values increase down,
+and the units in pixels.)
+By default, the plot area is equal to the image area minus the margins
+(see <xref linkend="SetMarginsPixels" />).
+Use SetPlotAreaPixels to define a different area. One possible use for
+this is to place multiple plots on an image.
+See <xref linkend="example-twoplot1" /> for an example of multiple plots.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$x1</replaceable></term>
+        <term><replaceable>$y1</replaceable></term>
+        <listitem>
+          <para>
+Device coordinates of the top left corner of the area to use for the plot.
+          </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><replaceable>$x2</replaceable></term>
+        <term><replaceable>$y2</replaceable></term>
+        <listitem>
+          <para>
+Device coordinates of the bottom right corner of the area to use for the plot.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+By default, the plot area is calculated automatically, but SetPlotAreaPixels
+needs to be used to limit the plot area to only use part of the image
+if you want to place multiple plots on the image.
+    </para>
+    <para>
+With this function, you are specifying the exact dimensions of the plot area, 
+not the plot area with margins. So the supplied coordinates have to account
+for margins.
+You cannot use this function along with <xref linkend="SetMarginsPixels" />.
+    </para>
+    <para>
+This will reset the scale factors if <xref linkend="SetPlotAreaWorld" />
+was already called, so SetPlotAreaPixels and SetPlotAreaWorld can be called
+in either order.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetPlotAreaWorld">
+  <refmeta>
+    <refentrytitle>SetPlotAreaWorld</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetPlotAreaWorld</refname>
+    <refpurpose>Override automatic data scaling to device coordinates</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetPlotAreaWorld(<optional><parameter>$xmin</parameter></optional>, <optional><parameter>$ymin</parameter></optional>, <optional><parameter>$xmax</parameter></optional>, <optional><parameter>$ymax</parameter></optional>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetPlotAreaWorld</function> changes the range for World Coordinate
+space. This is the coordinate space of the data to be plotted, and is
+translated and scaled to fit into the Device Coordinate space of the image.
+By default, PHPlot defines the world coordinate space by the actual limits
+of the data to be plotted. By using SetPlotAreaWorld, you can override one or
+more of these calculated limits. Each parameter you specify overrides
+the corresponding calculated limit. Each defaulted or NULL parameter is
+ignored and the calculated limit is used.
+    </para>
+    <para>
+Since tick marks are automatically positioned based on the world coordinate
+limits, SetPlotAreaWorld is also used to force a specific range for tick marks.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$xmin</replaceable></term>
+        <listitem>
+          <para>
+Optional argument specifying the desired X data range minimum value.
+If omitted or NULL, the value is calculated from the actual plot data.
+          </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><replaceable>$ymin</replaceable></term>
+        <listitem>
+          <para>
+Optional argument specifying the desired Y data range minimum value.
+If omitted or NULL, the value is calculated from the actual plot data.
+          </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><replaceable>$xmax</replaceable></term>
+        <listitem>
+          <para>
+Optional argument specifying the desired X data range maximum value.
+If omitted or NULL, the value is calculated from the actual plot data.
+          </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><replaceable>$ymax</replaceable></term>
+        <listitem>
+          <para>
+Optional argument specifying the desired Y data range maximum value.
+If omitted or NULL, the value is calculated from the actual plot data.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+Because SetPlotAreaWorld needs to access and interpret the data array, it must
+be called after <xref linkend="SetDataValues" /> sets the data array, and
+after <xref linkend="SetDataType" /> (if used).
+    </para>
+    <para>
+Trailing defaulted arguments can be omitted, but non-trailing defaulted
+arguments must be specified as NULL. For example, to set the minimum X
+value to 10, the maximum X value to 100, and default the Y scaling, you can
+use:
+      <programlisting>
+$plot-&gt;SetPlotAreaWorld(10, NULL, 100);
+      </programlisting>
+    </para>
+    <para>
+This will reset the scale factors if <xref linkend="SetPlotAreaPixels" />
+was already called, so SetPlotAreaPixels and SetPlotAreaWorld can be called
+in either order.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetPlotBgColor">
+  <refmeta>
+    <refentrytitle>SetPlotBgColor</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetPlotBgColor</refname>
+    <refpurpose>Set plot area background color</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetPlotBgColor(<parameter>$color</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetPlotBgColor</function> sets the background color of the
+plot area of the image (the area inside the margins, title, and usually the
+axes).
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$color</replaceable></term>
+        <listitem>
+          <para>
+Color value to use.
+See <xref linkend="conc-colors" /> for more on color values.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+Background color is disabled by default. If you want a background color
+for the plot area, you must enabled it with
+<xref linkend="SetDrawPlotAreaBackground" />.
+    </para>
+    <para>
+Background image takes priority over background color.
+If a background image was set
+with <xref linkend="SetPlotAreaBgImage" />,
+then no background color will be drawn, even if it was enabled.
+    </para>
+    <para>
+The default background color for the plot area is white (if enabled as noted
+above). If background color for the plot area is not enabled, the overall
+background color (or image) will be seen in the plot area.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetPlotBorderType">
+  <refmeta>
+    <refentrytitle>SetPlotBorderType</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetPlotBorderType</refname>
+    <refpurpose>Control how much of a border is drawn around the plot</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetPlotBorderType(<parameter>$pbt</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetPlotBorderType</function> controls how much of a border is
+drawn around the plot. By default, left and right side borders are drawn.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$bt</replaceable></term>
+        <listitem>
+          <para>
+A string indicating where to draw the plot borders:
+            <informaltable>
+              <tgroup cols="2">
+                <?dbhtml table-summary="Border position values"?>
+                <thead>
+                  <row>
+                    <entry>Value</entry>
+                    <entry>Description</entry>
+                  </row>
+                </thead>
+                <tbody>
+                  <row>
+                    <entry>left</entry>
+                    <entry>Border on left side of plot only</entry>
+                  </row>
+                  <row>
+                    <entry>sides</entry>
+                    <entry>Border on left and right sides of plot</entry>
+                  </row>
+                  <row>
+                    <entry>full</entry>
+                    <entry>Border on all four sides of the plot</entry>
+                  </row>
+                  <row>
+                    <entry>none</entry>
+                    <entry>No plot area border</entry>
+                  </row>
+                </tbody>
+              </tgroup>
+            </informaltable>
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+Plot border color is set by <xref linkend="SetGridColor" /> (this color
+also applies to the axes and other elements).
+The default color is black.
+    </para>
+    <para>
+Usually, the X axis is at the bottom of the plot where there bottom edge of
+the border would go. The Y axis is (apparently) always on the left where
+the left border would go. So typically this function only controls the top
+and right border.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetPlotType">
+  <refmeta>
+    <refentrytitle>SetPlotType</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetPlotType</refname>
+    <refpurpose>Select the type of plot - how the data will be graphed</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetPlotType(<parameter>$pt</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetPlotType</function> selects a type of plot from among the plot
+types supported by PHPlot. This includes bar charts, line plots, point
+plots, and others. A complete description of the type of plots available
+can be found in <xref linkend="conc-plottypes" />.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$pt</replaceable></term>
+        <listitem>
+          <para>
+A string indicating the type of plot. The following types are available:
+            <itemizedlist spacing="compact">
+              <listitem><para>bars</para></listitem>
+              <listitem><para>stackedbars</para></listitem>
+              <listitem><para>lines</para></listitem>
+              <listitem><para>linepoints</para></listitem>
+              <listitem><para>area</para></listitem>
+              <listitem><para>points</para></listitem>
+              <listitem><para>pie</para></listitem>
+              <listitem><para>thinbarline</para></listitem>
+              <listitem><para>squared</para></listitem>
+            </itemizedlist>
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The default plot type is 'linepoints'.
+     </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetPointShapes">
+  <refmeta>
+    <refentrytitle>SetPointShapes</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetPointShapes</refname>
+    <refpurpose>Select a point shape for each data set</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetPointShapes(<parameter>$pt</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetPointShapes</function> assigns a point shape to each data set
+in a plot.
+'Point' here refers to the marker drawn at each data point in 'points' and
+'linepoints' type plots.
+For example, if each data row contains 4 Y values, the first
+point shape will be used for the first Y value, the second point shape for
+the second Y value, etc. There are 10 point shapes to chose from.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$pt</replaceable></term>
+        <listitem>
+          <para>
+An array of point shape names, or a string naming a single point shape.
+If a string, that shape name is used for all data sets.
+If an array, the array values name the point shapes for each subsequent
+data set in a plot.
+The following shapes are available:
+            <informaltable>
+              <tgroup cols="2">
+                <?dbhtml table-summary="Available shape names"?>
+                <thead>
+                  <row>
+                    <entry>Shape Name</entry>
+                    <entry>Description</entry>
+                  </row>
+                </thead>
+                <tbody>
+                  <row>
+                    <entry>circle</entry>
+                    <entry>A hollow circle centered on the point.</entry>
+                  </row>
+                  <row>
+                    <entry>cross</entry>
+                    <entry>An X centered on the point.</entry>
+                  </row>
+                  <row>
+                    <entry>diamond</entry>
+                    <entry>A filled diamond (square rotated 45 degrees).</entry>
+                  </row>
+                  <row>
+                    <entry>dot</entry>
+                    <entry>A filled circle centered on the point.</entry>
+                  </row>
+                  <row>
+                    <entry>halfline</entry>
+                    <entry>A short line from the point going left.</entry>
+                  </row>
+                  <row>
+                    <entry>line</entry>
+                    <entry>A horizontal line centered on the point.</entry>
+                  </row>
+                  <row>
+                    <entry>plus</entry>
+                    <entry>A plus sign centered on the point.</entry>
+                  </row>
+                  <row>
+                    <entry>rect</entry>
+                    <entry>A filled square centered on the point.</entry>
+                  </row>
+                  <row>
+                    <entry>triangle</entry>
+                    <entry>A filled triangle pointing down from the point.</entry>
+                  </row>
+                  <row>
+                    <entry>trianglemid</entry>
+                    <entry>A filled triangle pointing down to the point.</entry>
+                  </row>
+                  <row>
+                    <entry>none</entry>
+                    <entry>No marker (see notes).</entry>
+                  </row>
+
+                </tbody>
+              </tgroup>
+            </informaltable>
+See <xref linkend="example-linepoints1" /> for a picture of the shapes.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+This applies only to 'points' and 'linepoints' plot types.
+    </para>
+    <para>
+By default, all data sets use the diamond shape.
+    </para>
+    <para>
+A point shape can be set to 'none' to suppress the point markers for that
+data set.
+This is only useful with 'linepoints' plot types, and results in a 'lines'
+plot type for that data set: a line only, but no markers.
+(This is available with PHPlot-5.0rc3 and higher.)
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetPointSizes">
+  <refmeta>
+    <refentrytitle>SetPointSizes</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetPointSizes</refname>
+    <refpurpose>Sets the point size for each data set</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetPointSizes(<parameter>$ps</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetPointSizes</function> assigns a point size to each data
+set in a plot.
+'Point' here refers to the marker drawn at each data point in 'points' and
+'linepoints' type plots.
+For example, if each data row contains 4 Y values, the first
+point size will be used for the first Y value, the second point size for
+the second Y value, etc.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$ps</replaceable></term>
+        <listitem>
+          <para>
+An array of point sizes, or a single value. All values are in pixels.
+If a single value, that size is used for all data sets.
+If an array, the array values are the sizes for each subsequent
+data set in a plot.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+This applies only to 'points' and 'linepoints' plot types.
+    </para>
+    <para>
+By default, the size array is (5, 5, 3). (PHPlot duplicates this and all
+settings arrays as many times as needed to handle all the supplied data
+sets.)
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetPrecisionX">
+  <refmeta>
+    <refentrytitle>SetPrecisionX</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetPrecisionX</refname>
+    <refpurpose>Set precision for numeric formated X labels</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetPrecisionX(<parameter>$prec</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetPrecisionX</function> sets the desired numeric precision
+for X tick and data labels, and also enables 'data' mode formatting
+of those labels with <xref linkend="SetXLabelType" />.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$prec</replaceable></term>
+        <listitem>
+          <para>
+The desired numeric precision.
+This is the number of decimal positions to output.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+Setting numeric precision with this function automatically enables 'data'
+mode formatting as if <literal>SetXLabelType('data')</literal> was called.
+    </para>
+    <para>
+The default is to format numbers with 1 decimal position, but only
+if 'data' mode formatting is selected.
+    </para>
+    <para>
+This applies to both X data labels and X tick labels (only one of which
+should be enabled). Using 'data' format for X data labels only makes sense
+when your data array contains numeric data in the label position.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetPrecisionY">
+  <refmeta>
+    <refentrytitle>SetPrecisionY</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetPrecisionY</refname>
+    <refpurpose>Set precision for numeric formated Y tick labels</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetPrecisionY(<parameter>$prec</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetPrecisionY</function> sets the desired numeric precision
+for Y tick and data labels, and also enables 'data' mode formatting
+of those labels with <xref linkend="SetYLabelType" />.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$prec</replaceable></term>
+        <listitem>
+          <para>
+The desired numeric precision.
+This is the number of decimal positions to output.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+Setting numeric precision with this function automatically enables 'data'
+mode formatting as if <literal>SetYLabelType('data')</literal> was called.
+    </para>
+    <para>
+The default is to format numbers with 1 decimal position, but only
+if 'data' mode formatting is selected.
+    </para>
+    <para>
+This function applies to Y tick labels, and also to the Y data labels
+available with bar charts.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetPrintImage">
+  <refmeta>
+    <refentrytitle>SetPrintImage</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetPrintImage</refname>
+    <refpurpose>Determine whether or not to automatically output the image
+when the plot is drawn</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetPrintImage(<parameter>$pi</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetPrintImage</function> determines whether or not to automatically
+output the image (as if <xref linkend="PrintImage" /> was used) when a plot
+is drawn (with <xref linkend="DrawGraph" />). The default is True.
+When putting multiple plots on one image, is is necessary to defer PrintImage
+until after all the plots have been drawn.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$pi</replaceable></term>
+        <listitem>
+          <para>
+True to automatically print the image when drawn with DrawGraph; False to
+defer printing the image until PrintImage is explicitly called.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+To put multiple plots on an image, call SetPrintImage(False). Then for each
+plot activate the position for it with <xref linkend="SetPlotAreaPixels" />,
+produce the plot, and draw it with <xref linkend="DrawGraph" />.
+When all the plots are drawn, output the image with <xref linkend="PrintImage" />.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetRGBArray">
+  <refmeta>
+    <refentrytitle>SetRGBArray</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetRGBArray</refname>
+    <refpurpose>Select a color map</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetRGBArray(<parameter>$color_array</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetRGBArray</function> selects a color map to use. A color map is
+an array of colors available to be used in the image. You can select from
+pre-defined color maps, or define your own. Each color in a color map has a
+name, and 3 color component values (red, green, blue) in the range 0 to 255
+inclusive.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$color_array</replaceable></term>
+        <listitem>
+          <para>
+An array or a string. If an array, each element defines a color in the color
+map. The array element key is the color name, and the array element value
+is an array of three color components. (See example below).
+          </para>
+          <para>
+Or, a string selecting a built-in color map.
+Use 'small' to select a map of 36 colors, or 'large'
+to select a much larger color map.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+An example of a user-defined color map is:
+<programlisting>
+    array( 'red' => array(255, 0, 0),
+           'green' => array(0, 255, 0),
+           'blue' => array(0, 0, 255) );
+</programlisting>
+    </para>
+    <para>
+More information about the color maps can be found in
+<xref linkend="conc-colors-map" />.
+    </para>
+    <para>
+Color names are case sensitive.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetShading">
+  <refmeta>
+    <refentrytitle>SetShading</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetShading</refname>
+    <refpurpose>Set the size of the drop shadow for bar and pie charts.</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetShading(<parameter>$s</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetShading</function> sets the size in pixels of the drop shadow
+used to give bar and pie charts a 3-D look. The 3-D look can be disabled by
+setting the shading to zero.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$s</replaceable></term>
+        <listitem>
+          <para>
+Desired shading size in pixels. If this is set to 0, pie charts are flat
+(not rotated away from the screen) with no shadow, and bars in bar charts
+and stackedbar charts are drawn as rectangles without drop shadows.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The default is shading enabled with a size of 5 pixels.
+    </para>
+    <para>
+If shading is turned off for bar and stackedbar charts, the bars
+will be drawn with borders. The color of the borders is set with
+<xref linkend="SetDataBorderColors" />.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetSkipBottomTick">
+  <refmeta>
+    <refentrytitle>SetSkipBottomTick</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetSkipBottomTick</refname>
+    <refpurpose>Suppress the bottom Y axis tick mark and label</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetSkipBottomTick(<parameter>$skip</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetSkipBottomTick</function> can be used to skip (suppress) the
+bottom-most Y tick mark and its label.
+See also
+<xref linkend="SetSkipLeftTick" />,
+<xref linkend="SetSkipRightTick" />, and
+<xref linkend="SetSkipTopTick" />.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$skip</replaceable></term>
+        <listitem>
+          <para>
+If True, don't draw the bottom Y tick mark and label;
+if False, draw the bottom Y tick mark and label.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+By default, no tick marks or labels are skipped.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetSkipLeftTick">
+  <refmeta>
+    <refentrytitle>SetSkipLeftTick</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetSkipLeftTick</refname>
+    <refpurpose>Suppress the first X axis tick mark and label</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetSkipLeftTick(<parameter>$skip</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetSkipLeftTick</function> can be used to skip (suppress) the
+left-most X tick mark and its label.
+See also
+<xref linkend="SetSkipBottomTick" />,
+<xref linkend="SetSkipRightTick" />, and
+<xref linkend="SetSkipTopTick" />.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+      <term><replaceable>$skip</replaceable></term>
+        <listitem>
+          <para>
+If True, don't draw the first X tick mark and label;
+if False, draw the first X tick mark and label.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+By default, no tick marks or labels are skipped.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetSkipRightTick">
+  <refmeta>
+    <refentrytitle>SetSkipRightTick</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetSkipRightTick</refname>
+    <refpurpose>Suppress the last X axis tick mark and label</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetSkipRightTick(<parameter>$skip</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetSkipRightTick</function> can be used to skip (suppress) the
+right-most X tick mark and its label.
+See also
+<xref linkend="SetSkipBottomTick" />,
+<xref linkend="SetSkipLeftTick" />, and
+<xref linkend="SetSkipTopTick" />.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$skip</replaceable></term>
+        <listitem>
+          <para>
+If True, don't draw the last X tick mark and label;
+if False, draw the last X tick mark and label.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+By default, no tick marks or labels are skipped.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetSkipTopTick">
+  <refmeta>
+    <refentrytitle>SetSkipTopTick</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetSkipTopTick</refname>
+    <refpurpose>Suppress the top Y axis tick mark and label</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetSkipTopTick(<parameter>$skip</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetSkipTopTick</function> can be used to skip (suppress) the
+top-most Y tick mark and its label.
+See also
+<xref linkend="SetSkipBottomTick" />,
+<xref linkend="SetSkipLeftTick" />, and
+<xref linkend="SetSkipRightTick" />.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$skip</replaceable></term>
+        <listitem>
+          <para>
+If True, don't draw the top Y tick mark and label;
+if False, draw the top Y tick mark and label.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+By default, no tick marks or labels are skipped.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetTTFPath">
+  <refmeta>
+    <refentrytitle>SetTTFPath</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetTTFPath</refname>
+    <refpurpose>Set the name of the default TrueType font directory</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetTTFPath(<parameter>$path</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetTTFPath</function> sets the name of the directory where
+<xref linkend="SetFont" /> can find TrueType font files.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$path</replaceable></term>
+        <listitem>
+          <para>
+Full path to a directory containing TrueType fonts.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The default TrueType font directory is '.', meaning fonts will only be
+searched for in the directory containing your main PHP script.
+This default can be changed at installation time as described in
+<xref linkend="install-install" />.
+    </para>
+    <para>
+Starting after PHPlot-5.0rc2, the default TrueType font directory is used both
+for the default font set with <xref linkend="SetDefaultTTFont" /> and for
+fonts set with <xref linkend="SetFont" />. Refer to those two functions for
+details.
+    </para>
+    <para>
+See the note at the end of the reference for <xref linkend="SetUseTTF" />
+on how to set up and use TrueType fonts.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetTextColor">
+  <refmeta>
+    <refentrytitle>SetTextColor</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetTextColor</refname>
+    <refpurpose>Set general text color</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetTextColor(<parameter>$color</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetTextColor</function> sets the color which is used for several
+text elements on the plot, including the tick labels, data labels, and the
+text in the legend.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$color</replaceable></term>
+        <listitem>
+          <para>
+Color value to use.
+See <xref linkend="conc-colors" /> for more on color values.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The default text color is black.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetTickColor">
+  <refmeta>
+    <refentrytitle>SetTickColor</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetTickColor</refname>
+    <refpurpose>Set the color of the axis tick marks</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetTickColor(<parameter>$color</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetTickColor</function> sets the color of the axis tick marks.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$color</replaceable></term>
+        <listitem>
+          <para>
+Color value to use.
+See <xref linkend="conc-colors" /> for more on color values.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The default color for the tick marks is black.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetTitle">
+  <refmeta>
+    <refentrytitle>SetTitle</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetTitle</refname>
+    <refpurpose>Set the main title text for the plot</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetTitle(<parameter>$title</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetTitle</function> sets the main plot title text. This is
+displayed centered at the top of the plot.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$title</replaceable></term>
+        <listitem>
+          <para>
+The title text to be displayed.
+The string can contain multiple lines, separated by newlines (in PHP: "\n").
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+</refentry>
+
+<refentry id="SetTitleColor">
+  <refmeta>
+    <refentrytitle>SetTitleColor</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetTitleColor</refname>
+    <refpurpose>Set the color of the plot titles</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetTitleColor(<parameter>$color</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetTitleColor</function> sets the color of the plot title
+(as set with <xref linkend="SetTitle" />), and the X and Y axis titles
+(as set with <xref linkend="SetXTitle" /> and <xref linkend="SetYTitle" />).
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$color</replaceable></term>
+        <listitem>
+          <para>
+Color value to use.
+See <xref linkend="conc-colors" /> for more on color values.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The default color for the titles is black.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetTransparentColor">
+  <refmeta>
+    <refentrytitle>SetTransparentColor</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetTransparentColor</refname>
+    <refpurpose>Designate one color to be transparent</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetTransparentColor(<parameter>$color</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetTransparentColor</function> designates one color in the image
+to be transparent. The designated color will not be visible (assuming the
+image is viewed with a program which supports transparency) - instead,
+everything drawn in that color will be transparent.
+By default, no color is transparent.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$color</replaceable></term>
+        <listitem>
+          <para>
+Name of the color in the current color map (see <xref linkend="SetRGBArray" />)
+which should become transparent.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+This will only work if both the selected image file format
+(see <xref linkend="SetFileFormat" />)
+and the user's browser or viewer support transparency.
+GIF format supports transparency.
+PNG format also supports transparency, but viewer support is more limited.
+    </para>
+  </refsect1>
+  <refsect1>
+    <title>Example</title>
+    <para>
+To set the plot image background to be transparent, pick a color (here
+'yellow') that won't be used anywhere else on the image, and use code
+like this:
+      <programlisting>
+$plot-&gt;SetBackgroundColor('yellow');
+$plot-&gt;SetTransparentColor('yellow');
+      </programlisting>
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetUseTTF">
+  <refmeta>
+    <refentrytitle>SetUseTTF</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetUseTTF</refname>
+    <refpurpose>Enables or disables use of TrueType fonts</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetUseTTF(<parameter>$ttf</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetUseTTF</function> enables (or disables) the use of TrueType
+fonts instead of the built-in GD fonts. TrueType fonts generally look
+better and can be scaled and rotated, but require more memory and
+processing power to render.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$ttf</replaceable></term>
+        <listitem>
+          <para>
+True to enable use of TrueType fonts, False to use built-in GD fonts
+instead.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+Changing the font type re-initializes all the font settings to the defaults.
+    </para>
+    <para>
+The default is False, to use the built-in GD fonts.
+    </para>
+    <para>
+There must be a valid default font before enabling TrueType fonts with
+SetUseTTF, or PHPlot will abort with an error. There are three ways to
+properly set up TrueType fonts to avoid this error, starting after
+PHPlot-5.0rc2:
+      <itemizedlist>
+        <listitem>
+          <para>
+Call <xref linkend="SetDefaultTTFont" /> with the full pathname to a
+TrueType font file to use as the default. Since SetDefaultTTFont
+automatically enables TrueType fonts, you don't need to call SetUseTTF
+if you use this option.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+Call <xref linkend="SetTTFPath" /> with the path to a directory where you
+have stored TrueType fonts, then call <xref linkend="SetDefaultTTFont" />
+with the filename (e.g. <filename>arial.ttf</filename>) of the
+TrueType font file to use as the default. Since SetDefaultTTFont
+automatically enables TrueType fonts, you don't need to call SetUseTTF
+if you use this option either.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+Modify the built-in values for the default TrueType font, and the default
+font directory (if needed), in <filename>phplot.php</filename> at
+installation time as described in <xref linkend="install-install" />.
+If the built-in defaults are sufficient to find the font file, you can
+use SetUseTTF to enable TrueType fonts.
+          </para>
+        </listitem>
+      </itemizedlist>
+    </para>
+    <para>
+After enabling TrueType fonts, you can use
+<xref linkend="SetFont" /> to select fonts and sizes for individual
+text elements in the plot.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetXAxisPosition">
+  <refmeta>
+    <refentrytitle>SetXAxisPosition</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetXAxisPosition</refname>
+    <refpurpose>Move the X axis</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetXAxisPosition(<parameter>$pos</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetXAxisPosition</function> sets the position of the X axis,
+which is normally at Y=0.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$pos</replaceable></term>
+        <listitem>
+          <para>
+The Y position in world coordinates for the X axis.
+(World coordinates are the coordinate space of your data points.)
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The given position is truncated (towards 0) to an integer value.
+    </para>
+    <para>
+The X axis is usually drawn at Y=0, but if Y=0 is not within the range of
+the graph, the X axis is drawn at the bottom of the plot.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetXDataLabelPos">
+  <refmeta>
+    <refentrytitle>SetXDataLabelPos</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetXDataLabelPos</refname>
+    <refpurpose>Where to draw the X data labels</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetXDataLabelPos(<parameter>$xdlp</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetXDataLabelPos</function> determines where the X data labels
+are drawn. The labels can be drawn at the bottom of the plot (below the X
+axis), above the plot, in both positions, or neither.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$xdlp</replaceable></term>
+        <listitem>
+          <para>
+A string indicating the desired position for the X data labels:
+            <informaltable>
+              <tgroup cols="2">
+                <?dbhtml table-summary="X data label position choices"?>
+                <thead>
+                  <row>
+                    <entry>Position</entry>
+                    <entry>Description</entry>
+                  </row>
+                </thead>
+                <tbody>
+                  <row>
+                    <entry>plotdown</entry>
+                    <entry>Data labels below the plot</entry>
+                  </row>
+                  <row>
+                    <entry>plotup</entry>
+                    <entry>Data labels above the plot</entry>
+                  </row>
+                  <row>
+                    <entry>both</entry>
+                    <entry>Data labels both below and above the plot</entry>
+                  </row>
+                  <row>
+                    <entry>none</entry>
+                    <entry>No data labels</entry>
+                  </row>
+                </tbody>
+              </tgroup>
+            </informaltable>
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The default position for X data labels is below the plot.
+    </para>
+    <para>
+Calling this function to position the data labels (that is,
+with parameter other than 'none') turns off X tick labels as if
+<xref linkend="SetXTickLabelPos" /> was called with parameter 'none',
+to prevent overlapping tick and data labels.
+    </para>
+    <para>
+This applies only to data labels.
+For tick labels, see <xref linkend="SetXTickLabelPos" />.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetXLabelAngle">
+  <refmeta>
+    <refentrytitle>SetXLabelAngle</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetXLabelAngle</refname>
+    <refpurpose>Set the text angle for X tick and data labels</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetXLabelAngle(<parameter>$xla</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetXLabelAngle</function> sets the text angle for X tick and data
+labels.
+If using TrueType fonts, any angle can be used.
+If using built-in GD fonts, only 0 degree and 90 degree text can be used.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$xla</replaceable></term>
+        <listitem>
+          <para>
+Desired angle for label text, in degrees.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The default text angle for X labels is 0 degrees, for horizontal text.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetXLabelType">
+  <refmeta>
+    <refentrytitle>SetXLabelType</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetXLabelType</refname>
+    <refpurpose>Set formatting type for X tick and data labels</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetXLabelType(<parameter>$xlt</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetXLabelType</function> sets the formatting type for X tick and
+data labels. By default, there is no special formatting, so the labels are
+output as-is. Other choices are 'data' and 'time'.
+    </para>
+    <para>
+'data' formatting formats the labels as floating point numbers,
+with thousands-separating commas,
+and with precision set by <xref linkend="SetPrecisionX" />.
+    </para>
+    <para>
+'time' formatting formats the labels as date/time values,
+using a format specifier set by <xref linkend="SetXTimeFormat" />.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$xlt</replaceable></term>
+        <listitem>
+          <para>
+A string indicating the desired formatting mode: 'data' or 'time'.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The default formatting mode is to do no special formatting of the labels.
+Strings will be output as-is, and numbers will be output using PHP's
+default formatting.
+    </para>
+    <para>
+A side effect of <xref linkend="SetPrecisionX" /> is to call this function
+SetXLabelType and set the formatting mode to 'data'.
+    </para>
+    <note>
+      <para>
+If using 'data' format for labels, you need to turn off X data label
+display with <xref linkend="SetXDataLabelPos" /> if you don't want to
+use data labels, even if the string values in your data array are
+empty. This is because with numeric formatting these empty strings will
+be displayed as the number zero, unless you turn off data label display.
+      </para>
+    </note>
+  </refsect1>
+</refentry>
+
+<refentry id="SetXScaleType">
+  <refmeta>
+    <refentrytitle>SetXScaleType</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetXScaleType</refname>
+    <refpurpose>Select linear or logarithmic scale</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetXScaleType(<parameter>$st</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetXScaleType</function> sets the scale type along the X axis 
+to be either linear (the default) or logarithmic.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$st</replaceable></term>
+        <listitem>
+          <para>
+A string specifying the scale type: 'linear' or 'log'.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+No X value may be less than or equal to 0 with logarithmic X scale.
+    </para>
+    <para>
+Support for logarithmic scales in PHPlot is limited. One problem is that
+tick interval is fixed for the entire range of data, which is inappropriate
+for logarithmic scales where the data spans more than one magnitude.
+    </para>
+    <para>
+The default X and Y scale types are linear.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetXTickCrossing">
+  <refmeta>
+    <refentrytitle>SetXTickCrossing</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetXTickCrossing</refname>
+    <refpurpose>Set crossing length of X tick marks</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetXTickCrossing(<parameter>$xc</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetXTickCrossing</function> sets the length by which the X tick
+marks cross the X axis or plot border (depending on the tick position
+set with <xref linkend="SetXTickPos" />) pointing inwards.
+See figure below.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$xc</replaceable></term>
+        <listitem>
+          <para>
+Desired X tick crossing length in pixels.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The default tick crossing length is 3 pixels.
+    </para>
+    <para>
+The following figure shows the four length measurements used to draw the
+tick marks. (In this plot, the tick lengths have been increased from the
+defaults.)
+      <informalfigure>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="images/ticksize.png" format="PNG" />
+          </imageobject>
+          <textobject>
+            <phrase>Tick size controls</phrase>
+          </textobject>
+        </mediaobject>
+      </informalfigure>
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetXTickIncrement">
+  <refmeta>
+    <refentrytitle>SetXTickIncrement</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetXTickIncrement</refname>
+    <refpurpose>Set the step between X ticks</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetXTickIncrement(<parameter>$ti</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetXTickIncrement</function> sets the interval between X tick
+marks.
+You can use either this function or <xref linkend="SetNumXTicks" />
+(but not both) to control the tick mark spacing.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$ti</replaceable></term>
+        <listitem>
+          <para>
+Desired tick interval, in world coordinates.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+If neither <function>SetXTickIncrement</function> nor 
+<xref linkend="SetNumXTicks" /> is used, the tick mark interval
+is calculated as 1/10th of the X data range.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetXTickLabelPos">
+  <refmeta>
+    <refentrytitle>SetXTickLabelPos</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetXTickLabelPos</refname>
+    <refpurpose>Position the X tick labels</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetXTickLabelPos(<parameter>$xtlp</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetXTickLabelPos</function> determines where (and if) the
+X tick labels are drawn. The labels can be drawn at the bottom of the plot,
+above the plot, in both positions, at the X axis (even if it is in the
+middle of the plot), or not drawn at all.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$xtlp</replaceable></term>
+        <listitem>
+          <para>
+A string indicating the desired position for the X tick labels:
+            <informaltable>
+              <tgroup cols="2">
+                <?dbhtml table-summary="X tick label position choices"?>
+                <thead>
+                  <row>
+                    <entry>Position</entry>
+                    <entry>Description</entry>
+                  </row>
+                </thead>
+                <tbody>
+                  <row>
+                    <entry>plotdown</entry>
+                    <entry>Tick labels below the plot</entry>
+                  </row>
+                  <row>
+                    <entry>plotup</entry>
+                    <entry>Tick labels above the plot</entry>
+                  </row>
+                  <row>
+                    <entry>both</entry>
+                    <entry>Tick labels both below and above the plot</entry>
+                  </row>
+                  <row>
+                    <entry>xaxis</entry>
+                    <entry>Tick labels at X axis (even if the axis is in
+                      the middle of the plot)</entry>
+                  </row>
+                  <row>
+                    <entry>none</entry>
+                    <entry>No tick labels</entry>
+                  </row>
+                </tbody>
+              </tgroup>
+            </informaltable>
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The default position for the X tick labels is below the plot.
+    </para>
+    <para>
+Calling this function to position the tick labels (that is,
+with parameter other than 'none') turns off X data labels as if
+<xref linkend="SetXDataLabelPos" /> was called with parameter 'none',
+to prevent overlapping tick and data labels.
+    </para>
+    <para>
+This applies only to tick labels.
+For data labels, see <xref linkend="SetXDataLabelPos" />.
+You probably want the tick marks to be in the same positions as the tick
+labels.  To position the tick marks, see <xref linkend="SetXTickPos" />.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetXTickLength">
+  <refmeta>
+    <refentrytitle>SetXTickLength</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetXTickLength</refname>
+    <refpurpose>Set outer length of X tick marks</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetXTickLength(<parameter>$xln</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetXTickLength</function> sets the length of the X tick marks
+pointing outwards from the plot. For example, for tick marks on an X axis
+at the bottom of the plot, this is the length from the X axis down.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$xln</replaceable></term>
+        <listitem>
+          <para>
+Desired X tick length in pixels.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The default tick length is 5 pixels.
+    </para>
+    <para>
+See figure under <xref linkend="SetXTickCrossing" />.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetXTickPos">
+  <refmeta>
+    <refentrytitle>SetXTickPos</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetXTickPos</refname>
+    <refpurpose>Position the X axis tick marks</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetXTickPos(<parameter>$tp</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetXTickPos</function> determines where (and if) the
+X tick marks are drawn. The tick marks can be drawn at the bottom of the plot,
+above the plot, in both positions, at the X axis (even if it is in the
+middle of the plot), or not drawn at all.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$xtp</replaceable></term>
+        <listitem>
+          <para>
+A string indicating the desired position for the X tick marks:
+            <informaltable>
+              <tgroup cols="2">
+                <?dbhtml table-summary="X tick position choices"?>
+                <thead>
+                  <row>
+                    <entry>Position</entry>
+                    <entry>Description</entry>
+                  </row>
+                </thead>
+                <tbody>
+                  <row>
+                    <entry>plotdown</entry>
+                    <entry>Tick marks below the plot</entry>
+                  </row>
+                  <row>
+                    <entry>plotup</entry>
+                    <entry>Tick marks above the plot</entry>
+                  </row>
+                  <row>
+                    <entry>both</entry>
+                    <entry>Tick marks both below and above the plot</entry>
+                  </row>
+                  <row>
+                    <entry>xaxis</entry>
+                    <entry>Tick marks at X axis (even if the axis is in
+                      the middle of the plot)</entry>
+                  </row>
+                  <row>
+                    <entry>none</entry>
+                    <entry>No tick marks</entry>
+                  </row>
+                </tbody>
+              </tgroup>
+            </informaltable>
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The default position for the X tick marks is below the plot.
+    </para>
+    <para>
+This applies only to tick marks.
+You may want the tick labels to be in the same positions as the tick
+marks.  To position the tick labels, see <xref linkend="SetXTickLabelPos" />.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetXTimeFormat">
+  <refmeta>
+    <refentrytitle>SetXTimeFormat</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetXTimeFormat</refname>
+    <refpurpose>Set date/time formatting string for X labels</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetXTimeFormat(<parameter>$xtf</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetXTimeFormat</function> sets the formatting string for X tick
+and data labels when 'time' formatting mode for X labels is in effect.
+Use <xref linkend="SetXLabelType" /> to select the formatting mode for labels.
+The formatting string is used with the PHP <function>strftime</function>
+to format labels as date/time strings.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$xtf</replaceable></term>
+        <listitem>
+          <para>
+Formatting string for X labels, used with <function>strftime()</function>.
+For example, if the label value is 1104534000 (which is the
+<literal>time_t</literal> representation of 6:00 PM on the last day of 2004),
+'%Y-%m-%d.%H:%M:%S' results in '2004-12-31.18:00:00',
+and '%d %b %Y' results in '31 Dec 2004'.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+This applies to both X tick labels and X data labels. To use date/time
+formatting, the label values must be Unix time_t values (number of seconds
+since Unix epoch).
+    </para>
+    <para>
+Unlike <xref linkend="SetPrecisionX" />, SetXTimeFormat does not
+automatically enable the correct label formatting mode. You
+must call <literal>SetXLabelType('time')</literal> to use date/time
+formatting of labels.
+    </para>
+    <para>
+The default time format is '%H:%M:%S', showing hours, minutes, and seconds
+(and ignoring any date information). This default applies to PHPlot-5.0rc3
+and higher. In older versions, the default is undefined.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetXTitle">
+  <refmeta>
+    <refentrytitle>SetXTitle</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetXTitle</refname>
+    <refpurpose>Sets the X axis title, and optionally its position</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetXTitle(<parameter>$xtitle</parameter>, <optional><parameter>$xpos</parameter></optional>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetXTitle</function> sets the text to be displayed as the X axis
+title. Optionally, it also sets the position of the title and the axis
+itself: below the graph (the usual place), above the graph, both, or
+neither.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+
+      <varlistentry>
+        <term><replaceable>$xtitle</replaceable></term>
+        <listitem>
+          <para>
+The text string to use for the X axis title.
+The string can contain multiple lines, separated by newlines (in PHP: "\n").
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>$xpos</replaceable></term>
+        <listitem>
+          <para>
+Optional position for the X axis and title. Use one of the following
+strings for the position:
+            <informaltable>
+              <tgroup cols="2">
+                <?dbhtml table-summary="X axis position choices"?>
+                <thead>
+                  <row>
+                    <entry>Position</entry>
+                    <entry>Description</entry>
+                  </row>
+                </thead>
+                <tbody>
+                  <row>
+                    <entry>plotdown</entry>
+                    <entry>X axis below the plot</entry>
+                  </row>
+                  <row>
+                    <entry>plotup</entry>
+                    <entry>X axis above the plot</entry>
+                  </row>
+                  <row>
+                    <entry>both</entry>
+                    <entry>One X axis above, and one below</entry>
+                  </row>
+                  <row>
+                    <entry>none</entry>
+                    <entry>No X axis, no X axis title</entry>
+                  </row>
+                </tbody>
+              </tgroup>
+            </informaltable>
+The default is 'plotdown'.
+          </para>
+        </listitem>
+      </varlistentry>
+
+    </variablelist>
+  </refsect1>
+</refentry>
+
+<refentry id="SetYAxisPosition">
+  <refmeta>
+    <refentrytitle>SetYAxisPosition</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetYAxisPosition</refname>
+    <refpurpose>Move the Y axis</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetYAxisPosition(<parameter>$pos</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetYAxisPosition</function> sets the position of the Y axis,
+which is normally at the left edge of the plot.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$pos</replaceable></term>
+        <listitem>
+          <para>
+The X position in world coordinates for the Y axis.
+(World coordinates are the coordinate space of your data points.)
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The given position is truncated (towards 0) to an integer value.
+    </para>
+    <para>
+Unless this function is used to move it, the Y axis is always drawn
+at the left of the graph.
+    </para>
+
+  </refsect1>
+</refentry>
+
+<refentry id="SetYDataLabelPos">
+  <refmeta>
+    <refentrytitle>SetYDataLabelPos</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetYDataLabelPos</refname>
+    <refpurpose>Position and control Y data labels</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetYDataLabelPos(<parameter>$ydlp</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetYDataLabelPos</function> determines if and where Y data labels
+are drawn. Currently, Y data labels are only implemented for 'bars' plot
+types. The Y data label shows the Y value above each bar.
+This is shown in <xref linkend="example-bars4" />.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$ydlp</replaceable></term>
+        <listitem>
+          <para>
+A string indicating the desired position for the Y data labels.
+The value 'plotin' enables Y data labels for bar charts. The value
+'none' disables the Y data labels. These are the only currently supported
+values.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The default is not to draw Y data labels.
+These labels are only available for plot type 'bars'. If the position is
+set to 'plotin', the labels will be drawn above the bars (or below the
+bars, for negative values). This works best if the values are short enough
+to fit.
+    </para>
+    <para>
+The Y data label feature for bar graphs was added to PHPlot-5.0rc3.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetYLabelAngle">
+  <refmeta>
+    <refentrytitle>SetYLabelAngle</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetYLabelAngle</refname>
+    <refpurpose>Set the text angle for Y tick labels</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetYLabelAngle(<parameter>$yla</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetYLabelAngle</function> sets the text angle for Y tick labels.
+(This does not apply to bar chart Y data labels, which are always drawn
+horizontally.)
+If using TrueType fonts, any angle can be used.
+If using built-in GD fonts, only 0 degree and 90 degree text can be used.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$yla</replaceable></term>
+        <listitem>
+          <para>
+Desired angle for label text, in degrees.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The default text angle for Y labels is 0 degrees, for horizontal text.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetYLabelType">
+  <refmeta>
+    <refentrytitle>SetYLabelType</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetYLabelType</refname>
+    <refpurpose>Set formatting type for Y tick and data labels</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetYLabelType(<parameter>$ylt</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetYLabelType</function> sets the formatting type for Y tick
+and data labels.
+(Y data labels are only available with bar charts.)
+By default, there is no special formatting, so the labels are
+output as-is. Other choices are 'data' and 'time'.
+    </para>
+    <para>
+'data' formatting formats the labels as floating point numbers,
+with thousands-separating commas,
+and with precision set by <xref linkend="SetPrecisionY" />.
+    </para>
+    <para>
+'time' formatting formats the labels as date/time values,
+using a format specifier set by <xref linkend="SetYTimeFormat" />.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$ylt</replaceable></term>
+        <listitem>
+          <para>
+A string indicating the desired formatting mode: 'data' or 'time'.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The default formatting mode is to do no special formatting of the labels.
+Strings will be output as-is, and numbers will be output using PHP's
+default formatting.
+    </para>
+    <para>
+A side effect of <xref linkend="SetPrecisionY" /> is to call this function
+SetYLabelType and set the formatting mode to 'data'.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetYScaleType">
+  <refmeta>
+    <refentrytitle>SetYScaleType</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetYScaleType</refname>
+    <refpurpose>Select linear or logarithmic scale</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetYScaleType(<parameter>$st</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetYScaleType</function> sets the scale type along the Y axis 
+to be either linear (the default) or logarithmic.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$st</replaceable></term>
+        <listitem>
+          <para>
+A string specifying the scale type: 'linear' or 'log'.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+No Y value may be less than or equal to 0 with logarithmic Y scale.
+    </para>
+    <para>
+Support for logarithmic scales in PHPlot is limited. One problem is that
+tick interval is fixed for the entire range of data, which is inappropriate
+for logarithmic scales where the data spans more than one magnitude.
+    </para>
+    <para>
+The default X and Y scale types are linear.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetYTickCrossing">
+  <refmeta>
+    <refentrytitle>SetYTickCrossing</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetYTickCrossing</refname>
+    <refpurpose>Set crossing length of Y tick marks</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetYTickCrossing(<parameter>$yc</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetYTickCrossing</function> sets the length by which the Y tick
+marks cross the Y axis or plot border (depending on the tick position
+set with <xref linkend="SetYTickPos" />) pointing inwards.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$yc</replaceable></term>
+        <listitem>
+          <para>
+Desired X tick crossing length in pixels.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The default tick crossing length is 3 pixels.
+    </para>
+    <para>
+See figure under <xref linkend="SetXTickCrossing" />.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetYTickIncrement">
+  <refmeta>
+    <refentrytitle>SetYTickIncrement</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetYTickIncrement</refname>
+    <refpurpose>Set the step between Y ticks</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetYTickIncrement(<parameter>$ti</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetYTickIncrement</function> sets the interval between Y tick
+marks.
+You can use either this function or <xref linkend="SetNumYTicks" />
+(but not both) to control the tick mark spacing.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$ti</replaceable></term>
+        <listitem>
+          <para>
+Desired tick interval, in world coordinates.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+If neither <function>SetYTickIncrement</function> nor 
+<xref linkend="SetNumYTicks" /> is used, the tick mark interval
+is calculated as 1/10th of the Y data range.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetYTickLabelPos">
+  <refmeta>
+    <refentrytitle>SetYTickLabelPos</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetYTickLabelPos</refname>
+    <refpurpose>Position the Y tick labels</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetYTickLabelPos(<parameter>$ytlp</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetYTickLabelPos</function> determines where (and if) the
+Y tick labels are drawn. The labels can be drawn on the left side of the plot,
+on the right side of the plot, in both positions, at the Y axis (even if it is
+in the middle of the plot), or not drawn at all.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$ytlp</replaceable></term>
+        <listitem>
+          <para>
+A string indicating the desired position for the Y tick labels:
+            <informaltable>
+              <tgroup cols="2">
+                <?dbhtml table-summary="Y tick label position choices"?>
+                <thead>
+                  <row>
+                    <entry>Position</entry>
+                    <entry>Description</entry>
+                  </row>
+                </thead>
+                <tbody>
+                  <row>
+                    <entry>plotleft</entry>
+                    <entry>Tick labels on the left side of the plot</entry>
+                  </row>
+                  <row>
+                    <entry>plotright</entry>
+                    <entry>Tick labels on the right side of the plot</entry>
+                  </row>
+                  <row>
+                    <entry>both</entry>
+                    <entry>Tick labels on both left and right sides of the
+                       plot</entry>
+                  </row>
+                  <row>
+                    <entry>yaxis</entry>
+                    <entry>Tick labels at Y axis (even if the axis is in
+                      the middle of the plot)</entry>
+                  </row>
+                  <row>
+                    <entry>none</entry>
+                    <entry>No tick labels</entry>
+                  </row>
+                </tbody>
+              </tgroup>
+            </informaltable>
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The default position for the Y tick labels is on the left side of the plot.
+    </para>
+    <para>
+This applies only to tick labels.
+You may want the tick marks to be in the same positions as the tick
+labels.  To position the tick marks, see <xref linkend="SetYTickPos" />.
+    </para>
+    <para>
+Unlike the X axis, which is by default drawn at Y=0, the Y axis is by
+default drawn at the left side of the plot, not at X=0.
+It can be moved to a different position with <xref linkend="SetYAxisPosition" />.
+If it isn't moved, 'yaxis' and 'plotleft' positions are the same.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetYTickLength">
+  <refmeta>
+    <refentrytitle>SetYTickLength</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetYTickLength</refname>
+    <refpurpose>Set outer length of Y tick marks</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetYTickLength(<parameter>$yln</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetYTickLength</function> sets the length of the Y tick marks
+pointing outwards from the plot. For example, for tick marks on a Y axis
+on the left side of the plot, this is the length from the axis to the left.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$yln</replaceable></term>
+        <listitem>
+          <para>
+Desired Y tick length in pixels.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The default tick length is 5 pixels.
+    </para>
+    <para>
+See figure under <xref linkend="SetXTickCrossing" />.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetYTickPos">
+  <refmeta>
+    <refentrytitle>SetYTickPos</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetYTickPos</refname>
+    <refpurpose>Position the Y axis tick marks</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetYTickPos(<parameter>$tp</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetYTickPos</function> determines where (and if) the
+Y tick marks are drawn. The tick marks can be drawn on the left side of the
+plot, on the right side the plot, in both positions, at the Y axis (even if
+it is in the middle of the plot), or not drawn at all.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$tp</replaceable></term>
+        <listitem>
+          <para>
+A string indicating the desired position for the Y tick marks:
+            <informaltable>
+              <tgroup cols="2">
+                <?dbhtml table-summary="Y tick position choices"?>
+                <thead>
+                  <row>
+                    <entry>Position</entry>
+                    <entry>Description</entry>
+                  </row>
+                </thead>
+                <tbody>
+                  <row>
+                    <entry>plotleft</entry>
+                    <entry>Tick marks on the left side of the plot</entry>
+                  </row>
+                  <row>
+                    <entry>plotright</entry>
+                    <entry>Tick marks on the right side of the plot</entry>
+                  </row>
+                  <row>
+                    <entry>both</entry>
+                    <entry>Tick marks on both left and right sides of the
+                       plot</entry>
+                  </row>
+                  <row>
+                    <entry>yaxis</entry>
+                    <entry>Tick marks at Y axis (even if the axis is in
+                      the middle of the plot)</entry>
+                  </row>
+                  <row>
+                    <entry>none</entry>
+                    <entry>No tick marks</entry>
+                  </row>
+                </tbody>
+              </tgroup>
+            </informaltable>
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The default position for the Y tick marks is on the left side of the plot.
+    </para>
+    <para>
+This applies only to tick marks.
+You may want the tick labels to be in the same positions as the tick
+marks.  To position the tick labels, see <xref linkend="SetYTickLabelPos" />.
+    </para>
+    <para>
+Unlike the X axis, which is by default drawn at Y=0, the Y axis is by
+default drawn at the left side of the plot, not at X=0.
+It can be moved to a different position with <xref linkend="SetYAxisPosition" />.
+If it isn't moved, 'yaxis' and 'plotleft' positions are the same.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetYTimeFormat">
+  <refmeta>
+    <refentrytitle>SetYTimeFormat</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetYTimeFormat</refname>
+    <refpurpose>Set date/time formatting string for Y labels</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetYTimeFormat(<parameter>$ytf</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetYTimeFormat</function> sets the formatting string for Y tick
+and data labels when 'time' formatting mode for Y labels is in effect.
+(Y data labels are only available with bar charts.)
+Use <xref linkend="SetYLabelType" /> to select the formatting mode for labels.
+The formatting string is used with the PHP <function>strftime</function>
+to format labels as date/time strings.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$ytf</replaceable></term>
+        <listitem>
+          <para>
+Formatting string for Y labels, used with <function>strftime()</function>.
+For example, if the label value is 1104534000 (which is the
+<literal>time_t</literal> representation of 6:00 PM on the last day of 2004),
+'%Y-%m-%d.%H:%M:%S' results in '2004-12-31.18:00:00',
+and '%d %b %Y' results in '31 Dec 2004'.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+This applies to Y tick labels and Y data labels on bar charts.
+To use date/time formatting, the label values must be Unix time_t
+values (number of seconds since Unix epoch).
+    </para>
+    <para>
+Unlike <xref linkend="SetPrecisionY" />, SetYTimeFormat does not
+automatically enable the correct label formatting mode. You
+must call <literal>SetYLabelType('time')</literal> to use date/time
+formatting of labels.
+    </para>
+    <para>
+The default time format is '%H:%M:%S', showing hours, minutes, and seconds
+(and ignoring any date information). This default applies to PHPlot-5.0rc3
+and higher. In older versions, the default is undefined.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetYTitle">
+  <refmeta>
+    <refentrytitle>SetYTitle</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetYTitle</refname>
+    <refpurpose>Sets the Y axis title, and optionally its position</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetYTitle(<parameter>$ytitle</parameter>, <optional><parameter>$ypos</parameter></optional>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetYTitle</function> sets the text to be displayed as the Y axis
+title. Optionally, it also sets the position of the title and the axis
+itself: on the left side of the graph (the usual place), on the right side,
+both, or neither.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$ytitle</replaceable></term>
+        <listitem>
+          <para>
+The text string to use for the Y axis title.
+The string can contain multiple lines, separated by newlines (in PHP: "\n").
+          </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><replaceable>$ypos</replaceable></term>
+        <listitem>
+          <para>
+Optional position for the Y axis and title. Use one of the following
+strings for the position:
+            <informaltable>
+              <tgroup cols="2">
+                <?dbhtml table-summary="Y axis position choices"?>
+                <thead>
+                  <row>
+                    <entry>Position</entry>
+                    <entry>Description</entry>
+                  </row>
+                </thead>
+                <tbody>
+                  <row>
+                    <entry>plotleft</entry>
+                    <entry>Y axis on the left side of the plot</entry>
+                  </row>
+                  <row>
+                    <entry>plotright</entry>
+                    <entry>Y axis on the right side of the plot</entry>
+                  </row>
+                  <row>
+                    <entry>both</entry>
+                    <entry>One Y axis on the left, and one on the right</entry>
+                  </row>
+                  <row>
+                    <entry>none</entry>
+                    <entry>No Y axis, no Y axis title</entry>
+                  </row>
+                </tbody>
+              </tgroup>
+            </informaltable>
+The default is 'plotleft'.
+          </para>
+        </listitem>
+      </varlistentry>
+
+    </variablelist>
+  </refsect1>
+</refentry>
+
+</reference>

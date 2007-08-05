@@ -1,0 +1,98 @@
+This is phplotdocs/ChangeLog, listing changes to the PHPlot Reference Manual
+-----------------------------------------------------------------------------
+Note: This is a more complete ChangeLog than the one in Appendix A of the
+manual, which only contains summaries of changes.
+-----------------------------------------------------------------------------
+
+2006-12-01
+   * No changes, but regenerate the manual because the examples showed
+     a change in tick/label counts at 5.0rc3 and this has been patched.
+
+2006-11-29
+   * Add new example bars4 showing bar chart data labels.
+   * Fix notes comment at top of examples.xml: remove obsolete info on
+     scaling of pictures for PDF output. Add notes on example order and
+     referencing.
+
+2006-11-28
+
+   * Default 'time' format was fixed at 5.0rc3 as %H:%M:%S.
+   * Found and fixed more references to "no Y data labels".
+
+2006-11-27 Changes to catch up to 5.0rc3 release:
+
+   * Update PHP version requirement. Min is 4.3.0 (not 4.2); PHP5 works; always
+     use the latest versions.
+   * Updated text to more closely match the release README file instructions,
+     including ZIP file availability and no TrueType fonts included.
+   * Delete note about "included examples and documentation", as they are no
+     longer included in the release.
+
+   * Changed 3 examples that use random data to seed the generator with a
+     fixed value. So now the graphs won't change and file compares work.
+
+   * Note how to get borderless, unshaded bars with SetDataBorderColors.
+
+   * Document new values in SetPointShapes and SetLineStyles to suppress
+     point markers or lines for individual datasets in 'linepoints' plots.
+     (New feature in 5.0rc3)
+
+   * Document new bar chart data labels with SetYDataLabelPos('plotin').
+
+   * Add reference to another image viewer: qiv.
+
+
+2006-11-11 Released manual dated 2006-11-11 to Sourceforge.net
+
+2006-09-24
+
+   Reorganized. Reference section is now alphabetically by function,
+   with the category grouping moved to a new chapter. This was done
+   partly because the previous organization had some odd Table of
+   Contents issues.
+
+2006-05-20
+
+   Conversion from SGML to XML, using DocBook-XML and the xsltproc
+   processor.
+
+2005-02-27 Released draft manual tagged REL20050227 dated 2005-02-27
+
+2005-02-26
+
+    Section 4.7 Reference, Fonts: TrueType font size issues
+    * Don't scale the font figure for PDF; make it smaller so it fits
+      on the page at full size. This is necessary so the fonts are
+      shown sized to match the HTML version.
+    * Add a note above the figure that the font sizes here may differ.
+    * Add a note to SetFont about PHP+GD TrueType font sizes in 'points'
+      actually being in pixels, and dependency on user's display resolution.
+
+2005-02-20
+
+   Section 1.2 Install:
+   * Use $ before shell commands consistently.
+   * Fix error in copy command: rgb.inc.php not rgb.inc
+   * Add text on configuration settings for TrueType font defaults.
+   * Moved configuration part up so as not to split up the two uses of
+     "three files" (chmod, and copying).
+
+   Section 4.7 Reference, Fonts:
+   * Added a figure at the start of the section showing the built-in GD
+     fonts and a sample of TrueType fonts.
+   * Note you can't mix TrueType and built-in fonts in an image.
+   * Changes to reference material for TrueType font functions to reflect
+     the fixes made by the "ttf" patch:
+     * SetDefaultTTFont: Accepts pathname or filename; enables TTF.
+     * SetFont: Call SetUseTTF or SetDefaultTTFont before use; accepts pathname
+       or filename; use empty fontname to just change size.
+     * SetTTFPath: Reference note under SetUseTTF, install customization.
+     * SetUseTTF: Describe 3 ways to set up TrueType fonts without error.
+
+2005-02-13
+
+  * Fixed typos in examples, concepts/datatypes, example/pie1
+
+2005-02-06 Released draft manual tagged REL20050206 dated 2005-02-06
+
+$Id$

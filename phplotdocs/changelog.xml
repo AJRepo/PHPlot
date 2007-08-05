@@ -1,0 +1,78 @@
+<!-- $Id$
+     Change Log Appendix for PHPlot Reference Manual
+-->
+<appendix id="changelog">
+<title>Change Log</title>
+
+<variablelist>
+  <varlistentry>
+    <term>2006-12-01</term>
+    <listitem>
+      <para>
+Released updated version of the manual to correspond to PHPlot-5.0rc3.
+Documented new Y data labels for bar charts and line/point suppression.
+Add a note on how to get borderless, unshaded bars (needed due to a recent
+bug fix).
+      <para>
+      </para>
+Updates were applied to the installation section to match the README
+included with 5.0rc3.  Minimum PHP level corrected to 4.3.0, and noted that
+PHP 5 works, as this has now been tested. Deleted note about included
+examples and documentation; these have been removed from the release.
+      </para>
+      <para>
+Three examples which use random data where changed to use a fixed seed,
+so the results are repeatable.
+      </para>
+      <para>
+A new example was added, showing a bar chart with data labels.
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
+    <term>2006-11-11</term>
+    <listitem>
+      <para>
+Released manual dated 2006-11-11 to sourceforge.net. This is the first
+release of the manual on Sourceforge. It corresponds to PHPlot-5.0rc2 with 
+several patches applied.
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
+    <term>2006-09-24</term>
+    <listitem>
+      <para>
+Conversion of manual from DocBook-SGML to DocBook-XML. Reorganized, so the
+reference section is now alphabetical by function name, with a new chapter
+for category grouping of functions.
+      </para>
+    </listitem>
+  </varlistentry>
+
+
+  <varlistentry>
+    <term>2005-02-27</term>
+    <listitem>
+      <para>
+Limited release of draft manual dated 2005-02-27.
+      </para>
+    </listitem>
+  </varlistentry>
+
+
+  <varlistentry>
+    <term>2005-02-06</term>
+    <listitem>
+      <para>
+Limited release of draft manual dated 2005-02-06.
+      </para>
+    </listitem>
+  </varlistentry>
+
+
+</variablelist>
+
+</appendix>

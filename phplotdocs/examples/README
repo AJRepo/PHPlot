@@ -1,0 +1,7 @@
+This directory contains the example sources.
+You must check them out before 'make' - they
+are not dependencies because they are wildcarded
+in the Makefile.
+
+Note: You should have a link ../phplot.php to the script you are using to
+generate the examples.
