@@ -1951,6 +1951,94 @@ See also <xref linkend="SetLegendWorld" />.
   </refsect1>
 </refentry>
 
+<refentry id="SetLegendStyle">
+  <refmeta>
+    <refentrytitle>SetLegendStyle</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetLegendStyle</refname>
+    <refpurpose>Control the appearance of the legend</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetLegendStyle(<parameter>$text_align</parameter>, <optional><parameter>$colorbox_align</parameter></optional>, <optional><parameter>$style</parameter></optional>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetLegendStyle</function> controls the appearance of the legend,
+which is drawn if <xref linkend="SetLegend" /> is used.  The legend
+contains of a series of text strings and color boxes, identifying the plot
+lines. SetLegendStyle sets the alignment of the text strings and color
+boxes. The color boxes are aligned within the legend box, left or right,
+and then the text strings are aligned within the remaining space, left or
+right.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$text_align</replaceable></term>
+        <listitem>
+          <para>
+A string indicating the alignment of the text strings: 'left' or 'right'.
+If 'left', the text strings are left-aligned between the legend box edge
+and the color boxes. If 'right', the text strings are right-aligned between
+the legend box edge and the color boxes.
+          </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><replaceable>$colorbox_align</replaceable></term>
+        <listitem>
+          <para>
+Optional string indicating the alignment of the color boxes: 'left' or 'right'.
+If 'left', the color boxes are drawn along the left side of the legend box.
+If 'right', the color boxes are drawn along the right side of the legend box.
+If this parameter is omitted, the same alignment as $text_align is used.
+          </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><replaceable>$style</replaceable></term>
+        <listitem>
+          <para>
+Optional parameter, reserved for future use, and currently ignored.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+By default, the color boxes are lined up along the right side of the legend
+box, and the text strings are right-aligned just left of the color boxes.
+The following figure shows the four possible alignment choices.
+      <informalfigure>
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="images/legendstyle.png" format="PNG" />
+          </imageobject>
+          <textobject>
+            <phrase>Four possible text/color-box alignment choices</phrase>
+          </textobject>
+        </mediaobject>
+      </informalfigure>
+    </para>
+    <para>
+This function was added to PHPlot after 5.0rc3.
+    </para>
+  </refsect1>
+</refentry>
+
 <refentry id="SetLegendWorld">
   <refmeta>
     <refentrytitle>SetLegendWorld</refentrytitle>
