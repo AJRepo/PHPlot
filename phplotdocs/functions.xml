@@ -247,6 +247,7 @@ Here is a sample plot with the legend called out.
 <itemizedlist>
   <listitem><para><xref linkend="SetLegend" /></para></listitem>
   <listitem><para><xref linkend="SetLegendPixels" /></para></listitem>
+  <listitem><para><xref linkend="SetLegendStyle" /></para></listitem>
   <listitem><para><xref linkend="SetLegendWorld" /></para></listitem>
 </itemizedlist>
 </para>
