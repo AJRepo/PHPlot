@@ -1,7 +1,9 @@
 This directory contains the example sources.
-You must check them out before 'make' - they
-are not dependencies because they are wildcarded
-in the Makefile.
+These are used in the top-level Makefile to generate both
+the source code examples and the images.
 
-Note: You should have a link ../phplot.php to the script you are using to
-generate the examples.
+These are wildcarded in the Makfile, so dependency checking won't work.
+
+The Makefile has to be able to find the PHP CLI interpreter, and the
+scripts need to be able to find phplot.php. It is suggested that you
+make a link ../phplot.php to the actual location of PHPlot.
