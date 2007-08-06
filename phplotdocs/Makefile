@@ -1,6 +1,6 @@
 # $Id$
 # Makefile for PHPlot Programmer's Reference Manual (Docbook-xml version)
-# lbayuk@mindspring.com (based on other projects)
+# lbayuk@pobox.com (based on other projects)
 # This uses xsltproc for HTML.
 # PDF does not work.
 
@@ -72,10 +72,6 @@ all: html
 html: html.mark
 pdf: phplot.pdf
 
-# Check out all for viewing:
-view: $(RELFILES)
-	@echo Checked out for viewing
-
 # Version date stamp file:
 version.xml:
 	echo "<!ENTITY version \"`date +%Y-%m-%d`\">" > $@
@@ -125,12 +121,6 @@ dist: $(RELFILES)
 	zip -r $(SRCRELEASE).zip $(RELEASE)
 	rm -rf $(RELEASE)
 	@echo Created source distribution $(SRCRELEASE) as $(SRCRELEASE).zip
-
-# Tag the current files:
-tag:
-	@if [[ x$(TAG) = x ]]; then echo "Error: must set TAG variable"; exit 1; fi
-	rcs -n$(TAG): $(RELFILES)
-
 
 # === For building the examples ===
 
