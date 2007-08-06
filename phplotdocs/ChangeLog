@@ -4,6 +4,9 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2007-08-04
+   * Added documentation for new function SetLegendStyle.
+
 2006-12-01
    * No changes, but regenerate the manual because the examples showed
      a change in tick/label counts at 5.0rc3 and this has been patched.
