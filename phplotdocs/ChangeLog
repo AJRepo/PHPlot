@@ -4,6 +4,9 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2007-08-26
+   * Document new option in SetLegendStyle: $colorbox_align = 'none'.
+
 2007-08-04
    * Added documentation for new function SetLegendStyle.
 

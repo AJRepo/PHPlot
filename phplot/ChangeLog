@@ -2,6 +2,15 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2007-08-26 (lbayuk)
+    * Allow SetLegendStyle colorbox_align argument to be 'none', to suppress
+      the colorboxes in the legend.
+
+      Fix comment on $legend_text_align: empty means right, not left.
+
+      Rewrote DrawLegend layout code to make it easier to understand. The
+      result should be within 1 or 2 pixels of the previous size and position.
+
 2007-08-04 (lbayuk)
     * New feature: control legend text and color box alignment.
       Adds a new function SetLegendStyle to adjust the alignment of the
