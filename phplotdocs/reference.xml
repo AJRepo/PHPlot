@@ -1976,7 +1976,7 @@ contains of a series of text strings and color boxes, identifying the plot
 lines. SetLegendStyle sets the alignment of the text strings and color
 boxes. The color boxes are aligned within the legend box, left or right,
 and then the text strings are aligned within the remaining space, left or
-right.
+right. SetLegendStyle can also turn off the color boxes.
     </para>
   </refsect1>
 
@@ -1998,9 +1998,11 @@ the legend box edge and the color boxes.
         <term><replaceable>$colorbox_align</replaceable></term>
         <listitem>
           <para>
-Optional string indicating the alignment of the color boxes: 'left' or 'right'.
+Optional string indicating the alignment of the color boxes: 'left', 'right',
+or 'none'.
 If 'left', the color boxes are drawn along the left side of the legend box.
 If 'right', the color boxes are drawn along the right side of the legend box.
+If 'none', no color boxes are drawn.
 If this parameter is omitted, the same alignment as $text_align is used.
           </para>
         </listitem>
@@ -2032,6 +2034,13 @@ The following figure shows the four possible alignment choices.
           </textobject>
         </mediaobject>
       </informalfigure>
+    </para>
+    <para>
+Using 'none' for $colorbox_align results in a legend with only text lines.
+This is not recommended for multi-line or multi-dataset plots, unless you
+have provided some other way to indicate which legend text line goes with
+which plot, or if you are using the legend for some purpose other than
+identifying the plot lines.
     </para>
     <para>
 This function was added to PHPlot after 5.0rc3.
