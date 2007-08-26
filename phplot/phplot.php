@@ -119,8 +119,8 @@ class PHPlot {
     var $legend = '';                       // An array with legend titles
     var $legend_x_pos = '';
     var $legend_y_pos = '';
-    var $legend_text_align = '';            // left or right, empty means left
-    var $legend_colorbox_align = '';        // left or right, empty means right
+    var $legend_text_align = '';            // left or right, empty means right
+    var $legend_colorbox_align = '';        // left, right, or none; empty means same as text_align
 
 //Ticks
     var $x_tick_length = 5;                 // tick length in pixels for upper/lower axis
@@ -1401,7 +1401,7 @@ class PHPlot {
     /*
      * Set legend text alignment, color box alignment, and style options
      *     $text_align accepts 'left' or 'right'.
-     *     $colorbox_align accepts 'left' or 'right' or missing/empty. If missing or empty,
+     *     $colorbox_align accepts 'left', 'right', 'none', or missing/empty. If missing or empty,
      *        the same alignment as $text_align is used. Color box is positioned first.
      *     $style is reserved for future use.
      */
@@ -1411,7 +1411,7 @@ class PHPlot {
         if (empty($colorbox_align))
             $this->legend_colorbox_align = $this->legend_text_align;
         else
-            $this->legend_colorbox_align = $this->CheckOption($colorbox_align, 'left, right', __FUNCTION__);
+            $this->legend_colorbox_align = $this->CheckOption($colorbox_align, 'left, right, none', __FUNCTION__);
     }
 
     /*!
@@ -3159,10 +3159,8 @@ class PHPlot {
         // Find maximum legend label length
         $max_len = 0;
         foreach ($this->legend as $leg) {
-            $len = strlen($leg);
-            $max_len = ($len > $max_len) ? $len : $max_len;
+            if (($len = strlen($leg)) > $max_len) $max_len = $len;
         }
-        $max_len += 5;          // Leave room for the boxes and margins
 
         /////// Calculate legend labels sizes:  FIXME - dirty hack - FIXME
         // TTF:
@@ -3183,13 +3181,21 @@ class PHPlot {
 
         $v_margin = $char_h/2;                         // Between vertical borders and labels
         $dot_height = $char_h + $this->line_spacing;   // Height of the small colored boxes
-        $width = $char_w * $max_len;
+        // Overall legend box width e.g.: | space colorbox space text space |
+        // where colorbox and each space are 1 char width.
+        if ($this->legend_colorbox_align != 'none') {
+            $width = $char_w * ($max_len + 4);
+            $draw_colorbox = True;
+        } else {
+            $width = $char_w * ($max_len + 2);
+            $draw_colorbox = False;
+        }
 
-        //////// Calculate box size
+        //////// Calculate box position
         // upper Left
         if ( (! $which_x1) || (! $which_y1) ) {
-            $box_start_x = $this->plot_area[2] - $width;
-            $box_start_y = $this->plot_area[1] + 5;
+            $box_start_x = $this->plot_area[2] - $width - $this->safe_margin;
+            $box_start_y = $this->plot_area[1] + $this->safe_margin;
         } else {
             $box_start_x = $which_x1;
             $box_start_y = $which_y1;
@@ -3197,7 +3203,7 @@ class PHPlot {
 
         // Lower right corner
         $box_end_y = $box_start_y + $dot_height*(count($this->legend)) + 2*$v_margin;
-        $box_end_x = $box_start_x + $width - 5;
+        $box_end_x = $box_start_x + $width;
 
         // Draw outer box
         ImageFilledRectangle($this->img, $box_start_x, $box_start_y, $box_end_x, $box_end_y, $this->ndx_bg_color);
@@ -3209,34 +3215,42 @@ class PHPlot {
         // Calculate color box and text positions
         if (($text_align = $this->legend_text_align) != 'left')
             $text_align = 'right';
-        if ($this->legend_colorbox_align == 'left') {
+
+        if (!$draw_colorbox) {
+            if ($text_align == 'left')
+                $x_pos = $box_start_x + $char_w;
+            else
+                $x_pos = $box_end_x - $char_w;
+        } elseif ($this->legend_colorbox_align == 'left') {
             $dot_left_x = $box_start_x + $char_w;
+            $dot_right_x = $dot_left_x + $char_w;
             if ($text_align == 'left')
                 $x_pos = $dot_left_x + 2 * $char_w;
             else
                 $x_pos = $box_end_x - $char_w;
         } else {
             $dot_left_x = $box_end_x - 2 * $char_w;
+            $dot_right_x = $dot_left_x + $char_w;
             if ($text_align == 'left')
                 $x_pos = $box_start_x + $char_w;
             else
                 $x_pos = $dot_left_x - $char_w;
         }
-        $dot_right_x = $dot_left_x + $char_w;
 
         $y_pos = $box_start_y + $v_margin;
 
         foreach ($this->legend as $leg) {
-            // Text right aligned to the little box
+            // Draw text with requested alignment:
             $this->DrawText($this->legend_font, 0, $x_pos, $y_pos,
                             $this->ndx_text_color, $leg, $text_align);
-            // Draw a box in the data color
-            ImageFilledRectangle($this->img, $dot_left_x, $y_pos + 1, $dot_right_x,
-                                 $y_pos + $dot_height-1, $this->ndx_data_colors[$color_index]);
-            // Draw a rectangle around the box
-            ImageRectangle($this->img, $dot_left_x, $y_pos + 1, $dot_right_x,
-                           $y_pos + $dot_height-1, $this->ndx_text_color);
-
+            if ($draw_colorbox) {
+                // Draw a box in the data color
+                ImageFilledRectangle($this->img, $dot_left_x, $y_pos + 1, $dot_right_x,
+                                     $y_pos + $dot_height-1, $this->ndx_data_colors[$color_index]);
+                // Draw a rectangle around the box
+                ImageRectangle($this->img, $dot_left_x, $y_pos + 1, $dot_right_x,
+                               $y_pos + $dot_height-1, $this->ndx_text_color);
+            }
             $y_pos += $char_h + $this->line_spacing;
 
             $color_index++;
