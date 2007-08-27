@@ -117,10 +117,12 @@ class PHPlot {
 
 // Legend
     var $legend = '';                       // An array with legend titles
-    var $legend_x_pos = '';
-    var $legend_y_pos = '';
-    var $legend_text_align = '';            // left or right, empty means right
-    var $legend_colorbox_align = '';        // left, right, or none; empty means same as text_align
+    // These variables are unset to take default values:
+    // var $legend_x_pos;                   // User-specified upper left coordinates of legend box
+    // var $legend_y_pos;
+    // var $legend_xy_world;                // If set, legend_x/y_pos are world coords, else pixel coords
+    // var $legend_text_align;              // left or right, Unset means right
+    // var $legend_colorbox_align;          // left, right, or none; Unset means same as text_align
 
 //Ticks
     var $x_tick_length = 5;                 // tick length in pixels for upper/lower axis
@@ -1370,30 +1372,31 @@ class PHPlot {
     }
 
     /*!
-     * Specifies the absolute (relative to image's up/left corner) position
-     * of the legend's upper/leftmost corner.
-     *  $which_type not yet used (TODO)
+     * Specifies the position of the legend's upper/leftmost corner,
+     * in pixel (device) coordinates.
      */
-    function SetLegendPixels($which_x, $which_y, $which_type=NULL)
+    function SetLegendPixels($which_x, $which_y)
     {
         $this->legend_x_pos = $which_x;
         $this->legend_y_pos = $which_y;
+        // Make sure this is unset, meaning we have pixel coords:
+        unset($this->legend_xy_world);
 
         return TRUE;
     }
 
     /*!
-     * Specifies the relative (to graph's origin) position of the legend's
-     * upper/leftmost corner. MUST be called after scales are set up.
-     *   $which_type not yet used (TODO)
+     * Specifies the position of the legend's upper/leftmost corner,
+     * in world (data space) coordinates.
+     * Since the scale factor to convert world to pixel coordinates
+     * is probably not available, set a flag and defer conversion
+     * to later.
      */
-    function SetLegendWorld($which_x, $which_y, $which_type=NULL)
+    function SetLegendWorld($which_x, $which_y)
     {
-        if (! isset($this->scale_is_set))
-            $this->CalcTranslation();
-
-        $this->legend_x_pos = $this->xtr($which_x);
-        $this->legend_y_pos = $this->ytr($which_y);
+        $this->legend_x_pos = $which_x;
+        $this->legend_y_pos = $which_y;
+        $this->legend_xy_world = True;
 
         return TRUE;
     }
@@ -3154,7 +3157,7 @@ class PHPlot {
      * FIXME: maximum label length should be calculated more accurately for TT fonts
      *        Performing a BBox calculation for every legend element, for example.
      */
-    function DrawLegend($which_x1, $which_y1, $which_boxtype)
+    function DrawLegend()
     {
         // Find maximum legend label length
         $max_len = 0;
@@ -3179,11 +3182,16 @@ class PHPlot {
             $char_h = $this->legend_font['height'];
         }
 
+        // Normalize text alignment and colorbox alignment:
+        $text_align = isset($this->legend_text_align) ? $this->legend_text_align : 'right';
+        $colorbox_align = isset($this->legend_colorbox_align) ? $this->legend_colorbox_align : 'right';
+
+        // Sizing parameters:
         $v_margin = $char_h/2;                         // Between vertical borders and labels
         $dot_height = $char_h + $this->line_spacing;   // Height of the small colored boxes
         // Overall legend box width e.g.: | space colorbox space text space |
         // where colorbox and each space are 1 char width.
-        if ($this->legend_colorbox_align != 'none') {
+        if ($colorbox_align != 'none') {
             $width = $char_w * ($max_len + 4);
             $draw_colorbox = True;
         } else {
@@ -3192,13 +3200,20 @@ class PHPlot {
         }
 
         //////// Calculate box position
-        // upper Left
-        if ( (! $which_x1) || (! $which_y1) ) {
+        // User-defined position specified?
+        if ( !isset($this->legend_x_pos) || !isset($this->legend_y_pos)) {
+            // No, use default
             $box_start_x = $this->plot_area[2] - $width - $this->safe_margin;
             $box_start_y = $this->plot_area[1] + $this->safe_margin;
+        } elseif (isset($this->legend_xy_world)) {
+            // User-defined position in world-coordinates (See SetLegendWorld).
+            $box_start_x = $this->xtr($this->legend_x_pos);
+            $box_start_y = $this->ytr($this->legend_y_pos);
+            unset($this->legend_xy_world);
         } else {
-            $box_start_x = $which_x1;
-            $box_start_y = $which_y1;
+            // User-defined position in pixel coordinates.
+            $box_start_x = $this->legend_x_pos;
+            $box_start_y = $this->legend_y_pos;
         }
 
         // Lower right corner
@@ -3213,15 +3228,12 @@ class PHPlot {
         $max_color_index = count($this->ndx_data_colors) - 1;
 
         // Calculate color box and text positions
-        if (($text_align = $this->legend_text_align) != 'left')
-            $text_align = 'right';
-
         if (!$draw_colorbox) {
             if ($text_align == 'left')
                 $x_pos = $box_start_x + $char_w;
             else
                 $x_pos = $box_end_x - $char_w;
-        } elseif ($this->legend_colorbox_align == 'left') {
+        } elseif ($colorbox_align == 'left') {
             $dot_left_x = $box_start_x + $char_w;
             $dot_right_x = $dot_left_x + $char_w;
             if ($text_align == 'left')
@@ -4070,7 +4082,7 @@ class PHPlot {
             $this->DrawPieChart();
 
             if ($this->legend)
-                $this->DrawLegend($this->legend_x_pos, $this->legend_y_pos, '');
+                $this->DrawLegend();
 
             if ($this->print_image)
                 $this->PrintImage();
@@ -4138,7 +4150,7 @@ class PHPlot {
         $this->DrawPlotBorder();
 
         if ($this->legend)
-            $this->DrawLegend($this->legend_x_pos, $this->legend_y_pos, '');
+            $this->DrawLegend();
 
         if ($this->print_image)
             $this->PrintImage();
