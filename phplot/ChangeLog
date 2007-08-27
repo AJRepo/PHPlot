@@ -11,6 +11,31 @@ The project home page is http://sourceforge.net/projects/phplot/
       Rewrote DrawLegend layout code to make it easier to understand. The
       result should be within 1 or 2 pixels of the previous size and position.
 
+    * Fixes for bug 1779115: SetLegendWorld() fails on undefined vars
+      Store the given coordinates and remember that they need to be converted
+      from world to pixel coordinates, but defer trying to actually convert
+      them until it is time to draw the legend. This way, there are no
+      problems with the scale having to being set up first (which is nearly
+      impossible to do).  Made the following changes:
+
+        Changed legend class variables to be uninitialized, and unset (rather
+        than empty string) means use the defaults. Added a new variable:
+        $legend_xy_world. If it is set, (legend_x_pos, legend_y_pos) need to
+        be converted to pixel coords. If it is unset, they are already pixel
+        coords (or undefined, meaning defaults).
+
+        Changed usage of internal function DrawLegend(): removed all arguments.
+        X and Y were always the class variables anyway, and now it needs to
+        also use the new flag to tell it if X and Y are world or pixel coords.
+        The third argument was unused.
+
+        Removed third, unused, default NULL argument from SetLegendPixels and
+        SetLegendWorld.
+ 
+        Changes to DrawLegend to convert x, y coords to pixel coordinates
+        if they came from SetLegendWorld. Also account for new usage of
+        the class variables: Test for unset to mean use default.
+
 2007-08-04 (lbayuk)
     * New feature: control legend text and color box alignment.
       Adds a new function SetLegendStyle to adjust the alignment of the
