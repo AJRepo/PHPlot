@@ -4311,15 +4311,21 @@ default formatting.
 A side effect of <xref linkend="SetPrecisionX" /> is to call this function
 SetXLabelType and set the formatting mode to 'data'.
     </para>
-    <note>
-      <para>
-If using 'data' format for labels, you need to turn off X data label
-display with <xref linkend="SetXDataLabelPos" /> if you don't want to
-use data labels, even if the string values in your data array are
-empty. This is because with numeric formatting these empty strings will
-be displayed as the number zero, unless you turn off data label display.
-      </para>
-    </note>
+    <para>
+Starting after PHPlot-5.0rc3, empty string data labels are ignored when
+formatting with 'data' or 'time' formats. You can use this to suppress
+some data labels, or control label density, with 'data' and 'time'
+formatted labels.
+    </para>
+    <para>
+Through PHPlot-5.0rc3, empty strings would still be formatted.  With 'data'
+format, an empty string would result in a zero value, and with 'time'
+format an empty string would cause an error. As a result, with older releases,
+if you don't want to use data labels when using 'data' or 'time' formats,
+you must  turn off X data label display with
+<xref linkend="SetXDataLabelPos" />,
+even if your data array labels are empty strings.
+    </para>
   </refsect1>
 </refentry>
 

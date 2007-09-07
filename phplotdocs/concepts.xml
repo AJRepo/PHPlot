@@ -1224,6 +1224,11 @@ Also note that there are limits to the range of this type of formatting
 that can make it unusable for historical data. On some platforms, dates
 before 1970-01-01 can not be formatted.
   </para>
+  <para>
+Starting after PHPlot-5.0rc3, empty string values for data labels are
+ignored for 'time' and 'data' formatting. Earlier versions would format
+the labels as 0 (for 'data') or cause an error (for 'time').
+  </para>
 </note>
 
 <para>
