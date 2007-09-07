@@ -2,6 +2,20 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2007-09-05 (lbayuk)
+    * Rewrote FormatLabel() to ignore blank label values. Adapted from a
+      patch and feature request submitted by Gerhard Reithofer (exgerhardr).
+      Blank labels used to produce an error if the LabelType was set to
+      'time', and zero if set to 'data'. Now they are just ignored. This
+      provides a simple way to have labels only at selected intervals when
+      using time or data formats. For example, you can have a date/time
+      label at every 10th data point by setting the labels for the other 9
+      to be empty strings. Also: Removed $which_pos values 'plotx' and
+      'ploty'.  These were unused by PHPlot and this is an internal-only
+      function so there is no compatibility issue. Removed error checking on
+      $which_pos for the same reason; the error message used an undefined
+      variable anyway so it wouldn't have worked.
+
 2007-08-26 (lbayuk)
     * Allow SetLegendStyle colorbox_align argument to be 'none', to suppress
       the colorboxes in the legend.
