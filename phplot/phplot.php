@@ -1956,7 +1956,7 @@ class PHPlot {
                 $miny = $miny - $mine;      // assume error bars are always > 0
                 break;
             default:
-                $this->PrintError("FindDataLimits(): Unknown data type '$data_type'.");
+                $this->PrintError("FindDataLimits(): Unknown data type '$this->data_type'.");
             break;
             }
             $this->data[$i][MINY] = $miny;      // This row's min Y, for DrawXDataLine()
@@ -2365,50 +2365,37 @@ class PHPlot {
 
     /*!
      * Formats a tick or data label.
-     *
+     *    which_pos - 'x' or 'y', selects formatting controls.
+     *    which_lab - String to format as a label.
      * \note Time formatting suggested by Marlin Viss
      */
     function FormatLabel($which_pos, $which_lab)
     {
-        switch ($which_pos) {
-        case 'x':
-        case 'plotx':
-            switch ($this->x_label_type) {
-            case 'title':
-                $lab = @ $this->data[$which_lab][0];
-                break;
-            case 'data':
-                $lab = $this->number_format($which_lab, $this->x_precision).$this->data_units_text;
-                break;
-            case 'time':
-                $lab = strftime($this->x_time_format, $which_lab);
-                break;
-            default:
-                // Unchanged from whatever format it is passed in
-                $lab = $which_lab;
-            break;
+        $lab = $which_lab;   // Default to no formatting.
+        if ($lab !== '') {   // Don't format empty strings (especially as time or numbers)
+            if ($which_pos == 'x') {
+                switch ($this->x_label_type) {
+                case 'title':  // Note: This is obsolete
+                    $lab = @ $this->data[$which_lab][0];
+                    break;
+                case 'data':
+                    $lab = $this->number_format($which_lab, $this->x_precision).$this->data_units_text;
+                    break;
+                case 'time':
+                    $lab = strftime($this->x_time_format, $which_lab);
+                    break;
+                }
+            } elseif ($which_pos == 'y') {
+                switch ($this->y_label_type) {
+                case 'data':
+                    $lab = $this->number_format($which_lab, $this->y_precision).$this->data_units_text;
+                    break;
+                case 'time':
+                    $lab = strftime($this->y_time_format, $which_lab);
+                    break;
+                }
             }
-            break;
-        case 'y':
-        case 'ploty':
-            switch ($this->y_label_type) {
-            case 'data':
-                $lab = $this->number_format($which_lab, $this->y_precision).$this->data_units_text;
-                break;
-            case 'time':
-                $lab = strftime($this->y_time_format, $which_lab);
-                break;
-            default:
-                // Unchanged from whatever format it is passed in
-                $lab = $which_lab;
-                break;
-            }
-            break;
-        default:
-            $this->PrintError("FormatLabel(): Unknown label type $which_type");
-            return NULL;
         }
-
         return $lab;
     } //function FormatLabel
 
