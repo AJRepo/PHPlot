@@ -66,7 +66,7 @@ None
 
   <refsynopsisdiv>
     <synopsis>
-$plot &amp;= new PHPlot(<optional><parameter>$width</parameter></optional>, <optional><parameter>$height</parameter></optional>, <optional><parameter>$output_file</parameter></optional>, <optional><parameter>$input_file</parameter></optional>)
+$plot = new PHPlot(<optional><parameter>$width</parameter></optional>, <optional><parameter>$height</parameter></optional>, <optional><parameter>$output_file</parameter></optional>, <optional><parameter>$input_file</parameter></optional>)
     </synopsis>
   </refsynopsisdiv>
 
@@ -75,10 +75,6 @@ $plot &amp;= new PHPlot(<optional><parameter>$width</parameter></optional>, <opt
     <para>
 This is the class constructor for PHPlot. It creates a new plot object and
 initializes all internal settings to default values.
-    </para>
-    <para>
-The created object should always be assigned as a reference, so that the
-PHPlot destructor works properly.
     </para>
   </refsect1>
 
@@ -134,8 +130,7 @@ height.
   <refsect1>
     <title>Return Value</title>
     <para>
-Returns an object, an instance of the PHPlot class. The return value should
-be assigned with the reference (&amp;) operator as shown above.
+Returns an object, an instance of the PHPlot class.
     </para>
   </refsect1>
 
@@ -144,6 +139,20 @@ be assigned with the reference (&amp;) operator as shown above.
     <para>
 The output_file will be ignored unless <xref linkend="SetIsInline" />(True) is
 called.
+    </para>
+    <para>
+Earlier versions of this manual said that the created object should always
+be returned as a reference, like this:
+      <programlisting>
+  $plot =&amp; new PHPlot(...);  // Do not use this
+      </programlisting>
+This was because PHPlot included a function to deallocate memory used by
+the object at script shutdown, but that would only work if a reference
+assignment was used. This quasi-destructor was removed after PHPlot-5.0rc3
+because it interfered with memory deallocation until the script ended.
+So the reference assignment should not be used.
+In addition, reference assignment of a newly created object instance
+is deprecated starting with PHP5.
     </para>
   </refsect1>
 </refentry>
@@ -2092,9 +2101,11 @@ The units and origin are the same as the data you are plotting.
   <refsect1>
     <title>Notes</title>
     <para>
-The data array, axis types, and any other setting which affects the scale of
-the data must be set up before this function is used, so that PHPlot can
-properly scale the coordinates.
+Through PHPlot-5.0rc3, it was required that the
+data array, axis types, and any other setting which affects the scale of
+the data be set up before this function is used.
+Starting after PHPlot-5.0rc3 this is no longer required, as the coordinates
+you supply are not scaled until the plot is drawn.
     </para>
     <para>
 See also <xref linkend="SetLegendPixels" />.
