@@ -9,7 +9,7 @@ $data = array(
   array('Bangladesh', 144.32),       array('Russia', 143.42),
 );
 
-$plot =& new PHPlot(800, 600);
+$plot = new PHPlot(800, 600);
 $plot->SetImageBorderType('plain');
 $plot->SetPlotType('bars');
 $plot->SetDataType('text-data');

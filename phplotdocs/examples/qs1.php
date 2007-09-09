@@ -3,7 +3,7 @@
 require_once 'phplot.php';
 
 //Define the object
-$plot =& new PHPlot();
+$plot = new PHPlot();
 
 //Define some data
 $example_data = array(

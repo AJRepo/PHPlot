@@ -14,7 +14,7 @@ for ($i = 1; $i <= 10; $i++) {
   $data[] = $subdata;
 }
 
-$plot =& new PHPlot(800, 600);
+$plot = new PHPlot(800, 600);
 $plot->SetImageBorderType('plain');
 
 $plot->SetPlotType('linepoints');

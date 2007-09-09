@@ -3,7 +3,7 @@
 require_once 'phplot.php';
 
 //create a PHPlot object with 800x600 pixel image
-$plot =& new PHPlot(800,600);
+$plot = new PHPlot(800,600);
 
 //Define some data
 $example_data = array(

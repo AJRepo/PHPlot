@@ -21,7 +21,7 @@ $data2 = array(        # Data array for bottom plot: Exports
   array('1999', 940),  array('2000', 1040),
 );
 
-$plot =& new PHPlot(800,600);
+$plot = new PHPlot(800,600);
 $plot->SetImageBorderType('plain');
 
 # Disable auto-output:

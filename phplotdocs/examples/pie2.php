@@ -7,7 +7,7 @@ $data = array(
   array('', 150, 100, 150, 100),
 );
 
-$plot =& new PHPlot(800,600);
+$plot = new PHPlot(800,600);
 $plot->SetImageBorderType('plain');
 $plot->SetDataType('text-data');
 $plot->SetDataValues($data);

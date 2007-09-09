@@ -10,7 +10,7 @@ $data = array();
 for ($i = 0; $i < 100; $i++)
   $data[] = array('', $i / 4.0 + 2.0 + rand(-20, 20) / 10.0);
 
-$plot =& new PHPlot(800, 600);
+$plot = new PHPlot(800, 600);
 $plot->SetImageBorderType('plain');
 
 $plot->SetPlotType('thinbarline');

@@ -11,7 +11,7 @@ $data = array(
   array('Nov', 35, 6, 20, 9), array('Dec', 40, 7, 12, 9),
 );
 
-$plot =& new PHPlot(800, 600);
+$plot = new PHPlot(800, 600);
 $plot->SetImageBorderType('plain');
 
 $plot->SetPlotType('stackedbars');

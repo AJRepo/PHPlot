@@ -9,7 +9,7 @@ $data = array(
   array('Oct', 18, 4, 4), array('Nov', 16, 7, 4), array('Dec', 14, 3, 4),
 );
 
-$plot =& new PHPlot(800, 600);
+$plot = new PHPlot(800, 600);
 $plot->SetImageBorderType('plain');
 
 $plot->SetPlotType('bars');

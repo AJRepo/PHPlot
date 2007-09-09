@@ -10,7 +10,7 @@ $data = array(
   array('2000', 100, 72, 72, 54, 38,  5),
 );
 
-$plot =& new PHPlot(800, 600);
+$plot = new PHPlot(800, 600);
 $plot->SetImageBorderType('plain');
 
 $plot->SetPlotType('area');
