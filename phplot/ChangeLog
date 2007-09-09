@@ -2,6 +2,16 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2007-09-08 (lbayuk)
+    * Fix for bug 1790441: Removed the PHPlot quasi-destructor function and
+      the register_shutdown_function() call which arranged for it to be used.
+      This was preventing release of memory when a PHPlot object was unset,
+      because the registered shutdown function held a reference to it.
+      So rather than improving memory use, it had the opposite effect.
+        Note: It is no longer necessary or recommended to use reference
+        assignment ($plot =& new PHPlot) for PHPlot object creation.
+      Thanks to annajilly for the thorough analysis, bug report, and fix.
+
 2007-09-05 (lbayuk)
     * Rewrote FormatLabel() to ignore blank label values. Adapted from a
       patch and feature request submitted by Gerhard Reithofer (exgerhardr).

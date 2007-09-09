@@ -4,6 +4,16 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2007-09-08
+   * Removed use of reference assignment ($p =& new PHPlot())
+     in all inline examples, external examples, and reference material when
+     creating a PHPlot object. Added note to PHPlot constructor reference
+     explaining why. This was the result of the fix for bug report #1790441,
+     which removed the  shutdown function, which was the reason for the
+     reference assignment.
+
+   * Document that SetLegendWorld() no longer has to have scale setup before
+
 2007-09-05
    * Change note on SetXLabelType for new behavior: ignoring blank labels.
 
