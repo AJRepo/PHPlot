@@ -3,13 +3,26 @@
 -->
 <appendix id="changelog">
 <title>Change Log</title>
+<abstract>
+  <para>
+This is the summary change log for the PHPlot Reference Manual. (For
+changes to PHPlot itself, see the ChangeLog file inside the PHPlot
+distribution.)
+  </para>
+</abstract>
 
 <variablelist>
   <varlistentry>
-    <term>Pending (2007-08-04 - 2007-08-26)</term>
+    <term>Pending (2007-08-04 - 2007-09-08)</term>
     <listitem>
       <para>
 Added documentation for new function SetLegendStyle.
+      </para>
+      <para>
+Removed use of reference assignment (<literal>=&amp;</literal>)
+in all inline examples, external examples, and reference material when
+creating a PHPlot object. Added note to PHPlot constructor reference
+explaining why.
       </para>
     </listitem>
   </varlistentry>
