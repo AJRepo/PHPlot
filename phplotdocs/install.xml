@@ -193,7 +193,7 @@ or by entering this minimal script into a file called (for example)
 &lt;?php
 require 'phplot.php';
 $data = array(array('', 10), array('', 1));
-$plot =&amp; new PHPlot();
+$plot = new PHPlot();
 $plot-&gt;SetDataValues($data);
 $plot-&gt;SetTitle('First Test Plot');
 $plot-&gt;DrawGraph();

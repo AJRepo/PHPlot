@@ -54,7 +54,7 @@ of several <emphasis>elements</emphasis> (like lines, axes, and labels).
 <para>
 To use PHPlot, you create a PHP object from the PHPlot class, for example:
 <programlisting>
-  $plot =&amp; new PHPlot;
+  $plot = new PHPlot;
 </programlisting>
 Then you set the properties of the object, by using a series of function
 calls (actually methods of the class). These define the characteristics of
@@ -134,7 +134,7 @@ and then defining the variable:
 <programlisting>
 &lt;?php
 require_once 'phplot.php';  // here we include the PHPlot code 
-$plot =&amp; new PHPlot;    // here we define the variable
+$plot = new PHPlot;    // here we define the variable
 
 //Rest of code goes below
 </programlisting>
@@ -142,10 +142,7 @@ $plot =&amp; new PHPlot;    // here we define the variable
 
 <para>
 The above code assigns the PHPlot object to the variable
-<literal>$plot</literal>. Please,
-use that '&amp;' to create a reference.
-It is needed by phplot's approximation of a destructor,
-a facility unavailable in PHP4.
+<literal>$plot</literal>.
 </para>
 
 </sect1>
@@ -185,13 +182,13 @@ of the image, and add some titles.
 Let's say we want our plot to be bigger, 800 pixels wide and 600 pixels high.
 So instead of having the line
   <programlisting>
-  $plot =&amp; new PHPlot;
+  $plot = new PHPlot;
   </programlisting>
 </para>
 <para>
 We replace it with
   <programlisting>
-  $plot =&amp; new PHPlot(800,600);
+  $plot = new PHPlot(800,600);
   </programlisting>
 and you have specified the size in pixels of the image to be created.
 </para>

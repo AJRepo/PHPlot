@@ -203,12 +203,10 @@ path to <filename>phplot.php</filename> when including it, or to copy
 
 <para>
 <programlisting>
-$plot =&amp; new PHPlot();
+$plot = new PHPlot();
 </programlisting>
 Here we create a new PHPlot object and call it <literal>plot</literal>.
-(See <xref linkend="PHPlot" /> for the reason for the &amp; reference
-operator.) Everything else we do with the plot will be through the $plot
-object.
+Everything else we do with the plot will be through the $plot object.
 </para>
 
 <para>
@@ -1258,7 +1256,7 @@ main <filename>phplot.php</filename> source file, you instead include the
 PHPlot object, use the extended class <literal>PHPlot_data</literal>.
 <programlisting>
 require_once 'phplot_data.php';
-$plot =&amp; new PHPlot_Data(...);
+$plot = new PHPlot_Data(...);
 </programlisting>
 </para>
 
