@@ -202,24 +202,6 @@ class PHPlot {
      */
     function PHPlot($which_width=600, $which_height=400, $which_output_file=NULL, $which_input_file=NULL)
     {
-        /*
-         * Please see http://www.php.net/register_shutdown_function
-         * PLEASE NOTE: register_shutdown_function() will take a copy of the object rather than a reference
-         * so we put an ampersand. However, the function registered will work on the object as it
-         * was upon registration. To solve this, one of two methods can be used:
-         *      $obj = new object();
-         *      register_shutdown_function(array(&$obj,'shutdown'));
-         * OR
-         *      $obj = &new object();
-         * HOWEVER, as the second statement assigns $obj a reference to the current object, it might be that
-         * several instances mess things up... (CHECK THIS)
-         *
-         * AND
-         *    as $this->img is set upon construction of the object, problems will not arise for us (for the
-         *    moment maybe, so I put all this here just in case)
-         */
-        register_shutdown_function(array(&$this, '_PHPlot'));
-
         $this->SetRGBArray($this->color_array);
 
         $this->background_done = FALSE;     // Set to TRUE after background image is drawn once
@@ -247,18 +229,6 @@ class PHPlot {
         $this->SetYTitle('');
 
         $this->print_image = TRUE;      // Use for multiple plots per image (TODO: automatic)
-    }
-
-    /*!
-     * Destructor. Image resources not deallocated can be memory hogs, I think
-     * it is safer to automatically call imagedestroy upon script termination than
-     * do it ourselves.
-     * See notes in the constructor code.
-     */
-    function _PHPlot ()
-    {
-        ImageDestroy($this->img);
-        return;
     }
 
 
@@ -1088,8 +1058,7 @@ class PHPlot {
 
 
     /*!
-     * Performs the actual outputting of the generated graph, and
-     * destroys the image resource.
+     * Performs the actual outputting of the generated graph.
      */
     function PrintImage()
     {
