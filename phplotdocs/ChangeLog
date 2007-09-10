@@ -14,6 +14,9 @@ manual, which only contains summaries of changes.
 
    * Document that SetLegendWorld() no longer has to have scale setup before
 
+   * Document SetNumberFormat() (new function added to CVS a while ago), and
+     change SetXLabelType and SetYLabelType accordingly.
+
 2007-09-05
    * Change note on SetXLabelType for new behavior: ignoring blank labels.
 

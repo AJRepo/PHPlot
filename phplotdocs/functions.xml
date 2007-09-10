@@ -360,6 +360,7 @@ Here is a sample plot with the pie chart labels called out.
   <listitem><para><xref linkend="SetDrawXDataLabelLines" /></para></listitem>
   <listitem><para><xref linkend="SetDrawYDataLabelLines" /></para></listitem>
   <listitem><para><xref linkend="SetLabelScalePosition" /></para></listitem>
+  <listitem><para><xref linkend="SetNumberFormat" /></para></listitem>
   <listitem><para><xref linkend="SetPrecisionX" /></para></listitem>
   <listitem><para><xref linkend="SetPrecisionY" /></para></listitem>
   <listitem><para><xref linkend="SetXDataLabelPos" /></para></listitem>

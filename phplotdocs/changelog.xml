@@ -24,6 +24,9 @@ in all inline examples, external examples, and reference material when
 creating a PHPlot object. Added note to PHPlot constructor reference
 explaining why.
       </para>
+      <para>
+Added documentation for new function SetNumberFormat.
+      </para>
     </listitem>
   </varlistentry>
   <varlistentry>

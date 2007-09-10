@@ -2406,6 +2406,95 @@ a plot area set with <xref linkend="SetPlotAreaPixels" />.
   </refsect1>
 </refentry>
 
+<refentry id="SetNumberFormat">
+  <refmeta>
+    <refentrytitle>SetNumberFormat</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetNumberFormat</refname>
+    <refpurpose>Set the separators used when formatting number labels</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetNumberFormat(<parameter>$decimal_point</parameter>, <parameter>$thousands_sep</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetNumberFormat</function> sets the separator characters used when
+formatting number labels. Labels are formatted as numbers when the 'data'
+format type is selected with
+<xref linkend="SetXLabelType" /> or <xref linkend="SetYLabelType" />.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$decimal_point</replaceable></term>
+        <listitem>
+          <para>
+The character used as a decimal point, to separate the integer part of the
+label from the fraction part.
+          </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><replaceable>$thousands_sep</replaceable></term>
+        <listitem>
+          <para>
+The character used as a thousands grouping separator (placed betwen every
+group of 3 digits left of the decimal point).
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+These separators are only used for labels when 'data' mode formatting is
+selected with
+<xref linkend="SetXLabelType" /> or <xref linkend="SetYLabelType" />.
+    </para>
+    <para>
+If <function>SetNumberFormat</function> is not used, PHPlot attempts to get
+the proper separator characters from your system locale. If this works and
+your locale is set correctly, you will probably not need to use this function.
+If locale information is not available, the default for decimal_point is
+a period, and the default for thousands_sep is a comma.
+    </para>
+    <para>
+If your system locale is set to "C" or "POSIX", you might find that there
+are no thousands separators in your formatted labels. This is the correct
+behavor for those locales. If you cannot select a more specific locale,
+use <function>SetNumberFormat</function> to set the correct separators.
+    </para>
+    <para>
+If your PHP script is forcing a specific locale with setlocale(), PHPlot
+will probaby undo that because it uses setlocale(LC_ALL, '') to import locale
+information from the environment.  This is the only way to get at the
+environment locale settings, but it will override a forced locale in your
+script.
+    </para>
+    <para>
+To set the number of decimal places, use
+<xref linkend="SetPrecisionX" /> and <xref linkend="SetPrecisionY" />.
+    </para>
+    <para>
+This was added to PHPlot after 5.0rc3. Versions up to and including 5.0rc3
+always used a period for decimal point, and comma for thousands separator.
+    </para>
+  </refsect1>
+
+</refentry>
+
 <refentry id="SetNumXTicks">
   <refmeta>
     <refentrytitle>SetNumXTicks</refentrytitle>
@@ -4288,7 +4377,7 @@ output as-is. Other choices are 'data' and 'time'.
     </para>
     <para>
 'data' formatting formats the labels as floating point numbers,
-with thousands-separating commas,
+with digits grouped into thousands (3 digit groups),
 and with precision set by <xref linkend="SetPrecisionX" />.
     </para>
     <para>
@@ -4336,6 +4425,14 @@ if you don't want to use data labels when using 'data' or 'time' formats,
 you must  turn off X data label display with
 <xref linkend="SetXDataLabelPos" />,
 even if your data array labels are empty strings.
+    </para>
+    <para>
+Through PHPlot-5.0rc3, when the formatting mode is 'data'
+the thousands grouping separator was always a comma,
+and a period was used as a decimal point.
+Starting after 5.0rc3, PHPlot attempts to get the correct values for your
+locale.  You can set the separator characters yourself instead with
+<xref linkend="SetNumberFormat" />.
     </para>
   </refsect1>
 </refentry>
@@ -5074,8 +5171,8 @@ output as-is. Other choices are 'data' and 'time'.
     </para>
     <para>
 'data' formatting formats the labels as floating point numbers,
-with thousands-separating commas,
-and with precision set by <xref linkend="SetPrecisionY" />.
+with digits grouped into thousands (3 digit groups),
+and with precision set by <xref linkend="SetPrecisionX" />.
     </para>
     <para>
 'time' formatting formats the labels as date/time values,
@@ -5107,6 +5204,14 @@ default formatting.
     <para>
 A side effect of <xref linkend="SetPrecisionY" /> is to call this function
 SetYLabelType and set the formatting mode to 'data'.
+    </para>
+    <para>
+Through PHPlot-5.0rc3, when the formatting mode is 'data'
+the thousands grouping separator was always a comma,
+and a period was used as a decimal point.
+Starting after 5.0rc3, PHPlot attempts to get the correct values for your
+locale.  You can set the separator characters yourself instead with
+<xref linkend="SetNumberFormat" />.
     </para>
   </refsect1>
 </refentry>
