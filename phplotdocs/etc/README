@@ -1,0 +1,32 @@
+phplotdocs: Extra files
+
+These are extra files and scripts which were originally used to produce the
+manual, but are not needed to generate the manual. This includes scripts
+used to generate the "static" manual figures. The generated figures are
+found as *.png files in the images/ directory. Note that some of the
+images were edited, for example to call out features, as noted below.
+
+
+colors.php
+  This makes colors.png, the color chart showing the built-in color map.
+
+fonts.php
+  This makes fonts.png, the figure showing built-in and TrueType fonts.
+
+labels-pie.php
+  This makes labels-pie.png, figure of pie chart labels, before it is
+  annotated to call out the label.
+
+labels.php
+  A basic bar chart, used to produce labels.png before it is annotated.
+
+typical.png
+  A plot used as the basis for several figures: typical-grid.png,
+  typical-legend.png, typical-titles.png.
+  The output is annotated to call out the different label types.
+
+Note: Other figures were either created on the fly or the original
+generating script has been misplaced:
+  gdinfo.png : Copied from a phpinfo() output
+  ticksize.png : Unknown source
+  legendstyle.png : Multiple copy-and-paste from a unknown script.
