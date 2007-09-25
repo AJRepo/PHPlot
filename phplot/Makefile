@@ -29,15 +29,12 @@ tag:
 
 release:
 	@if [[ x$(VER) = x ]]; then echo "Error: must set VER variable"; exit 1; fi
-	@if [[ $$(id -u) -ne 0 ]]; then \
-          echo "Warning: Not root, files in .tar will have wrong ownership"; fi
 	@echo "Note: The main script has the following version info:"
 	@grep -i 'phplot version' phplot.php
 	mkdir -p $(RDIRPATH)
 	cp -v -p $(REL) $(RDIRPATH)
-	if [[ $$(id -u) -eq 0 ]]; then chown -R 0:0 $(RDIRPATH); fi
 	(cd $(TMP); zip -r $(RDIR).zip $(RDIR); )
-	(cd $(TMP); tar -cvzf $(RDIR).tar.gz $(RDIR); )
+	(cd $(TMP); tar -cvzf $(RDIR).tar.gz --owner=0 --group=0 $(RDIR); )
 	rm -rf $(RDIRPATH)
 	@echo "Release packages are: $(TMP)/$(RDIR).zip"
 	@echo "                 and: $(TMP)/$(RDIR).tar.gz"
