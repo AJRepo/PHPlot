@@ -259,10 +259,9 @@ class PHPlot {
     function SetIndexDarkColor($which_color)
     {
         list ($r, $g, $b) = $this->SetRGBColor($which_color);
-
-        $r -= 0x30;     $r = ($r < 0) ? 0 : $r;
-        $g -= 0x30;     $g = ($g < 0) ? 0 : $g;
-        $b -= 0x30;     $b = ($b < 0) ? 0 : $b;
+        $r = max(0, $r - 0x30);
+        $g = max(0, $g - 0x30);
+        $b = max(0, $b - 0x30);
 
         $index = ImageColorExact($this->img, $r, $g, $b);
         if ($index == -1) {
@@ -1865,7 +1864,7 @@ class PHPlot {
             $j=0;
             // Extract maximum text label length
             $val = @ strlen($this->data[$i][$j++]);
-            $maxt = ($val > $maxt) ? $val : $maxt;
+            if ($val > $maxt) $maxt = $val;
 
             switch ($this->data_type) {
             case 'text-data':           // Data is passed in as (title, y1, y2, y3, ...)
@@ -1882,44 +1881,44 @@ class PHPlot {
                     if ($this->plot_type == 'stackedbars') {
                         $maxy += abs($val);      // only positive values for the moment
                     } else {
-                        $maxy = ($val > $maxy) ? $val : $maxy;
-                        $miny = ($val < $miny) ? $val : $miny;
+                        if ($val > $maxy) $maxy = $val;
+                        if ($val < $miny) $miny = $val;
                     }
                 }
                 break;
             case 'data-data':           // Data is passed in as (title, x, y, y2, y3, ...)
                 // X value:
                 $val = (double)$this->data[$i][$j++];
-                $maxx = ($val > $maxx) ? $val : $maxx;
-                $minx = ($val < $minx) ? $val : $minx;
+                if ($val > $maxx) $maxx = $val;
+                if ($val < $minx) $minx = $val;
 
                 $miny = $maxy = (double)$this->data[$i][$j++];
                 // $numrecs = @ count($this->data[$i]);
                 for (; $j < $this->num_recs[$i]; $j++) {
                     $val = (double)$this->data[$i][$j];
-                    $maxy = ($val > $maxy) ? $val : $maxy;
-                    $miny = ($val < $miny) ? $val : $miny;
+                    if ($val > $maxy) $maxy = $val;
+                    if ($val < $miny) $miny = $val;
                 }
                 break;
             case 'data-data-error':     // Data is passed in as (title, x, y, err+, err-, y2, err2+, err2-,...)
                 // X value:
                 $val = (double)$this->data[$i][$j++];
-                $maxx = ($val > $maxx) ? $val : $maxx;
-                $minx = ($val < $minx) ? $val : $minx;
+                if ($val > $maxx) $maxx = $val;
+                if ($val < $minx) $minx = $val;
 
                 $miny = $maxy = (double)$this->data[$i][$j];
                 // $numrecs = @ count($this->data[$i]);
                 for (; $j < $this->num_recs[$i];) {
                     // Y value:
                     $val = (double)$this->data[$i][$j++];
-                    $maxy = ($val > $maxy) ? $val : $maxy;
-                    $miny = ($val < $miny) ? $val : $miny;
+                    if ($val > $maxy) $maxy = $val;
+                    if ($val < $miny) $miny = $val;
                     // Error +:
                     $val = (double)$this->data[$i][$j++];
-                    $maxe = ($val > $maxe) ? $val : $maxe;
+                    if ($val > $maxe) $maxe = $val;
                     // Error -:
                     $val = (double)$this->data[$i][$j++];
-                    $mine = ($val > $mine) ? $val : $mine;
+                    if ($val > $mine) $mine = $val;
                 }
                 $maxy = $maxy + $maxe;
                 $miny = $miny - $mine;      // assume error bars are always > 0
@@ -1931,8 +1930,8 @@ class PHPlot {
             $this->data[$i][MINY] = $miny;      // This row's min Y, for DrawXDataLine()
             $this->data[$i][MAXY] = $maxy;      // This row's max Y, for DrawXDataLine()
 
-            $minminy = ($miny < $minminy) ? $miny : $minminy;   // global min
-            $maxmaxy = ($maxy > $maxmaxy) ? $maxy : $maxmaxy;   // global max
+            if ($miny < $minminy) $minminy = $miny;   // global min
+            if ($maxy > $maxmaxy) $maxmaxy = $maxy;   // global max
         }
 
         $this->min_x = $minx;
@@ -2268,10 +2267,10 @@ class PHPlot {
         // User provided y axis position?
         if ($this->y_axis_position !== '') {
             // Make sure we draw our axis inside the plot
-            $this->y_axis_position = ($this->y_axis_position < $this->plot_min_x)
-                                     ? $this->plot_min_x : $this->y_axis_position;
-            $this->y_axis_position = ($this->y_axis_position > $this->plot_max_x)
-                                     ? $this->plot_max_x : $this->y_axis_position;
+            if ($this->y_axis_position < $this->plot_min_x)
+                $this->y_axis_position = $this->plot_min_x;
+            elseif ($this->y_axis_position > $this->plot_max_x)
+                $this->y_axis_position = $this->plot_max_x;
             $this->y_axis_x_pixels = $this->xtr($this->y_axis_position);
         } else {
             // Default to left axis
@@ -2280,10 +2279,10 @@ class PHPlot {
         // User provided x axis position?
         if ($this->x_axis_position !== '') {
             // Make sure we draw our axis inside the plot
-            $this->x_axis_position = ($this->x_axis_position < $this->plot_min_y)
-                                     ? $this->plot_min_y : $this->x_axis_position;
-            $this->x_axis_position = ($this->x_axis_position > $this->plot_max_y)
-                                     ? $this->plot_max_y : $this->x_axis_position;
+            if ($this->x_axis_position < $this->plot_min_y)
+                $this->x_axis_position = $this->plot_min_y;
+            elseif ($this->x_axis_position > $this->plot_max_y)
+                $this->x_axis_position = $this->plot_max_y;
         } elseif ($this->yscale_type == 'log') {
             $this->x_axis_position = 1;
         } else {
