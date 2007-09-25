@@ -2,6 +2,16 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2007-09-24 (lbayuk)
+    * Code cleanup: Fix ternary operator misuse.  This doesn't change
+      behavior, but it was annoying me so I fixed it.
+      Replaced all cases of code like this: $a = ($a > $b) ? $b : $a
+      With just: if ($a > $b) $a = $b
+
+    * Fix Makefile 'release' target to set owner/group when creating
+      the tar file. This avoids having to run it as root, but it needs
+      GNU tar to work.
+
 2007-09-08 (lbayuk)
     * Fix for bug 1790441: Removed the PHPlot quasi-destructor function and
       the register_shutdown_function() call which arranged for it to be used.
