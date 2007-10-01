@@ -1,0 +1,764 @@
+<!-- $Id$
+     Developer's Guide chapter for PHPlot Reference Manual
+-->
+<part label="III" id="part3">
+<title>Developer's Guide to PHPlot</title>
+<partintro id="developer">
+  <abstract>
+    <para>
+This part of the PHPlot manual is about PHPlot internals, and various
+technical details which are of interest mostly to developers of PHPlot
+itself.
+    </para>
+  </abstract>
+</partintro>
+
+<chapter id="dev-layout">
+<title>Plot Layout</title>
+<para>
+This figure illustrates the plot layout. Note that the areas for axis
+labels, tick marks, only are used if those areas are enabled.
+  <note>
+    <para>
+Analysis of the PHPlot source code was the primary source of information
+used to create this figure. There are probably errors. Some errors may be
+due to discrepancies between different parts of the PHPlot code, and some
+of these may be considered bugs in the code. The double safe_margin gap on
+the bottom and right edges are one suspect area.
+    </para>
+  </note>
+
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="images/layout.png" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>PHPlot plot layout figure</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+</para>
+
+</chapter>
+
+<chapter id="dev-legend">
+<title>Legend Layout</title>
+<para>
+This figure illustrates the layout of the legend, as drawn by DrawLegend().
+
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="images/legend-layout.png" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>PHPlot legend layout figure</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+</para>
+
+</chapter>
+
+<chapter id="dev-internal">
+<title>Internal Functions</title>
+<para>
+This chapter documents PHPlot internal functions. These functions are
+intended to be used only by PHPlot itself.
+</para>
+
+<!-- Original material is from "PHPlot Internal Functions" included with
+   pre-5.0rc3 releases of PHPlot, but extensively edited.
+   All functions in phplot.php should either be documented in "reference"
+   (if 'public') or here (if 'private').
+-->
+
+<variablelist>
+<varlistentry>
+  <term id="array_merge_php4" xreflabel="array_merge_php4">array_merge_php4($array1,$array2)</term>
+  <listitem>
+    <para>
+This is not a member function in the PHPlot class. It emulates the
+behavior of the PHP array_merge() function as it existed in PHP4, not PHP5.
+Starting with PHP5, array_merge() only accepts array arguments. PHPlot
+depends on the old behavior, to merge array and non-array arguments
+(which are treated as an array with one element). Therefore
+array_merge_php4() is used when this behavior is needed.
+This function is only used by <xref linkend="array_pad_array"/>.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="array_pad_array" xreflabel="array_pad_array">array_pad_array(&amp;$arr, $size, $arr2=NULL)</term>
+  <listitem>
+    <para>
+This is not a member function in the PHPlot class. Its purpose is to resize
+the array $arr to have $size elements. This is used for example to make
+sure there are enough data colors in the data colors array to have one
+color per plot line. It does this by appending a copy of the original array
+(or $arr2 if provided, but it never is) onto the result array $arr until
+the size equals or exceeds $size.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="CalcBarWidths" xreflabel="CalcBarWidths">CalcBarWidths()</term>
+  <listitem>
+    <para>
+Calculates the widths of the bars for 'bars' and 'stackedbars' plot types.
+It calculates the width of the bars and the margins around and between them.
+Called by <xref linkend="DrawGraph"/> before calling
+<xref linkend="DrawBars"/> or <xref linkend="DrawStackedBars"/>.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="CalcMargins" xreflabel="CalcMargins">CalcMargins()</term>
+  <listitem>
+    <para>
+Calculates the size of the four margin areas around the plot area:
+x_left_margin, x_right_margin, y_top_margin, and y_bot_margin.
+It does this by trying to determine how much space is needed for titles
+and labels.
+Called if needed by <xref linkend="SetPlotAreaPixels"/> and
+always called by <xref linkend="DrawGraph"/>.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="CalcTranslation" xreflabel="CalcTranslation">CalcTranslation()</term>
+  <listitem>
+    <para>
+Calculates the parameters for transforming world to pixel coordinates.
+This function calculates the scale (xscale, yscale) and origin
+(plot_origin_x, plot_origin_y) for X and Y translations, which
+are used by the xtr() and ytr() functions.
+Called by several functions if necessary, including
+<xref linkend="SetPlotAreaPixels"/> if the plot area is set or changed.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="CheckOption" xreflabel="CheckOption">CheckOption($which_opt, $which_acc, $which_func)</term>
+  <listitem>
+    <para>
+Checks the validity of an option passed to a PHPlot member function.
+$which_opt is the string to check, and $which_acc is a string of acceptable
+choices (separated by commas, by convention). If the string to check is not
+found in the string of acceptable choices, a fatal error will be reported
+using <xref linkend="DrawError"/>.
+The error message will include $which_func which should
+be the name of the calling function (using the PHP __FUNCTION__ magic constant).
+Note that this is used to catch programming errors, not run-time or user errors.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="DrawArea" xreflabel="DrawArea">DrawArea()</term>
+  <listitem>
+    <para>
+Draws an area plot.
+Called by <xref linkend="DrawGraph"/> when the plot type is 'area'.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="DrawBackground" xreflabel="DrawBackground">DrawBackground()</term>
+  <listitem>
+    <para>
+Draws the image background, either an image file or solid fill or nothing.
+Called by <xref linkend="DrawGraph"/>.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="DrawBars" xreflabel="DrawBars">DrawBars()</term>
+  <listitem>
+    <para>
+Draws a bar chart plot.
+Called by <xref linkend="DrawGraph"/> when the plot type is 'bars'.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="DrawDataLabel" xreflabel="DrawDataLabel">DrawDataLabel($which_font, $which_angle, $x_world, $y_world, $which_color, $which_text, $which_halign = 'center', $which_valign = 'top', $x_adjustment=0, $y_adjustment=0)</term>
+  <listitem>
+    <para>
+Draws a data label for a point. This is separate from the X data labels,
+and is currently only available for bar charts.
+Called by <xref linkend="DrawBars"/> if enabled with
+<xref linkend="SetYDataLabelPos"/>.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="DrawDot" xreflabel="DrawDot">DrawDot($x_world, $y_world, $record, $color)</term>
+  <listitem>
+    <para>
+Draws a single marker point ('dot') at the give X and Y world coordinates,
+using the given color. The $record parameter selects the marker shape and size
+using the arrays set up with SetPointSizes() and SetPointShapes(); they are
+not passed as arguments themselves.
+Called by those plotting routines that include dots:
+<xref linkend="DrawDotsError"/> and <xref linkend="DrawDots"/>.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="DrawDots" xreflabel="DrawDots">DrawDots()</term>
+  <listitem>
+    <para>
+Draws a dot plot.
+Called by <xref linkend="DrawGraph"/> when the plot type is either
+'linepoints' or 'points', and the data type does not select error bars
+(is not 'data-data-error').
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="DrawDotsError" xreflabel="DrawDotsError">DrawDotsError()</term>
+  <listitem>
+    <para>
+Draws a dot plot with error bars.
+Called by <xref linkend="DrawGraph"/> when the plot type is either
+'linepoints' or 'points', and the data type is 'data-data-error'.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="DrawError" xreflabel="DrawError">DrawError($error_message, [$where_x], [$where_y])</term>
+  <listitem>
+    <para>
+Handles a fatal error by creating an image of the error message.
+If $where_x or $where_y are not provided, the message will be centered.
+This method of error handling lets the PHP script produce the expected image
+type file.
+The image file is produced with PrintImage, then the script exits.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="DrawImageBorder" xreflabel="DrawImageBorder">DrawImageBorder()</term>
+  <listitem>
+    <para>
+Draws a border around the image, if enabled by
+<xref linkend="SetImageBorderType"/>.
+Called by <xref linkend="DrawGraph"/>.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="DrawLegend" xreflabel="DrawLegend">DrawLegend(x,y,type)</term>
+  <listitem>
+    <para>
+Draws the plot legend. This includes the box, text labels, and color boxes.
+Called by <xref linkend="DrawGraph"/>,
+but only if legend text has been set using <xref linkend="SetLegend"/>.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="DrawLines" xreflabel="DrawLines">DrawLines()</term>
+  <listitem>Draw lines in data-data format.
+    <para>
+Draws a line plot.
+Called by <xref linkend="DrawGraph"/> when the plot type is 'lines' or
+'linepoints',
+and the data type does not select error bars (is not 'data-data-error').
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="DrawLinesError" xreflabel="DrawLinesError">DrawLinesError()</term>
+  <listitem>
+    <para>
+Draws a lines plot with error bars.
+Called by <xref linkend="DrawGraph"/> when the plot type is either
+'linepoints' or 'lines', and the data type is 'data-data-error'.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="DrawPieChart" xreflabel="DrawPieChart">DrawPieChart()</term>
+  <listitem>
+    <para>
+Draws a pie chart plot.
+Called by <xref linkend="DrawGraph"/> with the plot type is 'pie'.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="DrawPlotAreaBackground" xreflabel="DrawPlotAreaBackground">DrawPlotAreaBackground()</term>
+  <listitem>
+    <para>
+Draws the plot area background, either an image file set with
+<xref linkend="SetPlotAreaBgImage"/>,
+or else a solid fill color selected by <xref linkend="SetPlotBgColor"/>
+if enabled with <xref linkend="SetDrawPlotAreaBackground"/>
+or else nothing.
+Called by <xref linkend="DrawGraph"/>.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="DrawPlotBorder" xreflabel="DrawPlotBorder">DrawPlotBorder()</term>
+  <listitem>
+    <para>
+Draws the border around the plot area.
+This draws zero to four lines around the plot area (depending on
+<xref linkend="SetPlotBorderType"/>). It only draws the outline; other functions
+draw the tick marks and labels for the X axis and Y axis.
+Called by <xref linkend="DrawGraph"/>.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="DrawSquared" xreflabel="DrawSquared">DrawSquared()</term>
+  <listitem>
+    <para>
+Draws a squared (stepped lines) plot.
+Called by <xref linkend="DrawGraph"/> when the plot type is 'squared'.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="DrawStackedBars" xreflabel="DrawStackedBars">DrawStackedBars()</term>
+  <listitem>
+    <para>
+Draws a stacked bars chart plot.
+Called by <xref linkend="DrawGraph"/> when the plot type is 'stackedbars'.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="DrawText" xreflabel="DrawText">DrawText($which_font, $which_angle, $which_xpos, $which_ypos, $which_color, $which_text, $which_halign = 'left', $which_valign = 'bottom')</term>
+  <listitem>
+    <para>
+Draws a string of text $which_text, at position ($which_xpos, $which_ypos).
+The font is selected with $which_font, which is one of the font information
+arrays in the object (for example: generic_font).
+The text is drawn at angle $which_angle (built-in fonts can be used at 0
+and 90 degrees only, TrueType at any angle). $which_color is a GD color
+index for the image. Text alignment relative to the (x,y) point is
+controlled with $which_halign ('center', 'left', or 'right')
+and $which_valign ('center', 'bottom', 'top').
+Multi-line text strings are supported. This function accounts for the
+limitations and differences in GD text drawing routines for built-in and
+TrueType fonts.
+Called by numerous functions which place text on the plot.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="DrawThinBarLines" xreflabel="DrawThinBarLines">DrawThinBarLines()</term>
+  <listitem>
+    <para>
+Draws a thin bar lines plot. This is sometimes called an impulse plot.
+Called by <xref linkend="DrawGraph"/> when the plot type is 'thinbarline'.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="DrawTitle" xreflabel="DrawTitle">DrawTitle()</term>
+  <listitem>
+    <para>
+Draws the main plot title as set with <xref linkend="SetTitle"/>. This is centered at the
+very top of the image.
+Called by <xref linkend="DrawGraph"/>.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="DrawXAxis" xreflabel="DrawXAxis">DrawXAxis()</term>
+  <listitem>
+    <para>
+Draws the X (horizontal) axis, including the axis line,
+tick marks and labels,
+and also draws the vertical grid lines.
+All of these except the axis line are done in (<xref linkend="DrawXTicks"/>).
+Called by <xref linkend="DrawGraph"/>.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="DrawXDataLabel" xreflabel="DrawXDataLabel">DrawXDataLabel($xlab, $xpos, $row=FALSE)</term>
+  <listitem>
+    <para>
+Draws a data label for an X value. The labels are above or below the plot
+area or both, depending on the value set with
+<xref linkend="SetXDataLabelPos"/>.
+This also calls <xref linkend="DrawXDataLine"/> to draw a line from the
+label to the point, if enabled.
+Called by plot drawing routines for all plot types except 'pie':
+<xref linkend="DrawArea"/>, 
+<xref linkend="DrawBars"/>,
+<xref linkend="DrawDots"/>, 
+<xref linkend="DrawDotsError"/>, 
+<xref linkend="DrawThinBarLines"/>, 
+<xref linkend="DrawLines"/>, 
+<xref linkend="DrawLinesError"/>, 
+<xref linkend="DrawSquared"/>, and
+<xref linkend="DrawStackedBars"/>.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="DrawXDataLine" xreflabel="DrawXDataLine">DrawXDataLine($xpos, $row)</term>
+  <listitem>
+    <para>
+Draws X data lines, which are vertical lines from the bottom or top of the
+plot to the data points. This is enabled with
+<xref linkend="SetDrawXDataLabelLines"/>. The lines are drawn from the
+position (above, below, or both) of the X data labels, which are set with
+<xref linkend="SetXDataLabelPos"/>.
+Called by <xref linkend="DrawXDataLabel"/>.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="DrawXTicks" xreflabel="DrawXTicks">DrawXTicks()</term>
+  <listitem>
+    <para>
+Draws the vertical grid lines, the tick marks, and tick labels.
+Called by <xref linkend="DrawXAxis"/>.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="DrawXTitle" xreflabel="DrawXTitle">DrawXTitle()</term>
+  <listitem>
+    <para>
+Draws the X axis title. There can be zero, one, or two of them depending on
+the position parameter specified in <xref linkend="SetXTitle"/>.
+Calls <xref linkend="DrawText"/> to actually draw the title(s).
+Called by <xref linkend="DrawGraph"/>.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="DrawYAxis" xreflabel="DrawYAxis">DrawYAxis()</term>
+  <listitem>
+    <para>
+Draws the Y (vertical) axis, including the axis line,
+tick marks and labels,
+and also draws the horizontal grid lines.
+All of these except the axis line are done in (<xref linkend="DrawYTicks"/>).
+Called by <xref linkend="DrawGraph"/>.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="DrawYErrorBar" xreflabel="DrawYErrorBar">DrawYErrorBar($x_world, $y_world, $error_height, $error_bar_type, $color)</term>
+  <listitem>
+    <para>
+Draws an error bar for the point at world coordinates ($x_world, $y_world).
+$error_height is the height (in world coordinates) of the error bar:
+positive for the upper range error, negative for the lower range error.
+The $error_bar_type is set to 'tee' or 'line' by <xref linkend="SetErrorBarShape"/>.
+Called by <xref linkend="DrawDotsError"/> and <xref linkend="DrawLinesError"/>, twice for each point on the
+plot (upper range error and lower range error).
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="DrawYTick" xreflabel="DrawYTick">DrawYTick($which_ylab, $which_ypix)</term>
+  <listitem>
+    <para>
+Draws a single Y value tick mark and its label.
+These can appear on the left of the graph, right of the graph, along the
+Y axis (even if it is in the middle somewhere), on both sides, or nowhere,
+as set with <xref linkend="SetYTickPos"/> and
+<xref linkend="SetYTickLabelPos"/>.
+Called by <xref linkend="DrawYTicks"/>.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="DrawYTicks" xreflabel="DrawYTicks">DrawYTicks()</term>
+  <listitem>
+    <para>
+Draws the horizontal grid lines, the tick marks, and tick labels.
+Unlike <xref linkend="DrawXTicks"/>, this uses another function
+<xref linkend="DrawYTick"/> to draw each tick mark and its label.
+Called by <xref linkend="DrawYAxis"/>.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="DrawYTitle" xreflabel="DrawYTitle">DrawYTitle()</term>
+  <listitem>
+    <para>
+Draws the Y axis title. There can be zero, one, or two of them depending on
+the position parameter specified in <xref linkend="SetYTitle"/>.
+Calls <xref linkend="DrawText"/> to actually draw the title(s).
+Called by <xref linkend="DrawGraph"/>.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="FindDataLimits" xreflabel="FindDataLimits">FindDataLimits()</term>
+  <listitem>
+    <para>
+Finds the limits of the data. Using the data_type and the data array, it
+goes through the points and determines the minumum and maximum X and Y
+values. It stores the min and max Y values for each row (plot line) in the
+data array using the special index values MINY (-1) and MAXY (-2).
+It also stores the overall min and max X and Y values as min_x, max_x,
+min_y, and max_y.
+It also stores the length of the longest data label in max_t.
+Called as necessary by <xref linkend="SetPlotAreaWorld"/>, <xref linkend="SetXTickIncrement"/>,
+<xref linkend="SetYTickIncrement"/>, and <xref linkend="DrawGraph"/> with a flag (data_limits_done) used to 
+ensure it is only called once per call to <xref linkend="SetDataValues"/>.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="FormatLabel" xreflabel="FormatLabel">FormatLabel($which_pos, $which_lab)</term>
+  <listitem>
+    <para>
+Formats a value for use as a tick or data label. This implements the format
+type selected with
+<xref linkend="SetXLabelType"/> and <xref linkend="SetYLabelType"/>.
+By default it returns the value as-is, or it can format it as a floating
+point number or date/time value.
+Called by several functions that need to format label values.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="number_format" xreflabel="number_format">number_format($number, $decimals=0)</term>
+  <listitem>
+    <para>
+Formats a floating point number, like PHP's number_format(), inserting
+a decimal separator and thousands groups separators. Unlike the PHP
+function, this uses variables in the PHPlot class to select the separators.
+The separators can be set with <xref linkend="SetNumberFormat"/>, or by
+default PHPlot will attempt to get locale-specific values.
+For example, 1234+(56/100) will be returned as "1,234.56" if the locale is
+"en_US", and as "1.234,56" if the locale is "de_DE".
+As a fall-back, if locale information is not available, '.' is used for
+decimal point, and ',' for thousands separator. This fall-back is equivalent
+to the behavior in PHPlot 5.0rc3 and earlier.
+This is used by <xref linkend="FormatLabel"/> when the formatting type is
+'data', and also for the pie chart labels in <xref linkend="DrawPieChart"/>.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="PadArrays" xreflabel="PadArrays">PadArrays()</term>
+  <listitem>
+    <para>
+Pads the style arrays (line_widths, line_styles, data_colors, etc.) so they
+are all large enough to contain an entry for each data set or plot line.
+This uses <xref linkend="array_pad_array"/>.
+Called by <xref linkend="DrawGraph"/> before drawing anything.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="PrintError" xreflabel="PrintError">PrintError($error_message)</term>
+  <listitem>
+    <para>
+Prints the given error message to stdout, then exits the script.
+This is used for fatal errors that preclude creating an image with the
+error message using <xref linkend="DrawError"/>.
+This is used for serious errors, such as failure to create an image
+(perhaps due to insufficient memory), and some programming errors such as
+invalid image type.
+This is also called by <xref linkend="DrawError"/> if there is no image
+resource to draw into.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="SetDashedStyle" xreflabel="SetDashedStyle">SetDashedStyle($which_ndxcol)</term>
+  <listitem>
+    <para>
+Sets the GD line style to select a dashed line, in preparation for drawing
+a dashed line.  To understand how this works, it helps to look at the
+documentation for the PHP GD function ImageSetStyle() and also refer to
+<xref linkend="SetDefaultDashedStyle"/>. GD expects a line style to be
+specified as an array of pixel values, which is awkward to deal with.
+PHPlot uses a shorthand notation with integer values indicating pairs of
+the number of color, then transparent pixels.
+SetDefaultDashedStyle creates a string of PHP code to generate an array
+of pixel values the way GD wants them, but defers filling in the
+exact color to use. SetDashedStyle evaluates this string with
+$which_ndx_color set to the color to use for the current line.
+The result is an array of pixel values for GD's ImageSetStyle.
+Called by <xref linkend="DrawXTicks"/> and <xref linkend="DrawYTicks"/>
+if a dashed grid is selected, as well as other line drawing functions
+such as <xref linkend="DrawLines"/> if dashed lines are used.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="SetDefaultFonts" xreflabel="SetDefaultFonts">SetDefaultFonts()</term>
+  <listitem>
+    <para>
+Selects all the default font values and sizes. See <xref linkend="SetFont"/>
+for details of the font element names and default values.
+Called by <xref linkend="PHPlot"/>, the class constructor, to initialize
+fonts in the plot object, and by <xref linkend="SetUseTTF"/> to restore the
+defaults when changing from or to TrueType font usage.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="SetDefaultStyles" xreflabel="SetDefaultStyles">SetDefaultStyles()</term>
+  <listitem>
+    <para>
+Initializes default colors and styles for PHPlot objects. Mostly this calls
+the public member functions such as <xref linkend="SetDataColors"/> but
+without specifying an array of colors, which causes the member functions
+to select default values.
+Called by <xref linkend="PHPlot"/>, the class constructor, to initialize
+the plot object.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="SetIndexColor" xreflabel="SetIndexColor">SetIndexColor($which_color)</term>
+  <listitem>
+    <para>
+Give a color specification (by name, hex RGB value, or r,g,b array - see
+<xref linkend="SetRGBColor"/>) returns a color index to be used in GD
+drawing functions. The color is the exact color requested if it already
+exists in the image, or if the image color palette has room for a new color.
+If not, the closest existing color will be used instead.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="SetIndexDarkColor" xreflabel="SetIndexDarkColor">SetIndexDarkColor($which_color)</term>
+  <listitem>
+    <para>
+Give a color specification (by name, hex RGB value, or r,g,b array - see
+<xref linkend="SetRGBColor"/>) returns an index for a 'slightly darker' color
+The index can be used in GD drawing functions.
+The method used is to subtract 48 from each red, green, and blue component
+(without letting any go negative).
+This is used for shadow colors (for example, in bar charts and pie charts).
+The same method as in <xref linkend="SetIndexColor"/> is used to select a
+color index.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="SetRGBColor" xreflabel="SetRGBColor">SetRGBColor($color_asked)</term>
+  <listitem>
+    <para>
+Converts a general color specification into a (red, green, blue) triplet
+where each color component value is an integer in the range 0-255.
+This accepts color names (which must be found in the color table set with
+<xref linkend="SetRGBArray"/>), a hexadecimal color specification in
+the form #RRGGBB, or an array of (red, green, blue) 0-255 integer values.
+This is used by mainly by <xref linkend="SetIndexColor"/>, and indirectly
+by all functions that accept a color specification.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="tile_img" xreflabel="tile_img">tile_img($file, $xorig, $yorig, $width, $height, $mode)</term>
+  <listitem>
+    <para>
+Tiles an image file over another the current plot image.
+$file is the filename of the image to use as the tile.
+($xorig, $yorig) are the origin point for the tiling,
+and ($width, $height) are the area to be tiled. These are used to tile just
+under the plot area versus the entire image. The $mode can be
+'centeredtile', 'tile', or 'scale'. Scale mode scales the source image to
+fit the target area. Tile and centertile modes repeat the source image as
+needed to fit into the target area; the difference is that centertile
+offsets the tile start position by half its size, which works better for
+some tiles.
+Called by
+<xref linkend="DrawBackground"/> and <xref linkend="DrawPlotAreaBackground"/>
+if an image file is selected for the plot area or overall background.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="TTFBBoxSize" xreflabel="TTFBBoxSize">TTFBBoxSize($size, $angle, $font, $string)</term>
+  <listitem>
+    <para>
+Calculates the size of the box which encloses the
+text string $string using TrueType font $font, angle $angle and size $size.
+This is the horizontal width and vertical height - that is, the dimensions
+of a box with sides parallel to the X and Y axes which encloses the text.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="xtr" xreflabel="xtr">xtr($x_world)</term>
+  <listitem>
+    <para>
+Translates an X world coordinate value into a pixel coordinate value.
+This uses the scale and translation set up by <xref linkend="CalcTranslation"/>.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="ytr" xreflabel="ytr">ytr($y_world)</term>
+  <listitem>
+    <para>
+Translates a Y world coordinate value into a pixel coordinate value.
+This uses the scale and translation set up by <xref linkend="CalcTranslation"/>.
+    </para>
+  </listitem>
+</varlistentry>
+</variablelist>
+
+</chapter>
+</part>
