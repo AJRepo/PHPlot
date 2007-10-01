@@ -34,7 +34,7 @@ MAIN=main.xml
 # List of all source files:
 SRC=$(MAIN) $(XSL_HTML) \
   reference.xml install.xml quickstart.xml \
-  concepts.xml examples.xml functions.xml changelog.xml
+  concepts.xml examples.xml functions.xml changelog.xml developer.xml
 
 # Files to add to release, in addition to *.html files:
 ALSO=phplotdoc.css
@@ -101,10 +101,11 @@ allclean: clean
 	-rm -f $(EXAMPLES_IMAGES)
 
 # Make a release of the HTML documentation only:
+# This assumes certain extensions in images/ (only *.png) and examples/
 release: html
-	mkdir $(RELEASE) $(RELEASE)/examples
+	mkdir $(RELEASE) $(RELEASE)/images $(RELEASE)/examples
 	cp *.html $(ALSO) $(RELEASE)
-	cp -a images $(RELEASE)/images
+	cp images/*.png $(RELEASE)/images
 	cp examples/*.png $(RELEASE)/examples
 	zip -r $(RELEASE).zip $(RELEASE)
 	rm -rf $(RELEASE)
@@ -112,7 +113,6 @@ release: html
 
 # Make a source release:
 # This assumes certain extensions in images/ (only *.png) and examples/
-# It won't work if the example sources are in RCS.
 dist: $(RELFILES)
 	mkdir $(RELEASE) $(RELEASE)/images $(RELEASE)/examples
 	cp $(RELFILES) $(RELEASE)
