@@ -4,6 +4,12 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2007-09-30
+   * New Part III - PHPlot Developer's Guide. This includes two layout figures
+     (overall plot, and legend), and a list of internal functions. This
+     idea for this material comes from the documentation released with
+     PHPlot-5.0rc2 and earlier, but has been redone from scratch.
+
 2007-09-08
    * Removed use of reference assignment ($p =& new PHPlot())
      in all inline examples, external examples, and reference material when
