@@ -13,7 +13,7 @@ distribution.)
 
 <variablelist>
   <varlistentry>
-    <term>Pending (2007-08-04 - 2007-09-08)</term>
+    <term>Pending (2007-08-04 - 2007-09-30)</term>
     <listitem>
       <para>
 Added documentation for new function SetLegendStyle.
@@ -26,6 +26,12 @@ explaining why.
       </para>
       <para>
 Added documentation for new function SetNumberFormat.
+      </para>
+      <para>
+Added new Part III - PHPlot Developer's Guide. This includes two layout figures
+and a list of internal functions. This is mostly intended as reference
+material for maintainers of PHPlot, but may be of use to others as well.
+More text may be added to this part in the future.
       </para>
     </listitem>
   </varlistentry>
