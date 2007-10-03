@@ -958,9 +958,18 @@ $plot-&gt;SetDrawXDataLabelLines(<parameter>$dxdl</parameter>)
   <refsect1>
     <title>Description</title>
     <para>
-<function>SetDrawXDataLabelLines</function> enables drawing of data label
-lines from the X axis up to the data point. To use data label lines, you
-generally want to turn off ticks, tick labels, and X grid.
+<function>SetDrawXDataLabelLines</function> enables drawing of data label lines.
+Data label lines are vertical lines drawn from the X data label positions
+to the data points. In the usual case, with the X axis at the bottom of the
+plot and the data labels just below the X axis, the data label lines would be
+drawn up from the X axis to the data points. Depending on the data label
+locations set with <xref linkend="SetXDataLabelPos"/>, the lines would be
+drawn down or up (or both, or neither) from the data points to the bottom
+or top of the plot area.
+    </para>
+    <para>
+To use data label lines, you generally want to turn off ticks, tick labels,
+and the X grid lines.
     </para>
   </refsect1>
 
