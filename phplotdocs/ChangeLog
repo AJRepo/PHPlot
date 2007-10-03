@@ -4,6 +4,12 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2007-10-01
+   * Fix reference for SetDrawXDataLabelLines. It said the lines go up from
+     the X axis to the points, but that is only the most usual case. In fact
+     they can go up or down or both, and not to the X axis but to the plot
+     area edges.
+ 
 2007-09-30
    * New Part III - PHPlot Developer's Guide. This includes two layout figures
      (overall plot, and legend), and a list of internal functions. This
