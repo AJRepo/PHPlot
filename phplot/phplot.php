@@ -13,15 +13,6 @@
  * Requires PHP 4.3.0 or later
  */
 
-if (! defined(__FUNCTION__))
-    define(__FUNCTION__, '__FUNCTION__ Requires at least PHP 4.3.0.');
-
-define ('MINY', -1);        // Indexes in $data (for DrawXDataLine())
-define ('MAXY', -2);
-define ('TOTY', -3);
-
-error_reporting(E_ALL);
-
 class PHPlot {
 
     /* I have removed internal variable declarations, some isset() checking was required,
@@ -1945,8 +1936,9 @@ class PHPlot {
                 $this->PrintError("FindDataLimits(): Unknown data type '$this->data_type'.");
             break;
             }
-            $this->data[$i][MINY] = $miny;      // This row's min Y, for DrawXDataLine()
-            $this->data[$i][MAXY] = $maxy;      // This row's max Y, for DrawXDataLine()
+            // Remember this row's min and max Y values:
+            $this->data_miny[$i] = $miny;
+            $this->data_maxy[$i] = $maxy;
 
             if ($miny < $minminy) $minminy = $miny;   // global min
             if ($maxy > $maxmaxy) $maxmaxy = $maxy;   // global max
@@ -3103,25 +3095,18 @@ class PHPlot {
         if ($this->x_data_label_pos == 'both') {
             ImageLine($this->img, $xpos, $this->plot_area[3], $xpos, $this->plot_area[1], $style);
         }
-        // Lines coming from the bottom of the plot
+        // Lines from the bottom of the plot up to the max Y value at this X:
         else if ($this->x_data_label_pos == 'plotdown') {
-            // See FindDataLimits() to see why 'MAXY' index.
-            $ypos = $this->ytr($this->data[$row][MAXY]);
+            $ypos = $this->ytr($this->data_maxy[$row]);
             ImageLine($this->img, $xpos, $ypos, $xpos, $this->plot_area[3], $style);
         }
-        // Lines coming from the top of the plot
+        // Lines from the top of the plot down to the min Y value at this X:
         else if ($this->x_data_label_pos == 'plotup') {
-            // See FindDataLimits() to see why 'MINY' index.
-            $ypos = $this->ytr($this->data[$row][MINY]);
+            $ypos = $this->ytr($this->data_miny[$row]);
             ImageLine($this->img, $xpos, $this->plot_area[1], $xpos, $ypos, $style);
         }
     }
 
-/*
-    function DrawPlotLabel($xlab, $xpos, $ypos)
-    {
-        $this->DrawText($this->x_label_font, $this->x_label_angle, $xpos, $this
-*/
 
     /*!
      * Draws the graph legend
@@ -3495,7 +3480,7 @@ class PHPlot {
         /*
         // TODO: add a parameter to show datalabels next to error bars?
         // something like this:
-        if ($this->x_data_label_pos == 'plot') {
+        if ($this->x_data_label_pos == 'plot')
             $this->DrawText($this->error_font, 90, $x1, $y2,
                             $color, $label, 'center', 'top');
         */
