@@ -2,6 +2,25 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2007-10-09 (lbayuk)
+    * Code cleanup, array padding: Get rid of functions outside the class
+      and remove the interim fix for PHP 5 (which changed the behavior of
+      array_merge).  Rewrote external function array_pad_array() as a new
+      class function pad_array().  It does not need access to the class,
+      but I don't think PHPlot should add to the global namespace more
+      than necessary.  The third argument (array to use for padding) was
+      never used, so it was removed. It always pads the array with itself.
+      It now only works on 'usual integer indexed' arrays (0-based
+      sequential integer index). The was previously required but
+      undocumented for some of the arrays (like line_widths); now it is
+      required for all style arrays and will be documented. Now we can pad
+      the array to the required length, not just N times its previous
+      length, and we don't need array_merge.  Deleted external function
+      array_merge_php4() as it is no longer used.
+
+      Deleted PHP end marker ?>. You don't need this and it can cause
+      problems with extra whitespace in your output.
+
 2007-09-24 (lbayuk)
     * Code cleanup: Fix ternary operator misuse.  This doesn't change
       behavior, but it was annoying me so I fixed it.
