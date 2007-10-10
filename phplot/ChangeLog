@@ -3,6 +3,15 @@ The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
 2007-10-09 (lbayuk)
+    * Code cleanup: Simplify SetIndexColor() and SetIndexDarkColor().
+      There is no need to first try ImageColorExact, then ImageColorResolve
+      if that fails. ImageColorResolve does all that for us.
+
+      Code cleanup: Rewrite SetRGBColor(). It now detects if an unrecognized
+      color name or color value form is used, and draws an error message.
+      Before this it would get a PHP index error and "headers already sent"
+      condition.
+
     * Code cleanup: Remove duplicated code for loading image files.
       Added new class-private function GetImage() which loads an image based
       on the image type, and also returns the image size. This replaces
