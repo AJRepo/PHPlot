@@ -1669,9 +1669,9 @@ class PHPlot {
         $pt = count($this->point_shapes);
 
         if ($ps < $pt) {
-            array_pad_array($this->point_sizes, $pt);
+            $this->pad_array($this->point_sizes, $pt);
         } else if ($pt > $ps) {
-            array_pad_array($this->point_shapes, $ps);
+            $this->pad_array($this->point_shapes, $ps);
         }
         return TRUE;
     }
@@ -1698,9 +1698,9 @@ class PHPlot {
         $pt = count($this->point_shapes);
 
         if ($ps < $pt) {
-            array_pad_array($this->point_sizes, $pt);
+            $this->pad_array($this->point_sizes, $pt);
         } else if ($pt > $ps) {
-            array_pad_array($this->point_shapes, $ps);
+            $this->pad_array($this->point_shapes, $ps);
         }
 
         // Fix odd point sizes for point shapes which need it
@@ -1778,18 +1778,36 @@ class PHPlot {
      */
     function PadArrays()
     {
-        array_pad_array($this->line_widths, $this->records_per_group);
-        array_pad_array($this->line_styles, $this->records_per_group);
+        $this->pad_array($this->line_widths, $this->records_per_group);
+        $this->pad_array($this->line_styles, $this->records_per_group);
 
-        array_pad_array($this->data_colors, $this->records_per_group);
-        array_pad_array($this->data_border_colors, $this->records_per_group);
-        array_pad_array($this->error_bar_colors, $this->records_per_group);
+        $this->pad_array($this->data_colors, $this->records_per_group);
+        $this->pad_array($this->data_border_colors, $this->records_per_group);
+        $this->pad_array($this->error_bar_colors, $this->records_per_group);
 
         $this->SetDataColors();
         $this->SetDataBorderColors();
         $this->SetErrorBarColors();
 
         return TRUE;
+    }
+
+    /*!
+     * Pads an array with itself. This only works on 0-based sequential integer indexed arrays.
+     *  \param arr array  Original array (reference), or scalar.
+     *  \param size int   Minimum size of the resulting array.
+     * If $arr is a scalar, it will be converted first to a single element array.
+     * If $arr has at least $size elements, it is unchanged.
+     * Otherwise, append elements of $arr to itself until it reaches $size elements.
+     */
+    function pad_array(&$arr, $size)
+    {
+        if (! is_array($arr)) {
+            $arr = array($arr);
+        }
+        $n = count($arr);
+        $base = 0;
+        while ($n < $size) $arr[$n++] = $arr[$base++];
     }
 
     /*
@@ -4555,52 +4573,3 @@ class PHPlot {
         return TRUE;
     }
 }  // class PHPlot
-
-
-
-////////////////////////
-
-
-/*!
- * Pads an array with another or with itself.
- *  \param arr array  Original array (reference)
- *  \param size int   Size of the resulting array.
- *  \param arr2 array If specified, array to use for padding. If unspecified, pad with $arr.
- */
-function array_pad_array(&$arr, $size, $arr2=NULL)
-{
-    if (! is_array($arr2)) {
-        $arr2 = $arr;                           // copy the original array
-    }
-    while (count($arr) < $size)
-        $arr = array_merge_php4($arr, $arr2);        // append until done
-}
-
-/*!
- * Fixes problem with array_merge() in PHP5.
- * \note I simply copied this from a bug report. I am not running php5 yet, so
- *       I cannot reproduce it, which is why I trust the reporter.
- */
-function array_merge_php4($array1,$array2)
-{
-    $return=array();
-
-    foreach(func_get_args() as $arg){
-        if(!is_array($arg)){
-        $arg=array($arg);
-        }
-        foreach($arg as $key=>$val){
-            if(!is_int($key)){
-                $return[$key]=$val;
-            }else{
-                $return[]=$val;
-            }
-        }
-    }
-    return $return;
- }
-
-
-
-
-?>
