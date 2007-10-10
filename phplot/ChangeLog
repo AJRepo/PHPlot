@@ -3,6 +3,14 @@ The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
 2007-10-09 (lbayuk)
+    * Code cleanup: Remove duplicated code for loading image files.
+      Added new class-private function GetImage() which loads an image based
+      on the image type, and also returns the image size. This replaces
+      duplicated code in tile_img() and SetInputFile().
+      Also fixed comment at top of SetImageFile which said it was deprecated.
+      It isn't - it is used by the constructor. Moved the function out of the
+      'deprecated' area up to below where it is used.
+
     * Code cleanup: PHPlot should not define or affect anything outside its
       own class.
       - Removed the check for __FUNCTION__ (PHP 4.3 and up). This is obsolete.
