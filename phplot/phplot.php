@@ -297,12 +297,7 @@ class PHPlot {
     function SetIndexColor($which_color)
     {
         list ($r, $g, $b) = $this->SetRGBColor($which_color);  //Translate to RGB
-        $index = ImageColorExact($this->img, $r, $g, $b);
-        if ($index == -1) {
-            return ImageColorResolve($this->img, $r, $g, $b);
-        } else {
-            return $index;
-        }
+        return ImageColorResolve($this->img, $r, $g, $b);
     }
 
 
@@ -315,13 +310,7 @@ class PHPlot {
         $r = max(0, $r - 0x30);
         $g = max(0, $g - 0x30);
         $b = max(0, $b - 0x30);
-
-        $index = ImageColorExact($this->img, $r, $g, $b);
-        if ($index == -1) {
-            return ImageColorResolve($this->img, $r, $g, $b);
-        } else {
-            return $index;
-        }
+        return ImageColorResolve($this->img, $r, $g, $b);
     }
 
     /*!
@@ -540,17 +529,19 @@ class PHPlot {
      */
     function SetRGBColor($color_asked)
     {
-        if ($color_asked == '') { $color_asked = array(0, 0, 0); };
+        if (empty($color_asked)) {
+            $ret_val = array(0, 0, 0);
+        } elseif (count($color_asked) == 3 ) {    // already array of 3 rgb
+            $ret_val = $color_asked;
+        } elseif ($color_asked[0] == '#') {       // Hex RGB notation #RRGGBB
+            $ret_val = array(hexdec(substr($color_asked, 1, 2)),
+                             hexdec(substr($color_asked, 3, 2)),
+                             hexdec(substr($color_asked, 5, 2)));
 
-        if ( count($color_asked) == 3 ) {    // already array of 3 rgb
-               $ret_val =  $color_asked;
-        } else {                             // asking for a color by string
-            if(substr($color_asked, 0, 1) == '#') {         // asking in #FFFFFF format.
-                $ret_val = array(hexdec(substr($color_asked, 1, 2)), hexdec(substr($color_asked, 3, 2)),
-                                  hexdec(substr($color_asked, 5, 2)));
-            } else {                                        // asking by color name
-                $ret_val = $this->rgb_array[$color_asked];
-            }
+        } elseif (isset($this->rgb_array[$color_asked])) {  // Color by name
+            $ret_val = $this->rgb_array[$color_asked];
+        } else {
+            $this->DrawError("SetRGBColor(): Color '$color_asked' is not valid.");
         }
         return $ret_val;
     }
