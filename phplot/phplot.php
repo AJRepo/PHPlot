@@ -222,6 +222,68 @@ class PHPlot {
         $this->print_image = TRUE;      // Use for multiple plots per image (TODO: automatic)
     }
 
+    /*!
+     * Reads an image file. Stores width and height, and returns the image
+     * resource. On error, calls PrintError and returns False.
+     * This is used by the constructor via SetInputFile, and by tile_img().
+     */
+    function GetImage($image_filename, &$width, &$height)
+    {
+        $error = '';
+        $size = getimagesize($image_filename);
+        if (!$size) {
+            $error = "Unable to query image file $image_filename";
+        } else {
+            $image_type = $size[2];
+            switch($image_type) {
+            case IMAGETYPE_GIF:
+                $img = @ ImageCreateFromGIF ($image_filename);
+                break;
+            case IMAGETYPE_PNG:
+                $img = @ ImageCreateFromPNG ($image_filename);
+                break;
+            case IMAGETYPE_JPEG:
+                $img = @ ImageCreateFromJPEG ($image_filename);
+                break;
+            default:
+                $error = "Unknown image type ($image_type) for image file $image_filename";
+                break;
+            }
+        }
+        if (empty($error) && !$img) {
+            # getimagesize is OK, but GD won't read it. Maybe unsupported format.
+            $error = "Failed to read image file $image_filename";
+        }
+        if (!empty($error)) {
+            $this->PrintError($error);
+        }
+        $width = $size[0];
+        $height = $size[1];
+        return $img;
+    }
+
+    /*!
+     * Selects an input file to be used as background for the whole graph.
+     * This resets the graph size to the image's size.
+     * Note: This is used by the constructor. It is deprecated for direct use.
+     */
+    function SetInputFile($which_input_file)
+    {
+        $im = $this->GetImage($which_input_file, $this->image_width, $this->image_height);
+        if (!$im)
+            return FALSE;  // GetImage already produced an error message.
+
+        // Deallocate any resources previously allocated
+        if (isset($this->img))
+            imagedestroy($this->img);
+
+        $this->img = $im;
+
+        // Do not overwrite the input file with the background color.
+        $this->background_done = TRUE;
+
+        return TRUE;
+    }
 
 /////////////////////////////////////////////
 //////////////                         COLORS
@@ -2569,44 +2631,16 @@ class PHPlot {
      */
     function tile_img($file, $xorig, $yorig, $width, $height, $mode)
     {
-        $size = getimagesize($file);
-        $input_format = $size[2];
-
-        switch($input_format) {
-        case 1:
-            $im = @ imagecreatefromGIF ($file);
-            if (! $im) {
-                $this->PrintError("tile_img:() Unable to open $file as a GIF.");
-                return FALSE;
-            }
-            break;
-        case 2:
-            $im = @ imagecreatefromJPEG ($file);
-            if (! $im) {
-                $this->PrintError("tile_img(): Unable to open $file as a JPG.");
-                return FALSE;
-            }
-            break;
-        case 3:
-            $im = @ imagecreatefromPNG ($file);
-            if (! $im) {
-                $this->PrintError("tile_img(): Unable to open $file as a PNG.");
-                return FALSE;
-            }
-            break;
-        default:
-            $this->PrintError('tile_img(): Please select a gif, jpg, or png image.');
-            return FALSE;
-            break;
-        }
-
+        $im = $this->GetImage($file, $tile_width, $tile_height);
+        if (!$im)
+            return FALSE;  // GetImage already produced an error message.
 
         if ($mode == 'scale') {
-            imagecopyresized($this->img, $im, $xorig, $yorig, 0, 0, $width, $height, $size[0],$size[1]);
+            imagecopyresized($this->img, $im, $xorig, $yorig, 0, 0, $width, $height, $tile_width, $tile_height);
             return TRUE;
         } else if ($mode == 'centeredtile') {
-            $x0 = - floor($size[0]/2);   // Make the tile look better
-            $y0 = - floor($size[1]/2);
+            $x0 = - floor($tile_width/2);   // Make the tile look better
+            $y0 = - floor($tile_height/2);
         } else if ($mode = 'tile') {
             $x0 = 0;
             $y0 = 0;
@@ -2619,9 +2653,9 @@ class PHPlot {
         if (! $tmp)
             $this->PrintError('tile_img(): Could not create image resource.');
 
-        for ($x = $x0; $x < $width; $x += $size[0])
-            for ($y = $y0; $y < $height; $y += $size[1])
-                imagecopy($tmp, $im, $x, $y, 0, 0, $size[0], $size[1]);
+        for ($x = $x0; $x < $width; $x += $tile_width)
+            for ($y = $y0; $y < $height; $y += $tile_height)
+                imagecopy($tmp, $im, $x, $y, 0, 0, $tile_width, $tile_height);
 
         // Copy the temporal image onto the final one.
         imagecopy($this->img, $tmp, $xorig, $yorig, 0,0, $width, $height);
@@ -4484,61 +4518,6 @@ class PHPlot {
         ImageSetStyle($this->img, $style);
         ImageLine($this->img, $x1, $y1, $x2, $y2, IMG_COLOR_STYLED);
     }
-
-    /*!
-     * \deprecated Selects an input file to be used as background for the whole graph.
-     * This resizes the graph to the image's size.
-     */
-    function SetInputFile($which_input_file)
-    {
-        $size = GetImageSize($which_input_file);
-        $input_type = $size[2];
-
-        switch($input_type) {
-        case 1:
-            $im = @ ImageCreateFromGIF ($which_input_file);
-            if (!$im) { // See if it failed
-                $this->PrintError("Unable to open $which_input_file as a GIF");
-                return FALSE;
-            }
-        break;
-        case 3:
-            $im = @ ImageCreateFromPNG ($which_input_file);
-            if (!$im) { // See if it failed
-                $this->PrintError("Unable to open $which_input_file as a PNG");
-                return FALSE;
-            }
-        break;
-        case 2:
-            $im = @ ImageCreateFromJPEG ($which_input_file);
-            if (!$im) { // See if it failed
-                $this->PrintError("Unable to open $which_input_file as a JPG");
-                return FALSE;
-            }
-        break;
-        default:
-            $this->PrintError('SetInputFile(): Please select gif, jpg, or png for image type!');
-            return FALSE;
-        break;
-        }
-
-        // Set Width and Height of Image
-        $this->image_width = $size[0];
-        $this->image_height = $size[1];
-
-        // Deallocate any resources previously allocated
-        if (isset($this->img))
-            imagedestroy($this->img);
-
-        $this->img = $im;
-
-        // Do not overwrite the input file with the background color.
-        $this->background_done = TRUE;
-
-        return TRUE;
-
-    }
-
 
     /*
      * \deprecated Use SetPointShapes().
