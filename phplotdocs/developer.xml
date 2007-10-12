@@ -79,13 +79,7 @@ intended to be used only by PHPlot itself.
   <term id="array_merge_php4" xreflabel="array_merge_php4">array_merge_php4($array1,$array2)</term>
   <listitem>
     <para>
-This is not a member function in the PHPlot class. It emulates the
-behavior of the PHP array_merge() function as it existed in PHP4, not PHP5.
-Starting with PHP5, array_merge() only accepts array arguments. PHPlot
-depends on the old behavior, to merge array and non-array arguments
-(which are treated as an array with one element). Therefore
-array_merge_php4() is used when this behavior is needed.
-This function is only used by <xref linkend="array_pad_array"/>.
+This non-member function was removed after PHPlot-5.0rc3.
     </para>
   </listitem>
 </varlistentry>
@@ -94,12 +88,8 @@ This function is only used by <xref linkend="array_pad_array"/>.
   <term id="array_pad_array" xreflabel="array_pad_array">array_pad_array(&amp;$arr, $size, $arr2=NULL)</term>
   <listitem>
     <para>
-This is not a member function in the PHPlot class. Its purpose is to resize
-the array $arr to have $size elements. This is used for example to make
-sure there are enough data colors in the data colors array to have one
-color per plot line. It does this by appending a copy of the original array
-(or $arr2 if provided, but it never is) onto the result array $arr until
-the size equals or exceeds $size.
+This non-member function was removed after PHPlot-5.0rc3 and replaced with
+the class member function <xref linkend="pad_array"/>.
     </para>
   </listitem>
 </varlistentry>
@@ -537,7 +527,7 @@ Called by <xref linkend="DrawGraph"/>.
   <listitem>
     <para>
 Finds the limits of the data. Using the data_type and the data array, it
-goes through the points and determines the minumum and maximum X and Y
+goes through the points and determines the minimum and maximum X and Y
 values. It stores the min and max Y values for each row (plot line) in the
 data array using the special index values MINY (-1) and MAXY (-2).
 It also stores the overall min and max X and Y values as min_x, max_x,
@@ -565,6 +555,23 @@ Called by several functions that need to format label values.
 </varlistentry>
 
 <varlistentry>
+  <term id="GetImage" xreflabel="GetImage">GetImage($image_filename, &amp;$width, &amp;$height)</term>
+  <listitem>
+    <para>
+Reads an image file from $image_filename, stores the width and height
+(in pixels) in the $width and $height reference arguments, and returns
+a PHP GD image resource of the image.
+This is used by <xref linkend="SetInputFile"/> and <xref linkend="tile_img"/>.
+Errors go to <xref linkend="PrintError"/>; there is no way for the script
+to recover. Possible errors include an image file type which is unsupported
+by PHP GD, or a corrupt image file.
+Note: This was added after PHPlot-5.0rc3, by moving common code from the
+two calling functions.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
   <term id="number_format" xreflabel="number_format">number_format($number, $decimals=0)</term>
   <listitem>
     <para>
@@ -585,12 +592,29 @@ This is used by <xref linkend="FormatLabel"/> when the formatting type is
 </varlistentry>
 
 <varlistentry>
+  <term id="pad_array" xreflabel="pad_array">pad_array(&amp;$arr, $size)</term>
+  <listitem>
+    <para>
+Pads an array $arr with copies of itself until it reaches the given size.
+If $arr is a scalar, it will first be converted to an array with one
+element. Then, if $arr has fewer than $size elements, elements of $arr
+starting from the first will be appended until it reaches $size elements.
+This only works on zero-based sequential integer indexed arrays.
+Called by <xref linkend="PadArrays"/>, <xref linkend="SetPointShapes"/>,
+and <xref linkend="SetPointSizes"/>.
+This replaced <xref linkend="array_pad_array"/> after PHPlot-5.0rc3,
+however that had an unused 3rd argument, and worked on general indexed arrays.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
   <term id="PadArrays" xreflabel="PadArrays">PadArrays()</term>
   <listitem>
     <para>
 Pads the style arrays (line_widths, line_styles, data_colors, etc.) so they
 are all large enough to contain an entry for each data set or plot line.
-This uses <xref linkend="array_pad_array"/>.
+This uses <xref linkend="pad_array"/>.
 Called by <xref linkend="DrawGraph"/> before drawing anything.
     </para>
   </listitem>
@@ -687,6 +711,24 @@ The method used is to subtract 48 from each red, green, and blue component
 This is used for shadow colors (for example, in bar charts and pie charts).
 The same method as in <xref linkend="SetIndexColor"/> is used to select a
 color index.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="SetInputFile" xreflabel="SetInputFile">SetInputFile($which_input_file)</term>
+  <listitem>
+    <para>
+Sets an image file $which_input_file to be used as the background image for
+the graph. Also resets the graph size to the size of the image file.
+This is used by the constructor, <xref linkend="PHPlot"/>.
+Note: In earlier releases, this was considered an externally available
+function. After a PHPlot object was created with the constructor,
+SetInputFile could be used to resize it and set the background image.
+Although this still works, it is deprecated. SetInputFile should be
+considered an internal-use-only function. Users should set the background
+image file using the 4th argument of <xref linkend="PHPlot"/> when
+creating an instance of the object.
     </para>
   </listitem>
 </varlistentry>
