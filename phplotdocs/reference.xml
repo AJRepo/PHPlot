@@ -404,6 +404,11 @@ See <xref linkend="conc-colors" /> for more on color values.
   <refsect1>
     <title>Notes</title>
     <para>
+If an array is used for <parameter>$border</parameter>, it
+must use zero based sequential integer indexes. This is what the PHP manual 
+calls 'the usual integer indices (starting from zero, increasing by one)'.
+    </para>
+    <para>
 If this function is never called, and <xref linkend="SetShading" /> is called
 to turn shading off, then all data borders are black.
     </para>
@@ -470,6 +475,11 @@ Use <xref linkend="SetDataBorderColors" /> instead.
 
   <refsect1>
     <title>Notes</title>
+    <para>
+If an array is used for <parameter>$data_colors</parameter>, it
+must use zero based sequential integer indexes. This is what the PHP manual 
+calls 'the usual integer indices (starting from zero, increasing by one)'.
+    </para>
     <para>
 Usually the <parameter>$data_colors</parameter> argument is an array of colors,
 one for each data set to be plotted. For example:
@@ -997,6 +1007,11 @@ bars, and stackedbars, because the data label line would be covered or
 obscured by the data.
     </para>
     <para>
+If a graph contains multiple data sets, data label lines drawn down will start
+at the maximum Y value for each X value. Data label lines drawn up will
+start at the minimum Y value for each X value.
+    </para>
+    <para>
 By default, data label lines are not drawn.
     </para>
   </refsect1>
@@ -1172,6 +1187,11 @@ See <xref linkend="conc-colors" /> for more on color values.
 
   <refsect1>
     <title>Notes</title>
+    <para>
+If an array is used for <parameter>$error_bar_colors</parameter>, it
+must use zero based sequential integer indexes. This is what the PHP manual 
+calls 'the usual integer indices (starting from zero, increasing by one)'.
+    </para>
     <para>
 The default array of error bar colors contains the same 8 colors as
 the data colors array:
@@ -2221,6 +2241,12 @@ legend, and stretches the color boxes accordingly.
     <para>
 The default line spacing is 4 pixels.
     </para>
+    <para>
+Line spacing must be set before setting titles. This is because a title's
+height is calculated when the title text is set. You cannot have different
+line spacing values for different titles. If you are using SetLineSpacing,
+you need to call it exactly once, before setting any title text.
+    </para>
   </refsect1>
 </refentry>
 
@@ -2266,6 +2292,11 @@ Or, a single value of 'solid' or 'dashed' to apply to all data sets.
 
   <refsect1>
     <title>Notes</title>
+    <para>
+If an array is used for <parameter>$ls</parameter>, it
+must use zero based sequential integer indexes. This is what the PHP manual 
+calls 'the usual integer indices (starting from zero, increasing by one)'.
+    </para>
     <para>
 The line style for dashed lines can be set with
 <xref linkend="SetDefaultDashedStyle" />.
@@ -2327,6 +2358,11 @@ Or, a single value to be used for all data sets.
 
   <refsect1>
     <title>Notes</title>
+    <para>
+If an array is used for <parameter>$lw</parameter>, it
+must use zero based sequential integer indexes. This is what the PHP manual 
+calls 'the usual integer indices (starting from zero, increasing by one)'.
+    </para>
     <para>
 By default, all data set plot lines are 1 pixel wide.
     </para>
@@ -2457,7 +2493,7 @@ label from the fraction part.
         <term><replaceable>$thousands_sep</replaceable></term>
         <listitem>
           <para>
-The character used as a thousands grouping separator (placed betwen every
+The character used as a thousands grouping separator (placed between every
 group of 3 digits left of the decimal point).
           </para>
         </listitem>
@@ -2482,12 +2518,12 @@ a period, and the default for thousands_sep is a comma.
     <para>
 If your system locale is set to "C" or "POSIX", you might find that there
 are no thousands separators in your formatted labels. This is the correct
-behavor for those locales. If you cannot select a more specific locale,
+behavior for those locales. If you cannot select a more specific locale,
 use <function>SetNumberFormat</function> to set the correct separators.
     </para>
     <para>
 If your PHP script is forcing a specific locale with setlocale(), PHPlot
-will probaby undo that because it uses setlocale(LC_ALL, '') to import locale
+will probably undo that because it uses setlocale(LC_ALL, '') to import locale
 information from the environment.  This is the only way to get at the
 environment locale settings, but it will override a forced locale in your
 script.
@@ -3208,6 +3244,11 @@ See <xref linkend="example-linepoints1" /> for a picture of the shapes.
   <refsect1>
     <title>Notes</title>
     <para>
+If an array is used for <parameter>$pt</parameter>, it
+must use zero based sequential integer indexes. This is what the PHP manual 
+calls 'the usual integer indices (starting from zero, increasing by one)'.
+    </para>
+    <para>
 This applies only to 'points' and 'linepoints' plot types.
     </para>
     <para>
@@ -3271,6 +3312,11 @@ data set in a plot.
 
   <refsect1>
     <title>Notes</title>
+    <para>
+If an array is used for <parameter>$ps</parameter>, it
+must use zero based sequential integer indexes. This is what the PHP manual 
+calls 'the usual integer indices (starting from zero, increasing by one)'.
+    </para>
     <para>
 This applies only to 'points' and 'linepoints' plot types.
     </para>
@@ -4309,6 +4355,11 @@ to prevent overlapping tick and data labels.
     <para>
 This applies only to data labels.
 For tick labels, see <xref linkend="SetXTickLabelPos" />.
+    </para>
+    <para>
+If X data lines are enabled with <xref linkend="SetDrawXDataLabelLines"/>,
+then SetXDataLabelPos() also determines the direction of the lines which
+are drawn from the data points.
     </para>
   </refsect1>
 </refentry>
