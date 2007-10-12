@@ -4,11 +4,30 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2007-10-11
+   * Updates for latest changes to CVS:
+     developer:
+     +  array_pad_array() and array_merge_php4() are removed.
+        Document new pad_array() which replaces these.
+     +  Document SetInputFile(). This was overlooked because it was in
+        the "Deprecated" section of the code, but it is used by the constructor.
+        It was only deprecated for direct external use.
+     +  Document new GetImage().
+
+     reference:
+     +  Document the requirement that style arrays use zero-based sequential
+        integer indexes only. This was previously an undocumented requirement
+        for some of them, but now it is required of all.
+     +  Document the requirement that SetLineSpacing() be called before
+        setting any title text, and not changed after.
+
 2007-10-01
    * Fix reference for SetDrawXDataLabelLines. It said the lines go up from
      the X axis to the points, but that is only the most usual case. In fact
      they can go up or down or both, and not to the X axis but to the plot
      area edges.
+     Also cross-reference back from SetXDataLabelPos, and explain what happens
+     to the data label lines when a plot has multiple data sets.
  
 2007-09-30
    * New Part III - PHPlot Developer's Guide. This includes two layout figures
