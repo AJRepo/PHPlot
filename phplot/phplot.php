@@ -937,17 +937,14 @@ class PHPlot {
 
             if ($which_valign == 'center')
                 $which_ypos += $size[1]/2;
-
-            if ($which_valign == 'bottom')
+            elseif ($which_valign == 'bottom')
                 $which_ypos += $size[1];
 
             if ($which_halign == 'center')
                 $which_xpos -= ($size[0]/2) * cos($rads);
-
-            if ($which_halign == 'left')
+            elseif ($which_halign == 'left')
                 $which_xpos += $size[0] * sin($rads);
-
-            if ($which_halign == 'right')
+            elseif ($which_halign == 'right')
                 $which_xpos -= $size[0] * cos($rads);
 
             ImageTTFText($this->img, $which_font['size'], $which_angle,
@@ -970,8 +967,9 @@ class PHPlot {
 
                 // Left alignment requires no modification to $xpos...
                 // Right-align it. $which_xpos designated the rightmost x coordinate.
-                else if ($which_halign == 'right')
-                    $which_xpos += ($nlines * ($which_font['height'] + $spacing));
+                elseif ($which_halign == 'right') {
+                    $which_xpos -= ($nlines * ($which_font['height'] + $spacing));
+                }
 
                 $ypos = $which_ypos;
                 for($i = 0; $i < $nlines; $i++) {
