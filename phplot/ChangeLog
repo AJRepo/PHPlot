@@ -2,6 +2,13 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2007-10-15 (lbayuk)
+    * Fix for bug 1813021: Miss-positioned right-justified vertical GD text.
+      Fixed DrawText() to correctly position 90 degree right-justified text
+      drawn in a fixed GD font. This could be seen with 90 degree Y tick
+      labels. (Found by accident while working on TrueType text problems.)
+      Also some code cleanup in DrawText: use elseif where appropriate.
+
 2007-10-09 (lbayuk)
     * Code cleanup: Simplify SetIndexColor() and SetIndexDarkColor().
       There is no need to first try ImageColorExact, then ImageColorResolve
