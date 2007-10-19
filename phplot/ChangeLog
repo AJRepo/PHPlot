@@ -2,6 +2,19 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2007-10-18 (lbayuk)
+    * Add callbacks - experimental feature:
+      New functions SetCallback, GetCallback, RemoveCallback.
+      New internal function DoCallback.
+      Added callback hooks to DrawGraph.
+
+      Re-arranged code in DrawGraph to bring pie chart drawing into the main
+      switch on plot type, rather than a special case in its own block. This
+      makes it easier to follow and easier to add callback hooks.
+
+    * Callbacks: New file, documentation for the new callbacks feature.
+      (This won't be in the manual while it is an experimental feature.)
+
 2007-10-15 (lbayuk)
     * Fix for bug 1813021: Miss-positioned right-justified vertical GD text.
       Fixed DrawText() to correctly position 90 degree right-justified text
