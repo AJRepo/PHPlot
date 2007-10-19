@@ -178,6 +178,18 @@ class PHPlot {
     var $draw_plot_area_background = FALSE;
     var $draw_broken_lines = FALSE;          // Tells not to draw lines for missing Y data.
 
+//Miscellaneous
+    var $callbacks = array(                  // Valid callback reasons (see SetCallBack)
+        'draw_setup' => NULL,
+        'draw_image_background' => NULL,
+        'draw_plotarea_background' => NULL,
+        'draw_titles' => NULL,
+        'draw_axes' => NULL,
+        'draw_graph' => NULL,
+        'draw_border' => NULL,
+        'draw_legend' => NULL,
+    );
+
 
 //////////////////////////////////////////////////////
 //BEGIN CODE
@@ -1876,6 +1888,68 @@ class PHPlot {
         }
         return number_format($number, $decimals, $this->decimal_point, $this->thousands_sep);
     }
+
+    /*
+     * Register a callback (hook) function
+     *   reason - A pre-defined name where a callback can be defined.
+     *   function - The name of a function to register for callback, or an instance/method
+     *      pair in an array (see 'callbacks' in the PHP reference manual).
+     *   arg - Optional argument to supply to the callback function when it is triggered.
+     *      (Often called "clientData")
+     * Returns: True if the callback reason is valid, else False.
+     */
+    function SetCallback($reason, $function, $arg = NULL)
+    {
+        // Use array_key_exists because valid reason keys have NULL as value.
+        if (!array_key_exists($reason, $this->callbacks))
+            return False;
+        $this->callbacks[$reason] = array($function, $arg);
+        return True;
+    }
+
+    /*
+     * Return the name of a function registered for callback. See SetCallBack.
+     *   reason - A pre-defined name where a callback can be defined.
+     * Returns the current callback function (name or array) for the given reason,
+     * or False if there was no active callback or the reason is not valid.
+     * Note you can safely test the return value with a simple 'if', as
+     * no valid function name evaluates to false.
+     */
+    function GetCallback($reason)
+    {
+        if (isset($this->callbacks[$reason]))
+            return $this->callbacks[$reason][0];
+        return False;
+    }
+
+    /*
+     * Un-register (remove) a function registered for callback.
+     *   reason - A pre-defined name where a callback can be defined.
+     * Returns: True if it was a valid callback reason, else False.
+     * Note: Returns True whether or not there was a callback registered.
+     */
+    function RemoveCallback($reason)
+    {
+        if (!array_key_exists($reason, $this->callbacks))
+            return False;
+        $this->callbacks[$reason] = NULL;
+        return True;
+    }
+
+    /*
+     * Invoke a callback, if one is registered.
+     * Arguments:
+     *    reason : A string naming the callback.
+     * Returns: nothing.
+     */
+    function DoCallback($reason)
+    {
+        if (!isset($this->callbacks[$reason]))
+            return;
+        list($function, $arg) = $this->callbacks[$reason];
+        call_user_func($function, $this->img, $arg);
+    }
+
 
 //////////////////////////////////////////////////////////
 ///////////         DATA ANALYSIS, SCALING AND TRANSLATION
@@ -4047,35 +4121,27 @@ class PHPlot {
         }
         */
         $this->PadArrays();                         // Pad color and style arrays to fit records per group.
+        $this->DoCallback('draw_setup');
 
         $this->DrawBackground();
-
         $this->DrawImageBorder();
+        $this->DoCallback('draw_image_background');
 
         $this->DrawPlotAreaBackground();
+        $this->DoCallback('draw_plotarea_background');
 
         $this->DrawTitle();
         $this->DrawXTitle();
         $this->DrawYTitle();
+        $this->DoCallback('draw_titles');
 
-        // Pie charts are drawn differently, handle them first
-        if ($this->plot_type == 'pie') {
-            $this->DrawPieChart();
+        // Pie charts have no grid or plot area borders:
+        $draw_grid_and_border = ($this->plot_type != 'pie');
 
-            if ($this->legend)
-                $this->DrawLegend();
-
-            if ($this->print_image)
-                $this->PrintImage();
-
-            return;
-        }
-
-        ////// All other chart types:
-
-        if (! $this->grid_at_foreground) {         // Usually one wants grids to go back, but...
+        if ($draw_grid_and_border && ! $this->grid_at_foreground) {   // Usually one wants grids to go back, but...
             $this->DrawYAxis();     // Y axis must be drawn before X axis (see DrawYAxis())
             $this->DrawXAxis();
+            $this->DoCallback('draw_axes');
         }
 
         switch ($this->plot_type) {
@@ -4111,6 +4177,9 @@ class PHPlot {
                 $this->DrawDots();
             }
             break;
+        case 'pie':
+            $this->DrawPieChart();
+            break;
         case 'stackedbars':
             $this->CalcBarWidths();
             $this->DrawStackedBars();
@@ -4122,16 +4191,23 @@ class PHPlot {
             $this->DrawBars();
             break;
         }   // end switch
+        $this->DoCallback('draw_graph');
 
-        if ($this->grid_at_foreground) {         // Usually one wants grids to go back, but...
+        if ($draw_grid_and_border && $this->grid_at_foreground) {   // Usually one wants grids to go back, but...
             $this->DrawYAxis();     // Y axis must be drawn before X axis (see DrawYAxis())
             $this->DrawXAxis();
+            $this->DoCallback('draw_axes');
         }
 
-        $this->DrawPlotBorder();
+        if ($draw_grid_and_border) {
+            $this->DrawPlotBorder();
+            $this->DoCallback('draw_border');
+        }
 
-        if ($this->legend)
+        if ($this->legend) {
             $this->DrawLegend();
+            $this->DoCallback('draw_legend');
+        }
 
         if ($this->print_image)
             $this->PrintImage();
