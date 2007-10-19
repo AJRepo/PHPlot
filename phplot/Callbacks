@@ -1,0 +1,186 @@
+phplot/Callbacks - Documentation of the experimental callback feature
+Last updated for PHPlot-5.0.4 on 2007-10-17
+The project home page is http://sourceforge.net/projects/phplot/
+-----------------------------------------------------------------------------
+Overview:
+
+This file documents the callback feature in PHPlot. Callbacks allow a
+programmer using PHPlot to insert their own functions into the graph
+drawing process.
+
+    NOTICES:
+
+    Callbacks are an experimental feature added to PHPlot-5.0.4. This
+    feature is subject to change in future releases. Changes in the
+    implementation may be incompatible with the current interface.
+    The feature may even be removed entirely. Be aware of this before
+    you decide to rely on callbacks in your application.
+
+    Some methods of using callbacks allow you to access or alter PHPlot
+    class variables, or call PHPlot internal methods. (Of course, this
+    is currently possible without the callback feature as well.) All
+    PHPlot class variables, and all methods/functions which are not
+    documented in the "Reference" section of the PHPlot Reference Manual,
+    are considered to be for internal use and are subject to be changed
+    or removed at any time.
+
+Feedback on the callback feature is welcome. Please use the "help"
+forum at http://sourceforge.net/projects/phplot/
+
+-----------------------------------------------------------------------------
+Application Interface:
+
+The following text assumes $plot is a PHPlot class instance.
+
+
+$plot->SetCallback($reason, $function, $arg = NULL)
+
+   Registers a callback function.
+
+     $reason is the 'reason', or 'name', for the callback.
+         See "Available Callback reason values" below.
+
+     $function is the external function to call.  This can be either the
+         name of a function as a string, or a two-element array with an
+         object class instance and method name.  Refer to the PHP manual
+         under "Types, Pseudo-Types, Callback" for more information on the
+         allowed forms of this argument.  Also see "Object Methods
+         as Callbacks" below for more information.
+
+         The function will be called with two arguments:
+             $img   The GD image resource for the plot image.
+             $arg   The argument supplied to SetCallback.
+
+     $arg is an an optional opaque argument passed-through to the callback
+         function when PHPlot triggers the callback. If $arg is not
+         supplied, the callback function will get a NULL argument.
+
+   For example, given:
+       $plot->SetCallback('draw_graph', 'my_drawing_callback', $myvar)
+   Then PHPlot will call:
+        my_drawing_callback($img, $myvar_value)
+   Where $myvar_value is the value of $myvar at the time SetCallback
+   was called.
+
+   If a callback is already registered for $reason, the new callback
+   replaces the old one.
+
+   Returns True if the callback has been registered.
+   Returns False on error. The only error condition is if the callback
+   $reason is not valid.
+
+
+
+$plot->GetCallback($reason)
+
+   Returns the current callback function registered for the given $reason,
+   That is, it returns the $function argument value used in SetCallback().
+
+   Returns False if there is no callback registered there.
+   Also returns False if $reason is not a valid callback reason.
+
+
+
+$plot->RemoveCallback($reason)
+
+   Unregisters any callback registered for the given $reason.
+
+   Returns True if the reason is a valid callback reason (whether or not
+   there was actually a callback registered for it).
+   Returns False if if $reason is not a valid callback reason.
+
+-----------------------------------------------------------------------------
+Callback function access:
+
+By default, the callback function has access only to the GD image resource
+as the $img argument, and to the pass-through argument provided when the
+callback function was registered. It would not have access to the PHPlot
+class instance ($plot above), nor any of its contents.
+
+If you feel you need access to the internals of the PHPlot class instance,
+you have two options. First, you can pass the instance variable as the $arg
+when registering the callback. Note that PHP5 will pass a reference, but PHP4
+will pass a copy. It should not matter unless you are going to make changes
+to the class variables.  If making changes and using PHP4, your should put
+a reference to the class instance inside an array, and pass the array as
+the argument:
+     $myarg = array(&$plot);
+     $plot->SetCallback('reason', 'function', $myarg);
+
+The second option is to use a class method. This is described below under
+"Object Methods as Callbacks".
+
+As stated in the NOTICE above, any access to the class internals is
+risky and subject to break with any new update to PHPlot.
+
+
+-----------------------------------------------------------------------------
+Available Callback 'reason' values:
+
+Note: By convention, a callback occurs right after the event which it names.
+For example, the 'draw_titles' callback will be called after drawing the
+plot titles.
+
+   Reason:                   Calling point:
+   ------------------------  -------------------------------------------------
+   draw_setup                After all setup, before drawing anything.
+   draw_image_background     After drawing the image backgrounds and border.
+   draw_plotarea_background  After drawing the plot area background.
+   draw_titles               After drawing the plot title, X and Y titles.
+   draw_axes                 After drawing the X and Y axis and grid lines.
+   draw_graph                After drawing the body of the graph.
+   draw_border               After drawing the plot area border.
+   draw_legend               After drawing the legend, if legend is enabled.
+
+Notes:
+   Anything drawn at draw_setup will be covered up by the background.
+   The draw_axes callback is not called for pie charts.
+   The draw_legend callback is not called if no legend was sent.
+   Other callbacks are called unconditionally (for example, the draw_titles
+callback is called after titles would be drawn, even if there are no
+titles).
+
+-----------------------------------------------------------------------------
+Object Methods as Callbacks:
+
+The callback function argument to SetCallback can be an array of two
+elements: a class variable and a method.  This can be used with any class,
+but here we are interested in using an extension of the PHPlot class.
+Consider the following setup:
+
+class my_PHPlot extends PHPlot
+{
+  function my_PHPlot($width=600, $height=400, $outfile=NULL, $infile=NULL)
+  {
+    $this->PHPlot($width, $height, $outfile, $infile);
+  }
+
+  function callback($img, $arg)
+  {
+    fwrite(STDERR, "callback in object\n");
+    fwrite(STDERR, "Plot area: ({$this->plot_area[0]}, {$this->plot_area[1]}) :");
+    fwrite(STDERR, " ({$this->plot_area[2]}, {$this->plot_area[2]})\n");
+  }
+}
+
+
+We define a class which extends PHPlot, and a method 'callback' which
+displays the plot area using the internal PHPlot class variable plot_area.
+
+We will then create an instance of the extended class:
+   $plot = new my_PHPlot(400,300);
+And set a callback. This is for PHP5:
+   $p->SetCallback('draw_titles', array($plot, 'callback'));
+For PHP4, you need to use a reference. (This also works in PHP5 but is
+deprecated):
+   $p->SetCallback('draw_titles', array(&$plot, 'callback'));
+
+When the draw_titles callback is triggered, it will call the 'callback'
+method inside our extended class. Because this is an extension of the
+PHPlot class, it has access to all the member variables.
+
+Note: The above example uses the PHP4-style constructor names, which is
+also compatible with PHP5.
+
+
+-----------------------------------------------------------------------------
