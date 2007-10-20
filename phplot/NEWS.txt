@@ -1,5 +1,116 @@
 This is the NEWS file for PHPlot, with release documentation.
 The project home page is http://sourceforge.net/projects/phplot/
+Refer the the ChangeLog file for detailed source changes.
+-----------------------------------------------------------------------------
+
+2007-10-20 Released 5.0.4
+
+Overview:
+
+This is the latest stable release of PHPlot. We are abandoning the 'rc'
+version naming style, because we don't consider these last releases
+'release candidate' versions. As we continue to make changes to PHPlot,
+we are not converging toward a final "5.0" release, however we do consider
+these releases stable and complete enough for production use.
+
+This release fixes a number of problems and introduces a few new features.
+
+The PHPlot reference manual has also been updated to match this release.
+New material has been added documenting some of the PHPlot internals.
+The manual is available as a separate download from Sourceforge.
+
+
+Code Cleanup:
+
+Some code cleanup is going in to this release. It is hoped that these
+changes will not impact any existing scripts using PHPlot, but will make
+the PHPlot code itself easier to understand and maintain.
+
+PHPlot now avoids making changes outside its own class definition. There
+are no longer any functions defined outside the class, nor any constants.
+Three constants (MINY MAXY TOTY) were removed, and 2 functions were removed
+(see Visible Changes below).  Also PHPlot no longer sets the PHP error
+reporting level to E_ALL. Although we highly recommend setting error
+reporting to E_ALL in your php.ini file or scripts, it is not right for
+PHPlot to assume that you want it.
+
+
+Visible Changes and Possible Incompatibilities:
+
+Arrays containing color and style information are used with several PHPlot
+functions to control the plot style array. These functions are:
+    SetPointShapes, SetPointSizes, SetLineWidths, SetLineStyles,
+    SetDataColors, SetDataBorderColors, and SetErrorBarColors.
+The arrays passed to these functions MUST used sequential integer 0-based
+indexes. This is what the PHP manual calls "Usual integer indices (starting
+from zero, increasing by one)". This is the type of array you get in PHP by
+default if you use array() without specifying key values, or use the
+empty-bracket assignment operator to add values onto an array.  In previous
+versions of PHPlot, some of these functions would also work with
+string-indexed or non-sequentially-indexed arrays, but this was not clearly
+defined. Starting with PHPlot-5.0.4, only arrays with "usual integer
+indices" work, and other array indexes will cause errors.
+
+Some internal-use-only functions have had their usage changed or been removed.
+If you are using functions that are not documented in the PHPlot Function
+Reference in the manual, your code may have to be changed.
+
+As part of the code cleanup, two functions which were defined outside the
+PHPlot class were removed: array_pad_array(), and array_merge_php4().
+If your code used these, you need to fix your code.
+
+The routines which accept a color name, value, or array now check for a valid
+color name. If you specify a color name which is not in your current color
+table, PHPlot will draw an error and exit. Previously, PHP would report an
+index error, continue, and get a 'headers already sent' message.
+
+
+Bug Fixes in 5.0.4:
+
+#1813021: Miss-positioned right-justified vertical GD text.
+  Fixed DrawText() to correctly position 90 degree right-justified text
+  drawn in a fixed GD font. This could be seen with 90 degree Y tick labels.
+
+#1790441 Removed destructor/shutdown function, and no longer recommend
+  using reference assignment when creating a PHPlot object. This was
+  interfering with memory usage.
+  Credit to annajilly for analysis.
+
+#1779115 SetLegendWorld() failed because of undefined variables. The
+  required order dependency was too hard to meet. This is now fixed.
+  You can now use SetLegendWorld anywhere before DrawGraph.
+
+#1726810 (feature request, but actually a bug fix) Ignore empty strings
+  as data labels when doing time or data label formatting. These would
+  previously produce errors or bad formatting. Now you can omit labels
+  as needed even with time and data formatting.
+  Credit to exgerhardr for finding this.
+
+#1605555 Y data labels used wrong font and not formatted (bar charts only).
+
+#1208054 Localization of number formatting in 'data' format type. PHPlot
+  will attempt to format the numbers in a way appropriate to your locale.
+  You can also force the formatting with the new function SetNumberFormat.
+  Credit to David Hernández Sanz.
+
+#937944 X/Y Tick counts: PHPlot could draw one two few Y tick counts, and
+  one too many X tick counts. This is not a perfect fix, and more work is
+  needed here, but this fixes an error case in both X and Y values.
+
+
+New Features in 5.0.4:
+
+New function SetLegendStyle allows control of the alignment of text and
+  color boxes within the legend.  Also allows removing the color boxes.
+  Based on bug #1208054.
+  Credit to David Hernández Sanz.
+
+New function SetNumberFormat. See bug report #1208054 above.
+
+Callbacks are added. PHPlot can call back your functions while generating the
+  plot. This is experimental, and documented only in the file "Callbacks".
+  Credit to annajilly for the idea and design.
+
 -----------------------------------------------------------------------------
 
 2006-11-13 Released 5.0rc3
