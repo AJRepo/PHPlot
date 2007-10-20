@@ -3,14 +3,21 @@
 /* $Id$ */
 
 /*
- * PHPLOT Version 5.0rc3
- * Copyright (C) 1998-2006 Afan Ottenheimer.  Released under
+ * PHPLOT Version 5.0.4
+ * Copyright (C) 1998-2007 Afan Ottenheimer.  Released under
  * the GPL and PHP licenses as stated in the the README file which should
  * have been included with this document.
  *
- * Recent (2003-2004) work by Miguel de Benito Delgado <nonick AT vodafone DOT es>
+ * Co-author and maintainer (2003-2005)
+ * Miguel de Benito Delgado <nonick AT vodafone DOT es>
  *
- * Requires PHP 4.3.0 or later
+ * Maintainer (2006-present)
+ * <lbayuk AT users DOT sourceforge DOT net>
+ *
+ * Visit http://sourceforge.net/projects/phplot/
+ * for PHPlot documentation, downloads, and discussions.
+ *
+ * Requires PHP 4.3.0 or later. PHP 5.2.x or later is recommended.
  */
 
 class PHPlot {
