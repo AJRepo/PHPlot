@@ -13,8 +13,12 @@ distribution.)
 
 <variablelist>
   <varlistentry>
-    <term>Pending (2007-08-04 - 2007-09-30)</term>
+    <term>2007-10-19</term>
     <listitem>
+      <para>
+Released updated version of the manual to correspond to PHPlot-5.0.4, which
+should be released in the next few days.
+      </para>
       <para>
 Added documentation for new function SetLegendStyle.
       </para>
@@ -32,6 +36,11 @@ Added new Part III - PHPlot Developer's Guide. This includes two layout figures
 and a list of internal functions. This is mostly intended as reference
 material for maintainers of PHPlot, but may be of use to others as well.
 More text may be added to this part in the future.
+      </para>
+      <para>
+Document the requirement that style arrays use zero-based sequential integer
+indexes only. This includes colors, point shapes/sizes, line widths, and
+line styles.
       </para>
     </listitem>
   </varlistentry>
