@@ -108,7 +108,7 @@ are pixels. Also known as Pixel Coordinates or GD Coordinates.
       <listitem>
         <para>
 A programming library used to create and manipulate images.
-GD can be found at the <ulink url="http://www.boutell.com/gd/">GD Graphics
+GD can be found at the <ulink url="http://libgd.org/">GD Graphics
 Library home page</ulink>.
 You can think of GD as a software implementation of a video card.
 GD is also available as a PHP extension, and that is what PHPlot uses to
@@ -1223,7 +1223,7 @@ that can make it unusable for historical data. On some platforms, dates
 before 1970-01-01 can not be formatted.
   </para>
   <para>
-Starting after PHPlot-5.0rc3, empty string values for data labels are
+Starting with PHPlot-5.0.4, empty string values for data labels are
 ignored for 'time' and 'data' formatting. Earlier versions would format
 the labels as 0 (for 'data') or cause an error (for 'time').
   </para>

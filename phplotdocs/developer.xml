@@ -79,7 +79,7 @@ intended to be used only by PHPlot itself.
   <term id="array_merge_php4" xreflabel="array_merge_php4">array_merge_php4($array1,$array2)</term>
   <listitem>
     <para>
-This non-member function was removed after PHPlot-5.0rc3.
+This non-member function was removed at PHPlot-5.0.4.
     </para>
   </listitem>
 </varlistentry>
@@ -88,7 +88,7 @@ This non-member function was removed after PHPlot-5.0rc3.
   <term id="array_pad_array" xreflabel="array_pad_array">array_pad_array(&amp;$arr, $size, $arr2=NULL)</term>
   <listitem>
     <para>
-This non-member function was removed after PHPlot-5.0rc3 and replaced with
+This non-member function was removed at PHPlot-5.0.4 and replaced with
 the class member function <xref linkend="pad_array"/>.
     </para>
   </listitem>
@@ -565,7 +565,7 @@ This is used by <xref linkend="SetInputFile"/> and <xref linkend="tile_img"/>.
 Errors go to <xref linkend="PrintError"/>; there is no way for the script
 to recover. Possible errors include an image file type which is unsupported
 by PHP GD, or a corrupt image file.
-Note: This was added after PHPlot-5.0rc3, by moving common code from the
+Note: This was added at PHPlot-5.0.4, by moving common code from the
 two calling functions.
     </para>
   </listitem>
@@ -602,7 +602,7 @@ starting from the first will be appended until it reaches $size elements.
 This only works on zero-based sequential integer indexed arrays.
 Called by <xref linkend="PadArrays"/>, <xref linkend="SetPointShapes"/>,
 and <xref linkend="SetPointSizes"/>.
-This replaced <xref linkend="array_pad_array"/> after PHPlot-5.0rc3,
+This replaced <xref linkend="array_pad_array"/> at PHPlot-5.0.4,
 however that had an unused 3rd argument, and worked on general indexed arrays.
     </para>
   </listitem>

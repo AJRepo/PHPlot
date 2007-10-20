@@ -4,6 +4,9 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2007-10-19
+   * Change vague references to release "after 5.0rc3" to "5.0.4".
+
 2007-10-11
    * Updates for latest changes to CVS:
      developer:

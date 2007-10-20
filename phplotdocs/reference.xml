@@ -148,7 +148,7 @@ be returned as a reference, like this:
       </programlisting>
 This was because PHPlot included a function to deallocate memory used by
 the object at script shutdown, but that would only work if a reference
-assignment was used. This quasi-destructor was removed after PHPlot-5.0rc3
+assignment was used. This quasi-destructor was removed at PHPlot-5.0.4
 because it interfered with memory deallocation until the script ended.
 So the reference assignment should not be used.
 In addition, reference assignment of a newly created object instance
@@ -780,7 +780,7 @@ font file.
   <refsect1>
     <title>Notes</title>
     <para>
-Starting after PHPlot-5.0rc2, the behavior of this function changed.
+Starting at PHPlot-5.0rc3, the behavior of this function changed.
 It now accepts either a filename (which must be in the default TrueType
 font directory as set with <xref linkend="SetTTFPath" />), or a full
 pathname. In addition, it automatically enables TrueType font usage
@@ -1544,7 +1544,7 @@ table. Use <xref linkend="SetDefaultTTFont" /> to set the default TrueType font.
     </para>
 
     <para>
-Starting after PHPlot-5.0rc2, the behavior of this function changed
+Starting at PHPlot-5.0rc3, the behavior of this function changed
 when used with TrueType fonts.
 It now first tries to find the font using the supplied name. If the
 font is not found that way, it tries again prefixed with the default
@@ -2081,7 +2081,7 @@ which plot, or if you are using the legend for some purpose other than
 identifying the plot lines.
     </para>
     <para>
-This function was added to PHPlot after 5.0rc3.
+This function was added to PHPlot-5.0.4.
     </para>
   </refsect1>
 </refentry>
@@ -2133,7 +2133,7 @@ The units and origin are the same as the data you are plotting.
 Through PHPlot-5.0rc3, it was required that the
 data array, axis types, and any other setting which affects the scale of
 the data be set up before this function is used.
-Starting after PHPlot-5.0rc3 this is no longer required, as the coordinates
+Starting at PHPlot-5.0.4 this is no longer required, as the coordinates
 you supply are not scaled until the plot is drawn.
     </para>
     <para>
@@ -2533,7 +2533,7 @@ To set the number of decimal places, use
 <xref linkend="SetPrecisionX" /> and <xref linkend="SetPrecisionY" />.
     </para>
     <para>
-This was added to PHPlot after 5.0rc3. Versions up to and including 5.0rc3
+This was added to PHPlot-5.0.4. Versions up to and including 5.0rc3
 always used a period for decimal point, and comma for thousands separator.
     </para>
   </refsect1>
@@ -3870,7 +3870,7 @@ This default can be changed at installation time as described in
 <xref linkend="install-install" />.
     </para>
     <para>
-Starting after PHPlot-5.0rc2, the default TrueType font directory is used both
+Starting with PHPlot-5.0rc3, the default TrueType font directory is used both
 for the default font set with <xref linkend="SetDefaultTTFont" /> and for
 fonts set with <xref linkend="SetFont" />. Refer to those two functions for
 details.
@@ -4182,8 +4182,8 @@ The default is False, to use the built-in GD fonts.
     <para>
 There must be a valid default font before enabling TrueType fonts with
 SetUseTTF, or PHPlot will abort with an error. There are three ways to
-properly set up TrueType fonts to avoid this error, starting after
-PHPlot-5.0rc2:
+properly set up TrueType fonts to avoid this error, starting with
+PHPlot-5.0rc3:
       <itemizedlist>
         <listitem>
           <para>
@@ -4472,7 +4472,7 @@ A side effect of <xref linkend="SetPrecisionX" /> is to call this function
 SetXLabelType and set the formatting mode to 'data'.
     </para>
     <para>
-Starting after PHPlot-5.0rc3, empty string data labels are ignored when
+Starting with PHPlot-5.0.4, empty string data labels are ignored when
 formatting with 'data' or 'time' formats. You can use this to suppress
 some data labels, or control label density, with 'data' and 'time'
 formatted labels.
@@ -4490,7 +4490,7 @@ even if your data array labels are empty strings.
 Through PHPlot-5.0rc3, when the formatting mode is 'data'
 the thousands grouping separator was always a comma,
 and a period was used as a decimal point.
-Starting after 5.0rc3, PHPlot attempts to get the correct values for your
+Starting with 5.0.4, PHPlot attempts to get the correct values for your
 locale.  You can set the separator characters yourself instead with
 <xref linkend="SetNumberFormat" />.
     </para>
@@ -5269,7 +5269,7 @@ SetYLabelType and set the formatting mode to 'data'.
 Through PHPlot-5.0rc3, when the formatting mode is 'data'
 the thousands grouping separator was always a comma,
 and a period was used as a decimal point.
-Starting after 5.0rc3, PHPlot attempts to get the correct values for your
+Starting with 5.0.4, PHPlot attempts to get the correct values for your
 locale.  You can set the separator characters yourself instead with
 <xref linkend="SetNumberFormat" />.
     </para>
