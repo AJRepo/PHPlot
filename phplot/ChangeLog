@@ -2,6 +2,11 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2007-10-20 (lbayuk)     ===== Released as 5.0.4 =====
+    * phplot.php: Updated copyright, version, and authors comments at top.
+    * README.txt: Updated for new release
+    * NEWS.txt: Add text for new release
+
 2007-10-18 (lbayuk)
     * Add callbacks - experimental feature:
       New functions SetCallback, GetCallback, RemoveCallback.
