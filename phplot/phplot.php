@@ -3425,34 +3425,47 @@ class PHPlot {
                 // NOTE that imagefilledarc measures angles CLOCKWISE (go figure why),
                 // so the pie chart would start clockwise from 3 o'clock, would it not be
                 // for the reversal of start and end angles in imagefilledarc()
+                // Also note ImageFilledArc only takes angles in integer degrees, and if the
+                // the start and end angles match then you get a full circle not a zero-width
+                // pie. This is bad. So skip any zero-size wedge. On the other hand, we cannot
+                // let cumulative error from rounding to integer result in missing wedges. So
+                // keep the running total as a float, and round the angles. It should not
+                // be necessary to check that the last wedge ends at 360 degrees.
                 $start_angle = $end_angle;
                 $end_angle += $val;
-                $mid_angle = deg2rad($end_angle - ($val / 2));
+                // This method of conversion to integer - truncate after reversing it - was
+                // chosen to match the implicit method of PHPlot<=5.0.4 to get the same slices.
+                $arc_start_angle = (int)(360 - $start_angle);
+                $arc_end_angle = (int)(360 - $end_angle);
 
-                // Draw the slice
-                ImageFilledArc($this->img, $xpos, $ypos+$h, $diameter, $diam2,
-                               360-$end_angle, 360-$start_angle,
-                               $slicecol, IMG_ARC_PIE);
+                if ($arc_start_angle > $arc_end_angle) {
+                    $mid_angle = deg2rad($end_angle - ($val / 2));
 
-                // Draw the labels only once
-                if ($h == 0) {
-                    // Draw the outline
-                    if (! $this->shading)
-                        ImageFilledArc($this->img, $xpos, $ypos+$h, $diameter, $diam2,
-                                       360-$end_angle, 360-$start_angle,
-                                       $this->ndx_grid_color, IMG_ARC_PIE | IMG_ARC_EDGED |IMG_ARC_NOFILL);
+                    // Draw the slice
+                    ImageFilledArc($this->img, $xpos, $ypos+$h, $diameter, $diam2,
+                                   $arc_end_angle, $arc_start_angle,
+                                   $slicecol, IMG_ARC_PIE);
+
+                    // Draw the labels only once
+                    if ($h == 0) {
+                        // Draw the outline
+                        if (! $this->shading)
+                            ImageFilledArc($this->img, $xpos, $ypos+$h, $diameter, $diam2,
+                                           $arc_end_angle, $arc_start_angle,
+                                           $this->ndx_grid_color, IMG_ARC_PIE | IMG_ARC_EDGED |IMG_ARC_NOFILL);
 
 
-                    // The '* 1.2' trick is to get labels out of the pie chart so there are more
-                    // chances they can be seen in small sectors.
-                    $label_x = $xpos + ($diameter * 1.2 * cos($mid_angle)) * $this->label_scale_position;
-                    $label_y = $ypos+$h - ($diam2 * 1.2 * sin($mid_angle)) * $this->label_scale_position;
+                        // The '* 1.2' trick is to get labels out of the pie chart so there are more
+                        // chances they can be seen in small sectors.
+                        $label_x = $xpos + ($diameter * 1.2 * cos($mid_angle)) * $this->label_scale_position;
+                        $label_y = $ypos+$h - ($diam2 * 1.2 * sin($mid_angle)) * $this->label_scale_position;
 
-                    $this->DrawText($this->generic_font, 0, $label_x, $label_y, $this->ndx_grid_color,
-                                    $label_txt, 'center', 'center');
+                        $this->DrawText($this->generic_font, 0, $label_x, $label_y, $this->ndx_grid_color,
+                                        $label_txt, 'center', 'center');
+                    }
                 }
-                $color_index++;
-                $color_index = $color_index % $max_data_colors;
+                if (++$color_index >= $max_data_colors)
+                    $color_index = 0;
             }   // end for
         }   // end for
     }
