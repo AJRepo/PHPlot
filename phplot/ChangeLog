@@ -2,6 +2,13 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2007-11-10 (lbayuk)
+    * Fix bug 1827263 "Spoiled up pie-chart if $val is close to zero":
+      Skip pie slices which would result in an integer angle of zero
+      degrees, because the GD arc filling function will draw a complete
+      circle for that case.
+      Credit to Viacheslav <webdeveloper.ua at gmail.com> for finding this.
+
 2007-10-20 (lbayuk)     ===== Released as 5.0.4 =====
     * phplot.php: Updated copyright, version, and authors comments at top.
     * README.txt: Updated for new release
