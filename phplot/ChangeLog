@@ -9,6 +9,13 @@ The project home page is http://sourceforge.net/projects/phplot/
       circle for that case.
       Credit to Viacheslav <webdeveloper.ua at gmail.com> for finding this.
 
+    * Removed 8 of the functions (class methods) marked 'deprecated'.  Only
+      deprecated functions which seem to have been for internal use have
+      been removed. Even old scripts shouldn't be using them, and they are
+      becoming a problem to maintain.
+      Removed: SetImageArea() DrawDotSeries() DrawLineSeries() CalcXHeights()
+      CalcYWidths() DrawLabels() InitImage() DrawDashedLine().
+
 2007-10-20 (lbayuk)     ===== Released as 5.0.4 =====
     * phplot.php: Updated copyright, version, and authors comments at top.
     * README.txt: Updated for new release
