@@ -4365,18 +4365,6 @@ class PHPlot {
     }
 
     /*!
-     * \deprecated This is now an Internal function - please set width and
-     *             height via PHPlot() upon object construction
-     */
-    function SetImageArea($which_iw, $which_ih)
-    {
-        $this->image_width = $which_iw;
-        $this->image_height = $which_ih;
-
-        return TRUE;
-    }
-
-    /*!
      * \deprecated Use SetXTickLength() and SetYTickLength() instead.
      */
     function SetTickLength($which_tl)
@@ -4436,14 +4424,6 @@ class PHPlot {
     }
 
     /*!
-     * \deprecated  Use DrawDots()
-     */
-    function DrawDotSeries()
-    {
-        $this->DrawDots();
-    }
-
-    /*!
      * \deprecated Use SetXLabelAngle()
      */
     function SetXDataLabelAngle($which_xdla)
@@ -4463,86 +4443,6 @@ class PHPlot {
             $this->SetXDataLabelPos('plotdown');
         else
             $this->SetXDataLabelPos('none');
-    }
-
-    /*!
-     * \deprecated This method was intended to improve performance by being specially
-     * written for 'data-data'. However, the improvement didn't pay. Use DrawLines() instead
-     */
-    function DrawLineSeries()
-    {
-        return $this->DrawLines();
-    }
-
-    /*!
-     * \deprecated Calculates maximum X-Axis label height. Now inside CalcMargins()
-     */
-    function CalcXHeights()
-    {
-        // TTF
-        if ($this->use_ttf) {
-            $xstr = str_repeat('.', $this->max_t);
-            $size = $this->TTFBBoxSize($this->x_label_font['size'], $this->x_label_angle,
-                                       $this->x_label_font['font'], $xstr);
-            $this->x_tick_label_height = $size[1];
-        }
-        // Fixed font
-        else { // For Non-TTF fonts we can have only angles 0 or 90
-            if ($this->x_label_angle == 90)
-                $this->x_tick_label_height = $this->max_t * $this->x_label_font['width'];
-            else
-                $this->x_tick_label_height = $this->x_label_font['height'];
-        }
-
-        return TRUE;
-    }
-
-
-    /*!
-     * \deprecated Calculates Maximum Y-Axis tick label width. Now inside CalcMargins()
-     */
-    function CalcYWidths()
-    {
-        //the "." is for space. It isn't actually printed
-        $ylab = number_format($this->max_y, $this->y_precision, '.', ', ') . $this->data_units_text . '.';
-
-        // TTF
-        if ($this->use_ttf) {
-            // Maximum Y tick label width
-            $size = $this->TTFBBoxSize($this->y_label_font['size'], 0, $this->y_label_font['font'], $ylab);
-            $this->y_tick_label_width = $size[0];
-
-        }
-        // Fixed font
-        else {
-            // Y axis title width
-            $this->y_tick_label_width = strlen($ylab) * $this->y_label_font['width'];
-        }
-
-        return TRUE;
-    }
-
-    /*!
-     * \deprecated Superfluous.
-     */
-    function DrawLabels()
-    {
-        $this->DrawTitle();
-        $this->DrawXTitle();
-        $this->DrawYTitle();
-    }
-
-    /*!
-     * Set up the image resource 'img'
-     * \deprecated The constructor should init 'img'
-     */
-    function InitImage()
-    {
-        $this->img = ImageCreate($this->image_width, $this->image_height);
-
-        if (! $this->img)
-            $this->PrintError('InitImage(): Could not create image resource');
-        return TRUE;
     }
 
     /*!
@@ -4583,25 +4483,6 @@ class PHPlot {
             $this->SetErrorBarLineWidth($which_lw);
         }
         return TRUE;
-    }
-
-    /*!
-     * \deprecated
-     */
-    function DrawDashedLine($x1, $y1, $x2, $y2 , $dash_length, $dash_space, $color)
-    {
-        if ($dash_length)
-            $dashes = array_fill(0, $dash_length, $color);
-        else
-            $dashes = array();
-        if ($dash_space)
-            $spaces = array_fill(0, $dash_space, IMG_COLOR_TRANSPARENT);
-        else
-            $spaces = array();
-
-        $style = array_merge($dashes, $spaces);
-        ImageSetStyle($this->img, $style);
-        ImageLine($this->img, $x1, $y1, $x2, $y2, IMG_COLOR_STYLED);
     }
 
     /*
