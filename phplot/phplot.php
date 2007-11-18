@@ -1945,16 +1945,23 @@ class PHPlot {
 
     /*
      * Invoke a callback, if one is registered.
-     * Arguments:
+     * Accepts a variable number of arguments >= 1:
      *    reason : A string naming the callback.
+     *    ... : Zero or more additional arguments to be passed to the
+     *      callback function, after the passthru argument:
+     *           callback_function($image, $passthru, ...)
      * Returns: nothing.
      */
-    function DoCallback($reason)
+    function DoCallback()  # Note: Variable arguments
     {
+        $args = func_get_args();
+        $reason = $args[0];
         if (!isset($this->callbacks[$reason]))
             return;
-        list($function, $arg) = $this->callbacks[$reason];
-        call_user_func($function, $this->img, $arg);
+        list($function, $args[0]) = $this->callbacks[$reason];
+        array_unshift($args, $this->img);
+        # Now args[] looks like: img, passthru, extra args...
+        call_user_func_array($function, $args);
     }
 
 
