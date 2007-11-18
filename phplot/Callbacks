@@ -1,5 +1,5 @@
 phplot/Callbacks - Documentation of the experimental callback feature
-Last updated for PHPlot-5.0.4 on 2007-10-17
+Last updated for the next release after PHPlot-5.0.4 on 2007-11-17
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 Overview:
@@ -47,9 +47,10 @@ $plot->SetCallback($reason, $function, $arg = NULL)
          allowed forms of this argument.  Also see "Object Methods
          as Callbacks" below for more information.
 
-         The function will be called with two arguments:
+         The function will be called with two or more arguments:
              $img   The GD image resource for the plot image.
              $arg   The argument supplied to SetCallback.
+             ...    Additional arguments specific to the 'reason'.
 
      $arg is an an optional opaque argument passed-through to the callback
          function when PHPlot triggers the callback. If $arg is not
@@ -65,10 +66,12 @@ $plot->SetCallback($reason, $function, $arg = NULL)
    If a callback is already registered for $reason, the new callback
    replaces the old one.
 
+   If a specific callback reason provides additional arguments to the
+   callback function, those are documented below.
+
    Returns True if the callback has been registered.
    Returns False on error. The only error condition is if the callback
    $reason is not valid.
-
 
 
 $plot->GetCallback($reason)
@@ -93,8 +96,9 @@ $plot->RemoveCallback($reason)
 Callback function access:
 
 By default, the callback function has access only to the GD image resource
-as the $img argument, and to the pass-through argument provided when the
-callback function was registered. It would not have access to the PHPlot
+as the $img argument, the pass-through argument provided when the callback
+function was registered, and additional arguments (if any) provided by
+PHPlot for the callback. It would not have access to the PHPlot
 class instance ($plot above), nor any of its contents.
 
 If you feel you need access to the internals of the PHPlot class instance,
@@ -139,6 +143,7 @@ Notes:
    Other callbacks are called unconditionally (for example, the draw_titles
 callback is called after titles would be drawn, even if there are no
 titles).
+   None of the 'draw_*' callbacks provides additional arguments.
 
 -----------------------------------------------------------------------------
 Object Methods as Callbacks:
@@ -183,4 +188,8 @@ Note: The above example uses the PHP4-style constructor names, which is
 also compatible with PHP5.
 
 
+-----------------------------------------------------------------------------
+History:
+2007-10-17 First version, for PHPlot-5.0.4
+2007-11-17 Added extra parameters to callback functions
 -----------------------------------------------------------------------------
