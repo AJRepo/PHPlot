@@ -2,6 +2,16 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2007-11-17 (lbayuk)
+    * Change to callbacks to support extra arguments.
+      The PHPlot class can now pass extra arguments to a callback function.
+      Callback functions now take the following form:
+          my_callback($img, $passthru_arg, ...)
+      Where '...' is zero or more additional arguments supplied by PHPlot to
+      the callback. Each implemented callback reason will define any
+      additional arguments it uses. The existing defined callbacks have not
+      changed and do not currently pass any extra arguments.
+
 2007-11-10 (lbayuk)
     * Fix bug 1827263 "Spoiled up pie-chart if $val is close to zero":
       Skip pie slices which would result in an integer angle of zero
