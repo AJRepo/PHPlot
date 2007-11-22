@@ -1340,28 +1340,22 @@ class PHPlot {
 
     /*!
      * Checks the valididy of an option.
-     *  \param which_opt  String to check.
-     *  \param which_acc  String of accepted choices.
-     *  \param which_func Name of the calling function, for error messages.
-     *  \note If checking everywhere for correctness slows things down, we could provide a
-     *        child class overriding every Set...() method which uses CheckOption(). Those new
-     *        methods could proceed in the unsafe but faster way.
+     *   $which_opt  String to check, such as the provided value of a function argument.
+     *   $which_acc  String of accepted choices separated by exactly ', ' (comma, space).
+     *   $which_func Name of the calling function, for error messages.
+     * Returns the supplied option value, downcased and trimmed, if it is valid.
+     * Reports an error if the supplied option is not valid.
      */
     function CheckOption($which_opt, $which_acc, $which_func)
     {
-        $asked = trim($which_opt);
+        $asked = strtolower(trim($which_opt));
 
-        // FIXME: this for backward compatibility, as eregi() fails with empty strings.
-        if ($asked == '')
-            return '';
-
-        $asked = strtolower($asked);
-        if (@ eregi($asked, $which_acc)) {
+        # Look for the supplied value in a comma/space separated list.
+        if (stripos(", $which_acc,", ", $asked,") !== False)
             return $asked;
-        } else {
-            $this->DrawError("$which_func(): '$which_opt' not in available choices: '$which_acc'.");
-            return NULL;
-        }
+
+        $this->DrawError("$which_func(): '$which_opt' not in available choices: '$which_acc'.");
+        return NULL;
     }
 
 
