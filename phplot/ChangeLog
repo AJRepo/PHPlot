@@ -2,6 +2,13 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2007-11-22
+    * Fix bug 1836528 "Insufficient checking of parameter values":
+      Rewrote CheckOption to correctly validate option choices.
+      (It previously accepted substrings and other incorrect values.)
+      PHPlot methods that use CheckOption now must be called with valid option
+      values. Empty strings are also no longer accepted.
+
 2007-11-17 (lbayuk)
     * Change to callbacks to support extra arguments.
       The PHPlot class can now pass extra arguments to a callback function.
