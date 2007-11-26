@@ -1240,6 +1240,150 @@ no option but to use the 'time' format labels for tick values.
 
 </sect1>
 
+<sect1 id="conc-errors">
+<title>Error Handling</title>
+<abstract>
+  <para>
+This section describes error handling in PHPlot. This information may not
+be accurate for PHPlot-5.0.4 and earlier.
+  </para>
+</abstract>
+
+<sect2 id="conc-errors-overview">
+<title>Error Handling Overview</title>
+<para>
+Errors detected within PHPlot are programming or installation errors. These
+are conditions that web application users should never see, because they
+should be detected and corrected before an application is deployed.
+Therefore, error handling in PHPlot is aimed more at the developer
+than the application user.
+</para>
+<para>
+PHPlot does the following when an error is detected:
+<itemizedlist>
+  <listitem>
+    <para>
+Creates an error image - an image containing the text of the error message.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+Outputs the error image to standard output or to a file, depending on where
+the plot image was supposed to go.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+Triggers a user-level error condition.
+If an error handler has been established, it determines what happens next.
+Otherwise, with no error handler:
+Writes the error message to error output, or logs it to the
+web server error log, depending on the PHPlot SAPI in use.
+Then the script will exit with a non-zero exit status.
+    </para>
+  </listitem>
+</itemizedlist>
+It is important not to have any text sent to standard output, even when
+an error occurs, or the image will be corrupted or PHP will display a "headers
+already sent" error and no image. Therefore it is necessary to turn off the
+PHP <command>display_errors</command> parameter, otherwise PHP will also
+write the error messages to standard output. This can be turned off in the
+php.ini configuration file, where it affects all scripts, or in an
+application script using:
+<programlisting>
+   ini_set('display_errors', 'off');
+</programlisting>
+</para>
+<para>
+Note that an image is produced and output on error even if
+<function>SetPrintImage(False)</function> is used to suppress or delay
+the normal output of a plot image. The error image is meant for the application
+developer or tester, but you need to see the error message in order to fix
+the problem which caused it, so the image is output when the error occurs.
+</para>
+<para>
+The following figure shows an example of an error image resulting from
+<function>$plot->SetPlotType('dots')</function>:
+  <informalfigure>
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/error-image.png" format="PNG" />
+      </imageobject>
+      <textobject>
+        <phrase>Example of an error image</phrase>
+      </textobject>
+    </mediaobject>
+  </informalfigure>
+</para>
+</sect2>
+
+<sect2 id="conc-errors-types">
+<title>Types of Errors</title>
+<para>
+The following types of errors can occur within PHPlot:
+<orderedlist>
+  <listitem>
+    <para>
+Parameter value errors: Use of an incorrect argument to a PHPlot function,
+such as: SetPlotType('dots') ['dots' is not a valid plot type].
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+Semantic errors: Invalid combination of parameters or data values, such as
+trying to use data type 'data-data' with plot type 'bars' [bar charts only
+work with 'text-data' data type].
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+Pathname errors: Missing font file or invalid font path; missing or
+invalid image file used as background. It might seem extreme to have a
+missing font file be a fatal error, but PHPlot has no way to substitute an
+appropriate font, and a missing font would indicate an application
+configuration or installation error.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+Inability to create a GD image resource. Probably the only way this can
+happen is if there is insufficient memory, which can occur if PHP's
+configured per-script memory limit is reached. (See note below)
+    </para>
+  </listitem>
+</orderedlist>
+All of these result in an E_USER_ERROR level error, except for memory
+exhaustion when creating an image, which is E_ERROR (fatal unrecoverable).
+If no GD image resource was created, no error image will be output.
+Furthermore, if the reason was memory exhaustion, there is no way to catch
+the error and PHP will cause the script to immediately exit.
+</para>
+</sect2>
+<sect2 id="conc-errors-handle">
+<title>Error Handlers</title>
+<para>
+It is possible to set up an error handler with PHP's
+<function>set_error_handler</function> to catch most errors from PHPlot.
+The handler can be established for all errors (the default), or just
+E_USER_ERROR error types (the only type PHPlot will trigger).
+See the PHP documentation for more details.
+Your handler function can perform cleanup before it exits, however it should
+not return.
+Some of the PHPlot functions will correctly handle a return from an error
+handler, and return FALSE to their callers, but not all. At the very least,
+a PHPlot object instance should be unset and not re-used after error.
+Use of error handlers that return is untested and unsupported.
+</para>
+<para>
+Note that an error image will be created and output, as described above,
+even if you have established an error handler.
+</para>
+
+</sect2>
+
+
+</sect1>
+
 <sect1 id="conc-extradata">
 <title>Extra Data Processing</title>
 <abstract>
