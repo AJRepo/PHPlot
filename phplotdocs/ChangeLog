@@ -4,6 +4,15 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2007-11-22
+   * Updates for latest changes to CVS to improve error handling:
+     concepts:
+     +  Add new section on error handling. This applies past PHPlot-5.0.4.
+     developer:
+     +  Update DrawError and PrintError to correspond to changes in the
+        implementation of error handling.
+     +  Clarify arguments to CheckOption, per fix for bug #1836528.
+
 2007-10-19
    * Change vague references to release "after 5.0rc3" to "5.0.4".
 

@@ -1,6 +1,24 @@
 This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
+2007-11-25
+    * Improve error handling:
+      Internal functions PrintError() and DrawError() are now the same. Both
+      will draw the error message into the image and output it, and then
+      trigger a user-level error. If no error handler has been set, it will
+      exit, as before. But now the error message should also get logged, or
+      written to the standard error stream, depending on the SAPI in use.
+      You can now establish an error handler to catch most PHPlot errors and
+      do some cleanup before exit.
+
+      This fix also covers bug #1823774 "Default Font Path and Error Message
+      Output".
+
+      Fixed the return value of most PHPlot functions, to return False on
+      error, else True. Since uncaught errors are fatal anyway, this only
+      affects code with an error handler that returns, which is not
+      recommended and unsupported at this time. These changes are for
+      possible future error handling options.
 
 2007-11-22
     * Fix bug 1836528 "Insufficient checking of parameter values":

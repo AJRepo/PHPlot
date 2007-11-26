@@ -13,6 +13,14 @@ distribution.)
 
 <variablelist>
   <varlistentry>
+    <term>2007-11-22</term>
+    <listitem>
+      <para>
+Added new section to Concepts chapter on error handling.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
     <term>2007-10-19</term>
     <listitem>
       <para>
