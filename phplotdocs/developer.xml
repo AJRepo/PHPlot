@@ -140,12 +140,17 @@ Called by several functions if necessary, including
     <para>
 Checks the validity of an option passed to a PHPlot member function.
 $which_opt is the string to check, and $which_acc is a string of acceptable
-choices (separated by commas, by convention). If the string to check is not
-found in the string of acceptable choices, a fatal error will be reported
-using <xref linkend="DrawError"/>.
+choices (with a comma and then a space between each choice).
+If the string to check is not found in the string of acceptable choices, a
+fatal error will be reported using <xref linkend="DrawError"/>.
 The error message will include $which_func which should
 be the name of the calling function (using the PHP __FUNCTION__ magic constant).
 Note that this is used to catch programming errors, not run-time or user errors.
+If the string to check is acceptable, it is returned down-cased and trimmed
+of leading and trailing spaces.
+Note: After PHPlot-5.0.4, this function was changed to require exactly ', '
+(comma space) between acceptable choices, and reject empty strings for
+$which_opt and disallow partial matches.
     </para>
   </listitem>
 </varlistentry>
@@ -233,11 +238,14 @@ Called by <xref linkend="DrawGraph"/> when the plot type is either
   <term id="DrawError" xreflabel="DrawError">DrawError($error_message, [$where_x], [$where_y])</term>
   <listitem>
     <para>
-Handles a fatal error by creating an image of the error message.
-If $where_x or $where_y are not provided, the message will be centered.
-This method of error handling lets the PHP script produce the expected image
-type file.
-The image file is produced with PrintImage, then the script exits.
+Starting after PHPlot-5.0.4, this function is an alias for
+<xref linkend="PrintError"/> and is retained for compatability.
+The $where_x and $where_arguments are now ignored. (Previously they
+positioned the error message on the image, but were never used.)
+    </para>
+    <para>
+(Through PHPlot-5.0.4, DrawError wrote the error message to an image,
+wrote the image, and exited.)
     </para>
   </listitem>
 </varlistentry>
@@ -624,14 +632,21 @@ Called by <xref linkend="DrawGraph"/> before drawing anything.
   <term id="PrintError" xreflabel="PrintError">PrintError($error_message)</term>
   <listitem>
     <para>
-Prints the given error message to stdout, then exits the script.
-This is used for fatal errors that preclude creating an image with the
-error message using <xref linkend="DrawError"/>.
-This is used for serious errors, such as failure to create an image
-(perhaps due to insufficient memory), and some programming errors such as
-invalid image type.
-This is also called by <xref linkend="DrawError"/> if there is no image
-resource to draw into.
+Handles a fatal error within PHPlot. Starting after PHPlot-5.0.4 this and
+<xref linkend="DrawError"/> are identical. PrintError attempts to draw the
+error message $error_message into the image, and then output the image.
+This method is used because PHPlot is normally expected to output an image,
+and text output would not be displayed properly. (If no image resource was
+available, and the <xref linkend="SetIsInline"/> flag is not on, PHPlot
+will send a 500 Internal Server Error header.) After this, PrintError uses
+the PHP trigger_error() function to signal a user error. This is normally
+fatal to the script, unless caught. This will also result in the error
+message written to the error output stream, which typically ends up in a
+web server error log.
+    </para>
+    <para>
+(Through PHPlot-5.0.4, PrintError wrote an error message to standard output
+and exited.)
     </para>
   </listitem>
 </varlistentry>
