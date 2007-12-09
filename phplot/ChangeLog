@@ -1,6 +1,70 @@
 This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
+2007-12-09 (lbayuk)
+    Major rewrite of the text drawing functions to address multiple problems.
+    Note: These changes are inter-dependent and cannot be split up.
+
+    * Fixed bug 1813070 "Bad position for multi-line TrueType text":
+      TTF text is now drawn line-by-line, not as a block, for proper
+      alignment and positioning.
+
+    * Fixed bug 1813071 "Wrong title height for multi-line TTF text":
+      Corrected miscalculation of overall height of multi-line TTF titles.
+      This bug resulted in over-sized margins.
+      The height is now computed line-by-line, including the inter-line spacing.
+
+    * Fixed bug 1813474 "DrawText alignment arguments wrong":
+      Corrected meaning of 'top' vs 'bottom' alignment. PHPlot now follows
+      the usual conventions: 'top' alignment means top of text to reference.
+      DrawText default for vertical alignment is still 'bottom', but the
+      meaning was corrected.  All callers of DrawText were fixed.
+
+    * Fixed bug 1816844 "Fix order dependency for setting titles":
+      Defer processing titles strings until DrawGraph(), so there is no
+      more order dependency (no need to set font before setting title strings).
+
+    * Fixed bug 1819668 "Horiz. align multi-line text: GD vs TTF":
+      The new text routines draw TTF text line-by-line and correctly do
+      right-, center-, and left- alignment of each line within a text block.
+
+    * Fixed bug 1826513 "FIXME in DrawLegend: Max label length":
+      Use actual width of widest legend line to calculate legend box size.
+
+    * Partial fix for bug 945439 "x_tick_label_height not set correctly":
+      In FindDataLimits(), save the longest data label, not just its length,
+      and use the actual rendered size of that string in CalcMargins() for
+      the margin calculations.
+      Also take into account which of the tick or data labels are visible.
+      This is not a complete fix, but is a significant improvement.
+
+    The following changes were made related to the above fixes:
+
+    + Replaced internal function TTFBBoxSize(), which didn't work right, with
+      SizeText(). It returns the orthogonal bounding box of a block of text,
+      and works with both GD and TTF text.
+
+    + DrawText() and SizeText() call a single function ProcessText(), which is
+      the only place GD text and TTF text are distinguished. (So eventually
+      we will be able to mix GD and TTF text on a plot.)
+
+    + New internal functions ProcessTextGD() and ProcessTextTTF() draw (or size)
+      GD and TTF text respectively. These are only called by ProcessText().
+      These are re-implementations which properly position and align text.
+
+    + Removed class variables title_angle, x_title_angle, and y_title_angle. The
+      titles only work at their fixed angles anyway (0, 0, and 90 respectively).
+
+    + Line spacing set with SetLineSpacing() now affects TTF text as well as
+      GD text. Previously, it only affected GD text. The default line spacing
+      happens to be usable for TTF text.
+
+    + Added new callback hook 'debug_textbox' for developing, testing, and
+      documenting. It provides access to the text area bounding box.
+
+    + Removed unneeded class variables x_tick_label_height, y_tick_label_width,
+      x_tot_margin, y_tot_margin.
+
 2007-11-25
     * Improve error handling:
       Internal functions PrintError() and DrawError() are now the same. Both
