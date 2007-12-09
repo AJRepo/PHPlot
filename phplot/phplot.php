@@ -51,9 +51,6 @@ class PHPlot {
     // Font angles: 0 or 90 degrees for fixed fonts, any for TTF
     var $x_label_angle = 0;                 // For labels on X axis (tick and data)
     var $y_label_angle = 0;                 // For labels on Y axis (tick and data)
-    var $x_title_angle = 0;                 // Don't change this if you don't want to screw things up!
-    var $y_title_angle = 90;                // Nor this.
-    var $title_angle = 0;                   // Or this.
 
 //Formats
     var $file_format = 'png';
@@ -195,6 +192,7 @@ class PHPlot {
         'draw_graph' => NULL,
         'draw_border' => NULL,
         'draw_legend' => NULL,
+        'debug_textbox' => NULL,
     );
 
 
@@ -734,7 +732,7 @@ class PHPlot {
 
 
 /////////////////////////////////////////////
-//////////////                          FONTS
+//////////////                 TEXT and FONTS
 /////////////////////////////////////////////
 
 
@@ -922,120 +920,419 @@ class PHPlot {
         return TRUE;
     }
 
-
     /*!
-     * Returns an array with the size of the bounding box of an
-     * arbitrarily placed (rotated) TrueType text string.
+     * Text drawing and sizing functions:
+     * ProcessText is meant for use only by DrawText and SizeText.
+     *    ProcessText(True, ...)  - Draw a block of text
+     *    ProcessText(False, ...) - Just return ($width, $height) of
+     *       the orthogonal bounding box containing the text.
+     * ProcessText is further split into separate functions for GD and TTF
+     * text, due to the size of the code.
+     *
+     * Horizontal and vertical alignment are relative to the drawing. That is:
+     * vertical text (90 deg) gets centered along Y postition with
+     * v_align = 'center', and adjusted to the right of X position with
+     * h_align = 'right'.  Another way to look at this is to say
+     * that text rotation happens first, then alignment.
+     *
+     * Original multiple lines code submitted by Remi Ricard.
+     * Original vertical code submitted by Marlin Viss.
+     *
+     * Text routines rewritten by ljb to fix alignment and position problems.
+     * Here is my explanation and notes. More information and pictures will be
+     * placed in the PHPlot Reference Manual.
+     *
+     *    + Process TTF text one line at a time, not as a block. (See below)
+     *    + Flipped top vs bottom vertical alignment. The usual interpretation
+     *  is: bottom align means bottom of the text is at the specified Y
+     *  coordinate. For some reason, PHPlot did left/right the correct way,
+     *  but had top/bottom reversed. I fixed it, and left the default valign
+     *  argument as bottom, but the meaning of the default value changed.
+     *
+     *    For GD font text, only single-line text is handled by GD, and the
+     *  basepoint is the upper left corner of each text line.
+     *    For TTF text, multi-line text could be handled by GD, with the text
+     *  basepoint at the lower left corner of the first line of text.
+     *  (Behavior of TTF drawing routines on multi-line text is not documented.)
+     *  But you cannot do left/center/right alignment on each line that way,
+     *  or proper line spacing.
+     *    Therefore, for either text type, we have to break up the text into
+     *  lines and position each line independently.
+     *
+     *    There are 9 alignment modes: Horizontal = left, center, or right, and
+     *  Vertical = top, center, or bottom. Alignment is interpreted relative to
+     *  the image, not as the text is read. This makes sense when you consider
+     *  for example X axis labels. They need to be centered below the marks
+     *  (center, top alignment) regardless of the text angle.
+     *
+     *    GD font text is supported (by libgd) at 0 degrees and 90 degrees only.
+     *  Multi-line or single line text works with any of the 9 alignment modes.
+     *
+     *    TTF text can be at any angle. The 9 aligment modes work for all angles,
+     *  but the results might not be what you expect for multi-line text. See
+     *  the PHPlot Reference Manual for pictures and details. In short, alignment
+     *  applies to the orthogonal (aligned with X and Y axes) bounding box that
+     *  contains the text, and to each line in the multi-line text box. Since
+     *  alignment is relative to the image, 45 degree multi-line text aligns
+     *  differently from 46 degree text.
+     *
+     *    Note that PHPlot allows multi-line text for the 3 titles, and they
+     *  are only drawn at 0 degrees (main and X titles) or 90 degrees (Y title).
+     *  Data labels can also be multi-line, and they can be drawn at any angle.
+     *  -ljb 2007-11-03
+     *
      */
-    function TTFBBoxSize($size, $angle, $font, $string)
+
+    /*
+     * ProcessTextGD() - Draw or size GD fixed-font text.
+     * This is intended for use only by ProcessText().
+     *    $draw_it : True to draw the text, False to just return the orthogonal width and height.
+     *    $font_number : GD font number, 1-5.
+     *    $font_width : Fixed character cell width for the font
+     *    $font_height : Fixed character cell height for the font
+     *    $angle : Text angle in degrees. GD only supports 0 and 90. We treat >= 45 as 90, else 0.
+     *    $x, $y : Reference point for the text (ignored if !$draw_it)
+     *    $color : GD color index to use for drawing the text (ignored if !$draw_it)
+     *    $text : The text to draw or size. Put a newline between lines.
+     *    $h_factor : Horizontal alignment factor: 0(left), .5(center), or 1(right) (ignored if !$draw_it)
+     *    $v_factor : Vertical alignment factor: 0(top), .5(center), or 1(bottom) (ignored if !$draw_it)
+     * Returns: True, if drawing text, or an array of ($width, $height) if not.
+     */
+    function ProcessTextGD($draw_it, $font_number, $font_width, $font_height, $angle, $x, $y, $color,
+                           $text, $h_factor, $v_factor)
     {
-        // First, assume angle < 90
-        $arr = ImageTTFBBox($size, 0, $font, $string);
-        $flat_width  = $arr[2] - $arr[0];
-        $flat_height = abs($arr[3] - $arr[5]);
+        # Break up the text into lines, trim whitespace, find longest line.
+        # Save the lines and length for drawing below.
+        $longest = 0;
+        foreach (explode("\n", $text) as $each_line) {
+            $lines[] = $line = trim($each_line);
+            $line_lens[] = $line_len = strlen($line);
+            if ($line_len > $longest) $longest = $line_len;
+        }
+        $n_lines = count($lines);
+        $spacing = $this->line_spacing * ($n_lines - 1); // Total inter-line spacing
 
-        // Now the bounding box
-        $angle = deg2rad($angle);
-        $width  = ceil(abs($flat_width*cos($angle) + $flat_height*sin($angle))); //Must be integer
-        $height = ceil(abs($flat_width*sin($angle) + $flat_height*cos($angle))); //Must be integer
+        # Width, height are based on font size and longest line, line count respectively.
+        # These are relative to the text angle.
+        $total_width = $longest * $font_width;
+        $total_height = $n_lines * $font_height + $spacing;
 
-        return array($width, $height);
+        if (!$draw_it) {
+            if ($angle < 45) return array($total_width, $total_height);
+            return array($total_height, $total_width);
+        }
+
+        $interline_step = $font_height + $this->line_spacing; // Line-to-line step
+
+        if ($angle >= 45) {
+            // Vertical text (90 degrees):
+            // (Remember the alignment convention with vertical text)
+            // For 90 degree text, alignment factors change like this:
+            $temp = $v_factor;
+            $v_factor = $h_factor;
+            $h_factor = 1 - $temp;
+
+            $draw_func = 'ImageStringUp';
+
+            // Rotation matrix "R" for 90 degrees (with Y pointing down):
+            $r00 = 0;  $r01 = 1;
+            $r10 = -1; $r11 = 0;
+
+        } else {
+            // Horizontal text (0 degrees):
+            $draw_func = 'ImageString';
+
+            // Rotation matrix "R" for 0 degrees:
+            $r00 = 1; $r01 = 0;
+            $r10 = 0; $r11 = 1;
+        }
+
+        // Adjust for vertical alignment (horizontal text) or horizontal aligment (vertical text):
+        $factor = (int)($total_height * $v_factor);
+        $xpos = $x - $r01 * $factor;
+        $ypos = $y - $r11 * $factor;
+
+        # Debug callback provides the bounding box:
+        if ($this->GetCallback('debug_textbox')) {
+            if ($angle >= 45) {
+                $bbox_width  = $total_height;
+                $bbox_height = $total_width;
+                $px = $xpos;
+                $py = $ypos - (1 - $h_factor) * $total_width;
+            } else {
+                $bbox_width  = $total_width;
+                $bbox_height = $total_height;
+                $px = $xpos - $h_factor * $total_width;
+                $py = $ypos;
+            }
+            $this->DoCallback('debug_textbox', $px, $py, $bbox_width, $bbox_height);
+        }
+
+        for ($i = 0; $i < $n_lines; $i++) {
+
+            $line = $lines[$i];
+            $line_len = $line_lens[$i];
+
+            // Adjust for alignment of this line within the text block:
+            $factor = (int)($line_len * $font_width * $h_factor);
+            $x = $xpos - $r00 * $factor;
+            $y = $ypos - $r10 * $factor;
+
+            // Call ImageString or ImageStringUp:
+            $draw_func($this->img, $font_number, $x, $y, $line, $color);
+
+            // Step to the next line of text. This is a rotation of (x=0, y=interline_spacing)
+            $xpos += $r01 * $interline_step;
+            $ypos += $r11 * $interline_step;
+        }
+        return TRUE;
     }
 
 
-    /*!
-     * Draws a string of text. Horizontal and vertical alignment are relative to
-     * to the drawing. That is: vertical text (90 deg) gets centered along y-axis
-     * with v_align = 'center', and adjusted to the left of x-axis with h_align = 'right',
-     *
-     * \note Original multiple lines code submitted by Remi Ricard.
-     * \note Original vertical code submitted by Marlin Viss.
+    /*
+     * ProcessTextTTF() - Draw or size TTF text.
+     * This is intended for use only by ProcessText().
+     *    $draw_it : True to draw the text, False to just return the orthogonal width and height.
+     *    $font_file : Path or filename to a TTF font file.
+     *    $font_size : Font size in "points".
+     *    $angle : Text angle in degrees.
+     *    $x, $y : Reference point for the text (ignored if !$draw_it)
+     *    $color : GD color index to use for drawing the text (ignored if !$draw_it)
+     *    $text : The text to draw or size. Put a newline between lines.
+     *    $h_factor : Horizontal alignment factor: 0(left), .5(center), or 1(right) (ignored if !$draw_it)
+     *    $v_factor : Vertical alignment factor: 0(top), .5(center), or 1(bottom) (ignored if !$draw_it)
+     * Returns: True, if drawing text, or an array of ($width, $height) if not.
+     */
+    function ProcessTextTTF($draw_it, $font_file, $font_size, $angle, $x, $y, $color,
+                            $text, $h_factor, $v_factor)
+    {
+        # Break up the text into lines, trim whitespace.
+        # Calculate the total width and height of the text box at 0 degrees.
+        # This has to be done line-by-line so the interline-spacing is right.
+        # Save the trimmed line, and its 0-degree height and width for later
+        # when the text is drawn.
+        # Note: Total height = sum of each line height plus inter-line spacing
+        #   (which is added after the loop). Total width = width of widest line.
+        $total_height = 0;
+        $total_width = 0;
+        foreach (explode("\n", $text) as $each_line) {
+            $lines[] = $line = trim($each_line);
+            $bbox = ImageTTFBBox($font_size, 0, $font_file, $line);
+            $height = $bbox[1] - $bbox[5];
+            $width = $bbox[2] - $bbox[0];
+            $total_height += $height;
+            if ($width > $total_width) $total_width = $width;
+            $line_widths[] = $width;
+            $line_heights[] = $height;
+        }
+        $n_lines = count($lines);
+        $total_height += ($n_lines - 1) * $this->line_spacing;
+
+        # Calculate the rotation matrix for the text's angle. Remember that GD points Y down,
+        # so the sin() terms change sign.
+        $theta = deg2rad($angle);
+        $cos_t = cos($theta);
+        $sin_t = sin($theta);
+        $r00 = $cos_t;    $r01 = $sin_t;
+        $r10 = -$sin_t;   $r11 = $cos_t;
+
+        # Make a bounding box of the right size, with upper left corner at (0,0).
+        # By convention, the point order is: LL, LR, UR, UL.
+        # Note this is still working with the text at 0 degrees.
+        $b[0] = 0;             $b[1] = $total_height;
+        $b[2] = $total_width;  $b[3] = $b[1];
+        $b[4] = $b[2];         $b[5] = 0;
+        $b[6] = $b[0];         $b[7] = $b[5];
+
+        # Rotate the bounding box, then offset to the reference point:
+        for ($i = 0; $i < 8; $i += 2) {
+            $x_b = $b[$i];
+            $y_b = $b[$i+1];
+            $c[$i]   = $x + $r00 * $x_b + $r01 * $y_b;
+            $c[$i+1] = $y + $r10 * $x_b + $r11 * $y_b;
+        }
+
+        # Get an orthogonal (aligned with X and Y axes) bounding box around it, by
+        # finding the min and max X and Y:
+        $bbox_ref_x = $bbox_max_x = $c[0];
+        $bbox_ref_y = $bbox_max_y = $c[1];
+        for ($i = 2; $i < 8; $i += 2) {
+            $x_b = $c[$i];
+            if ($x_b < $bbox_ref_x) $bbox_ref_x = $x_b; elseif ($bbox_max_x < $x_b) $bbox_max_x = $x_b;
+            $y_b = $c[$i+1];
+            if ($y_b < $bbox_ref_y) $bbox_ref_y = $y_b; elseif ($bbox_max_y < $y_b) $bbox_max_y = $y_b;
+        }
+        $bbox_width = $bbox_max_x - $bbox_ref_x;
+        $bbox_height = $bbox_max_y - $bbox_ref_y;
+
+        if (!$draw_it) {
+            return array($bbox_width, $bbox_height);
+        }
+
+        # Calculate the offsets from the supplied reference point to the
+        # required upper-left corner of the text.
+        # Start at the reference point at the upper left corner of the bounding
+        # box (bbox_ref_x, bbox_ref_y) then adjust it for the 9 point alignment.
+        # h,v_factor are 0,0 for top,left, .5,.5 for center,center, 1,1 for bottom,right.
+        #    $off_x = $bbox_ref_x + $bbox_width * $h_factor - $x;
+        #    $off_y = $bbox_ref_y + $bbox_height * $v_factor - $y;
+        # Then use that offset to calculate back to the supplied reference point x, y
+        # to get the text base point.
+        #    $qx = $x - $off_x;
+        #    $qy = $y - $off_y;
+        # Reduces to:
+        $qx = 2 * $x - $bbox_ref_x - $bbox_width * $h_factor;
+        $qy = 2 * $y - $bbox_ref_y - $bbox_height * $v_factor;
+
+        # Check for debug callback. Don't calculate bounding box unless it is wanted.
+        if ($this->GetCallback('debug_textbox')) {
+            # Calculate the orthogonal bounding box coordinates for debug testing.
+
+            # qx, qy is upper left corner relative to the text.
+            # Calculate px,py: upper left corner (absolute) of the bounding box.
+            # There are 4 equation sets for this, depending on the quadrant:
+            if ($sin_t > 0) {
+                if ($cos_t > 0) {
+                    # Quadrant: 0d - 90d:
+                    $px = $qx; $py = $qy - $total_width * $sin_t;
+                } else {
+                    # Quadrant: 90d - 180d:
+                   $px = $qx + $total_width * $cos_t; $py = $qy - $bbox_height;
+                }
+            } else {
+                if ($cos_t < 0) {
+                    # Quadrant: 180d - 270d:
+                    $px = $qx - $bbox_width; $py = $qy + $total_height * $cos_t;
+                } else {
+                    # Quadrant: 270d - 360d:
+                    $px = $qx + $total_height * $sin_t; $py = $qy;
+                }
+            }
+            $this->DoCallback('debug_textbox', $px, $py, $bbox_width, $bbox_height);
+        }
+
+        # Since alignment is applied after rotation, which parameter is used
+        # to control alignment of each line within the text box varies with
+        # the angle.
+        #   Angle (degrees):       Line alignment controlled by:
+        #  -45 < angle <= 45          h_align
+        #   45 < angle <= 135         reversed v_align
+        #  135 < angle <= 225         reversed h_align
+        #  225 < angle <= 315         v_align
+        if ($cos_t >= $sin_t) {
+            if ($cos_t >= -$sin_t) $line_align_factor = $h_factor;
+            else $line_align_factor = $v_factor;
+        } else {
+            if ($cos_t >= -$sin_t) $line_align_factor = 1-$v_factor;
+            else $line_align_factor = 1-$h_factor;
+        }
+
+        # Now we have the start point, spacing and in-line alignment factor.
+        # We are finally ready to start drawing the text, line by line.
+        for ($i = 0; $i < $n_lines; $i++) {
+            $line = $lines[$i];
+            # These are height and width at 0 degrees, calculated above:
+            $height = $line_heights[$i];
+            $width = $line_widths[$i];
+
+            # For drawing TTF text, the lower left corner is the base point.
+            # The adjustment is inside the loop, since lines can have different
+            # heights. The following also adjusts for horizontal (relative to
+            # the text) alignment of the current line within the box.
+            # What is happening is rotation of this vector by the text angle:
+            #    (x = (total_width - line_width) * factor, y = line_height)
+
+            $width_factor = ($total_width - $width) * $line_align_factor;
+            $rx = $qx + $r00 * $width_factor + $r01 * $height;
+            $ry = $qy + $r10 * $width_factor + $r11 * $height;
+
+            # Finally, draw the text:
+            ImageTTFText($this->img, $font_size, $angle, $rx, $ry, $color, $font_file, $line);
+
+            # Step to position of next line.
+            # This is a rotation of (x=0,y=text_height+line_height) by $angle:
+            $interline_step = $this->line_spacing + $height;
+            $qx += $r01 * $interline_step;
+            $qy += $r11 * $interline_step;
+        }
+        return True;
+    }
+
+    /*
+     * ProcessText() - Wrapper for ProcessTextTTF() and ProcessTextGD(). See notes above.
+     * This is intended for use from within PHPlot only, and only by DrawText() and SizeText().
+     *    $draw_it : True to draw the text, False to just return the orthogonal width and height.
+     *    $font : PHPlot font array. (Contents depend on use_ttf flag).
+     *    $angle : Text angle in degrees
+     *    $x, $y : Reference point for the text (ignored if !$draw_it)
+     *    $color : GD color index to use for drawing the text (ignored if !$draw_it)
+     *    $text : The text to draw or size. Put a newline between lines.
+     *    $halign : Horizontal alignment: left, center, or right (ignored if !$draw_it)
+     *    $valign : Vertical alignment: top, center, or bottom (ignored if !$draw_it)
+     *      Note: Alignment is relative to the image, not the text.
+     * Returns: True, if drawing text, or an array of ($width, $height) if not.
+     */
+    function ProcessText($draw_it, $font, $angle, $x, $y, $color, $text, $halign, $valign)
+    {
+        # Empty text case:
+        if ($text === '') {
+            if ($draw_it) return TRUE;
+            return array(0, 0);
+        }
+
+        # Calculate width and height offset factors using the alignment args:
+        if ($valign == 'top') $v_factor = 0;
+        elseif ($valign == 'center') $v_factor = 0.5;
+        else $v_factor = 1.0; # 'bottom'
+        if ($halign == 'left') $h_factor = 0;
+        elseif ($halign == 'center') $h_factor = 0.5;
+        else $h_factor = 1.0; # 'right'
+
+        if ($this->use_ttf) {
+            return $this->ProcessTextTTF($draw_it, $font['font'], $font['size'],
+                                         $angle, $x, $y, $color, $text, $h_factor, $v_factor);
+        }
+
+        return $this->ProcessTextGD($draw_it, $font['font'], $font['width'], $font['height'],
+                                    $angle, $x, $y, $color, $text, $h_factor, $v_factor);
+    }
+
+
+    /*
+     * Draws a block of text. See comments above before ProcessText().
+     *    $which_font : PHPlot font array. (Contents depend on use_ttf flag).
+     *    $which_angle : Text angle in degrees
+     *    $which_xpos, $which_ypos: Reference point for the text
+     *    $which_color : GD color index to use for drawing the text
+     *    $which_text :  The text to draw, with newlines (\n) between lines.
+     *    $which_halign : Horizontal (relative to the image) alignment: left, center, or right.
+     *    $which_valign : Vertical (relative to the image) alignment: top, center, or bottom.
      */
     function DrawText($which_font, $which_angle, $which_xpos, $which_ypos, $which_color, $which_text,
                       $which_halign = 'left', $which_valign = 'bottom')
     {
-        // TTF:
-        if ($this->use_ttf) {
-            $size = $this->TTFBBoxSize($which_font['size'], $which_angle, $which_font['font'], $which_text);
-            $rads = deg2rad($which_angle);
+        return $this->ProcessText(True,
+                           $which_font, $which_angle, $which_xpos, $which_ypos,
+                           $which_color, $which_text, $which_halign, $which_valign);
+    }
 
-            if ($which_valign == 'center')
-                $which_ypos += $size[1]/2;
-            elseif ($which_valign == 'bottom')
-                $which_ypos += $size[1];
-
-            if ($which_halign == 'center')
-                $which_xpos -= ($size[0]/2) * cos($rads);
-            elseif ($which_halign == 'left')
-                $which_xpos += $size[0] * sin($rads);
-            elseif ($which_halign == 'right')
-                $which_xpos -= $size[0] * cos($rads);
-
-            ImageTTFText($this->img, $which_font['size'], $which_angle,
-                         $which_xpos, $which_ypos, $which_color, $which_font['font'], $which_text);
-        }
-        // Fixed fonts:
-        else {
-            // Split the text by its lines, and count them
-            $which_text = ereg_replace("\r", "", $which_text);
-            $str = split("\n", $which_text);
-            $nlines = count($str);
-            $spacing = $this->line_spacing * ($nlines - 1);
-
-            // Vertical text:
-            // (Remember the alignment convention with vertical text)
-            if ($which_angle == 90) {
-                // The text goes around $which_xpos.
-                if ($which_halign == 'center')
-                    $which_xpos -= ($nlines * ($which_font['height'] + $spacing))/2;
-
-                // Left alignment requires no modification to $xpos...
-                // Right-align it. $which_xpos designated the rightmost x coordinate.
-                elseif ($which_halign == 'right') {
-                    $which_xpos -= ($nlines * ($which_font['height'] + $spacing));
-                }
-
-                $ypos = $which_ypos;
-                for($i = 0; $i < $nlines; $i++) {
-                    // Center the text vertically around $which_ypos (each line)
-                    if ($which_valign == 'center')
-                        $ypos = $which_ypos + (strlen($str[$i]) * $which_font['width']) / 2;
-                    // Make the text finish (vertically) at $which_ypos
-                    if ($which_valign == 'bottom')
-                        $ypos = $which_ypos + strlen($str[$i]) * $which_font['width'];
-
-                    ImageStringUp($this->img, $which_font['font'],
-                                  $i * ($which_font['height'] + $spacing) + $which_xpos,
-                                  $ypos, $str[$i], $which_color);
-                }
-            }
-            // Horizontal text:
-            else {
-                // The text goes above $which_ypos
-                if ($which_valign == 'top')
-                    $which_ypos -= $nlines * ($which_font['height'] + $spacing);
-                // The text is centered around $which_ypos
-                if ($which_valign == 'center')
-                    $which_ypos -= ($nlines * ($which_font['height'] + $spacing))/2;
-                // valign = 'bottom' requires no modification
-
-                $xpos = $which_xpos;
-                for($i = 0; $i < $nlines; $i++) {
-                    // center the text around $which_xpos
-                    if ($which_halign == 'center')
-                        $xpos = $which_xpos - (strlen($str[$i]) * $which_font['width'])/2;
-                    // make the text finish at $which_xpos
-                    if ($which_halign == 'right')
-                        $xpos = $which_xpos - strlen($str[$i]) * $which_font['width'];
-
-                    ImageString($this->img, $which_font['font'], $xpos,
-                                $i * ($which_font['height'] + $spacing) + $which_ypos,
-                                $str[$i], $which_color);
-                }
-            }
-        }
-        return TRUE;
-    } // function DrawText()
+    /*
+     * Returns the size of block of text. This is the orthogonal width and height of a bounding
+     * box aligned with the X and Y axes of the text. Only for angle=0 is this the actual
+     * width and height of the text block, but for any angle it is the amount of space needed
+     * to contain the text.
+     *    $which_font : PHPlot font array. (Contents depend on use_ttf flag).
+     *    $which_angle : Text angle in degrees
+     *    $which_text :  The text to draw, with newlines (\n) between lines.
+     * Returns a two element array with: $width, $height.
+     * This is just a wrapper for ProcessText() - see above.
+     */
+    function SizeText($which_font, $which_angle, $which_text)
+    {
+        // Color, position, and alignment are not used when calculating the size.
+        return $this->ProcessText(False,
+                           $which_font, $which_angle, 0, 0, 1, $which_text, '', '');
+    }
 
 
 /////////////////////////////////////////////
@@ -1559,22 +1856,6 @@ class PHPlot {
     function SetTitle($which_title)
     {
         $this->title_txt = $which_title;
-
-        if ($which_title == '') {
-            $this->title_height = 0;
-            return TRUE;
-        }
-
-        $str = split("\n", $which_title);
-        $lines = count($str);
-        $spacing = $this->line_spacing * ($lines - 1);
-
-        if ($this->use_ttf) {
-            $size = $this->TTFBBoxSize($this->title_font['size'], 0, $this->title_font['font'], $which_title);
-            $this->title_height = $size[1] * $lines;
-        } else {
-            $this->title_height = ($this->title_font['height'] + $spacing) * $lines;
-        }
         return TRUE;
     }
 
@@ -1588,20 +1869,7 @@ class PHPlot {
 
         $this->x_title_pos = $this->CheckOption($which_xpos, 'plotdown, plotup, both, none', __FUNCTION__);
         if (!$this->x_title_pos) return FALSE;
-
         $this->x_title_txt = $which_xtitle;
-
-        $str = split("\n", $which_xtitle);
-        $lines = count($str);
-        $spacing = $this->line_spacing * ($lines - 1);
-
-        if ($this->use_ttf) {
-            $size = $this->TTFBBoxSize($this->x_title_font['size'], 0, $this->x_title_font['font'], $which_xtitle);
-            $this->x_title_height = $size[1] * $lines;
-        } else {
-            $this->x_title_height = ($this->x_title_font['height'] + $spacing) * $lines;
-        }
-
         return TRUE;
     }
 
@@ -1616,21 +1884,7 @@ class PHPlot {
 
         $this->y_title_pos = $this->CheckOption($which_ypos, 'plotleft, plotright, both, none', __FUNCTION__);
         if (!$this->y_title_pos) return FALSE;
-
         $this->y_title_txt = $which_ytitle;
-
-        $str = split("\n", $which_ytitle);
-        $lines = count($str);
-        $spacing = $this->line_spacing * ($lines - 1);
-
-        if ($this->use_ttf) {
-            $size = $this->TTFBBoxSize($this->y_title_font['size'], 90, $this->y_title_font['font'],
-                                       $which_ytitle);
-            $this->y_title_width = $size[0] * $lines;
-        } else {
-            $this->y_title_width = ($this->y_title_font['height'] + $spacing) * $lines;
-        }
-
         return TRUE;
     }
 
@@ -2035,6 +2289,7 @@ class PHPlot {
         $mine = 0;  // Maximum value for the -error bar (assume error bars always > 0)
         $maxe = 0;  // Maximum value for the +error bar (assume error bars always > 0)
         $maxt = 0;  // Maximum number of characters in text labels
+        $longest_x_data_label = '';
 
         if ($this->plot_type == 'stackedbars') {
             $maxmaxy = $minminy = 0;
@@ -2046,9 +2301,13 @@ class PHPlot {
         // Process each row of data
         for ($i=0; $i < $this->num_data_rows; $i++) {
             $j=0;
-            // Extract maximum text label length
-            $val = @ strlen($this->data[$i][$j++]);
-            if ($val > $maxt) $maxt = $val;
+            // Save the longest X data label for margin calculations
+            $row_data_label = $this->data[$i][$j++];
+            $row_data_label_len = strlen($row_data_label);
+            if ($row_data_label_len > $maxt) {
+                $maxt = $row_data_label_len;
+                $longest_x_data_label = $row_data_label;
+            }
 
             switch ($this->data_type) {
             case 'text-data':           // Data is passed in as (title, y1, y2, y3, ...)
@@ -2122,7 +2381,7 @@ class PHPlot {
         $this->max_x = $maxx;
         $this->min_y = $minminy;
         $this->max_y = $maxmaxy;
-        $this->max_t = $maxt;
+        $this->longest_x_data_label = $longest_x_data_label;
 
         $this->data_limits_done = TRUE;
 
@@ -2134,49 +2393,47 @@ class PHPlot {
      * Calculates image margins on the fly from title positions and sizes,
      * and tick labels positions and sizes.
      *
-     * FIXME: fix x_data_label_pos behaviour. Now we are leaving room for it AND x_tick_label_pos
-     *        maybe it shouldn't be so...
-     *
      * TODO: add x_tick_label_width and y_tick_label_height and use them to calculate
      *       max_x_labels and max_y_labels, to be used by drawing functions to avoid overlapping.
      */
     function CalcMargins()
     {
-        // Temporary variables for label size calculation
-        $xlab = $this->FormatLabel('x', $this->max_x);
+
+        //////// Calculate maximum X/Y axis label height / width:
+
+        // Calculate approximate height of X tick or data labels, depending on which is on:
+        if ($this->x_data_label_pos == 'none') {
+            $xlab_data = '';
+        } else {
+            $xlab_data = $this->longest_x_data_label;
+        }
+        if ($this->x_tick_label_pos == 'none') {
+            $xlab_tick = '';
+        } else {
+            // FIXME: Assumes max X is a visible tick label and results in tallest label.
+            $xlab_tick = $this->FormatLabel('x', $this->max_x);
+        }
+        $x_label_height = 0;
+        if ($xlab_data !== '') {
+            list($unused, $height) = $this->SizeText($this->x_label_font, $this->x_label_angle, $xlab_data);
+            if ($height > $x_label_height)
+                $x_label_height = $height;
+        }
+        if ($xlab_tick !== '') {
+            list($unused, $height) = $this->SizeText($this->x_label_font, $this->x_label_angle, $xlab_tick);
+            if ($height > $x_label_height)
+                $x_label_height = $height;
+        }
+
+        // FIXME: Assumes max Y is a visible tick label and results in widest label.
         $ylab = $this->FormatLabel('y', $this->max_y);
+        list($y_label_width, $unused) = $this->SizeText($this->y_label_font, $this->y_label_angle, $ylab);
 
-        // dirty fix:
-        // max_t is the maximum data label length (from column 0 of each data row).
-        if ($this->max_t > strlen ($xlab))
-            $xlab = sprintf ("%{$this->max_t}s","_");
 
-        //////// Calculate maximum X/Y axis label height and width:
-
-        // TTFonts:
-        if ($this->use_ttf) {
-            // Maximum X axis label height
-            $size = $this->TTFBBoxSize($this->x_label_font['size'], $this->x_label_angle,
-                                       $this->x_label_font['font'], $xlab);
-            $this->x_tick_label_height = $size[1];
-
-            // Maximum Y axis label width
-            $size = $this->TTFBBoxSize($this->y_label_font['size'], $this->y_label_angle,
-                                        $this->y_label_font['font'], $ylab);
-            $this->y_tick_label_width = $size[0];
-        }
-        // Fixed fonts:
-        else {
-            // Maximum X axis label height
-            if ($this->x_label_angle == 90)
-                $this->x_tick_label_height = strlen($xlab) * $this->x_label_font['width'];
-            else
-                $this->x_tick_label_height = $this->x_label_font['height'];
-
-            // Maximum Y axis label width
-            $this->y_tick_label_width = strlen($ylab) * $this->y_label_font['width'];
-        }
-
+        // Calculate the title sizes:
+        list($unused, $this->title_height) = $this->SizeText($this->title_font, 0, $this->title_txt);
+        list($unused, $this->x_title_height) = $this->SizeText($this->x_title_font, 0, $this->x_title_txt);
+        list($this->y_title_width, $unused) = $this->SizeText($this->y_title_font, 90, $this->y_title_txt);
 
         ///////// Calculate margins:
 
@@ -2187,13 +2444,13 @@ class PHPlot {
             $this->y_top_margin += $this->x_title_height + $this->safe_margin;
 
         if ($this->x_tick_label_pos == 'plotup' || $this->x_tick_label_pos == 'both')
-            $this->y_top_margin += $this->x_tick_label_height;
+            $this->y_top_margin += $x_label_height;
 
         if ($this->x_tick_pos == 'plotup' || $this->x_tick_pos == 'both')
             $this->y_top_margin += $this->x_tick_length * 2;
 
         if ($this->x_data_label_pos == 'plotup' || $this->x_data_label_pos == 'both')
-            $this->y_top_margin += $this->x_tick_label_height;
+            $this->y_top_margin += $x_label_height;
 
         // Lower title, ticks and tick labels, and data labels:
         $this->y_bot_margin = $this->safe_margin * 2;
@@ -2208,13 +2465,13 @@ class PHPlot {
             $this->y_bot_margin += $this->x_tick_length * 2;
 
         if ($this->x_tick_label_pos == 'plotdown' || $this->x_tick_label_pos == 'both')
-            $this->y_bot_margin += $this->x_tick_label_height;
+            $this->y_bot_margin += $x_label_height;
 
         if ($this->x_tick_label_pos == 'xaxis' && ($this->x_axis_position == '' || $this->x_axis_position == 0))
-            $this->y_bot_margin += $this->x_tick_label_height;
+            $this->y_bot_margin += $x_label_height;
 
         if ($this->x_data_label_pos == 'plotdown' || $this->x_data_label_pos == 'both')
-            $this->y_bot_margin += $this->x_tick_label_height;
+            $this->y_bot_margin += $x_label_height;
 
         // Left title, ticks and tick labels:
         $this->x_left_margin = $this->safe_margin * 2;
@@ -2223,7 +2480,7 @@ class PHPlot {
             $this->x_left_margin += $this->y_title_width + $this->safe_margin;
 
         if ($this->y_tick_label_pos == 'plotleft' || $this->y_tick_label_pos == 'both')
-            $this->x_left_margin += $this->y_tick_label_width;
+            $this->x_left_margin += $y_label_width;
 
         if ($this->y_tick_pos == 'plotleft' || $this->y_tick_pos == 'both')
             $this->x_left_margin += $this->y_tick_length * 2 ;
@@ -2235,14 +2492,10 @@ class PHPlot {
             $this->x_right_margin += $this->y_title_width + $this->safe_margin;
 
         if ($this->y_tick_label_pos == 'plotright' || $this->y_tick_label_pos == 'both')
-            $this->x_right_margin += $this->y_tick_label_width;
+            $this->x_right_margin += $y_label_width;
 
         if ($this->y_tick_pos == 'plotright' || $this->y_tick_pos == 'both')
             $this->x_right_margin += $this->y_tick_length * 2;
-
-
-        $this->x_tot_margin = $this->x_left_margin + $this->x_right_margin;
-        $this->y_tot_margin = $this->y_top_margin + $this->y_bot_margin;
 
         return TRUE;
     }
@@ -2256,11 +2509,9 @@ class PHPlot {
 
         $this->x_left_margin = $which_lm;
         $this->x_right_margin = $which_rm;
-        $this->x_tot_margin = $which_lm + $which_rm;
 
         $this->y_top_margin = $which_tm;
         $this->y_bot_margin = $which_bm;
-        $this->y_tot_margin = $which_tm + $which_bm;
 
         $this->SetPlotAreaPixels();
 
@@ -2280,7 +2531,7 @@ class PHPlot {
         if ($x2 && $y2) {
             $this->plot_area = array($x1, $y1, $x2, $y2);
         } else {
-            if (! isset($this->x_tot_margin))
+            if (! isset($this->x_right_margin))
                 $this->CalcMargins();
 
             $this->plot_area = array($this->x_left_margin, $this->y_top_margin,
@@ -2483,13 +2734,10 @@ class PHPlot {
 
     /*!
      * Translate X world coordinate into pixel coordinate
-     * Needs values calculated by _CalcTranslation()
+     * See CalcTranslation() for calculation of xscale.
      */
     function xtr($x_world)
     {
-        //$x_pixels =  $this->x_left_margin + ($this->image_width - $this->x_tot_margin)*
-        //      (($x_world - $this->plot_min_x) / ($this->plot_max_x - $this->plot_min_x)) ;
-        //which with a little bit of math reduces to ...
         if ($this->xscale_type == 'log') {
             $x_pixels = $this->plot_origin_x + log10($x_world) * $this->xscale ;
         } else {
@@ -2501,7 +2749,7 @@ class PHPlot {
 
     /*!
      * Translate Y world coordinate into pixel coordinate.
-     * Needs values calculated by _CalcTranslation()
+     * See CalcTranslation() for calculation of yscale.
      */
     function ytr($y_world)
     {
@@ -2829,8 +3077,8 @@ class PHPlot {
         // Place it at almost at the top
         $ypos = $this->safe_margin;
 
-        $this->DrawText($this->title_font, $this->title_angle, $xpos, $ypos,
-                        $this->ndx_title_color, $this->title_txt, 'center', 'bottom');
+        $this->DrawText($this->title_font, 0, $xpos, $ypos,
+                        $this->ndx_title_color, $this->title_txt, 'center', 'top');
 
         return TRUE;
 
@@ -2851,14 +3099,14 @@ class PHPlot {
         // Upper title
         if ($this->x_title_pos == 'plotup' || $this->x_title_pos == 'both') {
             $ypos = $this->safe_margin + $this->title_height + $this->safe_margin;
-            $this->DrawText($this->x_title_font, $this->x_title_angle,
-                            $xpos, $ypos, $this->ndx_title_color, $this->x_title_txt, 'center');
+            $this->DrawText($this->x_title_font, 0, $xpos, $ypos, $this->ndx_title_color,
+                            $this->x_title_txt, 'center', 'top');
         }
         // Lower title
         if ($this->x_title_pos == 'plotdown' || $this->x_title_pos == 'both') {
-            $ypos = $this->image_height - $this->x_title_height - $this->safe_margin;
-            $this->DrawText($this->x_title_font, $this->x_title_angle,
-                            $xpos, $ypos, $this->ndx_title_color, $this->x_title_txt, 'center');
+            $ypos = $this->image_height - $this->safe_margin;
+            $this->DrawText($this->x_title_font, 0, $xpos, $ypos, $this->ndx_title_color,
+                            $this->x_title_txt, 'center', 'bottom');
         }
         return TRUE;
     }
@@ -3089,7 +3337,7 @@ class PHPlot {
             if ($this->x_tick_label_pos == 'xaxis') {
                  $this->DrawText($this->x_label_font, $this->x_label_angle, $x_pixels,
                                 $this->x_axis_y_pixels + $this->x_tick_length*1.5, $this->ndx_text_color,
-                                $xlab, 'center', 'bottom');
+                                $xlab, 'center', 'top');
             }
 
             // Top of the plot area tick
@@ -3107,14 +3355,14 @@ class PHPlot {
             if ($this->x_tick_label_pos == 'plotup' || $this->x_tick_label_pos == 'both') {
                 $this->DrawText($this->x_label_font, $this->x_label_angle, $x_pixels,
                                 $this->plot_area[1] - $this->x_tick_length*1.5, $this->ndx_text_color,
-                                $xlab, 'center', 'top');
+                                $xlab, 'center', 'bottom');
             }
 
             // Bottom of the plot area tick label
             if ($this->x_tick_label_pos == 'plotdown' || $this->x_tick_label_pos == 'both') {
                 $this->DrawText($this->x_label_font, $this->x_label_angle, $x_pixels,
                                 $this->plot_area[3] + $this->x_tick_length*1.5, $this->ndx_text_color,
-                                $xlab, 'center', 'bottom');
+                                $xlab, 'center', 'top');
             }
         }
         return TRUE;
@@ -3162,7 +3410,7 @@ class PHPlot {
      * This is currently only used for Y data labels for bar charts.
      */
     function DrawDataLabel($which_font, $which_angle, $x_world, $y_world, $which_color, $which_text,
-                      $which_halign = 'center', $which_valign = 'top', $x_adjustment=0, $y_adjustment=0) 
+                      $which_halign = 'center', $which_valign = 'bottom', $x_adjustment=0, $y_adjustment=0) 
     {
         $data_label = $this->FormatLabel('y', $which_text);
         //since DrawDataLabel is going to be called alot - perhaps for speed it is better to 
@@ -3204,13 +3452,13 @@ class PHPlot {
         if ($this->x_data_label_pos == 'plotdown' || $this->x_data_label_pos == 'both')
             $this->DrawText($this->x_label_font, $this->x_label_angle, $xpos,
                             $this->plot_area[3] + $this->x_tick_length,
-                            $this->ndx_text_color, $xlab, 'center', 'bottom');
+                            $this->ndx_text_color, $xlab, 'center', 'top');
 
         // Labels above the plot area
         if ($this->x_data_label_pos == 'plotup' || $this->x_data_label_pos == 'both')
             $this->DrawText($this->x_label_font, $this->x_label_angle, $xpos,
                             $this->plot_area[1] - $this->x_tick_length ,
-                            $this->ndx_text_color, $xlab, 'center', 'top');
+                            $this->ndx_text_color, $xlab, 'center', 'bottom');
 
         // $row=0 means this is the first row. $row=FALSE means don't do any rows.
         if ($row !== FALSE && $this->draw_x_data_label_lines)
@@ -3258,35 +3506,20 @@ class PHPlot {
      * Draws the graph legend
      *
      * \note Base code submitted by Marlin Viss
-     * FIXME: maximum label length should be calculated more accurately for TT fonts
-     *        Performing a BBox calculation for every legend element, for example.
      */
     function DrawLegend()
     {
-        // Find maximum legend label length
-        $max_len = 0;
-        foreach ($this->legend as $leg) {
-            if (($len = strlen($leg)) > $max_len) $max_len = $len;
+        // Find maximum legend label line width.
+        $max_width = 0;
+        foreach ($this->legend as $line) {
+            list($width, $unused) = $this->SizeText($this->legend_font, 0, $line);
+            if ($width > $max_width) $max_width = $width;
         }
 
-        /////// Calculate legend labels sizes:  FIXME - dirty hack - FIXME
-        // TTF:
-        if ($this->use_ttf) {
-            $size = $this->TTFBBoxSize($this->legend_font['size'], 0,
-                                       $this->legend_font['font'], '_');
-            $char_w = $size[0];
+        // For the color box and line spacing, use a typical font character: 8.
+        list($char_w, $char_h) = $this->SizeText($this->legend_font, 0, '8');
 
-            $size = $this->TTFBBoxSize($this->legend_font['size'], 0,
-                                       $this->legend_font['font'], '|');
-            $char_h = $size[1];
-        }
-        // Fixed fonts:
-        else {
-            $char_w = $this->legend_font['width'];
-            $char_h = $this->legend_font['height'];
-        }
-
-        // Normalize text alignment and colorbox alignment:
+        // Normalize text alignment and colorbox alignment variables:
         $text_align = isset($this->legend_text_align) ? $this->legend_text_align : 'right';
         $colorbox_align = isset($this->legend_colorbox_align) ? $this->legend_colorbox_align : 'right';
 
@@ -3296,10 +3529,10 @@ class PHPlot {
         // Overall legend box width e.g.: | space colorbox space text space |
         // where colorbox and each space are 1 char width.
         if ($colorbox_align != 'none') {
-            $width = $char_w * ($max_len + 4);
+            $width = $max_width + 4 * $char_w;
             $draw_colorbox = True;
         } else {
-            $width = $char_w * ($max_len + 2);
+            $width = $max_width + 2 * $char_w;
             $draw_colorbox = False;
         }
 
@@ -3331,7 +3564,7 @@ class PHPlot {
         $color_index = 0;
         $max_color_index = count($this->ndx_data_colors) - 1;
 
-        // Calculate color box and text positions
+        // Calculate color box and text horizontal positions.
         if (!$draw_colorbox) {
             if ($text_align == 'left')
                 $x_pos = $box_start_x + $char_w;
@@ -3353,21 +3586,25 @@ class PHPlot {
                 $x_pos = $dot_left_x - $char_w;
         }
 
-        $y_pos = $box_start_y + $v_margin;
+        // Calculate starting position of first text line.  The bottom of each color box
+        // lines up with the bottom (baseline) of its text line.
+        $y_pos = $box_start_y + $v_margin + $dot_height;
 
         foreach ($this->legend as $leg) {
             // Draw text with requested alignment:
             $this->DrawText($this->legend_font, 0, $x_pos, $y_pos,
-                            $this->ndx_text_color, $leg, $text_align);
+                            $this->ndx_text_color, $leg, $text_align, 'bottom');
             if ($draw_colorbox) {
                 // Draw a box in the data color
-                ImageFilledRectangle($this->img, $dot_left_x, $y_pos + 1, $dot_right_x,
-                                     $y_pos + $dot_height-1, $this->ndx_data_colors[$color_index]);
+                $y1 = $y_pos - $dot_height + 1;
+                $y2 = $y_pos - 1;
+                ImageFilledRectangle($this->img, $dot_left_x, $y1, $dot_right_x, $y2,
+                                     $this->ndx_data_colors[$color_index]);
                 // Draw a rectangle around the box
-                ImageRectangle($this->img, $dot_left_x, $y_pos + 1, $dot_right_x,
-                               $y_pos + $dot_height-1, $this->ndx_text_color);
+                ImageRectangle($this->img, $dot_left_x, $y1, $dot_right_x, $y2,
+                               $this->ndx_text_color);
             }
-            $y_pos += $char_h + $this->line_spacing;
+            $y_pos += $dot_height;
 
             $color_index++;
             if ($color_index > $max_color_index)
@@ -3645,7 +3882,7 @@ class PHPlot {
         // something like this:
         if ($this->x_data_label_pos == 'plot')
             $this->DrawText($this->error_font, 90, $x1, $y2,
-                            $color, $label, 'center', 'top');
+                            $color, $label, 'center', 'bottom');
         */
 
         $x1 = $this->xtr($x_world);
@@ -3709,11 +3946,12 @@ class PHPlot {
             ImageFilledRectangle($this->img, $x1, $y1, $x2, $y2, $color);
             break;
         case 'circle':
-            ImageArc($this->img, $x_mid, $y_mid, $this->point_sizes[$record], $this->point_sizes[$record], 0, 360, $color);
+            ImageArc($this->img, $x_mid, $y_mid, $this->point_sizes[$record], $this->point_sizes[$record],
+                     0, 360, $color);
             break;
         case 'dot':
-            ImageFilledArc($this->img, $x_mid, $y_mid, $this->point_sizes[$record], $this->point_sizes[$record], 0, 360,
-                           $color, IMG_ARC_PIE);
+            ImageFilledArc($this->img, $x_mid, $y_mid, $this->point_sizes[$record],
+                           $this->point_sizes[$record], 0, 360, $color, IMG_ARC_PIE);
             break;
         case 'diamond':
             $arrpoints = array( $x1, $y_mid, $x_mid, $y1, $x2, $y_mid, $x_mid, $y2);
@@ -4066,10 +4304,10 @@ class PHPlot {
                     // Draw optional data labels above the bars (or below, for negative values).
                     if ( $this->y_data_label_pos == 'plotin') {
                         if ($upgoing_bar) {
-                          $v_align = 'top';
+                          $v_align = 'bottom';
                           $y_offset = -5 - $this->shading;
                         } else {
-                          $v_align = 'bottom';
+                          $v_align = 'top';
                           $y_offset = 2;
                         }
                         $this->DrawDataLabel($this->y_label_font, NULL, $row+0.5, $this->data[$row][$record], '',
