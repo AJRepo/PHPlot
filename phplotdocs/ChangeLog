@@ -4,6 +4,16 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2007-12-09
+   * Updates to developer section for the rewritten text functions:
+     + Internal function TTFBBoxSize is removed.
+     + Internal function DrawText is now just a wrapper.
+     + Add new internal functions SizeText, ProcessText, ProcessTextGD,
+       ProcessTextTTF.
+   * Add internal function DoCallback to the developer section.
+     (Note that the external functions for the experimental callback
+     feature are still only documented outside the manual.)
+
 2007-11-22
    * Updates for latest changes to CVS to improve error handling:
      concepts:
