@@ -156,6 +156,23 @@ $which_opt and disallow partial matches.
 </varlistentry>
 
 <varlistentry>
+  <term id="DoCallback" xreflabel="DoCallback">DoCallback($reason, ...)</term>
+  <listitem>
+    <para>
+Call a callback (hook) function.  $reason is the name given to the
+callback, for example 'draw_titles' (meaning: call after drawing titles).
+The reasons are array indexes in the $callbacks class variable. Following
+that are zero or more arguments to pass to the callback, after the image
+resource and passthrough arguments. DoCallback does nothing if there is no
+callback registered for the given reason, otherwise it calls the callback
+function.
+Note: Callbacks are an experimental feature, currently only documented in
+the text file 'Callbacks' distributed with the software.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
   <term id="DrawArea" xreflabel="DrawArea">DrawArea()</term>
   <listitem>
     <para>
@@ -239,7 +256,7 @@ Called by <xref linkend="DrawGraph"/> when the plot type is either
   <listitem>
     <para>
 Starting after PHPlot-5.0.4, this function is an alias for
-<xref linkend="PrintError"/> and is retained for compatability.
+<xref linkend="PrintError"/> and is retained for compatibility.
 The $where_x and $where_arguments are now ignored. (Previously they
 positioned the error message on the image, but were never used.)
     </para>
@@ -368,6 +385,12 @@ Multi-line text strings are supported. This function accounts for the
 limitations and differences in GD text drawing routines for built-in and
 TrueType fonts.
 Called by numerous functions which place text on the plot.
+    </para>
+    <para>
+Starting after PHPlot-5.0.4, this function just calls
+<xref linkend="ProcessText"/> in text drawing mode. DrawText should be used
+by all internal PHPlot code that needs to draw text, and ProcessText should
+only be used by DrawText and SizeText.
     </para>
   </listitem>
 </varlistentry>
@@ -652,6 +675,90 @@ and exited.)
 </varlistentry>
 
 <varlistentry>
+  <term id="ProcessText" xreflabel="ProcessText">ProcessText($draw_it, $font, $angle, $x, $y, $color, $text, $halign, $valign)</term>
+  <listitem>
+    <para>
+This function acts as a bridge, or switch, between the two functions
+<xref linkend="SizeText"/> and <xref linkend="DrawText"/>, which handle
+both GD and TTF text,
+and the functions which specifically handle GD text or TTF text.
+The arguments to this function are the same as
+<xref linkend="DrawText"/> except for an additional first argument
+$draw_it. If $draw_it is true, text is drawn. This is used by DrawText. If
+$draw_it is false, only the bounding box size of the text is calculated and
+returned. This is used by SizeText. In text sizing mode, the x, y, color,
+halign, and valign arguments are ignored, as they are not needed when
+calculating the text bounding box size.
+This function is only called by
+<xref linkend="SizeText"/> and <xref linkend="DrawText"/>, and calls either
+<xref linkend="ProcessTextTTF"/> or <xref linkend="ProcessTextGD"/>.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="ProcessTextGD" xreflabel="ProcessTextGD">ProcessTextGD($draw_it, $font_number, $font_width, $font_height, $angle, $x, $y, $color, $text, $h_factor, $v_factor)</term>
+  <listitem>
+    <para>
+Draws GD fixed-font text, or calculates the size of GD fixed-font text.
+This is only called by <xref linkend="ProcessText"/> after it determines
+that GD text is in use.
+If $draw_it is true, text is drawn;
+if $draw_it is false, only the bounding box size of the text is calculated and
+returned as a two-element array ($width, $height).
+Here $width is measured along the X axis, and $height along Y, regardless
+of the text angle. These are the size of an orthogonal bounding box that
+contains the text block.
+The $font_number, $font_width, and $font_height numbers identify the GD
+font (normally 1-5), and its character cell width and height.
+The $angle is 0 or 90 degrees, as GD text only supports those values.
+$x, $y are the reference point of the text $text, which is drawn in color
+$color.
+The text string can contain multiple lines, with a newline character between
+lines.
+The $h_factor and $v_factor arguments are translated from the
+alignment arguments supplied to DrawText or SizeText: 0, 0.5, or 1.0
+If $draw_it is false, for text sizing mode, the x, y, color,
+h_factor and v_factor arguments are ignored.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="ProcessTextTTF" xreflabel="ProcessTextTTF">ProcessTextTTF($draw_it, $font_file, $font_size, $angle, $x, $y, $color, $text, $h_factor, $v_factor)</term>
+  <listitem>
+    <para>
+Draws TTF text, or calculates the size of TTF text.
+This is only called by <xref linkend="ProcessText"/> after it determines
+that TTF text is in use.
+If $draw_it is true, text is drawn;
+if $draw_it is false, only the bounding box size of the text is calculated and
+returned as a two-element array ($width, $height).
+Here $width is measured along the X axis, and $height along Y, regardless
+of the text angle. These are the size of an orthogonal bounding box that
+contains the text block.
+The TTF font path or filename is $font_file, and the desired point size is
+$font_size.
+The text is drawn at $angle degrees; unlike GD text TTF text can be drawn
+at any angle.
+$x, $y are the reference point of the text $text, which is drawn in color
+$color.
+The text string can contain multiple lines, with a newline character between
+lines.
+The $h_factor and $v_factor arguments are translated from the
+alignment arguments supplied to DrawText or SizeText: 0, 0.5, or 1.0
+If $draw_it is false, for text sizing mode, the x, y, color,
+h_factor and v_factor arguments are ignored.
+    </para>
+    <para>
+Note that the interpretation of the alignment for text at arbitrary angles
+may not be what you expect. Rotation of text happens before alignment, and
+alignment and positioning use the orthogonal bounding box of the text.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
   <term id="SetDashedStyle" xreflabel="SetDashedStyle">SetDashedStyle($which_ndxcol)</term>
   <listitem>
     <para>
@@ -764,6 +871,27 @@ by all functions that accept a color specification.
 </varlistentry>
 
 <varlistentry>
+  <term id="SizeText" xreflabel="SizeText">SizeText($which_font, $which_angle, $which_text)</term>
+  <listitem>
+    <para>
+Calculates the size of a block of text. It works on both GD (fixed-font) and TTF
+text.
+$which_font is a PHPlot font array, $which_angle is the text angle in degrees,
+and $which_text is the text string. The text string can contain multiple lines,
+with a newline character between lines.
+This function just calls <xref linkend="ProcessText"/> in text sizing mode
+to do the work.
+It returns a two-element array with the text width and height. These are the
+width and height of an orthogonal bounding box (box aligned with the X
+and Y axes) which contains the rotated text block.
+Called by functions which need to determine text size for laying out
+plot elements, such as <xref linkend="CalcMargins"/>.
+This function replaced <xref linkend="TTFBBoxSize"/> after PHPlot-5.0.4.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
   <term id="tile_img" xreflabel="tile_img">tile_img($file, $xorig, $yorig, $width, $height, $mode)</term>
   <listitem>
     <para>
@@ -788,10 +916,8 @@ if an image file is selected for the plot area or overall background.
   <term id="TTFBBoxSize" xreflabel="TTFBBoxSize">TTFBBoxSize($size, $angle, $font, $string)</term>
   <listitem>
     <para>
-Calculates the size of the box which encloses the
-text string $string using TrueType font $font, angle $angle and size $size.
-This is the horizontal width and vertical height - that is, the dimensions
-of a box with sides parallel to the X and Y axes which encloses the text.
+This function was removed after PHPlot-5.0.4.
+It was replaced by <xref linkend="SizeText"/>.
     </para>
   </listitem>
 </varlistentry>
