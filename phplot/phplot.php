@@ -1166,7 +1166,8 @@ class PHPlot {
         $bbox_height = $bbox_max_y - $bbox_ref_y;
 
         if (!$draw_it) {
-            return array($bbox_width, $bbox_height);
+            # Return the bounding box, rounded up (so it always contains the text):
+            return array((int)ceil($bbox_width), (int)ceil($bbox_height));
         }
 
         # Calculate the offsets from the supplied reference point to the
