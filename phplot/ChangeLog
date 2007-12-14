@@ -1,6 +1,11 @@
 This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
+2007-12-13 (lbayuk)
+    * Changed ProcessTextTTF() so SizeText() will return integers. It rounds
+      the calculated values up, so the bounding box really contains the text.
+      This also prevents unneeded float calculations in derived values.
+
 2007-12-09 (lbayuk)
     Major rewrite of the text drawing functions to address multiple problems.
     Note: These changes are inter-dependent and cannot be split up.
