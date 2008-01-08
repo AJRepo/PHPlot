@@ -2826,9 +2826,12 @@ for margins.
 You cannot use this function along with <xref linkend="SetMarginsPixels" />.
     </para>
     <para>
-This will reset the scale factors if <xref linkend="SetPlotAreaWorld" />
-was already called, so SetPlotAreaPixels and SetPlotAreaWorld can be called
-in either order.
+SetPlotAreaPixels and SetPlotAreaWorld can be called in either order.
+Through PHPlot-5.0.4 this was because SetPlotAreaPixels would
+reset the scale factors if <xref linkend="SetPlotAreaWorld" /> was already
+called.
+Starting after PHPlot-5.0.4 both routines just store the information,
+and no calculations take place until <xref linkend="DrawGraph" /> is used.
     </para>
   </refsect1>
 </refentry>
@@ -2912,9 +2915,11 @@ If omitted or NULL, the value is calculated from the actual plot data.
   <refsect1>
     <title>Notes</title>
     <para>
-Because SetPlotAreaWorld needs to access and interpret the data array, it must
-be called after <xref linkend="SetDataValues" /> sets the data array, and
-after <xref linkend="SetDataType" /> (if used).
+Through PHPlot-5.0.4, SetPlotAreaWorld needed to access and interpret the data
+array, so it had to be called after <xref linkend="SetDataValues" /> sets the
+data array, and after <xref linkend="SetDataType" /> (if used).
+Starting after PHPlot-5.0.4 this restriction no longer applies and the
+functions can be called in any order.
     </para>
     <para>
 Trailing defaulted arguments can be omitted, but non-trailing defaulted
@@ -2926,8 +2931,12 @@ $plot-&gt;SetPlotAreaWorld(10, NULL, 100);
       </programlisting>
     </para>
     <para>
-This will reset the scale factors if <xref linkend="SetPlotAreaPixels" />
-was already called, so SetPlotAreaPixels and SetPlotAreaWorld can be called
+SetPlotAreaPixels and SetPlotAreaWorld can be called in either order.
+Through PHPlot-5.0.4 this was because SetPlotAreaWorld would
+reset the scale factors if <xref linkend="SetPlotAreaPixels" /> was already
+called.
+Starting after PHPlot-5.0.4 both routines just store the information,
+and no calculations take place until <xref linkend="DrawGraph" /> is used.
 in either order.
     </para>
   </refsect1>
