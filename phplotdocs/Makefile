@@ -71,6 +71,10 @@ EXAMPLE_LIST=examples/list.xml
 all: html
 html: html.mark
 pdf: phplot.pdf
+# Special version of the manual with required logo for
+# Sourceforge project web pages. See the XSLT style sheet for details.
+sfhtml:
+	$(MAKE) -$(MAKEFLAGS) XSLTPROCFLAGS='--param footerlogo 1' html
 
 # Version date stamp file:
 version.xml:
@@ -78,8 +82,9 @@ version.xml:
 
 # Build (X)HTML Manual. The html.mark file is just used for dependency.
 html.mark: $(SRC) $(ALSO) version.xml $(EXAMPLE_LIST)
-	$(XSLTPROC) $(XSL_HTML) $(MAIN)
+	$(XSLTPROC) $(XSLTPROCFLAGS) $(XSL_HTML) $(MAIN)
 	touch html.mark
+
 
 # Build PDF manual with dblatex.
 # This doesn't work yet. Testing: PDF with dblatex

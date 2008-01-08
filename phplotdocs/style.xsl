@@ -61,4 +61,26 @@ division  toc
 <!-- Don't include the section number in the hyperlink -->
 <xsl:param name="autotoc.label.in.hyperlink" select="0" />
 
+<!-- Conditional inclusion of extra footer content. This is needed to comply
+     with Sourceforge.net rules for use of project web space.
+     If "dash dash"param footerlogo=1" is used on the xsltproc command line,
+     then the extra content will be included.
+   NOTE: This is very specific to this project (see group_id).
+-->
+<xsl:param name="footerlogo" select="0"/>  <!-- Default value -->
+<xsl:template name="user.footer.navigation">
+  <xsl:if test="$footerlogo != 0">
+<div class="host">
+<a href="http://sourceforge.net"><img class="logoImage" alt=""
+   src="http://sourceforge.net/sflogo.php?group_id=14653"
+   width="88" height="31" align="left" /></a>
+<p style="font-size: 50%">This version of the manual was produced for the
+PHPlot Sourceforge project web service site, which requires the logo on each
+page.<br />To download a logo-free copy of the manual, see the
+<a href="http://sourceforge.net/projects/phplot/">PHPlot project</a> downloads
+area.</p>
+</div>
+  </xsl:if>
+</xsl:template>
+
 </xsl:stylesheet>
