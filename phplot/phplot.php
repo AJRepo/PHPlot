@@ -4,7 +4,7 @@
 
 /*
  * PHPLOT Version 5.0.4
- * Copyright (C) 1998-2007 Afan Ottenheimer.  Released under
+ * Copyright (C) 1998-2008 Afan Ottenheimer.  Released under
  * the GPL and PHP licenses as stated in the the README file which should
  * have been included with this document.
  *
@@ -17,7 +17,7 @@
  * Visit http://sourceforge.net/projects/phplot/
  * for PHPlot documentation, downloads, and discussions.
  *
- * Requires PHP 4.3.0 or later. PHP 5.2.x or later is recommended.
+ * Requires PHP 5.2.x or later. (PHP 4 is unsupported as of Jan 2008)
  */
 
 class PHPlot {
@@ -106,9 +106,9 @@ class PHPlot {
     var $y_time_format = '%H:%M:%S';        // SetYTimeFormat() too...
 
     // Skipping labels
-    var $x_label_inc = 1;                   // Draw a label every this many (1 = all) (TODO)
-    var $y_label_inc = 1;
-    var $_x_label_cnt = 0;                  // internal count FIXME: work in progress
+    // var $x_label_inc = 1;                   // Draw a label every this many (1 = all) (TODO)
+    // var $y_label_inc = 1;
+    // var $_x_label_cnt = 0;                  // internal count FIXME: work in progress
 
 // Legend
     var $legend = '';                       // An array with legend titles
@@ -192,7 +192,8 @@ class PHPlot {
         'draw_graph' => NULL,
         'draw_border' => NULL,
         'draw_legend' => NULL,
-        'debug_textbox' => NULL,
+        'debug_textbox' => NULL,  // For testing/debugging text box alignment
+        'debug_scale' => NULL,    // For testing/debugging scale setup
     );
 
 
@@ -212,7 +213,8 @@ class PHPlot {
     {
         $this->SetRGBArray($this->color_array);
 
-        $this->background_done = FALSE;     // Set to TRUE after background image is drawn once
+        $this->background_done = FALSE;     // TRUE after background image is drawn once
+        $this->plot_margins_set = FALSE;    // TRUE with user-set plot area or plot margins.
 
         if ($which_output_file)
             $this->SetOutputFile($which_output_file);
@@ -1914,9 +1916,6 @@ class PHPlot {
     function SetYAxisPosition($pos)
     {
         $this->y_axis_position = (int)$pos;
-        if (isset($this->scale_is_set)) {
-            $this->CalcTranslation();
-        }
         return TRUE;
     }
 
@@ -1927,9 +1926,6 @@ class PHPlot {
     function SetXAxisPosition($pos)
     {
         $this->x_axis_position = (int)$pos;
-        if (isset($this->scale_is_set)) {
-            $this->CalcTranslation();
-        }
         return TRUE;
     }
 
@@ -2103,7 +2099,6 @@ class PHPlot {
      */
     function SetDataValues(&$which_dv)
     {
-        unset ($this->data_limits_done);        // Reset this for every new data_set
         $this->num_data_rows = count($which_dv);
         $this->total_records = 0;               // Perform some useful calculations.
         $this->records_per_group = 1;
@@ -2289,8 +2284,6 @@ class PHPlot {
 
         $mine = 0;  // Maximum value for the -error bar (assume error bars always > 0)
         $maxe = 0;  // Maximum value for the +error bar (assume error bars always > 0)
-        $maxt = 0;  // Maximum number of characters in text labels
-        $longest_x_data_label = '';
 
         if ($this->plot_type == 'stackedbars') {
             $maxmaxy = $minminy = 0;
@@ -2301,14 +2294,7 @@ class PHPlot {
 
         // Process each row of data
         for ($i=0; $i < $this->num_data_rows; $i++) {
-            $j=0;
-            // Save the longest X data label for margin calculations
-            $row_data_label = $this->data[$i][$j++];
-            $row_data_label_len = strlen($row_data_label);
-            if ($row_data_label_len > $maxt) {
-                $maxt = $row_data_label_len;
-                $longest_x_data_label = $row_data_label;
-            }
+            $j = 1; // Skip over the data label for this row.
 
             switch ($this->data_type) {
             case 'text-data':           // Data is passed in as (title, y1, y2, y3, ...)
@@ -2382,13 +2368,14 @@ class PHPlot {
         $this->max_x = $maxx;
         $this->min_y = $minminy;
         $this->max_y = $maxmaxy;
-        $this->longest_x_data_label = $longest_x_data_label;
 
-        $this->data_limits_done = TRUE;
-
+        if ($this->GetCallback('debug_scale')) {
+            $this->DoCallback('debug_scale', __FUNCTION__, array(
+                'min_x' => $this->min_x, 'min_y' => $this->min_y,
+                'max_x' => $this->max_x, 'max_y' => $this->max_y));
+        }
         return TRUE;
     }
-
 
     /*!
      * Calculates image margins on the fly from title positions and sizes,
@@ -2396,194 +2383,354 @@ class PHPlot {
      *
      * TODO: add x_tick_label_width and y_tick_label_height and use them to calculate
      *       max_x_labels and max_y_labels, to be used by drawing functions to avoid overlapping.
+     *
+     * A picture of the locations of elements and spacing can be found in the
+     * PHPlot Reference Manual.
+     *
+     * Calculates the following (class variables unless noted):
+     *
+     * Plot area margins (see note below):
+     *     y_top_margin
+     *     y_bot_margin
+     *     x_left_margin
+     *     x_right_margin
+     *
+     * Title sizes (these are now local, not class variables, since they are not used elsewhere):
+     *     title_height : Height of main title
+     *     x_title_height : Height of X axis title, 0 if no X title
+     *     y_title_width : Width of Y axis title, 0 if no Y title
+     *
+     * Tick/Data label offsets, relative to plot_area:
+     *     x_label_top_offset, x_label_bot_offset, x_label_axis_offset
+     *     y_label_left_offset, y_label_right_offset, y_label_axis_offset
+     *
+     * Title offsets, relative to plot area:
+     *     x_title_top_offset, x_title_bot_offset
+     *     y_title_left_offset, y_title_left_offset
+     *
+     *  Note: The margins are calculated, but not stored, if margins or plot area were
+     *  set by the user with SetPlotAreaPixels or SetMarginsPixels (as indicated by
+     *  the plot_margins_set flag). The margin calculation is mixed in with the offset
+     *  variables, so it doesn't see worth the trouble to separate them.
+     *
+     * If the $maximize argument is true, we use the full image size, minus safe_margin
+     * and main title, for the plot. This is for pie charts which have no axes or X/Y titles.
      */
-    function CalcMargins()
+    function CalcMargins($maximize)
     {
+        // This is the line-to-line or line-to-text spacing:
+        $gap = $this->safe_margin;
+
+        // Minimum margin on each side. This reduces the chance that the
+        // right-most tick label (for example) will run off the image edge
+        // if there are no titles on that side.
+        $min_margin = 3 * $gap;
+
+        // Calculate the title sizes:
+        list($unused, $title_height) = $this->SizeText($this->title_font, 0, $this->title_txt);
+        list($unused, $x_title_height) = $this->SizeText($this->x_title_font, 0, $this->x_title_txt);
+        list($y_title_width, $unused) = $this->SizeText($this->y_title_font, 90, $this->y_title_txt);
+
+        // Special case for maximum area usage with no X/Y titles or labels, only main title:
+        if ($maximize) {
+            if (!$this->plot_margins_set) {
+                $this->x_left_margin = $gap;
+                $this->x_right_margin = $gap;
+                $this->y_top_margin = $gap;
+                $this->y_bot_margin = $gap;
+                if ($title_height > 0)
+                    $this->y_top_margin += $title_height + $gap;
+            }
+            return TRUE;
+        }
+
+        // Make local variables for these. (They get used a lot and I'm tired of this, this, this.)
+        $x_tick_label_pos = $this->x_tick_label_pos;
+        $x_data_label_pos = $this->x_data_label_pos;
+        $x_tick_pos       = $this->x_tick_pos;
+        $x_tick_len       = $this->x_tick_length;
+        $y_tick_label_pos = $this->y_tick_label_pos;
+        $y_tick_pos       = $this->y_tick_pos;
+        $y_tick_len       = $this->y_tick_length;
 
         //////// Calculate maximum X/Y axis label height / width:
 
-        // Calculate approximate height of X tick or data labels, depending on which is on:
-        if ($this->x_data_label_pos == 'none') {
-            $xlab_data = '';
+        // Calculate maximum height of X tick or data labels, depending on which one is on.
+        // It is possible for both to be on, but this is only valid if all the data labels are empty.
+        if ($x_data_label_pos == 'none') {
+            $x_label_height = 0;
         } else {
-            $xlab_data = $this->longest_x_data_label;
+            $x_label_height = $this->CalcMaxDataLabelSize();
         }
-        if ($this->x_tick_label_pos == 'none') {
-            $xlab_tick = '';
-        } else {
-            // FIXME: Assumes max X is a visible tick label and results in tallest label.
-            $xlab_tick = $this->FormatLabel('x', $this->max_x);
-        }
-        $x_label_height = 0;
-        if ($xlab_data !== '') {
-            list($unused, $height) = $this->SizeText($this->x_label_font, $this->x_label_angle, $xlab_data);
-            if ($height > $x_label_height)
-                $x_label_height = $height;
-        }
-        if ($xlab_tick !== '') {
-            list($unused, $height) = $this->SizeText($this->x_label_font, $this->x_label_angle, $xlab_tick);
-            if ($height > $x_label_height)
+        if ($x_tick_label_pos != 'none' &&
+            ($height = $this->CalcMaxTickLabelSize('x')) > $x_label_height) {
                 $x_label_height = $height;
         }
 
-        // FIXME: Assumes max Y is a visible tick label and results in widest label.
-        $ylab = $this->FormatLabel('y', $this->max_y);
-        list($y_label_width, $unused) = $this->SizeText($this->y_label_font, $this->y_label_angle, $ylab);
-
-
-        // Calculate the title sizes:
-        list($unused, $this->title_height) = $this->SizeText($this->title_font, 0, $this->title_txt);
-        list($unused, $this->x_title_height) = $this->SizeText($this->x_title_font, 0, $this->x_title_txt);
-        list($this->y_title_width, $unused) = $this->SizeText($this->y_title_font, 90, $this->y_title_txt);
+        // If Y tick labels are on, calculate the width of the widest tick label:
+        if ($y_tick_label_pos == 'none')
+            $y_label_width = 0;
+        else
+            $y_label_width = $this->CalcMaxTickLabelSize('y');
 
         ///////// Calculate margins:
 
-        // Upper title, ticks and tick labels, and data labels:
-        $this->y_top_margin = $this->title_height + $this->safe_margin * 2;
+        // For X/Y tick and label position of 'xaxis' or 'yaxis', determine if the axis happens to be
+        // on an edge of a plot. If it is, we need to account for the margins there.
+        if ($this->x_axis_position <= $this->plot_min_y)
+            $x_axis_pos = 'bottom';
+        elseif ($this->x_axis_position >= $this->plot_max_y)
+            $x_axis_pos = 'top';
+        else
+            $x_axis_pos = 'none';
 
-        if ($this->x_title_pos == 'plotup' || $this->x_title_pos == 'both')
-            $this->y_top_margin += $this->x_title_height + $this->safe_margin;
+        if ($this->y_axis_position <= $this->plot_min_x)
+            $y_axis_pos = 'left';
+        elseif ($this->y_axis_position >= $this->plot_max_x)
+            $y_axis_pos = 'right';
+        else
+            $y_axis_pos = 'none';
 
-        if ($this->x_tick_label_pos == 'plotup' || $this->x_tick_label_pos == 'both')
-            $this->y_top_margin += $x_label_height;
+        // y_top_margin: Main title, Upper X title, X ticks and tick labels, and X data labels:
+        // y_bot_margin: Lower title, ticks and tick labels, and data labels:
+        $top_margin = $gap;
+        $bot_margin = $gap;
+        $this->x_title_top_offset = $gap;
+        $this->x_title_bot_offset = $gap;
 
-        if ($this->x_tick_pos == 'plotup' || $this->x_tick_pos == 'both')
-            $this->y_top_margin += $this->x_tick_length * 2;
+        if ($title_height > 0)
+            $top_margin += $title_height + $gap;
 
-        if ($this->x_data_label_pos == 'plotup' || $this->x_data_label_pos == 'both')
-            $this->y_top_margin += $x_label_height;
+        if ($x_title_height > 0) {
+            $pos = $this->x_title_pos;
+            if ($pos == 'plotup' || $pos == 'both')
+                $top_margin += $x_title_height + $gap;
+            if ($pos == 'plotdown' || $pos == 'both')
+                $bot_margin += $x_title_height + $gap;
+        }
 
-        // Lower title, ticks and tick labels, and data labels:
-        $this->y_bot_margin = $this->safe_margin * 2;
+        if ($x_tick_label_pos == 'plotup' || $x_tick_label_pos == 'both'
+           || $x_data_label_pos == 'plotup' || $x_data_label_pos == 'both'
+           || ($x_tick_label_pos == 'xaxis' && $x_axis_pos == 'top')) {
+            // X Tick or Data Labels above the plot:
+            $top_margin += $x_label_height + $gap;
+            $this->x_title_top_offset += $x_label_height + $gap;
+        }
+        if ($x_tick_label_pos == 'plotdown' || $x_tick_label_pos == 'both'
+           || $x_data_label_pos == 'plotdown' || $x_data_label_pos == 'both'
+           || ($x_tick_label_pos == 'xaxis' && $x_axis_pos == 'bottom')) {
+            // X Tick or Data Labels below the plot:
+            $bot_margin += $x_label_height + $gap;
+            $this->x_title_bot_offset += $x_label_height + $gap;
+        }
+        if ($x_tick_pos == 'plotup' || $x_tick_pos == 'both'
+           || ($x_tick_pos == 'xaxis' && $x_axis_pos == 'top')) {
+            // X Ticks above the plot:
+            $top_margin += $x_tick_len;
+            $this->x_label_top_offset = $x_tick_len + $gap;
+            $this->x_title_top_offset += $x_tick_len;
+        } else {
+            // No X Ticks above the plot:
+            $this->x_label_top_offset = $gap;
+        }
+        if ($x_tick_pos == 'plotdown' || $x_tick_pos == 'both'
+           || ($x_tick_pos == 'xaxis' && $x_axis_pos == 'bottom')) {
+            // X Ticks below the plot:
+            $bot_margin += $x_tick_len;
+            $this->x_label_bot_offset = $x_tick_len + $gap;
+            $this->x_title_bot_offset += $x_tick_len;
+        } else {
+            // No X Ticks below the plot:
+            $this->x_label_bot_offset = $gap;
+        }
+        // Label offsets for on-axis ticks:
+        if ($x_tick_pos == 'xaxis') {
+            $this->x_label_axis_offset = $x_tick_len + $gap;
+        } else {
+            $this->x_label_axis_offset = $gap;
+        }
 
-        if ($this->x_title_pos == 'plotdown' || $this->x_title_pos == 'both')
-            $this->y_bot_margin += $this->x_title_height;
+        // x_left_margin: Left Y title, Y ticks and tick labels:
+        // x_right_margin: Right Y title, Y ticks and tick labels:
+        $left_margin = $gap;
+        $right_margin = $gap;
+        $this->y_title_left_offset = $gap;
+        $this->y_title_right_offset = $gap;
 
-        if ($this->x_tick_pos == 'plotdown' || $this->x_tick_pos == 'both')
-            $this->y_bot_margin += $this->x_tick_length * 2;
+        if ($y_title_width > 0) {
+            $pos = $this->y_title_pos;
+            if ($pos == 'plotleft' || $pos == 'both')
+                $left_margin += $y_title_width + $gap;
+            if ($pos == 'plotright' || $pos == 'both')
+                $right_margin += $y_title_width + $gap;
+        }
 
-        if ($this->x_tick_pos == 'xaxis' && ($this->x_axis_position == '' || $this->x_axis_position == 0))
-            $this->y_bot_margin += $this->x_tick_length * 2;
+        if ($y_tick_label_pos == 'plotleft' || $y_tick_label_pos == 'both'
+           || ($y_tick_label_pos == 'yaxis' && $y_axis_pos == 'left')) {
+            // Y Tick Labels left of plot:
+            $left_margin += $y_label_width + $gap;
+            $this->y_title_left_offset += $y_label_width + $gap;
+        }
+        if ($y_tick_label_pos == 'plotright' || $y_tick_label_pos == 'both'
+           || ($y_tick_label_pos == 'yaxis' && $y_axis_pos == 'right')) {
+            // Y Tick Labels right of plot:
+            $right_margin += $y_label_width + $gap;
+            $this->y_title_right_offset += $y_label_width + $gap;
+        }
+        if ($y_tick_pos == 'plotleft' || $y_tick_pos == 'both'
+           || ($y_tick_pos == 'yaxis' && $y_axis_pos == 'left')) {
+            // Y Ticks left of plot:
+            $left_margin += $y_tick_len;
+            $this->y_label_left_offset = $y_tick_len + $gap;
+            $this->y_title_left_offset += $y_tick_len;
+        } else {
+            // No Y Ticks left of plot:
+            $this->y_label_left_offset = $gap;
+        }
+        if ($y_tick_pos == 'plotright' || $y_tick_pos == 'both'
+           || ($y_tick_pos == 'yaxis' && $y_axis_pos == 'right')) {
+            // Y Ticks right of plot:
+            $right_margin += $y_tick_len;
+            $this->y_label_right_offset = $y_tick_len + $gap;
+            $this->y_title_right_offset += $y_tick_len;
+        } else {
+            // No Y Ticks right of plot:
+            $this->y_label_right_offset = $gap;
+        }
 
-        if ($this->x_tick_label_pos == 'plotdown' || $this->x_tick_label_pos == 'both')
-            $this->y_bot_margin += $x_label_height;
+        // Label offsets for on-axis ticks:
+        if ($x_tick_pos == 'yaxis') {
+            $this->y_label_axis_offset = $y_tick_len + $gap;
+        } else {
+            $this->y_label_axis_offset = $gap;
+        }
 
-        if ($this->x_tick_label_pos == 'xaxis' && ($this->x_axis_position == '' || $this->x_axis_position == 0))
-            $this->y_bot_margin += $x_label_height;
+        // Apply the minimum margins and store in the object.
+        // Do not set margins if they are user-defined (see note at top of function).
+        if (!$this->plot_margins_set) {
+            $this->y_top_margin = max($min_margin, $top_margin);
+            $this->y_bot_margin = max($min_margin, $bot_margin);
+            $this->x_left_margin = max($min_margin, $left_margin);
+            $this->x_right_margin = max($min_margin, $right_margin);
+        }
+ 
+        if ($this->GetCallback('debug_scale')) {
+            // (Too bad compact() doesn't work on class member variables...)
+            $this->DoCallback('debug_scale', __FUNCTION__, array(
+                'x_label_height' => $x_label_height,
+                'y_label_width' => $y_label_width,
+                'x_tick_len' => $x_tick_len,
+                'y_tick_len' => $y_tick_len,
+                'x_left_margin' => $this->x_left_margin,
+                'x_right_margin' => $this->x_right_margin,
+                'y_top_margin' => $this->y_top_margin,
+                'y_bot_margin' => $this->y_bot_margin,
+                'x_label_top_offset' => $this->x_label_top_offset,
+                'x_label_bot_offset' => $this->x_label_bot_offset,
+                'y_label_left_offset' => $this->y_label_left_offset,
+                'y_label_right_offset' => $this->y_label_right_offset,
+                'x_title_top_offset' => $this->x_title_top_offset,
+                'x_title_bot_offset' => $this->x_title_bot_offset,
+                'y_title_left_offset' => $this->y_title_left_offset,
+                'y_title_right_offset' => $this->y_title_right_offset));
+        }
 
-        if ($this->x_data_label_pos == 'plotdown' || $this->x_data_label_pos == 'both')
-            $this->y_bot_margin += $x_label_height;
+        return TRUE;
+    }
 
-        // Left title, ticks and tick labels:
-        $this->x_left_margin = $this->safe_margin * 2;
+    /*
+     * Calculate the plot area (device coordinates) from the margins.
+     * (This used to be part of SetPlotAreaPixels.)
+     * The margins might come from SetMarginsPixels, SetPlotAreaPixels,
+     * or CalcMargins.
+     */
+    function CalcPlotAreaPixels()
+    {
+        $this->plot_area = array($this->x_left_margin, $this->y_top_margin,
+                                 $this->image_width - $this->x_right_margin,
+                                 $this->image_height - $this->y_bot_margin);
+        $this->plot_area_width = $this->plot_area[2] - $this->plot_area[0];
+        $this->plot_area_height = $this->plot_area[3] - $this->plot_area[1];
 
-        if ($this->y_title_pos == 'plotleft' || $this->y_title_pos == 'both')
-            $this->x_left_margin += $this->y_title_width + $this->safe_margin;
-
-        if ($this->y_tick_label_pos == 'plotleft' || $this->y_tick_label_pos == 'both')
-            $this->x_left_margin += $y_label_width;
-
-        if ($this->y_tick_pos == 'plotleft' || $this->y_tick_pos == 'both')
-            $this->x_left_margin += $this->y_tick_length * 2 ;
-
-        // Right title, ticks and tick labels:
-        $this->x_right_margin = $this->safe_margin * 2;
-
-        if ($this->y_title_pos == 'plotright' || $this->y_title_pos == 'both')
-            $this->x_right_margin += $this->y_title_width + $this->safe_margin;
-
-        if ($this->y_tick_label_pos == 'plotright' || $this->y_tick_label_pos == 'both')
-            $this->x_right_margin += $y_label_width;
-
-        if ($this->y_tick_pos == 'plotright' || $this->y_tick_pos == 'both')
-            $this->x_right_margin += $this->y_tick_length * 2;
-
+        $this->DoCallback('debug_scale', __FUNCTION__, $this->plot_area);
         return TRUE;
     }
 
 
     /*!
      * Set the margins in pixels (left, right, top, bottom)
+     * This determines the plot area, equivalent to SetPlotAreaPixels().
+     * Deferred calculations now occur in CalcPlotAreaPixels().
      */
     function SetMarginsPixels($which_lm, $which_rm, $which_tm, $which_bm)
     {
-
         $this->x_left_margin = $which_lm;
         $this->x_right_margin = $which_rm;
-
         $this->y_top_margin = $which_tm;
         $this->y_bot_margin = $which_bm;
 
-        $this->SetPlotAreaPixels();
+        $this->plot_margins_set = TRUE;
 
         return TRUE;
     }
 
-
     /*!
-     * Sets the limits for the plot area. If no arguments are supplied, uses
-     * values calculated from CalcMargins();
-     * Like in GD, (0,0) is upper left
-     *
-     * This resets the scale if SetPlotAreaWorld() was already called
+     * Sets the limits for the plot area.
+     * This stores the margins, not the area. That may seem odd, but
+     * the idea is to make SetPlotAreaPixels and SetMarginsPixels two
+     * ways to accomplish the same thing, and the deferred calculations
+     * in CalcMargins and CalcPlotAreaPixels don't need to know which
+     * was used.
+     *   (x1, y1) - Upper left corner of the plot area
+     *   (x2, y2) - Lower right corner of the plot area
      */
-    function SetPlotAreaPixels($x1=NULL, $y1=NULL, $x2=NULL, $y2=NULL)
+    function SetPlotAreaPixels($x1, $y1, $x2, $y2)
     {
-        if ($x2 && $y2) {
-            $this->plot_area = array($x1, $y1, $x2, $y2);
-        } else {
-            if (! isset($this->x_right_margin))
-                $this->CalcMargins();
+        $this->x_left_margin = $x1;
+        $this->x_right_margin = $this->image_width - $x2;
+        $this->y_top_margin = $y1;
+        $this->y_bot_margin = $this->image_height - $y2;
 
-            $this->plot_area = array($this->x_left_margin, $this->y_top_margin,
-                                     $this->image_width - $this->x_right_margin,
-                                     $this->image_height - $this->y_bot_margin);
-        }
-        $this->plot_area_width = $this->plot_area[2] - $this->plot_area[0];
-        $this->plot_area_height = $this->plot_area[3] - $this->plot_area[1];
-
-        // Reset the scale with the new plot area.
-        if (isset($this->plot_max_x))
-            $this->CalcTranslation();
+        $this->plot_margins_set = TRUE;
 
         return TRUE;
-
     }
 
-
-    /*!
-     * Sets minimum and maximum x and y values in the plot using FindDataLimits()
-     * or from the supplied parameters, if any.
-     *
-     * This resets the scale if SetPlotAreaPixels() was already called
+    /*
+     * Calculate the World Coordinate limits of the plot area.
+     * This goes with SetPlotAreaWorld, but the calculations are
+     * deferred until the graph is being drawn.
+     * Uses: plot_min_x, plot_max_x, plot_min_y, plot_max_y
+     * which can be user-supplied or NULL to auto-calculate.
+     * Pre-requisites: FindDataLimits()
      */
-    function SetPlotAreaWorld($xmin=NULL, $ymin=NULL, $xmax=NULL, $ymax=NULL)
+    function CalcPlotAreaWorld()
     {
-        if (! isset($this->data_limits_done)) { // For automatic setting of data we need data limits
-            $this->FindDataLimits() ;
-        }
+        if (isset($this->plot_min_x) && $this->plot_min_x !== '')
+            $xmin = $this->plot_min_x;
+        elseif ($this->data_type == 'text-data')  // Valid for data without X values only.
+            $xmin = 0;
+        else
+            $xmin = $this->min_x;
 
-        if ($xmin === NULL || $xmin === '') {
-            if ($this->data_type == 'text-data')  // Valid for data without X values only.
-                $xmin = 0;
-            else
-                $xmin = $this->min_x;
-        }
-        if ($xmax === NULL || $xmax === '') {
-            if ($this->data_type == 'text-data')  // Valid for data without X values only.
-                $xmax = $this->max_x + 1;
-            else
-                $xmax = $this->max_x;
-        }
+        if (isset($this->plot_max_x) && $this->plot_max_x !== '')
+            $xmax = $this->plot_max_x;
+        elseif ($this->data_type == 'text-data')  // Valid for data without X values only.
+            $xmax = $this->max_x + 1;
+        else
+            $xmax = $this->max_x;
 
         // Leave room above and below the highest and lowest data points.
 
-        if ($ymin === NULL || $ymin === '') {
+        if (!isset($this->plot_min_y) || $this->plot_min_y === '')
             $ymin = floor($this->min_y - abs($this->min_y) * 0.1);
-        }
-        if ($ymax === NULL || $ymax === '') {
+        else
+            $ymin = $this->plot_min_y;
+
+        if (!isset($this->plot_max_y) || $this->plot_max_y === '')
             $ymax = ceil($this->max_y + abs($this->max_y) * 0.1);
-        }
+        else
+            $ymax = $this->plot_max_y;
 
         // Error checking
 
@@ -2595,6 +2742,7 @@ class PHPlot {
                 $ymin = 1;
             }
             if ($ymax <= 0) {
+                // Note: Error messages reference the user function, not this function.
                 return $this->PrintError('SetPlotAreaWorld(): Log plots need data greater than 0');
             }
         }
@@ -2603,18 +2751,30 @@ class PHPlot {
             return $this->PrintError('SetPlotAreaWorld(): Error in data - max not greater than min');
         }
 
-
-        // Reset (if it was already set) the scale with the new maxs and mins
-
         $this->plot_min_x = $xmin;
         $this->plot_max_x = $xmax;
         $this->plot_min_y = $ymin;
         $this->plot_max_y = $ymax;
-
-        if (isset($this->plot_area_width)) {
-            $this->CalcTranslation();
+        if ($this->GetCallback('debug_scale')) {
+            $this->DoCallback('debug_scale', __FUNCTION__, array(
+                'plot_min_x' => $this->plot_min_x, 'plot_min_y' => $this->plot_min_y,
+                'plot_max_x' => $this->plot_max_x, 'plot_max_y' => $this->plot_max_y));
         }
 
+        return TRUE;
+    }
+
+    /*!
+     * Stores the desired World Coordinate range of the plot.
+     * The user calls this to force one or more of the range limits to
+     * specific values. Anything not set will be calculated in CalcPlotAreaWorld().
+     */
+    function SetPlotAreaWorld($xmin=NULL, $ymin=NULL, $xmax=NULL, $ymax=NULL)
+    {
+        $this->plot_min_x = $xmin;
+        $this->plot_max_x = $xmax;
+        $this->plot_min_y = $ymin;
+        $this->plot_max_y = $ymax;
         return TRUE;
     } //function SetPlotAreaWorld
 
@@ -2657,6 +2817,49 @@ class PHPlot {
         return TRUE;
     }
 
+    /*
+     * Calculate X and Y Axis Positions, world coordinates.
+     * This needs the min/max x/y range set by CalcPlotAreaWorld.
+     * It adjusts or sets x_axis_position and y_axis_position per the data.
+     * Empty string means the values need to be calculated; otherwise they
+     * are supplied but need to be validated against the World area.
+     *
+     * Note: This used to be in CalcTranslation, but CalcMargins needs it too.
+     * This does not calculate the pixel values of the axes. That happens in
+     * CalcTranslation, after scaling is set up (which has to happen after
+     * margins are set up).
+     */
+    function CalcAxisPositions()
+    {
+        // If no user-provided Y axis position, default to axis on left side.
+        // Otherwise, make sure user-provided position is inside the plot area.
+        if ($this->y_axis_position === '')
+            $this->y_axis_position = $this->plot_min_x;
+        else
+            $this->y_axis_position = min(max($this->plot_min_x, $this->y_axis_position), $this->plot_max_x);
+
+        // If no user-provided X axis position, default to axis at Y=0 (if in range), or min_y
+        //   if the range does not include 0, or 1 for log plots.
+        // Otherwise, make sure user-provided position is inside the plot area.
+        if ($this->x_axis_position === '') {
+            if ($this->yscale_type == 'log')
+                $this->x_axis_position = 1;
+            elseif ($this->plot_min_y <= 0 && 0 <= $this->plot_max_y)
+                $this->x_axis_position = 0;
+             else 
+                $this->x_axis_position = $this->plot_min_y;
+        } else
+            $this->x_axis_position = min(max($this->plot_min_y, $this->x_axis_position), $this->plot_max_y);
+
+        if ($this->GetCallback('debug_scale')) {
+            $this->DoCallback('debug_scale', __FUNCTION__, array(
+                'x_axis_position' => $this->x_axis_position,
+                'y_axis_position' => $this->y_axis_position));
+        }
+
+        return TRUE;
+    }
+
     /*!
      * Calculates scaling stuff...
      */
@@ -2693,41 +2896,17 @@ class PHPlot {
             $this->plot_origin_y = $this->plot_area[3] + ($this->yscale * $this->plot_min_y);
         }
 
-        $this->scale_is_set = TRUE;
-
-        /************** FIXME?? *************/
-        // There should be a better place for this.
-
-        // User provided y axis position?
-        if ($this->y_axis_position !== '') {
-            // Make sure we draw our axis inside the plot
-            if ($this->y_axis_position < $this->plot_min_x)
-                $this->y_axis_position = $this->plot_min_x;
-            elseif ($this->y_axis_position > $this->plot_max_x)
-                $this->y_axis_position = $this->plot_max_x;
-            $this->y_axis_x_pixels = $this->xtr($this->y_axis_position);
-        } else {
-            // Default to left axis
-            $this->y_axis_x_pixels = $this->xtr($this->plot_min_x);
-        }
-        // User provided x axis position?
-        if ($this->x_axis_position !== '') {
-            // Make sure we draw our axis inside the plot
-            if ($this->x_axis_position < $this->plot_min_y)
-                $this->x_axis_position = $this->plot_min_y;
-            elseif ($this->x_axis_position > $this->plot_max_y)
-                $this->x_axis_position = $this->plot_max_y;
-        } elseif ($this->yscale_type == 'log') {
-            $this->x_axis_position = 1;
-        } else {
-            // Default to axis at 0 or plot_min_y (should be 0 anyway, from SetPlotAreaWorld())
-            // Note x_axis_position must be set because DrawBars and others expect a number.
-            if ($this->plot_min_y <= 0 && 0 <= $this->plot_max_y)
-                $this->x_axis_position = 0;
-            else 
-                $this->x_axis_position = $this->plot_min_y;
-        }
+        // Convert axis positions to device coordinates:
+        $this->y_axis_x_pixels = $this->xtr($this->y_axis_position);
         $this->x_axis_y_pixels = $this->ytr($this->x_axis_position);
+
+        if ($this->GetCallback('debug_scale')) {
+            $this->DoCallback('debug_scale', __FUNCTION__, array(
+                'xscale' => $this->xscale, 'yscale' => $this->yscale,
+                'plot_origin_x' => $this->plot_origin_x, 'plot_origin_y' => $this->plot_origin_y,
+                'y_axis_x_pixels' => $this->y_axis_x_pixels,
+                'x_axis_y_pixels' => $this->x_axis_y_pixels));
+        }
 
         return TRUE;
     } // function CalcTranslation()
@@ -2761,6 +2940,132 @@ class PHPlot {
             $y_pixels =  $this->plot_origin_y - $y_world * $this->yscale ;
         }
         return round($y_pixels);
+    }
+
+    /*
+     * Calculate tick parameters: Start, end, and delta values. This is used
+     * by both DrawXTicks() and DrawYTicks().
+     * This currently uses the same simplistic method previously used by
+     * PHPlot (basically just range/10), but splitting this out into its
+     * own function is the first step in replacing the method.
+     * This is also used by CalcMaxTickSize() for CalcMargins().
+     *
+     *   $which : 'x' or 'y' : Which tick parameters to calculate
+     *
+     * Returns an array of 3 elements: tick_start, tick_end, tick_step
+     */
+    function CalcTicks($which)
+    {
+        if ($which == 'x') {
+            $num_ticks = $this->num_x_ticks;
+            $tick_inc = $this->x_tick_inc;
+            $data_max = $this->plot_max_x;
+            $data_min = $this->plot_min_x;
+            $skip_lo = $this->skip_left_tick;
+            $skip_hi = $this->skip_right_tick;
+        } elseif ($which == 'y') {
+            $num_ticks = $this->num_y_ticks;
+            $tick_inc = $this->y_tick_inc;
+            $data_max = $this->plot_max_y;
+            $data_min = $this->plot_min_y;
+            $skip_lo = $this->skip_bottom_tick;
+            $skip_hi = $this->skip_top_tick;
+        } else {
+          return $this->PrintError("CalcTicks: Invalid usage ($which)");
+        }
+
+        if (!empty($tick_inc)) {
+            $tick_step = $tick_inc;
+        } elseif (!empty($num_ticks)) {
+            $tick_step = ($data_max - $data_min) / $num_ticks;
+        } else {
+            $tick_step = ($data_max - $data_min) / 10;
+        }
+
+        // NOTE: When working with floats, because of approximations when adding $tick_step,
+        // the value may not quite reach the end, or may exceed it very slightly.
+        // So apply a "fudge" factor.
+        $tick_start = (double)$data_min;
+        $tick_end = (double)$data_max + ($data_max - $data_min) / 10000.0;
+
+        if ($skip_lo)
+            $tick_start += $tick_step;
+
+        if ($skip_hi)
+            $tick_end -= $tick_step;
+
+        return array($tick_start, $tick_end, $tick_step);
+    }
+
+    /*
+     * Calculate the size of the biggest tick label. This is used by CalcMargins().
+     * For 'x' ticks, it returns the height . For 'y' ticks, it returns the width.
+     * This means height along Y, or width along X - not relative to the text angle.
+     * That is what we need to calculate the needed margin space.
+     * (Previous versions of PHPlot estimated this, using the maximum X or Y value,
+     * or maybe the longest string. That doesn't work. -10 is longer than 9, etc.
+     * So this gets the actual size of each label, slow as that may be.
+     */
+    function CalcMaxTickLabelSize($which)
+    {
+        list($tick_val, $tick_end, $tick_step) = $this->CalcTicks($which);
+
+        if ($which == 'x') {
+          $font = $this->x_label_font;
+          $angle = $this->x_label_angle;
+        } elseif ($which == 'y') {
+          $font = $this->y_label_font;
+          $angle = $this->y_label_angle;
+        } else {
+          return $this->PrintError("CalcMaxTickLabelSize: Invalid usage ($which)");
+        }
+
+        $max_width = 0;
+        $max_height = 0;
+
+        // Loop over ticks, same as DrawXTicks and DrawYTicks:
+        while ($tick_val <= $tick_end) {
+            $tick_label = $this->FormatLabel($which, $tick_val);
+            list($width, $height) = $this->SizeText($font, $angle, $tick_label);
+            if ($width > $max_width) $max_width = $width;
+            if ($height > $max_height) $max_height = $height;
+            $tick_val += $tick_step;
+        }
+        if ($this->GetCallback('debug_scale')) {
+            $this->DoCallback('debug_scale', __FUNCTION__, array(
+                'which' => $which, 'height' => $max_height, 'width' => $max_width));
+        }
+
+        if ($which == 'x')
+            return $max_height;
+        return $max_width;
+    }
+
+    /*
+     * Calculate the size of the biggest X data label. This is used by CalcMargins().
+     * Returns the height along Y axis of the biggest X data label.
+     * (This calculates width and height, but only height is used at present.)
+     */
+    function CalcMaxDataLabelSize()
+    {
+        $font = $this->x_label_font;
+        $angle = $this->x_label_angle;
+        $max_width = 0;
+        $max_height = 0;
+
+        // Loop over all data labels and find the biggest:
+        for ($i = 0; $i < $this->num_data_rows; $i++) {
+            $label = $this->FormatLabel('x', $this->data[$i][0]);
+            list($width, $height) = $this->SizeText($font, $angle, $label);
+            if ($width > $max_width) $max_width = $width;
+            if ($height > $max_height) $max_height = $height;
+        }
+        if ($this->GetCallback('debug_scale')) {
+            $this->DoCallback('debug_scale', __FUNCTION__, array(
+                'height' => $max_height, 'width' => $max_width));
+        }
+
+        return $max_height;
     }
 
     /*!
@@ -2808,37 +3113,24 @@ class PHPlot {
     /*!
      * Use either this or SetNumXTicks() to set where to place x tick marks
      */
-    function SetXTickIncrement($which_ti=NULL)
+    function SetXTickIncrement($which_ti='')
     {
-        if ($which_ti) {
-            $this->x_tick_inc = $which_ti;  //world coordinates
-        } else {
-            if (! isset($this->data_limits_done)) {
-                $this->FindDataLimits();  //Get maxima and minima for scaling
-            }
-            $this->x_tick_inc =  ($this->plot_max_x  - $this->plot_min_x  )/10;
+        $this->x_tick_inc = $which_ti;
+        if (!empty($which_ti)) {
+            $this->num_x_ticks = ''; //either use num_x_ticks or x_tick_inc, not both
         }
-        $this->num_x_ticks = ''; //either use num_y_ticks or y_tick_inc, not both
         return TRUE;
     }
 
     /*!
      * Use either this or SetNumYTicks() to set where to place y tick marks
      */
-    function SetYTickIncrement($which_ti=NULL)
+    function SetYTickIncrement($which_ti='')
     {
-        if ($which_ti) {
-            $this->y_tick_inc = $which_ti;  //world coordinates
-        } else {
-            if (! isset($this->data_limits_done)) {
-                $this->FindDataLimits();  //Get maxima and minima for scaling
-            }
-            if (! isset($this->plot_max_y))
-                $this->SetPlotAreaWorld();
-
-            $this->y_tick_inc =  ($this->plot_max_y  - $this->plot_min_y  )/10;
+        $this->y_tick_inc = $which_ti;
+        if (!empty($which_ti)) {
+            $this->num_y_ticks = ''; //either use num_y_ticks or y_tick_inc, not both
         }
-        $this->num_y_ticks = ''; //either use num_y_ticks or y_tick_inc, not both
         return TRUE;
     }
 
@@ -2846,14 +3138,18 @@ class PHPlot {
     function SetNumXTicks($which_nt)
     {
         $this->num_x_ticks = $which_nt;
-        $this->x_tick_inc = '';  //either use num_x_ticks or x_tick_inc, not both
+        if (!empty($which_nt)) {
+            $this->x_tick_inc = '';  //either use num_x_ticks or x_tick_inc, not both
+        }
         return TRUE;
     }
 
     function SetNumYTicks($which_nt)
     {
         $this->num_y_ticks = $which_nt;
-        $this->y_tick_inc = '';  //either use num_y_ticks or y_tick_inc, not both
+        if (!empty($which_nt)) {
+            $this->y_tick_inc = '';  //either use num_y_ticks or y_tick_inc, not both
+        }
         return TRUE;
     }
 
@@ -3099,15 +3395,15 @@ class PHPlot {
 
         // Upper title
         if ($this->x_title_pos == 'plotup' || $this->x_title_pos == 'both') {
-            $ypos = $this->safe_margin + $this->title_height + $this->safe_margin;
+            $ypos = $this->plot_area[1] - $this->x_title_top_offset;
             $this->DrawText($this->x_title_font, 0, $xpos, $ypos, $this->ndx_title_color,
-                            $this->x_title_txt, 'center', 'top');
+                            $this->x_title_txt, 'center', 'bottom');
         }
         // Lower title
         if ($this->x_title_pos == 'plotdown' || $this->x_title_pos == 'both') {
-            $ypos = $this->image_height - $this->safe_margin;
+            $ypos = $this->plot_area[3] + $this->x_title_bot_offset;
             $this->DrawText($this->x_title_font, 0, $xpos, $ypos, $this->ndx_title_color,
-                            $this->x_title_txt, 'center', 'bottom');
+                            $this->x_title_txt, 'center', 'top');
         }
         return TRUE;
     }
@@ -3120,16 +3416,16 @@ class PHPlot {
         if ($this->y_title_pos == 'none')
             return TRUE;
 
-        // Center the title vertically to the plot
+        // Center the title vertically to the plot area
         $ypos = ($this->plot_area[3] + $this->plot_area[1]) / 2;
 
         if ($this->y_title_pos == 'plotleft' || $this->y_title_pos == 'both') {
-            $xpos = $this->safe_margin;
+            $xpos = $this->plot_area[0] - $this->y_title_left_offset;
             $this->DrawText($this->y_title_font, 90, $xpos, $ypos, $this->ndx_title_color,
-                            $this->y_title_txt, 'left', 'center');
+                            $this->y_title_txt, 'right', 'center');
         }
         if ($this->y_title_pos == 'plotright' || $this->y_title_pos == 'both') {
-            $xpos = $this->image_width - $this->safe_margin - $this->y_title_width - $this->safe_margin;
+            $xpos = $this->plot_area[2] + $this->y_title_right_offset;
             $this->DrawText($this->y_title_font, 90, $xpos, $ypos, $this->ndx_title_color,
                             $this->y_title_txt, 'left', 'center');
         }
@@ -3178,49 +3474,45 @@ class PHPlot {
     }
 
     /*!
-     * Draw Just one Tick, called from DrawYTicks() and DrawXAxis()
-     * TODO? Move this inside DrawYTicks() and Modify DrawXAxis() ?
+     * Draw one Y tick mark and its tick label. Called from DrawYTicks() and DrawXAxis()
      */
     function DrawYTick($which_ylab, $which_ypix)
     {
         // Ticks on Y axis
         if ($this->y_tick_pos == 'yaxis') {
             ImageLine($this->img, $this->y_axis_x_pixels - $this->y_tick_length, $which_ypix,
-                      $this->y_axis_x_pixels + $this->y_tick_cross, $which_ypix,
-                      $this->ndx_tick_color);
+                      $this->y_axis_x_pixels + $this->y_tick_cross, $which_ypix, $this->ndx_tick_color);
+        }
+
+        // Ticks to the left of the Plot Area
+        if (($this->y_tick_pos == 'plotleft') || ($this->y_tick_pos == 'both') ) {
+            ImageLine($this->img, $this->plot_area[0] - $this->y_tick_length, $which_ypix,
+                      $this->plot_area[0] + $this->y_tick_cross, $which_ypix, $this->ndx_tick_color);
+        }
+
+        // Ticks to the right of the Plot Area
+        if (($this->y_tick_pos == 'plotright') || ($this->y_tick_pos == 'both') ) {
+            ImageLine($this->img, $this->plot_area[2] + $this->y_tick_length, $which_ypix,
+                      $this->plot_area[2] - $this->y_tick_cross, $which_ypix, $this->ndx_tick_color);
         }
 
         // Labels on Y axis
         if ($this->y_tick_label_pos == 'yaxis') {
             $this->DrawText($this->y_label_font, $this->y_label_angle,
-                            $this->y_axis_x_pixels - $this->y_tick_length * 1.5, $which_ypix,
+                            $this->y_axis_x_pixels - $this->y_label_axis_offset, $which_ypix,
                             $this->ndx_text_color, $which_ylab, 'right', 'center');
-        }
-
-        // Ticks to the left of the Plot Area
-        if (($this->y_tick_pos == 'plotleft') || ($this->y_tick_pos == 'both') ) {
-            ImageLine($this->img, $this->plot_area[0] - $this->y_tick_length,
-                      $which_ypix, $this->plot_area[0] + $this->y_tick_cross,
-                      $which_ypix, $this->ndx_tick_color);
-        }
-
-        // Ticks to the right of the Plot Area
-        if (($this->y_tick_pos == 'plotright') || ($this->y_tick_pos == 'both') ) {
-            ImageLine($this->img, ($this->plot_area[2] + $this->y_tick_length),
-                      $which_ypix, $this->plot_area[2] - $this->y_tick_cross,
-                      $which_ypix, $this->ndx_tick_color);
         }
 
         // Labels to the left of the plot area
         if ($this->y_tick_label_pos == 'plotleft' || $this->y_tick_label_pos == 'both') {
             $this->DrawText($this->y_label_font, $this->y_label_angle,
-                            $this->plot_area[0] - $this->y_tick_length * 1.5, $which_ypix,
+                            $this->plot_area[0] - $this->y_label_left_offset, $which_ypix,
                             $this->ndx_text_color, $which_ylab, 'right', 'center');
         }
         // Labels to the right of the plot area
         if ($this->y_tick_label_pos == 'plotright' || $this->y_tick_label_pos == 'both') {
             $this->DrawText($this->y_label_font, $this->y_label_angle,
-                            $this->plot_area[2] + $this->y_tick_length * 1.5, $which_ypix,
+                            $this->plot_area[2] + $this->y_label_right_offset, $which_ypix,
                             $this->ndx_text_color, $which_ylab, 'left', 'center');
         }
         return TRUE;
@@ -3243,25 +3535,8 @@ class PHPlot {
             $style = $this->ndx_light_grid_color;
         }
 
-        // maxy is always > miny so delta_y is always positive
-        if ($this->y_tick_inc) {
-            $delta_y = $this->y_tick_inc;
-        } elseif ($this->num_y_ticks) {
-            $delta_y = ($this->plot_max_y - $this->plot_min_y) / $this->num_y_ticks;
-        } else {
-            $delta_y = ($this->plot_max_y - $this->plot_min_y) / 10 ;
-        }
-
-        // NOTE: When working with floats, because of approximations when adding $delta_y,
-        // $y_tmp may not quite reach $y_end, or may exceed it very slightly, so apply a "fudge" factor.
-        $y_tmp = (double)$this->plot_min_y;
-        $y_end = (double)$this->plot_max_y + ($this->plot_max_y - $this->plot_min_y) / 10000.0;
-
-        if ($this->skip_bottom_tick)
-            $y_tmp += $delta_y;
-
-        if ($this->skip_top_tick)
-            $y_end -= $delta_y;
+        // Calculate the tick start, end, and step:
+        list($y_tmp, $y_end, $delta_y) = $this->CalcTicks('y');
 
         for (;$y_tmp <= $y_end; $y_tmp += $delta_y) {
             $ylab = $this->FormatLabel('y', $y_tmp);
@@ -3272,12 +3547,57 @@ class PHPlot {
                 ImageLine($this->img, $this->plot_area[0]+1, $y_pixels, $this->plot_area[2]-1, $y_pixels, $style);
             }
 
-            // Draw ticks
+            // Draw tick mark(s)
             $this->DrawYTick($ylab, $y_pixels);
         }
         return TRUE;
     } // function DrawYTicks
 
+    /*!
+     * Draw one X tick mark and its tick label.
+     */
+    function DrawXTick($which_xlab, $which_xpix)
+    {
+        // Ticks on X axis
+        if ($this->x_tick_pos == 'xaxis') {
+            ImageLine($this->img, $which_xpix, $this->x_axis_y_pixels - $this->x_tick_cross,
+                      $which_xpix, $this->x_axis_y_pixels + $this->x_tick_length, $this->ndx_tick_color);
+        }
+
+        // Ticks on top of the Plot Area
+        if ($this->x_tick_pos == 'plotup' || $this->x_tick_pos == 'both') {
+            ImageLine($this->img, $which_xpix, $this->plot_area[1] - $this->x_tick_length,
+                      $which_xpix, $this->plot_area[1] + $this->x_tick_cross, $this->ndx_tick_color);
+        }
+
+        // Ticks on bottom of Plot Area
+        if ($this->x_tick_pos == 'plotdown' || $this->x_tick_pos == 'both') {
+            ImageLine($this->img, $which_xpix, $this->plot_area[3] + $this->x_tick_length,
+                      $which_xpix, $this->plot_area[3] - $this->x_tick_cross, $this->ndx_tick_color);
+        }
+
+        // Label on X axis
+        if ($this->x_tick_label_pos == 'xaxis') {
+            $this->DrawText($this->x_label_font, $this->x_label_angle,
+                            $which_xpix, $this->x_axis_y_pixels + $this->x_label_axis_offset,
+                            $this->ndx_text_color, $which_xlab, 'center', 'top');
+        }
+
+        // Label on top of the Plot Area
+        if ($this->x_tick_label_pos == 'plotup' || $this->x_tick_label_pos == 'both') {
+            $this->DrawText($this->x_label_font, $this->x_label_angle,
+                            $which_xpix, $this->plot_area[1] - $this->x_label_top_offset,
+                            $this->ndx_text_color, $which_xlab, 'center', 'bottom');
+        }
+
+        // Label on bottom of the Plot Area
+        if ($this->x_tick_label_pos == 'plotdown' || $this->x_tick_label_pos == 'both') {
+            $this->DrawText($this->x_label_font, $this->x_label_angle,
+                            $which_xpix, $this->plot_area[3] + $this->x_label_bot_offset,
+                            $this->ndx_text_color, $which_xlab, 'center', 'top');
+        }
+        return TRUE;
+    }
 
     /*!
      * Draws Grid, Ticks and Tick Labels along X-Axis
@@ -3296,27 +3616,8 @@ class PHPlot {
             $style = $this->ndx_light_grid_color;
         }
 
-        // Calculate x increment between ticks
-        if ($this->x_tick_inc) {
-            $delta_x = $this->x_tick_inc;
-        } elseif ($this->num_x_ticks) {
-            $delta_x = ($this->plot_max_x - $this->plot_min_x) / $this->num_x_ticks;
-        } else {
-            $delta_x =($this->plot_max_x - $this->plot_min_x) / 10 ;
-        }
-
-        // NOTE: When working with decimals, because of approximations when adding $delta_x,
-        // $x_tmp may not quite reach $x_end, or may exceed it very slightly, so apply a "fudge" factor.
-        $x_tmp = (double)$this->plot_min_x;
-        $x_end = (double)$this->plot_max_x + ($this->plot_max_x - $this->plot_min_x) / 10000.0;
-
-        // Should the leftmost tick be drawn?
-        if ($this->skip_left_tick)
-            $x_tmp += $delta_x;
-
-        // And the rightmost?
-        if ($this->skip_right_tick)
-            $x_end -= $delta_x;
+        // Calculate the tick start, end, and step:
+        list($x_tmp, $x_end, $delta_x) = $this->CalcTicks('x');
 
         for (;$x_tmp <= $x_end; $x_tmp += $delta_x) {
             $xlab = $this->FormatLabel('x', $x_tmp);
@@ -3327,44 +3628,8 @@ class PHPlot {
                 ImageLine($this->img, $x_pixels, $this->plot_area[1], $x_pixels, $this->plot_area[3], $style);
             }
 
-            // Tick on X Axis
-            if ($this->x_tick_pos == 'xaxis') {
-
-                ImageLine($this->img, $x_pixels, $this->x_axis_y_pixels - $this->x_tick_cross,
-                          $x_pixels, $this->x_axis_y_pixels + $this->x_tick_length, $this->ndx_tick_color);
-            }
-
-            // Label on X axis
-            if ($this->x_tick_label_pos == 'xaxis') {
-                 $this->DrawText($this->x_label_font, $this->x_label_angle, $x_pixels,
-                                $this->x_axis_y_pixels + $this->x_tick_length*1.5, $this->ndx_text_color,
-                                $xlab, 'center', 'top');
-            }
-
-            // Top of the plot area tick
-            if ($this->x_tick_pos == 'plotup' || $this->x_tick_pos == 'both') {
-                ImageLine($this->img, $x_pixels, $this->plot_area[1] - $this->x_tick_length,
-                          $x_pixels, $this->plot_area[1] + $this->x_tick_cross, $this->ndx_tick_color);
-            }
-            // Bottom of the plot area tick
-            if ($this->x_tick_pos == 'plotdown' || $this->x_tick_pos == 'both') {
-                ImageLine($this->img, $x_pixels, $this->plot_area[3] + $this->x_tick_length,
-                          $x_pixels, $this->plot_area[3] - $this->x_tick_cross, $this->ndx_tick_color);
-            }
-
-            // Top of the plot area tick label
-            if ($this->x_tick_label_pos == 'plotup' || $this->x_tick_label_pos == 'both') {
-                $this->DrawText($this->x_label_font, $this->x_label_angle, $x_pixels,
-                                $this->plot_area[1] - $this->x_tick_length*1.5, $this->ndx_text_color,
-                                $xlab, 'center', 'bottom');
-            }
-
-            // Bottom of the plot area tick label
-            if ($this->x_tick_label_pos == 'plotdown' || $this->x_tick_label_pos == 'both') {
-                $this->DrawText($this->x_label_font, $this->x_label_angle, $x_pixels,
-                                $this->plot_area[3] + $this->x_tick_length*1.5, $this->ndx_text_color,
-                                $xlab, 'center', 'top');
-            }
+            // Draw tick mark(s)
+            $this->DrawXTick($xlab, $x_pixels);
         }
         return TRUE;
     } // function DrawXTicks
@@ -3444,21 +3709,21 @@ class PHPlot {
     function DrawXDataLabel($xlab, $xpos, $row=FALSE)
     {
         // FIXME!! not working...
-        if (($this->_x_label_cnt++ % $this->x_label_inc) != 0)
-            return;
+        // if (($this->_x_label_cnt++ % $this->x_label_inc) != 0)
+        //    return;
 
         $xlab = $this->FormatLabel('x', $xlab);
 
         // Labels below the plot area
         if ($this->x_data_label_pos == 'plotdown' || $this->x_data_label_pos == 'both')
-            $this->DrawText($this->x_label_font, $this->x_label_angle, $xpos,
-                            $this->plot_area[3] + $this->x_tick_length,
+            $this->DrawText($this->x_label_font, $this->x_label_angle,
+                            $xpos, $this->plot_area[3] + $this->x_label_bot_offset,
                             $this->ndx_text_color, $xlab, 'center', 'top');
 
         // Labels above the plot area
         if ($this->x_data_label_pos == 'plotup' || $this->x_data_label_pos == 'both')
-            $this->DrawText($this->x_label_font, $this->x_label_angle, $xpos,
-                            $this->plot_area[1] - $this->x_tick_length ,
+            $this->DrawText($this->x_label_font, $this->x_label_angle,
+                            $xpos, $this->plot_area[1] - $this->x_label_top_offset,
                             $this->ndx_text_color, $xlab, 'center', 'bottom');
 
         // $row=0 means this is the first row. $row=FALSE means don't do any rows.
@@ -4387,44 +4652,44 @@ class PHPlot {
      */
     function DrawGraph()
     {
+        // Test for missing image, missing data, empty data:
         if (! $this->img) {
             return $this->PrintError('DrawGraph(): No image resource allocated');
         }
-
         if (empty($this->data) || ! is_array($this->data)) {
             return $this->PrintError("DrawGraph(): No data array");
         }
-
-        if (! isset($this->data_limits_done))
-            $this->FindDataLimits();                // Get maxima and minima for scaling
-
-        if ($this->total_records == 0) {            // Check for empty data sets
+        if ($this->total_records == 0) {
             return $this->PrintError('DrawGraph(): Empty data set');
         }
 
-        $this->CalcMargins();                       // Calculate margins
+        // For pie charts: don't draw grid or border or axes, and maximize area usage.
+        // These controls can be split up in the future if needed.
+        $draw_axes = ($this->plot_type != 'pie');
 
-        if (! isset($this->plot_area_width)) {      // Set plot area pixel values (plot_area[])
-            if ($this->plot_type == 'pie') {
-                // Pie charts can maximize image space usage.
-                $this->SetPlotAreaPixels($this->safe_margin, $this->title_height + $this->safe_margin,
-                                         $this->image_width - $this->safe_margin,
-                                         $this->image_height - $this->safe_margin);
-            } else {
-                $this->SetPlotAreaPixels();
-            }
-        }
+        // Get maxima and minima for scaling:
+        if (!$this->FindDataLimits())
+            return FALSE;
 
-        if (! isset($this->plot_max_y))             // Set plot area world values (plot_max_x, etc.)
-            $this->SetPlotAreaWorld();
+        // Set plot area world values (plot_max_x, etc.):
+        if (!$this->CalcPlotAreaWorld())
+            return FALSE;
 
-        /* FIXME!!  this sort of thing should not be done without user's consent
-        if ($this->x_data_label_pos != 'none') {    // Default: do not draw tick stuff if
-            $this->x_tick_label_pos = 'none';       // there are data labels.
-            $this->x_tick_pos = 'none';
-        }
-        */
-        $this->PadArrays();                         // Pad color and style arrays to fit records per group.
+        // Calculate X and Y axis positions in World Coordinates:
+        $this->CalcAxisPositions();
+
+        // Calculate the plot margins, if needed.
+        // For pie charts, set the $maximize argument to maximize space usage.
+        $this->CalcMargins(!$draw_axes);
+
+        // Calculate the actual plot area in device coordinates:
+        $this->CalcPlotAreaPixels();
+
+        // Calculate the mapping between world and device coordinates:
+        $this->CalcTranslation();
+
+        // Pad color and style arrays to fit records per group:
+        $this->PadArrays();
         $this->DoCallback('draw_setup');
 
         $this->DrawBackground();
@@ -4439,10 +4704,7 @@ class PHPlot {
         $this->DrawYTitle();
         $this->DoCallback('draw_titles');
 
-        // Pie charts have no grid or plot area borders:
-        $draw_grid_and_border = ($this->plot_type != 'pie');
-
-        if ($draw_grid_and_border && ! $this->grid_at_foreground) {   // Usually one wants grids to go back, but...
+        if ($draw_axes && ! $this->grid_at_foreground) {   // Usually one wants grids to go back, but...
             $this->DrawYAxis();     // Y axis must be drawn before X axis (see DrawYAxis())
             $this->DrawXAxis();
             $this->DoCallback('draw_axes');
@@ -4497,13 +4759,13 @@ class PHPlot {
         }   // end switch
         $this->DoCallback('draw_graph');
 
-        if ($draw_grid_and_border && $this->grid_at_foreground) {   // Usually one wants grids to go back, but...
+        if ($draw_axes && $this->grid_at_foreground) {   // Usually one wants grids to go back, but...
             $this->DrawYAxis();     // Y axis must be drawn before X axis (see DrawYAxis())
             $this->DrawXAxis();
             $this->DoCallback('draw_axes');
         }
 
-        if ($draw_grid_and_border) {
+        if ($draw_axes) {
             $this->DrawPlotBorder();
             $this->DoCallback('draw_border');
         }
