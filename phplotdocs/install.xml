@@ -14,9 +14,11 @@ This chapter explains how to install PHPlot.
 <title>Prerequisites</title>
 <para>
 Before you can use PHPlot, you need a recent version of PHP with the GD
-extension.  PHPlot is known to require at least PHP version 4.3.0, but you
-should always use the latest available version of either the PHP4 or PHP5
-releases.
+extension.  PHPlot-5.0.4 and earlier require at least PHP version 4.3.0,
+and PHPlot-5.0.4 was tested with PHP-4.4.7 and PHP-5.2.4. PHPlot versions
+after 5.0.4 will only support PHP5, since PHP4 reached its official
+end-of-life as of the end of 2007.
+In general, you should always use the latest available version of PHP5.
 </para>
 
 <para>
