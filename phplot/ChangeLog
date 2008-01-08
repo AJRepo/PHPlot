@@ -1,6 +1,74 @@
 This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
+2008-01-07 (lbayuk)
+    Copyright updated to 2008 and PHP4 no longer listed as supported.
+
+    Major rewrite of the margin calculation functions to address multiple
+    problems.  Fixes for bugs 1856207 "Margin error with 'xaxis'/'yaxis'
+    position, 1843012 "Make margins, drawing consistent", and 945439
+    "x_tick_label_height not set correctly".
+
+    Note: These changes are inter-dependent and cannot be split up.
+
+    * Defer all calculations to DrawGraph time, to eliminate order dependencies.
+      These functions now just store their arguments in the object, and all
+      calculations happen later:
+    + SetXAxisPosition, SetYAxisPosition
+    + SetMarginsPixels
+    + SetPlotAreaPixels (Stores margins, not area, now.)
+    + SetPlotAreaWorld
+    + SetXTickIncrement, SetYTickIncrement
+
+    * A new callback 'debug_scale' was added to trace the margin and scale
+      calculations.
+
+    * CalcMargins was rewritten. Actual sizes of tick and data labels are now
+      used, rather than guesses like "use size of biggest Y value". A minimum
+      value (3 x safe_margin, or 15 pixels) applies to each margin.
+
+    * FindDataLimits no longer needs to find the longest data label, since
+      CalcMargins now does that more precisely.
+
+    * DrawXTitle and DrawYTitle now use position offsets calculated by
+      CalcMargins. Note: These titles are now offset from the plot area,
+      not the image area. The titles will move if you had set the plot area
+      or margins.
+
+    * DrawYTick, DrawXTick rewritten to use pre-calculated offsets, and common
+      code moved to new CalcTicks().
+
+    * DrawXDataLabel: Use pre-calculated offsets for text.
+
+    * DrawGraph: Rewrote top section (before drawing anything) to do the
+      calculations in the proper order, unconditionally.
+
+    * Class variables removed:
+      x_label_inc, y_label_inc, _x_label_cnt : These were never used.
+      title_height, x_title_height, y_title_width : Now internal to CalcMargins.
+      data_limits_done : No more need to remember if FindDataLimits called.
+
+    * New class variables added:
+      plot_margins_set : Keeps track of user-set plot area or automatic.
+      x_label_top_offset, x_label_bot_offset, x_offset_axis_offset,
+          y_label_left_offset, y_label_right_offset, y_label_axis_offset,
+          x_title_top_offset, x_title_bot_offset,
+          y_title_left_offset, y_title_left_offset : Label offsets
+      
+    * New internal functions:
+      CalcPlotAreaPixels : Deferred calculations taken out of SetPlotAreaPixels
+        and SetMarginsPixels.
+      CalcPlotAreaWorld : Deferred calculations taken out of SetPlotAreaWorld.
+      CalcAxisPositions : Calculate axis positions, moved from CalcTranslation.
+      CalcTicks : Calculate X and Y tick interval. This still uses the
+        same simple method (basically range/10), but now we could drop in a new
+        algorithm much more easily. This is now also used by CalcMargins.
+        Code taken out of DrawXTicks and DrawYTicks.
+      CalcMaxTickLabelSize : So CalcMargins can use the exact tick label sizes.
+      CalcMaxDataLabelSize : So CalcMargins can use the exact data label sizes.
+      DrawXTick : Code split out from DrawXTicks for symmetry with DrawYTick.
+
+
 2007-12-13 (lbayuk)
     * Changed ProcessTextTTF() so SizeText() will return integers. It rounds
       the calculated values up, so the bounding box really contains the text.
