@@ -4,6 +4,20 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2008-01-07
+   * Changes for new margin code rewrite:
+     + developer: Updated layout figure (images/layout.png) and added
+         new explanatory text.
+         Updated documentation on internal functions.
+     + reference: Updated description of SetPlotAreaWorld and SetPlotAreaPixels.
+
+   * Updated copyright year to 2008.
+   * Updated install prerequisites to indicate PHP4 is no longer supported.
+
+2008-01-05
+   * Changes to Makefile and style.xsl stylesheet to allow building a
+     special version for the Sourceforge project site, with required logo.
+
 2007-12-09
    * Updates to developer section for the rewritten text functions:
      + Internal function TTFBBoxSize is removed.
