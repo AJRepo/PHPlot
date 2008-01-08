@@ -16,17 +16,71 @@ itself.
 <chapter id="dev-layout">
 <title>Plot Layout</title>
 <para>
-This figure illustrates the plot layout. Note that the areas for axis
-labels, tick marks, only are used if those areas are enabled.
-  <note>
+This figure illustrates the plot layout, starting after PHPlot-5.0.4 when
+the margin calculations were rewritten.
+Use the following notes to help understand the figure.
+</para>
+
+<itemizedlist>
+  <listitem>
     <para>
-Analysis of the PHPlot source code was the primary source of information
-used to create this figure. There are probably errors. Some errors may be
-due to discrepancies between different parts of the PHPlot code, and some
-of these may be considered bugs in the code. The double safe_margin gap on
-the bottom and right edges are one suspect area.
+The safe_margin (box with X) is a gap of 5 pixels used to separate elements.
     </para>
-  </note>
+  </listitem>
+  <listitem>
+    <para>
+The main title, X titles, and Y titles are optional. If these titles are
+not set, the space allocated to them collapses, including the safe_margin
+gap. This is shown in the figure with an arrow.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+Similarly, the X tick labels, X data labels, and Y tick labels are optional.
+If these labels are not used, the space allocated to them collapses,
+including the safe_margin.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+X data labels and X tick labels occupy the same space. Normally only one of
+these should be present; if both are on for some reason they will overlay.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+There is a minimum value for top, left, right, and bottom margins. The
+minimum is currently fixed at 3 times the safe_margin. Even if there are no
+titles at all on a side, the margin on that side will be no less than
+the minimum margin. This keeps the axis or plot area edge from coming too
+close to the image edge.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+The main title is positioned relative to the top of the image.
+Starting after PHPlot-5.0.4, the X and Y titles are positioned relative
+to the plot area. 
+PHPlot-5.0.4 and earlier positioned the X and Y titles
+relative to the image edges.
+The difference should not be visible with automatic margins, but if the
+margins are set larger, or the plot area smaller, then the X and Y titles
+will move inwards with the newer releases.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+It is possible to position X ticks and X tick labels to 'xaxis', and
+Y ticks and Y tick labels to 'yaxis', so the ticks and/or labels will
+float to the axis positions rather than always appear on the edges of the
+plot area. Space will be allocated for the corresponding margin only if the
+axis happens to fall exactly at the data limits for that side. This may
+cause problems if the axis is close but not quite at the edge; no margin
+space will be allocated on that side for the labels, and the labels may
+overlap the title or fall off the edge of the image.
+    </para>
+  </listitem>
+</itemizedlist>
 
 <informalfigure>
   <mediaobject>
@@ -38,7 +92,6 @@ the bottom and right edges are one suspect area.
     </textobject>
   </mediaobject>
 </informalfigure>
-</para>
 
 </chapter>
 
@@ -95,6 +148,22 @@ the class member function <xref linkend="pad_array"/>.
 </varlistentry>
 
 <varlistentry>
+  <term id="CalcAxisPositions" xreflabel="CalcAxisPositions">CalcAxisPositions()</term>
+  <listitem>
+    <para>
+Calculates the X and Y axis positions in world coordinates. These can be
+supplied by the user, in which case they are only changed if they are
+outside the data range. If not supplied by the user, the Y axis is set to
+the minimum X value, so it appears on the left. If not supplied the the
+user, the X axis is set to Y=0 (Y=1 for log scale plots) if the Y data
+range includes 0, else to the minimum Y value.
+Note: This code was moved out of CalcTranslation after PHPlot-5.0.4.
+Called by <xref linkend="DrawGraph"/>.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
   <term id="CalcBarWidths" xreflabel="CalcBarWidths">CalcBarWidths()</term>
   <listitem>
     <para>
@@ -107,15 +176,89 @@ Called by <xref linkend="DrawGraph"/> before calling
 </varlistentry>
 
 <varlistentry>
-  <term id="CalcMargins" xreflabel="CalcMargins">CalcMargins()</term>
+  <term id="CalcMargins" xreflabel="CalcMargins">CalcMargins($maximize)</term>
   <listitem>
     <para>
 Calculates the size of the four margin areas around the plot area:
 x_left_margin, x_right_margin, y_top_margin, and y_bot_margin.
-It does this by trying to determine how much space is needed for titles
-and labels.
-Called if needed by <xref linkend="SetPlotAreaPixels"/> and
-always called by <xref linkend="DrawGraph"/>.
+It does this by trying to determine how much space is needed for titles,
+labels, and tick marks.
+Starting after PHPlot-5.0.4, this is only called by <xref linkend="DrawGraph"/>,
+and it also calculates position offsets for titles and labels. It is called
+even in case of a user-supplied plot area (SetPlotAreaPixels or
+SetMarginsPixels was used). If the $maximize argument is true, then the
+plot area does not leave room for X or Y axis, labels, or titles; this is
+used for pie charts.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="CalcMaxDataLabelSize" xreflabel="CalcMaxDataLabelSize">CalcMaxDataLabelSize()</term>
+  <listitem>
+    <para>
+Calculates the size of the biggest X data label. It returns the height
+along the Y axis of the tallest data label. This is used to allocate space
+for margins.
+This was added after PHPlot-5.0.4.
+Called by <xref linkend="CalcMargins"/>.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="CalcMaxTickLabelSize" xreflabel="CalcMaxTickLabelSize">CalcMaxTickLabelSize($which)</term>
+  <listitem>
+    <para>
+Calculates the size of the biggest tick label. The $which argument is 'x'
+or 'y' to indicate which labels to work with. For 'x', it returns the
+height along the Y axis; for 'y' it returns the width along the X axis.
+This is used to allocate space for margins.
+This was added after PHPlot-5.0.4.
+Calls <xref linkend="CalcTicks"/> to determine the tick value parameters.
+Called by <xref linkend="CalcMargins"/>.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="CalcPlotAreaPixels" xreflabel="CalcPlotAreaPixels">CalcPlotAreaPixels()</term>
+  <listitem>
+    <para>
+Calculates the pixel coordinates of the plot area.
+This was added after PHPlot-5.0.4 by moving the parts of the calculations out of
+SetPlotAreaPixels and SetMarginsPixels. Those two functions now simply
+record their arguments, and make no attempt to calculate any parameters.
+Called by <xref linkend="DrawGraph"/>, after <xref linkend="CalcMargins"/>
+is used to calculate margins.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="CalcPlotAreaWorld" xreflabel="CalcPlotAreaWorld">CalcPlotAreaWorld()</term>
+  <listitem>
+    <para>
+Calculates the world coordinate limits of the plot area.
+This was added after PHPlot-5.0.4 by moving the calculations out of
+<xref linkend="SetPlotAreaWorld"/>.
+Called by <xref linkend="DrawGraph"/>, after <xref linkend="FindDataLimits"/>
+is used to examine the data array values.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="CalcTicks" xreflabel="CalcTicks">CalcTicks($which)</term>
+  <listitem>
+    <para>
+Calculates the tick parameters. $which is 'x' or 'y'. Returns an array of 3
+values: start, end, and interval.
+This was added after PHPlot-5.0.4, although it still uses the same method
+of just dividing the interval by 10 if there is no user-supplied interval
+or tick count.
+Called by <xref linkend="CalcMaxTickLabelSize"/>,
+<xref linkend="DrawYTicks"/>, and <xref linkend="DrawXTicks"/>.
     </para>
   </listitem>
 </varlistentry>
@@ -128,8 +271,9 @@ Calculates the parameters for transforming world to pixel coordinates.
 This function calculates the scale (xscale, yscale) and origin
 (plot_origin_x, plot_origin_y) for X and Y translations, which
 are used by the xtr() and ytr() functions.
-Called by several functions if necessary, including
-<xref linkend="SetPlotAreaPixels"/> if the plot area is set or changed.
+Starting after PHPlot-5.0.4, this is only called by <xref
+linkend="DrawGraph"/>, as nothing else uses the parameters until
+the graph is ready to be drawn.
     </para>
   </listitem>
 </varlistentry>
@@ -423,7 +567,7 @@ Called by <xref linkend="DrawGraph"/>.
 Draws the X (horizontal) axis, including the axis line,
 tick marks and labels,
 and also draws the vertical grid lines.
-All of these except the axis line are done in (<xref linkend="DrawXTicks"/>).
+All of these except the axis line are done in <xref linkend="DrawXTicks"/>.
 Called by <xref linkend="DrawGraph"/>.
     </para>
   </listitem>
@@ -467,10 +611,28 @@ Called by <xref linkend="DrawXDataLabel"/>.
 </varlistentry>
 
 <varlistentry>
+  <term id="DrawXTick" xreflabel="DrawXTick">DrawXTick($which_xlab, $which_xpix)</term>
+  <listitem>
+    <para>
+Draws a single X value tick mark and its label.
+These can appear on the bottom of the graph, top of the graph, along the
+X axis (even if it is in the middle somewhere), on both sides, or nowhere,
+as set with <xref linkend="SetXTickPos"/> and
+<xref linkend="SetXTickLabelPos"/>.
+Called by <xref linkend="DrawXTicks"/>.
+This was added after PHPlot-5.0.4 by splitting the code out of DrawXTicks,
+for symmetry with DrawYTicks.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
   <term id="DrawXTicks" xreflabel="DrawXTicks">DrawXTicks()</term>
   <listitem>
     <para>
 Draws the vertical grid lines, the tick marks, and tick labels.
+Calls <xref linkend="CalcTicks"/> to calculate the tick parameters.
+Calls <xref linkend="DrawXTick"/> to draw each tick mark and its label.
 Called by <xref linkend="DrawXAxis"/>.
     </para>
   </listitem>
@@ -495,7 +657,7 @@ Called by <xref linkend="DrawGraph"/>.
 Draws the Y (vertical) axis, including the axis line,
 tick marks and labels,
 and also draws the horizontal grid lines.
-All of these except the axis line are done in (<xref linkend="DrawYTicks"/>).
+All of these except the axis line are done in <xref linkend="DrawYTicks"/>.
 Called by <xref linkend="DrawGraph"/>.
     </para>
   </listitem>
@@ -534,8 +696,7 @@ Called by <xref linkend="DrawYTicks"/>.
   <listitem>
     <para>
 Draws the horizontal grid lines, the tick marks, and tick labels.
-Unlike <xref linkend="DrawXTicks"/>, this uses another function
-<xref linkend="DrawYTick"/> to draw each tick mark and its label.
+Calls <xref linkend="DrawYTick"/> to draw each tick mark and its label.
 Called by <xref linkend="DrawYAxis"/>.
     </para>
   </listitem>
@@ -558,15 +719,17 @@ Called by <xref linkend="DrawGraph"/>.
   <listitem>
     <para>
 Finds the limits of the data. Using the data_type and the data array, it
-goes through the points and determines the minimum and maximum X and Y
-values. It stores the min and max Y values for each row (plot line) in the
-data array using the special index values MINY (-1) and MAXY (-2).
+goes through the points and determines the minimum and maximum X and Y values.
+It stores the min and max Y values for each row (plot line) in the
+class arrays data_min and data_max.
+(Before PHPlot-5.0.4, these were stored back into the data array
+with special index values MINY (-1) and MAXY (-2).)
 It also stores the overall min and max X and Y values as min_x, max_x,
 min_y, and max_y.
 It also stores the length of the longest data label in max_t.
-Called as necessary by <xref linkend="SetPlotAreaWorld"/>, <xref linkend="SetXTickIncrement"/>,
-<xref linkend="SetYTickIncrement"/>, and <xref linkend="DrawGraph"/> with a flag (data_limits_done) used to 
-ensure it is only called once per call to <xref linkend="SetDataValues"/>.
+Starting after PHPlot-5.0.4, this is only called once by
+<xref linkend="DrawGraph"/>. (In PHPlot-5.0.4 and earlier, this was called
+from various places, with a flag data_limits_done to indicate it was called.)
     </para>
   </listitem>
 </varlistentry>
