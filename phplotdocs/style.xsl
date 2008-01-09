@@ -70,16 +70,15 @@ division  toc
 <xsl:param name="footerlogo" select="0"/>  <!-- Default value -->
 <xsl:template name="user.footer.navigation">
   <xsl:if test="$footerlogo != 0">
-<div class="host">
-<a href="http://sourceforge.net"><img class="logoImage" alt=""
-   src="http://sourceforge.net/sflogo.php?group_id=14653"
-   width="88" height="31" align="left" /></a>
+<div><a href="http://sourceforge.net"><img
+  src="http://sflogo.sourceforge.net/sflogo.php?group_id=14653&amp;type=1"
+  width="88" height="31" border="0" alt="SourceForge.net Logo"
+  align="left" /></a>
 <p style="font-size: 50%">This version of the manual was produced for the
 PHPlot Sourceforge project web service site, which requires the logo on each
 page.<br />To download a logo-free copy of the manual, see the
 <a href="http://sourceforge.net/projects/phplot/">PHPlot project</a> downloads
-area.</p>
-</div>
+area.</p></div>
   </xsl:if>
 </xsl:template>
 
