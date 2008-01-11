@@ -1064,8 +1064,8 @@ $file is the filename of the image to use as the tile.
 and ($width, $height) are the area to be tiled. These are used to tile just
 under the plot area versus the entire image. The $mode can be
 'centeredtile', 'tile', or 'scale'. Scale mode scales the source image to
-fit the target area. Tile and centertile modes repeat the source image as
-needed to fit into the target area; the difference is that centertile
+fit the target area. Tile and centeredtile modes repeat the source image as
+needed to fit into the target area; the difference is that centeredtile
 offsets the tile start position by half its size, which works better for
 some tiles.
 Called by
