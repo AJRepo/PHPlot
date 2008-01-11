@@ -4,6 +4,15 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2008-01-10
+   * examples: Fix area1 example. Top tick should be 100 not 110, and there
+     was a typo in a code comment.
+
+   * reference: Explain the 3 available tile modes in SetBgImage and
+     SetPlotAreaBgImage.
+
+   * developer: Fix error in tile mode.
+
 2008-01-07
    * Changes for new margin code rewrite:
      + developer: Updated layout figure (images/layout.png) and added
