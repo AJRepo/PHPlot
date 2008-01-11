@@ -20,8 +20,8 @@ $plot->SetDataValues($data);
 # Main plot title:
 $plot->SetTitle('Candy Sales by Flavor');
 
-# Set Y data limits, tick incrementm titles:
-$plot->SetPlotAreaWorld(NULL, 0, NULL, 110);
+# Set Y data limits, tick increment, and titles:
+$plot->SetPlotAreaWorld(NULL, 0, NULL, 100);
 $plot->SetYTickIncrement(10);
 $plot->SetYTitle('% of Total');
 $plot->SetXTitle('Year');
