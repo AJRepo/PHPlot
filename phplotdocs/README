@@ -1,5 +1,5 @@
 This is phplotdocs/README, for the PHPlot Reference Manual source
-Last updated on 2007-09-20
+Last updated on 2008-01-10
 -----------------------------------------------------------------------------
 
 This directory contains the Docbook-XML source files for the PHPlot Reference
@@ -50,6 +50,9 @@ The Makefile has the following targets:
   "make dist" makes the manual source distribution.
   "make clean" deletes some intermediate files, but leaves the manual output.
   "make allclean" deletes every generated file.
+  "make sfhtml" makes a special HTML version of the manual for the
+    PHPlot web site on Sourceforge.net (which requires their logo on
+    each page).
 
 
 Example Figure Production:
