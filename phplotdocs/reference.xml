@@ -303,6 +303,13 @@ If a background image has been set, background color (set with
 <xref linkend="SetBackgroundColor" />) is ignored.
     </para>
     <para>
+Scale mode scales the supplied background image file to fit the image area
+of the entire graph.  Tile and centeredtile modes repeat the supplied
+background image file as needed to fit the image area of the graph.  The
+difference is that centeredtile offsets the start position within the
+background image by half its size, which works better for some images.
+    </para>
+    <para>
 SetBgImage sets a background for the entire image area, while
 <xref linkend="SetPlotAreaBgImage" /> sets a background for
 the plot area (generally, the area between the axes).
@@ -2746,6 +2753,13 @@ Optional display mode for the background image: one of the strings
     <para>
 If a background image has been set, background color (set with
 <xref linkend="SetPlotBgColor" />) is ignored.
+    </para>
+    <para>
+Scale mode scales the supplied background image file to fit the plot area.
+Tile and centeredtile modes repeat the supplied background image file as
+needed to fit the plot area.  The difference is that centeredtile offsets the
+start position within the background image by half its size, which works
+better for some images.
     </para>
     <para>
 SetPlotAreaBgImage sets a background for the plot area, while
