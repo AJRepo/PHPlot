@@ -2,7 +2,6 @@
 # Makefile for PHPlot Programmer's Reference Manual (Docbook-xml version)
 # lbayuk@pobox.com (based on other projects)
 # This uses xsltproc for HTML.
-# PDF does not work.
 
 # === Makefile Configuration ===
 
@@ -14,17 +13,9 @@ PHP=/opt/php/bin/php
 
 # XSL Style Sheet for HTML:
 XSL_HTML=style.xsl
-# Style Sheet for Print/PDF: (TBSL)
-XSL_PRINT=
 
 # XSL Transformation Processor program:
 XSLTPROC=xsltproc
-
-# Command to build a PDF. Append output name and input name. Does not work.
-# simple, native, or db2latex
-DBLATEX_STYLE=simple
-# Add -d for debug: leave temp files
-MAKEPDF=dblatex -T $(DBLATEX_STYLE) -d -b pdftex -o
 
 # === End of Makefile Configuration ===
 
@@ -70,7 +61,6 @@ EXAMPLE_LIST=examples/list.xml
 
 all: html
 html: html.mark
-pdf: phplot.pdf
 # Special version of the manual with required logo for
 # Sourceforge project web pages. See the XSLT style sheet for details.
 sfhtml:
@@ -85,12 +75,6 @@ html.mark: $(SRC) $(ALSO) version.xml $(EXAMPLE_LIST)
 	$(XSLTPROC) $(XSLTPROCFLAGS) $(XSL_HTML) $(MAIN)
 	touch html.mark
 
-
-# Build PDF manual with dblatex.
-# This doesn't work yet. Testing: PDF with dblatex
-phplot.pdf: $(SRC) $(ALSO) $(EXAMPLE_LIST)
-	$(MAKEPDF) $@ $(MAIN)
-
 # Just build the example image files. (Can't use 'examples' as a target,
 # because there is a directory by that name which interferes.)
 exampleimages: $(EXAMPLES_IMAGES)
@@ -102,16 +86,13 @@ clean:
 
 # All cleanup: Remove all generated files. Caution: Removes all HTML files!
 allclean: clean
-	-rm -f *.html main.pdf
+	-rm -f *.html
 	-rm -f $(EXAMPLES_IMAGES)
 
 # Make a release of the HTML documentation only:
-# This assumes certain extensions in images/ (only *.png) and examples/
 release: html
-	mkdir $(RELEASE) $(RELEASE)/images $(RELEASE)/examples
-	cp *.html $(ALSO) $(RELEASE)
-	cp images/*.png $(RELEASE)/images
-	cp examples/*.png $(RELEASE)/examples
+	@if [ -d $(RELEASE) ]; then echo "Error: Release directory $(RELEASE) already exists"; exit 1; fi
+	$(MAKE) -$(MAKEFLAGS) DESTDIR=$(RELEASE) install
 	zip -r $(RELEASE).zip $(RELEASE)
 	rm -rf $(RELEASE)
 	@echo Created release $(RELEASE) as $(RELEASE).zip
@@ -126,6 +107,19 @@ dist: $(RELFILES)
 	zip -r $(SRCRELEASE).zip $(RELEASE)
 	rm -rf $(RELEASE)
 	@echo Created source distribution $(SRCRELEASE) as $(SRCRELEASE).zip
+
+# Install the manual somewhere. This is used by 'make release', and also
+# for building the manual to read or upload to the web site.
+# This requires DESTDIR be defined, e.g. make DESTDIR=/path/to install
+# Note: If the manual isn't already built, this will do 'make html'
+# (not sfhtml), so it is better to build the manual first.
+# Note: This assumes certain extensions in images/ (only *.png) and examples/
+install: html
+	@if [ x$(DESTDIR) = x ]; then echo "Error: Must set DESTDIR for make install"; exit 1; fi
+	mkdir -p $(DESTDIR) $(DESTDIR)/images $(DESTDIR)/examples
+	cp *.html $(ALSO) $(DESTDIR)
+	cp images/*.png $(DESTDIR)/images
+	cp examples/*.png $(DESTDIR)/examples
 
 # === For building the examples ===
 
