@@ -54,6 +54,71 @@ None
   </refsect1>
 </refentry>
 
+<refentry id="GetCallback">
+  <refmeta>
+    <refentrytitle>GetCallback</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>GetCallback</refname>
+    <refpurpose>Returns the current callback function registered for the given reason</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;GetCallback(<parameter>$reason</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>GetCallback</function> returns the current callback function
+registered for the given reason.
+That is, it returns the function argument value used when a callback
+function was registered with <xref linkend="SetCallback"/>.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$reason</replaceable></term>
+        <listitem>
+          <para>
+A PHPlot-defined name for the callback.
+See <xref linkend="callbacks-names" />.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Return Value</title>
+    <para>
+Returns the function name as a string, or a 2-element array
+for object instance and method calls.
+Returns False if there is no callback registered for this reason,
+or if the given reason is not valid.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+Since no valid function name (or array of object instance and method)
+evaluates to false when directly tested, it is not necessary to check
+using the identical-to (===) operator.
+    </para>
+    <para>
+Callbacks are an experimental feature added to PHPlot-5.0.4.
+Refer to <xref linkend="callbacks"/> for more information.
+    </para>
+  </refsect1>
+</refentry>
+
 <refentry id="PHPlot">
   <refmeta>
     <refentrytitle>PHPlot</refentrytitle>
@@ -193,6 +258,64 @@ told not to using <xref linkend="SetPrintImage" />.
     <title>Parameters</title>
     <para>
 None
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="RemoveCallback">
+  <refmeta>
+    <refentrytitle>RemoveCallback</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>RemoveCallback</refname>
+    <refpurpose>Unregisters any callback registered for the given reason</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;RemoveCallback(<parameter>$reason</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>RemoveCallback</function> unregisters any callback registered
+for the given reason.
+It undoes the effect of <xref linkend="SetCallback"/>.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$reason</replaceable></term>
+        <listitem>
+          <para>
+A PHPlot-defined name for the callback.
+See <xref linkend="callbacks-names" />.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Return Value</title>
+    <para>
+Returns True if the given reason is valid (whether or not
+there was actually a callback registered for it).
+Returns False if reason is not a valid callback reason.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+Callbacks are an experimental feature added to PHPlot-5.0.4.
+Refer to <xref linkend="callbacks"/> for more information.
     </para>
   </refsect1>
 </refentry>
@@ -360,6 +483,89 @@ browser to cache the image.
         </listitem>
       </varlistentry>
     </variablelist>
+  </refsect1>
+</refentry>
+
+<refentry id="SetCallback">
+  <refmeta>
+    <refentrytitle>SetCallback</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetCallback</refname>
+    <refpurpose>Registers a callback function</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetCallback(<parameter>$reason</parameter>, <parameter>$function</parameter>, <optional><parameter>$arg</parameter></optional>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetCallback</function> registers a callback function. That is, it
+arranges for the caller-provided function to be called at a specific point
+or point inside PHPlot's internal processing.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$reason</replaceable></term>
+        <listitem>
+          <para>
+A PHPlot-defined name for the callback.
+See <xref linkend="callbacks-names" />.
+          </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><replaceable>$function</replaceable></term>
+        <listitem>
+          <para>
+The function to be called. This can be either the name of a function as a
+string, or a two-element array with an object class instance and method name.
+See <xref linkend="callbacks-api"/> for more information.
+          </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><replaceable>$arg</replaceable></term>
+        <listitem>
+          <para>
+An optional opaque argument passed-through to the callback function when
+PHPlot triggers the callback. If not supplied, the callback function will
+get a NULL argument.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Return Value</title>
+    <para>
+Returns True if the callback has been registered.
+Returns False on error. The only error condition is if the given callback
+reason is not valid. Note that the function name is not validated until
+the callback is triggered.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+If a callback is already registered for the given reason, the new callback
+replaces the old one.
+    </para>
+    <para>
+Callbacks are an experimental feature added to PHPlot-5.0.4.
+Refer to <xref linkend="callbacks"/> for more information.
+    </para>
   </refsect1>
 </refentry>
 
