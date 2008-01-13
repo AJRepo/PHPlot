@@ -309,9 +309,7 @@ The reasons are array indexes in the $callbacks class variable. Following
 that are zero or more arguments to pass to the callback, after the image
 resource and passthrough arguments. DoCallback does nothing if there is no
 callback registered for the given reason, otherwise it calls the callback
-function.
-Note: Callbacks are an experimental feature, currently only documented in
-the text file 'Callbacks' distributed with the software.
+function. See <xref linkend="callbacks"/> for more information on callbacks.
     </para>
   </listitem>
 </varlistentry>
@@ -1107,4 +1105,310 @@ This uses the scale and translation set up by <xref linkend="CalcTranslation"/>.
 </variablelist>
 
 </chapter>
+
+<chapter id="callbacks">
+<title>Callbacks</title>
+<abstract>
+  <para>
+This chapter documents the callback feature in PHPlot. Callbacks allow a
+programmer using PHPlot to insert their own functions into the graph
+drawing process. Callbacks are currently also used for development and
+testing of PHPlot.
+  </para>
+</abstract>
+
+<warning>
+  <para>
+Callbacks were added to PHPlot-5.0.4 as an experimental feature.
+This feature is subject to change in future releases. Changes in the
+implementation may be incompatible with the current interface.
+The feature may even be removed entirely. Be aware of this before
+you decide to rely on callbacks in your application.
+  </para>
+  <para>
+Some methods of using callbacks allow you to directly access or alter PHPlot
+class variables, or call PHPlot internal methods. (Of course, this is
+currently possible without the callback feature as well.) All PHPlot class
+variables, and all methods/functions which are not documented in the
+"Reference" section of the PHPlot Reference Manual, are considered to be
+for internal use and are subject to be changed or removed at any time.
+  </para>
+</warning>
+
+<sect1 id="callbacks-api">
+<title>Callbacks Application Interface</title>
+<para>
+Refer to these entries in the Function Reference:
+  <itemizedlist>
+    <listitem>
+      <para>
+<xref linkend="SetCallback"/> - Register a callback function
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+<xref linkend="GetCallback"/> - Return a currently registered callback function
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+<xref linkend="RemoveCallback"/> - Unregister a callback function
+      </para>
+    </listitem>
+  </itemizedlist>
+</para>
+
+<para>
+Either a function name or an object and method can be registered as
+a callback with <xref linkend="SetCallback"/>.
+For more information about using callbacks with objects and methods,
+see the PHP manual under Types, Pseudo Types, Callback.
+Also refer to <xref linkend="callbacks-objects"/> later in this manual.
+Whether calling a function or an
+object method as a callback, the same calling sequence is used.
+</para>
+<para>
+  <programlisting>
+function_name($img, $passthrough_arg, [other_args...])
+  </programlisting>
+</para>
+<para>
+  <variablelist>
+    <varlistentry>
+      <term>$img</term>
+      <listitem>
+        <para>
+The GD image resource for the plot image.
+        </para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>$passthrough_arg</term>
+      <listitem>
+        <para>
+The third argument supplied to SetCallback ($arg) when the callback is
+established. This allows the programmer to pass information to the callback
+without using global variables. This can be any PHP type including array.
+To pass a reference, you should put it into an array and pass the array.
+        </para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>other_args...</term>
+      <listitem>
+        <para>
+Zero or more additional arguments supplied by PHPlot to callbacks of this
+type. Refer to <xref linkend="callbacks-names"/> to see what callback
+reasons supply extra arguments.
+        </para>
+      </listitem>
+    </varlistentry>
+  </variablelist>
+</para>
+
+<para>
+For example, given this callback setup:
+  <programlisting>
+$plot->SetCallback('draw_graph', 'my_drawing_callback', $myvar);
+  </programlisting>
+Then PHPlot will call:
+  <programlisting>
+my_drawing_callback($img, $myvar_value);
+  </programlisting>
+Where $myvar_value is the value of $myvar at the time SetCallback was called.
+</para>
+</sect1>
+
+<sect1 id="callbacks-access">
+<title>Callback Function Access</title>
+<para>
+By default, the callback function has access only to the GD image resource
+as the $img argument, the pass-through argument provided when the callback
+function was registered, and additional arguments (if any) provided by
+PHPlot for the callback. It does not have access to the PHPlot
+class object instance, nor any of its contents.
+</para>
+
+<para>
+If you feel you need access to the internals of the PHPlot class instance,
+you have two options. First, you can pass the instance variable as the $arg
+when registering the callback. With PHP5 this will pass a reference to
+the object, which allows reading and changing variables. (PHP4 would pass
+a copy of the object at the time the callback function is being set up,
+which would probably not be useful. There are work-arounds, but PHP4 is no
+longer supported.)
+</para>
+
+<para>
+The second option is to use a class method.
+This is described in <xref linkend="callbacks-objects"/>.
+</para>
+
+<para>
+As stated in the warning at the top of this chapter, any access to the class
+internals is risky and subject to break with any new update to PHPlot.
+</para>
+
+</sect1>
+
+
+<sect1 id="callbacks-names">
+<title>Available Callbacks</title>
+<para>
+This section defines the currently available callback names. A callback
+name is also called a <emphasis>reason</emphasis>.
+</para>
+
+<para>
+Most of the callbacks currently available are drawing callbacks, activated
+during the graph drawing process started by <xref linkend="DrawGraph"/>.
+By convention, a drawing callback occurs right after the event which it names.
+For example, the <command>draw_titles</command> callback will be called after
+drawing the plot titles.
+</para>
+
+<para>
+Debug callbacks are for use when developing and debugging PHPlot itself.
+Needless to say, their use for other purposes is discouraged.
+</para>
+
+<para>
+The following table lists the available callback reasons.
+</para>
+
+<para>
+  <informaltable id="callback-reasons">
+    <tgroup cols="4">
+      <?dbhtml table-summary="PHPlot available callback reasons"?>
+      <thead>
+        <row>
+          <entry>Reason Name:</entry>
+          <entry>Calling Point:</entry>
+          <entry>Extra Parameters:</entry>
+          <entry>Notes:</entry>
+        </row>
+      </thead>
+      <tbody>
+        <row>
+          <entry>draw_setup</entry>
+          <entry>After all setup, before drawing anything.</entry>
+          <entry>(None)</entry>
+          <entry>Anything drawn here will be covered by the background.</entry>
+        </row>
+        <row>
+          <entry>draw_image_background</entry>
+          <entry>After drawing the image backgrounds and border.</entry>
+          <entry>(None)</entry>
+          <entry></entry>
+        </row>
+        <row>
+          <entry>draw_plotarea_background</entry>
+          <entry>After drawing the plot area background.</entry>
+          <entry>(None)</entry>
+          <entry></entry>
+        </row>
+        <row>
+          <entry>draw_titles</entry>
+          <entry>After drawing the plot title, X and Y titles.</entry>
+          <entry>(None)</entry>
+          <entry>Called even if no titles were set.</entry>
+        </row>
+        <row>
+          <entry>draw_axes</entry>
+          <entry>After drawing the X and Y axis and grid lines.</entry>
+          <entry>(None)</entry>
+          <entry>Not called for pie charts.</entry>
+        </row>
+        <row>
+          <entry>draw_graph</entry>
+          <entry>After drawing the body of the graph.</entry>
+          <entry>(None)</entry>
+          <entry></entry>
+        </row>
+        <row>
+          <entry>draw_border</entry>
+          <entry>After drawing the plot area border.</entry>
+          <entry>(None)</entry>
+          <entry>Not called for pie charts.</entry>
+        </row>
+        <row>
+          <entry>draw_legend</entry>
+          <entry>After drawing the legend, if legend is enabled.</entry>
+          <entry>(None)</entry>
+          <entry>Not called if no legend was set.</entry>
+        </row>
+        <row>
+          <entry>debug_textbox</entry>
+          <entry>Just before drawing any text.</entry>
+          <entry>$px, $py, $bbox_width, $bbox_height</entry>
+          <entry>Provides access to the orthogonal bounding box position
+              and size for the text string.</entry>
+        </row>
+        <row>
+          <entry>debug_scale</entry>
+          <entry>Called at end of many scale calculation functions.</entry>
+          <entry>Function name, then an array of variable name =&gt; value</entry>
+          <entry>For displaying intermediate values in margin and scale
+              calculations.</entry>
+        </row>
+      </tbody>
+    </tgroup>
+  </informaltable>
+</para>
+</sect1>
+
+<sect1 id="callbacks-objects">
+<title>Object Methods as Callbacks</title>
+<para>
+The callback function argument to <xref linkend="SetCallback"/>
+can be an array of two elements: a class variable and a method.
+This can be used with any class, but here we are interested in using an
+extension of the PHPlot class.
+Consider the following setup:
+</para>
+<para>
+  <programlisting>
+class my_PHPlot extends PHPlot
+{
+  function my_PHPlot($width=600, $height=400, $outfile=NULL, $infile=NULL)
+  {
+    $this-&gt;PHPlot($width, $height, $outfile, $infile);
+  }
+
+  function callback($img, $arg)
+  {
+    fwrite(STDERR, "callback in object\n");
+    fwrite(STDERR, "Plot area: ({$this-&gt;plot_area[0]}, {$this-&gt;plot_area[1]}) :");
+    fwrite(STDERR, " ({$this-&gt;plot_area[2]}, {$this-&gt;plot_area[2]})\n");
+  }
+}
+  </programlisting>
+</para>
+
+<para>
+We define a class which extends PHPlot, and a method 'callback' which
+displays the plot area using the internal PHPlot class variable plot_area.
+(Note we are using a PHP4-style constructor, which also works with PHP5.
+You can use the PHP5 constructor method instead.)
+</para>
+
+<para>
+We will then create an instance of the extended class, and set a callback.
+  <programlisting>
+$plot = new my_PHPlot(400,300);
+$plot->SetCallback('draw_titles', array($plot, 'callback'));
+  </programlisting>
+This is for PHP5. For PHP4, you need to use a reference to the $plot instance.
+Note that PHP4 is no longer supported.
+</para>
+
+<para>
+When the draw_titles callback is triggered, it will call the 'callback'
+method inside our extended class. Because this is an extension of the
+PHPlot class, it has access to all the member variables via $this.
+</para>
+
+</sect1>
+</chapter>
+
 </part>
