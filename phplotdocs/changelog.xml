@@ -13,6 +13,27 @@ distribution.)
 
 <variablelist>
   <varlistentry>
+    <term>2008-01-12</term>
+    <listitem>
+      <para>
+Update copyright year to 2008.
+      </para>
+      <para>
+Updates to Part III, Developer's Guide for changes in internal functions
+used for text handling and margin/scale processing. Updated figure showing
+the plot layout.
+      </para>
+      <para>
+Added new chapter to Developer's Guide on the callbacks feature, and added
+documentation of the 3 public functions used with callbacks to the Function
+Reference. The text is based on the <filename>Callbacks</filename> file
+which was included with PHPlot-5.0.4 (and will removed in the next release).
+Although this is now documented in the manual,
+the callbacks feature is still considered experimental.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
     <term>2007-11-22</term>
     <listitem>
       <para>
