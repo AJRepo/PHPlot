@@ -119,10 +119,9 @@ a plot using PHPlot.
 Information on PHP can be found at
 <ulink url="http://www.php.net/">www.php.net</ulink>.
 Information about the GD library which PHP uses to create images can
-be found at
-<ulink url="http://www.boutell.com/">www.boutell.com</ulink>.
+be found at <ulink url="http://libgd.org/">libd.org</ulink>.
 More information about PHPlot can be found at
-<ulink url="http://www.phplot.com">www.phplot.com</ulink>.
+<ulink url="http://phplot.sourceforge.net/">phplot.sourceforge.net</ulink>.
 </para>
 </sect1>
 
