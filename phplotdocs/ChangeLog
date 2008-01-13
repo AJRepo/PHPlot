@@ -4,6 +4,19 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2008-1-12
+   * Incorporate the callbacks documentation from the "Callbacks" file in
+     the source distribution into the manual.
+     + developer: Add new chapter on callbacks.
+     + functions: Add new category with list of callback functions
+     + reference: Document GetCallback, RemoveCallback, SetCallback.
+
+   * Makefile: Added 'install' target to copy the manual files somewhere.
+
+   * Fixed external links: www.phplot.com is redirecting away now, so
+     use the new PHPlot web site on Sourceforge.net instead. Fix GD URL.
+     Update peoples' roles to reflect current activities.
+
 2008-01-10
    * examples: Fix area1 example. Top tick should be 100 not 110, and there
      was a typo in a code comment.
