@@ -430,4 +430,22 @@ positioning of the plot on the image.
 </para>
 </sect1>
 
+<sect1 id="ref-callbacks">
+<title>Callbacks</title>
+<para>
+The functions in this section are used to implement callbacks.
+This is an advanced feature described in more detail in
+<xref linkend="callbacks"/>.
+</para>
+
+<para>
+<itemizedlist>
+  <listitem><para><xref linkend="GetCallback"/></para></listitem>
+  <listitem><para><xref linkend="RemoveCallback"/></para></listitem>
+  <listitem><para><xref linkend="SetCallback"/></para></listitem>
+</itemizedlist>
+</para>
+</sect1>
+
+
 </chapter>
