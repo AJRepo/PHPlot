@@ -4,7 +4,10 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
-2008-1-12
+2008-01-13
+   * Change vague references to release "after 5.0.4" to "5.0.5".
+
+2008-01-12
    * Incorporate the callbacks documentation from the "Callbacks" file in
      the source distribution into the manual.
      + developer: Add new chapter on callbacks.
