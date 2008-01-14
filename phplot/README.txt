@@ -1,6 +1,7 @@
 This is the README file for PHPlot
-Last updated for PHPlot-5.0.4 on 2007-10-20
-The project home page is http://sourceforge.net/projects/phplot/
+Last updated for PHPlot-5.0.5 on 2008-01-13
+The project web site is http://sourceforge.net/projects/phplot/
+The project home page is http://phplot.sourceforge.net/
 -----------------------------------------------------------------------------
 
 OVERVIEW:
@@ -9,8 +10,10 @@ PHPlot is a PHP class for creating scientific and business charts.
 
 The release documentation contains only summary information. For more
 complete information, download the PHPlot Reference Manual from the
-Sourceforge project web site. For important changes in this release,
-see the NEWS.txt file.
+Sourceforge project web site. You can also view the manual online at
+http://phplot.sourceforge.net
+
+For important changes in this release, see the NEWS.txt file.
 
 
 CONTENTS:
@@ -27,12 +30,10 @@ CONTENTS:
 
 REQUIREMENTS:
 
-You need a recent version of PHP. You must use PHP-4.3.0 or higher, but you
-are advised to use the latest stable release of PHP5.  The PHP group has
-announced end-of-life for PHP4 as of 2007-12-31, so if you are still using
-PHP4 you should upgrade. Future releases of PHPlot may only work with PHP5.
-
-This release of PHPlot has been tested with PHP-5.2.4 and PHP-4.4.7.
+You need a recent version of PHP5, and you are advised to use the latest
+stable release.  This version of PHPlot has been tested with PHP-5.2.5.
+(PHPlot-5.0.5 does not support PHP4, since the PHP group has discontinued
+support for PHP4.)
 
 You need the GD extension to PHP either built in to PHP or loaded as a
 module. Refer to the PHP documentation for more information - see the
@@ -81,15 +82,15 @@ on the PHPlot project web site for more information.
 #1795972 and #1795971: Default data colors and default point shapes need to
   be improved.
 
-#945439 Inaccurate label length calculations lead to margin miscalculation
-
-Additional text problems: These occur mostly with TrueType text. The
-symptoms include over-sized or under-sized margins, text overlapping
-other elements, or text extended outside the image. This is generally worse
-with rotated (non-horizontal) text, and multi-line titles.
-
 Tick interval calculations should try for intervals of 1, 2, or 5 times a
 power of 10.
+
+
+If you think you found a problem with PHPlot, or want to ask questions or
+provide feedback, please use the Help forum at
+     http://sourceforge.net/projects/phplot/
+If you are relatively sure you have found a bug, you can report it on the
+bug tracker at the same web site.
 
 
 
@@ -131,7 +132,7 @@ graph, check your web server error log for more information.
 
 COPYRIGHT and LICENSE:
 
-PHPlot is Copyright (C) 1998-2007 Afan Ottenheimer
+PHPlot is Copyright (C) 1998-2008 Afan Ottenheimer
 
 This is distributed with NO WARRANTY and under the terms of the GNU GPL
 and PHP licenses. If you use it - a cookie or some credit would be nice.
@@ -140,4 +141,3 @@ You can get a copy of the GNU GPL at http://www.gnu.org/copyleft/gpl.html
 You can get a copy of the PHP License at http://www.php.net/license.html
 
 See http://sourceforge.net/projects/phplot/ for the latest information.
-

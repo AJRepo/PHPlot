@@ -1,6 +1,14 @@
 This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
+
+2008-01-13 (lbayuk)     ===== Released as 5.0.5 =====
+    * phplot.php: Updated version
+    * README.txt: Updated for new release
+    * NEWS.txt: Add text for new release
+    * Makefile: Remove 'Callbacks' from release target, as this material is
+      now in the reference manual.
+
 2008-01-07 (lbayuk)
     Copyright updated to 2008 and PHP4 no longer listed as supported.
 
