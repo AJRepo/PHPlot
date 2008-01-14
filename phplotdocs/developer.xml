@@ -16,7 +16,7 @@ itself.
 <chapter id="dev-layout">
 <title>Plot Layout</title>
 <para>
-This figure illustrates the plot layout, starting after PHPlot-5.0.4 when
+This figure illustrates the plot layout, starting with PHPlot-5.0.5 when
 the margin calculations were rewritten.
 Use the following notes to help understand the figure.
 </para>
@@ -59,7 +59,7 @@ close to the image edge.
   <listitem>
     <para>
 The main title is positioned relative to the top of the image.
-Starting after PHPlot-5.0.4, the X and Y titles are positioned relative
+Starting with PHPlot-5.0.5, the X and Y titles are positioned relative
 to the plot area. 
 PHPlot-5.0.4 and earlier positioned the X and Y titles
 relative to the image edges.
@@ -157,7 +157,7 @@ outside the data range. If not supplied by the user, the Y axis is set to
 the minimum X value, so it appears on the left. If not supplied the the
 user, the X axis is set to Y=0 (Y=1 for log scale plots) if the Y data
 range includes 0, else to the minimum Y value.
-Note: This code was moved out of CalcTranslation after PHPlot-5.0.4.
+Note: This code was moved out of CalcTranslation at PHPlot-5.0.5.
 Called by <xref linkend="DrawGraph"/>.
     </para>
   </listitem>
@@ -183,7 +183,7 @@ Calculates the size of the four margin areas around the plot area:
 x_left_margin, x_right_margin, y_top_margin, and y_bot_margin.
 It does this by trying to determine how much space is needed for titles,
 labels, and tick marks.
-Starting after PHPlot-5.0.4, this is only called by <xref linkend="DrawGraph"/>,
+Starting with PHPlot-5.0.5, this is only called by <xref linkend="DrawGraph"/>,
 and it also calculates position offsets for titles and labels. It is called
 even in case of a user-supplied plot area (SetPlotAreaPixels or
 SetMarginsPixels was used). If the $maximize argument is true, then the
@@ -200,7 +200,7 @@ used for pie charts.
 Calculates the size of the biggest X data label. It returns the height
 along the Y axis of the tallest data label. This is used to allocate space
 for margins.
-This was added after PHPlot-5.0.4.
+This was added to PHPlot-5.0.5.
 Called by <xref linkend="CalcMargins"/>.
     </para>
   </listitem>
@@ -214,7 +214,7 @@ Calculates the size of the biggest tick label. The $which argument is 'x'
 or 'y' to indicate which labels to work with. For 'x', it returns the
 height along the Y axis; for 'y' it returns the width along the X axis.
 This is used to allocate space for margins.
-This was added after PHPlot-5.0.4.
+This was added to PHPlot-5.0.5.
 Calls <xref linkend="CalcTicks"/> to determine the tick value parameters.
 Called by <xref linkend="CalcMargins"/>.
     </para>
@@ -226,7 +226,7 @@ Called by <xref linkend="CalcMargins"/>.
   <listitem>
     <para>
 Calculates the pixel coordinates of the plot area.
-This was added after PHPlot-5.0.4 by moving the parts of the calculations out of
+This was added to PHPlot-5.0.5 by moving the parts of the calculations out of
 SetPlotAreaPixels and SetMarginsPixels. Those two functions now simply
 record their arguments, and make no attempt to calculate any parameters.
 Called by <xref linkend="DrawGraph"/>, after <xref linkend="CalcMargins"/>
@@ -240,7 +240,7 @@ is used to calculate margins.
   <listitem>
     <para>
 Calculates the world coordinate limits of the plot area.
-This was added after PHPlot-5.0.4 by moving the calculations out of
+This was added to PHPlot-5.0.5 by moving the calculations out of
 <xref linkend="SetPlotAreaWorld"/>.
 Called by <xref linkend="DrawGraph"/>, after <xref linkend="FindDataLimits"/>
 is used to examine the data array values.
@@ -254,7 +254,7 @@ is used to examine the data array values.
     <para>
 Calculates the tick parameters. $which is 'x' or 'y'. Returns an array of 3
 values: start, end, and interval.
-This was added after PHPlot-5.0.4, although it still uses the same method
+This was added to PHPlot-5.0.5, although it still uses the same method
 of just dividing the interval by 10 if there is no user-supplied interval
 or tick count.
 Called by <xref linkend="CalcMaxTickLabelSize"/>,
@@ -271,7 +271,7 @@ Calculates the parameters for transforming world to pixel coordinates.
 This function calculates the scale (xscale, yscale) and origin
 (plot_origin_x, plot_origin_y) for X and Y translations, which
 are used by the xtr() and ytr() functions.
-Starting after PHPlot-5.0.4, this is only called by <xref
+Starting with PHPlot-5.0.5, this is only called by <xref
 linkend="DrawGraph"/>, as nothing else uses the parameters until
 the graph is ready to be drawn.
     </para>
@@ -292,7 +292,7 @@ be the name of the calling function (using the PHP __FUNCTION__ magic constant).
 Note that this is used to catch programming errors, not run-time or user errors.
 If the string to check is acceptable, it is returned down-cased and trimmed
 of leading and trailing spaces.
-Note: After PHPlot-5.0.4, this function was changed to require exactly ', '
+Note: At PHPlot-5.0.5, this function was changed to require exactly ', '
 (comma space) between acceptable choices, and reject empty strings for
 $which_opt and disallow partial matches.
     </para>
@@ -397,7 +397,7 @@ Called by <xref linkend="DrawGraph"/> when the plot type is either
   <term id="DrawError" xreflabel="DrawError">DrawError($error_message, [$where_x], [$where_y])</term>
   <listitem>
     <para>
-Starting after PHPlot-5.0.4, this function is an alias for
+Starting with PHPlot-5.0.5, this function is an alias for
 <xref linkend="PrintError"/> and is retained for compatibility.
 The $where_x and $where_arguments are now ignored. (Previously they
 positioned the error message on the image, but were never used.)
@@ -529,7 +529,7 @@ TrueType fonts.
 Called by numerous functions which place text on the plot.
     </para>
     <para>
-Starting after PHPlot-5.0.4, this function just calls
+Starting with PHPlot-5.0.5, this function just calls
 <xref linkend="ProcessText"/> in text drawing mode. DrawText should be used
 by all internal PHPlot code that needs to draw text, and ProcessText should
 only be used by DrawText and SizeText.
@@ -618,7 +618,7 @@ X axis (even if it is in the middle somewhere), on both sides, or nowhere,
 as set with <xref linkend="SetXTickPos"/> and
 <xref linkend="SetXTickLabelPos"/>.
 Called by <xref linkend="DrawXTicks"/>.
-This was added after PHPlot-5.0.4 by splitting the code out of DrawXTicks,
+This was added at PHPlot-5.0.5 by splitting the code out of DrawXTicks,
 for symmetry with DrawYTicks.
     </para>
   </listitem>
@@ -725,7 +725,7 @@ with special index values MINY (-1) and MAXY (-2).)
 It also stores the overall min and max X and Y values as min_x, max_x,
 min_y, and max_y.
 It also stores the length of the longest data label in max_t.
-Starting after PHPlot-5.0.4, this is only called once by
+Starting with PHPlot-5.0.5, this is only called once by
 <xref linkend="DrawGraph"/>. (In PHPlot-5.0.4 and earlier, this was called
 from various places, with a flag data_limits_done to indicate it was called.)
     </para>
@@ -816,7 +816,7 @@ Called by <xref linkend="DrawGraph"/> before drawing anything.
   <term id="PrintError" xreflabel="PrintError">PrintError($error_message)</term>
   <listitem>
     <para>
-Handles a fatal error within PHPlot. Starting after PHPlot-5.0.4 this and
+Handles a fatal error within PHPlot. Starting with PHPlot-5.0.5 this and
 <xref linkend="DrawError"/> are identical. PrintError attempts to draw the
 error message $error_message into the image, and then output the image.
 This method is used because PHPlot is normally expected to output an image,
@@ -1047,7 +1047,7 @@ width and height of an orthogonal bounding box (box aligned with the X
 and Y axes) which contains the rotated text block.
 Called by functions which need to determine text size for laying out
 plot elements, such as <xref linkend="CalcMargins"/>.
-This function replaced <xref linkend="TTFBBoxSize"/> after PHPlot-5.0.4.
+This function replaced <xref linkend="TTFBBoxSize"/> at PHPlot-5.0.5.
     </para>
   </listitem>
 </varlistentry>
@@ -1077,7 +1077,7 @@ if an image file is selected for the plot area or overall background.
   <term id="TTFBBoxSize" xreflabel="TTFBBoxSize">TTFBBoxSize($size, $angle, $font, $string)</term>
   <listitem>
     <para>
-This function was removed after PHPlot-5.0.4.
+This function was removed at PHPlot-5.0.5.
 It was replaced by <xref linkend="SizeText"/>.
     </para>
   </listitem>
