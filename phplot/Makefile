@@ -6,8 +6,7 @@ PROJ=phplot
 
 # List of files to tag and release:
 REL=ChangeLog LICENSE.GPL LICENSE.PHP_3_0 NEWS.txt README.txt \
-   phplot.php phplot_data.php rgb.inc.php \
-   Callbacks
+   phplot.php phplot_data.php rgb.inc.php
 
 # Temporary directory for building releases. Can be relative.
 # Release packages will be left here too.
