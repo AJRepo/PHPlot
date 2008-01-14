@@ -3,7 +3,7 @@
 /* $Id$ */
 
 /*
- * PHPLOT Version 5.0.4
+ * PHPLOT Version 5.0.5
  * Copyright (C) 1998-2008 Afan Ottenheimer.  Released under
  * the GPL and PHP licenses as stated in the the README file which should
  * have been included with this document.
