@@ -2,6 +2,27 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2008-07-06 (lbayuk)
+    Changes to allow mixing GD fixed-font text and TrueType Font (TTF) text
+    on the same plot.
+    (This change came from work done trying to fix TTF text positioning,
+    where it looks like additional information needs to be stored for TrueType
+    fonts. The old font data structure was awkward to extend, and allowing
+    mixed GD/TTF text was on the to-do list anyway.)
+
+    External changes:
+    * SetFontGD(), SetFontTTF(): New functions to set a font, with type.
+    * SetFont(): Now calls SetFontGD or SetFontTTF depending on $use_ttf.
+    These changes should be fully compatible with existing programs.
+
+    Internal changes:
+    * Updated comments explaining SetUseTTF() now sets the default type
+      (not the only type) of text used.
+    * Put all the font data into a class array. (Replaces $this->generic_font
+      with $this->fonts['generic'], etc.)
+    * ProcessTextGD() and ProcessTextTTF() now take the font array as one
+      argument, rather than separate arguments for font path and size.
+
 2008-01-13 (lbayuk)     ===== Released as 5.0.5 =====
     * phplot.php: Updated version
     * README.txt: Updated for new release
