@@ -3,7 +3,7 @@
 /* $Id$ */
 
 /*
- * PHPLOT Version 5.0.5
+ * PHPLOT Version 5.0.5 + CVS (This is an unreleased CVS version!)
  * Copyright (C) 1998-2008 Afan Ottenheimer.  Released under
  * the GPL and PHP licenses as stated in the the README file which should
  * have been included with this document.
@@ -43,7 +43,7 @@ class PHPlot {
     var $yscale_type = 'linear';
 
 //Fonts
-    var $use_ttf  = FALSE;                  // Use True Type Fonts?
+    var $use_ttf  = FALSE;                  // Use True Type Fonts by default?
     var $ttf_path = '.';                    // Default path to look in for TT Fonts.
     var $default_ttfont = 'benjamingothic.ttf';
     var $line_spacing = 4;                  // Pixels between lines.
@@ -749,9 +749,9 @@ class PHPlot {
 
 
     /*!
-     * Enables use of TrueType fonts in the graph. Font initialisation methods
-     * depend on this setting, so when called, SetUseTTF() resets the font
-     * settings
+     * Select the default font type to use.
+     *   $which_ttf : True to default to TrueType, False to default to GD (fixed) fonts.
+     * This also resets all font settings to the defaults.
      */
     function SetUseTTF($which_ttf)
     {
@@ -778,7 +778,8 @@ class PHPlot {
      * Sets the default TrueType font and updates all fonts to that.
      * The default font might be a full path, or relative to the TTFPath,
      * so let SetFont check that it exists.
-     * Side effect: enable use of TrueType fonts.
+     * Side effects: Enables use of TrueType fonts as the default font type,
+     * and resets all font settings.
      */
     function SetDefaultTTFont($which_font)
     {
@@ -811,116 +812,87 @@ class PHPlot {
             && $this->SetFont('y_title', 3);
     }
 
-    /*!
-     * Sets Fixed/Truetype font parameters.
-     *  \param $which_elem Is the element whose font is to be changed.
-     *         It can be one of 'title', 'legend', 'generic',
-     *         'x_label', 'y_label', x_title' or 'y_title'
-     *  \param $which_font Can be a number (for fixed font sizes) or
-     *         a string with the font pathname or filename when using TTFonts.
-     *         For TTFonts, an empty string means use the default font.
-     *  \param $which_size Point size (TTF only)
-     * Calculates and updates internal height and width variables.
+    /*
+     * Select a fixed (GD) font for an element.
+     * This allows using a fixed font, even with SetUseTTF(True).
+     *    $which_elem : The element whose font is to be changed.
+     *       One of: title legend generic x_label y_label x_title y_title
+     *    $which_font : A GD font number 1-5
+     */
+    function SetFontGD($which_elem, $which_font)
+    {
+        if ($which_font < 1 || 5 < $which_font) {
+            return $this->PrintError(__FUNCTION__ . ': Font size must be 1, 2, 3, 4 or 5');
+        }
+        if (!$this->CheckOption($which_elem,
+                                'generic, title, legend, x_label, y_label, x_title, y_title',
+                                __FUNCTION__)) {
+            return FALSE;
+        }
+   
+        # Store the font parameters: name/size, char cell height and width.
+        $this->fonts[$which_elem] = array('ttf' => FALSE,
+                                          'font' => $which_font,
+                                          'height' => ImageFontHeight($which_font),
+                                          'width' => ImageFontWidth($which_font));
+        return TRUE;
+    }
+
+    /*
+     * Select a TrueType font for an element.
+     * This allows using a TrueType font, even with SetUseTTF(False).
+     *    $which_elem : The element whose font is to be changed.
+     *       One of: title legend generic x_label y_label x_title y_title
+     *    $which_font : A TrueType font filename or pathname.
+     *    $which_size : Font point size.
+     */
+    function SetFontTTF($which_elem, $which_font, $which_size = 12)
+    {
+        if (!$this->CheckOption($which_elem,
+                                'generic, title, legend, x_label, y_label, x_title, y_title',
+                                __FUNCTION__)) {
+            return FALSE;
+        }
+
+        # Empty font name means use the default font.
+        if (empty($which_font))
+            $which_font = $this->default_ttfont;
+        $path = $which_font;
+
+        # First try the font name directly, if not then try with path.
+        if (!is_file($path) || !is_readable($path)) {
+            $path = $this->ttf_path . '/' . $which_font;
+            if (!is_file($path) || !is_readable($path)) {
+                return $this->PrintError(__FUNCTION__ . ": Can't find TrueType font $which_font");
+            }
+        }
+
+        # Store the font parameters:
+        $this->fonts[$which_elem] = array('ttf' => TRUE,
+                                          'font' => $path,
+                                          'size' => $which_size);
+        return TRUE;
+    }
+
+
+    /*
+     * Select Fixed/TrueType font for an element. Which type of font is
+     * selected depends on the $use_ttf class variable (see SetUseTTF()).
+     * Before PHPlot supported mixing font types, only this function and
+     * SetUseTTF were available to select an overall font type, but now
+     * SetFontGD() and SetFontTTF() can be used for mixing font types.
+     *    $which_elem : The element whose font is to be changed.
+     *       One of: title legend generic x_label y_label x_title y_title
+     *    $which_font : A number 1-5 for fixed fonts, or a TrueType font.
+     *    $which_size : Ignored for Fixed fonts, point size for TrueType.
      */
     function SetFont($which_elem, $which_font, $which_size = 12)
     {
-        // TTF:
-        if ($this->use_ttf) {
-            // Empty font name means use the default font.
-            if (empty($which_font))
-                $which_font = $this->default_ttfont;
-            $path = $which_font;
-
-            // First try the font name directly, if not then try with path.
-            if (!is_file($path) || !is_readable($path)) {
-                $path = $this->ttf_path . '/' . $which_font;
-                if (!is_file($path) || !is_readable($path)) {
-                    return $this->PrintError("SetFont(): Can't find TrueType font $which_font");
-                }
-            }
-
-            switch ($which_elem) {
-            case 'generic':
-                $this->generic_font['font'] = $path;
-                $this->generic_font['size'] = $which_size;
-                break;
-            case 'title':
-                $this->title_font['font'] = $path;
-                $this->title_font['size'] = $which_size;
-                break;
-            case 'legend':
-                $this->legend_font['font'] = $path;
-                $this->legend_font['size'] = $which_size;
-                break;
-            case 'x_label':
-                $this->x_label_font['font'] = $path;
-                $this->x_label_font['size'] = $which_size;
-                break;
-            case 'y_label':
-                $this->y_label_font['font'] = $path;
-                $this->y_label_font['size'] = $which_size;
-                break;
-            case 'x_title':
-                $this->x_title_font['font'] = $path;
-                $this->x_title_font['size'] = $which_size;
-                break;
-            case 'y_title':
-                $this->y_title_font['font'] = $path;
-                $this->y_title_font['size'] = $which_size;
-                break;
-            default:
-                return $this->PrintError("SetFont(): Unknown element '$which_elem' specified.");
-            }
-            return TRUE;
-
-        }
-
-        // Fixed fonts:
-        if ($which_font > 5 || $which_font < 0) {
-            return $this->PrintError('SetFont(): Non-TTF font size must be 1, 2, 3, 4 or 5');
-        }
-
-        switch ($which_elem) {
-        case 'generic':
-            $this->generic_font['font'] = $which_font;
-            $this->generic_font['height'] = ImageFontHeight($which_font);
-            $this->generic_font['width'] = ImageFontWidth($which_font);
-            break;
-        case 'title':
-           $this->title_font['font'] = $which_font;
-           $this->title_font['height'] = ImageFontHeight($which_font);
-           $this->title_font['width'] = ImageFontWidth($which_font);
-           break;
-        case 'legend':
-            $this->legend_font['font'] = $which_font;
-            $this->legend_font['height'] = ImageFontHeight($which_font);
-            $this->legend_font['width'] = ImageFontWidth($which_font);
-            break;
-        case 'x_label':
-            $this->x_label_font['font'] = $which_font;
-            $this->x_label_font['height'] = ImageFontHeight($which_font);
-            $this->x_label_font['width'] = ImageFontWidth($which_font);
-            break;
-        case 'y_label':
-            $this->y_label_font['font'] = $which_font;
-            $this->y_label_font['height'] = ImageFontHeight($which_font);
-            $this->y_label_font['width'] = ImageFontWidth($which_font);
-            break;
-        case 'x_title':
-            $this->x_title_font['font'] = $which_font;
-            $this->x_title_font['height'] = ImageFontHeight($which_font);
-            $this->x_title_font['width'] = ImageFontWidth($which_font);
-            break;
-        case 'y_title':
-            $this->y_title_font['font'] = $which_font;
-            $this->y_title_font['height'] = ImageFontHeight($which_font);
-            $this->y_title_font['width'] = ImageFontWidth($which_font);
-            break;
-        default:
-            return $this->PrintError("SetFont(): Unknown element '$which_elem' specified.");
-        }
-        return TRUE;
+        if ($this->use_ttf)
+            return $this->SetFontTTF($which_elem, $which_font, $which_size);
+        return $this->SetFontGD($which_elem, $which_font);
     }
+
 
     /*!
      * Text drawing and sizing functions:
@@ -989,9 +961,7 @@ class PHPlot {
      * ProcessTextGD() - Draw or size GD fixed-font text.
      * This is intended for use only by ProcessText().
      *    $draw_it : True to draw the text, False to just return the orthogonal width and height.
-     *    $font_number : GD font number, 1-5.
-     *    $font_width : Fixed character cell width for the font
-     *    $font_height : Fixed character cell height for the font
+     *    $font : PHPlot font array (with 'ttf' = False) - see SetFontGD()
      *    $angle : Text angle in degrees. GD only supports 0 and 90. We treat >= 45 as 90, else 0.
      *    $x, $y : Reference point for the text (ignored if !$draw_it)
      *    $color : GD color index to use for drawing the text (ignored if !$draw_it)
@@ -1000,9 +970,13 @@ class PHPlot {
      *    $v_factor : Vertical alignment factor: 0(top), .5(center), or 1(bottom) (ignored if !$draw_it)
      * Returns: True, if drawing text, or an array of ($width, $height) if not.
      */
-    function ProcessTextGD($draw_it, $font_number, $font_width, $font_height, $angle, $x, $y, $color,
-                           $text, $h_factor, $v_factor)
+    function ProcessTextGD($draw_it, $font, $angle, $x, $y, $color, $text, $h_factor, $v_factor)
     {
+        # Extract font parameters:
+        $font_number = $font['font'];
+        $font_width = $font['width'];
+        $font_height = $font['height'];
+
         # Break up the text into lines, trim whitespace, find longest line.
         # Save the lines and length for drawing below.
         $longest = 0;
@@ -1095,8 +1069,7 @@ class PHPlot {
      * ProcessTextTTF() - Draw or size TTF text.
      * This is intended for use only by ProcessText().
      *    $draw_it : True to draw the text, False to just return the orthogonal width and height.
-     *    $font_file : Path or filename to a TTF font file.
-     *    $font_size : Font size in "points".
+     *    $font : PHPlot font array (with 'ttf' = True) - see SetFontTTF()
      *    $angle : Text angle in degrees.
      *    $x, $y : Reference point for the text (ignored if !$draw_it)
      *    $color : GD color index to use for drawing the text (ignored if !$draw_it)
@@ -1105,9 +1078,12 @@ class PHPlot {
      *    $v_factor : Vertical alignment factor: 0(top), .5(center), or 1(bottom) (ignored if !$draw_it)
      * Returns: True, if drawing text, or an array of ($width, $height) if not.
      */
-    function ProcessTextTTF($draw_it, $font_file, $font_size, $angle, $x, $y, $color,
-                            $text, $h_factor, $v_factor)
+    function ProcessTextTTF($draw_it, $font, $angle, $x, $y, $color, $text, $h_factor, $v_factor)
     {
+        # Extract font parameters:
+        $font_file = $font['font'];
+        $font_size = $font['size'];
+
         # Break up the text into lines, trim whitespace.
         # Calculate the total width and height of the text box at 0 degrees.
         # This has to be done line-by-line so the interline-spacing is right.
@@ -1265,7 +1241,7 @@ class PHPlot {
      * ProcessText() - Wrapper for ProcessTextTTF() and ProcessTextGD(). See notes above.
      * This is intended for use from within PHPlot only, and only by DrawText() and SizeText().
      *    $draw_it : True to draw the text, False to just return the orthogonal width and height.
-     *    $font : PHPlot font array. (Contents depend on use_ttf flag).
+     *    $font : PHPlot font array
      *    $angle : Text angle in degrees
      *    $x, $y : Reference point for the text (ignored if !$draw_it)
      *    $color : GD color index to use for drawing the text (ignored if !$draw_it)
@@ -1291,19 +1267,16 @@ class PHPlot {
         elseif ($halign == 'center') $h_factor = 0.5;
         else $h_factor = 1.0; # 'right'
 
-        if ($this->use_ttf) {
-            return $this->ProcessTextTTF($draw_it, $font['font'], $font['size'],
-                                         $angle, $x, $y, $color, $text, $h_factor, $v_factor);
+        if ($font['ttf']) {
+            return $this->ProcessTextTTF($draw_it, $font, $angle, $x, $y, $color, $text, $h_factor, $v_factor);
         }
-
-        return $this->ProcessTextGD($draw_it, $font['font'], $font['width'], $font['height'],
-                                    $angle, $x, $y, $color, $text, $h_factor, $v_factor);
+        return $this->ProcessTextGD($draw_it, $font, $angle, $x, $y, $color, $text, $h_factor, $v_factor);
     }
 
 
     /*
      * Draws a block of text. See comments above before ProcessText().
-     *    $which_font : PHPlot font array. (Contents depend on use_ttf flag).
+     *    $which_font : PHPlot font array.
      *    $which_angle : Text angle in degrees
      *    $which_xpos, $which_ypos: Reference point for the text
      *    $which_color : GD color index to use for drawing the text
@@ -1324,7 +1297,7 @@ class PHPlot {
      * box aligned with the X and Y axes of the text. Only for angle=0 is this the actual
      * width and height of the text block, but for any angle it is the amount of space needed
      * to contain the text.
-     *    $which_font : PHPlot font array. (Contents depend on use_ttf flag).
+     *    $which_font : PHPlot font array.
      *    $which_angle : Text angle in degrees
      *    $which_text :  The text to draw, with newlines (\n) between lines.
      * Returns a two element array with: $width, $height.
@@ -1520,7 +1493,7 @@ class PHPlot {
             // Switch to built-in fonts, in case of error with TrueType fonts:
             $this->SetUseTTF(FALSE);
 
-            $this->DrawText($this->generic_font, 0, $xpos, $ypos, $fgcolor,
+            $this->DrawText($this->fonts['generic'], 0, $xpos, $ypos, $fgcolor,
                             wordwrap($error_message), 'center', 'center');
 
             $this->PrintImage();
@@ -2427,9 +2400,9 @@ class PHPlot {
         $min_margin = 3 * $gap;
 
         // Calculate the title sizes:
-        list($unused, $title_height) = $this->SizeText($this->title_font, 0, $this->title_txt);
-        list($unused, $x_title_height) = $this->SizeText($this->x_title_font, 0, $this->x_title_txt);
-        list($y_title_width, $unused) = $this->SizeText($this->y_title_font, 90, $this->y_title_txt);
+        list($unused, $title_height) = $this->SizeText($this->fonts['title'], 0, $this->title_txt);
+        list($unused, $x_title_height) = $this->SizeText($this->fonts['x_title'], 0, $this->x_title_txt);
+        list($y_title_width, $unused) = $this->SizeText($this->fonts['y_title'], 90, $this->y_title_txt);
 
         // Special case for maximum area usage with no X/Y titles or labels, only main title:
         if ($maximize) {
@@ -3011,10 +2984,10 @@ class PHPlot {
         list($tick_val, $tick_end, $tick_step) = $this->CalcTicks($which);
 
         if ($which == 'x') {
-          $font = $this->x_label_font;
+          $font = $this->fonts['x_label'];
           $angle = $this->x_label_angle;
         } elseif ($which == 'y') {
-          $font = $this->y_label_font;
+          $font = $this->fonts['y_label'];
           $angle = $this->y_label_angle;
         } else {
           return $this->PrintError("CalcMaxTickLabelSize: Invalid usage ($which)");
@@ -3048,7 +3021,7 @@ class PHPlot {
      */
     function CalcMaxDataLabelSize()
     {
-        $font = $this->x_label_font;
+        $font = $this->fonts['x_label'];
         $angle = $this->x_label_angle;
         $max_width = 0;
         $max_height = 0;
@@ -3374,7 +3347,7 @@ class PHPlot {
         // Place it at almost at the top
         $ypos = $this->safe_margin;
 
-        $this->DrawText($this->title_font, 0, $xpos, $ypos,
+        $this->DrawText($this->fonts['title'], 0, $xpos, $ypos,
                         $this->ndx_title_color, $this->title_txt, 'center', 'top');
 
         return TRUE;
@@ -3396,13 +3369,13 @@ class PHPlot {
         // Upper title
         if ($this->x_title_pos == 'plotup' || $this->x_title_pos == 'both') {
             $ypos = $this->plot_area[1] - $this->x_title_top_offset;
-            $this->DrawText($this->x_title_font, 0, $xpos, $ypos, $this->ndx_title_color,
+            $this->DrawText($this->fonts['x_title'], 0, $xpos, $ypos, $this->ndx_title_color,
                             $this->x_title_txt, 'center', 'bottom');
         }
         // Lower title
         if ($this->x_title_pos == 'plotdown' || $this->x_title_pos == 'both') {
             $ypos = $this->plot_area[3] + $this->x_title_bot_offset;
-            $this->DrawText($this->x_title_font, 0, $xpos, $ypos, $this->ndx_title_color,
+            $this->DrawText($this->fonts['x_title'], 0, $xpos, $ypos, $this->ndx_title_color,
                             $this->x_title_txt, 'center', 'top');
         }
         return TRUE;
@@ -3421,12 +3394,12 @@ class PHPlot {
 
         if ($this->y_title_pos == 'plotleft' || $this->y_title_pos == 'both') {
             $xpos = $this->plot_area[0] - $this->y_title_left_offset;
-            $this->DrawText($this->y_title_font, 90, $xpos, $ypos, $this->ndx_title_color,
+            $this->DrawText($this->fonts['y_title'], 90, $xpos, $ypos, $this->ndx_title_color,
                             $this->y_title_txt, 'right', 'center');
         }
         if ($this->y_title_pos == 'plotright' || $this->y_title_pos == 'both') {
             $xpos = $this->plot_area[2] + $this->y_title_right_offset;
-            $this->DrawText($this->y_title_font, 90, $xpos, $ypos, $this->ndx_title_color,
+            $this->DrawText($this->fonts['y_title'], 90, $xpos, $ypos, $this->ndx_title_color,
                             $this->y_title_txt, 'left', 'center');
         }
 
@@ -3498,20 +3471,20 @@ class PHPlot {
 
         // Labels on Y axis
         if ($this->y_tick_label_pos == 'yaxis') {
-            $this->DrawText($this->y_label_font, $this->y_label_angle,
+            $this->DrawText($this->fonts['y_label'], $this->y_label_angle,
                             $this->y_axis_x_pixels - $this->y_label_axis_offset, $which_ypix,
                             $this->ndx_text_color, $which_ylab, 'right', 'center');
         }
 
         // Labels to the left of the plot area
         if ($this->y_tick_label_pos == 'plotleft' || $this->y_tick_label_pos == 'both') {
-            $this->DrawText($this->y_label_font, $this->y_label_angle,
+            $this->DrawText($this->fonts['y_label'], $this->y_label_angle,
                             $this->plot_area[0] - $this->y_label_left_offset, $which_ypix,
                             $this->ndx_text_color, $which_ylab, 'right', 'center');
         }
         // Labels to the right of the plot area
         if ($this->y_tick_label_pos == 'plotright' || $this->y_tick_label_pos == 'both') {
-            $this->DrawText($this->y_label_font, $this->y_label_angle,
+            $this->DrawText($this->fonts['y_label'], $this->y_label_angle,
                             $this->plot_area[2] + $this->y_label_right_offset, $which_ypix,
                             $this->ndx_text_color, $which_ylab, 'left', 'center');
         }
@@ -3578,21 +3551,21 @@ class PHPlot {
 
         // Label on X axis
         if ($this->x_tick_label_pos == 'xaxis') {
-            $this->DrawText($this->x_label_font, $this->x_label_angle,
+            $this->DrawText($this->fonts['x_label'], $this->x_label_angle,
                             $which_xpix, $this->x_axis_y_pixels + $this->x_label_axis_offset,
                             $this->ndx_text_color, $which_xlab, 'center', 'top');
         }
 
         // Label on top of the Plot Area
         if ($this->x_tick_label_pos == 'plotup' || $this->x_tick_label_pos == 'both') {
-            $this->DrawText($this->x_label_font, $this->x_label_angle,
+            $this->DrawText($this->fonts['x_label'], $this->x_label_angle,
                             $which_xpix, $this->plot_area[1] - $this->x_label_top_offset,
                             $this->ndx_text_color, $which_xlab, 'center', 'bottom');
         }
 
         // Label on bottom of the Plot Area
         if ($this->x_tick_label_pos == 'plotdown' || $this->x_tick_label_pos == 'both') {
-            $this->DrawText($this->x_label_font, $this->x_label_angle,
+            $this->DrawText($this->fonts['x_label'], $this->x_label_angle,
                             $which_xpix, $this->plot_area[3] + $this->x_label_bot_offset,
                             $this->ndx_text_color, $which_xlab, 'center', 'top');
         }
@@ -3680,9 +3653,9 @@ class PHPlot {
     {
         $data_label = $this->FormatLabel('y', $which_text);
         //since DrawDataLabel is going to be called alot - perhaps for speed it is better to 
-        //not use this if statement and just always assume which_font is x_label_font (ditto for color).
+        //not use this if statement and just always assume which_font is the x_label font (ditto for color).
         if ( empty($which_font) ) 
-            $which_font = $this->x_label_font;
+            $which_font = $this->fonts['x_label'];
 
         $which_angle = empty($which_angle)?'0':$this->x_label_angle;
 
@@ -3716,13 +3689,13 @@ class PHPlot {
 
         // Labels below the plot area
         if ($this->x_data_label_pos == 'plotdown' || $this->x_data_label_pos == 'both')
-            $this->DrawText($this->x_label_font, $this->x_label_angle,
+            $this->DrawText($this->fonts['x_label'], $this->x_label_angle,
                             $xpos, $this->plot_area[3] + $this->x_label_bot_offset,
                             $this->ndx_text_color, $xlab, 'center', 'top');
 
         // Labels above the plot area
         if ($this->x_data_label_pos == 'plotup' || $this->x_data_label_pos == 'both')
-            $this->DrawText($this->x_label_font, $this->x_label_angle,
+            $this->DrawText($this->fonts['x_label'], $this->x_label_angle,
                             $xpos, $this->plot_area[1] - $this->x_label_top_offset,
                             $this->ndx_text_color, $xlab, 'center', 'bottom');
 
@@ -3778,12 +3751,12 @@ class PHPlot {
         // Find maximum legend label line width.
         $max_width = 0;
         foreach ($this->legend as $line) {
-            list($width, $unused) = $this->SizeText($this->legend_font, 0, $line);
+            list($width, $unused) = $this->SizeText($this->fonts['legend'], 0, $line);
             if ($width > $max_width) $max_width = $width;
         }
 
         // For the color box and line spacing, use a typical font character: 8.
-        list($char_w, $char_h) = $this->SizeText($this->legend_font, 0, '8');
+        list($char_w, $char_h) = $this->SizeText($this->fonts['legend'], 0, '8');
 
         // Normalize text alignment and colorbox alignment variables:
         $text_align = isset($this->legend_text_align) ? $this->legend_text_align : 'right';
@@ -3858,7 +3831,7 @@ class PHPlot {
 
         foreach ($this->legend as $leg) {
             // Draw text with requested alignment:
-            $this->DrawText($this->legend_font, 0, $x_pos, $y_pos,
+            $this->DrawText($this->fonts['legend'], 0, $x_pos, $y_pos,
                             $this->ndx_text_color, $leg, $text_align, 'bottom');
             if ($draw_colorbox) {
                 // Draw a box in the data color
@@ -4004,7 +3977,7 @@ class PHPlot {
                         $label_x = $xpos + ($diameter * 1.2 * cos($mid_angle)) * $this->label_scale_position;
                         $label_y = $ypos+$h - ($diam2 * 1.2 * sin($mid_angle)) * $this->label_scale_position;
 
-                        $this->DrawText($this->generic_font, 0, $label_x, $label_y, $this->ndx_grid_color,
+                        $this->DrawText($this->fonts['generic'], 0, $label_x, $label_y, $this->ndx_grid_color,
                                         $label_txt, 'center', 'center');
                     }
                 }
@@ -4147,7 +4120,7 @@ class PHPlot {
         // TODO: add a parameter to show datalabels next to error bars?
         // something like this:
         if ($this->x_data_label_pos == 'plot')
-            $this->DrawText($this->error_font, 90, $x1, $y2,
+            $this->DrawText($this->fonts['error'], 90, $x1, $y2,
                             $color, $label, 'center', 'bottom');
         */
 
@@ -4576,7 +4549,7 @@ class PHPlot {
                           $v_align = 'top';
                           $y_offset = 2;
                         }
-                        $this->DrawDataLabel($this->y_label_font, NULL, $row+0.5, $this->data[$row][$record], '',
+                        $this->DrawDataLabel($this->fonts['y_label'], NULL, $row+0.5, $this->data[$row][$record], '',
                                 $this->data[$row][$record], 'center', $v_align,
                                 ($idx + 0.5) * $this->record_bar_width - $x_first_bar, $y_offset);
                     }
