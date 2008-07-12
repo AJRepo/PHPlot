@@ -60,7 +60,7 @@ class PHPlot {
     var $data_type = 'text-data';           // text-data, data-data-error, data-data, text-data-single
     var $plot_type= 'linepoints';           // bars, lines, linepoints, area, points, pie, thinbarline, squared
 
-    var $label_scale_position = 0.5;        // Shifts data labes in pie charts. 1 = top, 0 = bottom
+    var $label_scale_position = 0.5;        // Shifts data labels in pie charts. 1 = top, 0 = bottom
     var $group_frac_width = 0.7;            // Bars use this fraction (0 to 1) of a group's space
     var $bar_extra_space = 0.5;             // Number of extra bar's worth of space in a group
     var $bar_width_adjust = 1;              // 1 = bars of normal width, must be > 0
@@ -207,7 +207,7 @@ class PHPlot {
      * \param which_width       int    Image width in pixels.
      * \param which_height      int    Image height in pixels.
      * \param which_output_file string Filename for output.
-     * \param which_input_fule  string Path to a file to be used as background.
+     * \param which_input_file  string Path to a file to be used as background.
      */
     function PHPlot($which_width=600, $which_height=400, $which_output_file=NULL, $which_input_file=NULL)
     {
@@ -904,7 +904,7 @@ class PHPlot {
      * text, due to the size of the code.
      *
      * Horizontal and vertical alignment are relative to the drawing. That is:
-     * vertical text (90 deg) gets centered along Y postition with
+     * vertical text (90 deg) gets centered along Y position with
      * v_align = 'center', and adjusted to the right of X position with
      * h_align = 'right'.  Another way to look at this is to say
      * that text rotation happens first, then alignment.
@@ -942,7 +942,7 @@ class PHPlot {
      *    GD font text is supported (by libgd) at 0 degrees and 90 degrees only.
      *  Multi-line or single line text works with any of the 9 alignment modes.
      *
-     *    TTF text can be at any angle. The 9 aligment modes work for all angles,
+     *    TTF text can be at any angle. The 9 alignment modes work for all angles,
      *  but the results might not be what you expect for multi-line text. See
      *  the PHPlot Reference Manual for pictures and details. In short, alignment
      *  applies to the orthogonal (aligned with X and Y axes) bounding box that
@@ -1023,7 +1023,7 @@ class PHPlot {
             $r10 = 0; $r11 = 1;
         }
 
-        // Adjust for vertical alignment (horizontal text) or horizontal aligment (vertical text):
+        // Adjust for vertical alignment (horizontal text) or horizontal alignment (vertical text):
         $factor = (int)($total_height * $v_factor);
         $xpos = $x - $r01 * $factor;
         $ypos = $y - $r11 * $factor;
@@ -1538,7 +1538,7 @@ class PHPlot {
 
     /*!
      * Sets position for Y labels near data points.
-     * For past compatability we accept plotleft, ...but pass it to SetTickLabelPos
+     * For past compatibility we accept plotleft, ...but pass it to SetTickLabelPos
      * eventually to specify how far up/down or left/right of the data point
      */
     function SetYDataLabelPos($which_ydlp, $which_distance_from_point=0)
@@ -1645,7 +1645,7 @@ class PHPlot {
 /////////////////////////////////////////////
 
     /*!
-     * Checks the valididy of an option.
+     * Checks the validity of an option.
      *   $which_opt  String to check, such as the provided value of a function argument.
      *   $which_acc  String of accepted choices. Must be lower-case, and separated
      *               by exactly ', ' (comma, space).
@@ -2229,7 +2229,7 @@ class PHPlot {
 //////////////////////////////////////////////////////////
 
     /*!
-     * Analizes data and sets up internal maxima and minima
+     * Analyzes data and sets up internal maxima and minima
      * Needed by: CalcMargins(), ...
      *   Text-Data is different than data-data graphs. For them what
      *   we have, instead of X values, is # of records equally spaced on data.
@@ -3652,7 +3652,7 @@ class PHPlot {
                       $which_halign = 'center', $which_valign = 'bottom', $x_adjustment=0, $y_adjustment=0) 
     {
         $data_label = $this->FormatLabel('y', $which_text);
-        //since DrawDataLabel is going to be called alot - perhaps for speed it is better to 
+        //since DrawDataLabel is going to be called a lot - perhaps for speed it is better to 
         //not use this if statement and just always assume which_font is the x_label font (ditto for color).
         if ( empty($which_font) ) 
             $which_font = $this->fonts['x_label'];
@@ -4218,11 +4218,11 @@ class PHPlot {
      *      'text-data'
      *      'data-data'
      * NOTE: This function used to add first and last data values even on incomplete
-     *       sets. That is not the behaviour now. As for missing data in between,
-     *       there are two posibilities: replace the point with one on the X axis (previous
+     *       sets. That is not the behavior now. As for missing data in between,
+     *       there are two possibilities: replace the point with one on the X axis (previous
      *       way), or forget about it and use the preceding and following ones to draw the polygon.
      *       There is the possibility to use both, we just need to add the method to set
-     *       it. Something like SetMissingDataBehaviour(), for example.
+     *       it. Something like SetMissingDataBehavior(), for example.
      */
     function DrawArea()
     {
@@ -4276,7 +4276,7 @@ class PHPlot {
 
             $num_points[$i] += 2;
 
-            // Draw the poligon
+            // Draw the polygon
             ImageFilledPolygon($this->img, $posarr[$i], $num_points[$i], $this->ndx_data_colors[$i]);
         }
         return TRUE;
