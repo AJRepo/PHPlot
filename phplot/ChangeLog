@@ -2,6 +2,9 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2008-07-12 (lbayuk)
+    Multiple comment spelling error fixes. No functional changes.
+
 2008-07-06 (lbayuk)
     Changes to allow mixing GD fixed-font text and TrueType Font (TTF) text
     on the same plot.
