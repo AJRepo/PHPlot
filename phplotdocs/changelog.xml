@@ -13,6 +13,16 @@ distribution.)
 
 <variablelist>
   <varlistentry>
+    <term>2008-07-22</term>
+    <listitem>
+      <para>
+Reference sections were changed to add a History subsection, detailing
+behavior in previous releases. This information was previously in the Notes
+subsections, but is not usually relevant to users of the current release.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
     <term>2008-01-12</term>
     <listitem>
       <para>
