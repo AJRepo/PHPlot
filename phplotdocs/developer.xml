@@ -516,8 +516,8 @@ Called by <xref linkend="DrawGraph"/> when the plot type is 'stackedbars'.
   <listitem>
     <para>
 Draws a string of text $which_text, at position ($which_xpos, $which_ypos).
-The font is selected with $which_font, which is one of the font information
-arrays in the object (for example: generic_font).
+The font is selected with $which_font, which is one of the font arrays in
+the object.
 The text is drawn at angle $which_angle (built-in fonts can be used at 0
 and 90 degrees only, TrueType at any angle). $which_color is a GD color
 index for the image. Text alignment relative to the (x,y) point is
@@ -533,6 +533,14 @@ Starting with PHPlot-5.0.5, this function just calls
 <xref linkend="ProcessText"/> in text drawing mode. DrawText should be used
 by all internal PHPlot code that needs to draw text, and ProcessText should
 only be used by DrawText and SizeText.
+    </para>
+    <para>
+There are 7 font array variables in the PHPlot object.
+Through PHPlot-5.0.5, these were separate variables: generic_font,
+title_font, legend_font, x_label_font, y_label_font, x_title_font, and
+y_title_font. Starting after PHPlot-5.0.5, these were combined into a
+single class array variable 'fonts', indexed by the element name, for
+example $fonts['generic'].
     </para>
   </listitem>
 </varlistentry>
@@ -764,6 +772,21 @@ two calling functions.
 </varlistentry>
 
 <varlistentry>
+  <term id="GetLineSpacing" xreflabel="GetLineSpacing">GetLineSpacing($font)</term>
+  <listitem>
+    <para>
+Given a font array variable, returns the proper spacing in pixels between lines
+of text using that font. This works for both GD and TrueType fonts. See also 
+<xref linkend="SetLineSpacing"/>.
+Used by <xref linkend="ProcessTextGD"/>, <xref linkend="ProcessTextTTF"/>,
+and <xref linkend="DrawLegend"/>.
+Note: This was added after PHPlot-5.0.5, with support for mixing TTF and GD
+fonts.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
   <term id="number_format" xreflabel="number_format">number_format($number, $decimals=0)</term>
   <listitem>
     <para>
@@ -858,7 +881,7 @@ This function is only called by
 </varlistentry>
 
 <varlistentry>
-  <term id="ProcessTextGD" xreflabel="ProcessTextGD">ProcessTextGD($draw_it, $font_number, $font_width, $font_height, $angle, $x, $y, $color, $text, $h_factor, $v_factor)</term>
+  <term id="ProcessTextGD" xreflabel="ProcessTextGD">ProcessTextGD($draw_it, $font, $angle, $x, $y, $color, $text, $h_factor, $v_factor)</term>
   <listitem>
     <para>
 Draws GD fixed-font text, or calculates the size of GD fixed-font text.
@@ -870,8 +893,7 @@ returned as a two-element array ($width, $height).
 Here $width is measured along the X axis, and $height along Y, regardless
 of the text angle. These are the size of an orthogonal bounding box that
 contains the text block.
-The $font_number, $font_width, and $font_height numbers identify the GD
-font (normally 1-5), and its character cell width and height.
+The $font argument is a PHPlot font array, which must reference a GD font.
 The $angle is 0 or 90 degrees, as GD text only supports those values.
 $x, $y are the reference point of the text $text, which is drawn in color
 $color.
@@ -882,11 +904,16 @@ alignment arguments supplied to DrawText or SizeText: 0, 0.5, or 1.0
 If $draw_it is false, for text sizing mode, the x, y, color,
 h_factor and v_factor arguments are ignored.
     </para>
+    <para>
+Note: This was added at PHPlot-5.0.5. It was changed after PHPlot-5.0.5 to
+take a single font array argument, rather than 3 separate arguments for
+font number, width, and height.
+    </para>
   </listitem>
 </varlistentry>
 
 <varlistentry>
-  <term id="ProcessTextTTF" xreflabel="ProcessTextTTF">ProcessTextTTF($draw_it, $font_file, $font_size, $angle, $x, $y, $color, $text, $h_factor, $v_factor)</term>
+  <term id="ProcessTextTTF" xreflabel="ProcessTextTTF">ProcessTextTTF($draw_it, $font, $angle, $x, $y, $color, $text, $h_factor, $v_factor)</term>
   <listitem>
     <para>
 Draws TTF text, or calculates the size of TTF text.
@@ -898,8 +925,7 @@ returned as a two-element array ($width, $height).
 Here $width is measured along the X axis, and $height along Y, regardless
 of the text angle. These are the size of an orthogonal bounding box that
 contains the text block.
-The TTF font path or filename is $font_file, and the desired point size is
-$font_size.
+The $font argument is a PHPlot font array, which must reference a TTF font.
 The text is drawn at $angle degrees; unlike GD text TTF text can be drawn
 at any angle.
 $x, $y are the reference point of the text $text, which is drawn in color
@@ -915,6 +941,11 @@ h_factor and v_factor arguments are ignored.
 Note that the interpretation of the alignment for text at arbitrary angles
 may not be what you expect. Rotation of text happens before alignment, and
 alignment and positioning use the orthogonal bounding box of the text.
+    </para>
+    <para>
+Note: This was added at PHPlot-5.0.5. It was changed after PHPlot-5.0.5 to
+take a single font array argument, rather than 2 separate arguments for
+font filename and size.
     </para>
   </listitem>
 </varlistentry>
