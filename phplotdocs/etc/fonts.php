@@ -2,10 +2,13 @@
 # Font comparison - GD and TTF font in various sizes
 
 # TrueType font directory:
-$ttf_dir = '/usr/local/lib/fonts/truetype';
+$ttf_dir = '/usr/share/fonts/TTF';
+# Font name and full path:
+$ttf_name = 'LiberationSans-Regular';
+$ttfont = $ttf_dir . DIRECTORY_SEPARATOR . $ttf_name . '.ttf';
 
 # Make an image:
-$width = 410;
+$width = 620;
 $height = 150;
 $g = imagecreate($width, $height);
 
@@ -28,8 +31,8 @@ for ($font = 1; $font <= 5; $font++) {
 $x = 180;
 $y = 20;
 for ($size = 8.0; $size <= 18.0; $size += 2.0) {
-  $bb = imagettftext($g, $size, 0.0, $x, $y, $fgnd, "$ttf_dir/arial.ttf",
-    "TrueType Arial {$size}pt");
+  $bb = imagettftext($g, $size, 0.0, $x, $y, $fgnd, $ttfont,
+    "TrueType $ttf_name {$size}pt");
   $y += $bb[1] - $bb[7] + 6;
 }
 
