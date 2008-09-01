@@ -205,6 +205,9 @@ Returns an object, an instance of the PHPlot class.
 The output_file will be ignored unless <xref linkend="SetIsInline" />(True) is
 called.
     </para>
+  </refsect1>
+  <refsect1>
+    <title>History</title>
     <para>
 Earlier versions of this manual said that the created object should always
 be returned as a reference, like this:
@@ -970,7 +973,8 @@ $plot-&gt;SetDefaultTTFont(<parameter>$font</parameter>)
     <title>Description</title>
     <para>
 <function>SetDefaultTTFont</function> sets the default TrueType font,
-resets all text elements to use that font, and enables TrueType fonts.
+resets all text elements to use that font, and makes TrueType fonts the
+default font type.
     </para>
   </refsect1>
 
@@ -993,21 +997,38 @@ font file.
   <refsect1>
     <title>Notes</title>
     <para>
-Starting at PHPlot-5.0rc3, the behavior of this function changed.
-It now accepts either a filename (which must be in the default TrueType
-font directory as set with <xref linkend="SetTTFPath" />), or a full
-pathname. In addition, it automatically enables TrueType font usage
-as if <xref linkend="SetUseTTF" />(True) was called.
+If given a filename, rather than a full path, the function expects to find
+the font file in the default TrueType font directory as set with
+<xref linkend="SetTTFPath" />.
+This function selects TrueType fonts as the default font type as if
+<xref linkend="SetUseTTF" />(True) was called.
     </para>
     <para>
 This function resets all elements to use the named font and default sizes,
-so it undoes all prior <xref linkend="SetFont" /> calls.
+so it undoes all prior
+<xref linkend="SetFont" />, <xref linkend="SetFontGD" />,
+and <xref linkend="SetFontTTF" /> calls.
     </para>
     <para>
-Change the font used by individual text elements with <xref linkend="SetFont" />
-after using SetDefaultTTFont.
+Change the font used by individual text elements with
+<xref linkend="SetFont" />, <xref linkend="SetFontGD" />,
+and <xref linkend="SetFontTTF" /> after using SetDefaultTTFont.
     </para>
   </refsect1>
+  <refsect1>
+    <title>History</title>
+    <para>
+This function was changed at PHPlot-5.0rc3 to work as described above.
+We are not quite sure how it worked before.
+    </para>
+    <para>
+Through PHPlot-5.0.5, setting a default TrueType font with this function
+also forced all text on the graph to use TrueType text.
+Starting after PHPlot-5.0.5, it just sets the default font type.
+Set <xref linkend="SetUseTTF" /> for more information on this change.
+    </para>
+  </refsect1>
+
 </refentry>
 
 <refentry id="SetDrawBrokenLines">
@@ -1644,7 +1665,7 @@ compression reduces the quality of lines and text.
 
   <refsynopsisdiv>
     <synopsis>
-$plot-&gt;SetFont(<parameter>$elem</parameter>, <parameter>$font</parameter>, <parameter>$size</parameter>)
+$plot-&gt;SetFont(<parameter>$elem</parameter>, <parameter>$font</parameter>, <optional><parameter>$size</parameter></optional>, <optional><parameter>$line_spacing</parameter></optional>)
     </synopsis>
   </refsynopsisdiv>
 
@@ -1696,11 +1717,23 @@ largest.
         <listitem>
           <para>
 The font size in points for TrueType fonts. Ignored for built-in GD fonts.
+If not specified, a default value of 12 is used.
 See note below.
           </para>
         </listitem>
       </varlistentry>
 
+      <varlistentry>
+        <term><replaceable>$line_spacing</replaceable></term>
+        <listitem>
+          <para>
+Optional line spacing adjustment for this text element.
+This is interpreted differently for GD and TrueType text.
+See <xref linkend="SetLineSpacing"/> for details.
+If not specified, the value set by <xref linkend="SetLineSpacing"/> is used.
+          </para>
+        </listitem>
+      </varlistentry>
 
     </variablelist>
   </refsect1>
@@ -1757,11 +1790,24 @@ table. Use <xref linkend="SetDefaultTTFont" /> to set the default TrueType font.
     </para>
 
     <para>
-Starting at PHPlot-5.0rc3, the behavior of this function changed
-when used with TrueType fonts.
-It now first tries to find the font using the supplied name. If the
-font is not found that way, it tries again prefixed with the default
-TrueType font directory as set with <xref linkend="SetTTFPath" />.
+Simultaneous use of GD and TrueType font text is allowed in the same plot.
+To mix font types, use 
+<xref linkend="SetFontGD"/> and <xref linkend="SetFontTTF"/> to
+specify the font and font type of an element, instead of using SetFont.
+    </para>
+
+    <para>
+SetFont implicitly uses the default font type.
+When a PHPlot object instance is created, the default font type is GD.
+Using <xref linkend="SetUseTTF"/>(True), or selecting a default font with
+<xref linkend="SetDefaultTTFont"/>, sets the default font type to TrueType.
+Using <xref linkend="SetUseTTF"/>(False) sets the default font type back
+to GD. Either of these three operations will also reset all current text
+elements to the defaults indicated above, negating any prior SetFont,
+SetFontGD, or SetFontTTF calls. Note that <xref linkend="SetTTFPath"/>,
+which selects the directory where TrueType fonts can be found, does not
+affect the default font type nor does it change any existing font
+selections.
     </para>
 
     <para>
@@ -1776,6 +1822,232 @@ On a 72 pixels per inch display, the text size will be 18 points, but at
 96 pixels per inch it would only be 13.5 points.
     </para>
 
+  </refsect1>
+
+  <refsect1>
+    <title>History</title>
+    <para>
+Simultaneous use of GD and TrueType font text was added after PHPlot-5.0.5.
+Through PHPlot-5.0.5, all text in a plot used GD fonts, or all text used
+TrueType fonts.
+    </para>
+
+    <para>
+The line_spacing parameter was added after PHPlot-5.0.5 to allow finer
+control over the line spacing for different elements. Through PHPlot-5.0.5,
+the same line spacing was used for all text elements.
+    </para>
+
+    <para>
+The described behavior for finding TrueType font files (first using the
+name as given, then looking in the SetTTFPath font directory) was
+implemented in PHPlot-5.0rc3.
+    </para>
+  </refsect1>
+
+</refentry>
+
+<refentry id="SetFontGD">
+  <refmeta>
+    <refentrytitle>SetFontGD</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetFontGD</refname>
+    <refpurpose>Select a GD font to use for a plot element</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetFontGD(<parameter>$elem</parameter>, <parameter>$font</parameter>, <optional><parameter>$line_spacing</parameter></optional>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetFontGD</function> selects a GD font to use for one plot
+element (for example, the title).
+This function supplements <xref linkend="SetFont"/>, which selects a GD or TTF
+font depending on the currently selected font type. SetFontGD always selects
+a GD font, even if TrueType fonts are in use.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+
+      <varlistentry>
+        <term><replaceable>$elem</replaceable></term>
+        <listitem>
+          <para>
+The name of the element to change the font for. Use one of the following
+strings: 'title', 'legend', 'generic', 'x_label', 'y_label', 'x_title',
+or 'y_title'. (The 'generic' font is currently used for pie chart
+percentage labels and error message images.)
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>$font</replaceable></term>
+        <listitem>
+          <para>
+Selects the GD font to use.  This is a number between 1 and 5 which selects
+one of the built-in GD fonts.
+Font 1 is the smallest, and font 5 is the largest.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>$line_spacing</replaceable></term>
+        <listitem>
+          <para>
+Optional line spacing adjustment for this text element.
+For GD fonts, this is the number of pixels between lines.
+If not specified, the value set by <xref linkend="SetLineSpacing"/> is used.
+          </para>
+        </listitem>
+      </varlistentry>
+
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+See <xref linkend="SetFont"/> for more information about fonts.
+See <xref linkend="SetLineSpacing"/> for more information about line spacing.
+    </para>
+
+    <para>
+Use <xref linkend="SetUseTTF"/>
+(or <xref linkend="SetDefaultTTFont"/>, which calls it) to set the default
+font type.
+Use <xref linkend="SetFont" /> to specify the font to use for an element
+using the default font type.
+Use SetFontGD and <xref linkend="SetFontTTF"/> to
+specify the font of an element using the specific type of font.
+    </para>
+  </refsect1>
+  <refsect1>
+    <title>History</title>
+    <para>
+This function was added after PHPlot-5.0.5, along with <xref
+linkend="SetFontTTF"/>, to allow mixing GD and TrueType fonts
+in the same graph.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetFontTTF">
+  <refmeta>
+    <refentrytitle>SetFontTTF</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetFontTTF</refname>
+    <refpurpose>Select a TrueType font to use for a plot element</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetFontTTF(<parameter>$elem</parameter>, <parameter>$font</parameter>, <optional><parameter>$size</parameter></optional>, <optional><parameter>$line_spacing</parameter></optional>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetFontTTF</function> selects a TrueType font and size to use for one
+plot element (for example, the title).
+This function supplements <xref linkend="SetFont"/>, which selects a GD or TTF
+font depending on the currently selected font type. SetFontTTF always selects
+a TrueType font, even if TrueType fonts are not the default font type.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+
+      <varlistentry>
+        <term><replaceable>$elem</replaceable></term>
+        <listitem>
+          <para>
+The name of the element to change the font for. Use one of the following
+strings: 'title', 'legend', 'generic', 'x_label', 'y_label', 'x_title',
+or 'y_title'. (The 'generic' font is currently used for pie chart
+percentage labels and error message images.)
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>$font</replaceable></term>
+        <listitem>
+          <para>
+Selects the TrueType font to use. This is the filename
+(without path, if the font file is in the default TrueType font
+directory as set with <xref linkend="SetTTFPath" />, or a full
+pathname) of the TrueType font file. An empty string or NULL can be
+specified to use the default TrueType font (but see notes below).
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>$size</replaceable></term>
+        <listitem>
+          <para>
+The TrueType font size in points.
+If not specified, a default value of 12 is used.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>$line_spacing</replaceable></term>
+        <listitem>
+          <para>
+Optional line spacing adjustment for this text element.
+For TrueType text, this is an adjustment factor for the built-in font
+spacing.
+See <xref linkend="SetLineSpacing"/> for details.
+          </para>
+        </listitem>
+      </varlistentry>
+
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+See <xref linkend="SetFont"/> for more information about fonts.
+See <xref linkend="SetLineSpacing"/> for more information about line spacing.
+    </para>
+
+    <para>
+Use <xref linkend="SetUseTTF"/>
+(or <xref linkend="SetDefaultTTFont"/>, which calls it) to set the default
+font type.
+Use <xref linkend="SetFont" /> to specify the font to use for an element
+using the default font type.
+Use <xref linkend="SetFontGD"/> and SetFontTTF to
+specify the font of an element using the specific type of font.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>History</title>
+    <para>
+This function was added after PHPlot-5.0.5, along with <xref
+linkend="SetFontGD"/>, to allow mixing GD and TrueType fonts
+in the same graph.
+    </para>
   </refsect1>
 </refentry>
 
@@ -2293,6 +2565,9 @@ have provided some other way to indicate which legend text line goes with
 which plot, or if you are using the legend for some purpose other than
 identifying the plot lines.
     </para>
+  </refsect1>
+  <refsect1>
+    <title>History</title>
     <para>
 This function was added to PHPlot-5.0.4.
     </para>
@@ -2343,14 +2618,17 @@ The units and origin are the same as the data you are plotting.
   <refsect1>
     <title>Notes</title>
     <para>
+See also <xref linkend="SetLegendPixels" />.
+    </para>
+  </refsect1>
+  <refsect1>
+    <title>History</title>
+    <para>
 Through PHPlot-5.0rc3, it was required that the
 data array, axis types, and any other setting which affects the scale of
 the data be set up before this function is used.
 Starting at PHPlot-5.0.4 this is no longer required, as the coordinates
 you supply are not scaled until the plot is drawn.
-    </para>
-    <para>
-See also <xref linkend="SetLegendPixels" />.
     </para>
   </refsect1>
 </refentry>
@@ -2411,7 +2689,7 @@ The default color is gray.
 
   <refnamediv>
     <refname>SetLineSpacing</refname>
-    <refpurpose>Set spacing between lines of multi-line elements</refpurpose>
+    <refpurpose>Set spacing between lines of multi-line text elements</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
@@ -2423,10 +2701,13 @@ $plot-&gt;SetLineSpacing(<parameter>$spc</parameter>)
   <refsect1>
     <title>Description</title>
     <para>
-<function>SetLineSpacing</function> sets the number of pixels between lines
+<function>SetLineSpacing</function> sets the default spacing between lines
 of a multi-line text element. Multiple lines can be specified in titles,
 for example, by placing a newline between lines (for example: "Line 1\nLine
 2"). Line spacing also affects the legend.
+You can override the default line spacing for individual text elements
+(such as the X title) using <xref linkend="SetFont"/>,
+<xref linkend="SetFontGD"/>, and <xref linkend="SetFontTTF"/>.
     </para>
   </refsect1>
 
@@ -2437,7 +2718,10 @@ for example, by placing a newline between lines (for example: "Line 1\nLine
         <term><replaceable>$spc</replaceable></term>
         <listitem>
           <para>
-Desired line spacing in pixels.
+Desired default line spacing factor.
+For the built-in GD fonts, this is the number of pixels between lines.
+For TrueType fonts, this is an adjustment factor for the font's built-in
+line spacing (see notes).
           </para>
         </listitem>
       </varlistentry>
@@ -2447,19 +2731,41 @@ Desired line spacing in pixels.
   <refsect1>
     <title>Notes</title>
     <para>
-Line spacing apparently does not apply when using TrueType fonts, except
-for the legend. In the legend, SetLineSpacing spreads out the lines of the
-legend, and stretches the color boxes accordingly.
+The default line spacing value is 4. For GD fonts, this is the number of
+pixels between text lines, and is independent of the font size.
     </para>
     <para>
-The default line spacing is 4 pixels.
+TrueType fonts have a built-in line spacing amount, which is the distance
+between the baseline of one text line and the top of the next text line.
+With TrueType text, PHPlot uses the line spacing value (set with SetLineSpacing
+or one of the SetFont functions) as an adjustment factor for this built-in
+line spacing. A value of 4 produces the built-in line spacing, lower values
+reduce the spacing and larger values increase the spacing. A value of 0 for
+line spacing would result in the baseline of one line nearly touching the
+top of the next line.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>History</title>
+    <para>
+The interpretation of the line spacing as an adjustment factor for TrueType
+text, rather than a value in pixels, began after PHPlot-5.0.5. This is also
+when the line spacing could be adjusted for each text element.
     </para>
     <para>
-Line spacing must be set before setting titles. This is because a title's
-height is calculated when the title text is set. You cannot have different
-line spacing values for different titles. If you are using SetLineSpacing,
-you need to call it exactly once, before setting any title text.
+At PHPlot-5.0.5, line spacing was the number of pixels between lines of text,
+for both GD or TrueType fonts.
+Before PHPlot-5.0.5, line spacing did not affect TrueType font text at all,
+except in the legend.
     </para>
+    <para>
+Before PHPlot-5.0.5, the line spacing had to be set before setting titles,
+because the title height was calculated when setting the title. This
+restriction was removed in PHPlot-5.0.5, so line spacing and titles can be
+set in either order.
+    </para>
+
   </refsect1>
 </refentry>
 
@@ -2745,12 +3051,14 @@ script.
 To set the number of decimal places, use
 <xref linkend="SetPrecisionX" /> and <xref linkend="SetPrecisionY" />.
     </para>
+  </refsect1>
+  <refsect1>
+    <title>History</title>
     <para>
 This was added to PHPlot-5.0.4. Versions up to and including 5.0rc3
 always used a period for decimal point, and comma for thousands separator.
     </para>
   </refsect1>
-
 </refentry>
 
 <refentry id="SetNumXTicks">
@@ -3045,6 +3353,9 @@ not the plot area with margins. So the supplied coordinates have to account
 for margins.
 You cannot use this function along with <xref linkend="SetMarginsPixels" />.
     </para>
+  </refsect1>
+  <refsect1>
+    <title>History</title>
     <para>
 SetPlotAreaPixels and SetPlotAreaWorld can be called in either order.
 Through PHPlot-5.0.4 this was because SetPlotAreaPixels would
@@ -3135,13 +3446,6 @@ If omitted or NULL, the value is calculated from the actual plot data.
   <refsect1>
     <title>Notes</title>
     <para>
-Through PHPlot-5.0.4, SetPlotAreaWorld needed to access and interpret the data
-array, so it had to be called after <xref linkend="SetDataValues" /> sets the
-data array, and after <xref linkend="SetDataType" /> (if used).
-Starting with PHPlot-5.0.5, this restriction no longer applies and the
-functions can be called in any order.
-    </para>
-    <para>
 Trailing defaulted arguments can be omitted, but non-trailing defaulted
 arguments must be specified as NULL. For example, to set the minimum X
 value to 10, the maximum X value to 100, and default the Y scaling, you can
@@ -3150,6 +3454,9 @@ use:
 $plot-&gt;SetPlotAreaWorld(10, NULL, 100);
       </programlisting>
     </para>
+  </refsect1>
+  <refsect1>
+    <title>History</title>
     <para>
 SetPlotAreaPixels and SetPlotAreaWorld can be called in either order.
 Through PHPlot-5.0.4 this was because SetPlotAreaWorld would
@@ -3157,7 +3464,13 @@ reset the scale factors if <xref linkend="SetPlotAreaPixels" /> was already
 called.
 Starting with PHPlot-5.0.5, both functions just store the information,
 and no calculations take place until <xref linkend="DrawGraph" /> is used.
-in either order.
+    </para>
+    <para>
+Through PHPlot-5.0.4, SetPlotAreaWorld needed to access and interpret the data
+array, so it had to be called after <xref linkend="SetDataValues" /> sets the
+data array, and after <xref linkend="SetDataType" /> (if used).
+Starting with PHPlot-5.0.5, this restriction no longer applies and the
+functions can be called in any order.
     </para>
   </refsect1>
 </refentry>
@@ -3488,7 +3801,12 @@ A point shape can be set to 'none' to suppress the point markers for that
 data set.
 This is only useful with 'linepoints' plot types, and results in a 'lines'
 plot type for that data set: a line only, but no markers.
-(This is available with PHPlot-5.0rc3 and higher.)
+    </para>
+  </refsect1>
+  <refsect1>
+    <title>History</title>
+    <para>
+Using 'none' as a point shape was added in PHPlot-5.0rc3.
     </para>
   </refsect1>
 </refentry>
@@ -4072,7 +4390,8 @@ $plot-&gt;SetTTFPath(<parameter>$path</parameter>)
     <title>Description</title>
     <para>
 <function>SetTTFPath</function> sets the name of the directory where
-<xref linkend="SetFont" /> can find TrueType font files.
+<xref linkend="SetFont" /> and <xref linkend="SetFontTTF" />
+can find TrueType font files.
     </para>
   </refsect1>
 
@@ -4099,14 +4418,18 @@ This default can be changed at installation time as described in
 <xref linkend="install-install" />.
     </para>
     <para>
+SetTTFPath does not enable the use of TrueType fonts.
+See the note at the end of the reference for <xref linkend="SetUseTTF" />
+on how to set up and use TrueType fonts.
+    </para>
+  </refsect1>
+  <refsect1>
+    <title>History</title>
+    <para>
 Starting with PHPlot-5.0rc3, the default TrueType font directory is used both
 for the default font set with <xref linkend="SetDefaultTTFont" /> and for
 fonts set with <xref linkend="SetFont" />. Refer to those two functions for
 details.
-    </para>
-    <para>
-See the note at the end of the reference for <xref linkend="SetUseTTF" />
-on how to set up and use TrueType fonts.
     </para>
   </refsect1>
 </refentry>
@@ -4366,7 +4689,7 @@ $plot-&gt;SetTransparentColor('yellow');
 
   <refnamediv>
     <refname>SetUseTTF</refname>
-    <refpurpose>Enables or disables use of TrueType fonts</refpurpose>
+    <refpurpose>Set the default font type</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
@@ -4378,10 +4701,8 @@ $plot-&gt;SetUseTTF(<parameter>$ttf</parameter>)
   <refsect1>
     <title>Description</title>
     <para>
-<function>SetUseTTF</function> enables (or disables) the use of TrueType
-fonts instead of the built-in GD fonts. TrueType fonts generally look
-better and can be scaled and rotated, but require more memory and
-processing power to render.
+<function>SetUseTTF</function> sets the default font type to TrueType fonts or
+built-in GD fonts, and re-initializes all font settings.
     </para>
   </refsect1>
 
@@ -4392,8 +4713,8 @@ processing power to render.
         <term><replaceable>$ttf</replaceable></term>
         <listitem>
           <para>
-True to enable use of TrueType fonts, False to use built-in GD fonts
-instead.
+True to use TrueType fonts by default, False to use built-in GD fonts
+by default.
           </para>
         </listitem>
       </varlistentry>
@@ -4410,16 +4731,16 @@ The default is False, to use the built-in GD fonts.
     </para>
     <para>
 There must be a valid default font before enabling TrueType fonts with
-SetUseTTF, or PHPlot will abort with an error. There are three ways to
-properly set up TrueType fonts to avoid this error, starting with
-PHPlot-5.0rc3:
+SetUseTTF, or PHPlot will abort with an error because it cannot find
+the default font. There are three ways to
+properly set up TrueType fonts to avoid this error:
       <itemizedlist>
         <listitem>
           <para>
 Call <xref linkend="SetDefaultTTFont" /> with the full pathname to a
 TrueType font file to use as the default. Since SetDefaultTTFont
-automatically enables TrueType fonts, you don't need to call SetUseTTF
-if you use this option.
+automatically selects TrueType fonts as the default,
+you don't need to call SetUseTTF if you use this option.
           </para>
         </listitem>
         <listitem>
@@ -4428,8 +4749,8 @@ Call <xref linkend="SetTTFPath" /> with the path to a directory where you
 have stored TrueType fonts, then call <xref linkend="SetDefaultTTFont" />
 with the filename (e.g. <filename>arial.ttf</filename>) of the
 TrueType font file to use as the default. Since SetDefaultTTFont
-automatically enables TrueType fonts, you don't need to call SetUseTTF
-if you use this option either.
+automatically selects TrueType fonts as the default,
+you don't need to call SetUseTTF if you use this option either.
           </para>
         </listitem>
         <listitem>
@@ -4445,10 +4766,23 @@ use SetUseTTF to enable TrueType fonts.
     </para>
     <para>
 After enabling TrueType fonts, you can use
-<xref linkend="SetFont" /> to select fonts and sizes for individual
-text elements in the plot.
+<xref linkend="SetFont" /> or <xref linkend="SetFontTTF" />
+to select fonts and sizes for individual text elements in the plot.
+You can also use <xref linkend="SetFontGD" /> to use GD fonts for one or
+more elements, overriding the default font type.
     </para>
   </refsect1>
+  <refsect1>
+    <title>History</title>
+    <para>
+Through PHPlot-5.0.5, this function enabled or disabled the use of TrueType
+font text, since all text on a graph had to be either TrueType or all GD.
+Starting after PHPlot-5.0.5, this function selects the default font type (and
+still re-initializes all fonts). Both GD and TrueType font text can now be
+used on a graph.
+    </para>
+  </refsect1>
+
 </refentry>
 
 <refentry id="SetXAxisPosition">
@@ -4668,6 +5002,7 @@ output as-is. Other choices are 'data' and 'time'.
 'data' formatting formats the labels as floating point numbers,
 with digits grouped into thousands (3 digit groups),
 and with precision set by <xref linkend="SetPrecisionX" />.
+Grouping separator characters can be set with <xref linkend="SetNumberFormat" />.
     </para>
     <para>
 'time' formatting formats the labels as date/time values,
@@ -4700,6 +5035,9 @@ default formatting.
 A side effect of <xref linkend="SetPrecisionX" /> is to call this function
 SetXLabelType and set the formatting mode to 'data'.
     </para>
+  </refsect1>
+  <refsect1>
+    <title>History</title>
     <para>
 Starting with PHPlot-5.0.4, empty string data labels are ignored when
 formatting with 'data' or 'time' formats. You can use this to suppress
@@ -5184,8 +5522,13 @@ formatting of labels.
     </para>
     <para>
 The default time format is '%H:%M:%S', showing hours, minutes, and seconds
-(and ignoring any date information). This default applies to PHPlot-5.0rc3
-and higher. In older versions, the default is undefined.
+(and ignoring any date information).
+    </para>
+  </refsect1>
+  <refsect1>
+    <title>History</title>
+    <para>
+The default time format was undefined prior to  PHPlot-5.0rc3.
     </para>
   </refsect1>
 </refentry>
@@ -5378,6 +5721,9 @@ set to 'plotin', the labels will be drawn above the bars (or below the
 bars, for negative values). This works best if the values are short enough
 to fit.
     </para>
+  </refsect1>
+  <refsect1>
+    <title>History</title>
     <para>
 The Y data label feature for bar graphs was added to PHPlot-5.0rc3.
     </para>
@@ -5461,7 +5807,8 @@ output as-is. Other choices are 'data' and 'time'.
     <para>
 'data' formatting formats the labels as floating point numbers,
 with digits grouped into thousands (3 digit groups),
-and with precision set by <xref linkend="SetPrecisionX" />.
+and with precision set by <xref linkend="SetPrecisionY" />.
+Grouping separator characters can be set with <xref linkend="SetNumberFormat" />.
     </para>
     <para>
 'time' formatting formats the labels as date/time values,
@@ -5494,6 +5841,9 @@ default formatting.
 A side effect of <xref linkend="SetPrecisionY" /> is to call this function
 SetYLabelType and set the formatting mode to 'data'.
     </para>
+  </refsect1>
+  <refsect1>
+    <title>History</title>
     <para>
 Through PHPlot-5.0rc3, when the formatting mode is 'data'
 the thousands grouping separator was always a comma,
@@ -5958,8 +6308,13 @@ formatting of labels.
     </para>
     <para>
 The default time format is '%H:%M:%S', showing hours, minutes, and seconds
-(and ignoring any date information). This default applies to PHPlot-5.0rc3
-and higher. In older versions, the default is undefined.
+(and ignoring any date information).
+    </para>
+  </refsect1>
+  <refsect1>
+    <title>History</title>
+    <para>
+The default time format was undefined prior to  PHPlot-5.0rc3.
     </para>
   </refsect1>
 </refentry>
