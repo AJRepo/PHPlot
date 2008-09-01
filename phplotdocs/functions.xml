@@ -135,16 +135,17 @@ error bars.
 <title>Text Fonts</title>
 <para>
 The functions in this section control the text fonts used by PHPlot. PHPlot
-supports built-in GD fonts and TrueType fonts (if available on your system).
-You cannot mix TrueType and built-in GD fonts in the same image.
+supports both built-in GD fonts and TrueType fonts (if available on your system).
 PHPlot does not support Adobe Type1 fonts, even if your GD supports them.
 </para>
 <tip>
   <para>
-The appearance of the built-in GD fonts was improved with recent versions
-of GD, including the GD bundled with recent versions of PHP.
-TrueType fonts are computationally expensive to work with, so you should
-consider using the built-in GD fonts instead.
+TrueType fonts produce generally higher quality text, but using them
+requires more internal computations. The built-in GD fonts are faster
+to render, but are limited to one typeface and 5 available sizes.
+TrueType fonts can be any size and angle, and many typefaces are available.
+On most systems, TrueType fonts are anti-aliased for improved appearance,
+but under some conditions the GD fonts may be easier to read.
   </para>
 </tip>
 
@@ -170,6 +171,8 @@ image. For more on font sizes, see the notes with <xref linkend="SetFont" />.)
 <itemizedlist>
   <listitem><para><xref linkend="SetDefaultTTFont" /></para></listitem>
   <listitem><para><xref linkend="SetFont" /></para></listitem>
+  <listitem><para><xref linkend="SetFontGD" /></para></listitem>
+  <listitem><para><xref linkend="SetFontTTF" /></para></listitem>
   <listitem><para><xref linkend="SetLineSpacing" /></para></listitem>
   <listitem><para><xref linkend="SetTTFPath" /></para></listitem>
   <listitem><para><xref linkend="SetUseTTF" /></para></listitem>
