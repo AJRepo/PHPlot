@@ -4,6 +4,21 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2008-09-01
+   * Continue changes for new GD/TTF mixed font usage.
+     + developer: Document changes to font arguments for internal functions
+       ProcessTextGD() and ProcessTextTTF().
+
+2008-07-22
+   * Changes for new GD/TTF mixed font usage.
+     + developer: Document change to font data arrays. New GetLineSpacing().
+     + functions: Rewrite text to not discourage TTF; list 2 new functions.
+            Recreate the text fonts figure - use a free TrueType font.
+     + reference: Document, link, and update all text on font usage.
+   * Use History subsections in the reference to detail behavior changes
+     over previous releases. This text used to be in Notes. The reference
+     section text, other than History, should not mention prior releases.
+
 2008-01-13
    * Change vague references to release "after 5.0.4" to "5.0.5".
 
