@@ -5,9 +5,10 @@
 <title>Change Log</title>
 <abstract>
   <para>
-This is the summary change log for the PHPlot Reference Manual. (For
-changes to PHPlot itself, see the ChangeLog file inside the PHPlot
-distribution.)
+This is the summary change log for the PHPlot Reference Manual.
+(For a more detailed list of changes, see the ChangeLog file
+in the manual's CVS repository.  For changes to PHPlot itself,
+see the ChangeLog file inside the PHPlot distribution.)
   </para>
 </abstract>
 
