@@ -3,6 +3,14 @@ The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
 2008-09-21 (lbayuk)
+    * Interim fix for bug 1932571 "Data-Data Plot fails with same X values".
+      PHPlot will no longer hang when the range of X values is 0 (that is, when
+      x_min == x_max). It will arbitrarily set an X range of 1, so the
+      calculated tick step is not 0. This is a temporary fix. Work on a smarter
+      X and Y range calculation is in progress, which will handle edge cases
+      like this better, but it isn't ready and this bug has been open too long.
+      Credit to andyl for finding the bug.
+
     * Fix font path: Use DIRECTORY_SEPARATOR constant not '/'.
 
     Extended the label formatting capabilities, adding 'printf' and 'custom'
