@@ -4,6 +4,15 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2008-09-21
+   * Changes for new label formatting types.
+     + reference: Document new arguments to SetXLabelType and SetYLabelType.
+         Add note to SetPrecision[XY] and Set[XY]TimeFormat.
+
+   * Use CDATA for example scripts, instead of processing them through sed
+     to escape special XML characters.
+
+
 2008-09-01
    * Continue changes for new GD/TTF mixed font usage.
      + developer: Document changes to font arguments for internal functions
