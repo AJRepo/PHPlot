@@ -134,12 +134,10 @@ $(EXAMPLE_LIST): $(EXAMPLES_PHP) $(EXAMPLES_XML) $(EXAMPLES_IMAGES)
 # Rules for examples:
 
 # This rule turns a PHP file into an XML file for inclusion as an example.
-# Based on one in the Linux Kernel Documentation DocBook Makefile.
 %.xml: %.php
-	{ echo "<programlisting>"; \
-      expand --tabs=8 $< \
-      | sed -e "s/&/\\&amp;/g" -e "s/</\\&lt;/g" -e "s/>/\\&gt;/g"; \
-      echo "</programlisting>"; } > $@
+	{ echo '<programlisting><![CDATA['; \
+      expand --tabs=8 $<; \
+      echo ']]></programlisting>'; } > $@
 
 # This rule runs an example through PHP to get an image file:
 %.png: %.php
