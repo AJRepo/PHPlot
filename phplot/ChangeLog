@@ -2,6 +2,53 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2008-09-21 (lbayuk)
+    * Fix font path: Use DIRECTORY_SEPARATOR constant not '/'.
+
+    Extended the label formatting capabilities, adding 'printf' and 'custom'
+    types, added a prefix and suffix for 'data' type, and allow format controls
+    to be included in SetXLabelType and SetYLabelType.
+
+    External changes:
+    * Added 'printf' label type. The caller specifies the print format as the
+      2nd argument to SetXLabelType or SetYLabelType (default '%e').
+             $plot->SetXLabelType('printf', '%5.2f');
+
+    * Added 'custom' label type. The caller supplies a callback (typically a
+      function name) and optional pass-through argument as the 2nd and 3rd
+      arguments to Set[XY]LabelType.  The function is called as $f($value, $arg)
+      to return the formatted $value.
+             $plot->SetXLabelType('custom', 'myfunction', $arg_value);
+
+    * In addition to Set[XY]TimeFormat, the format string for type 'time' can
+      now be set as the 2nd argument to Set[XY]LabelType.
+             $plot->SetXLabelType('time', '%H:%M');
+
+    * In addition to SetPrecision[XY], the precision for type 'data' can now be
+      set as the 2nd argument to Set[XY]LabelType. A 3rd and 4th argument
+      can supply a prefix and suffix for 'data' formatting. (All optional)
+             $plot->SetXLabelType('data', 2, '$', 'US');
+
+    Internal changes:
+    * Class variables x_precision, y_precision, x_label_type, y_label_type,
+      x_time_format, and y_time_format have been removed.
+
+    * New class array variable label_format[], with elements 'x' and 'y' which
+      are arrays for label formatting. Elements in the sub-arrays are not
+      initialized until needed.
+
+    * New function SetLabelType, which implements Set[XY]LabelType now.
+
+    * FormatLabel() was rewritten to support the new label formatting.
+
+    Compatibility:
+    * Any code that directly references class variables related to label
+      formatting will break, except for data_units_text. Use the documented
+      function methods instead.  Setting data_units_text as a suffix is
+      deprecated but still works.
+
+    * The 'data' type precision for 'Y' is still used for pie chart labels.
+
 2008-07-12 (lbayuk)
     Multiple comment spelling error fixes. No functional changes.
 
