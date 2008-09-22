@@ -65,11 +65,6 @@ class PHPlot {
     var $bar_extra_space = 0.5;             // Number of extra bar's worth of space in a group
     var $bar_width_adjust = 1;              // 1 = bars of normal width, must be > 0
 
-    var $y_precision = 1;
-    var $x_precision = 1;
-
-    var $data_units_text = '';              // Units text for 'data' labels (i.e: '¤', '$', etc.)
-
 // Titles
     var $title_txt = '';
 
@@ -99,11 +94,14 @@ class PHPlot {
     var $draw_x_data_label_lines = FALSE;   // Draw a line from the data point to the axis?
     var $draw_y_data_label_lines = FALSE;   // TODO
 
-    // Label types: (for tick, data and plot labels)
-    var $x_label_type = '';                 // data, time. Leave blank for no formatting.
-    var $y_label_type = '';                 // data, time. Leave blank for no formatting.
-    var $x_time_format = '%H:%M:%S';        // See http://www.php.net/manual/html/function.strftime.html
-    var $y_time_format = '%H:%M:%S';        // SetYTimeFormat() too...
+    // Label format controls: (for tick, data and plot labels)
+    // Unset by default, these array members are used as needed for 'x' and 'y':
+    //    type, precision, prefix, suffix, time_format, printf_format, custom_callback, custom_arg.
+    // These replace the former: x_label_type, x_time_format, x_precision (similar for y), data_units_text.
+    var $label_format = array('x' => array(), 'y' => array());
+    // data_units_text is retained for backward compatibility, because there was never a function
+    // to set it. Use the 'suffix' argument to Set[XY]LabelType instead.
+    var $data_units_text = '';              // Units text for 'data' labels (i.e: '¤', '$', etc.)
 
     // Skipping labels
     // var $x_label_inc = 1;                   // Draw a label every this many (1 = all) (TODO)
@@ -861,7 +859,7 @@ class PHPlot {
 
         # First try the font name directly, if not then try with path.
         if (!is_file($path) || !is_readable($path)) {
-            $path = $this->ttf_path . '/' . $which_font;
+            $path = $this->ttf_path . DIRECTORY_SEPARATOR . $which_font;
             if (!is_file($path) || !is_readable($path)) {
                 return $this->PrintError(__FUNCTION__ . ": Can't find TrueType font $which_font");
             }
@@ -1590,33 +1588,103 @@ class PHPlot {
     }
 
     /*!
-     * Sets type for tick and data labels on X axis.
-     * \note 'title' type left for backwards compatibility.
+     * Sets type for tick and data labels on X or Y axis. This is meant for use by
+     * SetXLabelType and SetYLabelType, but can also be called directly.
+     *    $axis  : 'x' or 'y', which axis' label type to configure.
+     *    $args  : Variable arguments, passed as an array.
+     *       [0] = $type (required) : Label type. 'data', 'time', 'printf', or 'custom'.
+     *     For type 'data':
+     *       [1] = $precision (optional). Numeric precision. Can also be set by SetPrecision[XY]().
+     *       [2] = $prefix (optional) - prefix string for labels.
+     *       [3] = $suffix (optional) - suffix string for labels. This replaces data_units_text.
+     *     For type 'time':
+     *       [1] = $format for strftime (optional). Can also be set by Set[XY]TimeFormat().
+     *     For type 'printf':
+     *       [1] = $format (optional) for sprintf.
+     *     For type 'custom':
+     *       [1] = $callback (required) - Custom function or array of (instance,method) to call.
+     *       [2] = $argument (optional) - Pass-through argument for the formatting function.
      */
-    function SetXLabelType($which_xlt)
+    function SetLabelType($axis, $args)
     {
-        $this->x_label_type = $this->CheckOption($which_xlt, 'data, time, title', __FUNCTION__);
-        return (boolean)$this->x_label_type;
+        if (!$this->CheckOption($axis, 'x, y', __FUNCTION__))
+            return FALSE;
+
+        $type = isset($args[0]) ? $args[0] : '';
+        $format =& $this->label_format[$axis];  // Shorthand reference to format storage variables
+        switch ($type) {
+        case 'data':
+            if (isset($args[1]))
+                $format['precision'] = $args[1];
+            elseif (!isset($format['precision']))
+                $format['precision'] = 1;
+            $format['prefix'] = isset($args[2]) ? $args[2] : '';
+            $format['suffix'] = isset($args[3]) ? $args[3] : '';
+            break;
+
+        case 'time':
+            if (isset($args[1]))
+                $format['time_format'] = $args[1];
+            elseif (!isset($format['time_format']))
+                $format['time_format'] = '%H:%M:%S';
+            break;
+
+        case 'printf':
+            if (isset($args[1]))
+                $format['printf_format'] = $args[1];
+            elseif (!isset($format['printf_format']))
+                $format['printf_format'] = '%e';
+            break;
+
+        case 'custom':
+            if (isset($args[1])) {
+                $format['custom_callback'] = $args[1];
+                $format['custom_arg'] = isset($args[2]) ? $args[2] : NULL;
+            } else {
+                $type = ''; // Error, 'custom' without a function, set to no-format mode.
+            }
+            break;
+
+        case '':
+        case 'title':   // Retained for backwards compatibility?
+            break;
+
+        default:
+            $this->CheckOption($type, 'data, time, printf, custom', __FUNCTION__);
+            $type = '';
+        }
+        $format['type'] = $type;
+        return (boolean)$type;
+    }
+
+
+    /*!
+     * Sets type for tick and data labels on X axis. See SetLabelType() for details.
+     */
+    function SetXLabelType()  // Variable arguments: $type, ...
+    {
+        $args = func_get_args();
+        return $this->SetLabelType('x', $args);
     }
 
     /*!
-     * Sets type for tick and data labels on Y axis.
+     * Sets type for tick and data labels on Y axis. See SetLabelType() for details.
      */
-    function SetYLabelType($which_ylt)
+    function SetYLabelType()  // Variable arguments: $type, ...
     {
-        $this->y_label_type = $this->CheckOption($which_ylt, 'data, time', __FUNCTION__);
-        return (boolean)$this->y_label_type;
+        $args = func_get_args();
+        return $this->SetLabelType('y', $args);
     }
 
     function SetXTimeFormat($which_xtf)
     {
-        $this->x_time_format = $which_xtf;
+        $this->label_format['x']['time_format'] = $which_xtf;
         return TRUE;
     }
 
     function SetYTimeFormat($which_ytf)
     {
-        $this->y_time_format = $which_ytf;
+        $this->label_format['y']['time_format'] = $which_ytf;
         return TRUE;
     }
 
@@ -1917,16 +1985,12 @@ class PHPlot {
 
     function SetPrecisionX($which_prec)
     {
-        $this->x_precision = $which_prec;
-        $this->SetXLabelType('data');
-        return TRUE;
+        return $this->SetXLabelType('data', $which_prec);
     }
 
     function SetPrecisionY($which_prec)
     {
-        $this->y_precision = $which_prec;
-        $this->SetYLabelType('data');
-        return TRUE;
+        return $this->SetYLabelType('data', $which_prec);
     }
 
     function SetErrorBarLineWidth($which_seblw)
@@ -3045,39 +3109,44 @@ class PHPlot {
      * Formats a tick or data label.
      *    which_pos - 'x' or 'y', selects formatting controls.
      *    which_lab - String to format as a label.
-     * \note Time formatting suggested by Marlin Viss
+     * Credits: Time formatting suggested by Marlin Viss
+     *          Custom formatting suggested by zer0x333
+     * Notes:
+     *   Type 'title' is obsolete and retained for compatibility.
+     *   Class variable 'data_units_text' is retained as a suffix for 'data' type formatting for
+     *      backward compatibility. Since there was never a function/method to set it, there
+     *      could be somebody out there who sets it directly in the object.
      */
     function FormatLabel($which_pos, $which_lab)
     {
-        $lab = $which_lab;   // Default to no formatting.
-        if ($lab !== '') {   // Don't format empty strings (especially as time or numbers)
-            if ($which_pos == 'x') {
-                switch ($this->x_label_type) {
-                case 'title':  // Note: This is obsolete
-                    $lab = @ $this->data[$which_lab][0];
-                    break;
-                case 'data':
-                    $lab = $this->number_format($which_lab, $this->x_precision).$this->data_units_text;
-                    break;
-                case 'time':
-                    $lab = strftime($this->x_time_format, $which_lab);
-                    break;
-                }
-            } elseif ($which_pos == 'y') {
-                switch ($this->y_label_type) {
-                case 'data':
-                    $lab = $this->number_format($which_lab, $this->y_precision).$this->data_units_text;
-                    break;
-                case 'time':
-                    $lab = strftime($this->y_time_format, $which_lab);
-                    break;
-                }
+        $format =& $this->label_format[$which_pos]; // Shortcut to format controls
+
+        // Don't format empty strings (especially as time or numbers), or if no type was set.
+        if ($which_lab !== '' && !empty($format['type'])) {
+            switch ($format['type']) {
+            case 'title':  // Note: This is obsolete
+                $which_lab = @ $this->data[$which_lab][0];
+                break;
+            case 'data':
+                $which_lab = $format['prefix']
+                           . $this->number_format($which_lab, $format['precision'])
+                           . $this->data_units_text  // Obsolete
+                           . $format['suffix'];
+                break;
+            case 'time':
+                $which_lab = strftime($format['time_format'], $which_lab);
+                break;
+            case 'printf':
+                $which_lab = sprintf($format['printf_format'], $which_lab);
+                break;
+            case 'custom':
+                $which_lab = call_user_func($format['custom_callback'], $which_lab, $format['custom_arg']);
+                break;
+
             }
         }
-        return $lab;
+        return $which_lab;
     } //function FormatLabel
-
-
 
 /////////////////////////////////////////////
 ///////////////                         TICKS
@@ -3925,6 +3994,13 @@ class PHPlot {
         }
         $max_data_colors = count ($this->data_colors);
 
+        // Use the Y label format precision, with default value:
+        if (isset($this->label_format['y']['precision']))
+            $precision = $this->label_format['y']['precision'];
+        else
+            $precision = 1;
+
+
         for ($h = $this->shading; $h >= 0; $h--) {
             $color_index = 0;
             $start_angle = 0;
@@ -3936,7 +4012,7 @@ class PHPlot {
                 else
                     $slicecol = $this->ndx_data_dark_colors[$color_index];
 
-                $label_txt = $this->number_format(($val / $total * 100), $this->y_precision) . '%';
+                $label_txt = $this->number_format(($val / $total * 100), $precision) . '%';
                 $val = 360 * ($val / $total);
 
                 // NOTE that imagefilledarc measures angles CLOCKWISE (go figure why),
