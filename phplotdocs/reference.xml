@@ -3931,6 +3931,13 @@ should be enabled). Using 'data' format for X data labels only makes sense
 when your data array contains numeric data in the label position.
     </para>
   </refsect1>
+  <refsect1>
+    <title>History</title>
+    <para>
+Starting after PHPlot-5.0.5, using <code>SetPrecisionX($n)</code>
+is exactly the same as calling <code>SetXLabelType('data', $n)</code>.
+    </para>
+  </refsect1>
 </refentry>
 
 <refentry id="SetPrecisionY">
@@ -3986,6 +3993,13 @@ if 'data' mode formatting is selected.
     <para>
 This function applies to Y tick labels, and also to the Y data labels
 available with bar charts.
+    </para>
+  </refsect1>
+  <refsect1>
+    <title>History</title>
+    <para>
+Starting after PHPlot-5.0.5, using <code>SetPrecisionY($n)</code>
+is exactly the same as calling <code>SetYLabelType('data', $n)</code>.
     </para>
   </refsect1>
 </refentry>
@@ -4987,7 +5001,7 @@ The default text angle for X labels is 0 degrees, for horizontal text.
 
   <refsynopsisdiv>
     <synopsis>
-$plot-&gt;SetXLabelType(<parameter>$xlt</parameter>)
+$plot-&gt;SetXLabelType(<parameter>$type</parameter>, <optional><parameter>...</parameter></optional>)
     </synopsis>
   </refsynopsisdiv>
 
@@ -4996,32 +5010,149 @@ $plot-&gt;SetXLabelType(<parameter>$xlt</parameter>)
     <para>
 <function>SetXLabelType</function> sets the formatting type for X tick and
 data labels. By default, there is no special formatting, so the labels are
-output as-is. Other choices are 'data' and 'time'.
+output as-is. Available format types are 'data', 'time', 'printf', and
+'custom'.
     </para>
     <para>
 'data' formatting formats the labels as floating point numbers,
 with digits grouped into thousands (3 digit groups),
-and with precision set by <xref linkend="SetPrecisionX" />.
+and with user-defined precision.
 Grouping separator characters can be set with <xref linkend="SetNumberFormat" />.
+The precision (number of digits after the decimal point) can be set with
+<xref linkend="SetPrecisionX" />, or as an additional argument to SetXLabelType.
+A prefix and suffix string can also be specified.
     </para>
     <para>
 'time' formatting formats the labels as date/time values,
-using a format specifier set by <xref linkend="SetXTimeFormat" />.
+using a format specifier set by <xref linkend="SetXTimeFormat" />
+or using an additional argument to SetXLabelType.
     </para>
+    <para>
+'printf' formatting formats the labels using the standard
+<function>sprintf</function> function, with the format string specified
+as an additional argument to SetXLabelType.
+    </para>
+    <para>
+'custom' formatting formats the labels using a caller-provided function,
+with an optional pass-through argument. This provides the maximum
+flexibility in formatting labels.
+    </para>
+
   </refsect1>
 
   <refsect1>
     <title>Parameters</title>
-    <variablelist>
-      <varlistentry>
-        <term><replaceable>$xlt</replaceable></term>
-        <listitem>
-          <para>
-A string indicating the desired formatting mode: 'data' or 'time'.
-          </para>
-        </listitem>
-      </varlistentry>
-    </variablelist>
+    <para>
+There is one required argument, $type. Other arguments depend on the value
+of the $type argument.
+      <variablelist>
+        <varlistentry>
+          <term><replaceable>$type</replaceable></term>
+          <listitem>
+            <para>
+A string indicating the desired formatting mode: 'data', 'time', 'printf',
+or 'custom'.
+            </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </para>
+
+    <para>
+For type 'data', there are three optional arguments:
+      <variablelist>
+        <varlistentry>
+          <term><replaceable>$precision</replaceable></term>
+          <listitem>
+            <para>
+The formatting precision, or number of decimal places (optional).
+If omitted, the value set with <xref linkend="SetPrecisionX" /> is used,
+or if that was never called then the default is 1.
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term><replaceable>$prefix</replaceable></term>
+          <listitem>
+            <para>
+A prefix string to be placed before the formatted label values. This could
+be used for a currency symbol, for example. The default is an empty string.
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term><replaceable>$suffix</replaceable></term>
+          <listitem>
+            <para>
+A suffix string to be placed after the formatted label values. This could
+be used for a currency symbol, for example. The default is an empty string.
+            </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </para>
+
+    <para>
+For type 'time', there is one optional argument:
+      <variablelist>
+        <varlistentry>
+          <term><replaceable>$format</replaceable></term>
+          <listitem>
+            <para>
+Formatting string, used with <function>strftime()</function>.
+For example, '%Y-%m-%d' results in formatting a <literal>time_t</literal>
+value as a year, month, and day numbers.
+If omitted, the value set with <xref linkend="SetXTimeFormat" /> is used,
+or if that was never called then the default is '%H:%M:%S' (hours, minutes,
+and seconds).
+            </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </para>
+
+    <para>
+For type 'printf', there is one optional argument:
+      <variablelist>
+        <varlistentry>
+          <term><replaceable>$format</replaceable></term>
+          <listitem>
+            <para>
+Formatting string, used with <function>sprintf()</function>.
+If omitted, the default value of '%e' uses scientific notation with default
+field sizes.
+            </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </para>
+
+    <para>
+For type 'custom', there is one required argument and one optional argument:
+      <variablelist>
+        <varlistentry>
+          <term><replaceable>$callback</replaceable></term>
+          <listitem>
+            <para>
+A callback function to format the label. This is either the name of a
+function (as a string), or a two-element array with an object instance and
+method name. (Refer to the PHP documentation for more information on the
+callback type.) The callback will be called with two arguments: the value
+of the label to be formatted, and the pass-through argument (see next).
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term><replaceable>$callback_arg</replaceable></term>
+          <listitem>
+            <para>
+A pass-through argument for the callback function.
+If omitted, NULL is used.
+            </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </para>
   </refsect1>
 
   <refsect1>
@@ -5033,11 +5164,141 @@ default formatting.
     </para>
     <para>
 A side effect of <xref linkend="SetPrecisionX" /> is to call this function
-SetXLabelType and set the formatting mode to 'data'.
+SetXLabelType and set the format type to 'data'.
+Note that <xref linkend="SetXTimeFormat" /> does not have a corresponding
+side effect on the format type.
+    </para>
+    <para>
+When using a custom label formatting function, do not assume the labels are
+formatted in any particular order, or only once each.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Examples</title>
+    <para>
+The following table shows some label formatting examples.
+      <informaltable>
+        <tgroup cols="4">
+          <?dbhtml table-summary="Examples of label formatting"?>
+          <thead>
+            <row>
+              <entry>Code:</entry>
+              <entry>Value:</entry>
+              <entry>Result:</entry>
+              <entry>Notes:</entry>
+            </row>
+          </thead>
+
+          <tbody>
+            <row>
+              <entry><programlisting>
+$plot->SetXLabelType('data', 2);
+</programlisting></entry>
+              <entry>1234.56</entry>
+              <entry>1,234.56</entry>
+              <entry>
+Data (numeric) formatting with two digits of precision.
+Grouping and decimal separators depend on locale.
+              </entry>
+            </row>
+
+            <row>
+              <entry><programlisting>
+$plot->SetXLabelType('data', 0, '\xa4');
+</programlisting></entry>
+              <entry>100000</entry>
+              <entry>&euro;1,000,000</entry>
+              <entry>
+Data (numeric) formatting with prefix.
+0xa4 is the ISO-8859-15 code for the Euro sign.
+Here we use it as a prefix, common usage for English.
+The Euro sign may appear differently in your browser. But when used with
+PHPlot it depends on the server font, not the user's setup.
+              </entry>
+            </row>
+
+            <row>
+              <entry><programlisting>
+$plot->SetNumberFormat(',', '.');
+$plot->SetXLabelType('data', 2, '', '\xa4');
+</programlisting></entry>
+              <entry>100000</entry>
+              <entry>1.000.000,00&euro;</entry>
+              <entry>
+Data (numeric) formatting with suffix.
+Here we use the Euro as a suffix, common usage for French.
+The thousands and decimal separator default to locale-dependent values,
+but here we set them ourselves with SetNumberFormat.
+The Euro sign may appear differently in your browser. But when used with
+PHPlot it depends on the server font, not the user's setup.
+              </entry>
+            </row>
+
+            <row>
+              <entry><programlisting>
+$plot->SetXLabelType('time', '%m/%Y');
+</programlisting></entry>
+              <entry>1208232000</entry>
+              <entry>04/2008</entry>
+              <entry>
+Date/time formatting.
+The given value is mktime(0,0,0,4,15,2008).
+The format string could be set with SetXTimeFormat instead.
+              </entry>
+            </row>
+
+            <row>
+              <entry><programlisting>
+$plot->SetXLabelType('printf', '%8.2e');
+</programlisting></entry>
+              <entry>1234</entry>
+              <entry>1.23e+3</entry>
+              <entry>
+Formatting using printf.
+Note PHP printf may differ from the standard C library. For example, PHP
+outputs only a one digit exponent here.
+              </entry>
+            </row>
+
+            <row>
+              <entry><programlisting>
+function deg_min_sec($value)
+{
+  $deg = (int)$value;
+  $value = ($value - $deg) * 60;
+  $min = (int)$value;
+  $sec = (int)(($value - $min) * 60);
+  return "{$deg}d {$min}m {$sec}s";
+}
+$plot->SetXLabelType('custom', 'deg_min_sec');
+</programlisting></entry>
+              <entry>75.12345</entry>
+              <entry>75d 7m 24s</entry>
+              <entry>
+A custom formatting function is used to format values in decimal degrees as
+degrees, minutes, and seconds. (This only works for non-negative angles.)
+              </entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+
     </para>
   </refsect1>
   <refsect1>
     <title>History</title>
+    <para>
+New label format types 'printf' and 'custom' were added after PHPlot-5.0.5, 
+as well as all arguments after the first. In PHPlot-5.0.5 and earlier, you
+must use SetXTimeFormat and SetPrecisionX to set the formatting parameters.
+Starting after PHPlot-5.0.5, you have the choice of using those, or
+providing additional arguments to SetXLabelType.
+Also added was the ability to add a prefix and suffix to 'data' formatted
+labels. In PHPlot-5.0.5 and earlier, there was an undocumented class variable 
+<parameter>data_units_text</parameter> that was applied as a suffix to 'data'
+mode labels, for both X and Y. This continues to work, but is deprecated.
+    </para>
     <para>
 Starting with PHPlot-5.0.4, empty string data labels are ignored when
 formatting with 'data' or 'time' formats. You can use this to suppress
@@ -5528,7 +5789,11 @@ The default time format is '%H:%M:%S', showing hours, minutes, and seconds
   <refsect1>
     <title>History</title>
     <para>
-The default time format was undefined prior to  PHPlot-5.0rc3.
+Starting after PHPlot-5.0.5, the time format can be set with
+<xref linkend="SetXLabelType" /> instead.
+    </para>
+    <para>
+The default time format was undefined prior to PHPlot-5.0rc3.
     </para>
   </refsect1>
 </refentry>
@@ -5791,7 +6056,7 @@ The default text angle for Y labels is 0 degrees, for horizontal text.
 
   <refsynopsisdiv>
     <synopsis>
-$plot-&gt;SetYLabelType(<parameter>$ylt</parameter>)
+$plot-&gt;SetYLabelType(<parameter>$type</parameter>, <optional><parameter>...</parameter></optional>)
     </synopsis>
   </refsynopsisdiv>
 
@@ -5802,32 +6067,149 @@ $plot-&gt;SetYLabelType(<parameter>$ylt</parameter>)
 and data labels.
 (Y data labels are only available with bar charts.)
 By default, there is no special formatting, so the labels are
-output as-is. Other choices are 'data' and 'time'.
+output as-is. Available format types are 'data', 'time', 'printf', and
+'custom'.
     </para>
     <para>
 'data' formatting formats the labels as floating point numbers,
 with digits grouped into thousands (3 digit groups),
-and with precision set by <xref linkend="SetPrecisionY" />.
+and with user-defined precision
 Grouping separator characters can be set with <xref linkend="SetNumberFormat" />.
+The precision (number of digits after the decimal point) can be set with
+<xref linkend="SetPrecisionY" />, or as an additional argument to SetYLabelType.
+A prefix and suffix string can also be specified.
     </para>
     <para>
 'time' formatting formats the labels as date/time values,
-using a format specifier set by <xref linkend="SetYTimeFormat" />.
+using a format specifier set by <xref linkend="SetYTimeFormat" />
+or using an additional argument to SetYLabelType.
     </para>
+    <para>
+'printf' formatting formats the labels using the standard
+<function>sprintf</function> function, with the format string specified
+as an additional argument to SetYLabelType.
+    </para>
+    <para>
+'custom' formatting formats the labels using a caller-provided function,
+with an optional pass-through argument. This provides the maximum
+flexibility in formatting labels.
+    </para>
+
   </refsect1>
 
   <refsect1>
     <title>Parameters</title>
-    <variablelist>
-      <varlistentry>
-        <term><replaceable>$ylt</replaceable></term>
-        <listitem>
-          <para>
-A string indicating the desired formatting mode: 'data' or 'time'.
-          </para>
-        </listitem>
-      </varlistentry>
-    </variablelist>
+    <para>
+There is one required argument, $type. Other arguments depend on the value
+of the $type argument.
+      <variablelist>
+        <varlistentry>
+          <term><replaceable>$type</replaceable></term>
+          <listitem>
+            <para>
+A string indicating the desired formatting mode: 'data', 'time', 'printf',
+or 'custom'.
+            </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </para>
+
+    <para>
+For type 'data', there are three optional arguments:
+      <variablelist>
+        <varlistentry>
+          <term><replaceable>$precision</replaceable></term>
+          <listitem>
+            <para>
+The formatting precision, or number of decimal places (optional).
+If omitted, the value set with <xref linkend="SetPrecisionY" /> is used,
+or if that was never called then the default is 1.
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term><replaceable>$prefix</replaceable></term>
+          <listitem>
+            <para>
+A prefix string to be placed before the formatted label values. This could
+be used for a currency symbol, for example. The default is an empty string.
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term><replaceable>$suffix</replaceable></term>
+          <listitem>
+            <para>
+A suffix string to be placed after the formatted label values. This could
+be used for a currency symbol, for example. The default is an empty string.
+            </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </para>
+
+    <para>
+For type 'time', there is one optional argument:
+      <variablelist>
+        <varlistentry>
+          <term><replaceable>$format</replaceable></term>
+          <listitem>
+            <para>
+Formatting string, used with <function>strftime()</function>.
+For example, '%Y-%m-%d' results in formatting a <literal>time_t</literal>
+value as a year, month, and day numbers.
+If omitted, the value set with <xref linkend="SetYTimeFormat" /> is used,
+or if that was never called then the default is '%H:%M:%S' (hours, minutes,
+and seconds).
+            </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </para>
+
+    <para>
+For type 'printf', there is one optional argument:
+      <variablelist>
+        <varlistentry>
+          <term><replaceable>$format</replaceable></term>
+          <listitem>
+            <para>
+Formatting string, used with <function>sprintf()</function>.
+If omitted, the default value of '%e' uses scientific notation with default
+field sizes.
+            </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </para>
+
+    <para>
+For type 'custom', there is one required argument and one optional argument:
+      <variablelist>
+        <varlistentry>
+          <term><replaceable>$callback</replaceable></term>
+          <listitem>
+            <para>
+A callback function to format the label. This is either the name of a
+function (as a string), or a two-element array with an object instance and
+method name. (Refer to the PHP documentation for more information on the
+callback type.) The callback will be called with two arguments: the value
+of the label to be formatted, and the pass-through argument (see next).
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term><replaceable>$callback_arg</replaceable></term>
+          <listitem>
+            <para>
+A pass-through argument for the callback function.
+If omitted, NULL is used.
+            </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </para>
   </refsect1>
 
   <refsect1>
@@ -5839,11 +6221,28 @@ default formatting.
     </para>
     <para>
 A side effect of <xref linkend="SetPrecisionY" /> is to call this function
-SetYLabelType and set the formatting mode to 'data'.
+SetYLabelType and set the format type mode to 'data'.
+Note that <xref linkend="SetYTimeFormat" /> does not have a corresponding
+side effect on the format type.
+    </para>
+    <para>
+When using a custom label formatting function, do not assume the labels are
+formatted in any particular order, or only once each.
     </para>
   </refsect1>
   <refsect1>
     <title>History</title>
+    <para>
+New label format types 'printf' and 'custom' were added after PHPlot-5.0.5, 
+as well as all arguments after the first. In PHPlot-5.0.5 and earlier, you
+must use SetYTimeFormat and SetPrecisionY to set the formatting parameters.
+Starting after PHPlot-5.0.5, you have the choice of using those, or
+providing additional arguments to SetYLabelType.
+Also added was the ability to add a prefix and suffix to 'data' formatted
+labels. In PHPlot-5.0.5 and earlier, there was an undocumented class variable 
+<parameter>data_units_text</parameter> that was applied as a suffix to 'data'
+mode labels, for both X and Y. This continues to work, but is deprecated.
+    </para>
     <para>
 Through PHPlot-5.0rc3, when the formatting mode is 'data'
 the thousands grouping separator was always a comma,
@@ -5851,6 +6250,12 @@ and a period was used as a decimal point.
 Starting with 5.0.4, PHPlot attempts to get the correct values for your
 locale.  You can set the separator characters yourself instead with
 <xref linkend="SetNumberFormat" />.
+    </para>
+  </refsect1>
+  <refsect1>
+    <title>Examples</title>
+    <para>
+See <xref linkend="SetXLabelType" />.
     </para>
   </refsect1>
 </refentry>
@@ -6313,6 +6718,10 @@ The default time format is '%H:%M:%S', showing hours, minutes, and seconds
   </refsect1>
   <refsect1>
     <title>History</title>
+    <para>
+Starting after PHPlot-5.0.5, the time format can be set with
+<xref linkend="SetYLabelType" /> instead.
+    </para>
     <para>
 The default time format was undefined prior to  PHPlot-5.0rc3.
     </para>
