@@ -2771,8 +2771,10 @@ class PHPlot {
 
         // Error checking
 
-        if ($ymin == $ymax)     // Minimum height
-            $ymax += 1;
+        if ($ymin == $ymax)
+            $ymax++;
+        if ($xmin == $xmax)
+            $xmax++;
 
         if ($this->yscale_type == 'log') {
             if ($ymin <= 0) {
