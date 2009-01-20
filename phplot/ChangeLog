@@ -1,6 +1,38 @@
 This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
+2009-01-18 (lbayuk)
+    * Fix for bug 1891636 "Misaligned TTF X Labels":
+	  PHPlot was using the actual bounding box of each line of text
+      to allocate space and set the text positioning, but was ignoring the
+      fact that the text baseline is not the same as the bottom of the
+      bounding box. This resulted in uneven alignment of the X labels if
+      they had different heights (for example, month names Jul and Aug).
+
+      PHPlot now calculates the size of text for allocation (SizeText) using
+      the descenders on the last line, and calculates the size for drawing
+      (DrawText) only to the baseline. PHPlot also now uses a fixed line
+      spacing for each line of text in a font, rather than the actual text
+      height. This allows separately drawn multi-line labels to align.
+
+    * Changes to line spacing when using multi-line labels:
+	  PHPlot was using the class variable line_spacing to mean the
+      number of pixels between lines of multi-line labels. This made the
+      spacing too small for larger fonts, and it was not possible to adjust
+      line spacing for different types of text.
+
+	  PHPlot now interprets line_spacing as the number of pixels only
+      for GD text, and as a scale factor for the font's built-in line
+      spacing for TrueType text. In addition, a new optional argument is
+      added to SetFont, SetFontGD, and SetFontTTF to set a line spacing
+      specific to that type of text.
+
+    * Changes had to be made to the legend drawing code to accommodate the
+      changes to font handling.
+
+      Note: The line spacing change results in slightly looser spacing on
+      multi-line TrueType text labels, and slightly taller legends, compared
+      to version 5.0.5.
 
 2008-09-21 (lbayuk)
     * Interim fix for bug 1932571 "Data-Data Plot fails with same X values".
