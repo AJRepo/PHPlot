@@ -46,7 +46,7 @@ class PHPlot {
     var $use_ttf  = FALSE;                  // Use True Type Fonts by default?
     var $ttf_path = '.';                    // Default path to look in for TT Fonts.
     var $default_ttfont = 'benjamingothic.ttf';
-    var $line_spacing = 4;                  // Pixels between lines.
+    var $line_spacing = 4;                  // Controls line spacing of multi-line labels
 
     // Font angles: 0 or 90 degrees for fixed fonts, any for TTF
     var $x_label_angle = 0;                 // For labels on X axis (tick and data)
@@ -737,7 +737,10 @@ class PHPlot {
 
 
     /*!
-     * Sets number of pixels between lines of the same text.
+     * Controls the line spacing of multi-line labels.
+     * For GD text, this is the number of pixels between lines.
+     * For TTF text, it controls line spacing in proportion to the normal
+     * spacing defined by the font.
      */
     function SetLineSpacing($which_spc)
     {
@@ -816,8 +819,9 @@ class PHPlot {
      *    $which_elem : The element whose font is to be changed.
      *       One of: title legend generic x_label y_label x_title y_title
      *    $which_font : A GD font number 1-5
+     *    $which_spacing (optional) : Line spacing factor
      */
-    function SetFontGD($which_elem, $which_font)
+    function SetFontGD($which_elem, $which_font, $which_spacing = NULL)
     {
         if ($which_font < 1 || 5 < $which_font) {
             return $this->PrintError(__FUNCTION__ . ': Font size must be 1, 2, 3, 4 or 5');
@@ -832,7 +836,8 @@ class PHPlot {
         $this->fonts[$which_elem] = array('ttf' => FALSE,
                                           'font' => $which_font,
                                           'height' => ImageFontHeight($which_font),
-                                          'width' => ImageFontWidth($which_font));
+                                          'width' => ImageFontWidth($which_font),
+                                          'line_spacing' => $which_spacing);
         return TRUE;
     }
 
@@ -843,8 +848,9 @@ class PHPlot {
      *       One of: title legend generic x_label y_label x_title y_title
      *    $which_font : A TrueType font filename or pathname.
      *    $which_size : Font point size.
+     *    $which_spacing (optional) : Line spacing factor
      */
-    function SetFontTTF($which_elem, $which_font, $which_size = 12)
+    function SetFontTTF($which_elem, $which_font, $which_size = 12, $which_spacing = NULL)
     {
         if (!$this->CheckOption($which_elem,
                                 'generic, title, legend, x_label, y_label, x_title, y_title',
@@ -865,10 +871,27 @@ class PHPlot {
             }
         }
 
+        # Calculate the font height and inherent line spacing. TrueType fonts have this information
+        # internally, but PHP/GD has no way to directly access it. So get the bounding box size of
+        # an upper-case character without descenders, and the baseline-to-baseline height.
+        # Note: In practice, $which_size = $height, maybe +/-1 . But which_size is in points,
+        # and height is in pixels, and someday GD may be able to tell the difference.
+        # The character width is saved too, but not used by the normal text drawing routines - it
+        # isn't necessarily a fixed-space font. It is used in DrawLegend.
+        $bbox = ImageTTFBBox($which_size, 0, $path, "E");
+        $height = $bbox[1] - $bbox[5];
+        $width = $bbox[2] - $bbox[0];
+        $bbox = ImageTTFBBox($which_size, 0, $path, "E\nE");
+        $spacing = $bbox[1] - $bbox[5] - 2 * $height;
+
         # Store the font parameters:
         $this->fonts[$which_elem] = array('ttf' => TRUE,
                                           'font' => $path,
-                                          'size' => $which_size);
+                                          'size' => $which_size,
+                                          'height' => $height,
+                                          'width' => $width,
+                                          'spacing' => $spacing,
+                                          'line_spacing' => $which_spacing);
         return TRUE;
     }
 
@@ -883,14 +906,36 @@ class PHPlot {
      *       One of: title legend generic x_label y_label x_title y_title
      *    $which_font : A number 1-5 for fixed fonts, or a TrueType font.
      *    $which_size : Ignored for Fixed fonts, point size for TrueType.
+     *    $which_spacing (optional) : Line spacing factor
      */
-    function SetFont($which_elem, $which_font, $which_size = 12)
+    function SetFont($which_elem, $which_font, $which_size = 12, $line_spacing = NULL)
     {
         if ($this->use_ttf)
-            return $this->SetFontTTF($which_elem, $which_font, $which_size);
-        return $this->SetFontGD($which_elem, $which_font);
+            return $this->SetFontTTF($which_elem, $which_font, $which_size, $line_spacing);
+        return $this->SetFontGD($which_elem, $which_font, $line_spacing);
     }
 
+    /*
+     * Return the inter-line spacing for a font.
+     * This is an internal function, used by ProcessText* and DrawLegend.
+     *   $font : A font array variable.
+     * Returns: Spacing, in pixels, between text lines.
+     */
+    function GetLineSpacing($font)
+    {
+        # Use the per-font line spacing preference, if set, else the global value:
+        if (isset($font['line_spacing']))
+            $line_spacing = $font['line_spacing'];
+        else
+            $line_spacing = $this->line_spacing;
+
+        # For GD fonts, that is the spacing in pixels.
+        # For TTF, adjust based on the 'natural' font spacing (see SetFontTTF):
+        if ($font['ttf']) {
+            $line_spacing = (int)($line_spacing * $font['spacing'] / 6.0);
+        }
+        return $line_spacing;
+    }
 
     /*!
      * Text drawing and sizing functions:
@@ -936,6 +981,7 @@ class PHPlot {
      *  the image, not as the text is read. This makes sense when you consider
      *  for example X axis labels. They need to be centered below the marks
      *  (center, top alignment) regardless of the text angle.
+     *  'Bottom' alignment really means baseline alignment.
      *
      *    GD font text is supported (by libgd) at 0 degrees and 90 degrees only.
      *  Multi-line or single line text works with any of the 9 alignment modes.
@@ -974,6 +1020,7 @@ class PHPlot {
         $font_number = $font['font'];
         $font_width = $font['width'];
         $font_height = $font['height'];
+        $line_spacing = $this->GetLineSpacing($font);
 
         # Break up the text into lines, trim whitespace, find longest line.
         # Save the lines and length for drawing below.
@@ -984,19 +1031,18 @@ class PHPlot {
             if ($line_len > $longest) $longest = $line_len;
         }
         $n_lines = count($lines);
-        $spacing = $this->line_spacing * ($n_lines - 1); // Total inter-line spacing
 
         # Width, height are based on font size and longest line, line count respectively.
         # These are relative to the text angle.
         $total_width = $longest * $font_width;
-        $total_height = $n_lines * $font_height + $spacing;
+        $total_height = $n_lines * $font_height + ($n_lines - 1) * $line_spacing;
 
         if (!$draw_it) {
             if ($angle < 45) return array($total_width, $total_height);
             return array($total_height, $total_width);
         }
 
-        $interline_step = $font_height + $this->line_spacing; // Line-to-line step
+        $interline_step = $font_height + $line_spacing; // Line-to-line step
 
         if ($angle >= 45) {
             // Vertical text (90 degrees):
@@ -1044,16 +1090,13 @@ class PHPlot {
 
         for ($i = 0; $i < $n_lines; $i++) {
 
-            $line = $lines[$i];
-            $line_len = $line_lens[$i];
-
             // Adjust for alignment of this line within the text block:
-            $factor = (int)($line_len * $font_width * $h_factor);
+            $factor = (int)($line_lens[$i] * $font_width * $h_factor);
             $x = $xpos - $r00 * $factor;
             $y = $ypos - $r10 * $factor;
 
             // Call ImageString or ImageStringUp:
-            $draw_func($this->img, $font_number, $x, $y, $line, $color);
+            $draw_func($this->img, $font_number, $x, $y, $lines[$i], $color);
 
             // Step to the next line of text. This is a rotation of (x=0, y=interline_spacing)
             $xpos += $r01 * $interline_step;
@@ -1078,31 +1121,32 @@ class PHPlot {
      */
     function ProcessTextTTF($draw_it, $font, $angle, $x, $y, $color, $text, $h_factor, $v_factor)
     {
-        # Extract font parameters:
+        # Extract font parameters (see SetFontTTF):
         $font_file = $font['font'];
         $font_size = $font['size'];
+        $font_height = $font['height'];
+        $line_spacing = $this->GetLineSpacing($font);
 
         # Break up the text into lines, trim whitespace.
         # Calculate the total width and height of the text box at 0 degrees.
-        # This has to be done line-by-line so the interline-spacing is right.
-        # Save the trimmed line, and its 0-degree height and width for later
-        # when the text is drawn.
-        # Note: Total height = sum of each line height plus inter-line spacing
-        #   (which is added after the loop). Total width = width of widest line.
-        $total_height = 0;
+        # Save the trimmed lines and their widths for later when drawing.
+        # To get uniform spacing, don't use the actual line heights.
+        # Total height = Font-specific line heights plus inter-line spacing.
+        # Total width = width of widest line.
+        # Last Line Descent is the offset from the bottom to the text baseline.
+        # Note: For some reason, ImageTTFBBox uses (-1,-1) as the reference point.
+        #   So 1+bbox[1] is the baseline to bottom distance.
         $total_width = 0;
+        $lastline_descent = 0;
         foreach (explode("\n", $text) as $each_line) {
             $lines[] = $line = trim($each_line);
             $bbox = ImageTTFBBox($font_size, 0, $font_file, $line);
-            $height = $bbox[1] - $bbox[5];
-            $width = $bbox[2] - $bbox[0];
-            $total_height += $height;
+            $line_widths[] = $width = $bbox[2] - $bbox[0];
             if ($width > $total_width) $total_width = $width;
-            $line_widths[] = $width;
-            $line_heights[] = $height;
+            $lastline_descent = 1 + $bbox[1];
         }
         $n_lines = count($lines);
-        $total_height += ($n_lines - 1) * $this->line_spacing;
+        $total_height = $n_lines * $font_height + ($n_lines - 1) * $line_spacing;
 
         # Calculate the rotation matrix for the text's angle. Remember that GD points Y down,
         # so the sin() terms change sign.
@@ -1115,10 +1159,19 @@ class PHPlot {
         # Make a bounding box of the right size, with upper left corner at (0,0).
         # By convention, the point order is: LL, LR, UR, UL.
         # Note this is still working with the text at 0 degrees.
-        $b[0] = 0;             $b[1] = $total_height;
+        # When sizing text (SizeText), use the overall size with descenders.
+        #   This tells the caller how much room to leave for the text.
+        # When drawing text (DrawText), use the size without descenders - that
+        #   is, down to the baseline. This is for accurate positioning.
+        $b[0] = 0;
+        if ($draw_it) {
+            $b[1] = $total_height;
+        } else {
+            $b[1] = $total_height + $lastline_descent;
+        }
         $b[2] = $total_width;  $b[3] = $b[1];
-        $b[4] = $b[2];         $b[5] = 0;
-        $b[6] = $b[0];         $b[7] = $b[5];
+        $b[4] = $total_width;  $b[5] = 0;
+        $b[6] = 0;             $b[7] = 0;
 
         # Rotate the bounding box, then offset to the reference point:
         for ($i = 0; $i < 8; $i += 2) {
@@ -1134,9 +1187,11 @@ class PHPlot {
         $bbox_ref_y = $bbox_max_y = $c[1];
         for ($i = 2; $i < 8; $i += 2) {
             $x_b = $c[$i];
-            if ($x_b < $bbox_ref_x) $bbox_ref_x = $x_b; elseif ($bbox_max_x < $x_b) $bbox_max_x = $x_b;
+            if ($x_b < $bbox_ref_x) $bbox_ref_x = $x_b;
+            elseif ($bbox_max_x < $x_b) $bbox_max_x = $x_b;
             $y_b = $c[$i+1];
-            if ($y_b < $bbox_ref_y) $bbox_ref_y = $y_b; elseif ($bbox_max_y < $y_b) $bbox_max_y = $y_b;
+            if ($y_b < $bbox_ref_y) $bbox_ref_y = $y_b;
+            elseif ($bbox_max_y < $y_b) $bbox_max_y = $y_b;
         }
         $bbox_width = $bbox_max_x - $bbox_ref_x;
         $bbox_height = $bbox_max_y - $bbox_ref_y;
@@ -1146,8 +1201,10 @@ class PHPlot {
             return array((int)ceil($bbox_width), (int)ceil($bbox_height));
         }
 
+        $interline_step = $font_height + $line_spacing; // Line-to-line step
+
         # Calculate the offsets from the supplied reference point to the
-        # required upper-left corner of the text.
+        # upper-left corner of the text.
         # Start at the reference point at the upper left corner of the bounding
         # box (bbox_ref_x, bbox_ref_y) then adjust it for the 9 point alignment.
         # h,v_factor are 0,0 for top,left, .5,.5 for center,center, 1,1 for bottom,right.
@@ -1207,28 +1264,23 @@ class PHPlot {
         # Now we have the start point, spacing and in-line alignment factor.
         # We are finally ready to start drawing the text, line by line.
         for ($i = 0; $i < $n_lines; $i++) {
-            $line = $lines[$i];
-            # These are height and width at 0 degrees, calculated above:
-            $height = $line_heights[$i];
-            $width = $line_widths[$i];
 
-            # For drawing TTF text, the lower left corner is the base point.
-            # The adjustment is inside the loop, since lines can have different
-            # heights. The following also adjusts for horizontal (relative to
+            # For drawing TTF text, the reference point is the left edge of the
+            # text baseline (not the lower left corner of the bounding box).
+            # The following also adjusts for horizontal (relative to
             # the text) alignment of the current line within the box.
             # What is happening is rotation of this vector by the text angle:
-            #    (x = (total_width - line_width) * factor, y = line_height)
+            #    (x = (total_width - line_width) * factor, y = font_height)
 
-            $width_factor = ($total_width - $width) * $line_align_factor;
-            $rx = $qx + $r00 * $width_factor + $r01 * $height;
-            $ry = $qy + $r10 * $width_factor + $r11 * $height;
+            $width_factor = ($total_width - $line_widths[$i]) * $line_align_factor;
+            $rx = $qx + $r00 * $width_factor + $r01 * $font_height;
+            $ry = $qy + $r10 * $width_factor + $r11 * $font_height;
 
             # Finally, draw the text:
-            ImageTTFText($this->img, $font_size, $angle, $rx, $ry, $color, $font_file, $line);
+            ImageTTFText($this->img, $font_size, $angle, $rx, $ry, $color, $font_file, $lines[$i]);
 
             # Step to position of next line.
-            # This is a rotation of (x=0,y=text_height+line_height) by $angle:
-            $interline_step = $this->line_spacing + $height;
+            # This is a rotation of (x=0,y=height+line_spacing) by $angle:
             $qx += $r01 * $interline_step;
             $qy += $r11 * $interline_step;
         }
@@ -3819,23 +3871,27 @@ class PHPlot {
      */
     function DrawLegend()
     {
+        $font = &$this->fonts['legend'];
+
         // Find maximum legend label line width.
         $max_width = 0;
         foreach ($this->legend as $line) {
-            list($width, $unused) = $this->SizeText($this->fonts['legend'], 0, $line);
+            list($width, $unused) = $this->SizeText($font, 0, $line);
             if ($width > $max_width) $max_width = $width;
         }
 
-        // For the color box and line spacing, use a typical font character: 8.
-        list($char_w, $char_h) = $this->SizeText($this->fonts['legend'], 0, '8');
+        // Use the font parameters to size the color boxes:
+        $char_w = $font['width'];
+        $char_h = $font['height'];
+        $line_spacing = $this->GetLineSpacing($font);
 
         // Normalize text alignment and colorbox alignment variables:
         $text_align = isset($this->legend_text_align) ? $this->legend_text_align : 'right';
         $colorbox_align = isset($this->legend_colorbox_align) ? $this->legend_colorbox_align : 'right';
 
         // Sizing parameters:
-        $v_margin = $char_h/2;                         // Between vertical borders and labels
-        $dot_height = $char_h + $this->line_spacing;   // Height of the small colored boxes
+        $v_margin = $char_h/2;                   // Between vertical borders and labels
+        $dot_height = $char_h + $line_spacing;   // Height of the small colored boxes
         // Overall legend box width e.g.: | space colorbox space text space |
         // where colorbox and each space are 1 char width.
         if ($colorbox_align != 'none') {
@@ -3902,8 +3958,7 @@ class PHPlot {
 
         foreach ($this->legend as $leg) {
             // Draw text with requested alignment:
-            $this->DrawText($this->fonts['legend'], 0, $x_pos, $y_pos,
-                            $this->ndx_text_color, $leg, $text_align, 'bottom');
+            $this->DrawText($font, 0, $x_pos, $y_pos, $this->ndx_text_color, $leg, $text_align, 'bottom');
             if ($draw_colorbox) {
                 // Draw a box in the data color
                 $y1 = $y_pos - $dot_height + 1;
