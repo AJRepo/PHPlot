@@ -1,5 +1,5 @@
 This is the README file for PHPlot
-Last updated for PHPlot-5.0.5 on 2008-01-13
+Last updated for PHPlot-5.0.6 on 2009-01-21
 The project web site is http://sourceforge.net/projects/phplot/
 The project home page is http://phplot.sourceforge.net/
 -----------------------------------------------------------------------------
@@ -31,8 +31,8 @@ CONTENTS:
 REQUIREMENTS:
 
 You need a recent version of PHP5, and you are advised to use the latest
-stable release.  This version of PHPlot has been tested with PHP-5.2.5.
-(PHPlot-5.0.5 does not support PHP4, since the PHP group has discontinued
+stable release.  This version of PHPlot has been tested with PHP-5.2.8.
+(PHPlot-5.0.6 does not support PHP4, since the PHP group has discontinued
 support for PHP4.)
 
 You need the GD extension to PHP either built in to PHP or loaded as a
