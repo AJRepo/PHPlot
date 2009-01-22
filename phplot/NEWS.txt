@@ -4,6 +4,102 @@ The project home page is http://phplot.sourceforge.net/
 Refer the the ChangeLog file for detailed source changes.
 -----------------------------------------------------------------------------
 
+2009-01-20 Release 5.0.6
+
+Overview:
+
+This is the current stable release of PHPlot. The purpose of this release
+is to fix additional problems with text spacing and positioning, and
+introduce some minor new features.
+
+The PHPlot reference manual has been updated to match this release.  The
+manual is available as a separate download from Sourceforge. The manual is
+also now available for on-line viewing at http://phplot.sourceforge.net
+
+
+New features in 5.0.6:
+
++ Allow mixing GD and TrueType font text on the same plot
+  You can use the new method functions SetFontGD() and SetFontTTF() to
+  select a font and font type for text element (labels, titles, etc.) For
+  example, you can have TrueType plot titles, and GD-fixed font labels.
+  SetUseTTF() now sets the default text type, TTF or GD. This is fully
+  backward compatible.
+
++ Extended label formatting
+  See the reference manual for more information on these.
+
+  New label formatting types are added: 'printf' (using a user-defined
+  format), and 'custom' (using a callback function).
+
+  For 'data' type formatting, a prefix and suffix can be added. (PHPlot
+  previously had an undocumented suffix for 'data' type, which still
+  works.)
+
+  For 'time' formatting, the format can now be specified in the same function
+  call rather than using SetXTimeFormat and SetYTimeFormat.
+
+  For 'data' formatting, the precision can now be specified in the same
+  function call, rather than using SetPrecisionX and SetPrecisionY.
+
++ Better control over line spacing in multi-line labels
+
+  Line spacing can now be set separately for each text element using an
+  additional argument to SetFont, SetFontGD, and SetFontTTF.  The overall
+  SetLineSpacing() value is the default for each text element that does not
+  have a specific line spacing set.
+
+  PHPlot now interprets the value set for line spacing as the number of
+  pixels only for GD text. For TrueType text, it is a scale factor for the
+  font's built-in line spacing for TrueType text. The equation used is:
+      interline_spacing = line_spacing * font_natural_spacing / 6
+  where line_spacing is either the global value set with SetLineSpacing
+  or a more specific value set with SetFont(), and font_natural_spacing
+  is the amount of space between lines built-in to the TrueType font. The
+  factor 6 should really be 4 (since PHPlot always used 4 as the default
+  line_spacing, this would give the natural font spacing by default). But
+  the text is too widely spaced with this value, and 6 was chosen to be
+  more compatible for typical font sizes.
+
+Visible Changes and Possible Incompatibilities:
+
++ Line spacing
+  Multi-line TrueType titles and labels will have different inter-line
+  spacing. Since the text size affects the margin and plot area sizes,
+  this results in slightly different sized features on any plot with
+  multi-line TrueType text.
+  Previous versions of PHPlot used a default 4 pixels for inter-line
+  spacing of multi-line TrueType text, regardless of the font size.
+  PHPlot now uses the 'natural' font inter-line spacing, adjusted by a line
+  spacing parameter (per text type, with a global default).
+
+  The same change can also increase the size of the legend box slightly.
+
++ Internal changes were made to the way font information is stored. Anything
+  that directly references PHPlot internals regarding fonts will break. Usage
+  also changed for the internal functions to size and draw text (ProcessText*,
+  SizeText*) due to font data storage changs.
+
++ Changes were made to internal class variables used to store label
+  formatting information. Anything relying on these internals may break.
+
+
+Bug Fixes in 5.0.6:
+
+#1932571: Data-Data Plot fails with same X values
+  PHPlot will no longer hang if all X values are the same. But this is
+  interim fix to force the X range to 1 to prevent the hang. Eventually,
+  smarter automatic range code will handle this better.
+  Credit to anydl for finding this.
+
+#1891636: Misaligned TTF X Labels
+  PHPlot will now correctly line-up TrueType labels along the X axis. There
+  were small but very noticable errors before, when the text had descenders
+  or lines with all short letters.
+
+
+-----------------------------------------------------------------------------
+
 2008-01-13 Released 5.0.5
 
 Overview:
