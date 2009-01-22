@@ -538,7 +538,7 @@ only be used by DrawText and SizeText.
 There are 7 font array variables in the PHPlot object.
 Through PHPlot-5.0.5, these were separate variables: generic_font,
 title_font, legend_font, x_label_font, y_label_font, x_title_font, and
-y_title_font. Starting after PHPlot-5.0.5, these were combined into a
+y_title_font. Starting with PHPlot-5.0.6, these were combined into a
 single class array variable 'fonts', indexed by the element name, for
 example $fonts['generic'].
     </para>
@@ -780,7 +780,7 @@ of text using that font. This works for both GD and TrueType fonts. See also
 <xref linkend="SetLineSpacing"/>.
 Used by <xref linkend="ProcessTextGD"/>, <xref linkend="ProcessTextTTF"/>,
 and <xref linkend="DrawLegend"/>.
-Note: This was added after PHPlot-5.0.5, with support for mixing TTF and GD
+Note: This was added at PHPlot-5.0.6, with support for mixing TTF and GD
 fonts.
     </para>
   </listitem>
@@ -905,7 +905,7 @@ If $draw_it is false, for text sizing mode, the x, y, color,
 h_factor and v_factor arguments are ignored.
     </para>
     <para>
-Note: This was added at PHPlot-5.0.5. It was changed after PHPlot-5.0.5 to
+Note: This was added at PHPlot-5.0.5. It was changed at PHPlot-5.0.6 to
 take a single font array argument, rather than 3 separate arguments for
 font number, width, and height.
     </para>
@@ -943,7 +943,7 @@ may not be what you expect. Rotation of text happens before alignment, and
 alignment and positioning use the orthogonal bounding box of the text.
     </para>
     <para>
-Note: This was added at PHPlot-5.0.5. It was changed after PHPlot-5.0.5 to
+Note: This was added at PHPlot-5.0.5. It was changed in PHPlot-5.0.6 to
 take a single font array argument, rather than 2 separate arguments for
 font filename and size.
     </para>

@@ -14,6 +14,23 @@ see the ChangeLog file inside the PHPlot distribution.)
 
 <variablelist>
   <varlistentry>
+    <term>2009-01-21</term>
+    <listitem>
+      <para>
+Released updated version of the manual to correspond to PHPlot-5.0.6.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>2008-09-21</term>
+    <listitem>
+      <para>
+Changes were made for the next PHPlot release, including new label
+formatting types and mixed GD/TTF text types.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
     <term>2008-07-22</term>
     <listitem>
       <para>

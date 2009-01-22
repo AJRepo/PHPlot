@@ -4,6 +4,10 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2009-01-21
+   For release with PHPlot-5.0.6:
+   * Change vague references to release "after 5.0.5" to "5.0.6".
+
 2008-09-21
    * Changes for new label formatting types.
      + reference: Document new arguments to SetXLabelType and SetYLabelType.
@@ -11,7 +15,6 @@ manual, which only contains summaries of changes.
 
    * Use CDATA for example scripts, instead of processing them through sed
      to escape special XML characters.
-
 
 2008-09-01
    * Continue changes for new GD/TTF mixed font usage.

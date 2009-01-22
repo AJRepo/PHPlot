@@ -1024,7 +1024,7 @@ We are not quite sure how it worked before.
     <para>
 Through PHPlot-5.0.5, setting a default TrueType font with this function
 also forced all text on the graph to use TrueType text.
-Starting after PHPlot-5.0.5, it just sets the default font type.
+Starting with PHPlot-5.0.6, it just sets the default font type.
 Set <xref linkend="SetUseTTF" /> for more information on this change.
     </para>
   </refsect1>
@@ -1827,13 +1827,13 @@ On a 72 pixels per inch display, the text size will be 18 points, but at
   <refsect1>
     <title>History</title>
     <para>
-Simultaneous use of GD and TrueType font text was added after PHPlot-5.0.5.
+Simultaneous use of GD and TrueType font text was added at PHPlot-5.0.6.
 Through PHPlot-5.0.5, all text in a plot used GD fonts, or all text used
 TrueType fonts.
     </para>
 
     <para>
-The line_spacing parameter was added after PHPlot-5.0.5 to allow finer
+The line_spacing parameter was added at PHPlot-5.0.6 to allow finer
 control over the line spacing for different elements. Through PHPlot-5.0.5,
 the same line spacing was used for all text elements.
     </para>
@@ -1935,7 +1935,7 @@ specify the font of an element using the specific type of font.
   <refsect1>
     <title>History</title>
     <para>
-This function was added after PHPlot-5.0.5, along with <xref
+This function was added at PHPlot-5.0.6, along with <xref
 linkend="SetFontTTF"/>, to allow mixing GD and TrueType fonts
 in the same graph.
     </para>
@@ -2044,7 +2044,7 @@ specify the font of an element using the specific type of font.
   <refsect1>
     <title>History</title>
     <para>
-This function was added after PHPlot-5.0.5, along with <xref
+This function was added at PHPlot-5.0.6, along with <xref
 linkend="SetFontGD"/>, to allow mixing GD and TrueType fonts
 in the same graph.
     </para>
@@ -2750,7 +2750,7 @@ top of the next line.
     <title>History</title>
     <para>
 The interpretation of the line spacing as an adjustment factor for TrueType
-text, rather than a value in pixels, began after PHPlot-5.0.5. This is also
+text, rather than a value in pixels, began with PHPlot-5.0.6. This is also
 when the line spacing could be adjusted for each text element.
     </para>
     <para>
@@ -3934,7 +3934,7 @@ when your data array contains numeric data in the label position.
   <refsect1>
     <title>History</title>
     <para>
-Starting after PHPlot-5.0.5, using <code>SetPrecisionX($n)</code>
+Starting with PHPlot-5.0.6, using <code>SetPrecisionX($n)</code>
 is exactly the same as calling <code>SetXLabelType('data', $n)</code>.
     </para>
   </refsect1>
@@ -3998,7 +3998,7 @@ available with bar charts.
   <refsect1>
     <title>History</title>
     <para>
-Starting after PHPlot-5.0.5, using <code>SetPrecisionY($n)</code>
+Starting with PHPlot-5.0.6, using <code>SetPrecisionY($n)</code>
 is exactly the same as calling <code>SetYLabelType('data', $n)</code>.
     </para>
   </refsect1>
@@ -4791,7 +4791,7 @@ more elements, overriding the default font type.
     <para>
 Through PHPlot-5.0.5, this function enabled or disabled the use of TrueType
 font text, since all text on a graph had to be either TrueType or all GD.
-Starting after PHPlot-5.0.5, this function selects the default font type (and
+Starting with PHPlot-5.0.6, this function selects the default font type (and
 still re-initializes all fonts). Both GD and TrueType font text can now be
 used on a graph.
     </para>
@@ -5289,10 +5289,10 @@ degrees, minutes, and seconds. (This only works for non-negative angles.)
   <refsect1>
     <title>History</title>
     <para>
-New label format types 'printf' and 'custom' were added after PHPlot-5.0.5, 
+New label format types 'printf' and 'custom' were added at PHPlot-5.0.6, 
 as well as all arguments after the first. In PHPlot-5.0.5 and earlier, you
 must use SetXTimeFormat and SetPrecisionX to set the formatting parameters.
-Starting after PHPlot-5.0.5, you have the choice of using those, or
+Starting with PHPlot-5.0.6, you have the choice of using those, or
 providing additional arguments to SetXLabelType.
 Also added was the ability to add a prefix and suffix to 'data' formatted
 labels. In PHPlot-5.0.5 and earlier, there was an undocumented class variable 
@@ -5789,7 +5789,7 @@ The default time format is '%H:%M:%S', showing hours, minutes, and seconds
   <refsect1>
     <title>History</title>
     <para>
-Starting after PHPlot-5.0.5, the time format can be set with
+Starting with PHPlot-5.0.6, the time format can be set with
 <xref linkend="SetXLabelType" /> instead.
     </para>
     <para>
@@ -6233,10 +6233,10 @@ formatted in any particular order, or only once each.
   <refsect1>
     <title>History</title>
     <para>
-New label format types 'printf' and 'custom' were added after PHPlot-5.0.5, 
+New label format types 'printf' and 'custom' were added at PHPlot-5.0.6, 
 as well as all arguments after the first. In PHPlot-5.0.5 and earlier, you
 must use SetYTimeFormat and SetPrecisionY to set the formatting parameters.
-Starting after PHPlot-5.0.5, you have the choice of using those, or
+Starting with PHPlot-5.0.6, you have the choice of using those, or
 providing additional arguments to SetYLabelType.
 Also added was the ability to add a prefix and suffix to 'data' formatted
 labels. In PHPlot-5.0.5 and earlier, there was an undocumented class variable 
@@ -6719,11 +6719,11 @@ The default time format is '%H:%M:%S', showing hours, minutes, and seconds
   <refsect1>
     <title>History</title>
     <para>
-Starting after PHPlot-5.0.5, the time format can be set with
+Starting with PHPlot-5.0.6, the time format can be set with
 <xref linkend="SetYLabelType" /> instead.
     </para>
     <para>
-The default time format was undefined prior to  PHPlot-5.0rc3.
+The default time format was undefined prior to PHPlot-5.0rc3.
     </para>
   </refsect1>
 </refentry>

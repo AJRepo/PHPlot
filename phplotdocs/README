@@ -1,5 +1,5 @@
 This is phplotdocs/README, for the PHPlot Reference Manual source
-Last updated on 2008-01-10
+Last updated on 2009-01-21
 -----------------------------------------------------------------------------
 
 This directory contains the Docbook-XML source files for the PHPlot Reference
@@ -26,8 +26,8 @@ Tools:
 I used the following tools and versions to produce the manual. Other
 versions may work too.
 
-   Docbook XSL Style Sheets docbook-xsl-1.72.0
-   xsltproc from libxml2-2.6.28
+   Docbook XSL Style Sheets docbook-xsl-1.73.2
+   xsltproc from libxml2-2.6.32
 
 The above are used to produce the XHTML manual. There was an attempt to
 make PDF output, but it never worked well and currently does not work at all.
@@ -66,8 +66,8 @@ SetIsInline(True) is not needed.
 
 The Makefile automatically makes two files from each PHP script (*.php). An
 image file (*.png) is created using PHPlot, and a text file (*.xml) is
-created using a simple script in the Makefile to escape the PHP file for
-XML.  The image file and the text file are included into the manual to
+created by wrapping the PHP script in CDATA markers inside a programlisting
+element.  The image file and the text file are included into the manual to
 form the example figure and the source code which generates it.  So you
 need a working installation of PHPlot, with phplot.php found on the PHP
 include path, in order for this to work.
@@ -80,9 +80,7 @@ them.
 Note: It is important to use the right version of PHPlot to make the
 examples. (Otherwise, people may try an example and it won't work.) To
 ensure a known version, make a link from this directory (where Makefile is)
-to the version of phplot.php which is to be used. The oldest version usable
-is PHPlot-5.0rc3  (or -rc2 with patches).  If you are using an older
-version, results may differ or the examples may fail.
+to the version of phplot.php which is to be used.
 
 
 Style Notes:
