@@ -4,6 +4,9 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2009-03-15
+   * style.xsl: Change Sourceforge.net logo link per 2009-03-09 instructions.
+
 2009-01-21
    For release with PHPlot-5.0.6:
    * Change vague references to release "after 5.0.5" to "5.0.6".
