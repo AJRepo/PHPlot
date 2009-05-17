@@ -3,7 +3,7 @@
 /* $Id$ */
 
 /*
- * PHPLOT Version 5.0.6
+ * PHPLOT Version 5.0.6 + CVS (This is an unreleased CVS version!)
  * Copyright (C) 1998-2009 Afan Ottenheimer.  Released under
  * the GPL and PHP licenses as stated in the the README file which should
  * have been included with this document.
@@ -2347,116 +2347,77 @@ class PHPlot {
     /*!
      * Analyzes data and sets up internal maxima and minima
      * Needed by: CalcMargins(), ...
-     *   Text-Data is different than data-data graphs. For them what
-     *   we have, instead of X values, is # of records equally spaced on data.
-     *   text-data is passed in as $data[] = (title, y1, y2, y3, y4, ...)
-     *   data-data is passed in as $data[] = (title, x, y1, y2, y3, y4, ...)
+     * Data type text-data has: title, Y1, Y2, ... (with X implied)
+     * Data type data-data has: title, X, Y1, Y2, ...
+     * Data type data-data-error: has title, X, Y1, Y1err+, Y1err-, Y2, Y2err+, Y2err-, ...
+     * Plot type 'stackedbars' is a special case because the bars always start at 0, and the
+     *    Y values in each row accumulate.
      */
     function FindDataLimits()
     {
-        // Set some default min and max values before running through the data
-        switch ($this->data_type) {
-        case 'text-data':
-        case 'text-data-single':
-            $minx = 0;
-            $maxx = $this->num_data_rows - 1 ;
-            $miny = $this->data[0][1];
-            $maxy = $miny;
-            break;
-        default:  //Everything else: data-data, etc, take first value
-            $minx = $this->data[0][1];
-            $maxx = $minx;
-            $miny = $this->data[0][2];
-            $maxy = $miny;
-            break;
-        }
+        # Determine how to process the data array:
+        $process_x = ($this->data_type == 'data-data' || $this->data_type == 'data-data-error');
+        $process_err_bars = ($this->data_type == 'data-data-error');
+        $process_stacked_bars = ($this->plot_type == 'stackedbars');
 
-        $mine = 0;  // Maximum value for the -error bar (assume error bars always > 0)
-        $maxe = 0;  // Maximum value for the +error bar (assume error bars always > 0)
+        # These need to be initialized in case there are multiple plots and
+        # missing data points.
+        $this->data_miny = array();
+        $this->data_maxy = array();
 
-        if ($this->plot_type == 'stackedbars') {
-            $maxmaxy = $minminy = 0;
+        # X values are in the data array or assumed?
+        if ($process_x) {
+            $all_x = array();
         } else {
-            $minminy = $miny;
-            $maxmaxy = $maxy;
+            $all_x = array(0, $this->num_data_rows - 1);
         }
 
-        // Process each row of data
-        for ($i=0; $i < $this->num_data_rows; $i++) {
-            $j = 1; // Skip over the data label for this row.
+        # Process all rows of data:
+        for ($i = 0; $i < $this->num_data_rows; $i++) {
+            $n_vals = $this->num_recs[$i];
+            $j = 1; # Skips label at [0]
 
-            switch ($this->data_type) {
-            case 'text-data':           // Data is passed in as (title, y1, y2, y3, ...)
-            case 'text-data-single':    // This one is for some pie charts
-                // $numrecs = @ count($this->data[$i]);
-                $maxy = (double)$this->data[$i][$j++];
-                if ($this->plot_type == 'stackedbars') {
-                    $miny = 0;
-                } else {
-                    $miny = $maxy;
-                }
-                for (; $j < $this->num_recs[$i]; $j++) {
-                    $val = (double)$this->data[$i][$j];
-                    if ($this->plot_type == 'stackedbars') {
-                        $maxy += abs($val);      // only positive values for the moment
-                    } else {
-                        if ($val > $maxy) $maxy = $val;
-                        if ($val < $miny) $miny = $val;
-                    }
-                }
-                break;
-            case 'data-data':           // Data is passed in as (title, x, y, y2, y3, ...)
-                // X value:
-                $val = (double)$this->data[$i][$j++];
-                if ($val > $maxx) $maxx = $val;
-                if ($val < $minx) $minx = $val;
-
-                $miny = $maxy = (double)$this->data[$i][$j++];
-                // $numrecs = @ count($this->data[$i]);
-                for (; $j < $this->num_recs[$i]; $j++) {
-                    $val = (double)$this->data[$i][$j];
-                    if ($val > $maxy) $maxy = $val;
-                    if ($val < $miny) $miny = $val;
-                }
-                break;
-            case 'data-data-error':     // Data is passed in as (title, x, y, err+, err-, y2, err2+, err2-,...)
-                // X value:
-                $val = (double)$this->data[$i][$j++];
-                if ($val > $maxx) $maxx = $val;
-                if ($val < $minx) $minx = $val;
-
-                $miny = $maxy = (double)$this->data[$i][$j];
-                // $numrecs = @ count($this->data[$i]);
-                for (; $j < $this->num_recs[$i];) {
-                    // Y value:
-                    $val = (double)$this->data[$i][$j++];
-                    if ($val > $maxy) $maxy = $val;
-                    if ($val < $miny) $miny = $val;
-                    // Error +:
-                    $val = (double)$this->data[$i][$j++];
-                    if ($val > $maxe) $maxe = $val;
-                    // Error -:
-                    $val = (double)$this->data[$i][$j++];
-                    if ($val > $mine) $mine = $val;
-                }
-                $maxy = $maxy + $maxe;
-                $miny = $miny - $mine;      // assume error bars are always > 0
-                break;
-            default:
-                return $this->PrintError("FindDataLimits(): Unknown data type '$this->data_type'.");
+            if ($process_x) {
+                $all_x[] = (double)$this->data[$i][$j++];
             }
-            // Remember this row's min and max Y values:
-            $this->data_miny[$i] = $miny;
-            $this->data_maxy[$i] = $maxy;
 
-            if ($miny < $minminy) $minminy = $miny;   // global min
-            if ($maxy > $maxmaxy) $maxmaxy = $maxy;   // global max
+            if ($process_stacked_bars) {
+                $all_y = array(0, 0); # Min (always 0) and max
+            } else {
+                $all_y = array();
+            }
+            while ($j < $n_vals) {
+                if (is_numeric($this->data[$i][$j])) {
+                    $val = (double)$this->data[$i][$j++];
+
+                    if ($process_err_bars) {
+                        $all_y[] = $val + (double)$this->data[$i][$j++]; 
+                        $all_y[] = $val - (double)$this->data[$i][$j++]; 
+                    } elseif ($process_stacked_bars) {
+                        $all_y[1] += $val;
+                    } else {
+                        $all_y[] = $val;
+                    }
+                } else {    # Missing Y value
+                  $j++;
+                  if ($process_err_bars) $j += 2;
+                }
+            }
+            if (!empty($all_y)) {
+                $this->data_miny[$i] = min($all_y);  # Store per-row Y range
+                $this->data_maxy[$i] = max($all_y);
+            }
         }
 
-        $this->min_x = $minx;
-        $this->max_x = $maxx;
-        $this->min_y = $minminy;
-        $this->max_y = $maxmaxy;
+        $this->min_x = min($all_x);  # Store X range
+        $this->max_x = max($all_x);
+        if (empty($this->data_miny)) { # Guard against regressive case: No Y at all
+            $this->min_y = 0;
+            $this->max_y = 0;
+        } else {
+            $this->min_y = min($this->data_miny);  # Store global Y range
+            $this->max_y = max($this->data_maxy);
+        }
 
         if ($this->GetCallback('debug_scale')) {
             $this->DoCallback('debug_scale', __FUNCTION__, array(
