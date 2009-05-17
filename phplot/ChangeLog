@@ -2,6 +2,10 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 2009-05-17 (lbayuk)
+    * Fix for bug 2792860 "Wrong DataLabelLines with missing Y":
+      Do not draw X Data Labels at points with missing Y values.
+
+
     * Fix for bug 2786350 "Missing Y data results in bad auto-range":
       Rewrote FindDataLimits to ignore missing Y values, rather than
       treating them as if 0, for calculating range.
@@ -12,7 +16,7 @@ The project home page is http://sourceforge.net/projects/phplot/
       amounts for each Y point to that point only, rather than applying the
       largest errors to the overall minimum and maximum Y value for the row.
 
-    Note: These two fixes can change existing plots which rely on
+    Note: The two fixes above can change existing plots which rely on
       automatic Y range calculation. The first fix affects plots with
       missing Y values and min(Y)>0. The second fix can affect plots using
       data-data-error data type and different error values for different
