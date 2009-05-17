@@ -9,7 +9,7 @@ The project home page is http://sourceforge.net/projects/phplot/
 
 
     * Fix for bug 2792860 "Wrong DataLabelLines with missing Y":
-      Do not draw X Data Labels at points with missing Y values.
+      Do not draw X Data Label Lines at points with missing Y values.
 
 
     * Fix for bug 2786350 "Missing Y data results in bad auto-range":
