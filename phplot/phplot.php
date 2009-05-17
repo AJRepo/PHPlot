@@ -4109,6 +4109,8 @@ class PHPlot {
 
             // Now go for Y, E+, E-
             for ($idx = 0; $record < $this->num_recs[$row]; $idx++) {
+                if (is_numeric($this->data[$row][$record])) {         // Allow for missing Y data
+
                     // Y:
                     $y_now = $this->data[$row][$record++];
                     $this->DrawDot($x_now, $y_now, $idx, $this->ndx_data_colors[$idx]);
@@ -4121,6 +4123,9 @@ class PHPlot {
                     $val = $this->data[$row][$record++];
                     $this->DrawYErrorBar($x_now, $y_now, -$val, $this->error_bar_shape,
                                          $this->ndx_error_bar_colors[$idx]);
+                } else {
+                    $record += 3;  // Skip over missing Y and its error values
+                }
             }
         }
         return TRUE;
@@ -4414,7 +4419,7 @@ class PHPlot {
                 if (is_numeric($this->data[$row][$record])) {           //Allow for missing Y data
                     $y_now_pixels = $this->ytr($this->data[$row][$record]);
 
-                    if ($start_lines[$idx] == TRUE) {
+                    if ($start_lines[$idx]) {
                         // Set line width, revert it to normal at the end
                         ImageSetThickness($this->img, $this->line_widths[$idx]);
 
@@ -4471,39 +4476,48 @@ class PHPlot {
             for ($idx = 0; $record < $this->num_recs[$row]; $idx++) {
                 if (($line_style = $this->line_styles[$idx]) == 'none')
                     continue; //Allow suppressing entire line, useful with linepoints
-                // Y
-                $y_now = $this->data[$row][$record++];
-                $y_now_pixels = $this->ytr($y_now);
+                if (is_numeric($this->data[$row][$record])) {    // Allow for missing Y data
 
-                if ($start_lines[$idx] == TRUE) {
-                    ImageSetThickness($this->img, $this->line_widths[$idx]);
+                    // Y
+                    $y_now = $this->data[$row][$record++];
+                    $y_now_pixels = $this->ytr($y_now);
 
-                    if ($line_style == 'dashed') {
-                        $this->SetDashedStyle($this->ndx_data_colors[$idx]);
-                        ImageLine($this->img, $x_now_pixels, $y_now_pixels, $lastx[$idx], $lasty[$idx],
-                                  IMG_COLOR_STYLED);
-                    } else {
-                        ImageLine($this->img, $x_now_pixels, $y_now_pixels, $lastx[$idx], $lasty[$idx],
-                                  $this->ndx_data_colors[$idx]);
+                    if ($start_lines[$idx]) {
+                        ImageSetThickness($this->img, $this->line_widths[$idx]);
+
+                        if ($line_style == 'dashed') {
+                            $this->SetDashedStyle($this->ndx_data_colors[$idx]);
+                            ImageLine($this->img, $x_now_pixels, $y_now_pixels, $lastx[$idx], $lasty[$idx],
+                                      IMG_COLOR_STYLED);
+                        } else {
+                            ImageLine($this->img, $x_now_pixels, $y_now_pixels, $lastx[$idx], $lasty[$idx],
+                                      $this->ndx_data_colors[$idx]);
+                        }
+                    }
+
+                    // Error+
+                    $val = $this->data[$row][$record++];
+                    $this->DrawYErrorBar($x_now, $y_now, $val, $this->error_bar_shape,
+                                         $this->ndx_error_bar_colors[$idx]);
+
+                    // Error-
+                    $val = $this->data[$row][$record++];
+                    $this->DrawYErrorBar($x_now, $y_now, -$val, $this->error_bar_shape,
+                                         $this->ndx_error_bar_colors[$idx]);
+
+                    // Update indexes:
+                    $start_lines[$idx] = TRUE;   // Tells us if we already drew the first column of points,
+                                             // thus having $lastx and $lasty ready for the next column.
+                    $lastx[$idx] = $x_now_pixels;
+                    $lasty[$idx] = $y_now_pixels;
+
+                } else {
+                    $record += 3;  // Skip over missing Y and its error values
+                    if ($this->draw_broken_lines) {
+                        $start_lines[$idx] = FALSE;
                     }
                 }
-
-                // Error+
-                $val = $this->data[$row][$record++];
-                $this->DrawYErrorBar($x_now, $y_now, $val, $this->error_bar_shape,
-                                     $this->ndx_error_bar_colors[$idx]);
-
-                // Error-
-                $val = $this->data[$row][$record++];
-                $this->DrawYErrorBar($x_now, $y_now, -$val, $this->error_bar_shape,
-                                     $this->ndx_error_bar_colors[$idx]);
-
-                // Update indexes:
-                $start_lines[$idx] = TRUE;   // Tells us if we already drew the first column of points,
-                                             // thus having $lastx and $lasty ready for the next column.
-                $lastx[$idx] = $x_now_pixels;
-                $lasty[$idx] = $y_now_pixels;
-            }   // end while
+            }   // end for
         }   // end for
 
         ImageSetThickness($this->img, 1);   // Revert to original state for lines to be drawn later.
