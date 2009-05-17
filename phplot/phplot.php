@@ -3812,12 +3812,12 @@ class PHPlot {
             ImageLine($this->img, $xpos, $this->plot_area[3], $xpos, $this->plot_area[1], $style);
         }
         // Lines from the bottom of the plot up to the max Y value at this X:
-        else if ($this->x_data_label_pos == 'plotdown') {
+        else if ($this->x_data_label_pos == 'plotdown' && isset($this->data_maxy[$row])) {
             $ypos = $this->ytr($this->data_maxy[$row]);
             ImageLine($this->img, $xpos, $ypos, $xpos, $this->plot_area[3], $style);
         }
         // Lines from the top of the plot down to the min Y value at this X:
-        else if ($this->x_data_label_pos == 'plotup') {
+        else if ($this->x_data_label_pos == 'plotup' && isset($this->data_miny[$row])) {
             $ypos = $this->ytr($this->data_miny[$row]);
             ImageLine($this->img, $xpos, $this->plot_area[1], $xpos, $ypos, $style);
         }
