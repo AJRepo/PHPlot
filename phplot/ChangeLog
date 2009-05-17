@@ -2,6 +2,12 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 2009-05-17 (lbayuk)
+    * Fix for bug 2791502 "Error plots treat missing Y values as 0":
+      Plots with data type data-data-error now support missing Y values,
+      instead of treating them as 0. This works with lines, points,
+      and linepoints plot types, and also honors SetDrawBrokenLines.
+
+
     * Fix for bug 2792860 "Wrong DataLabelLines with missing Y":
       Do not draw X Data Labels at points with missing Y values.
 
