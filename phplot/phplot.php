@@ -212,7 +212,6 @@ class PHPlot {
         $this->SetRGBArray($this->color_array);
 
         $this->background_done = FALSE;     // TRUE after background image is drawn once
-        $this->plot_margins_set = FALSE;    // TRUE with user-set plot area or plot margins.
 
         if ($which_output_file)
             $this->SetOutputFile($which_output_file);
@@ -2459,9 +2458,9 @@ class PHPlot {
      *     y_title_left_offset, y_title_left_offset
      *
      *  Note: The margins are calculated, but not stored, if margins or plot area were
-     *  set by the user with SetPlotAreaPixels or SetMarginsPixels (as indicated by
-     *  the plot_margins_set flag). The margin calculation is mixed in with the offset
-     *  variables, so it doesn't see worth the trouble to separate them.
+     *  set by the user with SetPlotAreaPixels or SetMarginsPixels. The margin
+     *  calculation is mixed in with the offset variables, so it doesn't seem worth the
+     *  trouble to separate them.
      *
      * If the $maximize argument is true, we use the full image size, minus safe_margin
      * and main title, for the plot. This is for pie charts which have no axes or X/Y titles.
@@ -2483,14 +2482,18 @@ class PHPlot {
 
         // Special case for maximum area usage with no X/Y titles or labels, only main title:
         if ($maximize) {
-            if (!$this->plot_margins_set) {
+            if (!isset($this->x_left_margin))
                 $this->x_left_margin = $gap;
+            if (!isset($this->x_right_margin))
                 $this->x_right_margin = $gap;
+            if (!isset($this->y_top_margin)) {
                 $this->y_top_margin = $gap;
-                $this->y_bot_margin = $gap;
                 if ($title_height > 0)
                     $this->y_top_margin += $title_height + $gap;
             }
+            if (!isset($this->y_bot_margin))
+                $this->y_bot_margin = $gap;
+
             return TRUE;
         }
 
@@ -2656,13 +2659,15 @@ class PHPlot {
         }
 
         // Apply the minimum margins and store in the object.
-        // Do not set margins if they are user-defined (see note at top of function).
-        if (!$this->plot_margins_set) {
+        // Do not set margins which were user-defined (see note at top of function).
+        if (!isset($this->y_top_margin))
             $this->y_top_margin = max($min_margin, $top_margin);
+        if (!isset($this->y_bot_margin))
             $this->y_bot_margin = max($min_margin, $bot_margin);
+        if (!isset($this->x_left_margin))
             $this->x_left_margin = max($min_margin, $left_margin);
+        if (!isset($this->x_right_margin))
             $this->x_right_margin = max($min_margin, $right_margin);
-        }
  
         if ($this->GetCallback('debug_scale')) {
             // (Too bad compact() doesn't work on class member variables...)
@@ -2712,14 +2717,12 @@ class PHPlot {
      * This determines the plot area, equivalent to SetPlotAreaPixels().
      * Deferred calculations now occur in CalcPlotAreaPixels().
      */
-    function SetMarginsPixels($which_lm, $which_rm, $which_tm, $which_bm)
+    function SetMarginsPixels($which_lm = NULL, $which_rm = NULL, $which_tm = NULL, $which_bm = NULL)
     {
         $this->x_left_margin = $which_lm;
         $this->x_right_margin = $which_rm;
         $this->y_top_margin = $which_tm;
         $this->y_bot_margin = $which_bm;
-
-        $this->plot_margins_set = TRUE;
 
         return TRUE;
     }
@@ -2734,14 +2737,14 @@ class PHPlot {
      *   (x1, y1) - Upper left corner of the plot area
      *   (x2, y2) - Lower right corner of the plot area
      */
-    function SetPlotAreaPixels($x1, $y1, $x2, $y2)
+    function SetPlotAreaPixels($x1 = NULL, $y1 = NULL, $x2 = NULL, $y2 = NULL)
     {
         $this->x_left_margin = $x1;
-        $this->x_right_margin = $this->image_width - $x2;
+        if (isset($x2)) $this->x_right_margin = $this->image_width - $x2;
+        else unset($this->x_right_margin);
         $this->y_top_margin = $y1;
-        $this->y_bot_margin = $this->image_height - $y2;
-
-        $this->plot_margins_set = TRUE;
+        if (isset($y2)) $this->y_bot_margin = $this->image_height - $y2;
+        else unset($this->y_bot_margin);
 
         return TRUE;
     }
