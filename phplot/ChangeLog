@@ -1,6 +1,14 @@
 This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
+
+2009-05-25 (lbayuk)
+    * Added new feature to allow partial margin or plot area specification.
+      You can omit, or specify as NULL, any of the 4 arguments to
+      SetMarginsPixels() or SetPlotAreaPixels(), and this means PHPlot
+      should use the automatically calculated margin on that side.
+      Credit to adoll for this feature.
+
 2009-05-17 (lbayuk)
     * Fix for bug 2791502 "Error plots treat missing Y values as 0":
       Plots with data type data-data-error now support missing Y values,

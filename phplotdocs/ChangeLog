@@ -4,6 +4,15 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2009-05-25
+   For next release PHPlot-5.0.7:
+   * Updates for new feature allowing partial margin specification.
+     + developer: Update description of CalcMargins
+     + reference: Arguments to SetMarginsPixels and SetPlotAreaPixels are
+       now optional.
+   * In the reference part, consistently put the History sections in
+     reverse chronological order.
+
 2009-03-15
    * style.xsl: Change Sourceforge.net logo link per 2009-03-09 instructions.
 
