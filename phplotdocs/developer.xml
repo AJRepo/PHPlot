@@ -179,7 +179,7 @@ Called by <xref linkend="DrawGraph"/> before calling
   <term id="CalcMargins" xreflabel="CalcMargins">CalcMargins($maximize)</term>
   <listitem>
     <para>
-Calculates the size of the four margin areas around the plot area:
+Calculates the size of the four margins around the plot area:
 x_left_margin, x_right_margin, y_top_margin, and y_bot_margin.
 It does this by trying to determine how much space is needed for titles,
 labels, and tick marks.
@@ -189,6 +189,17 @@ even in case of a user-supplied plot area (SetPlotAreaPixels or
 SetMarginsPixels was used). If the $maximize argument is true, then the
 plot area does not leave room for X or Y axis, labels, or titles; this is
 used for pie charts.
+    </para>
+    <para>
+Through PHPlot-5.0.6, all 4 margins are either user-defined or all 4 are
+automatically calculated. Starting with PHPlot-5.0.7, the 4 margins can be
+independently set or defaulted to automatic. CalcMargins calculates values
+for all 4 margins, but only saves those that have not been set using either
+<xref linkend="SetMarginsPixels"/> or <xref linkend="SetPlotAreaPixels"/>.
+Note that other than the overall plot title, elements are drawn relative to
+the plot area, which is calculated based on the actual margins. If the top
+margin is increased, for example, the plot title stays at the top of the
+image, but top tick marks and labels move down against the graph.
     </para>
   </listitem>
 </varlistentry>
