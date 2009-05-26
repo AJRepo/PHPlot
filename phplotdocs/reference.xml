@@ -1018,14 +1018,14 @@ and <xref linkend="SetFontTTF" /> after using SetDefaultTTFont.
   <refsect1>
     <title>History</title>
     <para>
-This function was changed at PHPlot-5.0rc3 to work as described above.
-We are not quite sure how it worked before.
-    </para>
-    <para>
 Through PHPlot-5.0.5, setting a default TrueType font with this function
 also forced all text on the graph to use TrueType text.
 Starting with PHPlot-5.0.6, it just sets the default font type.
 Set <xref linkend="SetUseTTF" /> for more information on this change.
+    </para>
+    <para>
+This function was changed at PHPlot-5.0rc3 to work as described above.
+We are not quite sure how it worked before.
     </para>
   </refsect1>
 
@@ -2900,16 +2900,18 @@ By default, all data set plot lines are 1 pixel wide.
 
   <refsynopsisdiv>
     <synopsis>
-$plot-&gt;SetMarginsPixels(<parameter>$lm</parameter>, <parameter>$rm</parameter>, <parameter>$tm</parameter>, <parameter>$bm</parameter>)
+$plot-&gt;SetMarginsPixels(<optional><parameter>$lm</parameter></optional>, <optional><parameter>$rm</parameter></optional>, <optional><parameter>$tm</parameter></optional>, <optional><parameter>$bm</parameter></optional>)
     </synopsis>
   </refsynopsisdiv>
 
   <refsect1>
     <title>Description</title>
     <para>
-<function>SetMarginsPixels</function> sets the margins around the plot area,
-overriding the automatic margin size calculation.
-The four margins are specified independently and in pixels.
+<function>SetMarginsPixels</function> sets the size of the margins around
+the plot area.  By default, the margin sizes are automatically calculated
+based on the space needed.  Use SetMarginsPixels to override these
+automatic calculations and set specific margin sizes.  The four margins are
+specified independently and in pixels.
     </para>
   </refsect1>
 
@@ -2920,7 +2922,8 @@ The four margins are specified independently and in pixels.
         <term><replaceable>$lm</replaceable></term>
         <listitem>
           <para>
-The left margin, in pixels.
+Optional argument specifying the left margin, in pixels.
+If omitted or NULL, the value is automatically calculated.
           </para>
         </listitem>
       </varlistentry>
@@ -2928,7 +2931,8 @@ The left margin, in pixels.
         <term><replaceable>$rm</replaceable></term>
         <listitem>
           <para>
-The right margin, in pixels.
+Optional argument specifying the right margin, in pixels.
+If omitted or NULL, the value is automatically calculated.
           </para>
         </listitem>
       </varlistentry>
@@ -2936,7 +2940,8 @@ The right margin, in pixels.
         <term><replaceable>$tm</replaceable></term>
         <listitem>
           <para>
-The top margin, in pixels.
+Optional argument specifying the top margin, in pixels.
+If omitted or NULL, the value is automatically calculated.
           </para>
         </listitem>
       </varlistentry>
@@ -2944,7 +2949,8 @@ The top margin, in pixels.
         <term><replaceable>$bm</replaceable></term>
         <listitem>
           <para>
-The bottom margin, in pixels.
+Optional argument specifying the bottom margin, in pixels.
+If omitted or NULL, the value is automatically calculated.
           </para>
         </listitem>
       </varlistentry>
@@ -2955,7 +2961,9 @@ The bottom margin, in pixels.
     <title>Notes</title>
     <para>
 By default, the margin sizes are automatically calculated based on the
-amount of room needed (for the axis labels, tick labels, and tick marks).
+space needed (for the axis labels, tick labels, and tick marks).
+Use SetMarginsPixels to override these automatic calculations and
+control the margins.
     </para>
     <para>
 The upper left corner of the plot area is at device coordinates
@@ -2964,8 +2972,25 @@ The lower right corner of the plot area is at device coordinates
 (Image_Width - Right_Margin, Image_Height - Bottom_Margin).
     </para>
     <para>
-Calling <function>SetMarginsPixels</function> causes PHPlot to forget
-a plot area set with <xref linkend="SetPlotAreaPixels" />.
+SetMarginsPixels and <xref linkend="SetPlotAreaPixels"/> perform the same
+function with different semantics. It makes no sense to use both - only the
+last one called will have an effect.
+    </para>
+    <para>
+Trailing defaulted arguments can be omitted, but non-trailing defaulted
+arguments must be specified as NULL. For example, to set the right margin
+to 100 pixels, and let PHPlot calculate the other three margins, use:
+      <programlisting>
+$plot-&gt;SetMarginsPixels(NULL, 100);
+      </programlisting>
+    </para>
+  </refsect1>
+  <refsect1>
+    <title>History</title>
+    <para>
+Through PHPlot-5.0.6, SetMarginsPixels required all 4 arguments be
+specified and not be NULL. Starting with PHPlot-5.0.7, each margin can
+either be specified or automatically calculated.
     </para>
   </refsect1>
 </refentry>
@@ -3296,23 +3321,26 @@ of the overall background.
 
   <refsynopsisdiv>
     <synopsis>
-$plot-&gt;SetPlotAreaPixels(<parameter>$x1</parameter>, <parameter>$y1</parameter>, <parameter>$x2</parameter>, <parameter>$y2</parameter>)
+$plot-&gt;SetPlotAreaPixels(<optional><parameter>$x1</parameter></optional>, <optional><parameter>$y1</parameter></optional>, <optional><parameter>$x2</parameter></optional>, <optional><parameter>$y2</parameter></optional>)
     </synopsis>
   </refsynopsisdiv>
 
   <refsect1>
     <title>Description</title>
     <para>
-<function>SetPlotAreaPixels</function> sets area to be used for the plot
+<function>SetPlotAreaPixels</function> sets the area to be used for the plot
 within the image, in device coordinates.
 (Device coordinates are GD coordinates, with the origin at the top left
 of the image, X values increase to the right, Y values increase down,
 and the units in pixels.)
-By default, the plot area is equal to the image area minus the margins
-(see <xref linkend="SetMarginsPixels" />).
-Use SetPlotAreaPixels to define a different area. One possible use for
-this is to place multiple plots on an image.
-See <xref linkend="example-twoplot1" /> for an example of multiple plots.
+The plot area is equal to the image area minus the margins. By default, the
+margins (and therefore the plot area) are automatically calculated based on
+the space needed for titles, labels, etc.
+Use SetPlotAreaPixels to override these automatic calculations and
+control the plot area.
+The four coordinate values are specified independently.
+SetPlotAreaPixels and <xref linkend="SetMarginsPixels"/> perform the same
+function with different semantics.
     </para>
   </refsect1>
 
@@ -3325,6 +3353,8 @@ See <xref linkend="example-twoplot1" /> for an example of multiple plots.
         <listitem>
           <para>
 Device coordinates of the top left corner of the area to use for the plot.
+Each value is optional, and if omitted or NULL the automatically calculated
+value is used.
           </para>
         </listitem>
       </varlistentry>
@@ -3334,6 +3364,8 @@ Device coordinates of the top left corner of the area to use for the plot.
         <listitem>
           <para>
 Device coordinates of the bottom right corner of the area to use for the plot.
+Each value is optional, and if omitted or NULL the automatically calculated
+value is used.
           </para>
         </listitem>
       </varlistentry>
@@ -3343,19 +3375,46 @@ Device coordinates of the bottom right corner of the area to use for the plot.
   <refsect1>
     <title>Notes</title>
     <para>
-By default, the plot area is calculated automatically, but SetPlotAreaPixels
-needs to be used to limit the plot area to only use part of the image
-if you want to place multiple plots on the image.
+The plot area is equal to the image area minus the margins. By default, the
+margins (and therefore the plot area) are automatically calculated based on
+the space needed (for the axis labels, tick labels, and tick marks).
+Use SetPlotAreaPixels to override these automatic calculations and
+control the plot area.
     </para>
     <para>
-With this function, you are specifying the exact dimensions of the plot area, 
-not the plot area with margins. So the supplied coordinates have to account
-for margins.
-You cannot use this function along with <xref linkend="SetMarginsPixels" />.
+SetPlotAreaPixels and <xref linkend="SetMarginsPixels"/> perform the same
+function with different semantics. It makes no sense to use both - only the
+last one called will have an effect.
+    </para>
+    <para>
+One possible use for SetPlotAreaPixels is to place multiple plots on an image.
+See <xref linkend="example-twoplot1" /> for an example of multiple plots.
+SetPlotAreaPixels is used there to limit the plot area to only use part of
+the image for each plot.
+    </para>
+    <para>
+Trailing defaulted arguments can be omitted, but non-trailing defaulted
+arguments must be specified as NULL. For example, to fix the bottom right
+corner of the plot area at (600, 400) and let PHPlot calculate the upper
+left corner use:
+      <programlisting>
+$plot-&gt;SetPlotAreaPixels(NULL, NULL, 600, 400);
+      </programlisting>
+You do not have to specify both X and Y. The following example sets the right
+edge of the plot area at X=600 and lets the other 3 edges be automatically
+calculated:
+      <programlisting>
+$plot-&gt;SetPlotAreaPixels(NULL, NULL, 600);
+      </programlisting>
     </para>
   </refsect1>
   <refsect1>
     <title>History</title>
+    <para>
+Through PHPlot-5.0.6, SetPlotAreaPixels required all 4 arguments be
+specified and not be NULL. Starting with PHPlot-5.0.7, each X and Y
+parameter can either be specified or automatically calculated.
+    </para>
     <para>
 SetPlotAreaPixels and SetPlotAreaWorld can be called in either order.
 Through PHPlot-5.0.4 this was because SetPlotAreaPixels would
