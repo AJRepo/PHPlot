@@ -36,6 +36,8 @@ The project home page is http://sourceforge.net/projects/phplot/
       data-data-error data type and different error values for different
       points. In both cases the new Y range can be smaller than before.
 
+2009-01-20 (lbayuk)     ===== Released as 5.0.6 =====
+
 2009-01-18 (lbayuk)
     * Fix for bug 1891636 "Misaligned TTF X Labels":
 	  PHPlot was using the actual bounding box of each line of text
