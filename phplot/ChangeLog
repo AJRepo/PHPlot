@@ -3,6 +3,13 @@ The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
 2009-06-11 (lbayuk)
+    * Change PHPlot license to LGPL, per Afan.
+        phplot.php, phplot_data.php - Change license notice.
+        rgb.inc.php - Change top comments and remove bottom marker.
+        COPYING - new file, text of LGPL.
+        LICENSE.* - removed files - old licenses.
+        Makefile - change list of distributed files.
+
     * Fix for bug 2803900: SetRGBArray('large') does not work. The include
       file defined a different array name than the main script expected.
       (This bug seems to have happened over 8 years ago.) Fixed the array
