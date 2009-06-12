@@ -537,8 +537,11 @@ class PHPlot {
                 );
             return TRUE;
         } elseif ($which_color_array === 'large')  {    // Large color array
-            include("./rgb.inc.php");
-            $this->rgb_array = $RGBArray;
+            if (!@include('rgb.inc.php')) {
+                return $this->PrintError("SetRGBArray(): Large color map could not be loaded\n"
+                                       . "from 'rgb.inc.php'.");
+            }
+            $this->rgb_array = $ColorArray;
         } else {                                        // Default to black and white only.
             $this->rgb_array = array('white' => array(255, 255, 255), 'black' => array(0, 0, 0));
         }
