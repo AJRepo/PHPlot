@@ -1,16 +1,28 @@
 <?php
-/* $Id$
- * 
- * Copyright (C) 2000 Afan Ottenheimer.  Released under
- * the GPL and PHP licenses as stated in the the README file which
- * should have been included with this document.
-
- * This is an subclass for phplot.php and should only be
- * called after phplot.ini has been called. This extends
- * phplot by adding additional routines that can be used
+/* $Id$ */
+/*
+ * This file extends PHPlot by adding additional routines that can be used
  * to modify the data arrays.
  *
- * Data must be a *numerical* array, this is enforced in SetDataValues() 
+ * ---------------------------------------------------------------------
+ * Copyright (C) 1998-2009 Afan Ottenheimer
+ *
+ * This is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation;
+ * version 2.1 of the License.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ * ---------------------------------------------------------------------
+ *
+ * Data must be a *numerical* array. This is enforced in SetDataValues() 
  */
 
 require_once("phplot.php");
@@ -92,9 +104,10 @@ class PHPlot_Data extends PHPlot
         }
 
         //Re-Scale Vertical Ticks if not already set
-        if ( ! $this->y_tick_increment) {
-            $this->SetYTickIncrement() ;
-        }
+        //Removed; does nothing and wrong variable name?
+        // if ( ! $this->y_tick_increment) {
+        //     $this->SetYTickIncrement() ;
+        // }
 
         return TRUE;
     } //function DoScaleData
