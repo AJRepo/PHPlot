@@ -2,6 +2,15 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2009-06-11 (lbayuk)
+    * Fix for bug 2803900: SetRGBArray('large') does not work. The include
+      file defined a different array name than the main script expected.
+      (This bug seems to have happened over 8 years ago.) Fixed the array
+      names to match. Also removed the ./ prefix from the included filename
+      so it will be found if on the include path but not in the script
+      directory.  Also added error check if the rgb.inc.php include file
+      is needed and not found.
+
 2009-05-25 (lbayuk)
     * Added new feature to allow partial margin or plot area specification.
       You can omit, or specify as NULL, any of the 4 arguments to
