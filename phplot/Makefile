@@ -4,9 +4,11 @@
 # Project name:
 PROJ=phplot
 
-# List of files to tag and release:
-REL=ChangeLog LICENSE.GPL LICENSE.PHP_3_0 NEWS.txt README.txt \
-   phplot.php phplot_data.php rgb.inc.php
+# List of text files to release, and do CRLF line ending
+# conversions in the ZIP release only:
+REL_TXTFILES=COPYING ChangeLog NEWS.txt README.txt
+# List of all files to tag and release:
+REL=$(REL_TXTFILES) phplot.php phplot_data.php rgb.inc.php
 
 # Temporary directory for building releases. Can be relative.
 # Release packages will be left here too.
@@ -33,8 +35,9 @@ release:
 	@grep -i 'phplot version' phplot.php
 	mkdir -p $(RDIRPATH)
 	cp -v -p $(REL) $(RDIRPATH)
-	(cd $(TMP); zip -r $(RDIR).zip $(RDIR); )
 	(cd $(TMP); tar -cvzf $(RDIR).tar.gz --owner=0 --group=0 $(RDIR); )
+	(cd $(TMP)/$(RDIR); for f in $(REL_TXTFILES);do todos < $$f > convert.tmp && mv -f convert.tmp $$f; done; )
+	(cd $(TMP); zip -r $(RDIR).zip $(RDIR); )
 	rm -rf $(RDIRPATH)
 	@echo "Release packages are: $(TMP)/$(RDIR).zip"
 	@echo "                 and: $(TMP)/$(RDIR).tar.gz"
