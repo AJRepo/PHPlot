@@ -14,6 +14,25 @@ see the ChangeLog file inside the PHPlot distribution.)
 
 <variablelist>
   <varlistentry>
+    <term>2009-06-14</term>
+    <listitem>
+      <para>
+Released updated version of the manual to correspond to PHPlot-5.0.7.
+      </para>
+      <para>
+PHPlot license is now LGPL-2.1.
+      </para>
+      <para>
+Add information to SetRGBArray about using large and custom color maps.
+      </para>
+      <para>
+Updates to Developer's Guide and Reference sections to document new feature
+allowing partial margin specifications in SetMarginsPixels and
+SetPlotAreaPixels.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
     <term>2009-01-21</term>
     <listitem>
       <para>
