@@ -4,6 +4,12 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2009-06-13
+   * main.xml: Update license information. PHPlot is now under the LGPL.
+   * reference.xml: Add notes to SetRGBArray() about finding the rgb.inc.php
+       file (related to a recent bug fix), about the default color map, and 
+       how to avoid invalid color errors with custom color maps.
+
 2009-05-25
    For next release PHPlot-5.0.7:
    * Updates for new feature allowing partial margin specification.
