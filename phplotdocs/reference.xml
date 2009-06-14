@@ -4168,6 +4168,9 @@ to select a much larger color map.
   <refsect1>
     <title>Notes</title>
     <para>
+If SetRGBArray is not called, the 'small' color map is used.
+    </para>
+    <para>
 An example of a user-defined color map is:
 <programlisting>
     array( 'red' => array(255, 0, 0),
@@ -4181,6 +4184,20 @@ More information about the color maps can be found in
     </para>
     <para>
 Color names are case sensitive.
+    </para>
+    <para>
+For the large color map to be loaded with SetRGBArray('large'), the file
+<filename>rgb.inc.php</filename> must be found on the PHP include path or
+in the same directory as <filename>phplot.php</filename>.
+    </para>
+    <para>
+When defining a color map, care must be taken to avoid invalid color errors. 
+PHPlot uses a number of pre-defined color names, and these must either be
+defined in your color map or changed.
+If you define your own colormap, it should always contain colors named 'black',
+'white', and 'gray', and you should use <xref linkend="SetDataColors" /> and
+<xref linkend="SetErrorBarColors" /> to select colors which are in your
+color map.
     </para>
   </refsect1>
 </refentry>
