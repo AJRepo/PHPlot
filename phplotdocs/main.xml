@@ -63,10 +63,12 @@ in all copies.
 PHPlot is a PHP class for on-the-fly graphs generation. It was started by
 Afan Ottenheimer in 2000 as an Open Source project, and is developed on
 <ulink url="http://sourceforge.net">Sourceforge</ulink>.
-It is distributed under the terms of the
-<ulink url="http://www.gnu.org/copyleft/gpl.html">GNU General Public
-License </ulink>,
-and the <ulink url="http://www.php.net/license.html">PHP license</ulink>.
+It is distributed<footnote><para>
+Versions prior to PHPlot-5.0.7 were distributed under the GPL and PHP
+licenses.
+</para></footnote> under the terms of the
+<ulink url="http://www.opensource.org/licenses/lgpl-2.1.php">GNU Lesser
+General Public License</ulink> version 2.1.
   </para>
 
   <para>
