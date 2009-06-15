@@ -2,6 +2,8 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2009-06-12 (lbayuk)     ===== Released as 5.0.7 =====
+
 2009-06-11 (lbayuk)
     * Change PHPlot license to LGPL, per Afan.
         phplot.php, phplot_data.php - Change license notice.
