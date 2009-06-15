@@ -4,6 +4,75 @@ The project home page is http://phplot.sourceforge.net/
 Refer the the ChangeLog file for detailed source changes.
 -----------------------------------------------------------------------------
 
+2009-06-14 Release 5.0.7
+
+Overview:
+
+This is the current stable release of PHPlot. The release adds one new
+feature, fixes a few bugs, and changes the license under which PHPlot
+is released.
+
+The PHPlot reference manual has been updated to match this release.  The
+manual is available as a separate download from Sourceforge. The manual is
+also now available for on-line viewing at http://phplot.sourceforge.net
+
+See the ChangeLog file for more about changes and bug fixes.
+
+
+Licensing:
+
+PHPlot is now released on the terms of the GNU Lesser General Public
+License, version 2.1. (Previous versions of PHPlot were released under
+a dual "PHP/GPL" license.) The licensing change was authorized by the
+original author and copyright holder of PHPlot.
+
+
+New feature in 5.0.7:
+
++ Plot area margins can now be partially specified, using either
+  SetMarginsPixels or SetPlotAreaPixels. In previous releases of
+  PHPlot you had to either specify all 4 margins or none.
+  Credit to adoll for this feature.
+
+
+Visible Changes and Possible Incompatibilities:
+
++ Y data range can change:
+  As a result of the bug fixes in this release, automatically-calculated
+  Y data ranges can change. If you have missing Y values in your data,
+  and you let PHPlot calculate the Y data range (that is, you do not
+  call SetPlotAreaWorld with a Ymin value), then the lower limit for Y
+  can change. If you have a plot with data-data-error data type, different
+  error values for different points, and let PHPlot calculate the Y data
+  range, then either Y limit can change.
+
+
+Bug Fixes in 5.0.7:
+
+
++ Fix for bug 2803900: SetRGBArray('large') does not work:
+  Corrected an array name usage problem. You can now select the large
+  color map. Also PHPlot no longer overrides use of the PHP include
+  path when loading the large color map, and now reports an error if the
+  file is needed and not found.
+
++ Fix for bug 2791502 "Error plots treat missing Y values as 0":
+  Missing Y values now with with data-data-error plots.
+
++ Fix for bug 2792860 "Wrong DataLabelLines with missing Y":
+  Data label lines are now suppressed at missing Y values.
+
++ Fix for bug 2786350 "Missing Y data results in bad auto-range":
+  Missing Y values are now ignored when calculating the Y data range.
+  Bug report and analysis by mrten.
+
++ Fix for bug 2786354 "Incorrect auto-range for data-data-error":
+  The Y data range is now correctly calculated for data-data-error plots
+  when the error values differ from point to point.
+
+
+-----------------------------------------------------------------------------
+
 2009-01-20 Release 5.0.6
 
 Overview:
@@ -78,7 +147,7 @@ Visible Changes and Possible Incompatibilities:
 + Internal changes were made to the way font information is stored. Anything
   that directly references PHPlot internals regarding fonts will break. Usage
   also changed for the internal functions to size and draw text (ProcessText*,
-  SizeText*) due to font data storage changs.
+  SizeText*) due to font data storage changes.
 
 + Changes were made to internal class variables used to store label
   formatting information. Anything relying on these internals may break.
@@ -90,11 +159,11 @@ Bug Fixes in 5.0.6:
   PHPlot will no longer hang if all X values are the same. But this is
   interim fix to force the X range to 1 to prevent the hang. Eventually,
   smarter automatic range code will handle this better.
-  Credit to anydl for finding this.
+  Credit to andyl for finding this.
 
 #1891636: Misaligned TTF X Labels
   PHPlot will now correctly line-up TrueType labels along the X axis. There
-  were small but very noticable errors before, when the text had descenders
+  were small but very noticeable errors before, when the text had descenders
   or lines with all short letters.
 
 

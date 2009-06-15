@@ -1,5 +1,5 @@
 This is the README file for PHPlot
-Last updated for PHPlot-5.0.6 on 2009-01-21
+Last updated for PHPlot-5.0.7 on 2009-06-14
 The project web site is http://sourceforge.net/projects/phplot/
 The project home page is http://phplot.sourceforge.net/
 -----------------------------------------------------------------------------
@@ -19,8 +19,7 @@ For important changes in this release, see the NEWS.txt file.
 CONTENTS:
 
    ChangeLog  . . . . . . . . . . . Lists changes to the sources
-   LICENSE.GPL  . . . . . . . . . . License file
-   LICENSE.PHP_3_0  . . . . . . . . License file
+   COPYING  . . . . . . . . . . . . LGPL 2.1 License file
    NEWS.txt . . . . . . . . . . . . Highlights changes in releases
    README.txt   . . . . . . . . . . This file
    phplot.php   . . . . . . . . . . The main PHPlot source file
@@ -31,9 +30,8 @@ CONTENTS:
 REQUIREMENTS:
 
 You need a recent version of PHP5, and you are advised to use the latest
-stable release.  This version of PHPlot has been tested with PHP-5.2.8.
-(PHPlot-5.0.6 does not support PHP4, since the PHP group has discontinued
-support for PHP4.)
+stable release.  This version of PHPlot has been tested with PHP-5.2.9.
+PHP4 is no longer supported.
 
 You need the GD extension to PHP either built in to PHP or loaded as a
 module. Refer to the PHP documentation for more information - see the
@@ -132,12 +130,18 @@ graph, check your web server error log for more information.
 
 COPYRIGHT and LICENSE:
 
-PHPlot is Copyright (C) 1998-2008 Afan Ottenheimer
+PHPlot is Copyright (C) 1998-2009 Afan Ottenheimer
 
-This is distributed with NO WARRANTY and under the terms of the GNU GPL
-and PHP licenses. If you use it - a cookie or some credit would be nice.
+This is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation;
+version 2.1 of the License.
 
-You can get a copy of the GNU GPL at http://www.gnu.org/copyleft/gpl.html
-You can get a copy of the PHP License at http://www.php.net/license.html
+This software is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
 
-See http://sourceforge.net/projects/phplot/ for the latest information.
+You should have received a copy of the GNU Lesser General Public
+License along with this software; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
