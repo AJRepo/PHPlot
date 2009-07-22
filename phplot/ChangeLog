@@ -2,6 +2,14 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2009-07-09 (lbayuk)
+    * Added a hook $plot->locale_override which can be set to True to prevent
+      PHPlot from loading locale settings from the environment with
+      setlocale(LC_ALL, ''). This is necessary for testing PHPlot on Windows,
+      where you cannot force a locale with an environment variable. It might
+      also be needed for people who want PHPlot's locale to differ from the
+      web server's locale.
+
 2009-06-12 (lbayuk)     ===== Released as 5.0.7 =====
 
 2009-06-11 (lbayuk)
