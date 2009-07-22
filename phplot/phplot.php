@@ -1,7 +1,7 @@
 <?php
 /* $Id$ */
 /*
- * PHPLOT Version 5.0.7
+ * PHPLOT Version 5.0.7 + CVS (This is an unreleased CVS version!)
  *
  * A PHP class for creating scientific and business charts
  * Visit http://sourceforge.net/projects/phplot/
@@ -2269,8 +2269,9 @@ class PHPlot {
     function number_format($number, $decimals=0)
     {
         if (!isset($this->decimal_point) || !isset($this->thousands_sep)) {
-            // Load locale-specific values from environment:
-            @setlocale(LC_ALL, '');
+            // Load locale-specific values from environment, unless disabled:
+            if (empty($this->locale_override))
+                @setlocale(LC_ALL, '');
             // Fetch locale settings:
             $locale = @localeconv();
             if (!empty($locale) && isset($locale['decimal_point']) &&
