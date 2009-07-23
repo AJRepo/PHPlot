@@ -3066,21 +3066,38 @@ behavior for those locales. If you cannot select a more specific locale,
 use <function>SetNumberFormat</function> to set the correct separators.
     </para>
     <para>
-If your PHP script is forcing a specific locale with setlocale(), PHPlot
-will probably undo that because it uses setlocale(LC_ALL, '') to import locale
-information from the environment.  This is the only way to get at the
-environment locale settings, but it will override a forced locale in your
-script.
-    </para>
-    <para>
 To set the number of decimal places, use
 <xref linkend="SetPrecisionX" /> and <xref linkend="SetPrecisionY" />.
+    </para>
+    <para>
+If you are trying to force a specific locale with setlocale(), it will not
+work, because PHPlot uses setlocale(LC_ALL, '') to import locale
+information from the system, and this overrides a forced locale from your
+script. On non-Windows platforms, you can force a locale using environment
+variables, but this does not work on Windows. To address this,
+PHPlot has (see the History section below) a special member variable
+<parameter>locale_override</parameter> that prevents PHPlot from importing
+locale settings from the system. For example, if the following code is used,
+numeric formatting will use the fr_CA locale settings, regardless of
+the system locale.
+<programlisting>
+   setlocale(LC_ALL, 'fr_CA');  # On Windows use: 'French_Canada'
+   $plot = new PHPlot(800, 600);
+   $plot->locale_override = True;
+</programlisting>
     </para>
   </refsect1>
   <refsect1>
     <title>History</title>
     <para>
-This was added to PHPlot-5.0.4. Versions up to and including 5.0rc3
+The <parameter>locale_override</parameter> hook was added after PHPlot-5.0.7.
+Before that, there was no way to force a specific locale on Windows, and on
+other platforms a locale could be forced only by using environment variables.
+The hook was added primarily for testing on Windows, but could be needed in
+other situations too.
+    </para>
+    <para>
+This function was added to PHPlot-5.0.4. Versions up to and including 5.0rc3
 always used a period for decimal point, and comma for thousands separator.
     </para>
   </refsect1>
@@ -5281,33 +5298,40 @@ Grouping and decimal separators depend on locale.
 
             <row>
               <entry><programlisting>
-$plot->SetXLabelType('data', 0, '\xa4');
+$plot->SetXLabelType('data', 0, '&amp;#8364;');
 </programlisting></entry>
               <entry>100000</entry>
               <entry>&euro;1,000,000</entry>
               <entry>
 Data (numeric) formatting with prefix.
-0xa4 is the ISO-8859-15 code for the Euro sign.
+&amp;#8364; is the entity code for the Euro sign in Unicode. (Numeric entity
+codes are handled by the GD library, but not named character entity codes.)
 Here we use it as a prefix, common usage for English.
 The Euro sign may appear differently in your browser. But when used with
-PHPlot it depends on the server font, not the user's setup.
+PHPlot it requires a Unicode font on the server.
               </entry>
             </row>
 
             <row>
               <entry><programlisting>
 $plot->SetNumberFormat(',', '.');
-$plot->SetXLabelType('data', 2, '', '\xa4');
+$plot->SetXLabelType('data', 2, '',
+                     '\xe2\x82\xac');
 </programlisting></entry>
               <entry>100000</entry>
               <entry>1.000.000,00&euro;</entry>
               <entry>
 Data (numeric) formatting with suffix.
 Here we use the Euro as a suffix, common usage for French.
+Unlike the previous example, here we represent it as a 3 byte UTF-8
+sequence. You can use html_entity_decode() with UTF-8 as the character set
+to translate &amp;euro; into this sequence. (You cannot used named
+character entity codes in PHPlot strings that are processed by GD, as GD
+only handles UTF-8 sequences or numeric entity codes.)
 The thousands and decimal separator default to locale-dependent values,
 but here we set them ourselves with SetNumberFormat.
 The Euro sign may appear differently in your browser. But when used with
-PHPlot it depends on the server font, not the user's setup.
+PHPlot it requires a Unicode font on the server.
               </entry>
             </row>
 
