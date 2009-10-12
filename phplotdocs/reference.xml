@@ -2184,9 +2184,9 @@ around the entire image. By default, no border is drawn.
         <term><replaceable>$sibt</replaceable></term>
         <listitem>
           <para>
-A string indicating the desired border type: 'raised' or 'plain'.
+A string indicating the desired border type: 'raised', 'plain', or 'none'.
 A plain border is 1 pixel wide. A raised border is 2 pixels wide, with the
-bottom and left side drawn in a darker color.
+bottom and left sides drawn in a darker color.
           </para>
         </listitem>
       </varlistentry>
@@ -2204,6 +2204,12 @@ It can be useful to have a border drawn around images when embedded in an
 HTML page. An alternative to this function is to use the BORDER attribute
 in the IMG tag when embedding the image. With that attribute, you can also
 control the border width.
+    </para>
+  </refsect1>
+  <refsect1>
+    <title>History</title>
+    <para>
+Use of 'none' to turn the border off was added after PHPlot-5.0.7.
     </para>
   </refsect1>
 </refentry>
@@ -5254,6 +5260,8 @@ If omitted, NULL is used.
 The default formatting mode is to do no special formatting of the labels.
 Strings will be output as-is, and numbers will be output using PHP's
 default formatting.
+If you need to change label formatting back to the default,
+use SetXLabelType without arguments, or with an empty string argument.
     </para>
     <para>
 A side effect of <xref linkend="SetPrecisionX" /> is to call this function
@@ -5398,6 +5406,10 @@ Also added was the ability to add a prefix and suffix to 'data' formatted
 labels. In PHPlot-5.0.5 and earlier, there was an undocumented class variable 
 <parameter>data_units_text</parameter> that was applied as a suffix to 'data'
 mode labels, for both X and Y. This continues to work, but is deprecated.
+    </para>
+    <para>
+Starting with PHPlot-5.0.6, you can use an empty string or no argument at all
+to reset to the default of no formatting.
     </para>
     <para>
 Starting with PHPlot-5.0.4, empty string data labels are ignored when
@@ -6318,6 +6330,8 @@ If omitted, NULL is used.
 The default formatting mode is to do no special formatting of the labels.
 Strings will be output as-is, and numbers will be output using PHP's
 default formatting.
+If you need to change label formatting back to the default,
+use SetYLabelType without arguments, or with an empty string argument.
     </para>
     <para>
 A side effect of <xref linkend="SetPrecisionY" /> is to call this function
@@ -6342,6 +6356,10 @@ Also added was the ability to add a prefix and suffix to 'data' formatted
 labels. In PHPlot-5.0.5 and earlier, there was an undocumented class variable 
 <parameter>data_units_text</parameter> that was applied as a suffix to 'data'
 mode labels, for both X and Y. This continues to work, but is deprecated.
+    </para>
+    <para>
+Starting with PHPlot-5.0.6, you can use an empty string or no argument at all
+to reset to the default of no formatting.
     </para>
     <para>
 Through PHPlot-5.0rc3, when the formatting mode is 'data'
