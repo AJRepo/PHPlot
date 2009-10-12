@@ -1059,6 +1059,22 @@ creating an instance of the object.
 </varlistentry>
 
 <varlistentry>
+  <term id="SetLabelType" xreflabel="SetLabelType">SetLabelType($which_axis, $args)</term>
+  <listitem>
+    <para>
+Sets the formatting used for tick and data labels. This implements
+<xref linkend="SetXLabelType"/> and <xref linkend="SetYLabelType"/>.
+$which_axis is either 'x' or 'y' and selects the axis to configure.
+$args is an array of arguments, with $args[0] selecting the type of
+formatting (for example, 'data'). Additional array elements depend on
+the formatting type. For more details, see the two referenced functions.
+All arguments to those functions are combined into an array and passed to
+<function>SetLabelType</function> as $args.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
   <term id="SetRGBColor" xreflabel="SetRGBColor">SetRGBColor($color_asked)</term>
   <listitem>
     <para>
