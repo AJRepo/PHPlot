@@ -1895,7 +1895,7 @@ class PHPlot {
      */
     function SetImageBorderType($sibt)
     {
-        $this->image_border_type = $this->CheckOption($sibt, 'raised, plain', __FUNCTION__);
+        $this->image_border_type = $this->CheckOption($sibt, 'raised, plain, none', __FUNCTION__);
         return (boolean)$this->image_border_type;
     }
 
