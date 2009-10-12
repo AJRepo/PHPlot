@@ -2,6 +2,11 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2009-10-12 (lbayuk)
+    * Bug report 2839547, allow SetImageBorderType('none') to reset the image
+      border type.  Also checked for other cases where there is no reset;
+      found one that exists (Set[XY]LabelType) but needs to be documented.
+
 2009-07-09 (lbayuk)
     * Added a hook $plot->locale_override which can be set to True to prevent
       PHPlot from loading locale settings from the environment with

@@ -4,13 +4,19 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2009-10-12
+   * developer.xml: document SetLabelType as an internal function.
+   * reference.xml:
+     + Document new feature SetImageBorderType('none').
+     + Document existing feature: SetXLabelType('') and SetYLabelType('') to
+       reset label formatting to default. Also works if arg is omitted.
+
 2009-07-21
    * reference.xml:
      + Update SetNumberFormat regarding setlocale() and the new hook variable
        locale_override.
      + Fix examples in SetXLabelType for rendering a Euro.
        Helpful information provided by kalvaro on the PHPlot Help forum.
-
 
 2009-06-13
    * main.xml: Update license information. PHPlot is now under the LGPL.
