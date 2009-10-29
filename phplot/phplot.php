@@ -846,7 +846,7 @@ class PHPlot {
                                 __FUNCTION__)) {
             return FALSE;
         }
-   
+
         # Store the font parameters: name/size, char cell height and width.
         $this->fonts[$which_elem] = array('ttf' => FALSE,
                                           'font' => $which_font,
@@ -1531,7 +1531,7 @@ class PHPlot {
      *    + Trigger a user-level error containing the error message.
      *      If no error handler was set up, the script will log the
      *      error and exit with non-zero status.
-     *  
+     *
      *  PrintError() and DrawError() are now equivalent. Both are provided for
      *  compatibility. (In earlier releases, PrintError sent the message to
      *  stdout only, and DrawError sent it in an image only.)
@@ -1612,15 +1612,15 @@ class PHPlot {
                                           __FUNCTION__);
         if (!$which_ydlp) return FALSE;
         $this->y_data_label_pos = $which_ydlp;
-        //This bit in SetYDataLabelPos about plotleft is for those who were 
+        //This bit in SetYDataLabelPos about plotleft is for those who were
         //using this function to set SetYTickLabelPos.
-        if ( ($which_ydlp == 'plotleft') || ($which_ydlp == 'plotright') || 
-             ($which_ydlp == 'both') || ($which_ydlp == 'yaxis') ) { 
+        if ( ($which_ydlp == 'plotleft') || ($which_ydlp == 'plotright') ||
+             ($which_ydlp == 'both') || ($which_ydlp == 'yaxis') ) {
 
             //Call sety_TICK_labelpos instead of sety_DATA_labelpos
             $this->SetYTickLabelPos($which_ydlp);
 
-        } elseif ($which_ydlp != 'none') { 
+        } elseif ($which_ydlp != 'none') {
             //right now its plotin or none
             $this->y_data_label_pos = 'plotin';
         }
@@ -2407,8 +2407,8 @@ class PHPlot {
                     $val = (double)$this->data[$i][$j++];
 
                     if ($process_err_bars) {
-                        $all_y[] = $val + (double)$this->data[$i][$j++]; 
-                        $all_y[] = $val - (double)$this->data[$i][$j++]; 
+                        $all_y[] = $val + (double)$this->data[$i][$j++];
+                        $all_y[] = $val - (double)$this->data[$i][$j++];
                     } elseif ($process_stacked_bars) {
                         $all_y[1] += $val;
                     } else {
@@ -2685,7 +2685,7 @@ class PHPlot {
             $this->x_left_margin = max($min_margin, $left_margin);
         if (!isset($this->x_right_margin))
             $this->x_right_margin = max($min_margin, $right_margin);
- 
+
         if ($this->GetCallback('debug_scale')) {
             // (Too bad compact() doesn't work on class member variables...)
             $this->DoCallback('debug_scale', __FUNCTION__, array(
@@ -2879,7 +2879,7 @@ class PHPlot {
         // Note that the extra space due to group_frac_width and bar_extra_space will be
         // evenly divided on each side of the group: the drawn bars are centered in the group.
 
-        // Within each bar's allocated space, if bar_width_adjust=1 the bar fills the 
+        // Within each bar's allocated space, if bar_width_adjust=1 the bar fills the
         // space, otherwise it is centered.
         // This is the actual drawn bar width:
         $this->actual_bar_width = $this->record_bar_width * $this->bar_width_adjust;
@@ -2918,7 +2918,7 @@ class PHPlot {
                 $this->x_axis_position = 1;
             elseif ($this->plot_min_y <= 0 && 0 <= $this->plot_max_y)
                 $this->x_axis_position = 0;
-             else 
+             else
                 $this->x_axis_position = $this->plot_min_y;
         } else
             $this->x_axis_position = min(max($this->plot_min_y, $this->x_axis_position), $this->plot_max_y);
@@ -3753,17 +3753,17 @@ class PHPlot {
      * This is currently only used for Y data labels for bar charts.
      */
     function DrawDataLabel($which_font, $which_angle, $x_world, $y_world, $which_color, $which_text,
-                      $which_halign = 'center', $which_valign = 'bottom', $x_adjustment=0, $y_adjustment=0) 
+                      $which_halign = 'center', $which_valign = 'bottom', $x_adjustment=0, $y_adjustment=0)
     {
         $data_label = $this->FormatLabel('y', $which_text);
-        //since DrawDataLabel is going to be called a lot - perhaps for speed it is better to 
+        //since DrawDataLabel is going to be called a lot - perhaps for speed it is better to
         //not use this if statement and just always assume which_font is the x_label font (ditto for color).
-        if ( empty($which_font) ) 
+        if ( empty($which_font) )
             $which_font = $this->fonts['x_label'];
 
         $which_angle = empty($which_angle)?'0':$this->x_label_angle;
 
-        if ( empty($which_color) ) 
+        if ( empty($which_color) )
             $which_color = $this->ndx_title_color;
 
         $x_pixels = $this->xtr($x_world) + $x_adjustment;
