@@ -2,6 +2,28 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2009-11-01 (lbayuk)
+    * Address bug report 2886365 "Declare all functions and variables in
+      PHP5 style"
+      PHP5 deprecates the use of 'var' to declare a class member variable.
+      All initialized class member variables are now declared 'public'.
+      (It was tempting to make most or all 'protected' or 'private', but
+      that would likely break too much, including the PHPlot Test Suite.)
+
+      Most class member functions which are meant for internal use only are
+      now declared 'protected', so they cannot be called from scripts
+      (except in child classes). (Note PHP5 does not deprecate the use of
+      just 'function' to mean public, so public functions were not changed.)
+      Internal functions are those documented in the manual under Developer's
+      Guide, Internal Functions. If your code breaks because you are using
+      a method which is now protected, please post the details on the help
+      forum.
+
+      Some member variables which were set in the constructor are now
+      initialized with the class instead. (No impact.)
+
+      Removed commented-out, FIXME-noted code for interim labels.
+
 2009-10-12 (lbayuk)
     * Bug report 2839547, allow SetImageBorderType('none') to reset the image
       border type.  Also checked for other cases where there is no reset;
