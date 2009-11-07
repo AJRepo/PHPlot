@@ -4,6 +4,33 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2009-11-06
+   The Callbacks chapter is moved from the "Part III, Developer's Guide to
+   PHPlot" to "Part I, PHPlot Programming", because it doesn't only apply
+   to PHPlot developers. A new chapter under Developers is added, with a
+   list of the PHPlot class member variables and brief descriptions.
+   * developer.xml:
+     + The material on Callbacks is removed (now in its own file).
+     + A new chapter Member Variables is added.
+   * main.xml:
+     + Define two new system entities for new files
+     + Fix - SourceForge, not Sourceforge
+     + Callbacks chapter inclusion
+   * callbacks.xml: New file, text taken from developer.xml
+   * variables.list: New file. This is the data file which is used to
+      generate variablelist.xml which contains the table of member variables.
+   * gen.vardoc: New file. This is a Tcl script to generate variablelist.xml
+      from variables.list
+   * Makefile: Add new files, dependencies, and command to generate the
+      variablelist.xml file
+
+
+   * callbacks.xml:
+     + Callback access to PHPlot object can also be via global variable.
+
+   * reference.xml:
+     + Document additional cases where LightGridColor and GridColor are used.
+
 2009-10-12
    * developer.xml: document SetLabelType as an internal function.
    * reference.xml:
