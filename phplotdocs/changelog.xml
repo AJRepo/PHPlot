@@ -13,6 +13,37 @@ see the ChangeLog file inside the PHPlot distribution.)
 </abstract>
 
 <variablelist>
+
+  <varlistentry>
+    <term>2009-11-06</term>
+    <listitem>
+      <para>
+Added a new chapter to Part III Developer's Guide documenting the internal
+member class variables.
+The chapter on Callbacks has been moved from Part III up into Part I.
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
+    <term>2009-10-12</term>
+    <listitem>
+      <para>
+Documented SetImageBorderType('none') and Set[XY]LabelType('').
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
+    <term>2009-07-21</term>
+    <listitem>
+      <para>
+Updated SetNumberFormat to document a new hook variable to override locale,
+and fixed the example under SetXLabelType on rendering a Euro symbol.
+      </para>
+    </listitem>
+  </varlistentry>
+
   <varlistentry>
     <term>2009-06-14</term>
     <listitem>
@@ -150,7 +181,7 @@ A new example was added, showing a bar chart with data labels.
     <listitem>
       <para>
 Released manual dated 2006-11-11 to sourceforge.net. This is the first
-release of the manual on Sourceforge. It corresponds to PHPlot-5.0rc2 with 
+release of the manual on SourceForge. It corresponds to PHPlot-5.0rc2 with 
 several patches applied.
       </para>
     </listitem>
