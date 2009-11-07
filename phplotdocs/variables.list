@@ -1,0 +1,168 @@
+# PHPlot class member variable listing
+# $Id$
+# This is a manually maintained list of PHPlot class variables.
+# It is processed by a script 'gen.vardoc' to generate Docbook-xml format
+# text for the reference manual.
+# The first non-comment line is the header, and each additional line documents
+# one variable. Each field on each line is separated by a tab.
+# NOTE: The processing script does no escaping. The text must be valid XML.
+# This means < > and & must be written as character entities, but it also
+# means the description can have inline Docbook-XML markup.
+#
+VARNAME	DEFAULT	REFERENCE	DESCRIPTION
+actual_bar_width		CalcBarWidths	Calculated width of bars for bar charts
+background_done	FALSE	SetInputFile DrawBackground	True if background has already been drawn, to avoid drawing a background fill over a background image.
+bar_adjust_gap		CalcBarWidths	Calculated bar gap
+bar_extra_space	0.5	CalcBarWidths	Extra space between groups of bars
+bar_width_adjust	1	CalcBarWidths	Width of bar relative to space for one bar
+bg_color	'white'	SetBackgroundColor	Name of image background color
+bgimg		SetBgImage	Background image filename
+bgmode		SetBgImage	Background image tiling mode
+browser_cache	FALSE	SetBrowserCache	Flag: Don't send cache suppression headers
+callbacks	array(...)	SetCallback	Callback (hook) function information. Indexed by callback reason; value is an array of function name and pass-through argument if the callback is in use, else NULL.
+color_array	'small'	PHPlot	Name of the initial color map
+dashed_grid	TRUE	SetDrawDashedGrid	Flag: Draw dashed or solid grid lines?
+dashed_style	'2-4'	SetDefaultStyles	Initial dashed pattern code
+data		SetDataValues	The data array
+data_border_colors	array('black')	SetDataBorderColors	Array of color names for bar chart data borders
+data_colors	array(...)	SetDataColors	Array of color names for data lines/marks/bars/etc.
+data_maxy		FindDataLimits	Array: Per row maximum Y value
+data_miny		FindDataLimits	Array: Per row minimum Y value
+data_type	'text-data'	SetDataType	Format of the data array
+data_units_text	''	FormatLabel	Obsolete - suffix for 'data'-formatted labels
+decimal_point		SetNumberFormat	Character to use for decimal point in formatted numbers
+default_dashed_style		SetDefaultDashedStyle	Formatted PHP code to build a dashed line pattern
+default_ttfont	'benjamingothic.ttf'	SetDefaultTTFont	Default TrueType font file
+draw_broken_lines	FALSE	SetDrawBrokenLines	Flag: How to handle missing Y values
+draw_plot_area_background	FALSE	SetDrawPlotAreaBackground	Flag: Draw the background of the plot area
+draw_x_data_label_lines	FALSE	SetDrawXDataLabelLines	Flag: Draw X data label lines
+draw_x_grid	FALSE	SetDrawXGrid	Flag: Draw X grid lines?
+draw_y_data_label_lines	FALSE	SetDrawYDataLabelLines	Unimplemented
+draw_y_grid	TRUE	SetDrawYGrid	Flag: Draw Y grid lines?
+error_bar_colors	array(...)	SetErrorBarColors	Array of color names for error bars
+error_bar_line_width	1	SetErrorBarLineWidth	Thickness of error bar lines
+error_bar_shape	'tee'	SetErrorBarShape	Shape (style) of error bars: line or tee
+error_bar_size	5	SetErrorBarSize	Size of error bars
+file_format	'png'	SetFileFormat	Image format: png, gif, jpg, wbmp
+fonts		SetFontGD SetFontTTF	Array of font information, indexed by text type (title, x_label, etc). Value is an array of font information, with indexes including: 'ttf' (True if TrueType), 'font' (font path or designator), 'size' (point size for TrueType).
+grid_at_foreground	FALSE	DrawGraph	Flag: Draw grid on top of or behind the plot
+grid_color	'black'	SetGridColor	Name of color to use for axes, plot area border, legend border, pie chart lines and text (not grid!)
+group_frac_width	0.7	CalcBarWidths	Controls fraction of bar group space used for bar
+i_border	array(194,194,194)	SetImageBorderColor	Name of color for image border, if drawn
+image_border_type	'none'	SetImageBorderType	Image border type: plain or raised
+image_height		PHPlot	Image height
+image_width		PHPlot	Image width
+img		PHPlot	Image resource
+in_error		PrintError	Prevent recursion in error message image production
+is_inline	FALSE	SetIsInline	Don't sent headers
+label_color	'black'	SetLabelColor	Unused - see SetTitleColor
+label_format	array(...)	SetXLabelType SetYLabelType SetXTimeFormat SetYTimeFormat SetPrecisionX SetPrecisionY	Label format info. Indexes 'x' and 'y' are each an array, with index 'type' indicating the label format type (data, time, printf, or custom), and other indexes depending on that value.
+label_scale_position	0.5	SetLabelScalePosition	Pie chart label position factor
+legend	''	SetLegend	Legend text array. Each index is a legend text line.
+legend_colorbox_align		SetLegendStyle	Legend alignment of color boxes, left, right, or none
+legend_text_align		SetLegendStyle	Legend style setting, left or right
+legend_x_pos		SetLegendPixels SetLegendWorld	Forced legend position
+legend_xy_world		SetLegendPixels SetLegendWorld	Flag indicating legend position was set in World coords
+legend_y_pos		SetLegendPixels SetLegendWorld	Forced legend position
+light_grid_color	'gray'	SetLightGridColor	Name of color for grid lines and X data lines
+line_spacing	4	SetLineSpacing	Controls inter-line spacing of text
+line_styles	array(...)	SetLineStyles	Plot line style(s)
+line_widths	1	SetLineWidths	Plot line width(s)
+locale_override		number_format	Flag to avoid importing locale info
+max_x		FindDataLimits	Overall max X value
+max_y		FindDataLimits	Overall max Y value
+min_x		FindDataLimits	Overall min X value
+min_y		FindDataLimits	Overall min Y value
+ndx_bg_color		SetBackgroundColor	Color index of image background
+ndx_data_border_colors		SetDataBorderColors	Array of color indexes for bar chart data borders
+ndx_data_colors		SetDataColors	Color index array for plot data lines/marks/bars/etc.
+ndx_data_dark_colors		SetDataColors	Color index array for plot data, darker shade
+ndx_error_bar_colors		SetErrorBarColors	Array of color indexes for error bars
+ndx_grid_color		SetGridColor	Color index for axes, plot area border, legend border, pie chart lines and text
+ndx_i_border		SetImageBorderColor	Color index for image border lines
+ndx_i_border_dark		SetImageBorderColor	Color index for image border lines, darker shade
+ndx_light_grid_color		SetLightGridColor	Color index for grid lines and X data lines
+ndx_plot_bg_color		SetPlotBgColor	Color index of plot area background
+ndx_text_color		SetTextColor	Color index for labels and legend text
+ndx_tick_color		SetTickColor	Color index for tick marks
+ndx_title_color		SetTitleColor SetLabelColor	Color index for titles
+num_data_rows		SetDataValues	Number of data array rows (number of plot lines, for example)
+num_recs		SetDataValues	Array of number of values for each data row
+num_x_ticks	''	SetNumXTicks	Forced number of X tick marks
+num_y_ticks	''	SetNumYTicks	Forced number of Y tick marks
+output_file	''	SetOutputFile	Redirect to output file
+plot_area		CalcPlotAreaPixels	Array defining the calculated plot area. ([0],[1]) is the top left corner, ([2],[3]) is the bottom right corner.
+plot_area_height		CalcPlotAreaPixels	Height of the plot area
+plot_area_width		CalcPlotAreaPixels	Width of the plot area
+plot_bg_color	'white'	SetPlotBgColor	Name of color for plot area background
+plot_border_type	'sides'	SetPlotBorderType	Where to draw plot borders
+plot_max_x		CalcPlotAreaWorld	Calculated maximum X of the plot data in world coordinates
+plot_max_y		CalcPlotAreaWorld	Calculated maximum Y of the plot data in world coordinates
+plot_min_x		CalcPlotAreaWorld	Calculated minimum X of the plot data in world coordinates
+plot_min_y		CalcPlotAreaWorld	Calculated minimum Y of the plot data in world coordinates
+plot_origin_x		CalcTranslation	X device coordinate of the plot area origin
+plot_origin_y		CalcTranslation	Y device coordinate of the plot area origin
+plot_type	'linepoints'	SetPlotType	Selected plot type
+plotbgimg		SetPlotAreaBgImage	Plot area background image filename
+plotbgmode		SetPlotAreaBgImage	Plot area background image tiling mode
+point_shapes	array(...)	SetPointShapes	Shapes of markers in point plots
+point_sizes	array(...)	SetPointSizes	Sizes of markers in point plots
+print_image	TRUE	SetPrintImage	Flag: Automatic PrintImage after DrawGraph?
+record_bar_width		CalcBarWidths	Area for each bar in a bar chart
+records_per_group		SetDataValues	Maximum of num_recs[], max values for any data row
+rgb_array		SetRGBArray	Array mapping color names to array of R, G, B values
+safe_margin	5		Fixed extra margin used in multiple places
+session_set		SetDefaultStyles	Used in SetDefaultStyles for 1-time initialization?
+shading	5	SetShading	Drop shadow size for pie and bar charts
+skip_bottom_tick	FALSE	SetSkipBottomTick	Skip bottom tick mark
+skip_left_tick	FALSE	SetSkipLeftTick	Skip left tick mark
+skip_right_tick	FALSE	SetSkipRightTick	Skip right tick mark
+skip_top_tick	FALSE	SetSkipTopTick	Skip top tick mark
+text_color	'black'	SetTextColor	Name of color for labels and legend text
+thousands_sep		SetNumberFormat	Character to use to group 1000s in formatted numbers
+tick_color	'black'	SetTickColor	Name of color for tick marks
+title_color	'black'	SetTitleColor	Name of color for main, X, and Y titles
+title_txt	''	SetTitle	Main title text
+total_records		SetDataValues	Counts data points, used to check if any data was given?
+ttf_path	'.'	SetTTFPath	TrueType font directory
+use_ttf	FALSE	SetUseTTF	Default font type, True for TrueType, False for GD
+x_axis_position	''	SetXAxisPosition	Position of X axis (in world coordinates)
+x_axis_y_pixels		CalcTranslation	Device coordinate for the X axis
+x_data_label_pos	'plotdown'	SetXDataLabelPos	Position of X data labels
+x_label_angle	0	SetXLabelAngle	X label text angle
+x_label_axis_offset		CalcMargins	Label offset relative to plot area
+x_label_bot_offset		CalcMargins	Label offset relative to plot area
+x_label_top_offset		CalcMargins	Label offset relative to plot area
+x_left_margin		CalcMargins	Calculated plot area margin - left side
+x_right_margin		CalcMargins	Calculated plot area margin - right side
+x_tick_cross	3	SetXTickCrossing	Length of X tick marks (inside plot area)
+x_tick_inc	''	SetXTickIncrement	Step between X tick marks
+x_tick_label_pos	'plotdown'	SetXTickLabelPos	Position of X tick labels
+x_tick_length	5	SetXTickLength	Length of X tick marks (outside plot area)
+x_tick_pos	'plotdown'	SetXTickPos	Position of X tick marks
+x_title_bot_offset		CalcMargins	Title offset relative to plot area
+x_title_pos	'plotdown'	SetXTitle	X Axis title position
+x_title_top_offset		CalcMargins	Title offset relative to plot area
+x_title_txt	''	SetXTitle	X Axis title text
+xscale		CalcTranslation	X scale factor for converting World to Device coordinates
+xscale_type	'linear'	SetXScaleType	Linear or log scale on X
+y_axis_position	''	SetYAxisPosition	Position of Y axis (in world coordinates)
+y_axis_x_pixels		CalcTranslation	Device coordinate for the Y axis
+y_bot_margin		CalcMargins	Calculated plot area margin - bottom
+y_data_label_pos	'plotleft'	SetYDataLabelPos	Position of Y labels above bars
+y_label_angle	0	SetYLabelAngle	Y label text angle
+y_label_axis_offset		CalcMargins	Label offset relative to plot area
+y_label_left_offset		CalcMargins	Label offset relative to plot area
+y_label_right_offset		CalcMargins	Label offset relative to plot area
+y_tick_cross	3	SetYTickCrossing	Length of Y tick marks (inside plot area)
+y_tick_inc	''	SetYTickIncrement	Step between Y tick marks
+y_tick_label_pos	'plotleft'	SetYTickLabelPos	Position of Y tick labels
+y_tick_length	5	SetYTickLength	Length of Y tick marks (outside plot area)
+y_tick_pos	'plotleft'	SetYTickPos	Position of Y tick marks
+y_title_left_offset		CalcMargins	Title offset relative to plot area
+y_title_pos	'plotleft'	SetYTitle	Y Axis title position
+y_title_right_offset		CalcMargins	Title offset relative to plot area
+y_title_txt	''	SetYTitle	Y Axis title text
+y_top_margin		CalcMargins	Calculated plot area margin - top
+yscale		CalcTranslation	Y scale factor for converting World to Device coordinates
+yscale_type	'linear'	SetYScaleType	Linear or log scale on Y
