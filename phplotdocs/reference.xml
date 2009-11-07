@@ -2100,6 +2100,10 @@ The default color is black.
 This doesn't actually set the color used by the grid; for that see
 <xref linkend="SetLightGridColor" />. We have no idea why this is so.
     </para>
+    <para>
+For pie charts drawn with no shading, this also sets the color of the pie
+slice borders.
+    </para>
   </refsect1>
 </refentry>
 
@@ -2646,7 +2650,7 @@ you supply are not scaled until the plot is drawn.
 
   <refnamediv>
     <refname>SetLightGridColor</refname>
-    <refpurpose>Set the color for grid lines</refpurpose>
+    <refpurpose>Set the color for grid lines and X data label lines</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
@@ -2660,6 +2664,8 @@ $plot-&gt;SetLightGridColor(<parameter>$color</parameter>)
     <para>
 <function>SetLightGridColor</function> sets the color used for the X and Y
 grid lines.
+This color is also used for X Data Lines, if enabled with
+<xref linkend="SetDrawXDataLabelLines"/>.
     </para>
   </refsect1>
 
