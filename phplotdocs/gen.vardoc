@@ -1,0 +1,110 @@
+#!/usr/bin/tclsh
+# $Id$
+# Generate documentation for PHPlot variables
+#    Copyright 2009 ljb - This is part of the PHPlot Reference Manual Source
+#    and may be used/distributed according to the same terms.
+# The input file is tab-separated fields with the first line being headers.
+# The expected header fields (in any order) are:
+#    VARNAME DEFAULT REFERENCE DESCRIPTION
+# The input file is assumed to already be sorted, and output in the same order.
+# There is no escaping. If any text has < > or &, must escape in the source
+# data file.
+
+# ===== Output processing:
+
+# Output the header
+proc output_header {} {
+  puts {
+<!-- Note: This table was generated using a script. Do not edit. -->
+<informaltable id="memvarlist">
+  <tgroup cols="4">
+    <?dbhtml cellpadding="5"?>
+    <?dbhtml table-summary="PHPlot Member Variable Reference"?>
+    <colspec colwidth="20%" />
+    <colspec colwidth="15%" />
+    <colspec colwidth="20%" />
+    <colspec colwidth="45%" />
+    <thead>
+      <row>
+        <entry>Variable Name:</entry>
+        <entry>Initialized to Value:</entry>
+        <entry>Reference Function:</entry>
+        <entry>Description:</entry>
+      </row>
+    </thead>
+    <tbody>}
+}
+
+# Output one record
+# d is an array indexed by field name.
+proc output_record {d_name} {
+  upvar $d_name d
+
+  # Reference col is a link, unless empty or "(none)". But the source
+  # can contain multiple words, each of which needs a link.
+  set ref $d(REFERENCE)
+  if {$ref eq "" || $ref eq "(none)"} {
+    set ref_col ""
+  } else {
+    set ref_col_list {}
+    foreach ref [split $d(REFERENCE)] {
+      lappend ref_col_list "<xref linkend=\"$ref\" />"
+    }
+    set ref_col [join $ref_col_list {, }]
+  }
+
+  puts "      <row>"
+  puts "        <entry>$d(VARNAME)</entry>"
+  puts "        <entry>$d(DEFAULT)</entry>"
+  puts "        <entry>$ref_col</entry>"
+  puts "        <entry>$d(DESCRIPTION)</entry>"
+  puts "      </row>"
+}
+
+# Output the footer
+proc output_footer {} {
+  puts {
+    </tbody>
+  </tgroup>
+</informaltable>
+<!-- End generated content -->}
+}
+
+# Read the next line from a file, ignoring blank and comment lines.
+# Comment lines begin with # in the first column.
+# Blank lines contain only whitespace.
+# Like {gets stream varname} and returns -1 on EOF else 1.
+proc getline {f line_name} {
+  upvar $line_name line
+  while {1} {
+    if {[set r [gets $f line]] < 0} {
+      return -1
+    }
+    if {$r > 0 && [string index $line 0] ne "#" && [string trim $line] ne ""} {
+     return 1
+    }
+  }
+}
+
+# =====
+
+# Read the headers:
+if {[getline stdin line] <= 0} {
+  error "Unable to read file header"
+}
+set headers [split $line "\t"]
+
+output_header
+
+# Read the file and process each record:
+set n_rec 0
+while {[getline stdin line] >= 0} {
+  incr n_rec
+  array unset d
+  foreach header $headers value [split $line "\t"] {
+    set d($header) $value
+  }
+  output_record d
+}
+output_footer
+puts stderr "Read and processed: $n_rec records"
