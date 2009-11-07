@@ -24,14 +24,15 @@ MAIN=main.xml
 
 # List of all source files:
 SRC=$(MAIN) $(XSL_HTML) \
-  reference.xml install.xml quickstart.xml \
-  concepts.xml examples.xml functions.xml changelog.xml developer.xml
+  install.xml quickstart.xml concepts.xml functions.xml \
+  examples.xml callbacks.xml \
+  reference.xml developer.xml changelog.xml
 
 # Files to add to release, in addition to *.html files:
 ALSO=phplotdoc.css
 
 # Files to add to the source release:
-SRCALSO=Makefile README ChangeLog
+SRCALSO=Makefile README ChangeLog gen.vardoc variables.list
 
 # All files to (1) include in source release, and (2) tag in RCS:
 RELFILES=$(SRC) $(ALSO) $(SRCALSO)
@@ -55,6 +56,9 @@ EXAMPLES_IMAGES=$(EXAMPLES_PHP:.php=.png)
 # for testing if the examples are up-to-date:
 EXAMPLE_LIST=examples/list.xml
 
+# Variables list: This is a generated file, referenced in main.xml
+VARIABLE_LIST=variablelist.xml
+
 # =====
 
 # Targets:
@@ -71,7 +75,7 @@ version.xml:
 	echo "<!ENTITY version \"`date +%Y-%m-%d`\">" > $@
 
 # Build (X)HTML Manual. The html.mark file is just used for dependency.
-html.mark: $(SRC) $(ALSO) version.xml $(EXAMPLE_LIST)
+html.mark: $(SRC) $(ALSO) version.xml $(EXAMPLE_LIST) $(VARIABLE_LIST)
 	$(XSLTPROC) $(XSLTPROCFLAGS) $(XSL_HTML) $(MAIN)
 	touch html.mark
 
@@ -82,7 +86,7 @@ exampleimages: $(EXAMPLES_IMAGES)
 # Cleanup: deletes intermediate files, leaves manual.
 clean:
 	-rm -f html.mark version.xml
-	-rm -f $(EXAMPLES_XML) $(EXAMPLE_LIST)
+	-rm -f $(EXAMPLES_XML) $(EXAMPLE_LIST) $(VARIABLE_LIST)
 
 # All cleanup: Remove all generated files. Caution: Removes all HTML files!
 allclean: clean
@@ -142,5 +146,10 @@ $(EXAMPLE_LIST): $(EXAMPLES_PHP) $(EXAMPLES_XML) $(EXAMPLES_IMAGES)
 # This rule runs an example through PHP to get an image file:
 %.png: %.php
 	$(PHP) $< > $@
+
+# === For building the variable list documentation ===
+
+$(VARIABLE_LIST): variables.list gen.vardoc 
+	./gen.vardoc < variables.list > $(VARIABLE_LIST)
 
 # ===
