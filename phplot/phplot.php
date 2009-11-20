@@ -200,6 +200,7 @@ class PHPlot {
         'draw_graph' => NULL,
         'draw_border' => NULL,
         'draw_legend' => NULL,
+        'draw_all' => NULL,
         'debug_textbox' => NULL,  // For testing/debugging text box alignment
         'debug_scale' => NULL,    // For testing/debugging scale setup
     );
@@ -1295,7 +1296,7 @@ class PHPlot {
      * ProcessText() - Wrapper for ProcessTextTTF() and ProcessTextGD(). See notes above.
      * This is intended for use from within PHPlot only, and only by DrawText() and SizeText().
      *    $draw_it : True to draw the text, False to just return the orthogonal width and height.
-     *    $font : PHPlot font array
+     *    $font : PHPlot font array, or NULL or empty string to use 'generic'
      *    $angle : Text angle in degrees
      *    $x, $y : Reference point for the text (ignored if !$draw_it)
      *    $color : GD color index to use for drawing the text (ignored if !$draw_it)
@@ -1321,6 +1322,9 @@ class PHPlot {
         elseif ($halign == 'center') $h_factor = 0.5;
         else $h_factor = 1.0; # 'right'
 
+        # Apply a default font. This is mostly for external (callback) users.
+        if (empty($font)) $font = $this->fonts['generic'];
+
         if ($font['ttf']) {
             return $this->ProcessTextTTF($draw_it, $font, $angle, $x, $y, $color, $text, $h_factor, $v_factor);
         }
@@ -1330,7 +1334,7 @@ class PHPlot {
 
     /*
      * Draws a block of text. See comments above before ProcessText().
-     *    $which_font : PHPlot font array.
+     *    $which_font : PHPlot font array, or NULL or empty string to use 'generic'
      *    $which_angle : Text angle in degrees
      *    $which_xpos, $which_ypos: Reference point for the text
      *    $which_color : GD color index to use for drawing the text
@@ -1351,7 +1355,7 @@ class PHPlot {
      * box aligned with the X and Y axes of the text. Only for angle=0 is this the actual
      * width and height of the text block, but for any angle it is the amount of space needed
      * to contain the text.
-     *    $which_font : PHPlot font array.
+     *    $which_font : PHPlot font array, or NULL or empty string to use 'generic'
      *    $which_angle : Text angle in degrees
      *    $which_text :  The text to draw, with newlines (\n) between lines.
      * Returns a two element array with: $width, $height.
@@ -3003,6 +3007,18 @@ class PHPlot {
             $y_pixels =  $this->plot_origin_y - $y_world * $this->yscale ;
         }
         return round($y_pixels);
+    }
+
+    /* A public interface to xtr and ytr. Translates (x,y) in world coordinates
+     * to (x,y) in device coordinates and returns them as an array.
+     * Usage is: list($x_pixel, $y_pixel) = $plot->GetDeviceXY($x_world, $y_world)
+     */
+    function GetDeviceXY($x_world, $y_world)
+    {
+        if (!isset($this->xscale)) {
+            return $this->PrintError("GetDeviceXY() was called before translation factors were calculated");
+        }
+        return array($this->xtr($x_world), $this->ytr($y_world));
     }
 
     /*
@@ -4786,7 +4802,7 @@ class PHPlot {
         $this->DoCallback('draw_image_background');
 
         $this->DrawPlotAreaBackground();
-        $this->DoCallback('draw_plotarea_background');
+        $this->DoCallback('draw_plotarea_background', $this->plot_area);
 
         $this->DrawTitle();
         $this->DrawXTitle();
@@ -4846,7 +4862,7 @@ class PHPlot {
             $this->DrawBars();
             break;
         }   // end switch
-        $this->DoCallback('draw_graph');
+        $this->DoCallback('draw_graph', $this->plot_area);
 
         if ($draw_axes && $this->grid_at_foreground) {   // Usually one wants grids to go back, but...
             $this->DrawYAxis();     // Y axis must be drawn before X axis (see DrawYAxis())
@@ -4863,6 +4879,7 @@ class PHPlot {
             $this->DrawLegend();
             $this->DoCallback('draw_legend');
         }
+        $this->DoCallback('draw_all', $this->plot_area);
 
         if ($this->print_image && !$this->PrintImage())
             return FALSE;
