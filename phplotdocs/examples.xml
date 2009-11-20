@@ -43,10 +43,9 @@ $  display output.png
     </screen>
   </para>
   <para>
-ImageMagick is available for many operating systems.
-Another good image viewer, for Linux, Solaris, FreeBSD, and HP-UX systems,
-is <ulink url="http://www.klografx.net/qiv/">qiv</ulink> - the Quick Image
-Viewer.
+<application>ImageMagick</application> is available for several operating systems.
+There are many other image viewers for Linux and Linux-like systems,
+including <application>qiv</application> and <application>gqview</application>.
   </para>
 </note>
 
@@ -534,6 +533,31 @@ alternative to Y axis labels, but only with bar charts.
   </mediaobject>
 </informalfigure>
 &bars4;
+</example>
+</sect1>
+
+<!-- =============================================== -->
+<sect1 id="ex-annotate">
+<title>Example - Annotating a Plot Using a Callback</title>
+<para>
+This is an advanced example that uses a drawing callback to
+add annotations to a plot. More information on this topic can
+be found in <xref linkend="callbacks-drawing" />,
+where this example is described in detail.
+</para>
+<example id="example-annotate">
+<title>Annotated Plot</title>
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="examples/annotate.png" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>Annotated Plot Example</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+&annotate;
 </example>
 </sect1>
 
