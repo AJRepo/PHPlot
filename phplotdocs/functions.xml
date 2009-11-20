@@ -1,5 +1,5 @@
 <!-- $Id$
-     Functions by Catagory
+     Functions by Category
      (This material used to be in the reference section, before I
      alphabetized the functions there.)
 
@@ -421,11 +421,12 @@ actual values will depend on a somewhat arbitrary base value.
 <title>Scaling and Translation</title>
 <para>
 The functions in this section control the overall data scaling and
-positioning of the plot on the image.
+positioning of the plot on the image, or translate coordinates.
 </para>
 
 <para>
 <itemizedlist>
+  <listitem><para><xref linkend="GetDeviceXY" /></para></listitem>
   <listitem><para><xref linkend="SetMarginsPixels" /></para></listitem>
   <listitem><para><xref linkend="SetPlotAreaPixels" /></para></listitem>
   <listitem><para><xref linkend="SetPlotAreaWorld" /></para></listitem>
