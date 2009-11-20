@@ -17,8 +17,6 @@ testing of PHPlot.
 Callbacks were added to PHPlot-5.0.4 as an experimental feature.
 This feature is subject to change in future releases. Changes in the
 implementation may be incompatible with the current interface.
-The feature may even be removed entirely. Be aware of this before
-you decide to rely on callbacks in your application.
   </para>
   <para>
 Some methods of using callbacks allow you to directly access or alter PHPlot
@@ -57,15 +55,19 @@ Refer to these entries in the Function Reference:
 Either a function name or an object and method can be registered as
 a callback with <xref linkend="SetCallback"/>.
 For more information about using callbacks with objects and methods,
-see the PHP manual under Types, Pseudo Types, Callback.
+see the PHP manual under
+<ulink url="http://www.php.net/manual/en/language.pseudo-types.php#language.types.callback">Types, Pseudo Types, Callback</ulink>
+and the documentation for the PHP
+<ulink url="http://www.php.net/manual/en/function.call-user-func.php ">call_user_func</ulink>
+function.
 Also refer to <xref linkend="callbacks-objects"/> later in this manual.
-Whether calling a function or an
-object method as a callback, the same calling sequence is used.
+Whether calling a function or an object method as a callback,
+the same calling sequence is used.
 </para>
 <para>
-  <programlisting>
+  <programlisting><![CDATA[
 function_name($img, $passthrough_arg, [other_args...])
-  </programlisting>
+]]></programlisting>
 </para>
 <para>
   <variablelist>
@@ -103,14 +105,16 @@ reasons supply extra arguments.
 
 <para>
 For example, given this callback setup:
-  <programlisting>
+  <programlisting><![CDATA[
 $plot->SetCallback('draw_graph', 'my_drawing_callback', $myvar);
-  </programlisting>
+]]></programlisting>
 Then PHPlot will call:
-  <programlisting>
-my_drawing_callback($img, $myvar_value);
-  </programlisting>
+  <programlisting><![CDATA[
+my_drawing_callback($img, $myvar_value, $plot_area);
+]]></programlisting>
 Where $myvar_value is the value of $myvar at the time SetCallback was called.
+(The plot_area parameter is not supplied for the draw_graph callback in
+PHPlot-5.0.7 and earlier.)
 </para>
 </sect1>
 
@@ -190,7 +194,7 @@ The following table lists the available callback reasons.
       <?dbhtml table-summary="PHPlot available callback reasons"?>
       <thead>
         <row>
-          <entry>Reason Name:</entry>
+          <entry>Callback Name:</entry>
           <entry>Calling Point:</entry>
           <entry>Extra Parameters:</entry>
           <entry>Notes:</entry>
@@ -212,8 +216,8 @@ The following table lists the available callback reasons.
         <row>
           <entry>draw_plotarea_background</entry>
           <entry>After drawing the plot area background.</entry>
-          <entry>(None)</entry>
-          <entry></entry>
+          <entry>plot_area</entry>
+          <entry>plot_area parameter was added after PHPlot-5.0.7</entry>
         </row>
         <row>
           <entry>draw_titles</entry>
@@ -230,8 +234,8 @@ The following table lists the available callback reasons.
         <row>
           <entry>draw_graph</entry>
           <entry>After drawing the body of the graph.</entry>
-          <entry>(None)</entry>
-          <entry></entry>
+          <entry>plot_area</entry>
+          <entry>plot_area parameter was added after PHPlot-5.0.7</entry>
         </row>
         <row>
           <entry>draw_border</entry>
@@ -244,6 +248,12 @@ The following table lists the available callback reasons.
           <entry>After drawing the legend, if legend is enabled.</entry>
           <entry>(None)</entry>
           <entry>Not called if no legend was set.</entry>
+        </row>
+        <row>
+          <entry>draw_all</entry>
+          <entry>After all drawing is complete.</entry>
+          <entry>plot_area</entry>
+          <entry>Added after PHPlot-5.0.7</entry>
         </row>
         <row>
           <entry>debug_textbox</entry>
@@ -263,6 +273,20 @@ The following table lists the available callback reasons.
     </tgroup>
   </informaltable>
 </para>
+<note>
+  <title>Notes:</title>
+  <para>
+Several of the drawing callbacks include <parameter>plot_area</parameter>
+as an extra parameter. This is an array of 4 values that define the plot area
+within the image, in GD pixel coordinates, as left_x, top_y, right_x, and
+bottom_y. For more information, see <xref linkend="dev-layout" />.
+  </para>
+  <para>
+See <xref linkend="callbacks-drawing"/>
+for information on using the drawing callbacks to annotate your plot.
+  </para>
+</note>
+
 </sect1>
 
 <sect1 id="callbacks-objects">
@@ -275,22 +299,22 @@ extension of the PHPlot class.
 Consider the following setup:
 </para>
 <para>
-  <programlisting>
+  <programlisting><![CDATA[
 class my_PHPlot extends PHPlot
 {
   function my_PHPlot($width=600, $height=400, $outfile=NULL, $infile=NULL)
   {
-    $this-&gt;PHPlot($width, $height, $outfile, $infile);
+    $this->PHPlot($width, $height, $outfile, $infile);
   }
 
   function callback($img, $arg)
   {
     fwrite(STDERR, "callback in object\n");
-    fwrite(STDERR, "Plot area: ({$this-&gt;plot_area[0]}, {$this-&gt;plot_area[1]}) :");
-    fwrite(STDERR, " ({$this-&gt;plot_area[2]}, {$this-&gt;plot_area[2]})\n");
+    fwrite(STDERR, "Plot area: ({$this->plot_area[0]}, {$this->plot_area[1]}) :");
+    fwrite(STDERR, " ({$this->plot_area[2]}, {$this->plot_area[2]})\n");
   }
 }
-  </programlisting>
+]]></programlisting>
 </para>
 
 <para>
@@ -302,10 +326,10 @@ You can use the PHP5 constructor method instead.)
 
 <para>
 We will then create an instance of the extended class, and set a callback.
-  <programlisting>
+  <programlisting><![CDATA[
 $plot = new my_PHPlot(400,300);
 $plot->SetCallback('draw_titles', array($plot, 'callback'));
-  </programlisting>
+]]></programlisting>
 This is for PHP5. For PHP4, you need to use a reference to the $plot instance.
 Note that PHP4 is no longer supported.
 </para>
@@ -317,5 +341,232 @@ PHPlot class, it has access to all the member variables via $this.
 </para>
 
 </sect1>
-</chapter>
 
+<sect1 id="callbacks-drawing">
+<title>Using Callbacks to Annotate Plots</title>
+<para>
+This section contains information about using PHPlot callbacks to annotate
+a plot with text and graphics. This is an advanced topic, and requires some
+knowledge of both PHPlot and the PHP GD extension.
+</para>
+<warning>
+  <para>
+The information in this section uses features which are recent additions
+to PHPlot, and in some cases uses PHPlot internal variables and functions.
+As a result, these methods are less likely to work with older releases, and
+more at risk to change or break in future releases.
+  </para>
+</warning>
+
+<para>
+This section will first provide general information and advice about
+annotating plots using callbacks.
+<!-- Note exception, link to example's section not example. -->
+After, portions of the script from <xref linkend="ex-annotate" />
+will be explained in more detail.
+</para>
+
+<para>
+The emphasis here is on using callbacks, but annotation is also possible 
+without callbacks.
+You can use <xref linkend="SetPrintImage"/>(False) to disable automatic
+output of your image. Then, when <xref linkend="DrawGraph"/> returns, you
+can annotate your plot using GD functions on the <literal>img</literal>
+member variable of your PHPlot object. Use of callbacks is preferred,
+however, because it makes your script somewhat less dependent on PHPlot
+internals (such as the <literal>img</literal> variable).
+</para>
+
+  <sect2>
+    <title>Setting the callback</title>
+    <para>
+Use <xref linkend="SetCallback"/> to establish a drawing callback.
+You can find a list of callbacks in <xref linkend="callbacks-names"/>.
+The various callbacks with names starting 'draw_' are called at different
+points in the drawing process. Drawn objects will cover items drawn at an
+earlier stage. For example, if you draw a line from a 'draw_titles' callback
+(which is called after the plot titles are drawn, but before the graph is
+drawn), the line would be 'behind' and possibly covered by the plotted data.
+    </para>
+    <para>
+Note that PHPlot does very little except save parameter values until you
+call <xref linkend="DrawGraph"/>. For that reason, you should use GD functions
+for annotation only from a drawing callback (that is, a callback with a name
+starting with 'draw_').
+The drawing callbacks are called after PHPlot calculations and image resource
+setup, at which point everything is ready for drawing.
+In addition, you should not use PHPlot functions which control plot
+appearance from your drawing callback. These would either have no affect,
+because it is too late, or produce unexpected results.
+    </para>
+  </sect2>
+
+  <sect2>
+    <title>Coordinates</title>
+    <para>
+When drawing with GD, you will use the <link linkend="def-devcoor">Device
+Coordinate system</link>. The coordinates in this system are pixels, with
+the origin in the upper left corner of your image. Y advances down and X
+advances to the right.
+    </para>
+    <para>
+If you want to make annotations relative to specific values in your plot data,
+you need to translate those values from
+<link linkend="def-worldcoor">World Coordinates</link> to device coordinates.
+Use the PHPlot function <xref linkend="GetDeviceXY"/>
+to perform this translation.
+You will need access to your PHPlot object from inside your callback function
+in order to use this (or any other PHPlot method function). You can make it
+global, or designate it as the passthrough argument to SetCallback.
+    </para>
+    <para>
+If your annotations will fall outside the plot area (for example, in an
+area you reserved for annotation using <xref linkend="SetPlotAreaPixels"/>
+or <xref linkend="SetMarginsPixels"/>, then you need not be concerned with
+coordinate translation. Of course, you can also add annotations at fixed
+pixel coordinates inside the plot area, however these may overlay (if done
+from a draw_graph or later callback) or underlay (if done before the
+draw_graph callback) the plotted data.
+    </para>
+  </sect2>
+
+  <sect2>
+    <title>Colors</title>
+    <para>
+Every GD drawing function you use will require a color value argument.
+You are recommended to allocate your own colors in your callback using the
+GD function <function>imagecolorresolve()</function>. This function
+will always return a color index, by either re-using an existing color in
+the image's color map, or by allocating a new color.
+Using imagecolorresolve() rather than trying to access the PHPlot internal
+variables for color indexes will protect your script from breaking if the
+way PHPlot manages its internal colors ever changes.
+    </para>
+  </sect2>
+
+  <sect2>
+    <title>Text</title>
+    <para>
+Text can be added to your plot using GD functions which include
+<function>imagestring</function>, for build-in simple fonts, and
+<function>imagettftext</function> for TrueType font text. To use these
+functions, you need device coordinates, as described above.
+    </para>
+    <para>
+You can also add text to your plot using the PHPlot function
+<function>DrawText</function>. This is documented only for internal
+use by PHPlot, so there is a risk of future incompatibility. But this
+function provides support for controlling the text justification, and works
+better with multi-line text.
+    </para>
+  </sect2>
+
+  <sect2>
+    <title>Example</title>
+    <para>
+This example creates a bar chart and adds annotation. The goal is to draw an
+ellipse and add text to the highest and lowest bars in a bar chart.
+<!-- Note exception, link to example's section not example. -->
+Refer to <xref linkend="ex-annotate" /> for the complete script and
+output from this example.
+    </para>
+
+    <para>
+The script starts with the usual PHPlot object creation and setup.
+      <programlisting><![CDATA[
+$plot = new PHPlot(800, 600);
+$plot->SetTitle('Monthly Widget Sales');
+...
+]]></programlisting>
+(For the complete script, see the example referenced above.)
+    </para>
+
+    <para>
+Before calling DrawGraph, establish the drawing callback. This uses the
+<literal>draw_all</literal> callback, which gets called when all drawing is
+complete in DrawGraph. (Note: If using PHPlot-5.0.7 or earlier, use
+'draw_graph' instead, as 'draw_all' was not yet available.)
+The name of our callback function is <literal>annotate_plot</literal>,
+and we are passing the PHPlot object ($plot) as a pass-through parameter.
+You can use a global or class callback instead -
+see <xref linkend="callbacks-api"/> for more on these options.
+      <programlisting><![CDATA[
+$plot->SetCallback('draw_all', 'annotate_plot', $plot);
+]]></programlisting>
+    </para>
+
+    <para>
+Here is the declaration of our callback function. The <literal>$img</literal>
+parameter is provided by PHPlot itself, and is the GD resource for our image.
+The <literal>$plot</literal> parameter is the pass-through argument we provided
+above when establishing the callback.
+Some callbacks make other parameters available. In fact, 'draw_all' provides
+the plot area coordinates as an additional parameter, but we don't need that
+here so we do not have to include that in the function declaration.
+      <programlisting><![CDATA[
+function annotate_plot($img, $plot)
+{
+]]></programlisting>
+    </para>
+
+    <para>
+As stated above, you should allocate your own colors, rather than trying to
+get into PHPlot's internals for color values. Here we allocate two colors
+and assign the color indexes to local variables:
+      <programlisting><![CDATA[
+$red = imagecolorresolve($img, 255, 0, 0);
+$green = imagecolorresolve($img, 0, 216, 0);
+]]></programlisting>
+    </para>
+
+    <para>
+Next, we want to draw graphics centered on two points in our data. The
+points were calculated as best_index (X), best_sales (Y), worst_index (X),
+and worst_sales (Y). In order to draw at these locations, we need to
+translate the values from
+<link linkend="def-worldcoor">World Coordinates</link> to
+<link linkend="def-devcoor">Device Coordinates</link>.
+This is done using the PHPlot function <xref linkend="GetDeviceXY"/>.
+      <programlisting><![CDATA[
+list($best_x, $best_y) = $plot->GetDeviceXY($best_index, $best_sales);
+list($worst_x, $worst_y) = $plot->GetDeviceXY($worst_index, $worst_sales);
+]]></programlisting>
+    </para>
+
+    <para>
+Now we are ready to draw some ellipses, centered on our two data points.
+The values 50 and 20 are the width and height, in pixels.
+      <programlisting><![CDATA[
+imageellipse($img, $best_x, $best_y, 50, 20, $green);
+imageellipse($img, $worst_x, $worst_y, 50, 20, $red);
+]]></programlisting>
+    </para>
+
+    <para>
+As stated above, we have two options for text, and the example uses each method.
+We can draw text using the GD functions, but we have to do a little more
+work to position the text. Here the text is approximately centered
+horizontally and above the data point. (Note ImageString by default uses the
+upper left corner of the text string for positioning.)
+      <programlisting><![CDATA[
+$font = '3';
+$fh = imagefontheight($font);
+$fw = imagefontwidth($font);
+imagestring($img, $font, $best_x-$fw*4, $best_y-$fh-10, 'Good Job!', $green);
+]]></programlisting>
+    </para>
+
+    <para>
+Or, we can use the PHPlot internal function DrawText. With a PHPlot version
+above 5.0.7, we omit the font specification and it will default to the
+generic font, which can be set with <xref linkend="SetFont"/>('generic', ...)
+      <programlisting><![CDATA[
+$plot->DrawText('', 0, $worst_x, $worst_y-10, $red, 'Bad News!', 'center', 'bottom');
+]]></programlisting>
+    </para>
+
+  </sect2>
+
+</sect1>
+
+</chapter>
