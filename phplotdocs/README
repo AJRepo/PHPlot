@@ -1,5 +1,5 @@
 This is phplotdocs/README, for the PHPlot Reference Manual source
-Last updated on 2009-01-21
+Last updated on 2009-11-19
 -----------------------------------------------------------------------------
 
 This directory contains the Docbook-XML source files for the PHPlot Reference
@@ -26,8 +26,9 @@ Tools:
 I used the following tools and versions to produce the manual. Other
 versions may work too.
 
-   Docbook XSL Style Sheets docbook-xsl-1.73.2
-   xsltproc from libxml2-2.6.32
+   Docbook XSL Style Sheets docbook-xsl-1.75.1
+   xsltproc from libxsltproc-1.1.24 and libxml2-2.7.3
+   Tcl shell (tclsh) is used to generate the table in the Variables chapter.
 
 The above are used to produce the XHTML manual. There was an attempt to
 make PDF output, but it never worked well and currently does not work at all.
@@ -43,11 +44,11 @@ example:    PHP=/opt/php/bin/php
 The Makefile has the following targets:
 
   "make html" creates the HTML files (in the current directory).
-  "make pdf" makes the PDF output phplot.pdf [Does not work]
   "make release" makes a ZIP file containing the HTML files for the manual.
     When unzipped, it will make a directory phplotdocs/ containing all
     the files, with index.html being the starting point.
-  "make dist" makes the manual source distribution.
+  "make dist" makes a source distribution of the manual. This isn't used,
+    because I don't create downloads for the manual source.
   "make clean" deletes some intermediate files, but leaves the manual output.
   "make allclean" deletes every generated file.
   "make sfhtml" makes a special HTML version of the manual for the
@@ -119,3 +120,13 @@ HTML vs XHTML:
 The selection of an XSL style sheet determines the output format: HTML or
 XHTML. Because the XHTML output is more standards-compliant, XHTML was
 chosen. The output should display properly in all modern browsers.
+
+
+Member Variables documentation:
+
+There is a table in the Member Variables chapter with information about
+all of the PHPlot class variables. The information about the variables is
+maintained in the tab-separated text file 'variables.list'. This is converted
+by the Makefile into a Docbook-XML file 'variablelist.xml', which is included
+into the manual. The conversion is done using a short Tcl script 'gen.vardoc',
+so you will need the Tcl shell tclsh to build the manual.
