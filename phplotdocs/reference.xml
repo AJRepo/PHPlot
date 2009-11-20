@@ -119,6 +119,108 @@ Refer to <xref linkend="callbacks"/> for more information.
   </refsect1>
 </refentry>
 
+<refentry id="GetDeviceXY">
+  <refmeta>
+    <refentrytitle>GetDeviceXY</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>GetDeviceXY</refname>
+    <refpurpose>Translate world coordinates into device coordinates</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+list($x, $y) = $plot-&gt;GetDeviceXY(<parameter>$x_world</parameter>, <parameter>$y_world</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>GetDeviceXY</function> translates values in
+<link linkend="def-worldcoor">world coordinates</link> into
+values in <link linkend="def-devcoor">device coordinates</link>.
+This is useful if you want to annotate a plot with text or graphics
+positioned relative to specific data values. Given the coordinates of a
+point in the coordinate space of your data values, this function returns
+the pixel coordinates of that point in the image.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$x_world</replaceable></term>
+        <listitem>
+          <para>
+The X coordinate to translate from world coordinates.
+          </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><replaceable>$y_world</replaceable></term>
+        <listitem>
+          <para>
+The Y coordinate to translate from world coordinates.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Return Value</title>
+    <para>
+Returns an array of two values ($x, $y) in device coordinates which
+correspond to the world coordinate parameters.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+This function only works after scaling factors have been established, which
+happens in <xref linkend="DrawGraph"/>. So it can only be used in two cases:
+      <itemizedlist>
+        <listitem>
+          <para>
+From a drawing callback (see <xref linkend="callbacks"/>) - that is, a
+callback whose name starts with 'draw'.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+If <xref linkend="SetPrintImage"/>(False) is used to disable automatic
+output of the image file, then <function>GetDeviceXY()</function> can be
+used after <xref linkend="DrawGraph"/> returns.
+          </para>
+        </listitem>
+      </itemizedlist>
+    </para>
+    <para>
+<function>GetDeviceXY()</function> will fail with an error message if it
+is called before scaling is set up.
+    </para>
+    <para>
+If the world coordinates represent a point that is not visible on the plot,
+the returned device coordinates will be outside the plot area, or even
+outside the image area.
+    </para>
+    <para>
+For examples, refer to *****To be supplied*****
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>History</title>
+    <para>
+This function was added after PHPlot-5.0.7.
+    </para>
+  </refsect1>
+</refentry>
+
 <refentry id="PHPlot">
   <refmeta>
     <refentrytitle>PHPlot</refentrytitle>
@@ -211,9 +313,9 @@ called.
     <para>
 Earlier versions of this manual said that the created object should always
 be returned as a reference, like this:
-      <programlisting>
-  $plot =&amp; new PHPlot(...);  // Do not use this
-      </programlisting>
+      <programlisting><![CDATA[
+  $plot =& new PHPlot(...);  // Do not use this
+]]></programlisting>
 This was because PHPlot included a function to deallocate memory used by
 the object at script shutdown, but that would only work if a reference
 assignment was used. This quasi-destructor was removed at PHPlot-5.0.4
@@ -510,7 +612,7 @@ $plot-&gt;SetCallback(<parameter>$reason</parameter>, <parameter>$function</para
     <para>
 <function>SetCallback</function> registers a callback function. That is, it
 arranges for the caller-provided function to be called at a specific point
-or point inside PHPlot's internal processing.
+or points inside PHPlot's internal processing.
     </para>
   </refsect1>
 
@@ -699,12 +801,12 @@ calls 'the usual integer indices (starting from zero, increasing by one)'.
     <para>
 Usually the <parameter>$data_colors</parameter> argument is an array of colors,
 one for each data set to be plotted. For example:
-<programlisting>
-$plot-&gt;SetDataColors(array('red', 'green', 'blue'));
-$plot-&gt;SetDataType('data-data');
-$plot-&gt;SetDataValues(array( array('', 1, 4, 10, 5),
+      <programlisting><![CDATA[
+$plot->SetDataColors(array('red', 'green', 'blue'));
+$plot->SetDataType('data-data');
+$plot->SetDataValues(array( array('', 1, 4, 10, 5),
                             array('', 2, 6, 20, 3)));
-</programlisting>
+]]></programlisting>
 This will plot a red line from (1,4) to (2,6), a green line from (1,10) to
 (2,20), and a blue line from (1,5) to (2,3).
     </para>
@@ -809,36 +911,36 @@ The default data type is <literal>text-data</literal>.
     </para>
     <para>
 An example of a <literal>text-data</literal> data array is:
-<programlisting>
+      <programlisting><![CDATA[
      $data = array(  array('Jan', 100, 150, 200),
                      array('Feb', 110, 140, 210),
                      array('Mar', 120, 145, 200),
                      array('Apr', 110, 160, 220) );
-</programlisting>
+]]></programlisting>
 This defines the data for 3 plots with 4 points on each, and a month name
 as label for each point.
     </para>
 
     <para>
 An example of a <literal>data-data</literal> data array is:
-<programlisting>
+      <programlisting><![CDATA[
      $data = array(  array('', 2, 15),
                      array('', 4, 14),
                      array('', 6, 10),
                      array('', 8, 20) );
-</programlisting>
+]]></programlisting>
 Here the labels are empty strings, next are the X values, then a single
 set of Y values (1 plot).
     </para>
 
     <para>
 An example of a <literal>data-data-error</literal> data array is:
-<programlisting>
+      <programlisting><![CDATA[
      $data = array(  array('1999', 1, 23.5, 5, 3),
                      array('2000', 2, 20.1, 4, 4),
                      array('2001', 3, 19.1, 3, 4),
                      array('2002', 4, 16.8, 4, 3) );
-</programlisting>
+]]></programlisting>
 Here the labels are years, next are the X values 1-4, then a single
 set of Y values with error ranges between 3 and 5 for each point.
     </para>
@@ -846,11 +948,11 @@ set of Y values with error ranges between 3 and 5 for each point.
     <para>
 An example of a <literal>text-data-single</literal> data array,
 used only for pie charts, is:
-<programlisting>
+      <programlisting><![CDATA[
      $data = array(  array('', 10),
                      array('', 40),
                      array('', 50) );
-</programlisting>
+]]></programlisting>
 Here the labels are empty (they aren't used with a pie chart anyway),
 and 3 slices with relative weights of 10, 40, and 50 are defined.
     </para>
@@ -2992,9 +3094,9 @@ last one called will have an effect.
 Trailing defaulted arguments can be omitted, but non-trailing defaulted
 arguments must be specified as NULL. For example, to set the right margin
 to 100 pixels, and let PHPlot calculate the other three margins, use:
-      <programlisting>
-$plot-&gt;SetMarginsPixels(NULL, 100);
-      </programlisting>
+      <programlisting><![CDATA[
+$plot->SetMarginsPixels(NULL, 100);
+]]></programlisting>
     </para>
   </refsect1>
   <refsect1>
@@ -3092,11 +3194,11 @@ PHPlot has (see the History section below) a special member variable
 locale settings from the system. For example, if the following code is used,
 numeric formatting will use the fr_CA locale settings, regardless of
 the system locale.
-<programlisting>
+      <programlisting><![CDATA[
    setlocale(LC_ALL, 'fr_CA');  # On Windows use: 'French_Canada'
    $plot = new PHPlot(800, 600);
    $plot->locale_override = True;
-</programlisting>
+]]></programlisting>
     </para>
   </refsect1>
   <refsect1>
@@ -3426,15 +3528,15 @@ Trailing defaulted arguments can be omitted, but non-trailing defaulted
 arguments must be specified as NULL. For example, to fix the bottom right
 corner of the plot area at (600, 400) and let PHPlot calculate the upper
 left corner use:
-      <programlisting>
-$plot-&gt;SetPlotAreaPixels(NULL, NULL, 600, 400);
-      </programlisting>
+      <programlisting><![CDATA[
+$plot->SetPlotAreaPixels(NULL, NULL, 600, 400);
+]]></programlisting>
 You do not have to specify both X and Y. The following example sets the right
 edge of the plot area at X=600 and lets the other 3 edges be automatically
 calculated:
-      <programlisting>
-$plot-&gt;SetPlotAreaPixels(NULL, NULL, 600);
-      </programlisting>
+      <programlisting><![CDATA[
+$plot->SetPlotAreaPixels(NULL, NULL, 600);
+]]></programlisting>
     </para>
   </refsect1>
   <refsect1>
@@ -3538,9 +3640,9 @@ Trailing defaulted arguments can be omitted, but non-trailing defaulted
 arguments must be specified as NULL. For example, to set the minimum X
 value to 10, the maximum X value to 100, and default the Y scaling, you can
 use:
-      <programlisting>
-$plot-&gt;SetPlotAreaWorld(10, NULL, 100);
-      </programlisting>
+      <programlisting><![CDATA[
+$plot->SetPlotAreaWorld(10, NULL, 100);
+]]></programlisting>
     </para>
   </refsect1>
   <refsect1>
@@ -4201,11 +4303,11 @@ If SetRGBArray is not called, the 'small' color map is used.
     </para>
     <para>
 An example of a user-defined color map is:
-<programlisting>
+      <programlisting><![CDATA[
     array( 'red' => array(255, 0, 0),
            'green' => array(0, 255, 0),
            'blue' => array(0, 0, 255) );
-</programlisting>
+]]></programlisting>
     </para>
     <para>
 More information about the color maps can be found in
@@ -4793,10 +4895,10 @@ PNG format also supports transparency, but viewer support is more limited.
 To set the plot image background to be transparent, pick a color (here
 'yellow') that won't be used anywhere else on the image, and use code
 like this:
-      <programlisting>
-$plot-&gt;SetBackgroundColor('yellow');
-$plot-&gt;SetTransparentColor('yellow');
-      </programlisting>
+      <programlisting><![CDATA[
+$plot->SetBackgroundColor('yellow');
+$plot->SetTransparentColor('yellow');
+]]></programlisting>
     </para>
   </refsect1>
 </refentry>
@@ -5299,9 +5401,9 @@ The following table shows some label formatting examples.
 
           <tbody>
             <row>
-              <entry><programlisting>
+              <entry><programlisting><![CDATA[
 $plot->SetXLabelType('data', 2);
-</programlisting></entry>
+]]></programlisting></entry>
               <entry>1234.56</entry>
               <entry>1,234.56</entry>
               <entry>
@@ -5311,9 +5413,9 @@ Grouping and decimal separators depend on locale.
             </row>
 
             <row>
-              <entry><programlisting>
+              <entry><programlisting><![CDATA[
 $plot->SetXLabelType('data', 0, '&amp;#8364;');
-</programlisting></entry>
+]]></programlisting></entry>
               <entry>100000</entry>
               <entry>&euro;1,000,000</entry>
               <entry>
@@ -5327,11 +5429,11 @@ PHPlot it requires a Unicode font on the server.
             </row>
 
             <row>
-              <entry><programlisting>
+              <entry><programlisting><![CDATA[
 $plot->SetNumberFormat(',', '.');
 $plot->SetXLabelType('data', 2, '',
                      '\xe2\x82\xac');
-</programlisting></entry>
+]]></programlisting></entry>
               <entry>100000</entry>
               <entry>1.000.000,00&euro;</entry>
               <entry>
@@ -5350,9 +5452,9 @@ PHPlot it requires a Unicode font on the server.
             </row>
 
             <row>
-              <entry><programlisting>
+              <entry><programlisting><![CDATA[
 $plot->SetXLabelType('time', '%m/%Y');
-</programlisting></entry>
+]]></programlisting></entry>
               <entry>1208232000</entry>
               <entry>04/2008</entry>
               <entry>
@@ -5363,9 +5465,9 @@ The format string could be set with SetXTimeFormat instead.
             </row>
 
             <row>
-              <entry><programlisting>
+              <entry><programlisting><![CDATA[
 $plot->SetXLabelType('printf', '%8.2e');
-</programlisting></entry>
+]]></programlisting></entry>
               <entry>1234</entry>
               <entry>1.23e+3</entry>
               <entry>
@@ -5376,7 +5478,7 @@ outputs only a one digit exponent here.
             </row>
 
             <row>
-              <entry><programlisting>
+              <entry><programlisting><![CDATA[
 function deg_min_sec($value)
 {
   $deg = (int)$value;
@@ -5386,7 +5488,7 @@ function deg_min_sec($value)
   return "{$deg}d {$min}m {$sec}s";
 }
 $plot->SetXLabelType('custom', 'deg_min_sec');
-</programlisting></entry>
+]]></programlisting></entry>
               <entry>75.12345</entry>
               <entry>75d 7m 24s</entry>
               <entry>
