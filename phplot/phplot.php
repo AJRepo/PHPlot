@@ -3087,7 +3087,7 @@ class PHPlot {
      */
     protected function CalcMaxTickLabelSize($which)
     {
-        list($tick_val, $tick_end, $tick_step) = $this->CalcTicks($which);
+        list($tick_start, $tick_end, $tick_step) = $this->CalcTicks($which);
 
         if ($which == 'x') {
           $font = $this->fonts['x_label'];
@@ -3103,12 +3103,15 @@ class PHPlot {
         $max_height = 0;
 
         // Loop over ticks, same as DrawXTicks and DrawYTicks:
+        // Avoid cumulative round-off errors from $val += $delta
+        $n = 0;
+        $tick_val = $tick_start;
         while ($tick_val <= $tick_end) {
             $tick_label = $this->FormatLabel($which, $tick_val);
             list($width, $height) = $this->SizeText($font, $angle, $tick_label);
             if ($width > $max_width) $max_width = $width;
             if ($height > $max_height) $max_height = $height;
-            $tick_val += $tick_step;
+            $tick_val = $tick_start + ++$n * $tick_step;
         }
         if ($this->GetCallback('debug_scale')) {
             $this->DoCallback('debug_scale', __FUNCTION__, array(
@@ -3608,7 +3611,6 @@ class PHPlot {
      * Draws Grid, Ticks and Tick Labels along Y-Axis
      * Ticks and ticklabels can be left of plot only, right of plot only,
      * both on the left and right of plot, or crossing a user defined Y-axis
-     * TODO: marks at whole numbers (-10, 10, 20, 30 ...) no matter where the plot begins (-3, 4.7, etc.)
      */
     protected function DrawYTicks()
     {
@@ -3621,9 +3623,12 @@ class PHPlot {
         }
 
         // Calculate the tick start, end, and step:
-        list($y_tmp, $y_end, $delta_y) = $this->CalcTicks('y');
+        list($y_start, $y_end, $delta_y) = $this->CalcTicks('y');
 
-        for (;$y_tmp <= $y_end; $y_tmp += $delta_y) {
+        // Loop, avoiding cumulative round-off errors from $y_tmp += $delta_y
+        $n = 0;
+        $y_tmp = $y_start;
+        while ($y_tmp <= $y_end) {
             $ylab = $this->FormatLabel('y', $y_tmp);
             $y_pixels = $this->ytr($y_tmp);
 
@@ -3634,6 +3639,9 @@ class PHPlot {
 
             // Draw tick mark(s)
             $this->DrawYTick($ylab, $y_pixels);
+
+            // Step to next Y, without accumulating error
+            $y_tmp = $y_start + ++$n * $delta_y;
         }
         return TRUE;
     } // function DrawYTicks
@@ -3702,9 +3710,12 @@ class PHPlot {
         }
 
         // Calculate the tick start, end, and step:
-        list($x_tmp, $x_end, $delta_x) = $this->CalcTicks('x');
+        list($x_start, $x_end, $delta_x) = $this->CalcTicks('x');
 
-        for (;$x_tmp <= $x_end; $x_tmp += $delta_x) {
+        // Loop, avoiding cumulative round-off errors from $x_tmp += $delta_x
+        $n = 0;
+        $x_tmp = $x_start;
+        while ($x_tmp <= $x_end) {
             $xlab = $this->FormatLabel('x', $x_tmp);
             $x_pixels = $this->xtr($x_tmp);
 
@@ -3715,6 +3726,9 @@ class PHPlot {
 
             // Draw tick mark(s)
             $this->DrawXTick($xlab, $x_pixels);
+
+            // Step to next X, without accumulating error
+            $x_tmp = $x_start + ++$n * $delta_x;
         }
         return TRUE;
     } // function DrawXTicks
