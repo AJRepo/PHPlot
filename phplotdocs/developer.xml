@@ -553,6 +553,12 @@ y_title_font. Starting with PHPlot-5.0.6, these were combined into a
 single class array variable 'fonts', indexed by the element name, for
 example $fonts['generic'].
     </para>
+    <para>
+Starting after PHPlot-5.0.7, $which_font can be NULL or an empty string to
+use the 'generic' font. This was intended to allow callbacks to avoid
+having to reference the internal class array variable which stores font
+information.
+    </para>
   </listitem>
 </varlistentry>
 
