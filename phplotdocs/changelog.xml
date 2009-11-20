@@ -15,6 +15,17 @@ see the ChangeLog file inside the PHPlot distribution.)
 <variablelist>
 
   <varlistentry>
+    <term>2009-11-18</term>
+    <listitem>
+      <para>
+Added a new section to the Callbacks chapter about using a callback for
+annotating a plot.
+This goes with a new example added to the Examples chapter.
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
     <term>2009-11-06</term>
     <listitem>
       <para>

@@ -4,6 +4,30 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2009-11-18
+   * callbacks.xml, reference.xml: Fix <programlisting> elements to use CDATA
+     for contents.
+
+   * callbacks.xml: Added new section about annotating a plot with callbacks.
+
+2009-11-16
+   * developer.xml: DrawText() can take NULL or '' for $font.
+
+   * callbacks.xml: new callback 'draw_all'. Several callbacks now provide
+     'plot_area' as a parameter.
+
+   * examples.xml, examples/annotate.php : New example added
+
+   * examples/squared1.php, examples/thinbarline1.php,
+     examples/thinbarline2.php: switch mt_rand() which gives the same results
+     on all platforms, unlike rand().
+
+2009-11-13
+   * README: Updated to mention need for Tcl shell to make variablelist.xml,
+     updated the tool versions, deleted mention of "make pdf" target.
+   * reference.xml: document new method GetDeviceXY()
+   * functions.xml: Link to GetDeviceXY
+
 2009-11-06
    The Callbacks chapter is moved from the "Part III, Developer's Guide to
    PHPlot" to "Part I, PHPlot Programming", because it doesn't only apply

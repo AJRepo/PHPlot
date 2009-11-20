@@ -2,6 +2,15 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2009-11-19 (lbayuk)
+    * Improve support for using callbacks to annotate plots:
+      Added new callback 'draw_all', called after all drawing.
+      Supply plot_area[] as argument to some drawing callbacks.
+      Added new method GetDeviceXY() to translate from world coordinates.
+      Allow NULL or '' for $font in DrawText() internal method, meaning to
+          use the generic font. If callbacks want to use DrawText, this
+          avoids them having to reference the internal fonts[] array.
+
 2009-11-01 (lbayuk)
     * Address bug report 2886365 "Declare all functions and variables in
       PHP5 style"
