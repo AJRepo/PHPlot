@@ -2,6 +2,15 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2009-11-20 (lbayuk)
+
+    * Fix for bug 2900914 "Problem with display of 0 on Y axis":
+      Changed how X and Y values are stepped by tick intervals, to avoid
+      cumulative round-off error. This fixes the problem when Y crosses 0 with
+      a tick step such as 0.1 resulting in a long label for a very small but
+      non-zero number. Fixed DrawXTicks, DrawYTicks, and CalcMaxTickLabelSize.
+      (Originally reported by cncnet)
+
 2009-11-19 (lbayuk)
     * Improve support for using callbacks to annotate plots:
       Added new callback 'draw_all', called after all drawing.
@@ -579,7 +588,7 @@ The project home page is http://sourceforge.net/projects/phplot/
       Note: This change may have some negative effects. 1) If your locale is
       "C" or "Posix", you might not get a thousands separator now by default.
       You should be using a more specific locale. 2) If your PHP script is
-      forcing a specific locale with setlocale(), PHPlot will probaby undo
+      forcing a specific locale with setlocale(), PHPlot will probably undo
       that because it uses setlocale(LC_ALL, '') to import locale information
       from the environment.  We have to do that, or a locale set through
       the environment is ignored. But it will override a manually set locale.
@@ -592,7 +601,7 @@ The project home page is http://sourceforge.net/projects/phplot/
       factor accounts for cumulative error when repeatedly adding a delta to
       the X (Y) value.
 
-      Notes: The bug report was writting about Y tick counts only, but X tick
+      Notes: The bug report was writing about Y tick counts only, but X tick
       counts can also be wrong. The proposed fix in the bug report does not
       work in all cases.
 
@@ -690,7 +699,7 @@ The project home page is http://sourceforge.net/projects/phplot/
 2005-03-29 (afan)
     * Small typo fixed in SetYDataLabelPos
 
-    * Update SetDataLabelPos: For past compatability we accept plotleft,
+    * Update SetDataLabelPos: For past compatibility we accept plotleft,
       ...but pass it to SetTickLabelPos
 
 2005-03-26 (afan)
