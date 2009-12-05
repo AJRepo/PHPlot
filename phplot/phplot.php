@@ -3995,14 +3995,23 @@ class PHPlot {
 
 
     /*!
-     * Draws a pie chart. Data has to be 'text-data' type.
+     * Draws a pie chart. Data is 'text-data', 'data-data', or 'text-data-single'.
      *
-     *  This can work in two ways: the classical, with a column for each sector
-     *  (computes the column totals and draws the pie with that)
-     *  OR
-     *  Takes each row as a sector and uses it's first value. This has the added
-     *  advantage of using the labels provided, which is not the case with the
-     *  former method. This might prove useful for pie charts from GROUP BY sql queries
+     *  For text-data-single, the data array contains records with an ignored label,
+     *  and one Y value. Each record defines a sector of the pie, as a portion of
+     *  the sum of all Y values.
+     *
+     *  For text-data and data-data, the data array contains records with an ignored label,
+     *  an ignored X value (for data-data only), and N (N>=1) Y values per record.
+     *  The pie chart will be produced with N segments. The relative size of the first
+     *  sector of the pie is the sum of the first Y data value in each record, etc.
+     *  
+     *  Note: With text-data-single, the data labels could be used, but are not currently.
+     *
+     *  If there are no valid data points > 0 at all, just draw nothing. It may seem more correct to
+     *  raise an error, but all of the other plot types handle it this way implicitly. DrawGraph
+     *  checks for an empty data array, but this is different: a non-empty data array with no Y values,
+     *  or all Y=0.
      */
     protected function DrawPieChart()
     {
@@ -4012,24 +4021,36 @@ class PHPlot {
         $radius = $diameter/2;
 
         // Get sum of each column? One pie slice per column
-        if ($this->data_type === 'text-data') {
+        if ($this->data_type == 'text-data') {
+            $num_slices = $this->records_per_group - 1;  // records_per_group is the maximum row size
+            if ($num_slices < 1) return TRUE;            // Give up early if there is no data at all.
+            $sumarr = array_fill(0, $num_slices, 0);
             for ($i = 0; $i < $this->num_data_rows; $i++) {
-                for ($j = 1; $j < $this->num_recs[$i]; $j++) {      // Label ($row[0]) unused in these pie charts
-                    @ $sumarr[$j] += abs($this->data[$i][$j]);      // NOTE!  sum > 0 to make pie charts
+                for ($j = 1; $j < $this->num_recs[$i]; $j++) {  // Skip label at [0]
+                    if (is_numeric($this->data[$i][$j]))
+                        $sumarr[$j-1] += abs($this->data[$i][$j]);
                 }
             }
         }
         // Or only one column per row, one pie slice per row?
         else if ($this->data_type == 'text-data-single') {
-            for ($i = 0; $i < $this->num_data_rows; $i++) {
-                $legend[$i] = $this->data[$i][0];                   // Set the legend to column labels
-                $sumarr[$i] = $this->data[$i][1];
+            $num_slices = $this->num_data_rows;
+            if ($num_slices < 1) return TRUE;            // Give up early if there is no data at all.
+            $sumarr = array_fill(0, $num_slices, 0);
+            for ($i = 0; $i < $num_slices; $i++) {
+                // $legend[$i] = $this->data[$i][0];                // Note: Labels are not used yet
+                if (is_numeric($this->data[$i][1]))
+                    $sumarr[$i] = abs($this->data[$i][1]);
             }
         }
         else if ($this->data_type == 'data-data') {
+            $num_slices = $this->records_per_group - 2;  // records_per_group is the maximum row size
+            if ($num_slices < 1) return TRUE;            // Give up early if there is no data at all.
+            $sumarr = array_fill(0, $num_slices, 0);
             for ($i = 0; $i < $this->num_data_rows; $i++) {
-                for ($j = 2; $j < $this->num_recs[$i]; $j++) {
-                    @ $sumarr[$j] += abs($this->data[$i][$j]);
+                for ($j = 2; $j < $this->num_recs[$i]; $j++) {  // Skip label at [0] an X and [1]
+                    if (is_numeric($this->data[$i][$j]))
+                        $sumarr[$j-2] += abs($this->data[$i][$j]);
                 }
             }
         }
@@ -4040,7 +4061,9 @@ class PHPlot {
         $total = array_sum($sumarr);
 
         if ($total == 0) {
-            return $this->PrintError('DrawPieChart(): Empty data set');
+            // There are either no valid data points, or all are 0.
+            // See top comment about why not to make this an error.
+            return TRUE;
         }
 
         if ($this->shading) {
@@ -4061,7 +4084,9 @@ class PHPlot {
             $color_index = 0;
             $start_angle = 0;
             $end_angle = 0;
-            foreach ($sumarr as $val) {
+            for ($j = 0; $j < $num_slices; $j++) {
+                $val = $sumarr[$j];
+
                 // For shaded pies: the last one (at the top of the "stack") has a brighter color:
                 if ($h == 0)
                     $slicecol = $this->ndx_data_colors[$color_index];
