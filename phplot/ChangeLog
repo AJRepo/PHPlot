@@ -2,8 +2,18 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
-2009-11-20 (lbayuk)
+2009-12-04
+    * Fix for bug 2908256, errors in pie charts with bad data array:
+      (From on a Drupal contrib module report by thekevinday.)
+      With pie charts only, a data array with no valid Y values resulted
+      in PHP error messages. All other plot types handle this by producing
+      an image without a graph.
+      Fixed DrawPieChart to behave this way too. If there are no valid Y
+      values, or if the sum of all Y values is 0, do not error out, but
+      don't draw a pie chart either.
+      Also, pie charts now ignore non-numeric Y values, like other plot types.
 
+2009-11-20 (lbayuk)
     * Fix for bug 2900914 "Problem with display of 0 on Y axis":
       Changed how X and Y values are stepped by tick intervals, to avoid
       cumulative round-off error. This fixes the problem when Y crosses 0 with
