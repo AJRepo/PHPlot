@@ -37,7 +37,7 @@ class PHPlot {
 
     /* Declare class variables which are initialized to static values. Many more class variables
      * are used, defined as needed, but are unset by default.
-     * All these are declared as public. While it is tempting to them private or protected, this
+     * All these are declared as public. While it is tempting to make them private or protected, this
      * is avoided for two reasons. First, it will break existing code, since all member variables
      * were public in PHP4 and who knows what internal variables people used. Second, it makes
      * testing harder and less effective. Nevertheless, your code should not modify these.
@@ -175,8 +175,10 @@ class PHPlot {
     public $line_styles = array('solid', 'solid', 'dashed');   // single value or array
     public $dashed_style = '2-4';              // colored dots-transparent dots
 
-    public $point_sizes = array(5,5,3);         // single value or array
-    public $point_shapes = array('diamond');   // rect, circle, diamond, triangle, dot, line, halfline, cross
+    public $point_sizes = array(6);            // Array of sizes for points. See CheckPointParams()
+    public $point_shapes = array(              // Array of point shapes. See SetPointShapes() and DrawDot()
+          'diamond', 'dot', 'delta', 'home', 'yield', 'box', 'circle', 'up', 'down', 'cross'
+       );
 
     public $error_bar_size = 5;                // right and left size of tee
     public $error_bar_shape = 'tee';           // 'tee' or 'line'
@@ -336,30 +338,12 @@ class PHPlot {
     }
 
     /*!
-     * Sets/reverts all colors and styles to their defaults. If session is set, then only updates indices,
-     * as they are lost with every script execution, else, sets the default colors by name or value and
-     * then updates indices too.
-     *
-     * FIXME Isn't this too slow?
-     *
+     * Sets/reverts all colors and styles to their defaults.
      */
     protected function SetDefaultStyles()
     {
         /* Some of the Set*() functions use default values when they get no parameters. */
-
-        if (! isset($this->session_set)) {
-            // If sessions are enabled, this variable will be preserved, so upon future executions, we
-            // will have it set, as well as color names (though not color indices, that's why we
-            // need to rebuild them)
-            $this->session_set = TRUE;
-
-            // These only need to be set once
-            $this->SetLineWidths();
-            $this->SetLineStyles();
-            $this->SetDefaultDashedStyle($this->dashed_style);
-            $this->SetPointSizes($this->point_sizes);
-        }
-
+        $this->SetDefaultDashedStyle($this->dashed_style);
         $this->SetImageBorderColor($this->i_border);
         $this->SetPlotBgColor($this->plot_bg_color);
         $this->SetBackgroundColor($this->bg_color);
@@ -2082,81 +2066,73 @@ class PHPlot {
         return (boolean)$this->error_bar_shape;
     }
 
-    /*!
-     * Sets point shape for each data set via an array.
-     * Shape can be one of: 'halfline', 'line', 'plus', 'cross', 'rect', 'circle', 'dot',
-     * 'diamond', 'triangle', 'trianglemid', or 'none'.
+    /*
+     * Synchronize the point shape and point size arrays.
+     * This is called just before drawing any plot that needs 'points'.
      */
-    function SetPointShapes($which_pt)
+    protected function CheckPointParams()
     {
-        if (is_null($which_pt)) {
-            // Do nothing, use default value.
-        } else if (is_array($which_pt)) {
-            // Did we get an array with point shapes?
-            $this->point_shapes = $which_pt;
-        } else {
-            // Single value into array
-            $this->point_shapes = array($which_pt);
-        }
-
-        foreach ($this->point_shapes as $shape)
-        {
-            if (!$this->CheckOption($shape,
-               'halfline, line, plus, cross, rect, circle, dot, diamond, triangle, trianglemid, none',
-                __FUNCTION__))
-                return FALSE;
-        }
-
-        // Make both point_shapes and point_sizes same size.
+        // Make both point_shapes and point_sizes the same size, by padding the smaller.
         $ps = count($this->point_sizes);
         $pt = count($this->point_shapes);
 
         if ($ps < $pt) {
             $this->pad_array($this->point_sizes, $pt);
-        } else if ($pt > $ps) {
+            $this->point_counts = $pt;
+        } else if ($ps > $pt) {
             $this->pad_array($this->point_shapes, $ps);
+            $this->point_counts = $ps;
+        }
+
+        // Note: PHPlot used to check and adjust point_sizes to be an even number here,
+        // for all 'diamond' and 'triangle' shapes. The reason for this having been
+        // lost, and the current maintainer seeing no sense it doing this for only
+        // some shapes, the code has been removed. But see what DrawDot() does.
+    }
+
+    /*!
+     * Sets point shape for each data set via an array.
+     * For a list of valid shapes, see the CheckOption call below.
+     * The point shape and point sizes arrays are synchronized before drawing a graph
+     * that uses points. See CheckPointParams()
+     */
+    function SetPointShapes($which_pt)
+    {
+        if (is_array($which_pt)) {
+            // Use provided array:
+            $this->point_shapes = $which_pt;
+        } elseif (!is_null($which_pt)) {
+            // Make the single value into an array:
+            $this->point_shapes = array($which_pt);
+        }
+
+        // Validate all the shapes. This list must agree with DrawDot().
+        foreach ($this->point_shapes as $shape)
+        {
+            if (!$this->CheckOption($shape, 'halfline, line, plus, cross, rect, circle, dot,'
+                       . ' diamond, triangle, trianglemid, delta, yield, star, hourglass,'
+                       . ' bowtie, target, box, home, up, down, none', __FUNCTION__))
+                return FALSE;
         }
         return TRUE;
     }
 
     /*!
      * Sets the point size for point plots.
-     * \param ps int Size in pixels.
-     * \note Test this more extensively
+     * The point shape and point sizes arrays are synchronized before drawing a graph
+     * that uses points. See CheckPointParams()
      */
     function SetPointSizes($which_ps)
     {
-        if (is_null($which_ps)) {
-            // Do nothing, use default value.
-        } else if (is_array($which_ps)) {
-            // Did we get an array with point sizes?
+        if (is_array($which_ps)) {
+            // Use provided array:
             $this->point_sizes = $which_ps;
-        } else {
-            // Single value into array
+        } elseif (!is_null($which_ps)) {
+            // Make the single value into an array:
             $this->point_sizes = array($which_ps);
-        }
-
-        // Make both point_shapes and point_sizes same size.
-        $ps = count($this->point_sizes);
-        $pt = count($this->point_shapes);
-
-        if ($ps < $pt) {
-            $this->pad_array($this->point_sizes, $pt);
-        } else if ($pt > $ps) {
-            $this->pad_array($this->point_shapes, $ps);
-        }
-
-        // Fix odd point sizes for point shapes which need it
-        for ($i = 0; $i < $pt; $i++) {
-            if ($this->point_shapes[$i] == 'diamond' or $this->point_shapes[$i] == 'triangle') {
-                if ($this->point_sizes[$i] % 2 != 0) {
-                    $this->point_sizes[$i]++;
-                }
-            }
         }
         return TRUE;
     }
-
 
     /*!
      * Tells not to draw lines for missing Y data. Only works with 'lines' and 'squared' plots.
@@ -4156,6 +4132,9 @@ class PHPlot {
             return $this->PrintError("DrawDotsError(): Data type '$this->data_type' not supported.");
         }
 
+        // Adjust the point shapes and point sizes arrays:
+        $this->CheckPointParams();
+
         // Suppress duplicate X data labels in linepoints mode; let DrawLinesError() do them.
         $do_labels = ($this->plot_type != 'linepoints');
 
@@ -4204,6 +4183,9 @@ class PHPlot {
     {
         if (!$this->CheckOption($this->data_type, 'text-data, data-data', __FUNCTION__))
             return FALSE;
+
+        // Adjust the point shapes and point sizes arrays:
+        $this->CheckPointParams();
 
         // Suppress duplicate X data labels in linepoints mode; let DrawLines() do them.
         $do_labels = ($this->plot_type != 'linepoints');
@@ -4310,15 +4292,17 @@ class PHPlot {
 
     /*!
      * Draws a styled dot. Uses world coordinates.
-     * Supported types: 'halfline', 'line', 'plus', 'cross', 'rect', 'circle', 'dot',
-     * 'diamond', 'triangle', 'trianglemid'
+     * The list of supported shapes can also be found in SetPointShapes().
+     * All shapes are drawn using a 3x3 grid, centered on the data point.
+     * The center is (x_mid, y_mid) and the corners are (x1, y1) and (x2, y2).
+     *   $record is the 0-based index that selects the shape and size.
      */
     protected function DrawDot($x_world, $y_world, $record, $color)
     {
-        // TODO: optimize, avoid counting every time we are called.
-        $record = $record % count ($this->point_shapes);
+        $index = $record % $this->point_counts;
+        $point_size = $this->point_sizes[$index];
 
-        $half_point = $this->point_sizes[$record] / 2;
+        $half_point = (int)($point_size / 2);
 
         $x_mid = $this->xtr($x_world);
         $y_mid = $this->ytr($y_world);
@@ -4328,7 +4312,7 @@ class PHPlot {
         $y1 = $y_mid - $half_point;
         $y2 = $y_mid + $half_point;
 
-        switch ($this->point_shapes[$record]) {
+        switch ($this->point_shapes[$index]) {
         case 'halfline':
             ImageLine($this->img, $x1, $y_mid, $x_mid, $y_mid, $color);
             break;
@@ -4343,16 +4327,11 @@ class PHPlot {
             ImageLine($this->img, $x1, $y1, $x2, $y2, $color);
             ImageLine($this->img, $x1, $y2, $x2, $y1, $color);
             break;
-        case 'rect':
-            ImageFilledRectangle($this->img, $x1, $y1, $x2, $y2, $color);
-            break;
         case 'circle':
-            ImageArc($this->img, $x_mid, $y_mid, $this->point_sizes[$record], $this->point_sizes[$record],
-                     0, 360, $color);
+            ImageArc($this->img, $x_mid, $y_mid, $point_size, $point_size, 0, 360, $color);
             break;
         case 'dot':
-            ImageFilledArc($this->img, $x_mid, $y_mid, $this->point_sizes[$record],
-                           $this->point_sizes[$record], 0, 360, $color, IMG_ARC_PIE);
+            ImageFilledArc($this->img, $x_mid, $y_mid, $point_size, $point_size, 0, 360, $color, IMG_ARC_PIE);
             break;
         case 'diamond':
             $arrpoints = array( $x1, $y_mid, $x_mid, $y1, $x2, $y_mid, $x_mid, $y2);
@@ -4366,9 +4345,49 @@ class PHPlot {
             $arrpoints = array( $x1, $y1, $x2, $y1, $x_mid, $y_mid);
             ImageFilledPolygon($this->img, $arrpoints, 3, $color);
             break;
-        case 'none':
+        case 'yield':
+            $arrpoints = array( $x1, $y1, $x2, $y1, $x_mid, $y2);
+            ImageFilledPolygon($this->img, $arrpoints, 3, $color);
             break;
-        default:
+        case 'delta':
+            $arrpoints = array( $x1, $y2, $x2, $y2, $x_mid, $y1);
+            ImageFilledPolygon($this->img, $arrpoints, 3, $color);
+            break;
+        case 'star':
+            ImageLine($this->img, $x1, $y_mid, $x2, $y_mid, $color);
+            ImageLine($this->img, $x_mid, $y1, $x_mid, $y2, $color);
+            ImageLine($this->img, $x1, $y1, $x2, $y2, $color);
+            ImageLine($this->img, $x1, $y2, $x2, $y1, $color);
+            break;
+        case 'hourglass':
+            $arrpoints = array( $x1, $y1, $x2, $y1, $x1, $y2, $x2, $y2);
+            ImageFilledPolygon($this->img, $arrpoints, 4, $color);
+            break;
+        case 'bowtie':
+            $arrpoints = array( $x1, $y1, $x1, $y2, $x2, $y1, $x2, $y2);
+            ImageFilledPolygon($this->img, $arrpoints, 4, $color);
+            break;
+        case 'target':
+            ImageFilledRectangle($this->img, $x1, $y1, $x_mid, $y_mid, $color);
+            ImageFilledRectangle($this->img, $x_mid, $y_mid, $x2, $y2, $color);
+            ImageRectangle($this->img, $x1, $y1, $x2, $y2, $color);
+            break;
+        case 'box':
+            ImageRectangle($this->img, $x1, $y1, $x2, $y2, $color);
+            break;
+        case 'home': /* As in: "home plate" (baseball), also looks sort of like a house. */
+            $arrpoints = array( $x1, $y2, $x2, $y2, $x2, $y_mid, $x_mid, $y1, $x1, $y_mid);
+            ImageFilledPolygon($this->img, $arrpoints, 5, $color);
+            break;
+        case 'up':
+            ImagePolygon($this->img, array($x_mid, $y1, $x2, $y2, $x1, $y2), 3, $color);
+            break;
+        case 'down':
+            ImagePolygon($this->img, array($x_mid, $y2, $x1, $y1, $x2, $y1), 3, $color);
+            break;
+        case 'none': /* Special case, no point shape here */
+            break;
+        default: /* Also 'rect' */
             ImageFilledRectangle($this->img, $x1, $y1, $x2, $y2, $color);
             break;
         }
