@@ -2,6 +2,26 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2009-12-07
+    * Fix bug 1795972 "Fix default point shapes":
+      +  Added 10 new point shapes to the existing 10 shapes.
+      +  Changed the default point shape from all 'diamond' to a
+         selection of up to 10 different shapes.
+      +  Fixed bug in the code that tried to set the point shapes
+         and sizes arrays to be the same size. This was not working,
+         resulting in unexpected point sizes.
+      +  Changed default point size to 6 for all shapes. It was trying
+         to be "5, 5, 3" but due to several bugs this was not working.
+      +  Do not adjust shape sizes to even numbers (was done for only two
+         shapes).  Instead, consistently truncate size/2 when needed.
+      NOTE: These may change the look of 'points' and 'linepoints' plots.
+
+    * Changed startup initialization code:
+      +  SetDefaultStyles() was doing some odd things using a variable
+         called "session_set", with comments referring to non-existent
+         session support code. This has been removed. There should be
+         no visible changes from this. PHPlot does not use PHP sessions.
+
 2009-12-04
     * Fix for bug 2908256, errors in pie charts with bad data array:
       (From on a Drupal contrib module report by thekevinday.)
