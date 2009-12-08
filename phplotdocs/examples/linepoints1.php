@@ -3,15 +3,22 @@
 require_once 'phplot.php';
 
 # This array is used for both the point shapes and legend:
-$shapes = array( 'circle', 'cross', 'diamond', 'dot',
-    'halfline', 'line', 'plus', 'rect', 'triangle', 'trianglemid');
+$shapes = array('bowtie', 'box', 'circle', 'cross', 'delta',
+    'diamond', 'dot', 'down', 'halfline', 'home',
+    'hourglass', 'line', 'plus', 'rect', 'star',
+    'target', 'triangle', 'trianglemid', 'up', 'yield');
 
-# Make 10 offset lines, one for each shape:
+# Number of shapes defines the number of lines to draw:
+$n_shapes = count($shapes);
+
+# Make offset diagonal lines, one for each shape:
+$ppl = 6; # Number of points per line.
 $data = array();
-for ($i = 1; $i <= 10; $i++) {
-  $subdata = array('', $i);
-  for ($j = 0; $j < 10; $j++) $subdata[] = 20 - $j - $i;
-  $data[] = $subdata;
+for ($i = 0; $i < $ppl; $i++) {
+    $subdata = array('', $i);
+    $offset = $n_shapes + $ppl - $i - 2;
+    for ($j = 0; $j < $n_shapes; $j++) $subdata[] = $offset - $j;
+    $data[] = $subdata;
 }
 
 $plot = new PHPlot(800, 600);
@@ -25,16 +32,20 @@ $plot->SetDataValues($data);
 $plot->SetTitle('Linepoints Plot - All Point Shapes');
 
 # Increase X range to make room for the legend.
-$plot->SetPlotAreaWorld(0, 0, 13, 20);
-# Turn off tick labels - not used for this plot.
+$plot->SetPlotAreaWorld(0, 0, $ppl, $n_shapes + $ppl - 2);
+# Turn off tick labels and ticks - not used for this plot.
 $plot->SetXTickLabelPos('none');
+$plot->SetXTickPos('none');
 $plot->SetYTickLabelPos('none');
+$plot->SetYTickPos('none');
 
-# Need 10 different colors;
-$plot->SetDataColors(array('red', 'green', 'blue', 'yellow', 'cyan',
-                        'magenta', 'brown', 'lavender', 'pink', 'orange'));
+# Need some different colors;
+$plot->SetDataColors(array('orange', 'blue', 'maroon', 'red', 'peru',
+    'cyan', 'black', 'gold', 'purple', 'YellowGreen',
+    'SkyBlue', 'green', 'SlateBlue', 'navy', 'aquamarine1',
+    'violet', 'salmon', 'brown', 'pink', 'DimGrey'));
 
-# Show all 10 shapes:
+# Show all shapes:
 $plot->SetPointShapes($shapes);
 
 # Make the points bigger so we can see them:
