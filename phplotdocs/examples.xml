@@ -203,7 +203,9 @@ use a nice whole number for the tick interval.
 This is a 'linepoints' plot (Lines/Points) showing all the point shapes
 available for 'point' and 'linepoints' plots. In this example, we also
 use a legend to display a text string for each data set, and change the
-data colors to get 10 distinctive colors.
+data colors to get a different color for each point shape.
+Note that the point shape sizes have been increased to 10 in this example,
+to make them easier to identify.
 </para>
 <example id="example-linepoints1">
 <title>Line/Point Plot, Point Shapes</title>
