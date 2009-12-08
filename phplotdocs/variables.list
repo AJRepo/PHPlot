@@ -105,6 +105,7 @@ plot_origin_y		CalcTranslation	Y device coordinate of the plot area origin
 plot_type	'linepoints'	SetPlotType	Selected plot type
 plotbgimg		SetPlotAreaBgImage	Plot area background image filename
 plotbgmode		SetPlotAreaBgImage	Plot area background image tiling mode
+point_counts		CheckPointParams	Size of point_shapes and point_sizes arrays (added after PHPlot-5.0.7)
 point_shapes	array(...)	SetPointShapes	Shapes of markers in point plots
 point_sizes	array(...)	SetPointSizes	Sizes of markers in point plots
 print_image	TRUE	SetPrintImage	Flag: Automatic PrintImage after DrawGraph?
@@ -112,7 +113,6 @@ record_bar_width		CalcBarWidths	Area for each bar in a bar chart
 records_per_group		SetDataValues	Maximum of num_recs[], max values for any data row
 rgb_array		SetRGBArray	Array mapping color names to array of R, G, B values
 safe_margin	5		Fixed extra margin used in multiple places
-session_set		SetDefaultStyles	Used in SetDefaultStyles for 1-time initialization?
 shading	5	SetShading	Drop shadow size for pie and bar charts
 skip_bottom_tick	FALSE	SetSkipBottomTick	Skip bottom tick mark
 skip_left_tick	FALSE	SetSkipLeftTick	Skip left tick mark
