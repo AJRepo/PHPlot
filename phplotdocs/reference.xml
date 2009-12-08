@@ -209,7 +209,8 @@ the returned device coordinates will be outside the plot area, or even
 outside the image area.
     </para>
     <para>
-For examples, refer to *****To be supplied*****
+To see how this can be used in callbacks,
+see <xref linkend="callbacks-drawing"/>.
     </para>
   </refsect1>
 
@@ -3892,7 +3893,7 @@ in a plot.
 'linepoints' type plots.
 For example, if each data row contains 4 Y values, the first
 point shape will be used for the first Y value, the second point shape for
-the second Y value, etc. There are 10 point shapes to chose from.
+the second Y value, etc. There are 20 point shapes to chose from.
     </para>
   </refsect1>
 
@@ -3919,6 +3920,14 @@ The following shapes are available:
                 </thead>
                 <tbody>
                   <row>
+                    <entry>bowtie</entry>
+                    <entry>Two filled triangles pointing right and left towards the point.</entry>
+                  </row>
+                  <row>
+                    <entry>box</entry>
+                    <entry>A square outline centered on the point.</entry>
+                  </row>
+                  <row>
                     <entry>circle</entry>
                     <entry>A hollow circle centered on the point.</entry>
                   </row>
@@ -3927,16 +3936,32 @@ The following shapes are available:
                     <entry>An X centered on the point.</entry>
                   </row>
                   <row>
+                    <entry>delta</entry>
+                    <entry>A filled triangle pointing up, centered on the point.</entry>
+                  </row>
+                  <row>
                     <entry>diamond</entry>
-                    <entry>A filled diamond (square rotated 45 degrees).</entry>
+                    <entry>A filled diamond (square rotated 45 degrees), centered on the point.</entry>
                   </row>
                   <row>
                     <entry>dot</entry>
                     <entry>A filled circle centered on the point.</entry>
                   </row>
                   <row>
+                    <entry>down</entry>
+                    <entry>An unfilled triangle pointing down, centered on the point.</entry>
+                  </row>
+                  <row>
                     <entry>halfline</entry>
                     <entry>A short line from the point going left.</entry>
+                  </row>
+                  <row>
+                    <entry>home</entry>
+                    <entry>A filled 5-sided shape, centered on the point.</entry>
+                  </row>
+                  <row>
+                    <entry>hourglass</entry>
+                    <entry>Two filled triangles pointing up and down towards the point.</entry>
                   </row>
                   <row>
                     <entry>line</entry>
@@ -3951,12 +3976,28 @@ The following shapes are available:
                     <entry>A filled square centered on the point.</entry>
                   </row>
                   <row>
+                    <entry>star</entry>
+                    <entry>Four lines crossing at the point.</entry>
+                  </row>
+                  <row>
+                    <entry>target</entry>
+                    <entry>A square outline with two filled squares and two open squares, centered on the point.</entry>
+                  </row>
+                  <row>
                     <entry>triangle</entry>
                     <entry>A filled triangle pointing down from the point.</entry>
                   </row>
                   <row>
                     <entry>trianglemid</entry>
                     <entry>A filled triangle pointing down to the point.</entry>
+                  </row>
+                  <row>
+                    <entry>up</entry>
+                    <entry>An unfilled triangle pointing up, centered on the point.</entry>
+                  </row>
+                  <row>
+                    <entry>yield</entry>
+                    <entry>A filled triangle pointing down, centered on the point.</entry>
                   </row>
                   <row>
                     <entry>none</entry>
@@ -3984,7 +4025,8 @@ calls 'the usual integer indices (starting from zero, increasing by one)'.
 This applies only to 'points' and 'linepoints' plot types.
     </para>
     <para>
-By default, all data sets use the diamond shape.
+By default, ten shapes are used in order:
+diamond, dot, delta, home, yield, box, circle, up, down, and cross.
     </para>
     <para>
 A point shape can be set to 'none' to suppress the point markers for that
@@ -3992,9 +4034,29 @@ data set.
 This is only useful with 'linepoints' plot types, and results in a 'lines'
 plot type for that data set: a line only, but no markers.
     </para>
+    <para>
+PHPlot duplicates the entries in the shorter of the two arrays,
+point sizes (set by <xref linkend="SetPointSizes"/>) and point shapes,
+to make both arrays the same size. Then it uses the entries in order,
+restarting at the beginning, for each data set at each X value.
+For example, if point sizes is (6, 10), and point shapes is ('diamond',
+'dot', 'rect'), then PHPlot first extends point sizes to (6, 10, 6) to
+match the point shapes. If there are 4 data sets to plot, PHPlot draws the
+point markers at each X value as: diamond (size 6), dot (size 10),
+rect (size 6), diamond (size 6).
+    </para>
   </refsect1>
   <refsect1>
     <title>History</title>
+    <para>
+Through PHPlot-5.0.7, these ten shapes were available: halfline, line, plus,
+cross, rect, circle, dot, diamond, triangle, trianglemid, and none. The
+default shape for all data sets was 'diamond'.
+After PHPlot-5.0.7, ten new point shapes were added, and different shape
+defaults were assigned for ten data sets.
+To restore the behavior in PHPlot-5.0.7 and earlier, call
+<literal>SetPointShapes('diamond')</literal>.
+    </para>
     <para>
 Using 'none' as a point shape was added in PHPlot-5.0rc3.
     </para>
@@ -4058,9 +4120,26 @@ calls 'the usual integer indices (starting from zero, increasing by one)'.
 This applies only to 'points' and 'linepoints' plot types.
     </para>
     <para>
-By default, the size array is (5, 5, 3). (PHPlot duplicates this and all
-settings arrays as many times as needed to handle all the supplied data
-sets.)
+PHPlot duplicates the entries in the shorter of the two arrays,
+point sizes and point shapes (set by <xref linkend="SetPointShapes"/>),
+to make both arrays the same size. Then it uses the entries in order,
+restarting at the beginning, for each data set at each X value.
+For example, if point sizes is (6, 10), and point shapes is ('diamond',
+'dot', 'rect'), then PHPlot first extends point sizes to (6, 10, 6) to
+match the point shapes. If there are 4 data sets to plot, PHPlot draws the
+point markers at each X value as: diamond (size 6), dot (size 10),
+rect (size 6), diamond (size 6).
+    </para>
+    <para>
+By default, all point sizes are 6 pixels.
+    </para>
+  </refsect1>
+  <refsect1>
+    <title>History</title>
+    <para>
+Through PHPlot-5.0.7, the default size array was (5, 5, 3). However, there
+were bugs in processing the sizes of the point shapes and point sizes arrays.
+Also, for some point sizes, PHPlot rounded the size up to the next even number.
     </para>
   </refsect1>
 </refentry>
