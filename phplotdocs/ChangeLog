@@ -4,6 +4,16 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2009-12-07
+   * variables.list, reference.xml, developer.xml: Document changes in
+     SetPointShapes and SetPointSizes. New point shapes and defaults.
+
+   * concepts.xml: Fix typo and change <programlisting> elements to use CDATA
+     for contents.
+
+   * examples.xml, examples/linepoints1.php: Update the example and text
+     to include the new point shapes.
+
 2009-11-18
    * callbacks.xml, reference.xml: Fix <programlisting> elements to use CDATA
      for contents.
