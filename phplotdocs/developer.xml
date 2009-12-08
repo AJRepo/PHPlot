@@ -311,6 +311,21 @@ $which_opt and disallow partial matches.
 </varlistentry>
 
 <varlistentry>
+  <term id="CheckPointParams" xreflabel="CheckPointParams">CheckPointParams()</term>
+  <listitem>
+    <para>
+Adjusts the point_shapes and point_sizes arrays so they have the same size,
+and stores the size in a class variable. This handles processing deferred
+from <xref linkend="SetPointShapes"/> and <xref linkend="SetPointSizes"/>
+until graph drawing time. It must be called from internal functions that
+produce plots that use point shapes: currently <xref linkend="DrawDots"/> and
+<xref linkend="DrawDotsError"/>.
+This was added after PHPlot-5.0.7.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
   <term id="DoCallback" xreflabel="DoCallback">DoCallback($reason, ...)</term>
   <listitem>
     <para>
