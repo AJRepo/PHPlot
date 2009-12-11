@@ -137,6 +137,7 @@ error bars.
 The functions in this section control the text fonts used by PHPlot. PHPlot
 supports both built-in GD fonts and TrueType fonts (if available on your system).
 PHPlot does not support Adobe Type1 fonts, even if your GD supports them.
+See <xref linkend="conc-text"/> for more information about font selection.
 </para>
 <tip>
   <para>
