@@ -53,9 +53,9 @@ of several <emphasis>elements</emphasis> (like lines, axes, and labels).
 
 <para>
 To use PHPlot, you create a PHP object from the PHPlot class, for example:
-<programlisting>
+<programlisting><![CDATA[
   $plot = new PHPlot;
-</programlisting>
+]]></programlisting>
 Then you set the properties of the object, by using a series of function
 calls (actually methods of the class). These define the characteristics of
 the image, the graph or graphs, and their elements.  This includes setting
@@ -130,13 +130,13 @@ More information about PHPlot can be found at
 <para>
 You create a PHPlot object by first including the code to be used,
 and then defining the variable:
-<programlisting>
-&lt;?php
+<programlisting><![CDATA[
+<?php
 require_once 'phplot.php';  // here we include the PHPlot code 
 $plot = new PHPlot;    // here we define the variable
 
 //Rest of code goes below
-</programlisting>
+]]></programlisting>
 </para>
 
 <para>
@@ -180,15 +180,15 @@ of the image, and add some titles.
 <para>
 Let's say we want our plot to be bigger, 800 pixels wide and 600 pixels high.
 So instead of having the line
-  <programlisting>
+  <programlisting><![CDATA[
   $plot = new PHPlot;
-  </programlisting>
+]]></programlisting>
 </para>
 <para>
 We replace it with
-  <programlisting>
+  <programlisting><![CDATA[
   $plot = new PHPlot(800,600);
-  </programlisting>
+]]></programlisting>
 and you have specified the size in pixels of the image to be created.
 </para>
 <para>

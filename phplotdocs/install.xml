@@ -37,9 +37,9 @@ will work fine.
 If you aren't sure what extensions you have in PHP, create this PHP
 script called <filename>phpinfo.php</filename> somewhere in
 your web server's document tree:
-<programlisting>
-&lt;?php phpinfo(); ?&gt;
-</programlisting>
+<programlisting><![CDATA[
+<?php phpinfo(); ?>
+]]></programlisting>
 Access this page with your browser to view your PHP configuration.
 Look for the section labeled 'gd'. If you have no 'gd' section in the
 PHP Info output, you don't have the required 'gd' extension. Consult the
@@ -150,10 +150,10 @@ This provides a default for <xref linkend="SetDefaultTTFont" />.
   </varlistentry>
 </variablelist>
 For example, you might change the settings in phplot.php to look like this:
-<programlisting>
+<programlisting><![CDATA[
   var $ttf_path = '/usr/local/share/fonts/truetype';
   var $default_ttfont = 'arial.ttf';
-</programlisting>
+]]></programlisting>
 </para>
 
 <para>
@@ -191,15 +191,15 @@ $ cp phplot.php phplot_data.php rgb.inc.php /usr/local/share/php
 You can test PHPlot with any of the examples in <xref linkend="examples" />,
 or by entering this minimal script into a file called (for example)
 <filename>plottest.php</filename>.
-<programlisting>
-&lt;?php
+<programlisting><![CDATA[
+<?php
 require 'phplot.php';
 $data = array(array('', 10), array('', 1));
 $plot = new PHPlot();
-$plot-&gt;SetDataValues($data);
-$plot-&gt;SetTitle('First Test Plot');
-$plot-&gt;DrawGraph();
-</programlisting>
+$plot->SetDataValues($data);
+$plot->SetTitle('First Test Plot');
+$plot->DrawGraph();
+]]></programlisting>
 Access this script through your browser, and you should see a very simple
 plot. Note: Since PHPlot returns image data, not text, you will generally
 not see error messages in the output. If a script using PHPlot has a
