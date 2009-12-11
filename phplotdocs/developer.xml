@@ -120,11 +120,26 @@ This figure illustrates the layout of the legend, as drawn by DrawLegend().
 This chapter documents PHPlot internal functions. These functions are
 intended to be used only by PHPlot itself.
 </para>
+<note>
+  <para>
+Starting after PHPlot-5.0.7, most of the internal functions are declared as
+<literal>protected</literal>, which limits their visibility to other member
+functions and inherited or parent classes. Some internal functions are
+still <literal>public</literal>, usually because they are needed for
+testing PHPlot. However, all functions documented in this chapter should be
+treated as private, for use only by PHPlot. If you feel you have a need to
+use one of these functions from outside PHPlot (or an inherited class),
+please report this via the available PHPlot support mechanisms.
+  </para>
+</note>
 
 <!-- Original material is from "PHPlot Internal Functions" included with
    pre-5.0rc3 releases of PHPlot, but extensively edited.
    All functions in phplot.php should either be documented in "reference"
    (if 'public') or here (if 'private').
+
+   This string is used to help maintain the document. Do not remove:
+   BEGIN INTERNAL FUNCTIONS
 -->
 
 <variablelist>
