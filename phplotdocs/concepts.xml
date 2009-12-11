@@ -19,7 +19,10 @@ Reference Manual.
   </para>
 </abstract>
 
-<!-- Note: All defs need to be tagged with anchor id="def-..." -->
+<!-- Note: All defs need to be tagged with anchor id="def-..."
+     To link a word to its definition, use <link linkend="def-...">Word</link>
+     Keep the definitions in alphabetical order.
+-->
 <para>
   <variablelist>
 
@@ -28,6 +31,17 @@ Reference Manual.
       <listitem>
         <para>
 A set of data points which represent some function, trend, samples, etc.
+        </para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term><anchor id="def-devcoor" />Device Coordinates</term>
+      <listitem>
+        <para>
+The coordinate space used by GD to create images. The origin is at the
+upper left corner, X increases to the left, Y increases down, and the units
+are pixels. Also known as Pixel Coordinates or GD Coordinates.
         </para>
       </listitem>
     </varlistentry>
@@ -42,18 +56,15 @@ A component of a graph, such as a label, tick mark, axis, or plot.
     </varlistentry>
 
     <varlistentry>
-      <term><anchor id="def-plot" />Plot</term>
+      <term><anchor id="def-gd" />GD</term>
       <listitem>
         <para>
-The graphical representation of one or more data sets.
-In PHPlot, each graph contains a single plot, but a plot
-can contain representation of multiple data sets (for example,
-you can have 3 line charts on a plot).
-        </para>
-        <para>
-Less formally, the term 'plot' is often used for the overall output of
-PHPlot: an image with a complete graphical representation of data, with
-labels, legend, title, etc.
+A programming library used to create and manipulate images.
+GD can be found at the <ulink url="http://libgd.org/">GD Graphics
+Library home page</ulink>.
+You can think of GD as a software implementation of a video card.
+GD is also available as a PHP extension, and that is what PHPlot uses to
+create images.
         </para>
       </listitem>
     </varlistentry>
@@ -81,6 +92,23 @@ library. A PHPlot image contains one or more graphs (but usually only one).
     </varlistentry>
 
     <varlistentry>
+      <term><anchor id="def-plot" />Plot</term>
+      <listitem>
+        <para>
+The graphical representation of one or more data sets.
+In PHPlot, each graph contains a single plot, but a plot
+can contain representation of multiple data sets (for example,
+you can have 3 line charts on a plot).
+        </para>
+        <para>
+Less formally, the term 'plot' is often used for the overall output of
+PHPlot: an image with a complete graphical representation of data, with
+labels, legend, title, etc.
+        </para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
       <term><anchor id="def-worldcoor" />World Coordinates</term>
       <listitem>
         <para>
@@ -88,31 +116,6 @@ The coordinate space of the plotted data. This is the "real world"
 coordinate space, in the units of whatever the plotted data measures.
 The origin of the world coordinate space is the 0,0 point on the X and Y
 axes.
-        </para>
-      </listitem>
-    </varlistentry>
-
-    <varlistentry>
-      <term><anchor id="def-devcoor" />Device Coordinates</term>
-      <listitem>
-        <para>
-The coordinate space used by GD to create images. The origin is at the
-upper left corner, X increases to the left, Y increases down, and the units
-are pixels. Also known as Pixel Coordinates or GD Coordinates.
-        </para>
-      </listitem>
-    </varlistentry>
-
-    <varlistentry>
-      <term><anchor id="def-gd" />GD</term>
-      <listitem>
-        <para>
-A programming library used to create and manipulate images.
-GD can be found at the <ulink url="http://libgd.org/">GD Graphics
-Library home page</ulink>.
-You can think of GD as a software implementation of a video card.
-GD is also available as a PHP extension, and that is what PHPlot uses to
-create images.
         </para>
       </listitem>
     </varlistentry>
@@ -1235,6 +1238,170 @@ easier to just format the label values in your PHP code and put the result
 into the label positions in the data array. If you need date/time formatting for
 Y values (and it is hard to imagine where that would be useful), you have
 no option but to use the 'time' format labels for tick values.
+</para>
+</sect2>
+
+</sect1>
+
+
+<sect1 id="conc-text">
+<title>Text Fonts</title>
+<abstract>
+  <para>
+This section contains information about using text fonts in PHPlot.
+See <xref linkend="ref-textfonts"/> for PHPlot functions used with text
+fonts.
+  </para>
+</abstract>
+
+<sect2 id="conc-text-fonts">
+<title>TrueType Font Selection</title>
+<para>
+PHPlot text can use built-in GD fonts or TrueType fonts. When using GD
+fonts, you specify a font name as a number between 1 and 5. This selects
+from 5 built-in GD fonts.
+When using TrueType fonts, you need to specify a font filename.
+The rest of this section discusses only TrueType fonts.
+</para>
+
+<para>
+On Windows systems, you need to use the font filename, not the font name.
+You can get the font filename using Control Panel - Fonts.
+For example, Windows applications may display "Arial Black", or "Arial
+Black (TrueType)" as a font name, but the actual font filename is "ariblk.ttf".
+You can tell PHPlot to look for fonts in the Windows font directory by
+passing <literal>$_SERVER['windir'] .  '\\fonts\\'</literal> to
+<xref linkend="SetTTFPath"/>, but this is not necessary since PHP will look
+there anyway. However, it is important to note that if you include a font
+directory path, you must also include the file extension ".ttf". If you do
+not specify a font directory, you can omit the file extension.
+
+</para>
+
+<para>
+On Windows, you can use the "Character Map" system tool to examine a font.
+This can also be used to find the Unicode character code of a special character.
+These will be displayed in hexadecimal, for example U+20AC for the Euro.
+See the next section for more information on using special characters.
+</para>
+
+<para>
+Here are some font selection examples for Windows:
+<programlisting><![CDATA[
+   # Set path; this is not really needed.
+   $plot->SetTTFPath($_SERVER['windir'] . '\\fonts\\');
+   # For titles, use Arial Bold Italic at 14 points:
+   $plot->SetFontTTF('title', 'ARIALBI.TTF', 14)
+   # For X Title, use Verdana at 12 points:
+   $plot->SetFontTTF('x_title', 'VERDANA.TTF', 12)
+]]></programlisting>
+</para>
+
+<para>
+On Linux and similar systems, you should specify a font directory with
+<xref linkend="SetTTFPath"/>. Typically this will be
+<literal>/usr/share/fonts/TTF</literal>. However, depending on your system
+setup, PHP may be able to find fonts without the path. As on Windows, you
+must provide a font filename with extension if using a path, but the
+extension can be omitted if no path is used. Remember that font pathnames
+are case sensitive.
+</para>
+
+<para>
+Your Linux system may include a tool for examining fonts. One such tool is
+<application>gucharmap</application>.
+This can also be used to find the Unicode character code of a special character.
+These may be displayed in hexadecimal, for example U+20AC for the Euro.
+See the next section for more information on using special characters.
+</para>
+
+<para>
+Here are some font selection examples for Linux:
+<programlisting><![CDATA[
+   # Set path; this may or may not be needed.
+   $plot->SetTTFPath('/usr/share/fonts/TTF/');
+   # For titles, use Liberation Sans Bold Italic at 14 points:
+   $plot->SetFontTTF('title', 'LiberationSans-BoldItalic.ttf', 14)
+   # For X Title, use DejaVuSans Bold at 12 points:
+   $plot->SetFontTTF('x_title', 'DejaVuSans-Bold.ttf', 12)
+]]></programlisting>
+</para>
+
+</sect2>
+
+<sect2 id="conc-text-special">
+<title>Using Special Characters</title>
+<para>
+You can include special characters in your PHPlot labels and titles. This
+refers to characters which you may not be able to type with a single key
+on your keyboard, including accented characters and special symbols.
+</para>
+
+<para>
+PHPlot itself does not do any special processing of text strings, so you
+should refer to the PHP GD and Image Functions reference for more
+information.
+</para>
+
+<note>
+  <para>
+This mostly only works with TrueType fonts. The built-in GD fonts do
+have some extended characters, but they are encoded in ISO8859-2 which is
+probably not what you might expect, and the GD font routines do not support
+special character entities.
+  </para>
+</note>
+
+<para>
+To use special characters in your PHPlot text strings, you need a TrueType
+font that contains the characters you want. Ideally, you want a Unicode
+font. You might have to examine the font using an operating system-specific
+tool to see if your characters are present and to find their numeric values.
+</para>
+
+<para>
+There are two basic ways to include special characters in your text
+strings. The examples below use the Euro character, which is decimal
+Unicode value 8364.
+<itemizedlist>
+  <listitem>
+    <para>
+Use HTML-stype character entities with decimal numeric encoding. For
+example, the Unicode Euro symbol is: &amp;#8364;
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+Include the UTF-8 encoding of the Unicode value in your string as a series
+of hex escapes. For example, the Euro symbol is: "\xe2\x82\xac".
+    </para>
+  </listitem>
+</itemizedlist>
+</para>
+<para>
+These are shown in the example below, both of which set the Y axis title to
+"Items per &euro;100".
+<programlisting><![CDATA[
+  $plot->SetYTitle("Items per &#8364;100"); # Numeric character entity
+  $plot->SetYTitle("Items per \xe2\x82\xac100"); # UTF-8 encoding
+]]></programlisting>
+</para>
+
+<para>
+You can also use PHP functions to encode your characters for including in
+PHPlot text strings. See the PHP documentation for the functions
+<function>html_entity_decode()</function>
+and <function>iconv()</function>.
+Here are some examples (sent in by Sourceforge user 'kalvaro'):
+<programlisting><![CDATA[
+
+# Encode the Euro symbol into UTF-8:
+$chars = html_entity_decode('&euro;', ENT_NOQUOTES, 'UTF-8');
+
+# Use iconv() to convert a character value xA4 in ISO-8859-15 to UTF:
+$chars = iconv('iso-8859-15', 'utf-8', chr(0xA4);
+
+]]></programlisting>
 </para>
 </sect2>
 
