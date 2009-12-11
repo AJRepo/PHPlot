@@ -4,6 +4,12 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2009-12-10
+   * concepts.xml: Put the definitions into alphabetical order. New section
+     added to chapter with info on text, especially TrueType fonts.
+
+   * developer.xml: Add note about internal function visibility.
+
 2009-12-07
    * variables.list, reference.xml, developer.xml: Document changes in
      SetPointShapes and SetPointSizes. New point shapes and defaults.

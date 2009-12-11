@@ -15,6 +15,17 @@ see the ChangeLog file inside the PHPlot distribution.)
 <variablelist>
 
   <varlistentry>
+    <term>2009-12-10</term>
+    <listitem>
+      <para>
+Added sections to the Concepts chapter about using TrueType fonts and
+special characters, because it didn't seem to have been documented anywhere
+else.
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
     <term>2009-11-18</term>
     <listitem>
       <para>
