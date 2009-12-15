@@ -362,17 +362,20 @@ Here is a sample plot with the pie chart labels called out.
 <para>
 <itemizedlist>
   <listitem><para><xref linkend="SetDrawXDataLabelLines" /></para></listitem>
-  <listitem><para><xref linkend="SetDrawYDataLabelLines" /></para></listitem>
   <listitem><para><xref linkend="SetLabelScalePosition" /></para></listitem>
   <listitem><para><xref linkend="SetNumberFormat" /></para></listitem>
   <listitem><para><xref linkend="SetPrecisionX" /></para></listitem>
   <listitem><para><xref linkend="SetPrecisionY" /></para></listitem>
+  <listitem><para><xref linkend="SetXDataLabelAngle" /></para></listitem>
   <listitem><para><xref linkend="SetXDataLabelPos" /></para></listitem>
+  <listitem><para><xref linkend="SetXDataLabelType" /></para></listitem>
   <listitem><para><xref linkend="SetXLabelAngle" /></para></listitem>
   <listitem><para><xref linkend="SetXLabelType" /></para></listitem>
   <listitem><para><xref linkend="SetXTickLabelPos" /></para></listitem>
   <listitem><para><xref linkend="SetXTimeFormat" /></para></listitem>
+  <listitem><para><xref linkend="SetYDataLabelAngle" /></para></listitem>
   <listitem><para><xref linkend="SetYDataLabelPos" /></para></listitem>
+  <listitem><para><xref linkend="SetYDataLabelType" /></para></listitem>
   <listitem><para><xref linkend="SetYLabelAngle" /></para></listitem>
   <listitem><para><xref linkend="SetYLabelType" /></para></listitem>
   <listitem><para><xref linkend="SetYTickLabelPos" /></para></listitem>
