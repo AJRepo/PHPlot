@@ -4989,8 +4989,10 @@ class PHPlot {
         $this->DoCallback('draw_plotarea_background', $this->plot_area);
 
         $this->DrawTitle();
-        $this->DrawXTitle();
-        $this->DrawYTitle();
+        if ($draw_axes) {  // If no axes (pie chart), no axis titles either
+            $this->DrawXTitle();
+            $this->DrawYTitle();
+        }
         $this->DoCallback('draw_titles');
 
         if ($draw_axes && ! $this->grid_at_foreground) {   // Usually one wants grids to go back, but...
