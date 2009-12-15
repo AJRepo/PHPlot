@@ -2,6 +2,10 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2009-12-15
+    * Cleanup: Remove DrawAxisLegend() - empty function marked TODO,
+      not really clear what it was meant to do.
+
 2009-12-14
     * Fix for bug 2914403 "Pie + X/Y titles: Undefined property error":
       In DrawGraph(), don't try to draw X or Y titles for pie charts.
