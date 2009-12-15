@@ -15,6 +15,20 @@ see the ChangeLog file inside the PHPlot distribution.)
 <variablelist>
 
   <varlistentry>
+    <term>2009-12-14</term>
+    <listitem>
+      <para>
+Document 4 new functions and changes to existing functions related to new
+controls on data labels versus tick labels.
+      </para>
+      <para>
+Removed function list from Getting Started chapter, because it was out of
+date and duplicated material in another chapter.
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
     <term>2009-12-10</term>
     <listitem>
       <para>

@@ -2,6 +2,51 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2009-12-14
+    * Feature request 2899921: "allow different format for data and tick
+      labels"; Bug 2906463: "Fixes for X Tick Labels vs X Data Labels",
+      and partial implementation of changes from user 'adoll' regarding
+      tick vs data labels:
+
+      New public functions:
+      + SetXDataLabelType() : Sets formatting for X Data Labels
+      + SetYDataLabelType() : Sets formatting for Y Data Labels (bar charts)
+      + SetXDataLabelAngle() : Sets text angle for X Data Labels
+      + SetYDataLabelAngle() : Sets text angle for Y Data Label (bar charts)
+      The defaults for these are set up to be fully backward compatible
+      with previous releases of PHPlot (except see the next item).
+
+      Re-used function name SetXDataLabelAngle():
+      + This has been deprecated and undocumented since 2003-12-07, and
+        used to just call SetXLabelAngle(). For new behavior, see above.
+
+      Changes to public functions:
+      + SetXDataLabelPos() and SetXTickLabelPos() no longer cancel each
+        other out (set the other control variable to 'none'). Instead,
+        they are both considered before plot drawing.
+
+      Changes to internal functions:
+      + DrawDataLabel() now uses the font, angle, and color arguments as
+        provided, and does not substitute values if they are empty.
+      + SetLabelType() now takes mode='xd' and 'yd' for X Data and Y Data
+        label formatting; 'x' and 'y' are for tick labels only now.
+      + Functions that work on Data labels now call FormatLabels() with the
+        new mode parameter value 'xd' or 'yd, and use the new
+        data_label_angle variables.
+      + New CheckLabels(), used by DrawGraph to process label parameters.
+      + CalcMargins() - Rewritten to handle changes to Tick and Data labels.
+
+      Changes to internal class variables:
+      + New: x_data_label_angle, y_data_label_angle
+      + Do not initialize x_tick_label_pos or x_data_label_pos, so that
+        CheckLabels() can tell if they were set or not and apply defaults.
+      + Initialize y_data_label_pos to 'none', not 'plotleft'.
+      + Add 2 more indexes to label_format[] array: 'xd' and 'yd'.
+
+    * Cleanup:
+      + Delete unused internal class variable: draw_y_data_label_lines
+      + Delete unused function SetDrawYDataLabelLines()
+
 2009-12-07
     * Fix bug 1795972 "Fix default point shapes":
       +  Added 10 new point shapes to the existing 10 shapes.

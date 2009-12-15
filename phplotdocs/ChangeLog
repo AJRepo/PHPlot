@@ -4,6 +4,40 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2009-12-14
+   Changes related to new Data Label Types controls:
+   * concepts.xml: Updated information on tick and data label functions;
+     add missing label format types.
+
+   * developer.xml: Document new internal CheckLabels(). Add references to
+     new Set[XY]DataLabelType in label formatting, and update descriptions
+     of internals FormatLabel() and SetLabelType().
+
+   * functions.xml: Add links to 4 new functions and remove link to
+     removed link to function SetDrawYDataLabelLines().
+
+   * reference.xml: Documented 4 new functions Set[XY]DataLabelAngle() and
+     Set[XY]DataLabelType().
+     Updated descriptions of Set[X]LabelAngle() and Set[XY]LabelType(),
+     to reference the new functions, document use of '' as a format type.
+     Updated descriptions of SetXDataLabelPos() and SetXTickLabelPos() to
+     indicate the change in interaction between these two and how the
+     defaults work now.
+     Removed function SetDrawYDataLabelLines().  This was never implemented
+     and isn't planned.
+
+   * variables.list: Update label_format description, and defaults for X
+     and Y label position and angle variables. Added [xy]_data_label_angle.
+     Remove unused draw_y_data_label_lines.
+
+   Also:
+   * developer.xml: Link xtr() and ytr() to public function GetDeviceXY().
+   * install.xml: Refreshed picture of phpinfo GD listing.
+   * quickstart.xml: Removed the list of functions from the Customization
+     sections. This duplicates the material in Chapter 4, PHPlot Functions
+     By Category, and was out of date.
+   * reference.xml: Minor cleanup, corrections, and style fixes.
+
 2009-12-10
    * concepts.xml: Put the definitions into alphabetical order. New section
      added to chapter with info on text, especially TrueType fonts.
