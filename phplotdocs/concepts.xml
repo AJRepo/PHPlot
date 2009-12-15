@@ -1111,12 +1111,10 @@ values in the data array are not used for tick labels.
 </para>
 
 <para>
-Both X tick labels and Y tick labels are plotted by default, and can be
-disabled or repositioned with <xref linkend="SetXTickLabelPos" />
-and <xref linkend="SetYTickLabelPos" />.
+You can enable, disable, or position the tick labels with
+<xref linkend="SetXTickLabelPos" /> and <xref linkend="SetYTickLabelPos" />.
 </para>
 </sect2>
-
 
 <sect2 id="conc-labels-data">
 <title>Data Labels</title>
@@ -1132,17 +1130,27 @@ For example, with data type text-data :
 The three points have data labels 'Peaches', 'Apples', and 'Pears'.
 These data labels will be drawn at the bottom of the plot (by default)
 below the corresponding X values.
-X data labels are drawn by default. You can disable or reposition the
-labels with <xref linkend="SetXDataLabelPos" />.
+You can disable or reposition the X data labels with
+<xref linkend="SetXDataLabelPos" />.
 </para>
 
 <para>
-Since by default both X data labels and X tick labels are enabled, you need
-to turn one off or you will get overlapped, double labels.  (Unless the
-label strings in your data array are empty.) If you enable or position X
-tick labels, then PHPlot will automatically turn off X data labels.  If you
-enable or position X data labels, then PHPlot will automatically turn off X
-tick labels.  But if you do neither, you get both tick and data labels.
+You will generally not want both X tick labels and X data labels on,
+because they will overlap and be unreadable. If you are not using data
+labels, you should either make them all empty strings in your data array,
+or else use <xref linkend="SetXDataLabelPos"/>('none') to turn them off.
+You can also call <xref linkend="SetXTickLabelPos"/> to explicitly position
+the tick labels; PHPlot will then disable the data labels.
+</para>
+
+<para>
+If you don't tell PHPlot what to do with X data and X tick labels,
+the behavior depends on the PHPlot version.
+PHPlot after 5.0.7 will examine your data array to see if there are any
+non-empty data labels, and if so it will draw only data labels, and omit
+tick labels.
+If all of the data labels are empty, tick labels will be drawn.
+(PHPlot through 5.0.7 will draw both tick and data labels in these cases.)
 </para>
 
 <para>
@@ -1157,28 +1165,31 @@ indicate the Y value right above each bar.
 <sect2 id="conc-labels-format">
 <title>Formatting Labels</title>
 <para>
-Both tick and data labels are subject to format controls. There are three
+Both tick and data labels are subject to format controls. There are several
 choices in formatting.  By default, the label value itself is simply displayed.
 Use <xref linkend="SetXLabelType" /> and <xref linkend="SetYLabelType" /> to
-select one of the other two format types: 'time' or 'data', as described
-in the following paragraphs.
+select one of the other format types for tick labels.
+Use <xref linkend="SetXDataLabelType" /> and
+<xref linkend="SetYDataLabelType" /> to select one of the other format
+types for data labels. (Note that SetXLabelType also sets the default
+format for X data labels, for use if SetXDataLabelType is not called.
+Also SetYLabelType sets the default for Y data labels, for use if
+SetYDataLabelType is not called.)
 </para>
 
 <para>
-Label type 'data' expects the tick or data label values to be numbers, and
-formats the values as floating point numbers with a comma between every
+Label format type 'data' expects the tick or data label values to be numbers,
+and formats the values as floating point numbers with a separator between every
 group of thousands and a fixed number of decimal places.
-Use <xref linkend="SetPrecisionX" /> and <xref linkend="SetPrecisionY" />
-to select the number of decimal places.
-By default, the precision is 1, meaning there will be one decimal position
-after the decimal point.
+You can set the number of digits of precision, with the default being 1 digit.
+PHPlot will try to set the thousands grouping separator and decimal separator
+according to your locale, but this can be overridden if necessary.
 </para>
 
 <para>
-Label type 'time' expects the tick or data label values to be a PHP time
-values (number of seconds since a fixed base data, the Unix Epoch).
-PHPlot will format the labels according to the format string you provide
-with <xref linkend="SetXTimeFormat" /> or <xref linkend="SetYTimeFormat" />.
+Label format type 'time' expects the tick or data label values to be a PHP time
+value (number of seconds since a fixed base data, the Unix Epoch).
+PHPlot will format the labels according to the format string you provide.
 Refer to the PHP documentation for <function>strftime()</function> for
 details on the format string, but here are some examples for 31 December
 2004 at 1:23:45 pm:
@@ -1238,6 +1249,14 @@ easier to just format the label values in your PHP code and put the result
 into the label positions in the data array. If you need date/time formatting for
 Y values (and it is hard to imagine where that would be useful), you have
 no option but to use the 'time' format labels for tick values.
+</para>
+
+<para>
+Two additional label format types are available.
+Label format type 'printf' uses a custom print format string.
+To use label format type 'custom', you supply a function of your own
+to format the labels. See <xref linkend="SetXLabelType"/> for more
+details about these format types.
 </para>
 </sect2>
 
