@@ -1402,37 +1402,6 @@ True to draw the X grid lines, False to not draw the X grid lines.
   </refsect1>
 </refentry>
 
-<refentry id="SetDrawYDataLabelLines">
-  <refmeta>
-    <refentrytitle>SetDrawYDataLabelLines</refentrytitle>
-  </refmeta>
-
-  <refnamediv>
-    <refname>SetDrawYDataLabelLines</refname>
-    <refpurpose>Not implemented</refpurpose>
-  </refnamediv>
-
-  <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetDrawYDataLabelLines(<parameter>$dydl</parameter>)
-    </synopsis>
-  </refsynopsisdiv>
-
-  <refsect1>
-    <title>Description</title>
-    <para>
-<function>SetDrawYDataLabelLines</function> is not implemented.
-    </para>
-  </refsect1>
-
-  <refsect1>
-    <title>Notes</title>
-    <para>
-Y data label lines are not currently implemented.
-    </para>
-  </refsect1>
-</refentry>
-
 <refentry id="SetDrawYGrid">
   <refmeta>
     <refentrytitle>SetDrawYGrid</refentrytitle>
@@ -4381,14 +4350,6 @@ to select a much larger color map.
 If SetRGBArray is not called, the 'small' color map is used.
     </para>
     <para>
-An example of a user-defined color map is:
-      <programlisting><![CDATA[
-    array( 'red' => array(255, 0, 0),
-           'green' => array(0, 255, 0),
-           'blue' => array(0, 0, 255) );
-]]></programlisting>
-    </para>
-    <para>
 More information about the color maps can be found in
 <xref linkend="conc-colors-map" />.
     </para>
@@ -4404,10 +4365,24 @@ in the same directory as <filename>phplot.php</filename>.
 When defining a color map, care must be taken to avoid invalid color errors. 
 PHPlot uses a number of pre-defined color names, and these must either be
 defined in your color map or changed.
-If you define your own colormap, it should always contain colors named 'black',
+If you define your own color map, it should always contain colors named 'black',
 'white', and 'gray', and you should use <xref linkend="SetDataColors" /> and
 <xref linkend="SetErrorBarColors" /> to select colors which are in your
 color map.
+    </para>
+  </refsect1>
+  <refsect1>
+    <title>Examples</title>
+    <para>
+An example of a user-defined color map is:
+      <programlisting><![CDATA[
+    array( 'black' => array(0, 0, 0),
+           'white' => array(255, 255, 255),
+           'gray'  => array(190, 190, 190),
+           'red'   => array(255, 0, 0),
+           'green' => array(0, 255, 0),
+           'blue'  => array(0, 0, 255) )
+]]></programlisting>
     </para>
   </refsect1>
 </refentry>
@@ -5136,6 +5111,65 @@ the graph, the X axis is drawn at the bottom of the plot.
   </refsect1>
 </refentry>
 
+<refentry id="SetXDataLabelAngle">
+  <refmeta>
+    <refentrytitle>SetXDataLabelAngle</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetXDataLabelAngle</refname>
+    <refpurpose>Set the text angle for X data labels</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetXDataLabelAngle(<parameter>$xdla</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetXDataLabelAngle</function> sets the text angle for X data labels.
+If using TrueType fonts, any angle can be used.
+If using built-in GD fonts, only 0 degree and 90 degree text can be used.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$xdla</replaceable></term>
+        <listitem>
+          <para>
+Desired angle for label text, in degrees.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+By default, X Data Labels are drawn at the same angle as X Tick Labels, as
+set with <xref linkend="SetXLabelAngle"/>.
+    </para>
+  </refsect1>
+  <refsect1>
+    <title>History</title>
+    <para>
+This function was added to PHPlot after 5.0.7. Through PHPlot-5.0.7,
+<xref linkend="SetXLabelAngle"/> set the angle for both text and data labels.
+    </para>
+    <para>
+Through PHPlot-5.0.7, there was a deprecated function by the same name that
+simply called SetXLabelAngle.
+    </para>
+  </refsect1>
+</refentry>
+
 <refentry id="SetXDataLabelPos">
   <refmeta>
     <refentrytitle>SetXDataLabelPos</refentrytitle>
@@ -5207,13 +5241,10 @@ A string indicating the desired position for the X data labels:
   <refsect1>
     <title>Notes</title>
     <para>
-The default position for X data labels is below the plot.
-    </para>
-    <para>
-Calling this function to position the data labels (that is,
-with parameter other than 'none') turns off X tick labels as if
-<xref linkend="SetXTickLabelPos" /> was called with parameter 'none',
-to prevent overlapping tick and data labels.
+The default position for X data labels is below the plot. However PHPlot
+only enables the data labels if SetXDataLabelPos was used to position them,
+or if <xref linkend="SetXTickLabelPos"/> was not used to enable the tick
+labels and the data labels are non-empty.
     </para>
     <para>
 This applies only to data labels.
@@ -5225,6 +5256,218 @@ then SetXDataLabelPos() also determines the direction of the lines which
 are drawn from the data points.
     </para>
   </refsect1>
+  <refsect1>
+    <title>History</title>
+    <para>
+Through PHPlot-5.0.7, the default position for X data labels was below the
+plot ('plotdown').
+This would result in overlaid data and tick labels by default.
+In addition, positioning the X tick labels with
+<xref linkend="SetXTickLabelPos"/> with a position other than 'none'
+resulted in disabling the X data labels, and vice-versa.
+If both tick and data labels were positioned, the later setting overrode
+the earlier, which was turned off.
+Starting after PHPlot-5.0.7, PHPlot handles tick and data label positions
+as described in the notes above.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetXDataLabelType">
+  <refmeta>
+    <refentrytitle>SetXDataLabelType</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetXDataLabelType</refname>
+    <refpurpose>Set formatting type for X data labels</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetXDataLabelType(<parameter>$type</parameter>, <optional><parameter>...</parameter></optional>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetXDataLabelType</function> sets the formatting type for X data
+labels. By default, data labels are formatted the same as tick labels.
+If <xref linkend="SetXLabelType"/> is not used, then there is no special
+formatting for either label type, so the labels are output as-is.
+Available format types are 'data', 'time', 'printf', and 'custom'.
+    </para>
+    <para>
+'data' formatting formats the labels as floating point numbers,
+with digits grouped into thousands (3 digit groups),
+and with user-defined precision.
+Grouping separator characters can be set with <xref linkend="SetNumberFormat" />.
+The precision (number of digits after the decimal point) can be set
+as an additional argument to SetXDataLabelType.
+A prefix and suffix string can also be specified.
+    </para>
+    <para>
+'time' formatting formats the labels as date/time values, with the
+format string specified as an additional argument to SetXDataLabelType.
+    </para>
+    <para>
+'printf' formatting formats the labels using the standard
+<function>sprintf</function> function, with the format string specified
+as an additional argument to SetXDataLabelType.
+    </para>
+    <para>
+'custom' formatting formats the labels using a caller-provided function,
+with an optional pass-through argument. This provides the maximum
+flexibility in formatting labels.
+    </para>
+
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <para>
+There is one required argument, $type. Other arguments depend on the value
+of the $type argument.
+      <variablelist>
+        <varlistentry>
+          <term><replaceable>$type</replaceable></term>
+          <listitem>
+            <para>
+A string indicating the desired formatting mode: 'data', 'time', 'printf',
+or 'custom'. Or, an empty string meaning revert to no formatting.
+            </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </para>
+
+    <para>
+For type 'data', there are three optional arguments:
+      <variablelist>
+        <varlistentry>
+          <term><replaceable>$precision</replaceable></term>
+          <listitem>
+            <para>
+The formatting precision, or number of decimal places (optional).
+If omitted, the default is 1.
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term><replaceable>$prefix</replaceable></term>
+          <listitem>
+            <para>
+A prefix string to be placed before the formatted label values. This could
+be used for a currency symbol, for example. The default is an empty string.
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term><replaceable>$suffix</replaceable></term>
+          <listitem>
+            <para>
+A suffix string to be placed after the formatted label values. This could
+be used for a currency symbol, for example. The default is an empty string.
+            </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </para>
+
+    <para>
+For type 'time', there is one optional argument:
+      <variablelist>
+        <varlistentry>
+          <term><replaceable>$format</replaceable></term>
+          <listitem>
+            <para>
+Formatting string, used with <function>strftime()</function>.
+For example, '%Y-%m-%d' results in formatting a <literal>time_t</literal>
+value as a year, month, and day numbers.
+If omitted, the default is '%H:%M:%S' (hours, minutes, and seconds).
+            </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </para>
+
+    <para>
+For type 'printf', there is one optional argument:
+      <variablelist>
+        <varlistentry>
+          <term><replaceable>$format</replaceable></term>
+          <listitem>
+            <para>
+Formatting string, used with <function>sprintf()</function>.
+If omitted, the default value of '%e' uses scientific notation with default
+field sizes.
+            </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </para>
+
+    <para>
+For type 'custom', there is one required argument and one optional argument:
+      <variablelist>
+        <varlistentry>
+          <term><replaceable>$callback</replaceable></term>
+          <listitem>
+            <para>
+A callback function to format the label. This is either the name of a
+function (as a string), or a two-element array with an object instance and
+method name. (Refer to the PHP documentation for more information on the
+callback type.) The callback will be called with two arguments: the value
+of the label to be formatted, and the pass-through argument (see next).
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term><replaceable>$callback_arg</replaceable></term>
+          <listitem>
+            <para>
+A pass-through argument for the callback function.
+If omitted, NULL is used.
+            </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The default formatting mode is to do no special formatting of the labels.
+Strings will be output as-is, and numbers will be output using PHP's
+default formatting.
+If you need to change label formatting back to the default,
+or to override a format type you set for tick labels and have no
+formatting for data labels,
+use SetXDataLabelType without arguments, or with an empty string argument.
+    </para>
+    <para>
+When using a custom label formatting function, do not assume the labels are
+formatted in any particular order, or only once each.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Examples</title>
+    <para>
+See <xref linkend="SetXLabelType" />.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>History</title>
+    <para>
+This function was added after PHPlot-5.0.7.
+Through PHPlot-5.0.7, data labels and tick labels always used the same
+formatting, as set with <xref linkend="SetXLabelType"/>.
+    </para>
+  </refsect1>
 </refentry>
 
 <refentry id="SetXLabelAngle">
@@ -5234,7 +5477,7 @@ are drawn from the data points.
 
   <refnamediv>
     <refname>SetXLabelAngle</refname>
-    <refpurpose>Set the text angle for X tick and data labels</refpurpose>
+    <refpurpose>Set the text angle for X labels</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
@@ -5246,8 +5489,9 @@ $plot-&gt;SetXLabelAngle(<parameter>$xla</parameter>)
   <refsect1>
     <title>Description</title>
     <para>
-<function>SetXLabelAngle</function> sets the text angle for X tick and data
-labels.
+<function>SetXLabelAngle</function> sets the text angle for X tick labels.
+Unless <xref linkend="SetXDataLabelAngle"/> is called, the same angle is
+also used for X data labels.
 If using TrueType fonts, any angle can be used.
 If using built-in GD fonts, only 0 degree and 90 degree text can be used.
     </para>
@@ -5273,6 +5517,16 @@ Desired angle for label text, in degrees.
 The default text angle for X labels is 0 degrees, for horizontal text.
     </para>
   </refsect1>
+  <refsect1>
+    <title>History</title>
+    <para>
+Through PHPlot-5.0.7, SetXLabelAngle sets the angle for both tick and data
+labels. Starting after PHPlot-5.0.7, these can be controlled independently
+using <xref linkend="SetXDataLabelAngle"/>.
+For compatibility, data label angles default to the value set for tick label
+angles with SetXLabelAngle.
+    </para>
+  </refsect1>
 </refentry>
 
 <refentry id="SetXLabelType">
@@ -5282,7 +5536,7 @@ The default text angle for X labels is 0 degrees, for horizontal text.
 
   <refnamediv>
     <refname>SetXLabelType</refname>
-    <refpurpose>Set formatting type for X tick and data labels</refpurpose>
+    <refpurpose>Set formatting type for X tick labels</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
@@ -5294,10 +5548,13 @@ $plot-&gt;SetXLabelType(<parameter>$type</parameter>, <optional><parameter>...</
   <refsect1>
     <title>Description</title>
     <para>
-<function>SetXLabelType</function> sets the formatting type for X tick and
-data labels. By default, there is no special formatting, so the labels are
-output as-is. Available format types are 'data', 'time', 'printf', and
-'custom'.
+<function>SetXLabelType</function> sets the formatting type for X tick labels,
+and the default formatting type for X data labels.
+(If <xref linkend="SetXDataLabelType"/> is never called,
+<function>SetXLabelType</function> effectively sets the formatting type
+for both X tick labels and X data labels.)
+By default, there is no special formatting, so the labels are output as-is.
+Available format types are 'data', 'time', 'printf', and 'custom'.
     </para>
     <para>
 'data' formatting formats the labels as floating point numbers,
@@ -5337,7 +5594,7 @@ of the $type argument.
           <listitem>
             <para>
 A string indicating the desired formatting mode: 'data', 'time', 'printf',
-or 'custom'.
+or 'custom'. Or, an empty string meaning revert to no formatting.
             </para>
           </listitem>
         </varlistentry>
@@ -5466,6 +5723,9 @@ formatted in any particular order, or only once each.
     <title>Examples</title>
     <para>
 The following table shows some label formatting examples.
+These also apply to <function>SetXLabelType</function>,
+<xref linkend="SetXDataLabelType"/>, <xref linkend="SetYLabelType"/>,
+and <xref linkend="SetYDataLabelType"/>.
       <informaltable>
         <tgroup cols="4">
           <?dbhtml table-summary="Examples of label formatting"?>
@@ -5583,6 +5843,14 @@ degrees, minutes, and seconds. (This only works for non-negative angles.)
   </refsect1>
   <refsect1>
     <title>History</title>
+    <para>
+Through PHPlot-5.0.7, this function set the format type for both X tick
+labels and X data labels.
+Starting after PHPlot-5.0.7, a new function <xref linkend="SetXDataLabelType"/>
+was added to allow separate control of tick and data labels.
+<function>SetXLabelType</function> now sets the format type for X tick labels,
+and the default format type for X data labels.
+    </para>
     <para>
 New label format types 'printf' and 'custom' were added at PHPlot-5.0.6, 
 as well as all arguments after the first. In PHPlot-5.0.5 and earlier, you
@@ -5868,19 +6136,33 @@ A string indicating the desired position for the X tick labels:
   <refsect1>
     <title>Notes</title>
     <para>
-The default position for the X tick labels is below the plot.
-    </para>
-    <para>
-Calling this function to position the tick labels (that is,
-with parameter other than 'none') turns off X data labels as if
-<xref linkend="SetXDataLabelPos" /> was called with parameter 'none',
-to prevent overlapping tick and data labels.
+The default position for the X tick labels is below the plot. However,
+PHPlot will disable X tick labels by default if X data labels are
+positioned with <xref linkend="SetXDataLabelPos"/>.
+If neither SetXTickLabelPos nor SetXDataLabelPos are used, PHPlot will
+enable just data labels if they are non-empty, and otherwise it will enable
+just tick labels, and position them below the plot.
     </para>
     <para>
 This applies only to tick labels.
 For data labels, see <xref linkend="SetXDataLabelPos" />.
 You probably want the tick marks to be in the same positions as the tick
 labels.  To position the tick marks, see <xref linkend="SetXTickPos" />.
+    </para>
+  </refsect1>
+  <refsect1>
+    <title>History</title>
+    <para>
+Through PHPlot-5.0.7, the default position for X tick labels was below the
+plot ('plotdown').
+This would result in overlaid data and tick labels by default.
+In addition, positioning the X data labels with
+<xref linkend="SetXDataLabelPos"/> with a position other than 'none'
+resulted in disabling the X tick labels, and vice-versa.
+If both tick and data labels were positioned, the later setting overrode
+the earlier, which was turned off.
+Starting after PHPlot-5.0.7, PHPlot handles tick and data label positions
+as described in the notes above.
     </para>
   </refsect1>
 </refentry>
@@ -6233,6 +6515,64 @@ at the left of the graph.
   </refsect1>
 </refentry>
 
+<refentry id="SetYDataLabelAngle">
+  <refmeta>
+    <refentrytitle>SetYDataLabelAngle</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetYDataLabelAngle</refname>
+    <refpurpose>Set the text angle for Y data labels</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetYDataLabelAngle(<parameter>$ydla</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetYDataLabelAngle</function> sets the text angle for Y data labels.
+These are the labels that can be used with bar charts.
+See <xref linkend="SetYDataLabelPos"/>.
+If using TrueType fonts, any angle can be used.
+If using built-in GD fonts, only 0 degree and 90 degree text can be used.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$ydla</replaceable></term>
+        <listitem>
+          <para>
+Desired angle for label text, in degrees.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+By default, Y data labels are drawn at 0 degrees.
+(This is different from X data labels, which default to the angle set
+for X tick labels.)
+    </para>
+  </refsect1>
+  <refsect1>
+    <title>History</title>
+    <para>
+This function was added to PHPlot after 5.0.7. Through PHPlot-5.0.7,
+Y data labels were always drawn at 0 degrees.
+    </para>
+  </refsect1>
+</refentry>
+
 <refentry id="SetYDataLabelPos">
   <refmeta>
     <refentrytitle>SetYDataLabelPos</refentrytitle>
@@ -6285,11 +6625,210 @@ set to 'plotin', the labels will be drawn above the bars (or below the
 bars, for negative values). This works best if the values are short enough
 to fit.
     </para>
+    <para>
+The Y data label text angle is set with <xref linkend="SetYDataLabelAngle"/>.
+    </para>
   </refsect1>
   <refsect1>
     <title>History</title>
     <para>
 The Y data label feature for bar graphs was added to PHPlot-5.0rc3.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetYDataLabelType">
+  <refmeta>
+    <refentrytitle>SetYDataLabelType</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetYDataLabelType</refname>
+    <refpurpose>Set formatting type for Y data labels</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetYDataLabelType(<parameter>$type</parameter>, <optional><parameter>...</parameter></optional>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetYDataLabelType</function> sets the formatting type for Y data
+labels.  (Y data labels are only available with bar charts.)
+By default, data labels are formatted the same as tick labels.
+If <xref linkend="SetYLabelType"/> is not used, then there is no special
+formatting for either label type, so the labels are output as-is.
+Available format types are 'data', 'time', 'printf', and 'custom'.
+    </para>
+    <para>
+'data' formatting formats the labels as floating point numbers,
+with digits grouped into thousands (3 digit groups),
+and with user-defined precision
+Grouping separator characters can be set with <xref linkend="SetNumberFormat" />.
+The precision (number of digits after the decimal point) can be set
+as an additional argument to SetYDataLabelType.
+A prefix and suffix string can also be specified.
+    </para>
+    <para>
+'time' formatting formats the labels as date/time values, with the
+format string specified as an additional argument to SetYDataLabelType.
+    </para>
+    <para>
+'printf' formatting formats the labels using the standard
+<function>sprintf</function> function, with the format string specified
+as an additional argument to SetYDataLabelType.
+    </para>
+    <para>
+'custom' formatting formats the labels using a caller-provided function,
+with an optional pass-through argument. This provides the maximum
+flexibility in formatting labels.
+    </para>
+
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <para>
+There is one required argument, $type. Other arguments depend on the value
+of the $type argument.
+      <variablelist>
+        <varlistentry>
+          <term><replaceable>$type</replaceable></term>
+          <listitem>
+            <para>
+A string indicating the desired formatting mode: 'data', 'time', 'printf',
+or 'custom'. Or, an empty string meaning revert to no formatting.
+            </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </para>
+
+    <para>
+For type 'data', there are three optional arguments:
+      <variablelist>
+        <varlistentry>
+          <term><replaceable>$precision</replaceable></term>
+          <listitem>
+            <para>
+The formatting precision, or number of decimal places (optional).
+If omitted, the default is 1.
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term><replaceable>$prefix</replaceable></term>
+          <listitem>
+            <para>
+A prefix string to be placed before the formatted label values. This could
+be used for a currency symbol, for example. The default is an empty string.
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term><replaceable>$suffix</replaceable></term>
+          <listitem>
+            <para>
+A suffix string to be placed after the formatted label values. This could
+be used for a currency symbol, for example. The default is an empty string.
+            </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </para>
+
+    <para>
+For type 'time', there is one optional argument:
+      <variablelist>
+        <varlistentry>
+          <term><replaceable>$format</replaceable></term>
+          <listitem>
+            <para>
+Formatting string, used with <function>strftime()</function>.
+For example, '%Y-%m-%d' results in formatting a <literal>time_t</literal>
+value as a year, month, and day numbers.
+If omitted, the default is '%H:%M:%S' (hours, minutes, and seconds).
+            </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </para>
+
+    <para>
+For type 'printf', there is one optional argument:
+      <variablelist>
+        <varlistentry>
+          <term><replaceable>$format</replaceable></term>
+          <listitem>
+            <para>
+Formatting string, used with <function>sprintf()</function>.
+If omitted, the default value of '%e' uses scientific notation with default
+field sizes.
+            </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </para>
+
+    <para>
+For type 'custom', there is one required argument and one optional argument:
+      <variablelist>
+        <varlistentry>
+          <term><replaceable>$callback</replaceable></term>
+          <listitem>
+            <para>
+A callback function to format the label. This is either the name of a
+function (as a string), or a two-element array with an object instance and
+method name. (Refer to the PHP documentation for more information on the
+callback type.) The callback will be called with two arguments: the value
+of the label to be formatted, and the pass-through argument (see next).
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term><replaceable>$callback_arg</replaceable></term>
+          <listitem>
+            <para>
+A pass-through argument for the callback function.
+If omitted, NULL is used.
+            </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The default formatting mode is to do no special formatting of the labels.
+Strings will be output as-is, and numbers will be output using PHP's
+default formatting.
+If you need to change label formatting back to the default,
+or to override a format type you set for tick labels and have no
+formatting for data labels,
+use SetYDataLabelType without arguments, or with an empty string argument.
+    </para>
+    <para>
+When using a custom label formatting function, do not assume the labels are
+formatted in any particular order, or only once each.
+    </para>
+  </refsect1>
+  <refsect1>
+    <title>Examples</title>
+    <para>
+See <xref linkend="SetXLabelType" />.
+    </para>
+  </refsect1>
+  <refsect1>
+    <title>History</title>
+    <para>
+This function was added after PHPlot-5.0.7.
+Through PHPlot-5.0.7, data labels and tick labels always used the same
+formatting, as set with <xref linkend="SetYLabelType"/>.
     </para>
   </refsect1>
 </refentry>
@@ -6314,8 +6853,6 @@ $plot-&gt;SetYLabelAngle(<parameter>$yla</parameter>)
     <title>Description</title>
     <para>
 <function>SetYLabelAngle</function> sets the text angle for Y tick labels.
-(This does not apply to bar chart Y data labels, which are always drawn
-horizontally.)
 If using TrueType fonts, any angle can be used.
 If using built-in GD fonts, only 0 degree and 90 degree text can be used.
     </para>
@@ -6340,6 +6877,10 @@ Desired angle for label text, in degrees.
     <para>
 The default text angle for Y labels is 0 degrees, for horizontal text.
     </para>
+    <para>
+This does not apply to bar chart Y data labels.
+For those, see <xref linkend="SetYDataLabelAngle"/>.
+    </para>
   </refsect1>
 </refentry>
 
@@ -6350,7 +6891,7 @@ The default text angle for Y labels is 0 degrees, for horizontal text.
 
   <refnamediv>
     <refname>SetYLabelType</refname>
-    <refpurpose>Set formatting type for Y tick and data labels</refpurpose>
+    <refpurpose>Set formatting type for Y tick labels</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
@@ -6362,12 +6903,13 @@ $plot-&gt;SetYLabelType(<parameter>$type</parameter>, <optional><parameter>...</
   <refsect1>
     <title>Description</title>
     <para>
-<function>SetYLabelType</function> sets the formatting type for Y tick
-and data labels.
-(Y data labels are only available with bar charts.)
-By default, there is no special formatting, so the labels are
-output as-is. Available format types are 'data', 'time', 'printf', and
-'custom'.
+<function>SetYLabelType</function> sets the formatting type for Y tick labels,
+and the default formatting type for Y data labels.
+(If <xref linkend="SetYDataLabelType"/> is never called,
+<function>SetYLabelType</function> effectively sets the formatting type
+for both Y tick labels and Y data labels.)
+By default, there is no special formatting, so the labels are output as-is.
+Available format types are 'data', 'time', 'printf', and 'custom'.
     </para>
     <para>
 'data' formatting formats the labels as floating point numbers,
@@ -6407,7 +6949,7 @@ of the $type argument.
           <listitem>
             <para>
 A string indicating the desired formatting mode: 'data', 'time', 'printf',
-or 'custom'.
+or 'custom'. Or, an empty string meaning revert to no formatting.
             </para>
           </listitem>
         </varlistentry>
@@ -6532,7 +7074,21 @@ formatted in any particular order, or only once each.
     </para>
   </refsect1>
   <refsect1>
+    <title>Examples</title>
+    <para>
+See <xref linkend="SetXLabelType" />.
+    </para>
+  </refsect1>
+  <refsect1>
     <title>History</title>
+    <para>
+Through PHPlot-5.0.7, this function set the format type for both Y tick
+labels and Y data labels.
+Starting after PHPlot-5.0.7, a new function <xref linkend="SetYDataLabelType"/>
+was added to allow separate control of tick and data labels.
+<function>SetYLabelType</function> now sets the format type for Y tick labels,
+and the default format type for Y data labels.
+    </para>
     <para>
 New label format types 'printf' and 'custom' were added at PHPlot-5.0.6, 
 as well as all arguments after the first. In PHPlot-5.0.5 and earlier, you
@@ -6555,12 +7111,6 @@ and a period was used as a decimal point.
 Starting with 5.0.4, PHPlot attempts to get the correct values for your
 locale.  You can set the separator characters yourself instead with
 <xref linkend="SetNumberFormat" />.
-    </para>
-  </refsect1>
-  <refsect1>
-    <title>Examples</title>
-    <para>
-See <xref linkend="SetXLabelType" />.
     </para>
   </refsect1>
 </refentry>
