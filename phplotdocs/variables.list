@@ -37,7 +37,6 @@ draw_broken_lines	FALSE	SetDrawBrokenLines	Flag: How to handle missing Y values
 draw_plot_area_background	FALSE	SetDrawPlotAreaBackground	Flag: Draw the background of the plot area
 draw_x_data_label_lines	FALSE	SetDrawXDataLabelLines	Flag: Draw X data label lines
 draw_x_grid	FALSE	SetDrawXGrid	Flag: Draw X grid lines?
-draw_y_data_label_lines	FALSE	SetDrawYDataLabelLines	Unimplemented
 draw_y_grid	TRUE	SetDrawYGrid	Flag: Draw Y grid lines?
 error_bar_colors	array(...)	SetErrorBarColors	Array of color names for error bars
 error_bar_line_width	1	SetErrorBarLineWidth	Thickness of error bar lines
@@ -56,7 +55,7 @@ img		PHPlot	Image resource
 in_error		PrintError	Prevent recursion in error message image production
 is_inline	FALSE	SetIsInline	Don't sent headers
 label_color	'black'	SetLabelColor	Unused - see SetTitleColor
-label_format	array(...)	SetXLabelType SetYLabelType SetXTimeFormat SetYTimeFormat SetPrecisionX SetPrecisionY	Label format info. Indexes 'x' and 'y' are each an array, with index 'type' indicating the label format type (data, time, printf, or custom), and other indexes depending on that value.
+label_format	array(...)	SetXLabelType SetYLabelType SetXDataLabelType SetYDataLabelType SetXTimeFormat SetYTimeFormat SetPrecisionX SetPrecisionY	Label format info. Indexes 'x', 'y' (for tick labels), 'xd', and 'yd' (for data labels) are each an array, with index 'type' indicating the label format type (data, time, printf, or custom), and other indexes depending on that value.
 label_scale_position	0.5	SetLabelScalePosition	Pie chart label position factor
 legend	''	SetLegend	Legend text array. Each index is a legend text line.
 legend_colorbox_align		SetLegendStyle	Legend alignment of color boxes, left, right, or none
@@ -128,8 +127,9 @@ ttf_path	'.'	SetTTFPath	TrueType font directory
 use_ttf	FALSE	SetUseTTF	Default font type, True for TrueType, False for GD
 x_axis_position	''	SetXAxisPosition	Position of X axis (in world coordinates)
 x_axis_y_pixels		CalcTranslation	Device coordinate for the X axis
-x_data_label_pos	'plotdown'	SetXDataLabelPos	Position of X data labels
-x_label_angle	0	SetXLabelAngle	X label text angle
+x_data_label_angle		SetXDataLabelAngle	X data label text angle (Added after PHPlot-5.0.7)
+x_data_label_pos		SetXDataLabelPos	Position of X data labels. (Default was 'plotdown', but is now applied at graph drawing time.)
+x_label_angle	0	SetXLabelAngle	X tick label text angle (and default for x_data_label_angle)
 x_label_axis_offset		CalcMargins	Label offset relative to plot area
 x_label_bot_offset		CalcMargins	Label offset relative to plot area
 x_label_top_offset		CalcMargins	Label offset relative to plot area
@@ -137,7 +137,7 @@ x_left_margin		CalcMargins	Calculated plot area margin - left side
 x_right_margin		CalcMargins	Calculated plot area margin - right side
 x_tick_cross	3	SetXTickCrossing	Length of X tick marks (inside plot area)
 x_tick_inc	''	SetXTickIncrement	Step between X tick marks
-x_tick_label_pos	'plotdown'	SetXTickLabelPos	Position of X tick labels
+x_tick_label_pos		SetXTickLabelPos	Position of X tick labels. (Default was 'plotdown', but is now applied at graph drawing time.)
 x_tick_length	5	SetXTickLength	Length of X tick marks (outside plot area)
 x_tick_pos	'plotdown'	SetXTickPos	Position of X tick marks
 x_title_bot_offset		CalcMargins	Title offset relative to plot area
@@ -149,8 +149,9 @@ xscale_type	'linear'	SetXScaleType	Linear or log scale on X
 y_axis_position	''	SetYAxisPosition	Position of Y axis (in world coordinates)
 y_axis_x_pixels		CalcTranslation	Device coordinate for the Y axis
 y_bot_margin		CalcMargins	Calculated plot area margin - bottom
-y_data_label_pos	'plotleft'	SetYDataLabelPos	Position of Y labels above bars
-y_label_angle	0	SetYLabelAngle	Y label text angle
+y_data_label_angle	0	SetYDataLabelAngle	Y data label text angle (Added after PHPlot-5.0.7)
+y_data_label_pos	'none'	SetYDataLabelPos	Position of Y labels above bars
+y_label_angle	0	SetYLabelAngle	Y tick label text angle
 y_label_axis_offset		CalcMargins	Label offset relative to plot area
 y_label_left_offset		CalcMargins	Label offset relative to plot area
 y_label_right_offset		CalcMargins	Label offset relative to plot area
