@@ -4076,17 +4076,6 @@ class PHPlot {
     } // Function DrawLegend()
 
 
-    /*!
-     * TODO Draws a legend over (or below) an axis of the plot.
-     */
-    protected function DrawAxisLegend()
-    {
-        // Calculate available room
-        // Calculate length of all items (boxes included)
-        // Calculate number of lines and room it would take. FIXME: this should be known in CalcMargins()
-        // Draw.
-    }
-
 /////////////////////////////////////////////
 ////////////////////             PLOT DRAWING
 /////////////////////////////////////////////
