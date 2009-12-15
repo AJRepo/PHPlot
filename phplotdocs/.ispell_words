@@ -9,7 +9,9 @@ CalcTicks
 CalcTranslation
 Callback
 Callbacks
+CheckLabels
 CheckOption
+CheckPointParams
 DoCallback
 DrawArea
 DrawBackground
@@ -49,6 +51,7 @@ FreeBSD
 FreeType
 GD
 GetCallback
+GetDeviceXY
 GetImage
 GetLineSpacing
 ImageMagick
@@ -150,7 +153,9 @@ SetTitleColor
 SetTransparentColor
 SetUseTTF
 SetXAxisPosition
+SetXDataLabelAngle
 SetXDataLabelPos
+SetXDataLabelType
 SetXLabelAngle
 SetXLabelType
 SetXScaleType
@@ -162,7 +167,9 @@ SetXTickPos
 SetXTimeFormat
 SetXTitle
 SetYAxisPosition
+SetYDataLabelAngle
 SetYDataLabelPos
+SetYDataLabelType
 SetYLabelAngle
 SetYLabelType
 SetYScaleType
