@@ -3,6 +3,10 @@ The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
 2009-12-14
+    * Fix for bug 2914403 "Pie + X/Y titles: Undefined property error":
+      In DrawGraph(), don't try to draw X or Y titles for pie charts.
+
+
     * Feature request 2899921: "allow different format for data and tick
       labels"; Bug 2906463: "Fixes for X Tick Labels vs X Data Labels",
       and partial implementation of changes from user 'adoll' regarding
