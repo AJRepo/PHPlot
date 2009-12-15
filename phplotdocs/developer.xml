@@ -305,6 +305,25 @@ the graph is ready to be drawn.
 </varlistentry>
 
 <varlistentry>
+  <term id="CheckLabels" xreflabel="CheckLabels">CheckLabels()</term>
+  <listitem>
+    <para>
+Fixes up the data and tick label position, angle, and format settings.
+This applies defaults to X data label and tick label positions but avoids
+having them overlap unless the user deliberately positioned them that way.
+Also sets the default angle for X data labels, and the default formatting
+for X and Y data labels, to match the corresponding settings for tick
+labels if they were not already set.
+This is for compatibility with PHPlot-5.0.7 and earlier, when there was only
+one control for both types of labels.
+Called by <xref linkend="DrawGraph"/> before calculating margins with
+<xref linkend="CalcMargins"/>.
+This was added after PHPlot-5.0.7.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
   <term id="CheckOption" xreflabel="CheckOption">CheckOption($which_opt, $which_acc, $which_func)</term>
   <listitem>
     <para>
@@ -793,10 +812,12 @@ from various places, with a flag data_limits_done to indicate it was called.)
     <para>
 Formats a value for use as a tick or data label. This implements the format
 type selected with
-<xref linkend="SetXLabelType"/> and <xref linkend="SetYLabelType"/>.
+<xref linkend="SetXLabelType"/> ,<xref linkend="SetYLabelType"/>,
+<xref linkend="SetXDataLabelType"/> ,and <xref linkend="SetYDataLabelType"/>.
 By default it returns the value as-is, or it can format it as a floating
 point number or date/time value.
 Called by several functions that need to format label values.
+Separation of data and tick label formatting started after PHPlot-5.0.7.
     </para>
   </listitem>
 </varlistentry>
@@ -1095,17 +1116,20 @@ creating an instance of the object.
 </varlistentry>
 
 <varlistentry>
-  <term id="SetLabelType" xreflabel="SetLabelType">SetLabelType($which_axis, $args)</term>
+  <term id="SetLabelType" xreflabel="SetLabelType">SetLabelType($mode, $args)</term>
   <listitem>
     <para>
 Sets the formatting used for tick and data labels. This implements
-<xref linkend="SetXLabelType"/> and <xref linkend="SetYLabelType"/>.
-$which_axis is either 'x' or 'y' and selects the axis to configure.
+<xref linkend="SetXLabelType"/>, <xref linkend="SetYLabelType"/>,
+<xref linkend="SetXDataLabelType"/> ,and <xref linkend="SetYDataLabelType"/>.
+$mode is either 'x', 'xd', 'y', or 'yd' and selects the axis to configure
+and type of label being drawing (x, y for tick labels; xd, yd for data labels).
 $args is an array of arguments, with $args[0] selecting the type of
 formatting (for example, 'data'). Additional array elements depend on
-the formatting type. For more details, see the two referenced functions.
+the formatting type. For more details, see the above-referenced functions.
 All arguments to those functions are combined into an array and passed to
 <function>SetLabelType</function> as $args.
+Separation of data and tick label formatting started after PHPlot-5.0.7.
     </para>
   </listitem>
 </varlistentry>
@@ -1183,6 +1207,7 @@ It was replaced by <xref linkend="SizeText"/>.
     <para>
 Translates an X world coordinate value into a pixel coordinate value.
 This uses the scale and translation set up by <xref linkend="CalcTranslation"/>.
+See <xref linkend="GetDeviceXY"/> for a public interface.
     </para>
   </listitem>
 </varlistentry>
@@ -1193,6 +1218,7 @@ This uses the scale and translation set up by <xref linkend="CalcTranslation"/>.
     <para>
 Translates a Y world coordinate value into a pixel coordinate value.
 This uses the scale and translation set up by <xref linkend="CalcTranslation"/>.
+See <xref linkend="GetDeviceXY"/> for a public interface.
     </para>
   </listitem>
 </varlistentry>
