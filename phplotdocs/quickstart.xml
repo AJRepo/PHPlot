@@ -119,7 +119,7 @@ a plot using PHPlot.
 Information on PHP can be found at
 <ulink url="http://www.php.net/">www.php.net</ulink>.
 Information about the GD library which PHP uses to create images can
-be found at <ulink url="http://libgd.org/">libd.org</ulink>.
+be found at <ulink url="http://libgd.org/">libgd.org</ulink>.
 More information about PHPlot can be found at
 <ulink url="http://phplot.sourceforge.net/">phplot.sourceforge.net</ulink>.
 </para>
@@ -365,154 +365,9 @@ function.
 There are many ways we can change the look and feel of the graph.
 Almost every parameter of the graph, including ticks, grids, and data labels,
 can be adjusted using PHPlot functions.
-Here is a list of functions used to customize graphs.
-Each of these is described in detail in the reference material in
-<xref linkend="reference" />.
-
-<variablelist>
-  <varlistentry>
-    <term>Colors, Background, Border:</term>
-    <listitem>
-      <para>
-<xref linkend="SetBackgroundColor" />,
-<xref linkend="SetBgImage" />,
-<xref linkend="SetDataBorderColors" />,
-<xref linkend="SetDataColors" />,
-<xref linkend="SetDrawPlotAreaBackground" />,
-<xref linkend="SetErrorBarColors" />,
-<xref linkend="SetGridColor" />,
-<xref linkend="SetImageBorderColor" />,
-<xref linkend="SetImageBorderType" />,
-<xref linkend="SetLightGridColor" />,
-<xref linkend="SetPlotAreaBgImage" />,
-<xref linkend="SetPlotBgColor" />,
-<xref linkend="SetPlotBorderType" />,
-<xref linkend="SetRGBArray" />,
-<xref linkend="SetShading" />,
-<xref linkend="SetTextColor" />,
-<xref linkend="SetTickColor" />,
-<xref linkend="SetTitleColor" />,
-<xref linkend="SetTransparentColor" />
-      </para>
-    </listitem>
-  </varlistentry>
-
-  <varlistentry>
-    <term>Point Shapes and Plotted Line Styles:</term>
-    <listitem>
-      <para>
-<xref linkend="SetDefaultDashedStyle" />,
-<xref linkend="SetDrawBrokenLines" />,
-<xref linkend="SetErrorBarLineWidth" />,
-<xref linkend="SetErrorBarShape" />,
-<xref linkend="SetErrorBarSize" />,
-<xref linkend="SetLineStyles" />,
-<xref linkend="SetLineWidths" />,
-<xref linkend="SetPointShapes" />,
-<xref linkend="SetPointSizes" />
-      </para>
-    </listitem>
-  </varlistentry>
-
-  <varlistentry>
-    <term>Fonts and Text:</term>
-    <listitem>
-      <para>
-<xref linkend="SetDefaultTTFont" />,
-<xref linkend="SetFont" />,
-<xref linkend="SetLineSpacing" />,
-<xref linkend="SetTTFPath" />,
-<xref linkend="SetUseTTF" />
-      </para>
-    </listitem>
-  </varlistentry>
-
-  <varlistentry>
-    <term>Grids:</term>
-    <listitem>
-      <para>
-<xref linkend="SetDrawDashedGrid" />,
-<xref linkend="SetDrawXGrid" />,
-<xref linkend="SetDrawYGrid" />
-<xref linkend="SetGridColor" />,
-<xref linkend="SetLightGridColor" />,
-      </para>
-    </listitem>
-  </varlistentry>
-
-  <varlistentry>
-    <term>Titles and Legend:</term>
-    <listitem>
-      <para>
-<xref linkend="SetLegend" />,
-<xref linkend="SetLegendPixels" />,
-<xref linkend="SetLegendWorld" />,
-<xref linkend="SetTitle" />,
-<xref linkend="SetXTitle" />,
-<xref linkend="SetYTitle" />
-      </para>
-    </listitem>
-  </varlistentry>
-
-  <varlistentry>
-    <term>Tick Marks and Labels:</term>
-    <listitem>
-      <para>
-<xref linkend="SetLabelScalePosition" />,
-<xref linkend="SetNumXTicks" />,
-<xref linkend="SetNumYTicks" />,
-<xref linkend="SetSkipBottomTick" />,
-<xref linkend="SetSkipLeftTick" />,
-<xref linkend="SetSkipRightTick" />,
-<xref linkend="SetSkipTopTick" />,
-<xref linkend="SetXTickCrossing" />,
-<xref linkend="SetXTickIncrement" />,
-<xref linkend="SetXTickLabelPos" />,
-<xref linkend="SetXTickLength" />,
-<xref linkend="SetXTickPos" />,
-<xref linkend="SetYTickCrossing" />,
-<xref linkend="SetYTickIncrement" />,
-<xref linkend="SetYTickLabelPos" />,
-<xref linkend="SetYTickLength" />,
-<xref linkend="SetYTickPos" />
-      </para>
-    </listitem>
-  </varlistentry>
-
-  <varlistentry>
-    <term>Axes and Data Labels:</term>
-    <listitem>
-      <para>
-<xref linkend="SetDrawXDataLabelLines" />,
-<xref linkend="SetXAxisPosition" />,
-<xref linkend="SetPrecisionX" />,
-<xref linkend="SetPrecisionY" />,
-<xref linkend="SetXDataLabelPos" />,
-<xref linkend="SetXLabelAngle" />,
-<xref linkend="SetXLabelType" />,
-<xref linkend="SetXScaleType" />,
-<xref linkend="SetXTimeFormat" />,
-<xref linkend="SetYAxisPosition" />,
-<xref linkend="SetYDataLabelPos" />,
-<xref linkend="SetYLabelAngle" />,
-<xref linkend="SetYLabelType" />,
-<xref linkend="SetYScaleType" />,
-<xref linkend="SetYTimeFormat" />
-      </para>
-    </listitem>
-  </varlistentry>
-
-  <varlistentry>
-    <term>Margins and Scaling:</term>
-    <listitem>
-      <para>
-<xref linkend="SetMarginsPixels" />,
-<xref linkend="SetPlotAreaPixels" />,
-<xref linkend="SetPlotAreaWorld" />
-      </para>
-    </listitem>
-  </varlistentry>
-</variablelist>
+A categorized list of these functions can be found in <xref
+linkend="functions"/>.
+Each of the functions is described in detail in <xref linkend="reference" />.
 
 </para>
 </sect1>
