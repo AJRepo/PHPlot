@@ -694,7 +694,7 @@ $plot-&gt;SetDataBorderColors(<parameter>$border</parameter>)
   <refsect1>
     <title>Description</title>
     <para>
-<function>SetDataBorderColors</function> sets the color used for the
+<function>SetDataBorderColors</function> sets the colors used for the
 borders of the bars and stacked bars for plot types 'bars' and
 'stackedbars'. The borders are only drawn if shading is turned off
 with <xref linkend="SetShading" />; the default is to draw bars with
@@ -709,10 +709,9 @@ a drop-shadow for a 3-D look and no borders.
         <term><replaceable>$border</replaceable></term>
         <listitem>
           <para>
-The desired color for the data borders.
-If this is an array, it sets the color for each data set sequentially from
-the array.
-If this is a single value, it sets the color for all data sets to that.
+An array of color values, one for the bar border of each data set.
+Or, a single color value (not an array) to use for all data sets.
+For other possibilities, see Notes.
 See <xref linkend="conc-colors" /> for more on color values.
           </para>
         </listitem>
@@ -729,7 +728,8 @@ calls 'the usual integer indices (starting from zero, increasing by one)'.
     </para>
     <para>
 If this function is never called, and <xref linkend="SetShading" /> is called
-to turn shading off, then all data borders are black.
+to turn shading off, a default color map is used which sets all data borders
+to black.
     </para>
     <para>
 This is only used for plot types 'bars' and 'stackedbars', and only if shading
@@ -739,6 +739,21 @@ is turned off.
 If you want flat (unshaded), borderless bars, call SetShading(0) to turn
 off the shading, and call SetDataBorderColors with the same color (or color
 array) that you use with <xref linkend="SetDataColors" />.
+    </para>
+    <para>
+If <parameter>$border</parameter> is not an array, but a single color
+value, then that color will be used for all data sets.
+However, the array(r,g,b) notation is not allowed in
+this case (because it looks like an array of 3 separate color values).
+    </para>
+    <para>
+Two special uses of the <parameter>$border</parameter> argument
+are available.
+If the argument is an empty string, or boolean False, the color map is reset
+to the defaults. This can be used to restore the default color map.
+If the argument is NULL or missing from the function call, the color map is
+reset to the defaults, but only if it has not already been set.
+This is used internal to PHPlot for one-time initialization.
     </para>
   </refsect1>
 </refentry>
@@ -774,8 +789,9 @@ data.
         <term><replaceable>$data_colors</replaceable></term>
         <listitem>
           <para>
-An array of color values, one for each data set. For other possibilities,
-see Notes.
+An array of color values, one for each data set.
+Or, a single color value (not an array) to use for all data sets.
+For other possibilities, see Notes.
 See <xref linkend="conc-colors" /> for more on color values.
           </para>
         </listitem>
@@ -818,14 +834,33 @@ However, the array(r,g,b) notation is not allowed in
 this case (because it looks like an array of 3 separate color values).
     </para>
     <para>
-If <parameter>$data_colors</parameter> is an empty string,
-the following 4 colors are used: blue red green orange.
+Two special uses of the <parameter>$data_colors</parameter> argument
+are available.
+If the argument is an empty string, or boolean False, the color map is reset
+to the defaults. This can be used to restore the default color map.
+If the argument is NULL or missing from the function call, the color map is
+reset to the defaults, but only if it has not already been set.
+This is used internal to PHPlot for one-time initialization.
     </para>
     <para>
-If SetDataColors is never called, the default colors in order are:
+If SetDataColors is never called, a default color map is used which
+contains 16 colors starting with SkyBlue, green, orange, and blue.
+For the full list, see <xref linkend="conc-colors-datacolors"/>.
+    </para>
+  </refsect1>
+  <refsect1>
+    <title>History</title>
+    <para>
+Through PHPlot-5.0.7, the default color map contained these 8 colors:
 SkyBlue, green, orange, blue, orange, red, violet, and azure1.
-Note that for some reason orange appears twice. If you are plotting more
-than 4 data sets, you should call SetDataColors to set distinctive colors.
+These were used if SetDataColors was never called.
+Unfortunately, orange is used twice, and azure1 is so close to the white
+background that it is invisible. Also, through PHPlot-5.0.7, if
+SetDataColors was called with an empty string argument, the color map was
+set to these 4 colors: blue red green orange.
+Starting after PHPlot-5.0.7, a new default color map with 16 colors was
+defined. Given an empty string (or False), SetDataColors now restores the
+default color map.
     </para>
   </refsect1>
 </refentry>
@@ -1483,7 +1518,8 @@ sets the colors used for the data plot itself.
         <listitem>
           <para>
 An array of color values, one for each data set's error bars.
-Or, a single color value to use for all data set error bars.
+Or, a single color value (not an array) to use for all data set error bars.
+For other possibilities, see Notes.
 See <xref linkend="conc-colors" /> for more on color values.
           </para>
         </listitem>
@@ -1499,11 +1535,42 @@ must use zero based sequential integer indexes. This is what the PHP manual
 calls 'the usual integer indices (starting from zero, increasing by one)'.
     </para>
     <para>
-The default array of error bar colors contains the same 8 colors as
-the data colors array:
-SkyBlue, green, orange, blue, orange, red, violet, and azure1.
+If <parameter>$error_bar_colors</parameter> is not an array, but a single color
+value, then that color will be used for all data sets' error bars.
+However, the array(r,g,b) notation is not allowed in
+this case (because it looks like an array of 3 separate color values).
+    </para>
+    <para>
+Two special uses of the <parameter>$error_bar_colors</parameter> argument
+are available.
+If the argument is an empty string, or boolean False, the color map is reset
+to the defaults. This can be used to restore the default color map.
+If the argument is NULL or missing from the function call, the color map is
+reset to the defaults, but only if it has not already been set.
+This is used internal to PHPlot for one-time initialization.
+    </para>
+    <para>
+If SetErrorBarColors is never called, the default color map is the same as
+for <xref linkend="SetDataColors"/>. It contains 16 colors, starting with
+SkyBlue, green, orange, and blue.
+For the full list, see <xref linkend="conc-colors-datacolors"/>.
+   </para>
+   <para>
 If you change the data colors with <xref linkend="SetDataColors" />,
 you probably want to change the error bar colors to the same array.
+    </para>
+  </refsect1>
+  <refsect1>
+    <title>History</title>
+    <para>
+Through PHPlot-5.0.7, the default color map contained these 8 colors:
+SkyBlue, green, orange, blue, orange, red, violet, and azure1.
+These were used if SetErrorBarColors was never called.
+Also, through PHPlot-5.0.7, if SetErrorBarColors was called with an empty
+string argument, the color map was set to just contain 'black'.
+Starting after PHPlot-5.0.7, a new default color map with 16 colors was
+defined. Given an empty string (or False), SetErrorBarColors now restores the
+default color map.
     </para>
   </refsect1>
 </refentry>
