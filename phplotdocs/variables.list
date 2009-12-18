@@ -24,13 +24,14 @@ color_array	'small'	PHPlot	Name of the initial color map
 dashed_grid	TRUE	SetDrawDashedGrid	Flag: Draw dashed or solid grid lines?
 dashed_style	'2-4'	SetDefaultStyles	Initial dashed pattern code
 data		SetDataValues	The data array
-data_border_colors	array('black')	SetDataBorderColors	Array of color names for bar chart data borders
-data_colors	array(...)	SetDataColors	Array of color names for data lines/marks/bars/etc.
+data_border_colors		SetDataBorderColors	Array of color names for bar chart data borders. Initialized to array('black') by SetDefaultStyles.
+data_colors		SetDataColors	Array of color names for data lines/marks/bars/etc. See default_colors for initial value.
 data_maxy		FindDataLimits	Array: Per row maximum Y value
 data_miny		FindDataLimits	Array: Per row minimum Y value
 data_type	'text-data'	SetDataType	Format of the data array
 data_units_text	''	FormatLabel	Obsolete - suffix for 'data'-formatted labels
 decimal_point		SetNumberFormat	Character to use for decimal point in formatted numbers
+default_colors	array(...)	SetDataColors SetErrorBarColors	The default color array, used to initialize data_colors and error_bar_colors. (Added after PHPlot-5.0.7)
 default_dashed_style		SetDefaultDashedStyle	Formatted PHP code to build a dashed line pattern
 default_ttfont	'benjamingothic.ttf'	SetDefaultTTFont	Default TrueType font file
 draw_broken_lines	FALSE	SetDrawBrokenLines	Flag: How to handle missing Y values
@@ -38,7 +39,7 @@ draw_plot_area_background	FALSE	SetDrawPlotAreaBackground	Flag: Draw the backgro
 draw_x_data_label_lines	FALSE	SetDrawXDataLabelLines	Flag: Draw X data label lines
 draw_x_grid	FALSE	SetDrawXGrid	Flag: Draw X grid lines?
 draw_y_grid	TRUE	SetDrawYGrid	Flag: Draw Y grid lines?
-error_bar_colors	array(...)	SetErrorBarColors	Array of color names for error bars
+error_bar_colors		SetErrorBarColors	Array of color names for error bars. See default_colors for initial value.
 error_bar_line_width	1	SetErrorBarLineWidth	Thickness of error bar lines
 error_bar_shape	'tee'	SetErrorBarShape	Shape (style) of error bars: line or tee
 error_bar_size	5	SetErrorBarSize	Size of error bars
