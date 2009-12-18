@@ -170,9 +170,15 @@ class PHPlot {
     public $light_grid_color = 'gray';
     public $tick_color = 'black';
     public $title_color = 'black';
-    public $data_colors = array('SkyBlue', 'green', 'orange', 'blue', 'orange', 'red', 'violet', 'azure1');
-    public $error_bar_colors = array('SkyBlue', 'green', 'orange', 'blue', 'orange', 'red', 'violet', 'azure1');
-    public $data_border_colors = array('black');
+    public $default_colors = array(       // The default colors for data and error bars
+        'SkyBlue', 'green', 'orange', 'blue', 'red', 'DarkGreen', 'purple', 'peru',
+        'cyan', 'salmon', 'SlateBlue', 'YellowGreen', 'magenta', 'aquamarine1', 'gold', 'violet');
+
+    // data_colors and error_bar_colors are initialized to default_colors by SetDefaultStyles.
+    // public $data_colors;                    // Data colors
+    // public $error_bar_colors;               // Error bar colors
+    // data_border_colors is initialized to black by SetDefaultStyles.
+    // public $data_border_colors;             // Data border colors
 
     public $line_widths = 1;                  // single value or array
     public $line_styles = array('solid', 'solid', 'dashed');   // single value or array
@@ -566,16 +572,21 @@ class PHPlot {
 
     /*!
      * Sets the colors for the data.
+     * Cases are:
+     *    SetDataColors(array(...))  : Use the supplied array as the color map.
+     *    SetDataColors(colorname)   : Use an array of just colorname as the color map.
+     *    SetDataColors() or SetDataColors(NULL) : Load default color map if no color map is already set.
+     *    SetDataColors('') or SetDataColors(False) : Load default color map (even if one is already set).
      */
     function SetDataColors($which_data = NULL, $which_border = NULL)
     {
-        if (is_null($which_data) && is_array($this->data_colors)) {
-            // use already set data_colors
-        } else if (! is_array($which_data)) {
-            $this->data_colors = ($which_data) ? array($which_data) : array('blue', 'red', 'green', 'orange');
-        } else {
-            $this->data_colors = $which_data;
-        }
+        if (is_array($which_data)) {
+            $this->data_colors = $which_data;  // Use supplied array
+        } elseif (!empty($which_data)) {
+            $this->data_colors = array($which_data);  // Use supplied single color
+        } elseif (empty($this->data_colors) || !is_null($which_data)) {
+            $this->data_colors = $this->default_colors;  // Use default color array
+        } // Else do nothing: which_data is NULL or missing and a color array is already set.
 
         $i = 0;
         foreach ($this->data_colors as $col) {
@@ -593,18 +604,18 @@ class PHPlot {
 
 
     /*!
-     *
+     * Set the colors for the bars and stacked bars outlines.
+     * Argument usage is similar to SetDataColors(), except the default is just black.
      */
     function SetDataBorderColors($which_br = NULL)
     {
-        if (is_null($which_br) && is_array($this->data_border_colors)) {
-            // use already set data_border_colors
-        } else if (! is_array($which_br)) {
-            // Create new array with specified color
-            $this->data_border_colors = ($which_br) ? array($which_br) : array('black');
-        } else {
-            $this->data_border_colors = $which_br;
-        }
+        if (is_array($which_br)) {
+            $this->data_border_colors = $which_br; // Use supplied array
+        } elseif (!empty($which_br)) {
+            $this->data_border_colors = array($which_br);  // Use supplied single color
+        } elseif (empty($this->data_border_colors) || !is_null($which_br)) {
+            $this->data_border_colors = array('black'); // Use default
+        } // Else do nothing: which_br is NULL or missing and a color array is already set.
 
         $i = 0;
         foreach($this->data_border_colors as $col) {
@@ -620,16 +631,17 @@ class PHPlot {
 
     /*!
      * Sets the colors for the data error bars.
+     * Argument usage is the same as SetDataColors().
      */
     function SetErrorBarColors($which_err = NULL)
     {
-        if (is_null($which_err) && is_array($this->error_bar_colors)) {
-            // use already set error_bar_colors
-        } else if (! is_array($which_err)) {
-            $this->error_bar_colors = ($which_err) ? array($which_err) : array('black');
-        } else {
-            $this->error_bar_colors = $which_err;
-        }
+        if (is_array($which_err)) {
+            $this->error_bar_colors = $which_err;  // Use supplied array
+        } elseif (!empty($which_err)) {
+            $this->error_bar_colors = array($which_err);  // Use supplied single color
+        } elseif (empty($this->error_bar_colors) || !is_null($which_err)) {
+            $this->error_bar_colors = $this->default_colors;  // Use default color array
+        } // Else do nothing: which_err is NULL or missing and a color array is already set.
 
         $i = 0;
         foreach($this->error_bar_colors as $col) {
