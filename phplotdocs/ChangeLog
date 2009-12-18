@@ -4,6 +4,15 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2009-12-18
+   Changes related to new Data Colors list:
+   * concepts.xml: List the new default data colors, including a color table.
+   * variables.list: Add default_colors. Change data_colors,
+     error_bar_colors, and data_border_colors.
+   * reference.xml: Updated SetDataColors(), SetErrorBarColors(),
+     and SetDataBorderColors(). Document new defaults and use of '' to reset
+     the maps.
+
 2009-12-14
    Changes related to new Data Label Types controls:
    * concepts.xml: Updated information on tick and data label functions;

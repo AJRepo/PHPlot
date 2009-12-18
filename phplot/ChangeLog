@@ -2,6 +2,16 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2009-12-18
+    * Change for bug 1795971 "Fix default data colors":
+      The default Data Color and Error Bar Color arrays now have 16
+      different colors, no duplicates, and nothing so light that it
+      is invisible.
+      Using '' or False as the argument to SetDataColors, SetErrorBarColors,
+      and SetDataBorderColors now re-initializes the map to the defaults.
+      This was previously undocumented, and in some cases set the map to
+      something different from the default.
+
 2009-12-15
     * Cleanup: Remove DrawAxisLegend() - empty function marked TODO,
       not really clear what it was meant to do.
