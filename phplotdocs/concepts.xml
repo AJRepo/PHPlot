@@ -1033,14 +1033,126 @@ maps, as they include alternate spellings (like 'gray' and 'grey').
 <title>Plotting Colors</title>
 <para>
 Each data set plotted on a graph uses the next color in the Data Colors list.
-By default, the Data Colors list contains the following eight colors in order:
-SkyBlue green orange blue orange red violet azure1
+By default, the Data Colors list contains the following 16 colors in order.
+  <informaltable>
+    <tgroup cols="2">
+    <?dbhtml table-summary="Default PHPlot Data Colors List"?>
+      <thead>
+        <row>
+          <entry>Data Set:</entry>
+          <entry>Color Name:</entry>
+          <entry>Color Sample:</entry>
+        </row>
+      </thead>
+      <tbody>
+<!-- Automatically generated content -->
+        <row><?dbhtml bgcolor="white"?>
+          <entry>1</entry>
+          <entry>SkyBlue</entry>
+          <entry><?dbhtml bgcolor="#87ceeb"?>&nbsp;&nbsp;&nbsp;&nbsp;</entry>
+        </row>
+        <row><?dbhtml bgcolor="white"?>
+          <entry>2</entry>
+          <entry>green</entry>
+          <entry><?dbhtml bgcolor="#00ff00"?>&nbsp;&nbsp;&nbsp;&nbsp;</entry>
+        </row>
+        <row><?dbhtml bgcolor="white"?>
+          <entry>3</entry>
+          <entry>orange</entry>
+          <entry><?dbhtml bgcolor="#ffa500"?>&nbsp;&nbsp;&nbsp;&nbsp;</entry>
+        </row>
+        <row><?dbhtml bgcolor="white"?>
+          <entry>4</entry>
+          <entry>blue</entry>
+          <entry><?dbhtml bgcolor="#0000ff"?>&nbsp;&nbsp;&nbsp;&nbsp;</entry>
+        </row>
+        <row><?dbhtml bgcolor="white"?>
+          <entry>5</entry>
+          <entry>red</entry>
+          <entry><?dbhtml bgcolor="#ff0000"?>&nbsp;&nbsp;&nbsp;&nbsp;</entry>
+        </row>
+        <row><?dbhtml bgcolor="white"?>
+          <entry>6</entry>
+          <entry>DarkGreen</entry>
+          <entry><?dbhtml bgcolor="#006400"?>&nbsp;&nbsp;&nbsp;&nbsp;</entry>
+        </row>
+        <row><?dbhtml bgcolor="white"?>
+          <entry>7</entry>
+          <entry>purple</entry>
+          <entry><?dbhtml bgcolor="#a020f0"?>&nbsp;&nbsp;&nbsp;&nbsp;</entry>
+        </row>
+        <row><?dbhtml bgcolor="white"?>
+          <entry>8</entry>
+          <entry>peru</entry>
+          <entry><?dbhtml bgcolor="#cd853f"?>&nbsp;&nbsp;&nbsp;&nbsp;</entry>
+        </row>
+        <row><?dbhtml bgcolor="white"?>
+          <entry>9</entry>
+          <entry>cyan</entry>
+          <entry><?dbhtml bgcolor="#00ffff"?>&nbsp;&nbsp;&nbsp;&nbsp;</entry>
+        </row>
+        <row><?dbhtml bgcolor="white"?>
+          <entry>10</entry>
+          <entry>salmon</entry>
+          <entry><?dbhtml bgcolor="#fa8072"?>&nbsp;&nbsp;&nbsp;&nbsp;</entry>
+        </row>
+        <row><?dbhtml bgcolor="white"?>
+          <entry>11</entry>
+          <entry>SlateBlue</entry>
+          <entry><?dbhtml bgcolor="#6a5acd"?>&nbsp;&nbsp;&nbsp;&nbsp;</entry>
+        </row>
+        <row><?dbhtml bgcolor="white"?>
+          <entry>12</entry>
+          <entry>YellowGreen</entry>
+          <entry><?dbhtml bgcolor="#9acd32"?>&nbsp;&nbsp;&nbsp;&nbsp;</entry>
+        </row>
+        <row><?dbhtml bgcolor="white"?>
+          <entry>13</entry>
+          <entry>magenta</entry>
+          <entry><?dbhtml bgcolor="#ff00ff"?>&nbsp;&nbsp;&nbsp;&nbsp;</entry>
+        </row>
+        <row><?dbhtml bgcolor="white"?>
+          <entry>14</entry>
+          <entry>aquamarine1</entry>
+          <entry><?dbhtml bgcolor="#7fffd4"?>&nbsp;&nbsp;&nbsp;&nbsp;</entry>
+        </row>
+        <row><?dbhtml bgcolor="white"?>
+          <entry>15</entry>
+          <entry>gold</entry>
+          <entry><?dbhtml bgcolor="#ffd700"?>&nbsp;&nbsp;&nbsp;&nbsp;</entry>
+        </row>
+        <row><?dbhtml bgcolor="white"?>
+          <entry>16</entry>
+          <entry>violet</entry>
+          <entry><?dbhtml bgcolor="#ee82ee"?>&nbsp;&nbsp;&nbsp;&nbsp;</entry>
+        </row>
+<!-- End automatically generated content -->
+      </tbody>
+    </tgroup>
+  </informaltable>
 </para>
 <para>
-If plotting more than four data sets, you should use
-<xref linkend="SetDataColors" /> to define your own data colors list.
+An additional color list is used with error plots. These have data type
+data-data-error (see <xref linkend="conc-datatypes-types"/>).
+The positive and negative error bars use a color map that is set using
+<xref linkend="SetErrorBarColors"/>. By default, this color list contains
+the same colors as the data color list, so each data set and its error bars
+will be in the same color. If you change the data colors list with
+<xref linkend="SetDataColors"/>, you probably want to use the same color
+list for the error bars.
+</para>
+<para>
+For bar charts and stackedbar charts, if shading is off, the color of the
+bar borders can be set with <xref linkend="SetDataBorderColors"/>. By
+default, unshaded bar charts use a black outline around the bars for all
+data sets.
+</para>
+<para>
+Note: PHPlot through version 5.0.7 used 8 colors in the default Data Colors
+list: SkyBlue, green, orange, blue, orange, red, violet, and azure1.
+If plotting more than four data sets with PHPlot-5.0.7 or earlier, you should
+use <xref linkend="SetDataColors" /> to define your own data colors list.
 Otherwise you will get two data sets plotted in the same color, orange.
-(This might be a bug.)
 </para>
 </sect2>
 
