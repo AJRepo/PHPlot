@@ -297,8 +297,8 @@ The following data types are available in PHPlot:
       <para>
 Each record contains a label, followed by one or more Y values:
 <literal>array('label', y1, y2, ...)</literal>.
-The corresponding X value for all Y values in a record is implicit: the
-first data record is at X=0, the second at X=1, etc.
+The corresponding X value for all Y values in a record is implicit.
+PHPlot assigns x=0.5 to the first data record, x=1.5 to the second, etc.
 This data type works with all plot types.
       </para>
     </listitem>
@@ -612,6 +612,7 @@ combining the 'line' and 'point' plot types.
 <para>
 This plot type works with data types 'text-data' and 'data-data'
 (see <xref linkend="conc-datatypes-types" />).
+For 'text-data', the data X values are assumed to be at 0.5+N for N=0,1,2...
 It also works with 'data-data-error' for error bars.
 </para>
 <para>
@@ -652,6 +653,7 @@ This plot type simply draws a line from each point to the next.
 <para>
 This plot type works with data types 'text-data' and 'data-data'
 (see <xref linkend="conc-datatypes-types" />).
+For 'text-data', the data X values are assumed to be at 0.5+N for N=0,1,2...
 It also works with 'data-data-error' for error bars.
 </para>
 <para>
@@ -784,6 +786,7 @@ This plot type draws a point marker at each X,Y value.
 <para>
 This plot type works with data types 'text-data' and 'data-data'
 (see <xref linkend="conc-datatypes-types" />).
+For 'text-data', the data X values are assumed to be at 0.5+N for N=0,1,2...
 It also works with 'data-data-error' for points with error bars.
 </para>
 <para>
