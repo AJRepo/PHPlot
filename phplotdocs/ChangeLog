@@ -4,6 +4,11 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2009-12-20
+   * concepts.xml: Fix description of data type 'text-data'. Under Data types,
+     it incorrectly said X=0, 1, 2. Under Plot Types, it correctly said it was
+     X=0.5, 1.5, 2.5 but this was missing under 3 of the plot types.
+
 2009-12-18
    Changes related to new Data Colors list:
    * concepts.xml: List the new default data colors, including a color table.
