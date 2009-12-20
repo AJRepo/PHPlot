@@ -1,4 +1,6 @@
-phplotdocs: Extra files
+This is phplotdocs/etc/README, for the PHPlot Reference Manual extra files
+Last updated on 2009-12-20
+-----------------------------------------------------------------------------
 
 These are extra files and scripts which were originally used to produce the
 manual, but are not needed to generate the manual. This includes scripts
@@ -19,6 +21,14 @@ labels-pie.php
 
 labels.php
   A basic bar chart, used to produce labels.png before it is annotated.
+
+layout.fig
+  The Xfig source for the "Plot Layout" figure in the Developer's Guide
+  section of the manual.
+
+legend-layout.fig
+  The Xfig source for the "Legend Layout" figure in the Developer's Guide
+  section of the manual.
 
 typical.png
   A plot used as the basis for several figures: typical-grid.png,
