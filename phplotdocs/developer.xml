@@ -122,7 +122,7 @@ intended to be used only by PHPlot itself.
 </para>
 <note>
   <para>
-Starting after PHPlot-5.0.7, most of the internal functions are declared as
+Starting with PHPlot-5.1.0, most of the internal functions are declared as
 <literal>protected</literal>, which limits their visibility to other member
 functions and inherited or parent classes. Some internal functions are
 still <literal>public</literal>, usually because they are needed for
@@ -318,7 +318,7 @@ This is for compatibility with PHPlot-5.0.7 and earlier, when there was only
 one control for both types of labels.
 Called by <xref linkend="DrawGraph"/> before calculating margins with
 <xref linkend="CalcMargins"/>.
-This was added after PHPlot-5.0.7.
+This was added in PHPlot-5.1.0.
     </para>
   </listitem>
 </varlistentry>
@@ -354,7 +354,7 @@ from <xref linkend="SetPointShapes"/> and <xref linkend="SetPointSizes"/>
 until graph drawing time. It must be called from internal functions that
 produce plots that use point shapes: currently <xref linkend="DrawDots"/> and
 <xref linkend="DrawDotsError"/>.
-This was added after PHPlot-5.0.7.
+This was added in PHPlot-5.1.0.
     </para>
   </listitem>
 </varlistentry>
@@ -603,7 +603,7 @@ single class array variable 'fonts', indexed by the element name, for
 example $fonts['generic'].
     </para>
     <para>
-Starting after PHPlot-5.0.7, $which_font can be NULL or an empty string to
+Starting with PHPlot-5.1.0, $which_font can be NULL or an empty string to
 use the 'generic' font. This was intended to allow callbacks to avoid
 having to reference the internal class array variable which stores font
 information.
@@ -817,7 +817,8 @@ type selected with
 By default it returns the value as-is, or it can format it as a floating
 point number or date/time value.
 Called by several functions that need to format label values.
-Separation of data and tick label formatting started after PHPlot-5.0.7.
+Separation of data and tick label formatting was available starting with
+PHPlot-5.1.0.
     </para>
   </listitem>
 </varlistentry>
@@ -1129,7 +1130,8 @@ formatting (for example, 'data'). Additional array elements depend on
 the formatting type. For more details, see the above-referenced functions.
 All arguments to those functions are combined into an array and passed to
 <function>SetLabelType</function> as $args.
-Separation of data and tick label formatting started after PHPlot-5.0.7.
+Separation of data and tick label formatting was available starting with
+PHPlot-5.1.0.
     </para>
   </listitem>
 </varlistentry>

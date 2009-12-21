@@ -1261,7 +1261,7 @@ the tick labels; PHPlot will then disable the data labels.
 <para>
 If you don't tell PHPlot what to do with X data and X tick labels,
 the behavior depends on the PHPlot version.
-PHPlot after 5.0.7 will examine your data array to see if there are any
+PHPlot 5.1.0 and later will examine your data array to see if there are any
 non-empty data labels, and if so it will draw only data labels, and omit
 tick labels.
 If all of the data labels are empty, tick labels will be drawn.

@@ -113,8 +113,8 @@ Then PHPlot will call:
 my_drawing_callback($img, $myvar_value, $plot_area);
 ]]></programlisting>
 Where $myvar_value is the value of $myvar at the time SetCallback was called.
-(The plot_area parameter is not supplied for the draw_graph callback in
-PHPlot-5.0.7 and earlier.)
+(The plot_area parameter is only supplied for the draw_graph callback in
+PHPlot-5.1.0 and later.)
 </para>
 </sect1>
 
@@ -217,7 +217,7 @@ The following table lists the available callback reasons.
           <entry>draw_plotarea_background</entry>
           <entry>After drawing the plot area background.</entry>
           <entry>plot_area</entry>
-          <entry>plot_area parameter was added after PHPlot-5.0.7</entry>
+          <entry>plot_area parameter was added in PHPlot-5.1.0</entry>
         </row>
         <row>
           <entry>draw_titles</entry>
@@ -235,7 +235,7 @@ The following table lists the available callback reasons.
           <entry>draw_graph</entry>
           <entry>After drawing the body of the graph.</entry>
           <entry>plot_area</entry>
-          <entry>plot_area parameter was added after PHPlot-5.0.7</entry>
+          <entry>plot_area parameter was added in PHPlot-5.1.0</entry>
         </row>
         <row>
           <entry>draw_border</entry>
@@ -253,7 +253,7 @@ The following table lists the available callback reasons.
           <entry>draw_all</entry>
           <entry>After all drawing is complete.</entry>
           <entry>plot_area</entry>
-          <entry>Added after PHPlot-5.0.7</entry>
+          <entry>Added in PHPlot-5.1.0</entry>
         </row>
         <row>
           <entry>debug_textbox</entry>
@@ -558,7 +558,7 @@ imagestring($img, $font, $best_x-$fw*4, $best_y-$fh-10, 'Good Job!', $green);
 
     <para>
 Or, we can use the PHPlot internal function DrawText. With a PHPlot version
-above 5.0.7, we omit the font specification and it will default to the
+5.1.0 and later, we omit the font specification and it will default to the
 generic font, which can be set with <xref linkend="SetFont"/>('generic', ...)
       <programlisting><![CDATA[
 $plot->DrawText('', 0, $worst_x, $worst_y-10, $red, 'Bad News!', 'center', 'bottom');

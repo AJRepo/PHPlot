@@ -217,7 +217,7 @@ see <xref linkend="callbacks-drawing"/>.
   <refsect1>
     <title>History</title>
     <para>
-This function was added after PHPlot-5.0.7.
+This function was added in PHPlot-5.1.0.
     </para>
   </refsect1>
 </refentry>
@@ -858,7 +858,7 @@ Unfortunately, orange is used twice, and azure1 is so close to the white
 background that it is invisible. Also, through PHPlot-5.0.7, if
 SetDataColors was called with an empty string argument, the color map was
 set to these 4 colors: blue red green orange.
-Starting after PHPlot-5.0.7, a new default color map with 16 colors was
+Starting with PHPlot-5.1.0, a new default color map with 16 colors was
 defined. Given an empty string (or False), SetDataColors now restores the
 default color map.
     </para>
@@ -1568,7 +1568,7 @@ SkyBlue, green, orange, blue, orange, red, violet, and azure1.
 These were used if SetErrorBarColors was never called.
 Also, through PHPlot-5.0.7, if SetErrorBarColors was called with an empty
 string argument, the color map was set to just contain 'black'.
-Starting after PHPlot-5.0.7, a new default color map with 16 colors was
+Starting with PHPlot-5.1.0, a new default color map with 16 colors was
 defined. Given an empty string (or False), SetErrorBarColors now restores the
 default color map.
     </para>
@@ -2352,7 +2352,7 @@ control the border width.
   <refsect1>
     <title>History</title>
     <para>
-Use of 'none' to turn the border off was added after PHPlot-5.0.7.
+Use of 'none' to turn the border off was added in PHPlot-5.1.0.
     </para>
   </refsect1>
 </refentry>
@@ -3241,7 +3241,7 @@ the system locale.
   <refsect1>
     <title>History</title>
     <para>
-The <parameter>locale_override</parameter> hook was added after PHPlot-5.0.7.
+The <parameter>locale_override</parameter> hook was added in PHPlot-5.1.0.
 Before that, there was no way to force a specific locale on Windows, and on
 other platforms a locale could be forced only by using environment variables.
 The hook was added primarily for testing on Windows, but could be needed in
@@ -4088,7 +4088,7 @@ rect (size 6), diamond (size 6).
 Through PHPlot-5.0.7, these ten shapes were available: halfline, line, plus,
 cross, rect, circle, dot, diamond, triangle, trianglemid, and none. The
 default shape for all data sets was 'diamond'.
-After PHPlot-5.0.7, ten new point shapes were added, and different shape
+Starting with PHPlot-5.1.0, ten new point shapes were added, and different shape
 defaults were assigned for ten data sets.
 To restore the behavior in PHPlot-5.0.7 and earlier, call
 <literal>SetPointShapes('diamond')</literal>.
@@ -5227,7 +5227,7 @@ set with <xref linkend="SetXLabelAngle"/>.
   <refsect1>
     <title>History</title>
     <para>
-This function was added to PHPlot after 5.0.7. Through PHPlot-5.0.7,
+This function was added to PHPlot in 5.1.0. Through PHPlot-5.0.7,
 <xref linkend="SetXLabelAngle"/> set the angle for both text and data labels.
     </para>
     <para>
@@ -5334,7 +5334,7 @@ In addition, positioning the X tick labels with
 resulted in disabling the X data labels, and vice-versa.
 If both tick and data labels were positioned, the later setting overrode
 the earlier, which was turned off.
-Starting after PHPlot-5.0.7, PHPlot handles tick and data label positions
+Starting with PHPlot-5.1.0, PHPlot handles tick and data label positions
 as described in the notes above.
     </para>
   </refsect1>
@@ -5530,7 +5530,7 @@ See <xref linkend="SetXLabelType" />.
   <refsect1>
     <title>History</title>
     <para>
-This function was added after PHPlot-5.0.7.
+This function was added in PHPlot-5.1.0.
 Through PHPlot-5.0.7, data labels and tick labels always used the same
 formatting, as set with <xref linkend="SetXLabelType"/>.
     </para>
@@ -5588,7 +5588,7 @@ The default text angle for X labels is 0 degrees, for horizontal text.
     <title>History</title>
     <para>
 Through PHPlot-5.0.7, SetXLabelAngle sets the angle for both tick and data
-labels. Starting after PHPlot-5.0.7, these can be controlled independently
+labels. Starting with PHPlot-5.1.0, these can be controlled independently
 using <xref linkend="SetXDataLabelAngle"/>.
 For compatibility, data label angles default to the value set for tick label
 angles with SetXLabelAngle.
@@ -5913,7 +5913,7 @@ degrees, minutes, and seconds. (This only works for non-negative angles.)
     <para>
 Through PHPlot-5.0.7, this function set the format type for both X tick
 labels and X data labels.
-Starting after PHPlot-5.0.7, a new function <xref linkend="SetXDataLabelType"/>
+Starting with PHPlot-5.1.0, a new function <xref linkend="SetXDataLabelType"/>
 was added to allow separate control of tick and data labels.
 <function>SetXLabelType</function> now sets the format type for X tick labels,
 and the default format type for X data labels.
@@ -6228,7 +6228,7 @@ In addition, positioning the X data labels with
 resulted in disabling the X tick labels, and vice-versa.
 If both tick and data labels were positioned, the later setting overrode
 the earlier, which was turned off.
-Starting after PHPlot-5.0.7, PHPlot handles tick and data label positions
+Starting with PHPlot-5.1.0, PHPlot handles tick and data label positions
 as described in the notes above.
     </para>
   </refsect1>
@@ -6634,7 +6634,7 @@ for X tick labels.)
   <refsect1>
     <title>History</title>
     <para>
-This function was added to PHPlot after 5.0.7. Through PHPlot-5.0.7,
+This function was added in PHPlot-5.1.0. Through PHPlot-5.0.7,
 Y data labels were always drawn at 0 degrees.
     </para>
   </refsect1>
@@ -6893,7 +6893,7 @@ See <xref linkend="SetXLabelType" />.
   <refsect1>
     <title>History</title>
     <para>
-This function was added after PHPlot-5.0.7.
+This function was added in PHPlot-5.1.0.
 Through PHPlot-5.0.7, data labels and tick labels always used the same
 formatting, as set with <xref linkend="SetYLabelType"/>.
     </para>
@@ -7151,7 +7151,7 @@ See <xref linkend="SetXLabelType" />.
     <para>
 Through PHPlot-5.0.7, this function set the format type for both Y tick
 labels and Y data labels.
-Starting after PHPlot-5.0.7, a new function <xref linkend="SetYDataLabelType"/>
+Starting with PHPlot-5.1.0, a new function <xref linkend="SetYDataLabelType"/>
 was added to allow separate control of tick and data labels.
 <function>SetYLabelType</function> now sets the format type for Y tick labels,
 and the default format type for Y data labels.

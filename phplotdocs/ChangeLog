@@ -4,6 +4,10 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2009-12-21
+   For release with PHPlot-5.1.0:
+   * Change vague references to release "after 5.0.7" to "5.1.0".
+
 2009-12-20
    * concepts.xml: Fix description of data type 'text-data'. Under Data types,
      it incorrectly said X=0, 1, 2. Under Plot Types, it correctly said it was

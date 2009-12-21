@@ -31,7 +31,7 @@ data_miny		FindDataLimits	Array: Per row minimum Y value
 data_type	'text-data'	SetDataType	Format of the data array
 data_units_text	''	FormatLabel	Obsolete - suffix for 'data'-formatted labels
 decimal_point		SetNumberFormat	Character to use for decimal point in formatted numbers
-default_colors	array(...)	SetDataColors SetErrorBarColors	The default color array, used to initialize data_colors and error_bar_colors. (Added after PHPlot-5.0.7)
+default_colors	array(...)	SetDataColors SetErrorBarColors	The default color array, used to initialize data_colors and error_bar_colors. (Added in PHPlot-5.1.0)
 default_dashed_style		SetDefaultDashedStyle	Formatted PHP code to build a dashed line pattern
 default_ttfont	'benjamingothic.ttf'	SetDefaultTTFont	Default TrueType font file
 draw_broken_lines	FALSE	SetDrawBrokenLines	Flag: How to handle missing Y values
@@ -105,7 +105,7 @@ plot_origin_y		CalcTranslation	Y device coordinate of the plot area origin
 plot_type	'linepoints'	SetPlotType	Selected plot type
 plotbgimg		SetPlotAreaBgImage	Plot area background image filename
 plotbgmode		SetPlotAreaBgImage	Plot area background image tiling mode
-point_counts		CheckPointParams	Size of point_shapes and point_sizes arrays (added after PHPlot-5.0.7)
+point_counts		CheckPointParams	Size of point_shapes and point_sizes arrays (added in PHPlot-5.1.0)
 point_shapes	array(...)	SetPointShapes	Shapes of markers in point plots
 point_sizes	array(...)	SetPointSizes	Sizes of markers in point plots
 print_image	TRUE	SetPrintImage	Flag: Automatic PrintImage after DrawGraph?
@@ -128,7 +128,7 @@ ttf_path	'.'	SetTTFPath	TrueType font directory
 use_ttf	FALSE	SetUseTTF	Default font type, True for TrueType, False for GD
 x_axis_position	''	SetXAxisPosition	Position of X axis (in world coordinates)
 x_axis_y_pixels		CalcTranslation	Device coordinate for the X axis
-x_data_label_angle		SetXDataLabelAngle	X data label text angle (Added after PHPlot-5.0.7)
+x_data_label_angle		SetXDataLabelAngle	X data label text angle (Added in PHPlot-5.1.0)
 x_data_label_pos		SetXDataLabelPos	Position of X data labels. (Default was 'plotdown', but is now applied at graph drawing time.)
 x_label_angle	0	SetXLabelAngle	X tick label text angle (and default for x_data_label_angle)
 x_label_axis_offset		CalcMargins	Label offset relative to plot area
@@ -150,7 +150,7 @@ xscale_type	'linear'	SetXScaleType	Linear or log scale on X
 y_axis_position	''	SetYAxisPosition	Position of Y axis (in world coordinates)
 y_axis_x_pixels		CalcTranslation	Device coordinate for the Y axis
 y_bot_margin		CalcMargins	Calculated plot area margin - bottom
-y_data_label_angle	0	SetYDataLabelAngle	Y data label text angle (Added after PHPlot-5.0.7)
+y_data_label_angle	0	SetYDataLabelAngle	Y data label text angle (Added in PHPlot-5.1.0)
 y_data_label_pos	'none'	SetYDataLabelPos	Position of Y labels above bars
 y_label_angle	0	SetYLabelAngle	Y tick label text angle
 y_label_axis_offset		CalcMargins	Label offset relative to plot area
