@@ -22,7 +22,7 @@ The project home page is http://sourceforge.net/projects/phplot/
 
 
     * Feature request 2899921: "allow different format for data and tick
-      labels"; Bug 2906463: "Fixes for X Tick Labels vs X Data Labels",
+      labels"; Bug 2906436: "Fixes for X Tick Labels vs X Data Labels",
       and partial implementation of changes from user 'adoll' regarding
       tick vs data labels:
 
@@ -87,7 +87,7 @@ The project home page is http://sourceforge.net/projects/phplot/
 
 2009-12-04
     * Fix for bug 2908256, errors in pie charts with bad data array:
-      (From on a Drupal contrib module report by thekevinday.)
+      (From a Drupal contrib module report by thekevinday.)
       With pie charts only, a data array with no valid Y values resulted
       in PHP error messages. All other plot types handle this by producing
       an image without a graph.
