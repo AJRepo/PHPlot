@@ -9,8 +9,11 @@ PROJ=phplot
 REL_TXTFILES=COPYING ChangeLog NEWS.txt README.txt
 # List of all top-level files to release:
 REL=$(REL_TXTFILES) phplot.php phplot_data.php rgb.inc.php
+
+# Contrib files to get CRLF line ending conversion in the Zip release:
+REL_CONTRIB_TXTFILES=contrib/README.txt
 # Contrib files to release:
-REL_CONTRIB=contrib/README \
+REL_CONTRIB=$(REL_CONTRIB_TXTFILES) \
   contrib/color_range.example.php \
   contrib/color_range.php \
   contrib/color_range.test1.php \
@@ -46,7 +49,7 @@ release:
 	cp -v -p $(REL) $(RDIRPATH)
 	cp -v -p $(REL_CONTRIB) $(RDIRPATH)/contrib
 	(cd $(TMP); tar -cvzf $(RDIR).tar.gz --owner=0 --group=0 $(RDIR); )
-	(cd $(TMP)/$(RDIR); for f in $(REL_TXTFILES);do todos < $$f > convert.tmp && mv -f convert.tmp $$f; done; )
+	(cd $(RDIRPATH); for f in $(REL_TXTFILES) $(REL_CONTRIB_TXTFILES);do todos < $$f > convert.tmp && mv -f convert.tmp $$f; done; )
 	(cd $(TMP); zip -r $(RDIR).zip $(RDIR); )
 	rm -rf $(RDIRPATH)
 	@echo "Release packages are: $(TMP)/$(RDIR).zip"
