@@ -1,5 +1,5 @@
 This is the README file for PHPlot
-Last updated for PHPlot-5.0.7 on 2009-06-14
+Last updated for PHPlot-5.1.0 on 2009-12-24
 The project web site is http://sourceforge.net/projects/phplot/
 The project home page is http://phplot.sourceforge.net/
 -----------------------------------------------------------------------------
@@ -18,10 +18,11 @@ For important changes in this release, see the NEWS.txt file.
 
 CONTENTS:
 
-   ChangeLog  . . . . . . . . . . . Lists changes to the sources
    COPYING  . . . . . . . . . . . . LGPL 2.1 License file
+   ChangeLog  . . . . . . . . . . . Lists changes to the sources
    NEWS.txt . . . . . . . . . . . . Highlights changes in releases
    README.txt   . . . . . . . . . . This file
+   contrib  . . . . . . . . . . . . "Contributed" directory, add-ons
    phplot.php   . . . . . . . . . . The main PHPlot source file
    phplot_data.php  . . . . . . . . Auxiliary and extended functions
    rgb.inc.php  . . . . . . . . . . Optional extended color table
@@ -30,8 +31,9 @@ CONTENTS:
 REQUIREMENTS:
 
 You need a recent version of PHP5, and you are advised to use the latest
-stable release.  This version of PHPlot has been tested with PHP-5.2.9.
-PHP4 is no longer supported.
+stable release.  This version of PHPlot has been tested with PHP-5.3.1 and
+PHP-5.2.12 on Linux, and with PHP-5.3.1 on Windows/XP.  PHP4 is no longer
+supported.
 
 You need the GD extension to PHP either built in to PHP or loaded as a
 module. Refer to the PHP documentation for more information - see the
@@ -77,19 +79,16 @@ on the PHPlot project web site for more information.
 #1605558 Wide/Custom dashed lines don't work well
   This is partially a GD issue, partially PHPlot's fault.
 
-#1795972 and #1795971: Default data colors and default point shapes need to
-  be improved.
-
-Tick interval calculations should try for intervals of 1, 2, or 5 times a
-power of 10.
+#2919086 Improve tick interval calculations
+  Tick interval calculations should try for intervals of 1, 2, or 5 times
+  a power of 10.
 
 
 If you think you found a problem with PHPlot, or want to ask questions or
-provide feedback, please use the Help forum at
+provide feedback, please use the Help and Discussion forum at
      http://sourceforge.net/projects/phplot/
-If you are relatively sure you have found a bug, you can report it on the
-bug tracker at the same web site.
-
+If you are sure you have found a bug, you can report it on the Bug tracker
+at the same web site. There is also a Features Request tracker.
 
 
 TESTING:
