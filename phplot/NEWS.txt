@@ -4,6 +4,167 @@ The project home page is http://phplot.sourceforge.net/
 Refer the the ChangeLog file for detailed source changes.
 -----------------------------------------------------------------------------
 
+2009-12-24 Release 5.1.0
+
+Overview:
+
+This is the current stable release of PHPlot. This release fixes a number of
+bugs and adds some new features. Some of the changes in this release can
+alter the appearance of plots, so be sure to review the information in this
+NEWS file and test this release with your application.
+
+The PHPlot reference manual has been updated to match this release.  The
+manual is available as a separate download from Sourceforge. The manual is
+also available for on-line viewing from the project home page.
+
+See the ChangeLog file in the release for more about changes and bug fixes.
+
+
+New features in 5.1.0:
+
++ A new "contrib" directory has been added for useful add-ons.
+  This currently contains:
+    * prune_labels : Control data label density on X axis.
+    * color_range : Define a gradient map for data colors.
+
++ Feature Request 2899921 "Allow different format for data and tick labels"
+  Text angle and format can now be controlled separately for data labels.
+
++ Locale loading override
+  New variable locale_override stops PHPlot from getting locale from system.
+
++ Translating Coordinates
+  New function GetDeviceXY() to translate world to device coordinates.
+
++ New drawing callback
+  New callback 'draw_all', called after all drawing is done.
+  The manual now contains an example of using this new callback and
+  the new GetDeviceXY() function to annotate a plot.
+
+
+Bug Fixes in 5.1.0:
+
+#2914403 "Pie + X/Y titles: Undefined property error"
+  X/Y titles are now properly ignored for pie charts.
+
+#2908256 "Error: array_sum() should be an array" (drupal)
+#2916864 "Should at least print legend on pie charts with empty data"
+  Pie charts with invalid data (no Y values > 0) now make an empty plot.
+
+#2906436 "Fixes for X Tick Labels vs X Data Labels"
+  Smarter determination of whether to do Tick labels, Data labels, or both.
+
+#2900914 "Problem with display of 0 on Y axis"
+  Fixed rounding error that could produce something like Y=8.12345E-16.
+
+#2886365 "PHP 5 patch" (Declare all functions and variables in PHP5 style)
+  Most internal PHPlot member functions now have "protected" visibility.
+
+#2839547 "SetImageBorderType('none')
+  You can use SetImageBorderType('none') to turn the image border back off.
+
+#1795972 "Fix default point shapes"
+  We now have 20 (vs 10) point shapes, with 10 (vs 1) used by default.
+
+#1795971 "Fix default data colors"
+  We now have 16 (vs 8) default data colors, no duplicates, all visible.
+
+
+Visible Changes and Possible Incompatibilities:
+
++ PHP5 visibility changes (Bug #2886365)
+Details: Most internal PHPlot member functions now have visibility
+    'protected', rather than all being public. All member variables are
+    still 'public'.
+
+Reason for the change: Use the recommended PHP5 syntax, better OO style.
+
+Compatibility: If you were calling a PHPlot internal function that got
+    changed to 'protected', this will break. Please report this.
+
+
++ Fix default point shapes (Bug 1795972)
+Details: We now have 20 (vs 10) point shapes available, and by default we
+    have 10 (vs 1) different shapes in use. The default size is now 6 pixels
+    for all point shapes.
+
+Reason for the changes: Using different shapes helps distinguish the data
+    sets. The existing 10 defined shapes were not enough, since some of them
+    are not centered over the points, too small, or otherwise hard to see.
+    The code to synchronize the point shape and size arrays was broken, and
+    some dubious code to adjust sizes to even numbers needed to be fixed.
+
+Compatibility (1): If you have a points or linepoints plot with more than
+    one dataset, and you did not use SetPointShapes() to configure the
+    shapes, them your plot will change from using a diamond for all data
+    sets to using different shapes for up to 10 data sets.
+
+Compatibility (2): Fixing the point size/point shape array size bug may
+    slightly change the size of some shapes, but it now works the way it
+    was documented and supposed to work.
+
++ Fix default data colors (Bug 1795971)
+Details: Defined a new set of 16 default data colors. The colors are
+    different and contrast well against the default white background.
+    The first 4 colors were not changed.
+
+Reason for the change: The default 8 data colors included two instances
+    of orange, and one color which was invisible on a white background.
+
+Compatibility: Colors will change on any plot with more than 4 data sets
+    where you did not use SetDataColors() to set your own data colors.
+
++ Re-used old function SetXDataLabelAngle()
+Details: SetXDataLabelAngle() now does something different.
+
+Reason for the change: This name was needed for a new function, to set the
+    angle for the X Data Labels. The old use of this function was not
+    documented, and marked "deprecated" in the code since around 2003-12-07.
+
+Compatibility: If you are still using SetXDataLabelAngle() to set both Tick
+    and Data label angles, you need to use SetXLabelAngle() instead.
+
++ Separate controls for tick and data labels (Feature Request 2899921)
+Details: New functions SetXDataLabelAngle(), SetYDataLabelAngle(),
+    SetXDataLabelType(), and SetYDataLabelType() to allow separate control
+    over the angle and format of data labels, versus tick labels.
+
+Reason for the change: Allow Data Labels to use different formatting and
+    angle compared to Tick Labels.
+
+Compatibility: The default behavior has been set up such that there should
+    be no compatibility issues. For example:
+    Old behavior: SetXLabelType() sets the type for both tick and data labels.
+    New behavior: SetXLabelType() sets the type for tick labels and the
+        default type for data labels.  SetXDataLabelType() sets the type for
+        data labels (overrides SetXLabelType).
+
++ X Tick Labels vs X Data Labels (Bug 2906436)
+Details: Regarding SetXTickLabelPos() and SetXDataLabelPos(): If only one
+    of them is called, the behavior is unchanged (only that label type will
+    be displayed). If both are called: Do exactly what was requested. If
+    neither was called: display only data labels if any data labels are
+    non-empty, else display only tick labels.
+
+Reason for the change: 1) Fix the long-standing problem behavior that by
+    default PHPlot overlays tick and data labels below the X axis. 2) Fix
+    order dependency between setting the position of tick and data labels.
+    3) Prepare for future extension of data labels, and allow both tick
+    and data labels to be on if the programmer enables both.
+
+Compatibility: There are some cases where your plot will change.
+    (a) Calls neither SetXDataLabelPos() nor SetXTickLabelPos():
+      Old behavior: Both tick and data labels displayed, possibly overlaid.
+      New behavior: If there are any non-blank data labels, then show only
+          the data labels, not the tick labels. Otherwise, show tick labels.
+
+   (b) Calls both SetXDataLabelPos() and SetXTickLabelPos(), with other than
+       'none' for each position:
+     Old behavior: The latter call was effective; earlier one ignored.
+     New behavior: Independent of order, both calls are effective.
+
+-----------------------------------------------------------------------------
+
 2009-06-14 Release 5.0.7
 
 Overview:
