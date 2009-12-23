@@ -2,6 +2,8 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2009-12-24 (lbayuk)     ===== Released as 5.1.0 =====
+
 2009-12-18
     * Change for bug 1795971 "Fix default data colors":
       The default Data Color and Error Bar Color arrays now have 16
@@ -19,7 +21,6 @@ The project home page is http://sourceforge.net/projects/phplot/
 2009-12-14
     * Fix for bug 2914403 "Pie + X/Y titles: Undefined property error":
       In DrawGraph(), don't try to draw X or Y titles for pie charts.
-
 
     * Feature request 2899921: "allow different format for data and tick
       labels"; Bug 2906436: "Fixes for X Tick Labels vs X Data Labels",
