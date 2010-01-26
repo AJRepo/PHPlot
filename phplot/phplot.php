@@ -1,13 +1,13 @@
 <?php
 /* $Id$ */
 /*
- * PHPLOT Version 5.1.0
+ * PHPLOT Version 5.1.0 + CVS (This is an unreleased CVS version!)
  *
  * A PHP class for creating scientific and business charts
  * Visit http://sourceforge.net/projects/phplot/
  * for PHPlot documentation, downloads, and discussions.
  * ---------------------------------------------------------------------
- * Copyright (C) 1998-2009 Afan Ottenheimer
+ * Copyright (C) 1998-2010 Afan Ottenheimer
  *
  * This is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -2965,18 +2965,23 @@ class PHPlot {
         else
             $this->y_axis_position = min(max($this->plot_min_x, $this->y_axis_position), $this->plot_max_x);
 
-        // If no user-provided X axis position, default to axis at Y=0 (if in range), or min_y
-        //   if the range does not include 0, or 1 for log plots.
-        // Otherwise, make sure user-provided position is inside the plot area.
-        if ($this->x_axis_position === '') {
-            if ($this->yscale_type == 'log')
-                $this->x_axis_position = 1;
-            elseif ($this->plot_min_y <= 0 && 0 <= $this->plot_max_y)
-                $this->x_axis_position = 0;
-             else
-                $this->x_axis_position = $this->plot_min_y;
-        } else
+        // Validate user-provided X axis position, or auto-calculate if not:
+        if ($this->x_axis_position !== '') {
+            // User-provided X axis position: make sure it is inside the range.
             $this->x_axis_position = min(max($this->plot_min_y, $this->x_axis_position), $this->plot_max_y);
+        } elseif ($this->yscale_type == 'log') {
+            // Always use 1 for X axis position on log scale plots.
+            $this->x_axis_position = 1;
+        } elseif ($this->plot_min_y <= 0 && 0 <= $this->plot_max_y) {
+            // Plot range includes Y=0, so use that for X axis:
+            $this->x_axis_position = 0;
+        } elseif ($this->plot_min_y > 0) {
+            // The entire Y range is > 0, so use the bottom for the X axis:
+            $this->x_axis_position = $this->plot_min_y;
+        } else {
+            // The entire Y range is < 0, so use the top for the X axis:
+            $this->x_axis_position = $this->plot_max_y;
+        }
 
         if ($this->GetCallback('debug_scale')) {
             $this->DoCallback('debug_scale', __FUNCTION__, array(
