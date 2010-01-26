@@ -2,6 +2,16 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2010-01-26
+    * Fix for bug 2938219 "Bars go in wrong direction":
+      Fixed CalcAxisPositions() to be consistent in positioning the X axis.
+      When all Y values are <0 and the Y=0 line is not part of the plot range,
+      PHPlot will now default the X axis to the top of the plot, not the
+      bottom.  This fixes the problem with bars to negative Y values being
+      drawn downward if Y=0 is visible, but upward if Y=0 is not visible.
+      This also affects thinbarline plots.
+      Credit to lauryn1298 for finding the bug.
+
 2009-12-24 (lbayuk)     ===== Released as 5.1.0 =====
 
 2009-12-18
