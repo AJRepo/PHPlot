@@ -5172,8 +5172,21 @@ The Y position in world coordinates for the X axis.
 The given position is truncated (towards 0) to an integer value.
     </para>
     <para>
-The X axis is usually drawn at Y=0, but if Y=0 is not within the range of
-the graph, the X axis is drawn at the bottom of the plot.
+The default position for the X axis is Y=0, provided Y=0 is within the
+range of the graph. If Y=0 is not within the range of the graph, the X axis
+will default to the edge with the smallest absolute Y value.
+This means the X axis will be at the bottom of the graph if all values of Y
+are greater than zero, and at the top of the graph if all values of Y are
+less than zero.
+(For log scale plots, however, the default X axis position is Y=1.)
+    </para>
+  </refsect1>
+  <refsect1>
+    <title>History</title>
+    <para>
+Through PHPlot-5.1.0, the default position for the X axis was the bottom of
+the graph whenever Y=0 was not within the range the graph, regardless of
+whether the data was all positive or all negative.
     </para>
   </refsect1>
 </refentry>
