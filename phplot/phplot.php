@@ -2121,6 +2121,8 @@ class PHPlot {
         } else if ($ps > $pt) {
             $this->pad_array($this->point_shapes, $ps);
             $this->point_counts = $ps;
+        } else {
+            $this->point_counts = $ps;
         }
 
         // Note: PHPlot used to check and adjust point_sizes to be an even number here,
