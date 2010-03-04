@@ -2,6 +2,11 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2010-03-04
+    * Fix for bug 2963757 "point_counts undefined error in 5.1.0":
+      Fixed CheckPointParams so it sets point_counts even when the point shape
+      and point size arrays are already the same size and do not need padding.
+
 2010-01-26
     * Fix for bug 2938219 "Bars go in wrong direction":
       Fixed CalcAxisPositions() to be consistent in positioning the X axis.
