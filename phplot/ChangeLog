@@ -2,6 +2,14 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2010-03-22
+    * Change related to feature request 2947679 - Fix 'dot' point shape:
+      Use imagefilledellipse(), not imagefilledarc(), when drawing the 'dot'
+      point shape. The fix was needed for future support of truecolor images
+      with transparency, but filled dots from imagefilledellipse() look
+      better (rounder) with regular images and opaque colors.
+      Credit to mvaldez for identifying the problem and providing the fix.
+
 2010-03-04
     * Fix for bug 2963757 "point_counts undefined error in 5.1.0":
       Fixed CheckPointParams so it sets point_counts even when the point shape
