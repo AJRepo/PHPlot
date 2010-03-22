@@ -4461,7 +4461,7 @@ class PHPlot {
             ImageArc($this->img, $x_mid, $y_mid, $point_size, $point_size, 0, 360, $color);
             break;
         case 'dot':
-            ImageFilledArc($this->img, $x_mid, $y_mid, $point_size, $point_size, 0, 360, $color, IMG_ARC_PIE);
+            ImageFilledEllipse($this->img, $x_mid, $y_mid, $point_size, $point_size, $color);
             break;
         case 'diamond':
             $arrpoints = array( $x1, $y_mid, $x_mid, $y1, $x2, $y_mid, $x_mid, $y2);
