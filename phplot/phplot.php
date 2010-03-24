@@ -1594,14 +1594,14 @@ class PHPlot {
     /*!
      * Sets position for Y labels near data points.
      * For past compatibility we accept plotleft, ...but pass it to SetTickLabelPos
-     * eventually to specify how far up/down or left/right of the data point
      */
-    function SetYDataLabelPos($which_ydlp, $which_distance_from_point=0)
+    function SetYDataLabelPos($which_ydlp)
     {
-        $which_ydlp = $this->CheckOption($which_ydlp, 'plotleft, plotright, both, yaxis, all, plotin, none',
+        $which_ydlp = $this->CheckOption($which_ydlp,
+                                         'plotleft, plotright, both, yaxis, all, plotin, plotstack, none',
                                           __FUNCTION__);
         if (!$which_ydlp) return FALSE;
-        $this->y_data_label_pos = $which_ydlp;
+
         //This bit in SetYDataLabelPos about plotleft is for those who were
         //using this function to set SetYTickLabelPos.
         if ( ($which_ydlp == 'plotleft') || ($which_ydlp == 'plotright') ||
@@ -1610,9 +1610,8 @@ class PHPlot {
             //Call sety_TICK_labelpos instead of sety_DATA_labelpos
             $this->SetYTickLabelPos($which_ydlp);
 
-        } elseif ($which_ydlp != 'none') {
-            //right now its plotin or none
-            $this->y_data_label_pos = 'plotin';
+        } else {
+            $this->y_data_label_pos = $which_ydlp;
         }
 
         return TRUE;
@@ -4252,9 +4251,10 @@ class PHPlot {
     }
 
 
-    /*!
-     * Supported data formats: data-data-error, text-data-error (doesn't exist yet)
-     * ( data comes in as array("title", x, y, error+, error-, y2, error2+, error2-, ...) )
+    /*
+     * Draw the points and errors bars for an error plot of types points and linepoints
+     * Supports only data-data-error format, with each row of the form
+     *   array("title", x, y1, error1+, error1-, y2, error2+, error2-, ...)
      */
     protected function DrawDotsError()
     {
@@ -4305,6 +4305,7 @@ class PHPlot {
 
 
     /*
+     * Draw the points for plots of type points and linepoints
      * Supported data types:
      *  - data-data ("title", x, y1, y2, y3, ...)
      *  - text-data ("title", y1, y2, y3, ...)
@@ -4347,8 +4348,10 @@ class PHPlot {
     } //function DrawDots
 
 
-    /*!
+    /*
+     * Draw a Thin Bar Line plot, also known as an Impulse plot.
      * A clean, fast routine for when you just want charts like stock volume charts
+     * Supports data-data and text-data formats.
      */
     protected function DrawThinBarLines()
     {
@@ -4385,8 +4388,8 @@ class PHPlot {
         return TRUE;
     }  //function DrawThinBarLines
 
-    /*!
-     *
+    /*
+     *  Draw an Error Bar set. Used by DrawDotsError and DrawLinesError
      */
     protected function DrawYErrorBar($x_world, $y_world, $error_height, $error_bar_type, $color)
     {
@@ -4420,7 +4423,7 @@ class PHPlot {
         return TRUE;
     }
 
-    /*!
+    /*
      * Draws a styled dot. Uses world coordinates.
      * The list of supported shapes can also be found in SetPointShapes().
      * All shapes are drawn using a 3x3 grid, centered on the data point.
@@ -4594,10 +4597,9 @@ class PHPlot {
     } // function DrawArea()
 
 
-    /*!
-     * Draw Lines. Supported data-types:
-     *      'data-data',
-     *      'text-data'
+    /*
+     * Draw a Line plot
+     * Supported data-types are 'data-data' and 'text-data'.
      * NOTE: Please see the note regarding incomplete data sets on DrawArea()
      */
     protected function DrawLines()
@@ -4661,9 +4663,10 @@ class PHPlot {
     } // function DrawLines()
 
 
-    /*!
-     * Draw lines with error bars - data comes in as
-     *      array("label", x, y, error+, error-, y2, error2+, error2-, ...);
+    /*
+     * Draw lines with error bars for an error plot of types lines and linepoints
+     * Supports only data-data-error format, with each row of the form
+     *   array("title", x, y1, error1+, error1-, y2, error2+, error2-, ...)
      */
     protected function DrawLinesError()
     {
@@ -4738,8 +4741,10 @@ class PHPlot {
 
 
 
-    /*!
-     * This is a mere copy of DrawLines() with one more line drawn for each point
+    /*
+     * Draw a Squared Line plot.
+     * Supported data-types are 'data-data' and 'text-data'.
+     * This is based on DrawLines(), with one more line drawn for each point.
      */
     protected function DrawSquared()
     {
@@ -4804,8 +4809,9 @@ class PHPlot {
     } // function DrawSquared()
 
 
-    /*!
-     * Data comes in as array("title", x, y, y2, y3, ...)
+    /*
+     * Draw a Bar chart
+     * Supports only text-data format, with each row in the form array("title", y1, y2, y3, ...)
      */
     protected function DrawBars()
     {
@@ -4884,9 +4890,10 @@ class PHPlot {
     } //function DrawBars
 
 
-    /*!
-     * Data comes in as array("title", x, y, y2, y3, ...)
-     * \note Original stacked bars idea by Laurent Kruk < lolok at users.sourceforge.net >
+    /*
+     * Draw a Stacked Bar chart
+     * Supports only text-data format, with each row in the form array("title", y1, y2, y3, ...)
+     * Original stacked bars idea by Laurent Kruk < lolok at users.sourceforge.net >
      */
     protected function DrawStackedBars()
     {
@@ -4897,6 +4904,27 @@ class PHPlot {
         // This is the X offset from the bar's label center point to the left side of the bar.
         $x_first_bar = $this->record_bar_width / 2 - $this->bar_adjust_gap;
 
+        // Copy shading value to local variable
+        $shade = $this->shading;
+
+        // Determine if any data labels are on:
+        if ($this->y_data_label_pos == 'plotin') {
+            $data_labels_above = True;
+            $data_labels_within = False;
+        } elseif ($this->y_data_label_pos == 'plotstack') {
+            $data_labels_above = True;
+            $data_labels_within = True;
+            // Get the text label height, plus a little bit, so we can omit labels in
+            // segments that are too short for the label to fit.
+            $data_labels_min_height = $this->fonts['y_label']['height'] + 2;
+        } else {
+            $data_labels_above = False;
+            $data_labels_within = False;
+        }
+        if ($data_labels_above || $data_labels_within) {
+            $data_label_y_offset = -5 - $shade;
+        }
+
         for ($row = 0; $row < $this->num_data_rows; $row++) {
             $record = 1;                                    // Skip record #0 (data label)
 
@@ -4905,44 +4933,79 @@ class PHPlot {
             if ($this->x_data_label_pos != 'none')          // Draw X Data labels?
                 $this->DrawXDataLabel($this->data[$row][0], $x_now_pixels);
 
-            // Lower left and lower right X of the bars in this group:
+            // Lower left and lower right X of the bars in this stack:
             $x1 = $x_now_pixels - $x_first_bar;
             $x2 = $x1 + $this->actual_bar_width;
 
-            // Draw the bars
-            $oldv = 0;
+            // Draw the bar segments in this stack. The first segment is drawn from the X axis to Y1.
+            // Each additional segment is drawn from the top of the previous segment to the new
+            // cumulative Y. Skip over any segment of 0 size or part below the X axis.
+            $wy1 = 0;                       // World coordinates Y1, upper value
+            $wy2 = $this->x_axis_position;  // World coordinates Y2, lower value
+
             for ($idx = 0; $record < $this->num_recs[$row]; $record++, $idx++) {
-                if (is_numeric($this->data[$row][$record])) {       // Allow for missing Y data
 
-                    $y1 = $this->ytr(abs($this->data[$row][$record]) + $oldv);
-                    $y2 = $this->ytr($this->x_axis_position + $oldv);
-                    $oldv += abs($this->data[$row][$record]);
+                // Skip missing Y values, and ignore Y=0 values.
+                if (is_numeric($this->data[$row][$record])
+                    && ($this_y = abs($this->data[$row][$record])) > 0) {
 
-                    // Draw the bar
-                    ImageFilledRectangle($this->img, $x1, $y1, $x2, $y2, $this->ndx_data_colors[$idx]);
+                    $wy1 += $this_y;  // Accumulate Y value in world coordinates - top of current segment.
 
-                    if ($this->shading) {                           // Draw the shade?
-                        ImageFilledPolygon($this->img, array($x1, $y1,
-                                                       $x1 + $this->shading, $y1 - $this->shading,
-                                                       $x2 + $this->shading, $y1 - $this->shading,
-                                                       $x2 + $this->shading, $y2 - $this->shading,
-                                                       $x2, $y2,
-                                                       $x2, $y1),
-                                           6, $this->ndx_data_dark_colors[$idx]);
+                    // Draw nothing if top of segment is below X axis.
+                    // Bottom (wy2) will not go below X axis, so we will get a partial
+                    // segment from X axis up if the segment would cross the X axis.
+                    if ($wy1 > $this->x_axis_position) {
+
+                        $y1 = $this->ytr($wy1);
+                        $y2 = $this->ytr($wy2);
+
+                        // Draw the bar
+                        ImageFilledRectangle($this->img, $x1, $y1, $x2, $y2, $this->ndx_data_colors[$idx]);
+
+                        if ($shade > 0) {                           // Draw the shade?
+                            ImageFilledPolygon($this->img,
+                                               array($x1, $y1, $x1 + $shade, $y1 - $shade,
+                                                     $x2 + $shade, $y1 - $shade, $x2 + $shade, $y2 - $shade,
+                                                     $x2, $y2, $x2, $y1),
+                                               6, $this->ndx_data_dark_colors[$idx]);
+                        } else {        // Or draw a border?
+                            ImageRectangle($this->img, $x1, $y1, $x2,$y2, $this->ndx_data_border_colors[$idx]);
+                        }
+
+                        // Draw optional data label for this bar segment just below the line.
+                        // Text value is the current Y, but position is the cumulative Y.
+                        // Skip the label if the segment is too short for the label to fit.
+                        if ($data_labels_within && ($y2 - $y1) >= $data_labels_min_height) {
+                            $this->DrawDataLabel($this->fonts['y_label'], $this->y_data_label_angle,
+                                    $row+0.5, $wy1, $this->ndx_title_color,
+                                    $this_y, 'center', 'top', 0, 3);
+                        }
                     }
-                    // Or draw a border?
-                    else {
-                        ImageRectangle($this->img, $x1, $y1, $x2,$y2, $this->ndx_data_border_colors[$idx]);
-                    }
+                    // Make the top of this segment become the bottom of the next segment, but not if
+                    // it is still below the X axis.
+                    $wy2 = max($this->x_axis_position, $wy1);
                 }
             }   // end for
+
+            // Draw optional data label above the bar with the total value.
+            // Value is wy1, but position is wy2. This only makes a difference when
+            // the stacked bar ends completely below the X axis. Then we see the actual
+            // cumulative value (wy1), positioned above the axis, with no bar at all.
+            if ($data_labels_above) {
+                $this->DrawDataLabel($this->fonts['y_label'], $this->y_data_label_angle,
+                        $row+0.5, $wy2, $this->ndx_title_color,
+                        $wy1, 'center', 'bottom', 0, $data_label_y_offset);
+            }
         }   // end for
         return TRUE;
     } //function DrawStackedBars
 
 
-    /*!
-     *
+    /*
+     * Draw the graph.
+     * This is the function that performs the actual drawing, after all
+     * the parameters and data are set up.
+     * It also outputs the finished image, unless told not to.
      */
     function DrawGraph()
     {
