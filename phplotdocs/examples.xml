@@ -417,7 +417,7 @@ This is the same as <xref linkend="example-stackedbars1" /> except we have
 turned off shading and now get flat stacked bars with borders.
 </para>
 <example id="example-stackedbars2">
-<title>Stacked Bars, Shaded</title>
+<title>Stacked Bars, Unshaded</title>
 <informalfigure>
   <mediaobject>
     <imageobject>
@@ -535,6 +535,30 @@ alternative to Y axis labels, but only with bar charts.
   </mediaobject>
 </informalfigure>
 &bars4;
+</example>
+</sect1>
+
+<!-- =============================================== -->
+<sect1 id="ex-stackedbars3">
+<title>Example - Stacked Bars with Y Data Labels</title>
+<para>
+This is the same as <xref linkend="example-stackedbars2" /> except that
+Y Data Labels are turned on.
+Note this feature was added after PHPlot-5.1.0.
+</para>
+<example id="example-stackedbars3">
+<title>Stacked Bars with Y Data Labels</title>
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="examples/stackedbars3.png" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>Stacked Bars with Y Data Labels Example</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+&stackedbars3;
 </example>
 </sect1>
 
