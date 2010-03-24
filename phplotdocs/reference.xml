@@ -4297,7 +4297,7 @@ if 'data' mode formatting is selected.
     </para>
     <para>
 This function applies to Y tick labels, and also to the Y data labels
-available with bar charts.
+available with bar charts and stacked bar charts.
     </para>
   </refsect1>
   <refsect1>
@@ -6615,7 +6615,7 @@ $plot-&gt;SetYDataLabelAngle(<parameter>$ydla</parameter>)
     <title>Description</title>
     <para>
 <function>SetYDataLabelAngle</function> sets the text angle for Y data labels.
-These are the labels that can be used with bar charts.
+These are the labels that can be used with bar charts and stacked bar charts.
 See <xref linkend="SetYDataLabelPos"/>.
 If using TrueType fonts, any angle can be used.
 If using built-in GD fonts, only 0 degree and 90 degree text can be used.
@@ -6673,9 +6673,16 @@ $plot-&gt;SetYDataLabelPos(<parameter>$ydlp</parameter>)
     <title>Description</title>
     <para>
 <function>SetYDataLabelPos</function> determines if and where Y data labels
-are drawn. Currently, Y data labels are only implemented for 'bars' plot
-types. The Y data label shows the Y value above each bar.
-This is shown in <xref linkend="example-bars4" />.
+are drawn. Currently, Y data labels are only implemented for 'bars'
+and 'stackedbars' plot types.
+For bar charts, the Y data label shows the Y value above each bar.
+For stacked bar charts, there are two types of data labels.
+Bar total labels indicate the total Y value for a bar stack, and are drawn
+above the bar.
+Bar segment labels indicate the incremental value of each segment
+within the bar, and are drawn inside the segment below the top.
+Y data labels are shown in <xref linkend="example-bars4" />
+and <xref linkend="example-stackedbars3" />.
     </para>
   </refsect1>
 
@@ -6686,10 +6693,38 @@ This is shown in <xref linkend="example-bars4" />.
         <term><replaceable>$ydlp</replaceable></term>
         <listitem>
           <para>
-A string indicating the desired position for the Y data labels.
-The value 'plotin' enables Y data labels for bar charts. The value
-'none' disables the Y data labels. These are the only currently supported
-values.
+A string indicating the desired position for the Y data labels:
+            <informaltable>
+              <tgroup cols="2">
+                <?dbhtml table-summary="Y data label position choices"?>
+                <thead>
+                  <row>
+                    <entry>Position</entry>
+                    <entry>Description</entry>
+                  </row>
+                </thead>
+                <tbody>
+                  <row>
+                    <entry>plotin</entry>
+                    <entry>Data labels above each bar. For stacked bar charts,
+                        this means only the bar total labels and not the
+                        bar segment labels.
+                    </entry>
+                  </row>
+                  <row>
+                    <entry>plotstack</entry>
+                    <entry>Data labels above each bar and below the top of
+                      each segment. This is valid only for stacked bar charts,
+                      and turns on both bar total labels and bar segment labels.
+                    </entry>
+                  </row>
+                  <row>
+                    <entry>none</entry>
+                    <entry>No data labels</entry>
+                  </row>
+                </tbody>
+              </tgroup>
+            </informaltable>
           </para>
         </listitem>
       </varlistentry>
@@ -6699,18 +6734,31 @@ values.
   <refsect1>
     <title>Notes</title>
     <para>
+These labels are only available for plot type 'bars' and 'stackedbars'.
 The default is not to draw Y data labels.
-These labels are only available for plot type 'bars'. If the position is
-set to 'plotin', the labels will be drawn above the bars (or below the
-bars, for negative values). This works best if the values are short enough
-to fit.
+Y data labels work best when the values are short enough to fit.
+    </para>
+    <para>
+The bar segment labels, if enabled, are drawn inside the bars and may not
+be very visible if dark colors are used for the bar fill.
+Bar segment labels will be omitted for segments which are too short.
+    </para>
+    <para>
+Y data labels will be drawn below the bars for negative values. This only
+applies to bar charts. Stacked bar charts are not allowed to have negative
+values.
     </para>
     <para>
 The Y data label text angle is set with <xref linkend="SetYDataLabelAngle"/>.
+The Y data label text format can be controlled with
+<xref linkend="SetYDataLabelType"/> or <xref linkend="SetYLabelType"/>.
     </para>
   </refsect1>
   <refsect1>
     <title>History</title>
+    <para>
+The Y data label feature for stacked bar graphs was added after PHPlot-5.1.0.
+    </para>
     <para>
 The Y data label feature for bar graphs was added to PHPlot-5.0rc3.
     </para>
@@ -6737,7 +6785,8 @@ $plot-&gt;SetYDataLabelType(<parameter>$type</parameter>, <optional><parameter>.
     <title>Description</title>
     <para>
 <function>SetYDataLabelType</function> sets the formatting type for Y data
-labels.  (Y data labels are only available with bar charts.)
+labels.
+(Y data labels are only available with bar charts and stacked bar charts.)
 By default, data labels are formatted the same as tick labels.
 If <xref linkend="SetYLabelType"/> is not used, then there is no special
 formatting for either label type, so the labels are output as-is.
@@ -6958,7 +7007,7 @@ Desired angle for label text, in degrees.
 The default text angle for Y labels is 0 degrees, for horizontal text.
     </para>
     <para>
-This does not apply to bar chart Y data labels.
+This does not apply to Y data labels on bar and stacked bar charts.
 For those, see <xref linkend="SetYDataLabelAngle"/>.
     </para>
   </refsect1>
@@ -7608,7 +7657,7 @@ $plot-&gt;SetYTimeFormat(<parameter>$ytf</parameter>)
     <para>
 <function>SetYTimeFormat</function> sets the formatting string for Y tick
 and data labels when 'time' formatting mode for Y labels is in effect.
-(Y data labels are only available with bar charts.)
+(Y data labels are only available with bar charts and stacked bar charts.)
 Use <xref linkend="SetYLabelType" /> to select the formatting mode for labels.
 The formatting string is used with the PHP <function>strftime</function>
 to format labels as date/time strings.
@@ -7636,7 +7685,8 @@ and '%d %b %Y' results in '31 Dec 2004'.
   <refsect1>
     <title>Notes</title>
     <para>
-This applies to Y tick labels and Y data labels on bar charts.
+This applies to Y tick labels, and to Y data labels on bar charts and
+stacked bar charts.
 To use date/time formatting, the label values must be Unix time_t
 values (number of seconds since Unix epoch).
     </para>
