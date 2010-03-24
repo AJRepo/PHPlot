@@ -1,5 +1,5 @@
 <?php
-# PHPlot Example: Stacked Bars, shaded
+# PHPlot Example: Stacked Bars, unshaded
 require_once 'phplot.php';
 
 $data = array(
