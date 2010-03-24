@@ -860,8 +860,9 @@ The border color (if shading is off) can be set with
 </para>
 <para>
 Examples of this plot type can be seen in
-<xref linkend="example-stackedbars1" /> and
-<xref linkend="example-stackedbars2" />.
+<xref linkend="example-stackedbars1" />,
+<xref linkend="example-stackedbars2" />, and
+<xref linkend="example-stackedbars3" />.
 </para>
 </sect2>
 
@@ -1190,8 +1191,9 @@ This section contains information about creating labels which identify data
 values on the plot.
 There are two types of labels for X values: data labels and tick labels.
 There are also tick labels for Y values, and data labels for Y values
-which only work with bar charts. None of this applies to pie charts, which
-have no tick labels and internally-generated data value labels.
+which only work with bar charts and stacked bar charts.
+None of this applies to pie charts, which have no tick labels
+and internally-generated data value labels.
   </para>
 </abstract>
 
@@ -1269,10 +1271,18 @@ If all of the data labels are empty, tick labels will be drawn.
 </para>
 
 <para>
-There is one type of Y data label for bar charts.
-Use <xref linkend="SetYDataLabelPos" /> to enable Y data labels, which
-indicate the Y value right above each bar.
+There is one type of Y data label for bar charts, which indicates the Y
+value above each bar.
+There are two types of Y data labels for stacked bar charts. Bar total
+labels indicate the total Y value for a bar stack, and are drawn above the
+bar. Bar segment labels indicate the incremental value of each segment
+within the bar, and are drawn inside the segment below the top.
+Use <xref linkend="SetYDataLabelPos" /> to enable Y data labels.
 <xref linkend="example-bars4" /> shows a bar chart with Y data labels.
+<xref linkend="example-stackedbars3" /> shows a stacked bar chart with Y data
+labels.
+(Note that Y data labels for stacked bars was first implemented
+after PHPlot-5.1.0.)
 </para>
 
 </sect2>
