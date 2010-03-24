@@ -2,6 +2,25 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2010-03-23
+    * Feature request 2973995 "Add y-Data to Stackedbars":
+      Implemented Y Data Labels for Stacked Bar charts (stackedbars).
+      The labels are enabled with SetYDataLabelPos, same as with bar charts.
+      There are two types of labels: above the stack with the total, and
+      within the bars at each segment. 'plotin' turns on the upper ones, and
+      'plotstack' turns both on.
+
+    * Other changes:
+      + Removed unimplemented second argument to SetYDataLabelPos.
+      + Fixed questionable logic in SetYDataLabelPos when given an argument
+        that belongs with SetYTickLabelPos.
+      + Fix comments at top of plot-type Draw functions.
+
+    * Fix for bug 2974639 "Stacked bars plot breaks with X axis != 0":
+      Stacked bar plots with non-zero X axis position no longer break apart
+      into segments with gaps. The bars are drawn up from the X axis, and
+      any segments or partial segments below the X axis are not drawn.
+
 2010-03-22
     * Change related to feature request 2947679 - Fix 'dot' point shape:
       Use imagefilledellipse(), not imagefilledarc(), when drawing the 'dot'

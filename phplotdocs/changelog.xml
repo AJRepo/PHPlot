@@ -13,6 +13,16 @@ see the ChangeLog file inside the PHPlot distribution.)
 </abstract>
 
 <variablelist>
+
+  <varlistentry>
+    <term>2010-03-23</term>
+    <listitem>
+      <para>
+Document new Y Data Labels for stacked bar charts.
+      </para>
+    </listitem>
+  </varlistentry>
+
   <varlistentry>
     <term>2009-12-24</term>
     <listitem>

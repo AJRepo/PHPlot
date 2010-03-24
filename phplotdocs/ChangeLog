@@ -4,6 +4,12 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2010-03-23
+   * concepts.xml: New Y Data Labels for stackedbars.
+   * reference.xml: Changes to SetYDataLabelPos for stackedbars labels.
+   * examples.xml: Reference new example stackedbar3.
+   * examples/stackedbar3.php: New example of stackedbar chart with data labels.
+
 2010-01-24
    * main.xml: Updated copyright year to 2010.
    * reference.xml: Document fixed behavior of default X axis position.
