@@ -7,7 +7,7 @@
 <title>PHPlot Function Reference</title>
 
 <partintro id="refintro">
-<abstract>
+<abstract><title></title>
   <para>
 This part of the PHPlot Reference Manual
 contains the reference information for the PHPlot functions.
@@ -1374,9 +1374,6 @@ True to draw the data label lines, False to not draw the lines.
     <para>
 Data label lines only work with these plot types: lines, points, linepoints,
 and thinbarline.
-Data label lines don't work with these plot types: pie, area, squared,
-bars, and stackedbars, because the data label line would be covered or
-obscured by the data.
     </para>
     <para>
 If a graph contains multiple data sets, data label lines drawn down will start
@@ -3881,15 +3878,16 @@ can be found in <xref linkend="conc-plottypes" />.
           <para>
 A string indicating the type of plot. The following types are available:
             <itemizedlist spacing="compact">
-              <listitem><para>bars</para></listitem>
-              <listitem><para>stackedbars</para></listitem>
-              <listitem><para>lines</para></listitem>
-              <listitem><para>linepoints</para></listitem>
               <listitem><para>area</para></listitem>
-              <listitem><para>points</para></listitem>
+              <listitem><para>bars</para></listitem>
+              <listitem><para>linepoints</para></listitem>
+              <listitem><para>lines</para></listitem>
               <listitem><para>pie</para></listitem>
-              <listitem><para>thinbarline</para></listitem>
+              <listitem><para>points</para></listitem>
               <listitem><para>squared</para></listitem>
+              <listitem><para>stackedarea</para></listitem>
+              <listitem><para>stackedbars</para></listitem>
+              <listitem><para>thinbarline</para></listitem>
             </itemizedlist>
           </para>
         </listitem>
@@ -3900,6 +3898,12 @@ A string indicating the type of plot. The following types are available:
     <title>Notes</title>
     <para>
 The default plot type is 'linepoints'.
+     </para>
+  </refsect1>
+  <refsect1>
+    <title>History</title>
+    <para>
+Plot type 'stackedarea' was added after PHPlot-5.1.0.
      </para>
   </refsect1>
 </refentry>
