@@ -4,6 +4,16 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2010-03-26
+   * concepts.xml: Document new plot type 'stackedarea'.
+   * developer.xml: Internal function DrawArea() has a new parameter.
+   * examples.xml: Reference new example stackedarea1.
+   * examples/stackedarea1.php: New example of new plot type 'stackedarea'.
+   * quickstart.xml: New plot type
+   * reference.xml: SetPlotType has a new plot type. For data label lines,
+     list only plot types that it does work with.
+   * All: Fixes to abstract markup (to avoid title suppressing CSS hack).
+
 2010-03-23
    * concepts.xml: New Y Data Labels for stackedbars.
    * reference.xml: Changes to SetYDataLabelPos for stackedbars labels.

@@ -3,7 +3,7 @@
 -->
 <appendix id="changelog">
 <title>Change Log</title>
-<abstract>
+<abstract><title></title>
   <para>
 This is the summary change log for the PHPlot Reference Manual.
 (For a more detailed list of changes, see the ChangeLog file
@@ -15,10 +15,13 @@ see the ChangeLog file inside the PHPlot distribution.)
 <variablelist>
 
   <varlistentry>
-    <term>2010-03-23</term>
+    <term>2010-03-25</term>
     <listitem>
       <para>
 Document new Y Data Labels for stacked bar charts.
+      </para>
+      <para>
+Document new plot type 'stackedarea'.
       </para>
     </listitem>
   </varlistentry>

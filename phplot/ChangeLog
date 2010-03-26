@@ -2,6 +2,27 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2010-03-26
+    Fixed bug 2976735 "Improvements and fixes for 'area' plots":
+    Rewrote DrawArea() function which handles 'area' plot.
+        Part 1: This is related to feature request 2947679, Truecolor support
+    with transparency. The area plot function was filling each area from the X
+    axis up to the Y value, resulting in area overlaps. This wasn't a problem
+    with opaque colors, but with transparency, the overlapping areas resulted
+    in changed colors. The rewritten function fills the area between each line
+    instead of from each line down to the X axis. Plots with opaque colors
+    will not change.
+        Part 2: Area plots now work when the X axis is moved up with
+    SetXAxisPosition().
+        Part 3: Fixed FindDataLimits() for area (and stackedbars too) to
+    take absolute values of Y values. The drawing function was doing this,
+    but not FindDataLimits, resulting in incorrect limits if any Y<0.
+        Part 4: The rewritten DrawArea() also handles a new plot type
+    'stackedarea'.  This is an area plot where the Y values are stacked,
+    similar to 'stackedbars'.
+        Note: As part of the changes, it is now an error to try an area plot
+    with an unequal number of Y points for each X.
+
 2010-03-23
     * Feature request 2973995 "Add y-Data to Stackedbars":
       Implemented Y Data Labels for Stacked Bar charts (stackedbars).
