@@ -5,7 +5,7 @@
 <chapter id="starting">
 <title>Getting Started with PHPlot</title>
 
-<abstract>
+<abstract><title></title>
   <para>
 This chapter will help you get started with PHPlot.
   </para>
@@ -310,7 +310,7 @@ PHPlot can draw these types of plots:
   <itemizedlist>
     <listitem>
       <para>
-Bars (with optional shadows)
+Bars (with optional shadows) and Stacked Bars
       </para>
     </listitem>
     <listitem>
@@ -325,7 +325,7 @@ Linepoints (a faster way of plotting when you want both points and lines)
     </listitem>
     <listitem>
       <para>
-Area
+Area and Stacked Area
       </para>
     </listitem>
     <listitem>
