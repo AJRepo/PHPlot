@@ -4,7 +4,7 @@
 <part label="III" id="part3">
 <title>Developer's Guide to PHPlot</title>
 <partintro id="developer">
-  <abstract>
+  <abstract><title></title>
     <para>
 This part of the PHPlot manual is about PHPlot internals, and various
 technical details which are of interest mostly to developers of PHPlot
@@ -375,11 +375,14 @@ function. See <xref linkend="callbacks"/> for more information on callbacks.
 </varlistentry>
 
 <varlistentry>
-  <term id="DrawArea" xreflabel="DrawArea">DrawArea()</term>
+  <term id="DrawArea" xreflabel="DrawArea">DrawArea($do_stacked = False)</term>
   <listitem>
     <para>
-Draws an area plot.
-Called by <xref linkend="DrawGraph"/> when the plot type is 'area'.
+Draws an area plot, or a stacked area plot (if the optional argument is True).
+Called by <xref linkend="DrawGraph"/> when the plot type is 'area' or
+'stackedarea'.
+Stacked area plots were added after PHPlot-5.1.0; through PHPlot-5.1.0 this
+function did not have a parameter and was used only for area plots.
     </para>
   </listitem>
 </varlistentry>
@@ -420,7 +423,7 @@ Called by <xref linkend="DrawBars"/> if enabled with
   <term id="DrawDot" xreflabel="DrawDot">DrawDot($x_world, $y_world, $record, $color)</term>
   <listitem>
     <para>
-Draws a single marker point ('dot') at the give X and Y world coordinates,
+Draws a single marker point ('dot') at the given X and Y world coordinates,
 using the given color. The $record parameter selects the marker shape and size
 using the arrays set up with SetPointSizes() and SetPointShapes(); they are
 not passed as arguments themselves.
@@ -1073,7 +1076,7 @@ the plot object.
   <term id="SetIndexColor" xreflabel="SetIndexColor">SetIndexColor($which_color)</term>
   <listitem>
     <para>
-Give a color specification (by name, hex RGB value, or r,g,b array - see
+Given a color specification (by name, hex RGB value, or r,g,b array - see
 <xref linkend="SetRGBColor"/>) returns a color index to be used in GD
 drawing functions. The color is the exact color requested if it already
 exists in the image, or if the image color palette has room for a new color.
@@ -1086,7 +1089,7 @@ If not, the closest existing color will be used instead.
   <term id="SetIndexDarkColor" xreflabel="SetIndexDarkColor">SetIndexDarkColor($which_color)</term>
   <listitem>
     <para>
-Give a color specification (by name, hex RGB value, or r,g,b array - see
+Given a color specification (by name, hex RGB value, or r,g,b array - see
 <xref linkend="SetRGBColor"/>) returns an index for a 'slightly darker' color
 The index can be used in GD drawing functions.
 The method used is to subtract 48 from each red, green, and blue component
@@ -1124,7 +1127,7 @@ Sets the formatting used for tick and data labels. This implements
 <xref linkend="SetXLabelType"/>, <xref linkend="SetYLabelType"/>,
 <xref linkend="SetXDataLabelType"/> ,and <xref linkend="SetYDataLabelType"/>.
 $mode is either 'x', 'xd', 'y', or 'yd' and selects the axis to configure
-and type of label being drawing (x, y for tick labels; xd, yd for data labels).
+and type of label being drawn (x, y for tick labels; xd, yd for data labels).
 $args is an array of arguments, with $args[0] selecting the type of
 formatting (for example, 'data'). Additional array elements depend on
 the formatting type. For more details, see the above-referenced functions.
@@ -1230,18 +1233,16 @@ See <xref linkend="GetDeviceXY"/> for a public interface.
 
 <chapter id="dev-vars">
 <title>Member Variables</title>
-<abstract>
-  <para>
-This chapter provides a list of PHPlot class member variables. All of these
-are intended for internal use, although they are declared as
-<emphasis>public</emphasis>.
+<para>
+This chapter provides a list of PHPlot class member variables.
+All PHPlot class member variables are meant for internal use only,
+although they are declared as <emphasis>public</emphasis>.
 You may use these in applications, but they are subject to change in future
 releases without concern for backward compatibility.
-  </para>
-</abstract>
+</para>
 
 <para>
-The table below lists PHPlot class member variables.
+The table below lists the PHPlot class member variables.
 If the variable is declared at the top of the PHPlot class definition,
 the initial value is listed under <emphasis>Initialized to Value</emphasis>.
 If nothing is listed under <emphasis>Initialized to Value</emphasis>, this
