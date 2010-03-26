@@ -3,14 +3,17 @@
 -->
 <chapter id="callbacks">
 <title>Callbacks</title>
-<abstract>
+<abstract><title></title>
   <para>
-This chapter documents the callback feature in PHPlot. Callbacks allow a
-programmer using PHPlot to insert their own functions into the graph
-drawing process. Callbacks are currently also used for development and
-testing of PHPlot.
+This chapter documents the callback feature in PHPlot.
   </para>
 </abstract>
+
+<para>
+Callbacks allow a programmer using PHPlot to insert their own functions
+into the graph drawing process. Callbacks are currently also used for
+development and testing of PHPlot.
+</para>
 
 <warning>
   <para>

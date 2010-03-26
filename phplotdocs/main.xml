@@ -134,7 +134,7 @@ http://sourceforge.net/projects/phplot/</ulink>.
 <part label="I" id="part1">
 <title>PHPlot Programming</title>
 <partintro id="progintro">
-  <abstract>
+  <abstract><title></title>
     <para>
 This first part of the PHPlot Reference Manual includes instructions on
 installing and using PHPlot.

@@ -7,7 +7,7 @@
 <chapter id="functions">
 <title>PHPlot Functions By Category</title>
 
-<abstract>
+<abstract><title></title>
   <para>
 This chapter presents a grouping of the PHPlot functions by category.
 Descriptions of the functions can be found in <xref linkend="reference" />.
