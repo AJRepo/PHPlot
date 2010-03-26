@@ -12,18 +12,19 @@
 <chapter id="examples">
 <title>PHPlot Examples</title>
 
-<abstract>
+<abstract><title></title>
   <para>
 This chapter contains examples of plots produced with PHPlot.
-Each example shows the image and the associated PHP code.
-  </para>
-  <para>
-To ensure accuracy, the example plots are generated from the PHP scripts by
-PHPlot, and the PHP script is inserted directly into this manual during
-production.  So the example code should exactly generate the image presented
-here, provided a compatible version of PHPlot is used.
   </para>
 </abstract>
+
+<para>
+Each of the following PHPlot examples shows an image, followed by the PHP
+script which produced that image.  Each script is self-contained (needing
+only PHPlot), so you can copy it from this manual and run it with PHP to
+produce the image.
+Note that some of the scripts may require the latest version of PHPlot.
+</para>
 
 <note>
   <para>
@@ -104,6 +105,8 @@ In the area plot, PHPlot fills the area from each data set down to the
 next data set, or to the X axis for the last data set.
 For this example, the data was prepared such that the data sets are
 cumulative percentages.
+(See also <xref linkend="example-stackedarea1" /> which produces a similar
+plot using a different data representation.)
 </para>
 <example id="example-area1">
 <title>Area Plot</title>
@@ -559,6 +562,38 @@ Note this feature was added after PHPlot-5.1.0.
   </mediaobject>
 </informalfigure>
 &stackedbars3;
+</example>
+</sect1>
+
+<!-- =============================================== -->
+<sect1 id="ex-stackedarea1">
+<title>Example - Stacked Area Plot</title>
+<para>
+The stacked area plot is similar in appearace to the area plot, and this
+example is the same as in <xref linkend="ex-area1" /> except for the
+plot type and data values. In the stacked area plot, PHPlot accumulates the
+Y values at each X position, similar to the stacked bar plot, and fills the
+area between the resulting values. For example, in 1960, 30% of the candy
+sales were cherry, 10% were lime, and 6% were lemon. In the stacked area
+plot, this is represented simply as (30, 10, 6, ...), whereas in the area
+plot example we had to sum the values to get (100, 70, 60, 54, ...).
+</para>
+<para>
+Note this plot type was added after PHPlot-5.1.0.
+</para>
+<example id="example-stackedarea1">
+<title>Stacked Area Plot</title>
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="examples/stackedarea1.png" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>Stacked Area Plot Example</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+&stackedarea1;
 </example>
 </sect1>
 
