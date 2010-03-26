@@ -4,7 +4,7 @@
 <chapter id="concepts">
 <title>PHPlot Concepts</title>
 
-<abstract>
+<abstract><title></title>
   <para>
 This chapter explains the operation and use of PHPlot.
   </para>
@@ -12,7 +12,7 @@ This chapter explains the operation and use of PHPlot.
 
 <sect1 id="conc-defs">
 <title>Definitions</title>
-<abstract>
+<abstract><title></title>
   <para>
 This section contains definitions of terms used throughout the PHPlot
 Reference Manual.
@@ -127,7 +127,7 @@ axes.
 
 <sect1 id="conc-overview">
 <title>Programming Overview</title>
-<abstract>
+<abstract><title></title>
   <para>
 This section contains an overview of how to use PHPlot.
   </para>
@@ -266,7 +266,7 @@ until you complete the plot with DrawGraph.
 
 <sect1 id="conc-datatypes">
 <title>PHPlot Data Types</title>
-<abstract>
+<abstract><title></title>
   <para>
 This section describes how data need to be organized for use with PHPlot.
   </para>
@@ -487,10 +487,14 @@ instead.
 
 <sect1 id="conc-plottypes">
 <title>PHPlot Plot Types</title>
-<abstract>
+<abstract><title></title>
   <para>
 This section describes the PHPlot plot types and their individual data
-type requirements. Plot types determine the overall look of the
+type requirements.
+  </para>
+</abstract>
+<para>
+Plot types determine the overall look of the
 graphical representation of the data values. To select the plot type,
 use <xref linkend="SetPlotType" />.
 The following plot types are available:
@@ -535,6 +539,10 @@ The following plot types are available:
         <entry>Stepped lines</entry>
       </row>
       <row>
+        <entry><link linkend="plottype-stackedarea">stackedarea</link></entry>
+        <entry>Filled areas between lines, with multiple data sets accumulated</entry>
+      </row>
+      <row>
         <entry><link linkend="plottype-stackedbars">stackedbars</link></entry>
         <entry>Filled bars with optional 3-D look, multiple data sets
             are accumulated and the sum is graphed</entry>
@@ -546,9 +554,7 @@ The following plot types are available:
     </tbody>
   </tgroup>
 </informaltable>
-
-  </para>
-</abstract>
+</para>
 
 <sect2 id="plottype-area">
 <title>Plot Type: area (Area Plot)</title>
@@ -568,11 +574,16 @@ This plot type works with data types 'text-data' and 'data-data'
 For 'text-data', the data X values are assumed to be at 0.5+N for N=0,1,2...
 </para>
 <para>
+This plot type uses the absolute value of each supplied Y, because negative
+values do not make sense here. Missing values are taken as zero.
+All records in the data array must have the same number of Y values.
+</para>
+<para>
 The areas are filled with colors as set with <xref linkend="SetDataColors" />.
 </para>
 <para>
 An example of this plot type can be seen in
-<xref linkend="example-area1" />.
+<xref linkend="ex-area1" />.
 </para>
 </sect2>
 
@@ -599,7 +610,10 @@ The border color (if shading is off) can be set with
 </para>
 <para>
 Examples of this plot type can be seen in
-<xref linkend="example-bars1" /> and <xref linkend="example-bars2" />.
+<xref linkend="ex-bars1" />,
+<xref linkend="ex-bars2" />,
+<xref linkend="ex-bars3" />, and
+<xref linkend="ex-bars4" />.
 </para>
 </sect2>
 
@@ -641,7 +655,7 @@ Error bar line width is set with <xref linkend="SetErrorBarLineWidth" />.
 </para>
 <para>
 An example of this plot type can be seen in
-<xref linkend="example-linepoints1" />.
+<xref linkend="ex-linepoints1" />.
 </para>
 </sect2>
 
@@ -672,8 +686,8 @@ Error bar line width is set with <xref linkend="SetErrorBarLineWidth" />.
 </para>
 <para>
 Examples of this plot type can be seen in
-<xref linkend="example-lines1" /> and
-<xref linkend="example-lines2" />.
+<xref linkend="ex-lines1" /> and
+<xref linkend="ex-lines2" />.
 </para>
 </sect2>
 
@@ -702,9 +716,9 @@ The position of the segment percentage labels is set with
 </para>
 <para>
 Examples of this plot type can be seen in
-<xref linkend="example-pie1" /> (text-data-single),
-<xref linkend="example-pie2" /> (text-data), and
-<xref linkend="example-pie3" /> (unshaded).
+<xref linkend="ex-pie1" /> (text-data-single),
+<xref linkend="ex-pie2" /> (text-data), and
+<xref linkend="ex-pie3" /> (unshaded).
 </para>
 
 <sect3 id="plottype-pie-tds">
@@ -804,8 +818,8 @@ Error bar line width is set with <xref linkend="SetErrorBarLineWidth" />.
 </para>
 <para>
 Examples of this plot type can be seen in
-<xref linkend="example-points2" /> (scatterplot), and
-<xref linkend="example-points1" /> (with error bars).
+<xref linkend="ex-points2" /> (scatterplot), and
+<xref linkend="ex-points1" /> (with error bars).
 </para>
 </sect2>
 
@@ -829,7 +843,46 @@ Line style (solid or dashed) per line are set with
 </para>
 <para>
 An example of this plot type can be seen in
-<xref linkend="example-squared1" />.
+<xref linkend="ex-squared1" />.
+</para>
+</sect2>
+
+<sect2 id="plottype-stackedarea">
+<title>Plot Type: stackedarea (Stacked Area Plot)</title>
+<para>
+This plot type draws filled areas between lines, similar to
+<xref linkend="plottype-area" /> except the values are accumulated
+in the same manner as for <xref linkend="plottype-stackedbars" />.
+For each data set (set of corresponding Y values from each record in the
+data array), the area between the X axis and the first Y value is filled.
+The area between the first Y value and the sum of the first and second Y
+values is filled next, and so on. The top-most line is the sum of all the Y
+values for each record.
+</para>
+<para>
+This plot type works with data types 'text-data' and 'data-data'
+(see <xref linkend="conc-datatypes-types" />).
+For 'text-data', the data X values are assumed to be at 0.5+N for N=0,1,2...
+</para>
+<para>
+This plot type uses the absolute value of each supplied Y, because negative
+values do not make sense here. Missing values are taken as zero.
+All records in the data array must have the same number of Y values.
+</para>
+<para>
+The areas are filled with colors as set with <xref linkend="SetDataColors" />.
+Note that data sets are processed with stacked area plots in reverse order
+relative to area plots.  With stacked area plots, the first data set (using the
+first data color) will be at the bottom, but with area plots it will be at
+the top.
+Compare <xref linkend="ex-area1"/> and <xref linkend="ex-stackedarea1"/>.
+</para>
+<para>
+An example of this plot type can be seen in
+<xref linkend="ex-stackedarea1" />.
+</para>
+<para>
+This plot type was added after PHPlot-5.1.0.
 </para>
 </sect2>
 
@@ -860,9 +913,9 @@ The border color (if shading is off) can be set with
 </para>
 <para>
 Examples of this plot type can be seen in
-<xref linkend="example-stackedbars1" />,
-<xref linkend="example-stackedbars2" />, and
-<xref linkend="example-stackedbars3" />.
+<xref linkend="ex-stackedbars1" />,
+<xref linkend="ex-stackedbars2" />, and
+<xref linkend="ex-stackedbars3" />.
 </para>
 </sect2>
 
@@ -885,8 +938,8 @@ Impulse width can be controlled with <xref linkend="SetLineWidths" />.
 </para>
 <para>
 Examples of this plot type can be seen in
-<xref linkend="example-thinbarline1" /> and
-<xref linkend="example-thinbarline2" />.
+<xref linkend="ex-thinbarline1" /> and
+<xref linkend="ex-thinbarline2" />.
 </para>
 
 </sect2>
@@ -895,7 +948,7 @@ Examples of this plot type can be seen in
 
 <sect1 id="conc-colors">
 <title>Colors</title>
-<abstract>
+<abstract><title></title>
   <para>
 This section contains information about using colors in PHPlot.
 Functions described in <xref linkend="ref-colorstyle" /> in the Reference
@@ -1185,17 +1238,19 @@ transparency.
 
 <sect1 id="conc-labels">
 <title>Labels</title>
-<abstract>
+<abstract><title></title>
   <para>
 This section contains information about creating labels which identify data
 values on the plot.
+  </para>
+</abstract>
+<para>
 There are two types of labels for X values: data labels and tick labels.
 There are also tick labels for Y values, and data labels for Y values
 which only work with bar charts and stacked bar charts.
 None of this applies to pie charts, which have no tick labels
 and internally-generated data value labels.
-  </para>
-</abstract>
+</para>
 
 <sect2 id="conc-labels-tick">
 <title>Tick Labels</title>
@@ -1278,8 +1333,8 @@ labels indicate the total Y value for a bar stack, and are drawn above the
 bar. Bar segment labels indicate the incremental value of each segment
 within the bar, and are drawn inside the segment below the top.
 Use <xref linkend="SetYDataLabelPos" /> to enable Y data labels.
-<xref linkend="example-bars4" /> shows a bar chart with Y data labels.
-<xref linkend="example-stackedbars3" /> shows a stacked bar chart with Y data
+<xref linkend="ex-bars4" /> shows a bar chart with Y data labels.
+<xref linkend="ex-stackedbars3" /> shows a stacked bar chart with Y data
 labels.
 (Note that Y data labels for stacked bars was first implemented
 after PHPlot-5.1.0.)
@@ -1390,7 +1445,7 @@ details about these format types.
 
 <sect1 id="conc-text">
 <title>Text Fonts</title>
-<abstract>
+<abstract><title></title>
   <para>
 This section contains information about using text fonts in PHPlot.
 See <xref linkend="ref-textfonts"/> for PHPlot functions used with text
@@ -1553,7 +1608,7 @@ $chars = iconv('iso-8859-15', 'utf-8', chr(0xA4);
 
 <sect1 id="conc-errors">
 <title>Error Handling</title>
-<abstract>
+<abstract><title></title>
   <para>
 This section describes error handling in PHPlot. This information may not
 be accurate for PHPlot-5.0.4 and earlier.
@@ -1697,7 +1752,7 @@ even if you have established an error handler.
 
 <sect1 id="conc-extradata">
 <title>Extra Data Processing</title>
-<abstract>
+<abstract><title></title>
   <para>
 This section describes some additional data processing functions
 which are not part of main PHPlot module but can be used with PHPlot
