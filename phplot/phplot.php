@@ -2026,8 +2026,8 @@ class PHPlot {
 
     function SetPlotType($which_pt)
     {
-        $this->plot_type = $this->CheckOption($which_pt,
-                           'bars, stackedbars, lines, linepoints, area, points, pie, thinbarline, squared',
+        $this->plot_type = $this->CheckOption($which_pt, 'bars, stackedbars, lines, linepoints,'
+                            . ' area, points, pie, thinbarline, squared, stackedarea',
                             __FUNCTION__);
         return (boolean)$this->plot_type;
     }
@@ -2376,8 +2376,9 @@ class PHPlot {
      * Data type text-data has: title, Y1, Y2, ... (with X implied)
      * Data type data-data has: title, X, Y1, Y2, ...
      * Data type data-data-error: has title, X, Y1, Y1err+, Y1err-, Y2, Y2err+, Y2err-, ...
-     * Plot type 'stackedbars' is a special case because the bars always start at 0, and the
-     *    Y values in each row accumulate.
+     * Plot types 'stackedbars' and 'stackedarea' are special cases, because the bars or area always
+     *    start at 0 (although they may be clipped below the X axis, if the axis is moved up),
+     *    absolute values are used, and the Y values in each row accumulate.
      * Note: This method should be 'protected', but is called from test script(s).
      */
     function FindDataLimits()
@@ -2385,7 +2386,8 @@ class PHPlot {
         # Determine how to process the data array:
         $process_x = ($this->data_type == 'data-data' || $this->data_type == 'data-data-error');
         $process_err_bars = ($this->data_type == 'data-data-error');
-        $process_stacked_bars = ($this->plot_type == 'stackedbars');
+        $process_stacked = ($this->plot_type == 'stackedbars' || $this->plot_type == 'stackedarea');
+        $abs_val = ($this->plot_type == 'area' || $this->plot_type == 'pie');
 
         # These need to be initialized in case there are multiple plots and
         # missing data points.
@@ -2408,7 +2410,7 @@ class PHPlot {
                 $all_x[] = (double)$this->data[$i][$j++];
             }
 
-            if ($process_stacked_bars) {
+            if ($process_stacked) {
                 $all_y = array(0, 0); # Min (always 0) and max
             } else {
                 $all_y = array();
@@ -2420,8 +2422,10 @@ class PHPlot {
                     if ($process_err_bars) {
                         $all_y[] = $val + (double)$this->data[$i][$j++];
                         $all_y[] = $val - (double)$this->data[$i][$j++];
-                    } elseif ($process_stacked_bars) {
-                        $all_y[1] += $val;
+                    } elseif ($process_stacked) {
+                        $all_y[1] += abs($val);
+                    } elseif ($abs_val) {
+                        $all_y[] = abs($val);
                     } else {
                         $all_y[] = $val;
                     }
@@ -4527,71 +4531,98 @@ class PHPlot {
         return TRUE;
     }
 
-    /*!
-     * Draw an area plot. Supported data types:
-     *      'text-data'
-     *      'data-data'
-     * NOTE: This function used to add first and last data values even on incomplete
-     *       sets. That is not the behavior now. As for missing data in between,
-     *       there are two possibilities: replace the point with one on the X axis (previous
-     *       way), or forget about it and use the preceding and following ones to draw the polygon.
-     *       There is the possibility to use both, we just need to add the method to set
-     *       it. Something like SetMissingDataBehavior(), for example.
+    /*
+     * Draw an 'area' or 'stacked area' plot.
+     * Both of these fill the area between lines, but in the stacked area graph the Y values
+     * are accumulated for each X, same as stacked bars. In the regular area graph, the areas
+     * are filled in order from the X axis up to each Y (so the Y values for each X need to be
+     * in decreasing order in this case).
+     * Data format can be text-data (label, y1, y2, ...) or data-data (label, x, y1, y2, ...)
+     * Notes:
+     *   All Y values must be >= 0. (If any Y<0 the absolute value is used.)
+     *   Missing data points are NOT handled. (They are counted as 0.)
+     *   All rows must have the same number of Y points, or an error image will be produced.
      */
-    protected function DrawArea()
+    protected function DrawArea($do_stacked = False)
     {
-        $incomplete_data_defaults_to_x_axis = FALSE;        // TODO: make this configurable
+        $n = $this->num_data_rows;  // Number of X values
 
-        for ($row = 0, $cnt = 0; $row < $this->num_data_rows; $row++) {
+        // These arrays store the device X and Y coordinates for all lines:
+        $xd = array();
+        $yd = array();
+        if ($this->data_type == 'data-data') { // Explicit X values?
+            $x_supplied = True;
+            $skip_index = 2;
+        } else {
+            $x_supplied = False;
+            $skip_index = 1;
+        }
+        $num_recs = max($this->num_recs);  // Number of 'records' (label + x + y's) for each X.
+        $num_points = $num_recs - $skip_index; // Number of Y values per X, max
+        $min_points = min($this->num_recs) - $skip_index; // To check for uniform number of Y values
+        if ($num_points != $min_points) {
+            return $this->PrintError("DrawArea(): Data array must contain the same number"
+                      . " of Y values for each X ($num_points != $min_points)");
+        }
+
+        // Calculate the Y value for each X, and store the device
+        // coordinates into the xd and yd arrays.
+        // For stacked area plots, the Y values accumulate.
+        for ($row = 0; $row < $n; $row++) {
             $rec = 1;                                       // Skip record #0 (data label)
 
-            if ($this->data_type == 'data-data')            // Do we have a value for X?
-                $x_now = $this->data[$row][$rec++];         // Read it, advance record index
+            if ($x_supplied)
+                $x_now = $this->data[$row][$rec++];
             else
-                $x_now = 0.5 + $cnt++;                      // Place text-data at X = 0.5, 1.5, 2.5, etc...
+                $x_now = 0.5 + $row;
 
-            $x_now_pixels = $this->xtr($x_now);             // Absolute coordinates
-
+            $x_now_pixels = $this->xtr($x_now);
 
             if ($this->x_data_label_pos != 'none')          // Draw X Data labels?
                 $this->DrawXDataLabel($this->data[$row][0], $x_now_pixels);
 
-            // Proceed with Y values
-            // Create array of points for imagefilledpolygon()
-            for($idx = 0; $rec < $this->num_recs[$row]; $rec++, $idx++) {
-                if (is_numeric($this->data[$row][$rec])) {              // Allow for missing Y data
-                    $y_now_pixels = $this->ytr($this->data[$row][$rec]);
+            // Store the X value.
+            // There is an artificial Y value at the axis. For 'area' it goes
+            // at the end; for stackedarea it goes before the start.
+            $xd[$row] = $x_now_pixels;
+            $yd[$row] = array();
+            if ($do_stacked)
+                $yd[$row][] = $this->x_axis_y_pixels;
 
-                    $posarr[$idx][] = $x_now_pixels;
-                    $posarr[$idx][] = $y_now_pixels;
-
-                    $num_points[$idx] = isset($num_points[$idx]) ? $num_points[$idx]+1 : 1;
+            // Store the Y values for this X.
+            // All Y values are clipped to the x axis which should be zero but can be moved.
+            $y = 0;
+            while ($rec < $num_recs) {
+                if (is_numeric($this->data[$row][$rec])) {  // Treat missing values as 0.
+                    $y += abs($this->data[$row][$rec]);
                 }
-                // If there's missing data...
-                else {
-                    if (isset ($incomplete_data_defaults_to_x_axis)) {
-                        $posarr[$idx][] = $x_now_pixels;
-                        $posarr[$idx][] = $this->x_axis_y_pixels;
-                        $num_points[$idx] = isset($num_points[$idx]) ? $num_points[$idx]+1 : 1;
-                    }
-                }
+                $yd[$row][] = $this->ytr(max($this->x_axis_position, $y));
+                if (!$do_stacked) $y = 0;
+                $rec++;
             }
-        }   // end for
 
-        $end = count($posarr);
-        for ($i = 0; $i < $end; $i++) {
-            // Prepend initial points. X = first point's X, Y = x_axis_y_pixels
-            $x = $posarr[$i][0];
-            array_unshift($posarr[$i], $x, $this->x_axis_y_pixels);
+            if (!$do_stacked)
+                $yd[$row][] = $this->x_axis_y_pixels;
+        }
 
-            // Append final points. X = last point's X, Y = x_axis_y_pixels
-            $x = $posarr[$i][count($posarr[$i])-2];
-            array_push($posarr[$i], $x, $this->x_axis_y_pixels);
+        // Now draw the filled polygons.
+        $prev_row = 0;
+        for ($row = 1; $row <= $num_points; $row++) { // 1 extra for X axis artificial row
+            $pts = array();
+            // Previous data set forms top (for area) or bottom (for stackedarea):
+            for ($j = 0; $j < $n; $j++) {
+                $pts[] = $xd[$j];
+                $pts[] = $yd[$j][$prev_row];
+            }
+            // Current data set forms bottom (for area) or top (for stackedarea):
+            for ($j = $n- 1; $j >= 0; $j--) {
+                $pts[] = $xd[$j];
+                $pts[] = $yd[$j][$row];
+            }
+            // Draw it:
+            ImageFilledPolygon($this->img, $pts, $n * 2, $this->ndx_data_colors[$prev_row]);
 
-            $num_points[$i] += 2;
-
-            // Draw the polygon
-            ImageFilledPolygon($this->img, $posarr[$i], $num_points[$i], $this->ndx_data_colors[$i]);
+            $prev_row = $row;
         }
         return TRUE;
     } // function DrawArea()
@@ -4600,7 +4631,6 @@ class PHPlot {
     /*
      * Draw a Line plot
      * Supported data-types are 'data-data' and 'text-data'.
-     * NOTE: Please see the note regarding incomplete data sets on DrawArea()
      */
     protected function DrawLines()
     {
@@ -5111,6 +5141,9 @@ class PHPlot {
         case 'stackedbars':
             $this->CalcBarWidths();
             $this->DrawStackedBars();
+            break;
+        case 'stackedarea':
+            $this->DrawArea(True);
             break;
         case 'bars':
         default:
