@@ -34,13 +34,6 @@ pre.programlisting, pre.synopsis, pre.screen {
   margin-left: 4em;
   margin-right: 4em;
 }
-/* This is sad. No other apparent way to get rid of the default title
-   "Abstract" which appears over the abstract in DocBook-XML.
-    DocBook-SGML doesn't do it at all.
-*/
-.abstract .title {
-  display: none;
-}
 
 /* Indent examples, line up program listings inside examples */
 div.example {
