@@ -1,6 +1,20 @@
 This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
+2010-03-29
+    * Feature request 2947679 "Support for alpha blending/Truecolor":
+      Implemented truecolor image support with a new class
+      PHPlot_truecolor, extended color specifications to allow
+      specification of an alpha value, and added a new optional parameter
+      to SetDataColors for a default alpha value for all data colors.
+      This feature is *EXPERIMENTAL* (see next item).
+
+    * Truecolor.txt: New file, documentation for the new truecolor capability.
+      (The Truecolor feature is experimental, which means it is subject to
+      change in incompatible ways and the documentation has not yet been
+      incorporated into the PHPlot Reference Manual.)
+
+    * Makefile: Include new documentation file in release.
 
 2010-03-26
     Fixed bug 2976735 "Improvements and fixes for 'area' plots":
