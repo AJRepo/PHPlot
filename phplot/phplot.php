@@ -201,6 +201,9 @@ class PHPlot {
     public $draw_plot_area_background = FALSE;
     public $draw_broken_lines = FALSE;          // Tells not to draw lines for missing Y data.
 
+    public $data_colors_alpha = 0;              // Default alpha for data colors. See SetDataColors()
+
+
 //Miscellaneous
     public $callbacks = array(                  // Valid callback reasons (see SetCallBack)
         'draw_setup' => NULL,
@@ -544,41 +547,90 @@ class PHPlot {
         return TRUE;
     }
 
-    /*!
-     * Returns an array in R, G, B format 0-255
+    /*
+     * Parse a color description and return the color component values.
+     * Arguments:
+     *   $color_asked : The desired color description, in one of these forms:
+     *       Component notatation: array(R, G, B) or array(R, G, B, A) with each
+     *          in the range described below for the return value.
+     *          Examples: (255,255,0)  (204,0,0,30)
+     *       Hex notation: "#RRGGBB" or "#RRGGBBAA" where each pair is a 2 digit hex number.
+     *          Examples: #FF00FF (magenta)   #0000FF40 (Blue with alpha=64/127)
+     *       Named color in the current colormap, with optional suffix ":alpha" for alpha value.
+     *          Examples:  blue   red:60  yellow:20
+     *   $alpha : optional default alpha value. This is applied to the color if it doesn't
+     *       already have an alpha value. If not supplied, colors are opaque (alpha=0) by default.
      *
-     *  \param color_asked array(R,G,B) or string (named color or '#AABBCC')
+     * Returns an array describing a color as (R, G, B, Alpha).
+     * R, G, and B are integers 0-255, and Alpha is 0 (opaque) to 127 (transparent).
+     * The Alpha component is only used with truecolor images (PHPlot_truecolor
+     * objects), and ignored for palette images (PHPlot objects).
+     *
+     * This method implements the function SetRBGColor(). The base class version of
+     * SetRGBColor returns 3 elements (r, g, b) and the truecolor version returns all four.
+     * While we could get away with returning 4 elements even in the base class, it breaks
+     * existing tests (which are looking specifically for a 3 element array), so this safer
+     * approach is used instead.
+     */
+    protected function parse_color($color_asked, $alpha = 0)
+    {
+        if (empty($color_asked)) {
+            $ret_val = array(0, 0, 0);
+
+        } elseif (is_array($color_asked) && (($n = count($color_asked)) == 3 || $n == 4) ) {
+            // Already an array of 3 or 4 elements:
+            $ret_val = $color_asked;
+
+        } elseif (preg_match('/^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})?$/i',
+                             $color_asked, $ss)) {
+            // #RRGGBB or #RRGGBBAA notation:
+            $ret_val = array(hexdec($ss[1]), hexdec($ss[2]), hexdec($ss[3]));
+            if (isset($ss[4])) $ret_val[] = hexdec($ss[4]);
+
+        } elseif (isset($this->rgb_array[$color_asked])) {
+            // Color by name:
+            $ret_val = $this->rgb_array[$color_asked];
+
+        } elseif (preg_match('/(.+):([\d]+)$/', $color_asked, $ss)
+                  && isset($this->rgb_array[$ss[1]])) {
+            // Color by name with ":alpha" suffix, alpha is a decimal number:
+            $ret_val = $this->rgb_array[$ss[1]];
+            $ret_val[3] = (int)$ss[2];
+
+        } else {
+            return $this->PrintError("SetRGBColor(): Color '$color_asked' is not valid.");
+        }
+
+        // Append alpha if not already provided for:
+        if (count($ret_val) == 3)
+            $ret_val[] = $alpha;
+        return $ret_val;
+    }
+
+    /*
+     * Parse a color description and return the color component values.
+     * See parse_color() for details. This base class version does not
+     * take or return an $alpha value.
+     * Arguments:
+     *   $color_asked : The desired color description. See parse_color()
+     * Returns an array describing a color as (R, G, B).
      * Note: This method should be 'protected', but is called from test script(s).
      */
     function SetRGBColor($color_asked)
     {
-        if (empty($color_asked)) {
-            $ret_val = array(0, 0, 0);
-        } elseif (count($color_asked) == 3 ) {    // already array of 3 rgb
-            $ret_val = $color_asked;
-        } elseif ($color_asked[0] == '#') {       // Hex RGB notation #RRGGBB
-            $ret_val = array(hexdec(substr($color_asked, 1, 2)),
-                             hexdec(substr($color_asked, 3, 2)),
-                             hexdec(substr($color_asked, 5, 2)));
-
-        } elseif (isset($this->rgb_array[$color_asked])) {  // Color by name
-            $ret_val = $this->rgb_array[$color_asked];
-        } else {
-            return $this->PrintError("SetRGBColor(): Color '$color_asked' is not valid.");
-        }
-        return $ret_val;
+        list ($r, $g, $b) = $this->parse_color($color_asked);
+        return array($r, $g, $b);
     }
 
-
     /*!
-     * Sets the colors for the data.
+     * Sets the colors for the data, with optional default alpha value (for PHPlot_truecolor only)
      * Cases are:
      *    SetDataColors(array(...))  : Use the supplied array as the color map.
      *    SetDataColors(colorname)   : Use an array of just colorname as the color map.
      *    SetDataColors() or SetDataColors(NULL) : Load default color map if no color map is already set.
      *    SetDataColors('') or SetDataColors(False) : Load default color map (even if one is already set).
      */
-    function SetDataColors($which_data = NULL, $which_border = NULL)
+    function SetDataColors($which_data = NULL, $which_border = NULL, $alpha = NULL)
     {
         if (is_array($which_data)) {
             $this->data_colors = $which_data;  // Use supplied array
@@ -588,13 +640,18 @@ class PHPlot {
             $this->data_colors = $this->default_colors;  // Use default color array
         } // Else do nothing: which_data is NULL or missing and a color array is already set.
 
+        // If an alpha value is supplied, use it as the new default. Need to save and restore
+        // this because the color indexes will be regenerated when the arrays are padded.
+        if (!empty($alpha))
+            $this->data_colors_alpha = $alpha;
+
         $i = 0;
         foreach ($this->data_colors as $col) {
-            $ndx = $this->SetIndexColor($col);
+            $ndx = $this->SetIndexColor($col, $this->data_colors_alpha);
             if (!isset($ndx))
                 return FALSE;
             $this->ndx_data_colors[$i] = $ndx;
-            $this->ndx_data_dark_colors[$i] = $this->SetIndexDarkColor($col);
+            $this->ndx_data_dark_colors[$i] = $this->SetIndexDarkColor($col, $this->data_colors_alpha);
             $i++;
         }
 
@@ -5438,3 +5495,92 @@ class PHPlot {
         return TRUE;
     }
 }  // class PHPlot
+
+
+/*
+ * The PHPlot_truecolor class extends PHPlot to use GD truecolor images.
+ */
+
+class PHPlot_truecolor extends PHPlot {
+    /*
+     * PHPlot Truecolor variation constructor: Create a PHPlot_truecolor object and initialize it.
+     * Note this does NOT call the parent (PHPlot) constructor. It duplicates the code here.
+     * Everything is the same as the PHPlot constructor except for imagecreatetruecolor.
+     *
+     * Parameters are the same as PHPlot:
+     * which_width, which_height       Image width and height in pixels.
+     * which_output_file               Optional filename for output.
+     * which_input_file                Optional path to a file to be used as background.
+     *
+     */
+    function __construct($which_width=600, $which_height=400, $which_output_file=NULL, $which_input_file=NULL)
+    {
+        $this->SetRGBArray($this->color_array);
+
+        if ($which_output_file)
+            $this->SetOutputFile($which_output_file);
+
+        if ($which_input_file)
+            $this->SetInputFile($which_input_file);
+        else {
+            $this->image_width = $which_width;
+            $this->image_height = $which_height;
+
+            $this->img = imagecreatetruecolor($this->image_width, $this->image_height);
+            if (! $this->img)
+                return $this->PrintError('PHPlot_truecolor(): Could not create image resource.');
+        }
+
+        $this->SetDefaultStyles();
+        $this->SetDefaultFonts();
+    }
+
+    /*
+     * Parse a color description and return the color component values.
+     * See parse_color() for details. In the truecolor class, this also
+     * takes and returns an $alpha value.
+     * Arguments:
+     *   $color_asked : The desired color description. See parse_color()
+     *   $alpha : optional default alpha value, used if color_asked does not have an alpha value.
+     * Returns an array describing a color as (R, G, B, A).
+     * Note: This method should be 'protected', but is called from test script(s).
+     */
+    function SetRGBColor($color_asked, $alpha = 0)
+    {
+        return $this->parse_color($color_asked, $alpha);
+    }
+
+    /*
+     * Returns a GD color index value to a color specificed as for SetRGBColor().
+     * This extends the base PHPlot function to use the GD function imagecolorresolvealpha.
+     *    $which_color : The color specification. See SetRGBColor for formats.
+     *    $alpha : Optional default Alpha value, if $which_color does not include alpha.
+     * Returns a GD color index, or NULL on error.
+     * Note: For palette images, this is an index into the color map.
+     * For truecolor images, this is a 32 bit value 0xAARRGGBB. But this difference
+     * is internal to GD.
+     */
+    function SetIndexColor($which_color, $alpha = 0)
+    {
+        list ($r, $g, $b, $a) = $this->SetRGBColor($which_color, $alpha);  //Translate to RGBA
+        if (!isset($r)) return NULL;
+        return ImageColorResolveAlpha($this->img, $r, $g, $b, $a);
+    }
+
+    /* 
+     * Returns an index to a slightly darker color than the one requested.
+     * This extends the base PHPlot function to use the GD function imagecolorresolvealpha.
+     *    $which_color : The color specification. See SetRGBColor for formats.
+     *    $alpha : Optional default Alpha value, if $which_color does not include alpha.
+     * Returns a GD color index, or NULL on error.
+     */
+    protected function SetIndexDarkColor($which_color, $alpha = 0)
+    {
+        list ($r, $g, $b, $a) = $this->SetRGBColor($which_color, $alpha);
+        if (!isset($r)) return NULL;
+        $r = max(0, $r - 0x30);
+        $g = max(0, $g - 0x30);
+        $b = max(0, $b - 0x30);
+        return ImageColorResolveAlpha($this->img, $r, $g, $b, $a);
+    }
+}
