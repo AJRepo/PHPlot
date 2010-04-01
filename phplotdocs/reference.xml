@@ -745,6 +745,9 @@ If <parameter>$border</parameter> is not an array, but a single color
 value, then that color will be used for all data sets.
 However, the array(r,g,b) notation is not allowed in
 this case (because it looks like an array of 3 separate color values).
+You can get around this restriction if you want to specify a single color 
+as an R, G, B array by wrapping the array in another array, for example:
+<literal>array(array(102, 0, 192))</literal>.
     </para>
     <para>
 Two special uses of the <parameter>$border</parameter> argument
@@ -832,6 +835,9 @@ If <parameter>$data_colors</parameter> is not an array, but a single color
 value, then that color will be used for all data sets.
 However, the array(r,g,b) notation is not allowed in
 this case (because it looks like an array of 3 separate color values).
+You can get around this restriction if you want to specify a single color 
+as an R, G, B array by wrapping the array in another array, for example:
+<literal>array(array(102, 0, 192))</literal>.
     </para>
     <para>
 Two special uses of the <parameter>$data_colors</parameter> argument
@@ -1032,6 +1038,18 @@ set by <xref linkend="SetDataType" />.
         </listitem>
       </varlistentry>
     </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The data array <parameter>$dv</parameter> must use zero based sequential
+integer indexes. This is what the PHP manual calls 'the usual integer
+indices (starting from zero, increasing by one)'. Each entry in the data
+array is also an array, representing one 'record'. The record arrays need
+not use zero based sequential integer indexes; the entries are processed in
+the same order in which they were defined, regardless of the index values.
+    </para>
   </refsect1>
 </refentry>
 
@@ -1536,6 +1554,9 @@ If <parameter>$error_bar_colors</parameter> is not an array, but a single color
 value, then that color will be used for all data sets' error bars.
 However, the array(r,g,b) notation is not allowed in
 this case (because it looks like an array of 3 separate color values).
+You can get around this restriction if you want to specify a single color 
+as an R, G, B array by wrapping the array in another array, for example:
+<literal>array(array(102, 0, 192))</literal>.
     </para>
     <para>
 Two special uses of the <parameter>$error_bar_colors</parameter> argument
