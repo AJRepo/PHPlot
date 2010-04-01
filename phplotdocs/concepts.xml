@@ -483,6 +483,40 @@ instead.
 
 </sect2>
 
+<sect2 id="conc-datatypes-indexes">
+<title>Data Array Indexes</title>
+<para>
+There are some rules you need to follow when building data arrays, in order
+for PHPlot to correctly process your data. The following rules apply to the
+array indexes, or keys, in your data array.
+  <itemizedlist>
+    <listitem>
+      <para>
+Your data array must be indexed using sequential integers starting with zero.
+This is automatically true if you build an array with the empty-brackets
+syntax (<literal>$mydata[] = ...</literal>), or if you use the
+<literal>array(...)</literal> construct without specifying keys.
+Note that this refers only to the data array itself, not the elements of
+the data array - the records.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+The data records, which are elements of the data array, are also arrays.
+These record arrays are processed by PHPlot using the
+<literal>array_values()</literal> function. This means the array keys
+are ignored, and the elements of the record are processed in the same order
+as they were assigned. As with the data array itself, you can use the
+empty-brackets syntax, or the array() language construct, to build records
+in the data array. You can also use words (such as database query result
+fields) as indexes, as long as the assignments are made in the correct
+order.
+      </para>
+    </listitem>
+  </itemizedlist>
+</para>
+</sect2>
+
 </sect1>
 
 <sect1 id="conc-plottypes">
