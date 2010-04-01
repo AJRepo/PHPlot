@@ -4,6 +4,16 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2010-03-31
+   * reference.xml, concepts.xml: Clarify that the data array must use
+     0-based sequential integer indexes. (Based on a problem reported in
+     the Help forum.) This was always true, but never actually documented.
+
+   * reference.xml: SetDataColors, SetDataBorderColors, SetErrorBarColors
+     are 3 functions that take an array of colors, or a single color.
+     Document a way around the restriction of not being able to specify
+     a single color as array(R,G,B).
+
 2010-03-26
    * concepts.xml: Document new plot type 'stackedarea'.
    * developer.xml: Internal function DrawArea() has a new parameter.
