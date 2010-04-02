@@ -2267,7 +2267,7 @@ class PHPlot {
      * use for (or while) loops, which sometimes are faster. Performance improvements
      * vary from 28% in DrawLines() to 49% in DrawArea() for plot drawing functions.
      */
-    function SetDataValues(&$which_dv)
+    function SetDataValues($which_dv)
     {
         $this->num_data_rows = count($which_dv);
         $this->total_records = 0;               // Perform some useful calculations.
