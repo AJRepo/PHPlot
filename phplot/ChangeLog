@@ -1,6 +1,11 @@
 This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
+2010-04-01
+    * Remove & from argument in SetDataValues(). The data array is not
+      modified and does not need to be passed by reference. (There is
+      no performance advantage, either.)
+
 2010-03-29
     * Feature request 2947679 "Support for alpha blending/Truecolor":
       Implemented truecolor image support with a new class
