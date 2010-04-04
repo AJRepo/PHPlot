@@ -1,5 +1,5 @@
 phplot/Truecolor - Documentation for the experimental truecolor support
-Last updated for PHPlot-5.1.1 on 2010-03-29
+Last updated for PHPlot-5.1.1 on 2010-04-04
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 Overview:
@@ -167,16 +167,16 @@ with the PHPlot_truecolor class, and palette images are created with the
 PHPlot class.
 
 What happens when you output the GD image to an image file depends on the
-image file format.
+image file format you select.
 
-JPEG image files are always truecolor images. Whether you use a PHPlot
-object or a PHPlot_truecolor object, you will get a truecolor image.
-However, the truecolor features such as specification of alpha channel
-information is only available if you use a PHPlot_truecolor object.
-Note: You are discouraged from using JPEG images with PHPlot, because they
-are not optimal for this type of graphical information.
+JPEG image files are always truecolor. Whether you use a PHPlot object or a
+PHPlot_truecolor object, you will get a truecolor image file.  However, the
+truecolor features such as specification of alpha channel information are
+only available if you use a PHPlot_truecolor object.  Note: You are
+discouraged from using JPEG images with PHPlot, because they are not
+optimal for this type of graphical information.
 
-GIF image files are always palette images, limited to 256 colors. When
+GIF image files are always palette type, limited to 256 colors. When
 using a PHPlot object, you will get a palette GIF image file with the
 colors you used in your plot. When using a PHPlot_truecolor object, GD will
 convert your image to palette format, reducing the number of colors to 256
@@ -213,7 +213,7 @@ colors. Flat pie charts (using SetShading(0)) are not too bad, showing some
 artifacts, but shaded or 3D-look pie charts are poorly rendered.
 
 Bar charts and stacked bar charts - Bars are drawn properly, but the 3D
-shading affects get blended, resulting in than ideal appearance. Flat,
+shading affects get blended, resulting in less than ideal appearance. Flat,
 outlined bars (using SetShading(0)) are fine with transparency, but when
 shading is on the 3D shadows overlap portions of the bars. With alpha
 blending, the overlaps take on new colors.
@@ -312,5 +312,5 @@ SetRGBColor() function, the default alpha argument is not provided and the
 -----------------------------------------------------------------------------
 
 History:
-2010-03-29 First version, for PHPlot-5.1.1
+2010-04-03 First version, for PHPlot-5.1.1
 -----------------------------------------------------------------------------
