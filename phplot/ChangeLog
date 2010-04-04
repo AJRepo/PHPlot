@@ -1,6 +1,12 @@
 This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
+
+2010-04-04 (lbayuk)     ===== Released as 5.1.1 =====
+    * phplot.php: Updated version
+    * README.txt: Updated for new release
+    * NEWS.txt: Add text for new release
+
 2010-04-01
     * Remove & from argument in SetDataValues(). The data array is not
       modified and does not need to be passed by reference. (There is
