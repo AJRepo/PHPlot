@@ -916,7 +916,7 @@ An example of this plot type can be seen in
 <xref linkend="ex-stackedarea1" />.
 </para>
 <para>
-This plot type was added after PHPlot-5.1.0.
+This plot type was added in PHPlot-5.1.1.
 </para>
 </sect2>
 
@@ -1371,7 +1371,7 @@ Use <xref linkend="SetYDataLabelPos" /> to enable Y data labels.
 <xref linkend="ex-stackedbars3" /> shows a stacked bar chart with Y data
 labels.
 (Note that Y data labels for stacked bars was first implemented
-after PHPlot-5.1.0.)
+in PHPlot-5.1.1.)
 </para>
 
 </sect2>

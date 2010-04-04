@@ -547,7 +547,7 @@ alternative to Y axis labels, but only with bar charts.
 <para>
 This is the same as <xref linkend="example-stackedbars2" /> except that
 Y Data Labels are turned on.
-Note this feature was added after PHPlot-5.1.0.
+Note this feature was added in PHPlot-5.1.1.
 </para>
 <example id="example-stackedbars3">
 <title>Stacked Bars with Y Data Labels</title>
@@ -579,7 +579,7 @@ plot, this is represented simply as (30, 10, 6, ...), whereas in the area
 plot example we had to sum the values to get (100, 70, 60, 54, ...).
 </para>
 <para>
-Note this plot type was added after PHPlot-5.1.0.
+Note this plot type was added in PHPlot-5.1.1.
 </para>
 <example id="example-stackedarea1">
 <title>Stacked Area Plot</title>

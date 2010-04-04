@@ -3924,7 +3924,7 @@ The default plot type is 'linepoints'.
   <refsect1>
     <title>History</title>
     <para>
-Plot type 'stackedarea' was added after PHPlot-5.1.0.
+Plot type 'stackedarea' was added in PHPlot-5.1.1.
      </para>
   </refsect1>
 </refentry>
@@ -6782,7 +6782,7 @@ The Y data label text format can be controlled with
   <refsect1>
     <title>History</title>
     <para>
-The Y data label feature for stacked bar graphs was added after PHPlot-5.1.0.
+The Y data label feature for stacked bar graphs was added in PHPlot-5.1.1.
     </para>
     <para>
 The Y data label feature for bar graphs was added to PHPlot-5.0rc3.

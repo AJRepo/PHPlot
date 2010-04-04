@@ -381,7 +381,7 @@ function. See <xref linkend="callbacks"/> for more information on callbacks.
 Draws an area plot, or a stacked area plot (if the optional argument is True).
 Called by <xref linkend="DrawGraph"/> when the plot type is 'area' or
 'stackedarea'.
-Stacked area plots were added after PHPlot-5.1.0; through PHPlot-5.1.0 this
+Stacked area plots were added in PHPlot-5.1.1; through PHPlot-5.1.0 this
 function did not have a parameter and was used only for area plots.
     </para>
   </listitem>
