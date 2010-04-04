@@ -4,6 +4,68 @@ The project home page is http://phplot.sourceforge.net/
 Refer the the ChangeLog file for detailed source changes.
 -----------------------------------------------------------------------------
 
+2010-04-04 Release 5.1.1
+
+Overview:
+
+This is the current stable release of PHPlot. This release adds truecolor
+image support as an experimental feature, fixes a number of bugs and adds
+a few new features.
+
+The PHPlot reference manual has been updated to match this release.  The
+manual is available as a separate download from Sourceforge. The manual is
+also available for on-line viewing from the project home page.
+
+See the ChangeLog file in the release for more about changes and bug fixes.
+
+
+Cautions and Important Notes:
+
+Avoid using PHP-5.3.2 or PHP-5.2.13 with PHPlot if you use TrueType fonts
+(TTF). Some new bugs were introduced in those releases that adversely
+affects accurate positioning and rendering of TrueType font text.
+
+
+New features in 5.1.1:
+
+#2947679 "Support for alpha blending/Truecolor":
+  PHPlot can now produce truecolor images, with alpha blending of colors and
+  other effects. This is considered an experimental feature, meaning it is
+  not yet documented in the PHPlot Reference Manual, and subject to change.
+  Refer to the text file Truecolor.txt included in the PHPlot release for
+  information on using truecolor.
+  Two drawing changes were made to improve plot appearance with Truecolor:
+  + Filled dots (in points & linespoints plots) are now drawn better. This
+    also makes them look rounder with regular (non-Truecolor) plots.
+  + Area plots have the areas filled without overlapping each area down to
+    the Y axis. This was needed to fix problems with alpha blending, and
+    should have no effect on non-Truecolor plots.
+
+#2973995 "Add y-Data to Stackedbars":
+  You can now have Y Data Labels with 'stackedbars' plots. These label the Y
+  values (incremental and total) for each bar. Refer to the reference manual
+  page for SetYDataLabelPos().
+
+
+Bug Fixes in 5.1.1:
+
+#2976735 "Improvements and fixes for 'area' plots":
+  Moving X axis works; handle Y<0 better; new 'stackedarea' plot type is a
+  variation on 'area' with the data represented differently.
+
+#2974639 "Stacked bars plot breaks with X axis != 0":
+  Moving X axis works.
+
+#2963757 "point_counts undefined error in 5.1.0":
+  Fixed an error introduced in PHPlot-5.1.0 when point size and shape arrays
+  were set to the same size.
+
+#2938219 "Bars go in wrong direction":
+  For bar charts with all Y<0, bars will still be drawn down even if Y=0 is
+  not in range.
+
+-----------------------------------------------------------------------------
+
 2009-12-24 Release 5.1.0
 
 Overview:
