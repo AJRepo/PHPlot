@@ -4,6 +4,10 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2010-04-03
+   For release with PHPlot-5.1.1:
+   * Change vague references to release "after 5.1.0" to "5.1.1".
+
 2010-03-31
    * reference.xml, concepts.xml: Clarify that the data array must use
      0-based sequential integer indexes. (Based on a problem reported in

@@ -15,6 +15,15 @@ see the ChangeLog file inside the PHPlot distribution.)
 <variablelist>
 
   <varlistentry>
+    <term>2010-04-03</term>
+    <listitem>
+      <para>
+Released updated version of the manual to correspond to PHPlot-5.1.1.
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
     <term>2010-03-25</term>
     <listitem>
       <para>
