@@ -1,7 +1,7 @@
 <?php
 /* $Id$ */
 /*
- * PHPLOT Version 5.1.0 + CVS (This is an unreleased CVS version!)
+ * PHPLOT Version 5.1.1
  *
  * A PHP class for creating scientific and business charts
  * Visit http://sourceforge.net/projects/phplot/
