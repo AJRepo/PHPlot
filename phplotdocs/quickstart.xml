@@ -214,7 +214,7 @@ type, PHPlot assumes <literal>text-data</literal>.
     <listitem>
       <para>
 We did not specify the file type (GIF, PNG, JPEG, ...).
-PHPlot 5.0 makes PNG images by default.
+PHPlot 5.0 (and newer) makes PNG images by default.
       </para>
     </listitem>
     <listitem>
