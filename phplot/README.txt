@@ -1,5 +1,5 @@
 This is the README file for PHPlot
-Last updated for PHPlot-5.1.0 on 2009-12-24
+Last updated for PHPlot-5.1.1 on 2010-04-04
 The project web site is http://sourceforge.net/projects/phplot/
 The project home page is http://phplot.sourceforge.net/
 -----------------------------------------------------------------------------
@@ -22,6 +22,7 @@ CONTENTS:
    ChangeLog  . . . . . . . . . . . Lists changes to the sources
    NEWS.txt . . . . . . . . . . . . Highlights changes in releases
    README.txt   . . . . . . . . . . This file
+   Truecolor.txt. . . . . . . . . . Interim documentation for Truecolor
    contrib  . . . . . . . . . . . . "Contributed" directory, add-ons
    phplot.php   . . . . . . . . . . The main PHPlot source file
    phplot_data.php  . . . . . . . . Auxiliary and extended functions
@@ -30,10 +31,12 @@ CONTENTS:
 
 REQUIREMENTS:
 
-You need a recent version of PHP5, and you are advised to use the latest
-stable release.  This version of PHPlot has been tested with PHP-5.3.1 and
-PHP-5.2.12 on Linux, and with PHP-5.3.1 on Windows/XP.  PHP4 is no longer
-supported.
+You need a recent version of PHP5. Usually, we recommend you use the latest
+stable release, however due to problems with PHP-5.3.2 and PHP-5.2.13 you
+are advised to use the previous releases if possible. The problems are
+specific to TrueType font (TTF) text. If you are not using TTF text, you
+may use PHP-5.3.2 or 5.2.13. However, this version of PHPlot has been tested
+with PHP-5.3.1 and PHP-5.2.12 on Linux, and with PHP-5.3.1 on Windows/XP.
 
 You need the GD extension to PHP either built in to PHP or loaded as a
 module. Refer to the PHP documentation for more information - see the
@@ -60,7 +63,7 @@ your PHP application scripts will be able to find them. The scripts are:
      phplot_data.php
      rgb.inc.php
 (Only phplot.php is necessary for most graphs.)
-Make sure the protections on these files allow the web server to read them.
+Make sure the permissions on these files allow the web server to read them.
 
 The ideal place is a directory outside your web server document area,
 and on your PHP include path. You can add to the include path in the PHP
@@ -82,6 +85,9 @@ on the PHPlot project web site for more information.
 #2919086 Improve tick interval calculations
   Tick interval calculations should try for intervals of 1, 2, or 5 times
   a power of 10.
+
+PHP Bugs #51207, #51094, and others: These are PHP bugs, not PHPlot,
+on rendering of TrueType font (TTF) text in PHP-5.3.2 and 5.2.13.
 
 
 If you think you found a problem with PHPlot, or want to ask questions or
@@ -129,7 +135,7 @@ graph, check your web server error log for more information.
 
 COPYRIGHT and LICENSE:
 
-PHPlot is Copyright (C) 1998-2009 Afan Ottenheimer
+PHPlot is Copyright (C) 1998-2010 Afan Ottenheimer
 
 This is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
