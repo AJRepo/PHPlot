@@ -4,6 +4,10 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2010-04-18
+   * webform.xml, images/webform.png: New example of a web form with plot.
+   * examples.xml, main.xml, Makefile: Changes for new web form example.
+
 2010-04-03
    For release with PHPlot-5.1.1:
    * Change vague references to release "after 5.1.0" to "5.1.1".

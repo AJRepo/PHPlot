@@ -15,6 +15,16 @@ see the ChangeLog file inside the PHPlot distribution.)
 <variablelist>
 
   <varlistentry>
+    <term>2010-04-18</term>
+    <listitem>
+      <para>
+Added a new example to the examples chapter with a complete mini-application
+containing a web form and form handling script.
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
     <term>2010-04-03</term>
     <listitem>
       <para>
