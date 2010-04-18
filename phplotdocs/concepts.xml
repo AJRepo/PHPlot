@@ -177,6 +177,7 @@ Your main script returns an HTML page which includes an IMG (Image) tag for
 the plot.
 The IMG tag has a SRC attribute which references the second script, and it
 is this second script which creates the PHPlot image.
+An example of this can be found in <xref linkend="ex-webform"/>.
 You will most likely need a way to communicate parameters from your main
 script to your image script. Two good ways to do this are using URL parameters,
 and with PHP session variables.
