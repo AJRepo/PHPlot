@@ -25,7 +25,7 @@ MAIN=main.xml
 # List of all source files:
 SRC=$(MAIN) $(XSL_HTML) \
   install.xml quickstart.xml concepts.xml functions.xml \
-  examples.xml callbacks.xml \
+  examples.xml webform.xml callbacks.xml \
   reference.xml developer.xml changelog.xml
 
 # Files to add to release, in addition to *.html files:
