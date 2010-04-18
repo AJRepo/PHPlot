@@ -623,4 +623,7 @@ where this example is described in detail.
 </sect1>
 
 <!-- =============================================== -->
+<!-- This webform.xml is long enough to get its own file. -->
+&webform;
+<!-- =============================================== -->
 </chapter>
