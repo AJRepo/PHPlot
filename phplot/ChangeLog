@@ -2,6 +2,19 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2010-05-29
+    * Feature request 3002606 "Add to plot and image border options":
+        Added options 'right', 'top', and 'bottom' to SetPlotBorderType()
+      (existing options are 'left', 'sides', 'none', and 'full'). This
+      now also accepts an array of the above options, giving complete
+      control over which sides to draw.
+        Added option 'solid' to SetImageBorderType() to use the actual
+      color set with SetImageBorderColor(), rather than the darker
+      shade as type 'plain' does (for some reason).
+        New function SetImageBorderWidth() sets the width of the image
+      border. The image border width is now accounted for in margin
+      calculations, although existing plots will not change.
+
 2010-04-04 (lbayuk)     ===== Released as 5.1.1 =====
     * phplot.php: Updated version
     * README.txt: Updated for new release
