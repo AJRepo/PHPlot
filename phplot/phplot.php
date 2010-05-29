@@ -1,7 +1,7 @@
 <?php
 /* $Id$ */
 /*
- * PHPLOT Version 5.1.1
+ * PHPLOT Version 5.1.1 + CVS (This is an unreleased CVS version!)
  *
  * A PHP class for creating scientific and business charts
  * Visit http://sourceforge.net/projects/phplot/
@@ -193,8 +193,9 @@ class PHPlot {
     public $error_bar_shape = 'tee';           // 'tee' or 'line'
     public $error_bar_line_width = 1;          // single value (or array TODO)
 
-    public $plot_border_type = 'sides';        // left, sides, none, full
+    public $plot_border_type = 'sides';        // left, right, top, bottom, sides, none, full; or array
     public $image_border_type = 'none';        // 'raised', 'plain', 'none'
+    // public $image_border_width;             // NULL, 0, or unset for default. Default depends on type.
 
     public $shading = 5;                       // 0 for no shading, > 0 is size of shadows in pixels
 
@@ -1883,6 +1884,26 @@ class PHPlot {
         return NULL;
     }
 
+    /*
+     * Checks the validity of an array of options.
+     *   $opt  Array or string to check.
+     *   $acc  String of accepted choices. Must be lower-case, and separated
+     *               by exactly ', ' (comma, space).
+     *   $func Name of the calling function, for error messages.
+     * Returns a array option value(s), downcased and trimmed, if all entries in $opt are valid.
+     * Reports an error if any supplied option is not valid. Returns NULL if the error handler returns.
+     */
+    protected function CheckOptionArray($opt, $acc, $func)
+    {
+        $opt_array = (array)$opt;
+        $result = array();
+        foreach ($opt_array as $option) {
+            $choice = $this->CheckOption($option, $acc, $func);
+            if (is_null($choice)) return NULL; // In case CheckOption error handler returns
+            $result[] = $choice;
+        }
+        return $result;
+    }
 
     /*!
      *  \note Submitted by Thiemo Nagel
@@ -1964,24 +1985,36 @@ class PHPlot {
         return ((boolean)$this->legend_text_align && (boolean)$this->legend_colorbox_align);
     }
 
-    /*!
-     * Accepted values are: left, sides, none, full
+    /*
+     * Set border for the plot area.
+     * Accepted values are: left, right, top, bottom, sides, none, full or an array of those.
      */
     function SetPlotBorderType($pbt)
     {
-        $this->plot_border_type = $this->CheckOption($pbt, 'left, sides, none, full', __FUNCTION__);
-        return (boolean)$this->plot_border_type;
+        $this->plot_border_type = $this->CheckOptionArray($pbt, 'left, right, top, bottom, sides, none, full',
+                                                          __FUNCTION__);
+        return !empty($this->plot_border_type);
     }
 
-    /*!
-     * Accepted values are: raised, plain
+    /*
+     * Set border style for the image.
+     * Accepted values are: raised, plain, solid, none
+     *  'solid' is the same as 'plain' except it fixes the color (see DrawImageBorder)
      */
     function SetImageBorderType($sibt)
     {
-        $this->image_border_type = $this->CheckOption($sibt, 'raised, plain, none', __FUNCTION__);
+        $this->image_border_type = $this->CheckOption($sibt, 'raised, plain, solid, none', __FUNCTION__);
         return (boolean)$this->image_border_type;
     }
 
+    /*
+     * Set border width for the image.
+     */
+    function SetImageBorderWidth($width)
+    {
+        $this->image_border_width = $width;
+        return TRUE;
+    }
 
     /*!
      * \param dpab bool
@@ -2542,6 +2575,7 @@ class PHPlot {
      * Title offsets, relative to plot area:
      *     x_title_top_offset, x_title_bot_offset
      *     y_title_left_offset, y_title_left_offset
+     *     title_offset (for main title, relative to image edge)
      *
      *  Note: The margins are calculated, but not stored, if margins or plot area were
      *  set by the user with SetPlotAreaPixels or SetMarginsPixels. The margin
@@ -2555,11 +2589,15 @@ class PHPlot {
     {
         // This is the line-to-line or line-to-text spacing:
         $gap = $this->safe_margin;
+        // Initial margin on each side takes into account a possible image border.
+        // For compatibility, if border is 1 or 2, don't increase the margins.
+        $base_margin = max($gap, $this->GetImageBorderWidth() + 3);
+        $this->title_offset = $base_margin;  // For use in DrawTitle
 
         // Minimum margin on each side. This reduces the chance that the
         // right-most tick label (for example) will run off the image edge
         // if there are no titles on that side.
-        $min_margin = 3 * $gap;
+        $min_margin = 2 * $gap + $base_margin;
 
         // Calculate the title sizes:
         list($unused, $title_height) = $this->SizeText($this->fonts['title'], 0, $this->title_txt);
@@ -2569,16 +2607,16 @@ class PHPlot {
         // Special case for maximum area usage with no X/Y titles or labels, only main title:
         if ($maximize) {
             if (!isset($this->x_left_margin))
-                $this->x_left_margin = $gap;
+                $this->x_left_margin = $base_margin;
             if (!isset($this->x_right_margin))
-                $this->x_right_margin = $gap;
+                $this->x_right_margin = $base_margin;
             if (!isset($this->y_top_margin)) {
-                $this->y_top_margin = $gap;
+                $this->y_top_margin = $base_margin;
                 if ($title_height > 0)
                     $this->y_top_margin += $title_height + $gap;
             }
             if (!isset($this->y_bot_margin))
-                $this->y_bot_margin = $gap;
+                $this->y_bot_margin = $base_margin;
 
             return TRUE;
         }
@@ -2674,8 +2712,8 @@ class PHPlot {
         // Calculating Top and Bottom margins:
         // y_top_margin: Main title, Upper X title, X ticks and tick labels, and X data labels:
         // y_bot_margin: Lower title, ticks and tick labels, and data labels:
-        $top_margin = $gap;
-        $bot_margin = $gap;
+        $top_margin = $base_margin;
+        $bot_margin = $base_margin;
         $this->x_title_top_offset = $gap;
         $this->x_title_bot_offset = $gap;
 
@@ -2735,8 +2773,8 @@ class PHPlot {
         // Calculating Left and Right margins:
         // x_left_margin: Left Y title, Y ticks and tick labels:
         // x_right_margin: Right Y title, Y ticks and tick labels:
-        $left_margin = $gap;
-        $right_margin = $gap;
+        $left_margin = $base_margin;
+        $right_margin = $base_margin;
         $this->y_title_left_offset = $gap;
         $this->y_title_right_offset = $gap;
 
@@ -3601,35 +3639,55 @@ class PHPlot {
     }  // function tile_img
 
 
-    /*!
+    /*
+     * Return the image border width.
+     * This is used by CalcMargins() and DrawImageBorder().
+     */
+    protected function GetImageBorderWidth()
+    {
+        if ($this->image_border_type == 'none')
+            return 0; // No border
+        if (!empty($this->image_border_width))
+            return $this->image_border_width; // Specified border width
+        if ($this->image_border_type == 'raised')
+            return 2; // Default for raised border is 2 pixels.
+        return 1; // Default for other border types is 1 pixel.
+    }
+
+    /*
      * Draws a border around the final image.
+     * Note: 'plain' draws a flat border using the dark shade of the border color.
+     * This probably should have been written to use the actual border color, but
+     * it is too late to fix it without changing plot appearances. Therefore a
+     * new type 'solid' was added to use the SetImageBorderColor color.
      */
     protected function DrawImageBorder()
     {
+        if ($this->image_border_type == 'none')
+            return TRUE; // Early test for default case.
+        $width = $this->GetImageBorderWidth();
+        $color1 = $this->ndx_i_border;
+        $color2 = $this->ndx_i_border_dark;
+        $ex = $this->image_width - 1;
+        $ey = $this->image_height - 1;
         switch ($this->image_border_type) {
         case 'raised':
-            ImageLine($this->img, 0, 0, $this->image_width-1, 0, $this->ndx_i_border);
-            ImageLine($this->img, 1, 1, $this->image_width-2, 1, $this->ndx_i_border);
-            ImageLine($this->img, 0, 0, 0, $this->image_height-1, $this->ndx_i_border);
-            ImageLine($this->img, 1, 1, 1, $this->image_height-2, $this->ndx_i_border);
-            ImageLine($this->img, $this->image_width-1, 0, $this->image_width-1,
-                      $this->image_height-1, $this->ndx_i_border_dark);
-            ImageLine($this->img, 0, $this->image_height-1, $this->image_width-1,
-                      $this->image_height-1, $this->ndx_i_border_dark);
-            ImageLine($this->img, $this->image_width-2, 1, $this->image_width-2,
-                      $this->image_height-2, $this->ndx_i_border_dark);
-            ImageLine($this->img, 1, $this->image_height-2, $this->image_width-2,
-                      $this->image_height-2, $this->ndx_i_border_dark);
+            // Top and left lines use border color, right and bottom use the darker shade.
+            // Drawing order matters in the upper right and lower left corners.
+            for ($i = 0; $i < $width; $i++, $ex--, $ey--) {
+                imageline($this->img, $i,  $i,  $ex, $i,  $color1); // Top
+                imageline($this->img, $ex, $i,  $ex, $ey, $color2); // Right
+                imageline($this->img, $i,  $i,  $i,  $ey, $color1); // Left
+                imageline($this->img, $i,  $ey, $ex, $ey, $color2); // Bottom
+            }
             break;
-        case 'plain':
-            ImageLine($this->img, 0, 0, $this->image_width-1, 0, $this->ndx_i_border_dark);
-            ImageLine($this->img, $this->image_width-1, 0, $this->image_width-1,
-                      $this->image_height-1, $this->ndx_i_border_dark);
-            ImageLine($this->img, $this->image_width-1, $this->image_height-1, 0, $this->image_height-1,
-                      $this->ndx_i_border_dark);
-            ImageLine($this->img, 0, 0, 0, $this->image_height-1, $this->ndx_i_border_dark);
-            break;
-        case 'none':
+        case 'plain': // See note above re colors
+            $color1 = $color2;
+            // Fall through
+        case 'solid':
+            for ($i = 0; $i < $width; $i++, $ex--, $ey--) {
+                imagerectangle($this->img, $i, $i, $ex, $ey, $color1);
+            }
             break;
         default:
             return $this->PrintError("DrawImageBorder(): unknown image_border_type: '$this->image_border_type'");
@@ -3650,7 +3708,7 @@ class PHPlot {
         $xpos = $this->image_width / 2;
 
         // Place it at almost at the top
-        $ypos = $this->safe_margin;
+        $ypos = $this->title_offset;
 
         $this->DrawText($this->fonts['title'], 0, $xpos, $ypos,
                         $this->ndx_title_color, $this->title_txt, 'center', 'top');
@@ -3924,37 +3982,34 @@ class PHPlot {
     } // function DrawXTicks
 
 
-    /*!
-     *
+    /*
+     *  Draw a border around the plot area. See SetPlotBorderType.
+     *  Note: SetPlotBorderType sets plot_border_type to an array, but
+     *  it won't be an array if it defaults or is set directly (backward compatibility).
      */
     protected function DrawPlotBorder()
     {
-        switch ($this->plot_border_type) {
-        case 'left':    // for past compatibility
-        case 'plotleft':
-            ImageLine($this->img, $this->plot_area[0], $this->ytr($this->plot_min_y),
-                      $this->plot_area[0], $this->ytr($this->plot_max_y), $this->ndx_grid_color);
-            break;
-        case 'right':
-        case 'plotright':
-            ImageLine($this->img, $this->plot_area[2], $this->ytr($this->plot_min_y),
-                      $this->plot_area[2], $this->ytr($this->plot_max_y), $this->ndx_grid_color);
-            break;
-        case 'both':
-        case 'sides':
-             ImageLine($this->img, $this->plot_area[0], $this->ytr($this->plot_min_y),
-                      $this->plot_area[0], $this->ytr($this->plot_max_y), $this->ndx_grid_color);
-            ImageLine($this->img, $this->plot_area[2], $this->ytr($this->plot_min_y),
-                      $this->plot_area[2], $this->ytr($this->plot_max_y), $this->ndx_grid_color);
-            break;
-        case 'none':
-            //Draw No Border
-            break;
-        case 'full':
-        default:
-            ImageRectangle($this->img, $this->plot_area[0], $this->ytr($this->plot_min_y),
-                           $this->plot_area[2], $this->ytr($this->plot_max_y), $this->ndx_grid_color);
-            break;
+        $pbt = (array)$this->plot_border_type;
+        $sides = 0;  // Bitmap: 1=left 2=top 4=right 8=bottom
+        $map = array('left' => 1, 'plotleft' => 1, 'right' => 4, 'plotright' => 4, 'top' => 2,
+                      'bottom' => 8, 'both' => 5, 'sides' => 5, 'full' => 15, 'none' => 0);
+        foreach ($pbt as $option) $sides |= $map[$option];
+        if ($sides == 15) { // Border on all 4 sides
+            imagerectangle($this->img, $this->plot_area[0], $this->plot_area[1],
+                           $this->plot_area[2], $this->plot_area[3], $this->ndx_grid_color);
+        } else {
+            if ($sides & 1) // Left
+                imageline($this->img, $this->plot_area[0], $this->plot_area[1],
+                                      $this->plot_area[0], $this->plot_area[3], $this->ndx_grid_color);
+            if ($sides & 2) // Top
+                imageline($this->img, $this->plot_area[0], $this->plot_area[1],
+                                      $this->plot_area[2], $this->plot_area[1], $this->ndx_grid_color);
+            if ($sides & 4) // Right
+                imageline($this->img, $this->plot_area[2], $this->plot_area[1],
+                                      $this->plot_area[2], $this->plot_area[3], $this->ndx_grid_color);
+            if ($sides & 8) // Bottom
+                imageline($this->img, $this->plot_area[0], $this->plot_area[3],
+                                      $this->plot_area[2], $this->plot_area[3], $this->ndx_grid_color);
         }
         return TRUE;
     }
