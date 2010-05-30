@@ -2307,9 +2307,17 @@ See <xref linkend="conc-colors" /> for more on color values.
     <title>Notes</title>
     <para>
 The image border is only drawn if <xref linkend="SetImageBorderType" /> is
-called with a type of 'plain' or 'raised'; by default there is no border.
+called with a type other than 'none'. By default there is no border.
 If the border is enabled but no color is set, the default color is
 gray (194,194,194).
+    </para>
+    <para>
+Either the specified color, a darker shade of that color, or both are used
+to draw the image border. See <xref linkend="SetImageBorderType" /> for
+details.
+    </para>
+    <para>
+The border width can be set with <xref linkend="SetImageBorderWidth" />.
     </para>
   </refsect1>
 </refentry>
@@ -2345,9 +2353,14 @@ around the entire image. By default, no border is drawn.
         <term><replaceable>$sibt</replaceable></term>
         <listitem>
           <para>
-A string indicating the desired border type: 'raised', 'plain', or 'none'.
-A plain border is 1 pixel wide. A raised border is 2 pixels wide, with the
-bottom and left sides drawn in a darker color.
+A string indicating the desired border type: 'raised', 'plain', 'solid', or
+'none'.
+Use 'none' to revert to the default of no border.
+Use 'solid' for a border drawn with the specified color.
+Use 'plain' for a border drawn with a darker shade of the specified color.
+Use 'raised' for a border that appears to raise the image, by drawing the
+top and left sides with the specified color and the bottom and right sides
+with a darker shade of the specified color.
           </para>
         </listitem>
       </varlistentry>
@@ -2357,20 +2370,94 @@ bottom and left sides drawn in a darker color.
   <refsect1>
     <title>Notes</title>
     <para>
-The color of the image border is set with <xref linkend="SetImageBorderColor" />.
-By default, no image border is drawn.
+The base color for the image border is set with
+<xref linkend="SetImageBorderColor" />.
+Either that color, a darker shade of that color, or both are used to draw
+the border, as described above.
+    </para>
+    <para>
+The image border width can be set with <xref linkend="SetImageBorderWidth" />.
+The default width is 1 pixel for types 'plain' and 'solid', and 2 pixels
+for 'raised'.
     </para>
     <para>
 It can be useful to have a border drawn around images when embedded in an
 HTML page. An alternative to this function is to use the BORDER attribute
-in the IMG tag when embedding the image. With that attribute, you can also
-control the border width.
+in the IMG tag when embedding the image.
     </para>
   </refsect1>
   <refsect1>
     <title>History</title>
     <para>
+Through PHPlot-5.1.1, the choices were 'none', 'plain' for a 1 pixel wide
+border using the darker shade, or 'raised' for a 2 pixel wide border
+using the specified color for the top and left sides and a darker shade
+for the bottom and right. There was no way to control the border width.
+Starting after PHPlot-5.1.1, a new choice 'solid' was added to use the
+exact color specified with <xref linkend="SetImageBorderColor" /> rather
+than using the darker shade like 'plain' uses (which may have been a bug).
+A new function <xref linkend="SetImageBorderWidth" /> was added to control
+the border width.
+    </para>
+    <para>
 Use of 'none' to turn the border off was added in PHPlot-5.1.0.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetImageBorderWidth">
+  <refmeta>
+    <refentrytitle>SetImageBorderWidth</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetImageBorderWidth</refname>
+    <refpurpose>Set the width for the image border</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetImageBorderWidth(<parameter>$width</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetImageBorderWidth</function> sets the width of an image border,
+if enabled by <xref linkend="SetImageBorderType" />.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$width</replaceable></term>
+        <listitem>
+          <para>
+The desired border width, in pixels.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+Use <xref linkend="SetImageBorderType" /> to enable the border.
+Use <xref linkend="SetImageBorderColor" /> to set the border color.
+    </para>
+    <para>
+By default, the image border width is 1 pixel for a 'solid' or 'plain'
+border type, and 2 pixels for a 'raised' border type.
+    </para>
+  </refsect1>
+  <refsect1>
+    <title>History</title>
+    <para>
+This function was added after PHPlot-5.1.1.
     </para>
   </refsect1>
 </refentry>
@@ -3812,7 +3899,8 @@ drawn around the plot. By default, left and right side borders are drawn.
         <term><replaceable>$bt</replaceable></term>
         <listitem>
           <para>
-A string indicating where to draw the plot borders:
+A string or array indicating where to draw the plot borders. If a string,
+it must be one of the following values:
             <informaltable>
               <tgroup cols="2">
                 <?dbhtml table-summary="Border position values"?>
@@ -3824,24 +3912,41 @@ A string indicating where to draw the plot borders:
                 </thead>
                 <tbody>
                   <row>
-                    <entry>left</entry>
-                    <entry>Border on left side of plot only</entry>
-                  </row>
-                  <row>
-                    <entry>sides</entry>
-                    <entry>Border on left and right sides of plot</entry>
+                    <entry>bottom</entry>
+                    <entry>Border on bottom plot</entry>
                   </row>
                   <row>
                     <entry>full</entry>
                     <entry>Border on all four sides of the plot</entry>
                   </row>
                   <row>
+                    <entry>left</entry>
+                    <entry>Border on left side of plot</entry>
+                  </row>
+                  <row>
                     <entry>none</entry>
                     <entry>No plot area border</entry>
+                  </row>
+                  <row>
+                    <entry>right</entry>
+                    <entry>Border on right side of plot</entry>
+                  </row>
+                  <row>
+                    <entry>sides</entry>
+                    <entry>Border on left and right sides of plot</entry>
+                  </row>
+                  <row>
+                    <entry>top</entry>
+                    <entry>Border on top of plot</entry>
                   </row>
                 </tbody>
               </tgroup>
             </informaltable>
+An array of strings can be used. Each element in the array must be one of
+the above values. For example, use either
+<literal>array('left', 'right', 'bottom')</literal>
+or <literal>array('sides', 'bottom')</literal>
+to get a plot border on the sides and bottom but not the top.
           </para>
         </listitem>
       </varlistentry>
@@ -3856,10 +3961,27 @@ also applies to the axes and other elements).
 The default color is black.
     </para>
     <para>
-Usually, the X axis is at the bottom of the plot where there bottom edge of
-the border would go. The Y axis is (apparently) always on the left where
-the left border would go. So typically this function only controls the top
-and right border.
+The X and Y axis lines and the plot border are all drawn in the same color.
+Usually, the X axis line is drawn at the bottom of the plot area.
+Unless it is moved with <xref linkend="SetXAxisPosition" /> or because the
+plot contains negative Y data values, enabling or disabling the bottom
+plot border will have no visible effect because the axis line is drawn there.
+    </para>
+    <para>
+Usually, the Y axis line is drawn on the left side of the plot area.
+Unless it is moved with <xref linkend="SetYAxisPosition" />,
+enabling or disabling the left side plot border will
+have no visible effect because the axis line is drawn there.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>History</title>
+    <para>
+Through PHPlot-5.1.1, the available choices were 'left', 'sides', 'full', or
+'none', and only a single string option was supported.
+Starting after PHPlot-5.1.1, the additional choices 'right', 'top', and
+'bottom' were added, as well as the ability to pass an array of choices.
     </para>
   </refsect1>
 </refentry>
