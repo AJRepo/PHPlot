@@ -4,6 +4,17 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2010-05-30
+   * developer.xml: Update plot layout figure and explain the margins, taking
+     into account the changes to allow for a wider image border.
+     Document new internal functions: CheckOptionArray, GetImageBorderWidth.
+   * examples.xml: Fix typo
+   * functions.xml: Link to new function: SetImageBorderWidth.
+   * reference.xml: Document changes to SetImageBorderType, SetPlotBorderType
+     for new controls on image and plot borders, and new function
+     SetImageBorderWidth. Fix explanation of image border colors.
+   * variables.list: List new variables image_border_width, title_offset.
+
 2010-04-18
    * webform.xml, images/webform.png: New example of a web form with plot.
    * examples.xml, main.xml, Makefile: Changes for new web form example.

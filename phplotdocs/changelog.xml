@@ -15,6 +15,15 @@ see the ChangeLog file inside the PHPlot distribution.)
 <variablelist>
 
   <varlistentry>
+    <term>2010-05-30</term>
+    <listitem>
+      <para>
+Documented changes to image border and plot border functions.
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
     <term>2010-04-18</term>
     <listitem>
       <para>
