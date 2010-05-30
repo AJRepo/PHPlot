@@ -569,7 +569,7 @@ Note this feature was added in PHPlot-5.1.1.
 <sect1 id="ex-stackedarea1">
 <title>Example - Stacked Area Plot</title>
 <para>
-The stacked area plot is similar in appearace to the area plot, and this
+The stacked area plot is similar in appearance to the area plot, and this
 example is the same as in <xref linkend="ex-area1" /> except for the
 plot type and data values. In the stacked area plot, PHPlot accumulates the
 Y values at each X position, similar to the stacked bar plot, and fills the
