@@ -49,11 +49,24 @@ these should be present; if both are on for some reason they will overlay.
   </listitem>
   <listitem>
     <para>
-There is a minimum value for top, left, right, and bottom margins. The
-minimum is currently fixed at 3 times the safe_margin. Even if there are no
-titles at all on a side, the margin on that side will be no less than
-the minimum margin. This keeps the axis or plot area edge from coming too
-close to the image edge.
+The base_margin (pink box with plus sign) is the space between the image edge
+and the outermost graphics or text. If there is no image border, or the
+image border is no wider than 2 pixels (which is always the case through
+PHPlot-5.1.1), then the base_margin is set to the same as the safe_margin
+value (5 pixels). A wider image border increases the base_margin; for example
+an 8 pixel image border results in a base_margin of 11 pixels.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+The top, left, right, and bottom margins consist of base_margin plus
+whatever space is needed for titles and ticks.  There is a minimum value
+for these margins - 2 times safe_margin plus base_margin.  Even if there
+are no titles at all on a side, the margin on that side will be no less
+than this minimum margin. This keeps the axis or plot area edge from coming
+too close to the image edge.
+The calculated plot area margins shown can be overridden by using
+<xref linkend="SetPlotAreaPixels"/> or <xref linkend="SetMarginsPixels"/>.
     </para>
   </listitem>
   <listitem>
@@ -343,6 +356,31 @@ $which_opt and disallow partial matches.
     </para>
   </listitem>
 </varlistentry>
+
+<varlistentry>
+  <term id="CheckOptionArray" xreflabel="CheckOptionArray">CheckOptionArray($opt, $acc, $func)</term>
+  <listitem>
+    <para>
+Checks the validity of an option argument passed to a PHPlot member function
+that can accept its argument as either a string or an array of strings.
+$opt is the string or array to check, and $acc is a string of acceptable
+choices (with a comma and then a space between each choice).
+If the $opt argument is supplied as a string, it is first converted to an
+array with one element. Then the elements of the array are each checked
+for validity. If any element of the array of strings to check is not
+found in the string of acceptable choices, a fatal error will be reported
+using <xref linkend="DrawError"/>.  The error message will include $func
+which should be the name of the calling function (using the PHP
+__FUNCTION__ magic constant).  Note that this is used to catch programming
+errors, not run-time or user errors.  If all of the array elements to check
+are acceptable, the array is returned with each element down-cased and
+trimmed of leading and trailing spaces.  Note that an array is always
+returned, even if the opt argument is a string.
+This was added after PHPlot-5.1.1.
+    </para>
+  </listitem>
+</varlistentry>
+
 
 <varlistentry>
   <term id="CheckPointParams" xreflabel="CheckPointParams">CheckPointParams()</term>
@@ -839,6 +877,19 @@ to recover. Possible errors include an image file type which is unsupported
 by PHP GD, or a corrupt image file.
 Note: This was added at PHPlot-5.0.4, by moving common code from the
 two calling functions.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="GetImageBorderWidth" xreflabel="GetImageBorderWidth">GetImageBorderWidth()</term>
+  <listitem>
+    <para>
+This returns the image border width, as set with
+<xref linkend="SetImageBorderWidth" /> or as defaulted.
+It is used by <xref linkend="CalcMargins" /> to account for image border width,
+and by <xref linkend="DrawImageBorder" /> when drawing the image border.
+This was added after PHPlot-5.1.1.
     </para>
   </listitem>
 </varlistentry>
