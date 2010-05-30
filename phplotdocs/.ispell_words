@@ -1,3 +1,4 @@
+BoldItalic
 CalcAxisPositions
 CalcBarWidths
 CalcMargins
@@ -11,7 +12,10 @@ Callback
 Callbacks
 CheckLabels
 CheckOption
+CheckOptionArray
 CheckPointParams
+DarkGreen
+DimGrey
 DoCallback
 DrawArea
 DrawBackground
@@ -53,10 +57,12 @@ GD
 GetCallback
 GetDeviceXY
 GetImage
+GetImageBorderWidth
 GetLineSpacing
 ImageMagick
 ImageSetStyle
 JPG
+LiberationSans
 MAXY
 MINY
 MySQL
@@ -64,6 +70,7 @@ PHP
 PHPlot
 PNG
 PadArrays
+PeachPuff
 PostgreSQL
 PrintError
 PrintImage
@@ -107,6 +114,7 @@ SetFontTTF
 SetGridColor
 SetImageBorderColor
 SetImageBorderType
+SetImageBorderWidth
 SetIndexColor
 SetIndexDarkColor
 SetInputFile
@@ -181,16 +189,22 @@ SetYTickPos
 SetYTimeFormat
 SetYTitle
 SizeText
+SkyBlue
+SlateBlue
 SourceForge
 TTF
 TTFBBoxSize
 TrueType
 Unicode
+Verdana
+YellowGreen
+aquamarine
 arial
 borderless
 callback
 callbacks
 centeredtile
+cyan
 halfline
 halign
 inline
@@ -204,6 +218,7 @@ plotright
 plotup
 scatterplot
 setlocale
+stackedarea
 stackedbar
 stackedbars
 thinbarline
