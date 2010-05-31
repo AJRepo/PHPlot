@@ -2,6 +2,21 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2010-05-31
+   * Improvements to truecolor support (from feature request 2947679):
+     Truecolor support is now better integrated. The derived class only
+     has the constructor now, and the base class itself provides the alpha
+     color component support through the internal functions SetIndexColor(),
+     SetIndexDarkColor(), and SetRGBColor(). This means alpha channel
+     works with palette images too (in so far as GD supports this).
+
+   * Truecolor.txt: Updated per changes to truecolor support.
+
+   * Image tiling with mode 'scale' in tile_img(), used with image and
+     plot area backgrounds, now uses imagecopyresampled() rather than
+     imagecopyresized(). They are the same with palette images, but the
+     resampled copy gets better results with truecolor images.
+
 2010-05-29
     * Feature request 3002606 "Add to plot and image border options":
         Added options 'right', 'top', and 'bottom' to SetPlotBorderType()
