@@ -1,5 +1,5 @@
 phplot/Truecolor - Documentation for the experimental truecolor support
-Last updated for PHPlot-5.1.1 on 2010-04-04
+Last updated for PHPlot-5.1.1 (+CVS updates) on 2010-05-31
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 Overview:
@@ -27,6 +27,7 @@ Contents:
   Plot Types - PHPlot plot types and truecolor with alpha blending
   Background Image - Caution about using a background image
   Implementation - How truecolor is implemented in PHPlot
+  Palette Images - Truecolor features that also work with palette images
   History of this document
 
 -----------------------------------------------------------------------------
@@ -82,8 +83,11 @@ number 00 to ff.
     A PHP array of 3 integers representing red, green, and blue in order
 with each value between 0 and 255.
 
-When using truecolor images, the way you can specify colors in PHPlot is
-extended to allow you to specify an alpha channel (transparency value).
+How you can specify colors in PHPlot is now extended to allow you to
+provide an alpha channel value, which indicates the transparency of the
+color.  Note that this works with both the base class (PHPlot) and the
+extended class (PHPlot_truecolor).
+
 These forms are recognized in addition to those listed above.
     A color name from the color map followed by a colon and alpha value as
 a decimal number, such as 'red:60'. Alpha is between 0 and 127.
@@ -140,7 +144,7 @@ X or Y grid lines you must use SetDrawDashedGrid(False) to make these solid.
 + imagealphablending() and imagelayereffect()
 These functions control the combining of partially transparent colors. They
 can be used via a 'draw_setup' callback, in the same way as imageantialias
-in the example above.
+in the example above. Note that alpha blending is on by default.
 
 + imagegammacorrect()
 You can have the GD library perform gamma adjustment on a truecolor image.
@@ -162,42 +166,54 @@ PHPlot can produce JPEG, PNG, and GIF image files (and possibly others).
 You select the PHPlot output image file format with SetFileFormat().
 
 PHPlot works with GD images before producing an image file. There are two
-types of GD images: truecolor and palette. Truecolor images are created
-with the PHPlot_truecolor class, and palette images are created with the
-PHPlot class.
+types of GD images: truecolor and palette. Truecolor images represent
+pixels as 32 bit values, combining 8 bits each of red, green, and blue
+components with a 7 bit alpha (transparency) value. Palette images use a
+color table with at most 256 entries, and represent pixels as 8 bit indexes
+into the color table. The palette image color table entries have 32 bit
+values, with the same components as truecolor image pixel values. So
+palette images in GD can have at most 256 unique colors, but there is no
+limitation on the number of unique colors in truecolor images.
+
+As long as you don't specify a background image when creating your plot
+object, truecolor images are created with the PHPlot_truecolor class, and
+palette images are created with the PHPlot class. If you specify a
+background image, the GD image created by PHPlot matches the type -
+truecolor or palette - of your background image file. More on background
+image files can be found below.
 
 What happens when you output the GD image to an image file depends on the
 image file format you select.
 
-JPEG image files are always truecolor. Whether you use a PHPlot object or a
-PHPlot_truecolor object, you will get a truecolor image file.  However, the
-truecolor features such as specification of alpha channel information are
-only available if you use a PHPlot_truecolor object.  Note: You are
+JPEG image files are always truecolor. Whether you have a GD palette image
+or truecolor image, you will get a truecolor image file.  Note: You are
 discouraged from using JPEG images with PHPlot, because they are not
-optimal for this type of graphical information.
+optimal for this type of graphical information due to use of lossy
+compression.
 
-GIF image files are always palette type, limited to 256 colors. When
-using a PHPlot object, you will get a palette GIF image file with the
-colors you used in your plot. When using a PHPlot_truecolor object, GD will
+GIF image files are always palette type, limited to 256 colors. If
+you have a GD palette image, you will get a palette GIF image file with the
+colors you used in your plot. If you have a a GD truecolor image, GD will
 convert your image to palette format, reducing the number of colors to 256
-if necessary. This may change the appearance of your plot. Note that the
-PHP manual incorrectly states that imagecreatetruecolor() does not work
-with GIF formats
+if necessary. This may change the appearance of your plot. Note that some
+versions of the PHP manual for imagecreatetruecolor() incorrectly state
+that you cannot output a GIF file from a truecolor GD image.
 
 PNG image files support truecolor images and palette images of various
-color depths. When using a PHPlot object, you will get a palette PNG image
-file. When using a PHPlot_truecolor object, you will get a truecolor PNG
+color depths.  If you have a GD palette image, you will get a palette PNG
+image file. If you have a GD truecolor image, you will get a truecolor PNG
 image file. Note that by default, even though PNG truecolor image files
 support an alpha channel, GD eliminates the alpha channel when producing a
 PNG file. The visual effects of alpha blending are reproduced using opaque
 colors. GD apparently does this due to poor support in viewers for alpha
 channels. Refer to the PHP Manual page on imagesavealpha() for details.
 
-Regardless of your selected image file format, the truecolor features such
-as specification of alpha channel information are only available if you use
-a PHPlot_truecolor object.  That is, if you create a PHPlot object (palette
-image), and then specify colors as (r, g, b, a), the alpha information will
-be ignored - even if you create a JPEG truecolor image file.
+In the initial release of truecolor support in PHPlot-5.1.1, alpha channel
+information was ignored when using a PHPlot object, and only used with a
+PHPlot_truecolor object. This was changed after PHPlot-5.1.1, and alpha
+channel information is used for both PHPlot and PHPlot_truecolor classes.
+However, alpha channel information is not always useful with palette
+images. More on this can be found below.
 
 -----------------------------------------------------------------------------
 Plot Types:
@@ -205,7 +221,7 @@ Plot Types:
 All PHPlot plot types work with truecolor images, but not all plot types
 work well with alpha blending of data colors. (Alpha blending refers to
 specifying colors which are partially transparent, and having GD merge
-overlayed colors.)
+overlaid colors.)
 
 Pie charts - Avoid using alpha blending with pie charts. The underlying GD
 routines do not fill the pie areas in a way that allows proper blending of
@@ -230,67 +246,44 @@ constructor.)
 
 If you provide an input file to the constructor, the image associated with
 your PHPlot or PHPlot_truecolor object takes on the type of the input file:
-palette or truecolor. But advanced features of truecolor images are only
-available if you use the PHPlot_truecolor class, and if your image is
-actually a truecolor image. This can result in some confusion.
-
-Note that JPEG files are always truecolor, and GIF files are always
-palette type. PNG files can be either truecolor or palette.
-
-Advanced truecolor features, such as alpha blending, will be available when
-you use an input file only if that input file is a truecolor image file (a
-JPEG, or a truecolor PNG), and you use the PHPlot_truecolor constructor.
-
-If you use a JPEG or a truecolor PNG image file as background, but create a
-PHPlot object (rather than a PHPlot_truecolor object), your image will be
-truecolor but you will be unable to specify alpha values for colors or use
-alpha blending.
-
-If you use a GIF or palette PNG image file as background, you will get a
-palette image file regardless of whether you use a PHPlot or a
-PHPlot_truecolor objects, and you will be unable to use alpha values and
-alpha blending.
+palette or truecolor. It does not matter which constructor you use when
+specifying an input file. (This was changed after the initial release of
+truecolor support in PHPlot-5.1.1.)
 
 -----------------------------------------------------------------------------
 Implementation:
 
-The PHPlot_truecolor class extends the PHPlot class and replaces the
-following functions:
+The PHPlot_truecolor class extends the PHPlot class and replaces only the
+constructor.  The PHPlot_truecolor constructor is a copy of the PHPlot
+constructor (which it does not call), with the only change being use of
+imagecreatetruecolor() instead of imagecreate().
 
-+ Constructor:
-The PHPlot_truecolor constructor is a copy of the PHPlot constructor (which
-it does not call), with the only change being use of imagecreatetruecolor()
-instead of imagecreate().
+All other changes to support truecolor images have been integrated into the
+base class. That means you can specify alpha values for colors even with
+palette images. However, this is not recommended. More details can be found
+above.
 
 + SetIndexColor():
-This internal function, which takes a general color specification and returns
-a GD color index, is changed to use imagecolorresolvealpha(). It makes use of
-the change to the PHPlot SetRGBColor() function (see below) which returns a
-4th color component.
+This internal function takes a general color specification and returns
+a GD color index. It now uses imagecolorresolvealpha() instead of
+imagecolorresolve(), and passes the alpha value from SetRGBColor() (see
+below).
 
 + SetIndexDarkColor():
-This internal function, which takes a general color specification and returns
+This internal function takes a general color specification and returns
 a GD color index for a darker shade, is also changed to use
 imagecolorresolvealpha(), similar to SetIndexColor.
 
 + SetRGBColor():
-This internal function is changed from the base class function to accept an
-optional alpha value to use as a default for colors that do not have an
-alpha value, and also to return all four values from parse_color(). See
-below for more on parse_color().
-
-
-To implement truecolor, changes were made to the following base PHPlot class
-functions:
-
-+ SetRGBColor():
-Color parsing is now performed by the internal function parse_color() - see
-below. The base class's SetRGBColor() internal function now just returns an
-array containing the first 3 elements (r, g, b) of the array returned by
-parse_color.
+This internal function parses a color specification and converts it to a
+canonical array component form. The color parsing was extended to support
+alpha specifications in colors.  The function also now accepts an optional
+alpha value to use as a default for colors that do not have an alpha value.
+It now returns a 4 component array consisting of red, green, blue, and
+alpha, rather than a 3 component array.
 
 + SetDataColors():
-This public function accepts a new parameter $default_alpha which it
+This public function now accepts a new parameter $default_alpha which it
 applies to all data colors that don't already have an alpha specification.
 It also saves the alpha value into a class variable $data_colors_alpha and
 re-uses it as the default. This is necessary because PHPlot calls this
@@ -298,19 +291,41 @@ function again, with no arguments, to recalculate the color indexes.
 Without saving and reusing the default alpha, all data colors would lose their
 alpha value.
 
-+ parse_color():
-This new internal function parses a color specification. This was
-previously implemented in SetRGBColor(), which is now a wrapper for
-parse_color(). The function has been rewritten (compared to the previous
-implementation of SetRGBColor) to allow for an alpha value in the various
-ways of specifying a color, and to support a new argument for a default
-alpha value.  parse_color() returns a 4 element array (r, g, b, a).  This
-function is used exclusively by SetRGBColor(). In the base class
-SetRGBColor() function, the default alpha argument is not provided and the
-4th element of the returned array is ignored.
+-----------------------------------------------------------------------------
+Palette Images:
+
+You will have a GD palette image if you use the PHPlot constructor without
+a background image file, or if you use either the PHPlot or PHPlot_truecolor
+constructors with a background image file that is a palette image (GIF or
+some types of PNG). You can use alpha color specifications with palette GD
+images, but this is not recommended. The results are not well documented,
+but here are the current observations:
+
++ There is no alpha blending. Drawing operations simply replace existing
+pixels values with the new pixel values. (These are actually index values
+into the color table.)
+
++ Alpha values are ignored when the image is output to a JPEG or GIF file.
+All colors are output as opaque.
+
++ Alpha values are preserved in PNG image files. These will be palette, not
+truecolor, PNG images, with the color table containing the alpha values.
+You can therefore have palette PNG files with partial transparency, however
+not all viewers properly support this.
+
+None of the advanced operations such as antialiasing or gamma adjust works
+with palette images.
 
 -----------------------------------------------------------------------------
 
 History:
+
 2010-04-03 First version, for PHPlot-5.1.1
+
+2010-05-31 Update for CVS changes pending for next release after PHPlot-5.1.1.
+  The truecolor functions have now been better integrated with the base class,
+  leaving only the class constructor separate. The base class methods now also
+  support specification of an alpha value, and they work to the extent that GD
+  supports palette images with alpha values.
+
 -----------------------------------------------------------------------------
