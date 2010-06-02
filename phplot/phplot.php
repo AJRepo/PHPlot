@@ -3682,13 +3682,15 @@ class PHPlot {
     }
 
 
-    /*!
-     * Adds the title to the graph.
+    /*
+     * Draws the main title on the graph.
+     * The title must not be drawn more than once (in the case of multiple plots
+     * on the image), because TTF text antialiasing makes it look bad.
      */
     protected function DrawTitle()
     {
-        // Center of the plot area
-        //$xpos = ($this->plot_area[0] + $this->plot_area_width )/ 2;
+        if (isset($this->title_done) || $this->title_txt === '')
+            return TRUE;
 
         // Center of the image:
         $xpos = $this->image_width / 2;
@@ -3699,8 +3701,8 @@ class PHPlot {
         $this->DrawText($this->fonts['title'], 0, $xpos, $ypos,
                         $this->ndx_title_color, $this->title_txt, 'center', 'top');
 
+        $this->title_done = TRUE;
         return TRUE;
-
     }
 
 
