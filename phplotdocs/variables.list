@@ -123,6 +123,7 @@ text_color	'black'	SetTextColor	Name of color for labels and legend text
 thousands_sep		SetNumberFormat	Character to use to group 1000s in formatted numbers
 tick_color	'black'	SetTickColor	Name of color for tick marks
 title_color	'black'	SetTitleColor	Name of color for main, X, and Y titles
+title_done		DrawTitle	Flag to prevent drawing main title more than once
 title_offset		CalcMargins	Y offset of main title position (Added after PHPlot-5.1.1)
 title_txt	''	SetTitle	Main title text
 total_records		SetDataValues	Counts data points, used to check if any data was given?
