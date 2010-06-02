@@ -2,6 +2,13 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2010-06-02
+   * Fix bug 3010116 "Bad rendering of title in multi-plot image
+     when using TTF":
+     Make sure the main title is drawn only once. (If drawn multiple
+     times with TrueType font text, the anti-aliasing effects result
+     in poor quality text.)
+
 2010-05-31
    * Improvements to truecolor support (from feature request 2947679):
      Truecolor support is now better integrated. The derived class only
