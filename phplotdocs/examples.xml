@@ -6,8 +6,6 @@
      information on example production.
          Try to add new examples to the end, so the numbers of the existing
      examples do not change.
-         References to examples should be made to the example tag's ID,
-     (example-*), not to the containing sect1 tag's id (ex-*).
 -->
 <chapter id="examples">
 <title>PHPlot Examples</title>
@@ -625,5 +623,83 @@ where this example is described in detail.
 <!-- =============================================== -->
 <!-- This webform.xml is long enough to get its own file. -->
 &webform;
+
 <!-- =============================================== -->
+<sect1 id="ex-truecolor-histogram">
+<title>Example - Using Truecolor To Make a Histogram</title>
+<para>
+This example creates a <link linkend="def-truecolor">Truecolor</link>
+plot containing a histogram of a photograph, then overlays the histogram on
+a scaled-down copy of the photograph. The histogram is partly transparent so
+you can still see the photograph below.
+Refer to <xref linkend="conc-truecolor"/> for more information on using
+truecolor PHPlot images.
+</para>
+<para>
+Here are some notes on the code example:
+  <itemizedlist>
+    <listitem>
+      <para>
+The main functions are <function>get_histogram</function> and
+<function>plot_histogram</function>. Parameters controlling the histogram
+and its placement on the image are in an array passed to
+<function>plot_histogram</function>. For the purpose of this demo, the
+array <literal>$param</literal> is used, and there is no provision to
+change the parameters or the photograph filename.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+This isn't a 'true' histogram, because the Y values are automatically scaled
+by PHPlot so they fill the available height. This could be called a
+'relative histogram', with the heights indicating the relative count of
+pixels in the image with that value.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+The histogram is created by converting each pixel's R, G, B color values to
+a grayscale value between 0 and 255, and counting the number of times each
+value appears in the image.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+The photograph image is scaled by PHPlot to fit into the background of the
+plot image using <xref linkend="SetBgImage"/>. The histogram is then
+drawn into an area restricted using <xref linkend="SetPlotAreaPixels"/>,
+leaving most of the background image unobscured. All labels and tick marks
+are turned off. The plot data colors are set to be partly transparent using
+the default alpha argument to <xref linkend="SetDataColors"/>.
+      </para>
+    </listitem>
+  </itemizedlist>
+</para>
+<para>
+  <note>
+This is a demonstration only. Processing individual pixels in
+nested loops this way using PHP code is not recommended, because it is very
+slow. A small image file (800x600) might be processed in a few seconds, but
+a larger file such as a 12 megapixel photograph could take 30 seconds, for
+example.
+  </note>
+</para>
+<example id="example-truecolor-histogram">
+<title>Truecolor Plot of Histogram</title>
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="examples/histogram.png" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>Truecolor Plot of Histogram Example</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+&histogram;
+</example>
+</sect1>
+
+<!-- =============================================== -->
+
 </chapter>
