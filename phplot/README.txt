@@ -22,7 +22,6 @@ CONTENTS:
    ChangeLog  . . . . . . . . . . . Lists changes to the sources
    NEWS.txt . . . . . . . . . . . . Highlights changes in releases
    README.txt   . . . . . . . . . . This file
-   Truecolor.txt. . . . . . . . . . Interim documentation for Truecolor
    contrib  . . . . . . . . . . . . "Contributed" directory, add-ons
    phplot.php   . . . . . . . . . . The main PHPlot source file
    phplot_data.php  . . . . . . . . Auxiliary and extended functions
