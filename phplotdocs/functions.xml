@@ -28,6 +28,7 @@ plot you want, provide the data to be plotted, and output the plot.
 <para>
 <itemizedlist>
   <listitem><para><xref linkend="PHPlot" /></para></listitem>
+  <listitem><para><xref linkend="PHPlot-truecolor" /></para></listitem>
   <listitem><para><xref linkend="DrawGraph" /></para></listitem>
   <listitem><para><xref linkend="PrintImage" /></para></listitem>
   <listitem><para><xref linkend="SetDataType" /></para></listitem>
@@ -62,7 +63,7 @@ direct the output, and control browser caching.
 The functions in this section are used to control the colors and
 line styles of PHPlot elements.
 More information about using colors in PHPlot can be found in
-<xref linkend="conc-colors" />.
+<xref linkend="conc-colors" /> and <xref linkend="conc-truecolor" />.
 </para>
 
 <para>
