@@ -15,6 +15,17 @@ see the ChangeLog file inside the PHPlot distribution.)
 <variablelist>
 
   <varlistentry>
+    <term>2010-06-13</term>
+    <listitem>
+      <para>
+New section added to PHPlot Concepts chapter on using truecolor images. The
+reference and developer information were also updated, and a new example
+was added.
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
     <term>2010-05-30</term>
     <listitem>
       <para>
