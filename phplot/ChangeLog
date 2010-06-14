@@ -2,6 +2,11 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2010-06-13
+   * Truecolor.txt: removed
+   * Makefile, README.txt: Removed reference to Truecolor.txt. Full
+     documentation for truecolor images is now in the Reference Manual.
+     
 2010-06-02
    * Fix bug 3010116 "Bad rendering of title in multi-plot image
      when using TTF":
