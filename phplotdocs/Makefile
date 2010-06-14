@@ -1,23 +1,22 @@
 # $Id$
 # Makefile for PHPlot Programmer's Reference Manual (Docbook-xml version)
-# lbayuk@pobox.com (based on other projects)
-# This uses xsltproc for HTML.
+# This uses xsltproc to generate HTML output.
+# The examples production assumes all examples/*.php are source files, and
+# each produces a PNG image to stdout when run.
 
-# === Makefile Configuration ===
+# Local: PHP CLI to run examples:
+PHP=/opt/php/bin/php
+
+# Local: XSL Transformation Processor program:
+XSLTPROC=xsltproc
+
+# =====
 
 # Name of this package, for the release target:
 PACKAGE=phplotdocs
 
-# PHP CLI to run examples:
-PHP=/opt/php/bin/php
-
 # XSL Style Sheet for HTML:
 XSL_HTML=style.xsl
-
-# XSL Transformation Processor program:
-XSLTPROC=xsltproc
-
-# === End of Makefile Configuration ===
 
 # Primary source file, which includes all the others:
 MAIN=main.xml
@@ -28,19 +27,29 @@ SRC=$(MAIN) $(XSL_HTML) \
   examples.xml webform.xml callbacks.xml \
   reference.xml developer.xml changelog.xml
 
+# Static image files used by the manual:
+STATIC_IMAGES=\
+  images/alpha-blending.png \
+  images/colors.png \
+  images/error-image.png \
+  images/fonts.png \
+  images/gdinfo.png \
+  images/labels-pie.png \
+  images/labels.png \
+  images/layout.png \
+  images/legend-layout.png \
+  images/legendstyle.png \
+  images/ticksize.png \
+  images/typical-grid.png \
+  images/typical-legend.png \
+  images/typical-titles.png \
+  images/webform.png \
+
 # Files to add to release, in addition to *.html files:
 ALSO=phplotdoc.css
 
-# Files to add to the source release:
-SRCALSO=Makefile README ChangeLog gen.vardoc variables.list
-
-# All files to (1) include in source release, and (2) tag in RCS:
-RELFILES=$(SRC) $(ALSO) $(SRCALSO)
-
 # Release base name:
 RELEASE=$(PACKAGE)
-# Source release base name:
-SRCRELEASE=$(PACKAGE)-src
 
 # All PHP example source files:
 EXAMPLES_PHP=$(wildcard examples/*.php)
@@ -48,7 +57,7 @@ EXAMPLES_PHP=$(wildcard examples/*.php)
 # Example XML files, generated from PHP scripts:
 EXAMPLES_XML=$(EXAMPLES_PHP:.php=.xml)
 
-# Example image files, also generated from PHP scripts:
+# Example image files, also generated from PHP scripts (must be PNG):
 EXAMPLES_IMAGES=$(EXAMPLES_PHP:.php=.png)
 
 # Entity list file for examples:
@@ -101,29 +110,17 @@ release: html
 	rm -rf $(RELEASE)
 	@echo Created release $(RELEASE) as $(RELEASE).zip
 
-# Make a source release:
-# This assumes certain extensions in images/ (only *.png) and examples/
-dist: $(RELFILES)
-	mkdir $(RELEASE) $(RELEASE)/images $(RELEASE)/examples
-	cp $(RELFILES) $(RELEASE)
-	cp images/*.png $(RELEASE)/images
-	cp examples/*.php $(RELEASE)/examples
-	zip -r $(SRCRELEASE).zip $(RELEASE)
-	rm -rf $(RELEASE)
-	@echo Created source distribution $(SRCRELEASE) as $(SRCRELEASE).zip
-
 # Install the manual somewhere. This is used by 'make release', and also
 # for building the manual to read or upload to the web site.
 # This requires DESTDIR be defined, e.g. make DESTDIR=/path/to install
 # Note: If the manual isn't already built, this will do 'make html'
 # (not sfhtml), so it is better to build the manual first.
-# Note: This assumes certain extensions in images/ (only *.png) and examples/
 install: html
 	@if [ x$(DESTDIR) = x ]; then echo "Error: Must set DESTDIR for make install"; exit 1; fi
 	mkdir -p $(DESTDIR) $(DESTDIR)/images $(DESTDIR)/examples
 	cp *.html $(ALSO) $(DESTDIR)
-	cp images/*.png $(DESTDIR)/images
-	cp examples/*.png $(DESTDIR)/examples
+	cp $(STATIC_IMAGES) $(DESTDIR)/images
+	cp $(EXAMPLES_IMAGES) $(DESTDIR)/examples
 
 # === For building the examples ===
 
@@ -131,7 +128,8 @@ install: html
 # The XML and IMAGES files are listed as a dependency so the whole thing
 # will be rebuilt if an example source changes.
 $(EXAMPLE_LIST): $(EXAMPLES_PHP) $(EXAMPLES_XML) $(EXAMPLES_IMAGES)
-	{ echo "<!-- Automatically generated: entity list file -->"; \
+	@echo "  $@"
+	@{ echo "<!-- Automatically generated: entity list file -->"; \
       for f in $(notdir $(EXAMPLES_PHP:.php=)); do \
         echo "<!ENTITY $$f SYSTEM \"$$f.xml\">"; done; } > $@
 
@@ -139,7 +137,8 @@ $(EXAMPLE_LIST): $(EXAMPLES_PHP) $(EXAMPLES_XML) $(EXAMPLES_IMAGES)
 
 # This rule turns a PHP file into an XML file for inclusion as an example.
 %.xml: %.php
-	{ echo '<programlisting><![CDATA['; \
+	@echo "  $@"
+	@{ echo '<programlisting><![CDATA['; \
       expand --tabs=8 $<; \
       echo ']]></programlisting>'; } > $@
 
