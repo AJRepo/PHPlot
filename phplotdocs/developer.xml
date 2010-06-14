@@ -1124,30 +1124,37 @@ the plot object.
 </varlistentry>
 
 <varlistentry>
-  <term id="SetIndexColor" xreflabel="SetIndexColor">SetIndexColor($which_color)</term>
+  <term id="SetIndexColor" xreflabel="SetIndexColor">SetIndexColor($which_color, $alpha = 0)</term>
   <listitem>
     <para>
-Given a color specification (by name, hex RGB value, or r,g,b array - see
-<xref linkend="SetRGBColor"/>) returns a color index to be used in GD
-drawing functions. The color is the exact color requested if it already
-exists in the image, or if the image color palette has room for a new color.
-If not, the closest existing color will be used instead.
+Given a color specification (see <xref linkend="SetRGBColor"/>),
+and a default alpha value,
+returns a color index to be used in GD drawing functions.
+The color is the exact color requested if it already exists in the image,
+or if can be allocated.
+For palette images, if the color map is full, no new colors can be allocated,
+and this function will return an index to the closest existing color.
+For truecolor images, this function always returns an index for the exact
+requested color.
+The default alpha parameter was added in PHPlot-5.1.1.
     </para>
   </listitem>
 </varlistentry>
 
 <varlistentry>
-  <term id="SetIndexDarkColor" xreflabel="SetIndexDarkColor">SetIndexDarkColor($which_color)</term>
+  <term id="SetIndexDarkColor" xreflabel="SetIndexDarkColor">SetIndexDarkColor($which_color, $alpha = 0)</term>
   <listitem>
     <para>
-Given a color specification (by name, hex RGB value, or r,g,b array - see
-<xref linkend="SetRGBColor"/>) returns an index for a 'slightly darker' color
-The index can be used in GD drawing functions.
+Given a color specification (see <xref linkend="SetRGBColor"/>),
+and a default alpha value,
+returns an index for a slightly darker color to be used in GD drawing functions.
 The method used is to subtract 48 from each red, green, and blue component
 (without letting any go negative).
+The alpha component is not adjusted.
 This is used for shadow colors (for example, in bar charts and pie charts).
 The same method as in <xref linkend="SetIndexColor"/> is used to select a
 color index.
+The default alpha parameter was added in PHPlot-5.1.1.
     </para>
   </listitem>
 </varlistentry>
@@ -1191,16 +1198,23 @@ PHPlot-5.1.0.
 </varlistentry>
 
 <varlistentry>
-  <term id="SetRGBColor" xreflabel="SetRGBColor">SetRGBColor($color_asked)</term>
+  <term id="SetRGBColor" xreflabel="SetRGBColor">SetRGBColor($color_asked, $alpha = 0)</term>
   <listitem>
     <para>
-Converts a general color specification into a (red, green, blue) triplet
-where each color component value is an integer in the range 0-255.
-This accepts color names (which must be found in the color table set with
-<xref linkend="SetRGBArray"/>), a hexadecimal color specification in
-the form #RRGGBB, or an array of (red, green, blue) 0-255 integer values.
-This is used by mainly by <xref linkend="SetIndexColor"/>, and indirectly
-by all functions that accept a color specification.
+Converts a general color specification into a standard form as an array of
+4 components: red, green, blue, and alpha, and returns the array.  The 3
+color components are integers in the range 0-255, and the alpha component
+is an integer in the range 0-127 (where 0 means opaque).  The acceptable
+color specification forms are documented in <xref
+linkend="conc-colors-forms"/> and <xref linkend="conc-truecolor-forms"/>,
+and include color names, component arrays, and strings of the form #RRGGBB
+and #RRGGBBAA.  The alpha argument provides a default value if the color
+specification does not include alpha; the default 0 makes the color
+opaque.  This is used directly by <xref linkend="SetIndexColor"/> and
+<xref linkend="SetIndexDarkColor"/>, and indirectly by all functions that
+accept a color specification.
+Use of alpha in the color specification, the default alpha argument, and the
+4th component in the returned array were added in PHPlot-5.1.1.
     </para>
   </listitem>
 </varlistentry>
