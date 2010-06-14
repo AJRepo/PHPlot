@@ -1,5 +1,5 @@
 This is phplotdocs/README, for the PHPlot Reference Manual source
-Last updated on 2009-11-19
+Last updated on 2010-06-13
 -----------------------------------------------------------------------------
 
 This directory contains the Docbook-XML source files for the PHPlot Reference
@@ -26,8 +26,8 @@ Tools:
 I used the following tools and versions to produce the manual. Other
 versions may work too.
 
-   Docbook XSL Style Sheets docbook-xsl-1.75.1
-   xsltproc from libxsltproc-1.1.24 and libxml2-2.7.3
+   Docbook XSL Style Sheets docbook-xsl-1.75.2
+   xsltproc from libxsltproc-1.1.26 and libxml2-2.7.6
    Tcl shell (tclsh) is used to generate the table in the Variables chapter.
 
 The above are used to produce the XHTML manual. There was an attempt to
@@ -44,16 +44,22 @@ example:    PHP=/opt/php/bin/php
 The Makefile has the following targets:
 
   "make html" creates the HTML files (in the current directory).
-  "make release" makes a ZIP file containing the HTML files for the manual.
+  "make release" makes a ZIP file containing the HTML and associated files
+    for the manual.
     When unzipped, it will make a directory phplotdocs/ containing all
     the files, with index.html being the starting point.
-  "make dist" makes a source distribution of the manual. This isn't used,
-    because I don't create downloads for the manual source.
+  "make install" builds (if necessary) the HTML files, and then copies them
+    and the images and stylesheet to a directory named by the DESTDIR
+    variable.
   "make clean" deletes some intermediate files, but leaves the manual output.
   "make allclean" deletes every generated file.
   "make sfhtml" makes a special HTML version of the manual for the
     PHPlot web site on Sourceforge.net (which requires their logo on
     each page).
+
+Note: The Makefile assumes every *.php file in the examples directory is
+an example source which produces a PNG image file on standard output when
+run. Refer to the Makefile for more details.
 
 
 Example Figure Production:
@@ -74,9 +80,8 @@ need a working installation of PHPlot, with phplot.php found on the PHP
 include path, in order for this to work.
 
 The Makefile wildcards the examples/*.php scripts - it does not contain a
-list. Therefore if the example scripts are in RCS they have to be checked
-out manually before making the manual, or the Makefile will just ignore
-them.
+list.  Every PHP script in the examples file is assumed to be an example
+source which will produce a PNG image.
 
 Note: It is important to use the right version of PHPlot to make the
 examples. (Otherwise, people may try an example and it won't work.) To
