@@ -4,6 +4,25 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2010-06-13
+   Documentation for truecolor images (introduced at phplot-5.1.1):
+   * concepts.xml: New definitions, new section and subsections on Truecolor.
+   * developer.xml: Changes to internal functions for truecolor: SetIndexColor,
+     SetIndexDarkColor, SetRGBColor.
+   * examples.xml: New example using truecolor to make a photo histogram
+     overlay.
+   * functions.xml: Link to new constructor; link to new truecolor section.
+   * reference.xml: Document new constructor PHPlot_truecolor,
+     cross-reference to base constructor, and add note on background image
+     type. Document new alpha parameters to SetDataColors, and that
+     SetRGBArray takes 3 or 4 element color component arrays.
+   * variables.list: New internal variable data_colors_alpha
+   * Makefile: removed unused 'dist' target (if you want a source
+     distribution, just "make allclean" and pack up the whole directory);
+     explicitly list the required files in images/*; fix verbosity; change
+     to use the list of examples vs wildcarding *.png for releasing.
+   * README: updated tool versions and info on Makefile.
+
 2010-05-30
    * developer.xml: Update plot layout figure and explain the margins, taking
      into account the changes to allow for a wider image border.
