@@ -71,10 +71,10 @@ line_spacing	4	SetLineSpacing	Controls inter-line spacing of text
 line_styles	array(...)	SetLineStyles	Plot line style(s)
 line_widths	1	SetLineWidths	Plot line width(s)
 locale_override		number_format	Flag to avoid importing locale info
-max_x		FindDataLimits	Overall max X value
-max_y		FindDataLimits	Overall max Y value
-min_x		FindDataLimits	Overall min X value
-min_y		FindDataLimits	Overall min Y value
+max_x		FindDataLimits	Overall max X value in the data array
+max_y		FindDataLimits	Overall max Y value in the data array
+min_x		FindDataLimits	Overall min X value in the data array
+min_y		FindDataLimits	Overall min Y value in the data array
 ndx_bg_color		SetBackgroundColor	Color index of image background
 ndx_data_border_colors		SetDataBorderColors	Array of color indexes for bar chart data borders
 ndx_data_colors		SetDataColors	Color index array for plot data lines/marks/bars/etc.
@@ -98,10 +98,10 @@ plot_area_height		CalcPlotAreaPixels	Height of the plot area
 plot_area_width		CalcPlotAreaPixels	Width of the plot area
 plot_bg_color	'white'	SetPlotBgColor	Name of color for plot area background
 plot_border_type	'sides'	SetPlotBorderType	Where to draw plot borders. Can be scalar or array of choices.
-plot_max_x		CalcPlotAreaWorld	Calculated maximum X of the plot data in world coordinates
-plot_max_y		CalcPlotAreaWorld	Calculated maximum Y of the plot data in world coordinates
-plot_min_x		CalcPlotAreaWorld	Calculated minimum X of the plot data in world coordinates
-plot_min_y		CalcPlotAreaWorld	Calculated minimum Y of the plot data in world coordinates
+plot_max_x		SetPlotAreaWorld CalcPlotAreaWorld	Max X of the plot area in world coordinates
+plot_max_y		SetPlotAreaWorld CalcPlotAreaWorld	Max Y of the plot area in world coordinates
+plot_min_x		SetPlotAreaWorld CalcPlotAreaWorld	Min X of the plot area in world coordinates
+plot_min_y		SetPlotAreaWorld CalcPlotAreaWorld	Min Y of the plot area in world coordinates
 plot_origin_x		CalcTranslation	X device coordinate of the plot area origin
 plot_origin_y		CalcTranslation	Y device coordinate of the plot area origin
 plot_type	'linepoints'	SetPlotType	Selected plot type
