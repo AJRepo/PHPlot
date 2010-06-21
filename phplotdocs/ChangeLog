@@ -4,6 +4,11 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2010-06-20
+   * variables.list: Clarify the difference between variables max_x, max_y,
+     min_x, and min_y and the variables plot_max_x, plot_max_y, plot_min_x,
+     and plot_min_y. Add reference to SetPlotAreaWorld for the plot_* vars.
+
 2010-06-13
    Documentation for truecolor images (introduced at phplot-5.1.1):
    * concepts.xml: New definitions, new section and subsections on Truecolor.
