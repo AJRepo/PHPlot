@@ -74,7 +74,7 @@ class PHPlot {
     public $output_file = '';              // For output to a file instead of stdout
 
 //Data
-    public $data_type = 'text-data';       // text-data, data-data-error, data-data, text-data-single
+    public $data_type = 'text-data';       // Structure of the data array 
     public $plot_type= 'linepoints';       // bars, lines, linepoints, area, points, pie, thinbarline, squared
 
     public $label_scale_position = 0.5;    // Shifts data labels in pie charts. 1 = top, 0 = bottom
@@ -1888,6 +1888,25 @@ class PHPlot {
         return $result;
     }
 
+    /*
+     * Check compatibility of a plot type and data type.
+     * This is called by the plot-type-specific drawing functions.
+     *   $valid_types  String of supported data types. Multiple values must be
+     *      separated by exactly ', ' (comma, space).
+     * Returns True if the type is valid for this plot.
+     * Reports an error if the data type is not value. If the error is handled and
+     *   the handler returns, this returns False.
+     */
+    protected function CheckDataType($valid_types)
+    {
+        if (strpos(", $valid_types,", ", $this->data_type,") !== False)
+            return TRUE;
+
+        $this->PrintError("Data type '$this->data_type' is not valid for '$this->plot_type' plots."
+               . " Supported data type(s): '$valid_types'");
+        return FALSE;
+    }
+
     /*!
      *  \note Submitted by Thiemo Nagel
      */
@@ -2258,7 +2277,8 @@ class PHPlot {
     }
 
 
-    /*!
+    /*
+     * Set the data type, which defines the structure of the data array
      *  text-data: ('label', y1, y2, y3, ...)
      *  text-data-single: ('label', data), for some pie charts.
      *  data-data: ('label', x, y1, y2, y3, ...)
@@ -4224,13 +4244,16 @@ class PHPlot {
      */
     protected function DrawPieChart()
     {
+        if (!$this->CheckDataType('text-data, text-data-single, data-data'))
+            return FALSE;
+
         $xpos = $this->plot_area[0] + $this->plot_area_width/2;
         $ypos = $this->plot_area[1] + $this->plot_area_height/2;
         $diameter = min($this->plot_area_width, $this->plot_area_height);
         $radius = $diameter/2;
 
-        // Get sum of each column? One pie slice per column
         if ($this->data_type == 'text-data') {
+            // Get sum of each column - One pie slice per column:
             $num_slices = $this->records_per_group - 1;  // records_per_group is the maximum row size
             if ($num_slices < 1) return TRUE;            // Give up early if there is no data at all.
             $sumarr = array_fill(0, $num_slices, 0);
@@ -4240,9 +4263,8 @@ class PHPlot {
                         $sumarr[$j-1] += abs($this->data[$i][$j]);
                 }
             }
-        }
-        // Or only one column per row, one pie slice per row?
-        else if ($this->data_type == 'text-data-single') {
+        } elseif ($this->data_type == 'text-data-single') {
+            // Or only one column per row, one pie slice per row:
             $num_slices = $this->num_data_rows;
             if ($num_slices < 1) return TRUE;            // Give up early if there is no data at all.
             $sumarr = array_fill(0, $num_slices, 0);
@@ -4251,8 +4273,7 @@ class PHPlot {
                 if (is_numeric($this->data[$i][1]))
                     $sumarr[$i] = abs($this->data[$i][1]);
             }
-        }
-        else if ($this->data_type == 'data-data') {
+        } else {          // $this->data_type == 'data-data'
             $num_slices = $this->records_per_group - 2;  // records_per_group is the maximum row size
             if ($num_slices < 1) return TRUE;            // Give up early if there is no data at all.
             $sumarr = array_fill(0, $num_slices, 0);
@@ -4262,9 +4283,6 @@ class PHPlot {
                         $sumarr[$j-2] += abs($this->data[$i][$j]);
                 }
             }
-        }
-        else {
-            return $this->PrintError("DrawPieChart(): Data type '$this->data_type' not supported.");
         }
 
         $total = array_sum($sumarr);
@@ -4359,13 +4377,10 @@ class PHPlot {
      * Draw the points and errors bars for an error plot of types points and linepoints
      * Supports only data-data-error format, with each row of the form
      *   array("title", x, y1, error1+, error1-, y2, error2+, error2-, ...)
+     * Note: plot type and data type were already checked by the calling function.
      */
     protected function DrawDotsError()
     {
-        if ($this->data_type != 'data-data-error') {
-            return $this->PrintError("DrawDotsError(): Data type '$this->data_type' not supported.");
-        }
-
         // Adjust the point shapes and point sizes arrays:
         $this->CheckPointParams();
 
@@ -4416,7 +4431,7 @@ class PHPlot {
      */
     protected function DrawDots()
     {
-        if (!$this->CheckOption($this->data_type, 'text-data, data-data', __FUNCTION__))
+        if (!$this->CheckDataType('text-data, data-data'))
             return FALSE;
 
         // Adjust the point shapes and point sizes arrays:
@@ -4459,7 +4474,7 @@ class PHPlot {
      */
     protected function DrawThinBarLines()
     {
-        if (!$this->CheckOption($this->data_type, 'text-data, data-data', __FUNCTION__))
+        if (!$this->CheckDataType('text-data, data-data'))
             return FALSE;
 
         for ($row = 0, $cnt = 0; $row < $this->num_data_rows; $row++) {
@@ -4645,6 +4660,9 @@ class PHPlot {
      */
     protected function DrawArea($do_stacked = False)
     {
+        if (!$this->CheckDataType('text-data, data-data'))
+            return FALSE;
+
         $n = $this->num_data_rows;  // Number of X values
 
         // These arrays store the device X and Y coordinates for all lines:
@@ -4734,6 +4752,9 @@ class PHPlot {
      */
     protected function DrawLines()
     {
+        if (!$this->CheckDataType('text-data, data-data'))
+            return FALSE;
+
         // Flag array telling if the current point is valid, one element per plot line.
         // If start_lines[i] is true, then (lastx[i], lasty[i]) is the previous point.
         $start_lines = array_fill(0, $this->records_per_group, FALSE);
@@ -4791,13 +4812,10 @@ class PHPlot {
      * Draw lines with error bars for an error plot of types lines and linepoints
      * Supports only data-data-error format, with each row of the form
      *   array("title", x, y1, error1+, error1-, y2, error2+, error2-, ...)
+     * Note: plot type and data type were already checked by the calling function.
      */
     protected function DrawLinesError()
     {
-        if ($this->data_type != 'data-data-error') {
-            return $this->PrintError("DrawLinesError(): Data type '$this->data_type' not supported.");
-        }
-
         $start_lines = array_fill(0, $this->records_per_group, FALSE);
 
         for ($row = 0, $cnt = 0; $row < $this->num_data_rows; $row++) {
@@ -4872,6 +4890,9 @@ class PHPlot {
      */
     protected function DrawSquared()
     {
+        if (!$this->CheckDataType('text-data, data-data'))
+            return FALSE;
+
         // Flag array telling if the current point is valid, one element per plot line.
         // If start_lines[i] is true, then (lastx[i], lasty[i]) is the previous point.
         $start_lines = array_fill(0, $this->records_per_group, FALSE);
@@ -4933,9 +4954,8 @@ class PHPlot {
      */
     protected function DrawBars()
     {
-        if ($this->data_type != 'text-data') {
-            return $this->PrintError('DrawBars(): Bar plots must be text-data: use function SetDataType("text-data")');
-        }
+        if (!$this->CheckDataType('text-data'))
+            return False;
 
         // This is the X offset from the bar group's label center point to the left side of the first bar
         // in the group. See also CalcBarWidths above.
@@ -5015,9 +5035,8 @@ class PHPlot {
      */
     protected function DrawStackedBars()
     {
-        if ($this->data_type != 'text-data') {
-            return $this->PrintError('DrawStackedBars(): Bar plots must be text-data: use SetDataType("text-data")');
-        }
+        if (!$this->CheckDataType('text-data'))
+            return False;
 
         // This is the X offset from the bar's label center point to the left side of the bar.
         $x_first_bar = $this->record_bar_width / 2 - $this->bar_adjust_gap;
