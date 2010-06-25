@@ -4734,15 +4734,9 @@ class PHPlot {
      */
     protected function DrawLines()
     {
-        // This will tell us if lines have already begun to be drawn.
-        // It is an array to keep separate information for every line, with a single
-        // variable we would sometimes get "undefined offset" errors and no plot...
+        // Flag array telling if the current point is valid, one element per plot line.
+        // If start_lines[i] is true, then (lastx[i], lasty[i]) is the previous point.
         $start_lines = array_fill(0, $this->records_per_group, FALSE);
-
-        if ($this->data_type == 'text-data') {
-            $lastx[0] = $this->xtr(0);
-            $lasty[0] = $this->xtr(0);
-        }
 
         for ($row = 0, $cnt = 0; $row < $this->num_data_rows; $row++) {
             $record = 1;                                    // Skip record #0 (data label)
@@ -4878,15 +4872,9 @@ class PHPlot {
      */
     protected function DrawSquared()
     {
-        // This will tell us if lines have already begun to be drawn.
-        // It is an array to keep separate information for every line, for with a single
-        // variable we could sometimes get "undefined offset" errors and no plot...
+        // Flag array telling if the current point is valid, one element per plot line.
+        // If start_lines[i] is true, then (lastx[i], lasty[i]) is the previous point.
         $start_lines = array_fill(0, $this->records_per_group, FALSE);
-
-        if ($this->data_type == 'text-data') {
-            $lastx[0] = $this->xtr(0);
-            $lasty[0] = $this->xtr(0);
-        }
 
         for ($row = 0, $cnt = 0; $row < $this->num_data_rows; $row++) {
             $record = 1;                                    // Skip record #0 (data label)
