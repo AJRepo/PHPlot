@@ -3,6 +3,14 @@ The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
 2010-06-25
+   * Each plot-type drawing function now checks that it is getting a data
+     type that it knows how to handle. A new internal function unifies the
+     checking and error message. (This is associated with an upcoming,
+     bigger change.)
+
+     Compatibility: If you were using an invalid data type for a plot type
+     whose function did not check, will now get an error.
+     
    * Removed some dubious code from DrawLines() and DrawSquared() and
      rewrote comments there. The code initialized lastx[0] and lasty[0],
      but lasty was mapped using the X (rather than Y) function.  This was
