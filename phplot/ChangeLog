@@ -2,6 +2,13 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2010-06-25
+   * Removed some dubious code from DrawLines() and DrawSquared() and
+     rewrote comments there. The code initialized lastx[0] and lasty[0],
+     but lasty was mapped using the X (rather than Y) function.  This was
+     obviously wrong, but closer inspection showed that the values were
+     never, used so the code was removed.
+
 2010-06-13
    * Truecolor.txt: removed
    * Makefile, README.txt: Removed reference to Truecolor.txt. Full
