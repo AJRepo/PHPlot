@@ -318,6 +318,20 @@ the graph is ready to be drawn.
 </varlistentry>
 
 <varlistentry>
+  <term id="CheckDataType" xreflabel="CheckDataType">CheckDataType($valid_types)</term>
+  <listitem>
+    <para>
+Used to validate the data_type for a plot_type. This works like a specialized
+version of <xref linkend="CheckOption"/>.  $valid_types contains the valid
+data type(s) for the current plot_type, separated by a comma and space if more
+than one is supported. If the current data_type is in the list, returns TRUE,
+else produces an error.  This was added after PHPlot-5.1.1 to unify the way
+the plot drawing functions check the data type.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
   <term id="CheckLabels" xreflabel="CheckLabels">CheckLabels()</term>
   <listitem>
     <para>
