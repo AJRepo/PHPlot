@@ -4,6 +4,14 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2010-06-25
+   * developer.xml: Document new error checking funtion CheckDataType.
+   * variables.list: Clarify that the data array counters (num_data_rows,
+     num_recs, records_per_group, total_records) do include all entries
+     in the data array, including label and independent variable value.
+     Correct description of num_data_rows: it is the number of points or
+     point sets, not the number of plot lines.
+
 2010-06-20
    * variables.list: Clarify the difference between variables max_x, max_y,
      min_x, and min_y and the variables plot_max_x, plot_max_y, plot_min_x,
