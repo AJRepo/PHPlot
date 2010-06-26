@@ -88,8 +88,8 @@ ndx_plot_bg_color		SetPlotBgColor	Color index of plot area background
 ndx_text_color		SetTextColor	Color index for labels and legend text
 ndx_tick_color		SetTickColor	Color index for tick marks
 ndx_title_color		SetTitleColor SetLabelColor	Color index for titles
-num_data_rows		SetDataValues	Number of data array rows (number of plot lines, for example)
-num_recs		SetDataValues	Array of number of values for each data row
+num_data_rows		SetDataValues	Number of rows in the data array (number of points along X, or number of bar groups, for example)
+num_recs		SetDataValues	Array with number of entries in each data row (including label and X if present)
 num_x_ticks	''	SetNumXTicks	Forced number of X tick marks
 num_y_ticks	''	SetNumYTicks	Forced number of Y tick marks
 output_file	''	SetOutputFile	Redirect to output file
@@ -112,7 +112,7 @@ point_shapes	array(...)	SetPointShapes	Shapes of markers in point plots
 point_sizes	array(...)	SetPointSizes	Sizes of markers in point plots
 print_image	TRUE	SetPrintImage	Flag: Automatic PrintImage after DrawGraph?
 record_bar_width		CalcBarWidths	Area for each bar in a bar chart
-records_per_group		SetDataValues	Maximum of num_recs[], max values for any data row
+records_per_group		SetDataValues	Maximum of num_recs[], max number of entries (including label and X if present) for all data rows
 rgb_array		SetRGBArray	Array mapping color names to array of R, G, B values
 safe_margin	5		Fixed extra margin used in multiple places
 shading	5	SetShading	Drop shadow size for pie and bar charts
@@ -127,7 +127,7 @@ title_color	'black'	SetTitleColor	Name of color for main, X, and Y titles
 title_done		DrawTitle	Flag to prevent drawing main title more than once
 title_offset		CalcMargins	Y offset of main title position (Added after PHPlot-5.1.1)
 title_txt	''	SetTitle	Main title text
-total_records		SetDataValues	Counts data points, used to check if any data was given?
+total_records		SetDataValues	Total number of entries (rows times columns in each row) in the data array.
 ttf_path	'.'	SetTTFPath	TrueType font directory
 use_ttf	FALSE	SetUseTTF	Default font type, True for TrueType, False for GD
 x_axis_position	''	SetXAxisPosition	Position of X axis (in world coordinates)
