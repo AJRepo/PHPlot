@@ -2,6 +2,20 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2010-06-26
+   * Feature request 2885930 "Horizontal Bars":
+     Horizontal bar charts are implemented, as an experimental feature.
+     A new data type 'text-data-yx' was added, which works with
+     'bars' plot type to produce a horizontal bar chart from a data
+     array with X values for each Y value. Changes were made to
+     FindDataLimits, CalcMargins, CalcPlotAreaWorld, CalcBarWidths,
+     and CalcMaxDataLabelSize to handle the new data type. Other
+     changes were made to handle label position defaults and grid
+     defaults. New drawing functions were added for horizontal bars.
+
+   * HorizontalBars.txt: new documentation file for experimental feature.
+   * Makefile: List new documentation file.
+
 2010-06-25
    * Each plot-type drawing function now checks that it is getting a data
      type that it knows how to handle. A new internal function unifies the
