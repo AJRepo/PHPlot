@@ -100,14 +100,13 @@ class PHPlot {
     //                 they are drawn at graph plotting time, by Draw*DataLabel(), called by DrawLines(), etc.
     //                 Draw*DataLabel() also draws H/V lines to datapoints depending on draw_*_data_label_lines
     // Tick Labels
-    // x_tick_label_pos and x_data_label_pos are not initialized, because PHPlot needs
-    // to determine if they were defaulted or set by the user. See CheckLabels().
-    // public $x_tick_label_pos = 'plotdown';     // plotdown, plotup, both, xaxis, none
-    public $y_tick_label_pos = 'plotleft';     // plotleft, plotright, both, yaxis, none
-
-    // Data Labels:
-    // public $x_data_label_pos = 'plotdown';     // plotdown, plotup, both, plot, all, none
-    public $y_data_label_pos = 'none';        // plotleft, plotright, both, plot, all, plotin, none
+    // Tick and Data label positions are not initialized, because PHPlot needs to tell if they
+    // defaulted or are set by the user. See CheckLabels() for details. The variables and
+    // effective defaults are shown here in comments (but CheckLabels adjusts the defaults).
+    // public $x_tick_label_pos = 'plotdown';     // X tick label position 
+    // public $y_tick_label_pos = 'plotleft';     // Y tick label position
+    // public $x_data_label_pos = 'plotdown';     // X data label position
+    // public $y_data_label_pos = 'none';         // Y data label position
 
     public $draw_x_data_label_lines = FALSE;   // Draw a line from the data point to the axis?
 
@@ -152,8 +151,8 @@ class PHPlot {
     public $skip_right_tick = FALSE;
 
 //Grid Formatting
-    public $draw_x_grid = FALSE;
-    public $draw_y_grid = TRUE;
+    // public $draw_x_grid = FALSE;            // Default is False except for swapped data type
+    // public $draw_y_grid = TRUE;             // Default is True except for swapped data type
 
     public $dashed_grid = TRUE;
     public $grid_at_foreground = FALSE;        // Chooses whether to draw the grid below or above the graph
@@ -1632,32 +1631,22 @@ class PHPlot {
         return TRUE;
     }
 
-    /*!
-     * Sets position for Y labels near data points.
-     * For past compatibility we accept plotleft, ...but pass it to SetTickLabelPos
+    /*
+     * Sets position for Y data labels.
+     * For bars and stackedbars, these are labels above the bars with the Y values.
+     *    Accepted positions are: plotin, plotstack, none.
+     * For horizontal bars, these are the labels along the Y axis or sides. 
+     *    Accepted positions are: plotleft, plotright, both, none.
      */
     function SetYDataLabelPos($which_ydlp)
     {
-        $which_ydlp = $this->CheckOption($which_ydlp,
-                                         'plotleft, plotright, both, yaxis, all, plotin, plotstack, none',
+        $which_ydlp = $this->CheckOption($which_ydlp, 'plotin, plotstack, none, plotleft, plotright, both',
                                           __FUNCTION__);
         if (!$which_ydlp) return FALSE;
-
-        //This bit in SetYDataLabelPos about plotleft is for those who were
-        //using this function to set SetYTickLabelPos.
-        if ( ($which_ydlp == 'plotleft') || ($which_ydlp == 'plotright') ||
-             ($which_ydlp == 'both') || ($which_ydlp == 'yaxis') ) {
-
-            //Call sety_TICK_labelpos instead of sety_DATA_labelpos
-            $this->SetYTickLabelPos($which_ydlp);
-
-        } else {
-            $this->y_data_label_pos = $which_ydlp;
-        }
+        $this->y_data_label_pos = $which_ydlp;
 
         return TRUE;
     }
-
 
     /*!
      * Sets position for X labels following ticks (hence grid lines)
@@ -1905,6 +1894,27 @@ class PHPlot {
         $this->PrintError("Data type '$this->data_type' is not valid for '$this->plot_type' plots."
                . " Supported data type(s): '$valid_types'");
         return FALSE;
+    }
+
+    /*
+     * Decode the data type into variables used to determine how to process a data array.
+     * Returns a numeric-indexed array with these elements in order:
+     *    swapped_xy  (boolean) True if Y is the independent variable, X dependent (e.g. horizontal bars).
+     *    implied_x   (boolean) True if data array has an implied X value for each set of Y.
+     *    implied_y   (boolean) True if data array has an implied Y value for each set of X.
+     *    err_bars    (boolean) True if data array contains error bars values for each point.
+     * Note these are not independent. implied_y means swapped_xy, and implied_x means !swapped_xy.
+     * Also some possibilities are reserved for future use: swapped_xy && !implied_y would be a
+     * future swapped X/Y equivalent to data-data or data-data-error.
+     */
+    protected function DecodeDataType()
+    {
+        $swapped_xy = ($this->data_type == 'text-data-yx'); // Only swapped type available now
+        $implied_x = ($this->data_type == 'text-data');
+        $implied_y = ($this->data_type == 'text-data-yx');
+        $err_bars = ($this->data_type == 'data-data-error');
+
+        return array($swapped_xy, $implied_x, $implied_y, $err_bars);
     }
 
     /*!
@@ -2283,6 +2293,7 @@ class PHPlot {
      *  text-data-single: ('label', data), for some pie charts.
      *  data-data: ('label', x, y1, y2, y3, ...)
      *  data-data-error: ('label', x1, y1, e1+, e2-, y2, e2+, e2-, y3, e3+, e3-, ...)
+     *  text-data-yx: ('label', x1, x2, x3, ...)
      */
     function SetDataType($which_dt)
     {
@@ -2292,9 +2303,9 @@ class PHPlot {
         elseif ($which_dt == 'linear-linear-error') { $which_dt = 'data-data-error'; }
         elseif ($which_dt == 'text-data-pie') { $which_dt = 'text-data-single'; }
 
-
         $this->data_type = $this->CheckOption($which_dt, 'text-data, text-data-single, '.
-                                                         'data-data, data-data-error', __FUNCTION__);
+                                                         'data-data, data-data-error, text-data-yx',
+                                                         __FUNCTION__);
         return (boolean)$this->data_type;
     }
 
@@ -2463,35 +2474,44 @@ class PHPlot {
 ///////////         DATA ANALYSIS, SCALING AND TRANSLATION
 //////////////////////////////////////////////////////////
 
-    /*!
-     * Analyzes data and sets up internal maxima and minima
-     * Needed by: CalcMargins(), ...
-     * Data type text-data has: title, Y1, Y2, ... (with X implied)
-     * Data type data-data has: title, X, Y1, Y2, ...
-     * Data type data-data-error: has title, X, Y1, Y1err+, Y1err-, Y2, Y2err+, Y2err-, ...
+    /*
+     * Analyzes the data array and calculates the minimum and maximum values.
+     * In this function, IV refers to the independent variable, and DV the dependent variable.
+     * For most plots, IV is X and DV is Y. For swapped X/Y plots, IV is Y and DV is X.
+     * At the end of the function, IV and DV ranges get assigned into X or Y.
+     *
      * Plot types 'stackedbars' and 'stackedarea' are special cases, because the bars or area always
      *    start at 0 (although they may be clipped below the X axis, if the axis is moved up),
      *    absolute values are used, and the Y values in each row accumulate.
+     *
+     * This calculates min_x, max_x, min_y, and max_y. It also calculates two arrays
+     * data_min[] and data_max[] with per-row min and max values. These are used for
+     * data label lines. For normal (unswapped) data, these are the Y range for each X.
+     * For swapped X/Y data, they are the X range for each Y.
+     *
      * Note: This method should be 'protected', but is called from test script(s).
      */
     function FindDataLimits()
     {
         # Determine how to process the data array:
-        $process_x = ($this->data_type == 'data-data' || $this->data_type == 'data-data-error');
-        $process_err_bars = ($this->data_type == 'data-data-error');
+        list($swapped_xy, $implied_x, $implied_y, $err_bars) = $this->DecodeDataType();
+        // process_iv is true if the data array contains independent variable values:
+        $process_iv = !($implied_x || $implied_y);
+
+        # Special case processing for certain plot types:
         $process_stacked = ($this->plot_type == 'stackedbars' || $this->plot_type == 'stackedarea');
         $abs_val = ($this->plot_type == 'area' || $this->plot_type == 'pie');
 
         # These need to be initialized in case there are multiple plots and
         # missing data points.
-        $this->data_miny = array();
-        $this->data_maxy = array();
+        $this->data_min = array();
+        $this->data_max = array();
 
-        # X values are in the data array or assumed?
-        if ($process_x) {
-            $all_x = array();
+        # Independent values are in the data array or assumed?
+        if ($process_iv) {
+            $all_iv = array();
         } else {
-            $all_x = array(0, $this->num_data_rows - 1);
+            $all_iv = array(0, $this->num_data_rows - 1);
         }
 
         # Process all rows of data:
@@ -2499,48 +2519,62 @@ class PHPlot {
             $n_vals = $this->num_recs[$i];
             $j = 1; # Skips label at [0]
 
-            if ($process_x) {
-                $all_x[] = (double)$this->data[$i][$j++];
+            if ($process_iv) {
+                $all_iv[] = (double)$this->data[$i][$j++];
             }
 
             if ($process_stacked) {
-                $all_y = array(0, 0); # Min (always 0) and max
+                $all_dv = array(0, 0); # Min (always 0) and max
             } else {
-                $all_y = array();
+                $all_dv = array();
             }
             while ($j < $n_vals) {
                 if (is_numeric($this->data[$i][$j])) {
                     $val = (double)$this->data[$i][$j++];
 
-                    if ($process_err_bars) {
-                        $all_y[] = $val + (double)$this->data[$i][$j++];
-                        $all_y[] = $val - (double)$this->data[$i][$j++];
+                    if ($err_bars) {
+                        $all_dv[] = $val + (double)$this->data[$i][$j++];
+                        $all_dv[] = $val - (double)$this->data[$i][$j++];
                     } elseif ($process_stacked) {
-                        $all_y[1] += abs($val);
+                        $all_dv[1] += abs($val);
                     } elseif ($abs_val) {
-                        $all_y[] = abs($val);
+                        $all_dv[] = abs($val);
                     } else {
-                        $all_y[] = $val;
+                        $all_dv[] = $val;
                     }
-                } else {    # Missing Y value
+                } else {    # Missing DV value
                   $j++;
-                  if ($process_err_bars) $j += 2;
+                  if ($err_bars) $j += 2;
                 }
             }
-            if (!empty($all_y)) {
-                $this->data_miny[$i] = min($all_y);  # Store per-row Y range
-                $this->data_maxy[$i] = max($all_y);
+            if (!empty($all_dv)) {
+                $this->data_min[$i] = min($all_dv);  # Store per-row DV range
+                $this->data_max[$i] = max($all_dv);
             }
         }
 
-        $this->min_x = min($all_x);  # Store X range
-        $this->max_x = max($all_x);
-        if (empty($this->data_miny)) { # Guard against regressive case: No Y at all
-            $this->min_y = 0;
-            $this->max_y = 0;
+        if ($swapped_xy) {
+            // Assign min and max for swapped X/Y plots: IV=Y and DV=X
+            $this->min_y = min($all_iv);
+            $this->max_y = max($all_iv);
+            if (empty($this->data_min)) { # Guard against regressive case: No X at all
+                $this->min_x = 0;
+                $this->max_x = 0;
+            } else {
+                $this->min_x = min($this->data_min);  # Store global X range
+                $this->max_x = max($this->data_max);
+            }
         } else {
-            $this->min_y = min($this->data_miny);  # Store global Y range
-            $this->max_y = max($this->data_maxy);
+            // Assign min and max for normal plots: IV=X and DV=Y
+            $this->min_x = min($all_iv);
+            $this->max_x = max($all_iv);
+            if (empty($this->data_min)) { # Guard against regressive case: No Y at all
+                $this->min_y = 0;
+                $this->max_y = 0;
+            } else {
+                $this->min_y = min($this->data_min);  # Store global Y range
+                $this->max_y = max($this->data_max);
+            }
         }
 
         if ($this->GetCallback('debug_scale')) {
@@ -2632,6 +2666,7 @@ class PHPlot {
         $y_tick_label_pos = $this->y_tick_label_pos;
         $y_tick_pos       = $this->y_tick_pos;
         $y_tick_len       = $this->y_tick_length;
+        $y_data_label_pos = $this->y_data_label_pos;
 
         // For X/Y tick and label position of 'xaxis' or 'yaxis', determine if the axis happens to be
         // on an edge of a plot. If it is, we need to account for the margins there.
@@ -2649,13 +2684,9 @@ class PHPlot {
             $y_axis_pos = 'none';
 
         // Calculate the heights for X tick and data labels, and the max (used if they are overlaid):
-        $x_data_label_height = ($x_data_label_pos == 'none') ? 0 : $this->CalcMaxDataLabelSize();
+        $x_data_label_height = ($x_data_label_pos == 'none') ? 0 : $this->CalcMaxDataLabelSize('x');
         $x_tick_label_height = ($x_tick_label_pos == 'none') ? 0 : $this->CalcMaxTickLabelSize('x');
         $x_max_label_height = max($x_data_label_height, $x_tick_label_height);
-
-        // Calcualte the width for Y tick labels, if on:
-        $y_label_width = ($y_tick_label_pos == 'none') ? 0 : $this->CalcMaxTickLabelSize('y');
-
 
         // Calculate the space needed above and below the plot for X tick and X data labels:
 
@@ -2691,21 +2722,43 @@ class PHPlot {
             $label_height_below = 0;
         }
 
-        // Calculate the space needed left and right of the plot for Y tick labels:
-        // (This is simpler than X, because Y data labels don't enter the picture.)
+        // Calculate the width for Y tick and data labels, if on, and the max:
+        // Note CalcMaxDataLabelSize('y') returns 0 except for swapped X/Y plots.
+        $y_data_label_width = ($y_data_label_pos == 'none') ? 0 : $this->CalcMaxDataLabelSize('y');
+        $y_tick_label_width = ($y_tick_label_pos == 'none') ? 0 : $this->CalcMaxTickLabelSize('y');
+        $y_max_label_width = max($y_data_label_width, $y_tick_label_width);
+
+        // Calculate the space needed left and right of the plot for Y tick and Y data labels:
+        // (Y data labels here are for swapped X/Y plots such has horizontal bars)
 
         // Left of the plot:
-        if ($y_tick_label_pos == 'plotleft' || $y_tick_label_pos == 'both'
-                || ($y_tick_label_pos == 'yaxis' && $y_axis_pos == 'left')) {
-            $label_width_left = $y_label_width;
+        $tick_labels_left = ($y_tick_label_pos == 'plotleft' || $y_tick_label_pos == 'both'
+                         || ($y_tick_label_pos == 'yaxis' && $y_axis_pos == 'left'));
+        $data_labels_left = ($y_data_label_pos == 'plotleft' || $y_data_label_pos == 'both');
+        if ($tick_labels_left) {
+            if ($data_labels_left) {
+                $label_width_left = $y_max_label_width;
+            } else {
+                $label_width_left = $y_tick_label_width;
+            }
+        } elseif ($data_labels_left) {
+            $label_width_left = $y_data_label_width;
         } else {
             $label_width_left = 0;
         }
 
         // Right of the plot:
-        if ($y_tick_label_pos == 'plotright' || $y_tick_label_pos == 'both'
-                || ($y_tick_label_pos == 'yaxis' && $y_axis_pos == 'right')) {
-            $label_width_right = $y_label_width;
+        $tick_labels_right = ($y_tick_label_pos == 'plotright' || $y_tick_label_pos == 'both'
+                          || ($y_tick_label_pos == 'yaxis' && $y_axis_pos == 'right'));
+        $data_labels_right = ($y_data_label_pos == 'plotright' || $y_data_label_pos == 'both');
+        if ($tick_labels_right) {
+            if ($data_labels_right) {
+                $label_width_right = $y_max_label_width;
+            } else {
+                $label_width_right = $y_tick_label_width;
+            }
+        } elseif ($data_labels_right) {
+            $label_width_right = $y_data_label_width;
         } else {
             $label_width_right = 0;
         }
@@ -2928,37 +2981,68 @@ class PHPlot {
      * Calculate the World Coordinate limits of the plot area.
      * This goes with SetPlotAreaWorld, but the calculations are
      * deferred until the graph is being drawn.
-     * Uses: plot_min_x, plot_max_x, plot_min_y, plot_max_y
-     * which can be user-supplied or NULL to auto-calculate.
-     * Pre-requisites: FindDataLimits()
+     * Uses and sets: plot_min_x, plot_max_x, plot_min_y, plot_max_y
+     * These can be user-supplied or NULL to auto-calculate.
+     * Pre-requisites: FindDataLimits() calculates min_x, max_x, min_y, max_y
+     * which are the limits of the data to be plotted.
+     *
+     * Note: $implied_y and $swapped_xy are currently equivalent, but in the
+     * future there may be a data type with swapped X/Y and explicit Y values.
+     * The 4 code blocks below for plot_min_x, plot_max_x, plot_min_y, and
+     * plot_max_y already contain logic for this case.
+     * The general method is this:
+     *   If any part of the range is user-defined (via SetPlotAreaWorld),
+     *      use the user-defined value.
+     *   Else, if this is an implicitly-defined independent variable,
+     *      use the fixed range of 0 to (max+1).
+     *   Else, if this is an explicitly-defined independent variable,
+     *      use the exact data range (min to max).
+     *   Else, this is the dependent variable, so define a range which
+     *      includes and exceeds the data range by a bit.
      */
     protected function CalcPlotAreaWorld()
     {
+        list($swapped_xy, $implied_x, $implied_y) = $this->DecodeDataType();
+
         if (isset($this->plot_min_x) && $this->plot_min_x !== '')
-            $xmin = $this->plot_min_x;
-        elseif ($this->data_type == 'text-data')  // Valid for data without X values only.
-            $xmin = 0;
+            $xmin = $this->plot_min_x; // Use user-provided value
+        elseif ($implied_x)
+            $xmin = 0;          // Implied X starts at zero
+        elseif ($swapped_xy)
+            // If X is the dependent variable, leave some room below.
+            $xmin = floor($this->min_x - abs($this->min_x) * 0.1);
         else
-            $xmin = $this->min_x;
+            $xmin = $this->min_x;  // Otherwise just start at the min data X
 
         if (isset($this->plot_max_x) && $this->plot_max_x !== '')
-            $xmax = $this->plot_max_x;
-        elseif ($this->data_type == 'text-data')  // Valid for data without X values only.
-            $xmax = $this->max_x + 1;
+            $xmax = $this->plot_max_x; // Use user-provided value
+        elseif ($implied_x)
+            $xmax = $this->max_x + 1; // Implied X ends after last value
+        elseif ($swapped_xy)
+            // If X is the dependent variable, leave some room above.
+            $xmax = ceil($this->max_x + abs($this->max_x) * 0.1);
         else
-            $xmax = $this->max_x;
+            $xmax = $this->max_x; // Otherwise just end at the max data X
 
-        // Leave room above and below the highest and lowest data points.
-
-        if (!isset($this->plot_min_y) || $this->plot_min_y === '')
+        if (isset($this->plot_min_y) && $this->plot_min_y !== '')
+            $ymin = $this->plot_min_y;  // Use user-provided value
+        elseif ($implied_y)
+            $ymin = 0;    // Implied Y starts at zero
+        elseif ($swapped_xy)
+            $ymin = $this->min_y; // Start at min data Y
+        else
+            // If Y is the dependent variable, leave some room below.
             $ymin = floor($this->min_y - abs($this->min_y) * 0.1);
-        else
-            $ymin = $this->plot_min_y;
 
-        if (!isset($this->plot_max_y) || $this->plot_max_y === '')
-            $ymax = ceil($this->max_y + abs($this->max_y) * 0.1);
+        if (isset($this->plot_max_y) && $this->plot_max_y !== '')
+            $ymax = $this->plot_max_y; // Use user-provided value
+        elseif ($implied_y)
+            $ymax = $this->max_y + 1; // Implied Y ends after last value
+        elseif ($swapped_xy)
+            $ymax = $this->max_y;  // End at max data Y
         else
-            $ymax = $this->plot_max_y;
+            // If Y is the dependent variable, leave some room above.
+            $ymax = ceil($this->max_y + abs($this->max_y) * 0.1);
 
         // Error checking
 
@@ -3009,13 +3093,24 @@ class PHPlot {
     } //function SetPlotAreaWorld
 
 
-    /*!
-     * For bar plots, which have equally spaced x variables.
+    /*
+     * Calculate the width (or height) of bars for bar plots.
+     * This calculates:
+     *    record_bar_width : Allocated width for each bar (including gaps)
+     *    actual_bar_width : Actual drawn width of each bar
+     *    bar_adjust_gap  : Gap on each side of each bar (0 if they touch)
+     * For the case $verticals=False, horizontal bars are being drawn,
+     * but the same variable names are used. Think of "bar_width" as being
+     * the width if you are standing on the Y axis looking towards positive X.
      */
-    protected function CalcBarWidths()
+    protected function CalcBarWidths($verticals = True)
     {
         // group_width is the width of a group, including padding
-        $group_width = $this->plot_area_width / $this->num_data_rows;
+        if ($verticals) {
+            $group_width = $this->plot_area_width / $this->num_data_rows;
+        } else {
+            $group_width = $this->plot_area_height / $this->num_data_rows;
+        }
 
         // Actual number of bar spaces in the group. This includes the drawn bars, and
         // 'bar_extra_space'-worth of extra bars.
@@ -3044,6 +3139,12 @@ class PHPlot {
         // This is the gap on each side of the bar (0 if bar_width_adjust=1):
         $this->bar_adjust_gap = ($this->record_bar_width - $this->actual_bar_width) / 2;
 
+        if ($this->GetCallback('debug_scale')) {
+            $this->DoCallback('debug_scale', __FUNCTION__, array(
+                'record_bar_width' => $this->record_bar_width,
+                'actual_bar_width' => $this->actual_bar_width,
+                'bar_adjust_gap' => $this->bar_adjust_gap));
+        }
         return TRUE;
     }
 
@@ -3292,20 +3393,40 @@ class PHPlot {
     }
 
     /*
-     * Calculate the size of the biggest X data label. This is used by CalcMargins().
-     * Returns the height along Y axis of the biggest X data label.
-     * (This calculates width and height, but only height is used at present.)
+     * Calculate the size of the biggest data label. This is used by CalcMargins().
+     * For $which='x', it returns the height of labels along the top or bottom.
+     * For $which='y', it returns the width of labels along the left or right sides.
+     * There is only one set of data labels (the first position in each data record).
+     * They normally go along the top or bottom (or both). If the data type indicates
+     * X/Y swapping (which is used for horizontal bar charts), the data labels go
+     * along the sides instead. So CalcMaxDataLabelSize('x') returns 0 if the
+     * data is X/Y swapped, and CalcMaxDataLabelSize('y') returns 0 if the data is
+     * is not X/Y swapped.
      */
-    protected function CalcMaxDataLabelSize()
+    protected function CalcMaxDataLabelSize($which = 'x')
     {
-        $font = $this->fonts['x_label'];
-        $angle = $this->x_data_label_angle;
+        list($swapped_xy) = $this->DecodeDataType();
+        if ($which == 'x') {
+          if ($swapped_xy)
+              return 0; // Shortcut: labels aren't on top/bottom.
+          $font = $this->fonts['x_label'];
+          $angle = $this->x_data_label_angle;
+          $format_code = 'xd';
+        } elseif ($which == 'y') {
+          if (!$swapped_xy)
+              return 0; // Shortcut: labels aren't on left/right.
+          $font = $this->fonts['y_label'];
+          $angle = $this->y_data_label_angle;
+          $format_code = 'yd';
+        } else {
+          return $this->PrintError("CalcMaxDataLabelSize: Invalid usage ($which)");
+        }
         $max_width = 0;
         $max_height = 0;
 
         // Loop over all data labels and find the biggest:
         for ($i = 0; $i < $this->num_data_rows; $i++) {
-            $label = $this->FormatLabel('xd', $this->data[$i][0]);
+            $label = $this->FormatLabel($format_code, $this->data[$i][0]);
             list($width, $height) = $this->SizeText($font, $angle, $label);
             if ($width > $max_width) $max_width = $width;
             if ($height > $max_height) $max_height = $height;
@@ -3315,7 +3436,34 @@ class PHPlot {
                 'height' => $max_height, 'width' => $max_width));
         }
 
+        if ($swapped_xy)
+            return $max_width;
         return $max_height;
+    }
+
+    /*
+     * Set grid control defaults.
+     * X grid defaults off, Y grid defaults on, except the reverse is true
+     * with swapped graphs such as horizontal bars.
+     */
+    protected function CalcGridSettings()
+    {
+        list($swapped_xy) = $this->DecodeDataType();
+        if (!isset($this->draw_x_grid))
+            $this->draw_x_grid = $swapped_xy;
+        if (!isset($this->draw_y_grid))
+            $this->draw_y_grid = !$swapped_xy;
+    }
+
+    /*
+     * Helper for CheckLabels() - determine if there are any non-empty labels.
+     * Returns True if all data labels are empty, else False.
+     */
+    protected function CheckLabelsAllEmpty()
+    {
+        for ($i = 0; $i < $this->num_data_rows; $i++)
+            if ($this->data[$i][0] !== '') return False;
+        return True;
     }
 
     /*
@@ -3323,7 +3471,9 @@ class PHPlot {
      * positioning and other label-related parameters.
      *   Copy label_format from 'x' to 'xd', and 'y' to 'yd', if not already set.
      *   Set x_data_label_angle from x_label_angle, if not already set.
-     *   Apply defaults to X tick and data label positions.
+     *   Apply defaults to X and Y tick and data label positions.
+     * Note: the label strings in the data array are used as X data labels in
+     * the normal case, but as Y data labels in the swapped X/Y case.
      */
     protected function CheckLabels()
     {
@@ -3341,38 +3491,78 @@ class PHPlot {
         // Note: Y data label angle defaults to zero, unlike X,
         // for compatibility with older releases.
 
+        list($swapped_xy) = $this->DecodeDataType(); // Determine if X->Y or Y->X.
+
         // X Label position fixups, for x_data_label_pos and x_tick_label_pos:
-
-        if (isset($this->x_data_label_pos)) {
-
-            if (!isset($this->x_tick_label_pos)) {
-                // Case: data_label_pos is set, tick_label_pos needs a default:
-                if ($this->x_data_label_pos == 'none')
-                    $this->x_tick_label_pos = 'plotdown';
-                else
-                    $this->x_tick_label_pos = 'none';
-            }
-
-        } elseif (isset($this->x_tick_label_pos)) {
-            // Case: tick_label_pos is set, data_label_pos needs a default:
-            if ($this->x_tick_label_pos == 'none')
-                $this->x_data_label_pos = 'plotdown';
-            else
-                $this->x_data_label_pos = 'none';
-
-        } else {
-            // Case: Neither tick_label_pos nor data_label_pos is set.
-            // We do not want them to be both on (as PHPlot used to do in this case).
-            // Turn on data labels if any were supplied, else tick labels.
-            $data_labels_empty = TRUE;
-            for ($i = 0; $data_labels_empty && $i < $this->num_data_rows; $i++)
-                $data_labels_empty = ($this->data[$i][0] === '');
-            if ($data_labels_empty) {
-                $this->x_data_label_pos = 'none';
+        if ($swapped_xy) {
+            // Just apply defaults - there is no position conflict for X labels.
+            if (!isset($this->x_tick_label_pos))
                 $this->x_tick_label_pos = 'plotdown';
+            if (!isset($this->x_data_label_pos))
+                $this->x_data_label_pos = 'none';
+        } else {
+            // Apply defaults but do not allow conflict between tick and data labels.
+            if (isset($this->x_data_label_pos)) {
+                if (!isset($this->x_tick_label_pos)) {
+                    // Case: data_label_pos is set, tick_label_pos needs a default:
+                    if ($this->x_data_label_pos == 'none')
+                        $this->x_tick_label_pos = 'plotdown';
+                    else
+                        $this->x_tick_label_pos = 'none';
+                }
+            } elseif (isset($this->x_tick_label_pos)) {
+                // Case: tick_label_pos is set, data_label_pos needs a default:
+                if ($this->x_tick_label_pos == 'none')
+                    $this->x_data_label_pos = 'plotdown';
+                else
+                    $this->x_data_label_pos = 'none';
             } else {
-                $this->x_data_label_pos = 'plotdown';
-                $this->x_tick_label_pos = 'none';
+                // Case: Neither tick_label_pos nor data_label_pos is set.
+                // We do not want them to be both on (as PHPlot used to do in this case).
+                // Turn on data labels if any were supplied, else tick labels.
+                if ($this->CheckLabelsAllEmpty()) {
+                    $this->x_data_label_pos = 'none';
+                    $this->x_tick_label_pos = 'plotdown';
+                } else {
+                    $this->x_data_label_pos = 'plotdown';
+                    $this->x_tick_label_pos = 'none';
+                }
+            }
+        }
+
+        // Y Label position fixups, for y_data_label_pos and y_tick_label_pos:
+        if (!$swapped_xy) {
+            // Just apply defaults - there is no position conflict.
+            if (!isset($this->y_tick_label_pos))
+                $this->y_tick_label_pos = 'plotleft';
+            if (!isset($this->y_data_label_pos))
+                $this->y_data_label_pos = 'none';
+        } else {
+            // Apply defaults but do not allow conflict between tick and data labels.
+            if (isset($this->y_data_label_pos)) {
+                if (!isset($this->y_tick_label_pos)) {
+                    // Case: data_label_pos is set, tick_label_pos needs a default:
+                    if ($this->y_data_label_pos == 'none')
+                        $this->y_tick_label_pos = 'plotleft';
+                    else
+                        $this->y_tick_label_pos = 'none';
+                }
+            } elseif (isset($this->y_tick_label_pos)) {
+                // Case: tick_label_pos is set, data_label_pos needs a default:
+                if ($this->y_tick_label_pos == 'none')
+                    $this->y_data_label_pos = 'plotleft';
+                else
+                    $this->y_data_label_pos = 'none';
+            } else {
+                // Case: Neither tick_label_pos nor data_label_pos is set.
+                // Turn on data labels if any were supplied, else tick labels.
+                if ($this->CheckLabelsAllEmpty()) {
+                    $this->y_data_label_pos = 'none';
+                    $this->y_tick_label_pos = 'plotleft';
+                } else {
+                    $this->y_data_label_pos = 'plotleft';
+                    $this->y_tick_label_pos = 'none';
+                }
             }
         }
         return TRUE;
@@ -4067,6 +4257,28 @@ class PHPlot {
         return TRUE;
     }
 
+    /*
+     * Draw a data label along the Y axis or side.
+     * This is only used by horizontal bar charts.
+     */
+    protected function DrawYDataLabel($ylab, $ypos)
+    {
+        $ylab = $this->FormatLabel('yd', $ylab);
+
+        // Labels left of the plot area
+        if ($this->y_data_label_pos == 'plotleft' || $this->y_data_label_pos == 'both')
+            $this->DrawText($this->fonts['y_label'], $this->y_data_label_angle,
+                            $this->plot_area[0] - $this->y_label_left_offset, $ypos,
+                            $this->ndx_text_color, $ylab, 'right', 'center');
+
+        // Labels right of the plot area
+        if ($this->y_data_label_pos == 'plotright' || $this->y_data_label_pos == 'both')
+            $this->DrawText($this->fonts['y_label'], $this->y_data_label_angle,
+                            $this->plot_area[2] + $this->y_label_right_offset, $ypos,
+                            $this->ndx_text_color, $ylab, 'left', 'center');
+        return TRUE;
+    }
+
     /*!
      * Draws Vertical lines from data points up and down.
      * Which lines are drawn depends on the value of x_data_label_pos,
@@ -4090,13 +4302,13 @@ class PHPlot {
             ImageLine($this->img, $xpos, $this->plot_area[3], $xpos, $this->plot_area[1], $style);
         }
         // Lines from the bottom of the plot up to the max Y value at this X:
-        else if ($this->x_data_label_pos == 'plotdown' && isset($this->data_maxy[$row])) {
-            $ypos = $this->ytr($this->data_maxy[$row]);
+        else if ($this->x_data_label_pos == 'plotdown' && isset($this->data_max[$row])) {
+            $ypos = $this->ytr($this->data_max[$row]);
             ImageLine($this->img, $xpos, $ypos, $xpos, $this->plot_area[3], $style);
         }
         // Lines from the top of the plot down to the min Y value at this X:
-        else if ($this->x_data_label_pos == 'plotup' && isset($this->data_miny[$row])) {
-            $ypos = $this->ytr($this->data_miny[$row]);
+        else if ($this->x_data_label_pos == 'plotup' && isset($this->data_min[$row])) {
+            $ypos = $this->ytr($this->data_min[$row]);
             ImageLine($this->img, $xpos, $this->plot_area[1], $xpos, $ypos, $style);
         }
         return TRUE;
@@ -5027,6 +5239,72 @@ class PHPlot {
         return TRUE;
     } //function DrawBars
 
+    /*
+     * Draw a Horizontal Bar chart
+     * Supports only text-data-yx format, with each row in the form array("title", x1, x2, x3, ...)
+     * This is an unusual case, because the data values are X not Y.
+     * Note: plot type and data type were already checked by the calling function.
+     */
+    protected function DrawHorizBars()
+    {
+        // This is the Y offset from the bar group's label center point to the bottom of the first bar
+        // in the group. See also CalcBarWidths above.
+        $y_first_bar = (($this->records_per_group - 1) * $this->record_bar_width) / 2 - $this->bar_adjust_gap;
+
+        for ($row = 0; $row < $this->num_data_rows; $row++) {
+            $record = 1;                                    // Skip record #0 (data label)
+
+            $y_now_pixels = $this->ytr(0.5 + $row);         // Place bars at Y=0.5, 1.5, 2.5, etc...
+
+            if ($this->y_data_label_pos != 'none')          // Draw Y Data Labels?
+                $this->DrawYDataLabel($this->data[$row][0], $y_now_pixels);
+
+            // Lower left Y of first bar in the group:
+            $y1 = $y_now_pixels + $y_first_bar;
+
+            // Draw the bars in the group:
+            for ($idx = 0; $record < $this->num_recs[$row]; $record++, $idx++) {
+                if (is_numeric($this->data[$row][$record])) {       // Allow for missing X data
+                    $y2 = $y1 - $this->actual_bar_width;
+
+                    if ($this->data[$row][$record] < $this->y_axis_position) {
+                        $x1 = $this->y_axis_x_pixels;
+                        $x2 = $this->xtr($this->data[$row][$record]);
+                        $rightwards_bar = False;
+                    } else {
+                        $x1 = $this->xtr($this->data[$row][$record]);
+                        $x2 = $this->y_axis_x_pixels;
+                        $rightwards_bar = True;
+                    }
+
+                    // Draw the bar
+                    ImageFilledRectangle($this->img, $x2, $y2, $x1, $y1, $this->ndx_data_colors[$idx]);
+
+                    if ($this->shading) {                           // Draw the shade?
+                        ImageFilledPolygon($this->img, array($x2, $y2,
+                                                       $x2 + $this->shading, $y2 - $this->shading,
+                                                       $x1 + $this->shading, $y2 - $this->shading,
+                                                       $x1 + $this->shading, $y1 - $this->shading,
+                                                       $x1, $y1,
+                                                       $x1, $y2),
+                                           6, $this->ndx_data_dark_colors[$idx]);
+                    }
+                    // Or draw a border?
+                    else {
+                        ImageRectangle($this->img, $x1, $y1, $x2,$y2, $this->ndx_data_border_colors[$idx]);
+                    }
+
+                    // Draw optional data labels above the bars (or below, for negative values).
+                    // DELETED
+
+                }
+                // Step to next bar in group:
+                $y1 -= $this->record_bar_width;
+            }   // end for
+        }   // end for
+
+        return TRUE;
+    }
 
     /*
      * Draw a Stacked Bar chart
@@ -5175,6 +5453,9 @@ class PHPlot {
         // Process label-related parameters:
         $this->CheckLabels();
 
+        // Apply grid defaults:
+        $this->CalcGridSettings();
+
         // Calculate the plot margins, if needed.
         // For pie charts, set the $maximize argument to maximize space usage.
         $this->CalcMargins(!$draw_axes);
@@ -5252,11 +5533,16 @@ class PHPlot {
         case 'stackedarea':
             $this->DrawArea(True);
             break;
-        case 'bars':
+        // case 'bars':
         default:
-            $this->plot_type = 'bars';  // Set it if it wasn't already set. (necessary?)
-            $this->CalcBarWidths();
-            $this->DrawBars();
+            $this->plot_type = 'bars';  // Make sure it is set
+            if ($this->data_type == 'text-data-yx') {
+                $this->CalcBarWidths(False);
+                $this->DrawHorizBars();
+            } else {
+                $this->CalcBarWidths();
+                $this->DrawBars();
+            }
             break;
         }   // end switch
         $this->DoCallback('draw_graph', $this->plot_area);
