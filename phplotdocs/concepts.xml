@@ -1631,7 +1631,7 @@ channels. Refer to the PHP Manual page on
 <para>
 In the initial release of Truecolor support in PHPlot-5.1.1, alpha channel
 information was ignored when using a PHPlot object, and only used with a
-PHPlot_truecolor object. This was changed after PHPlot-5.1.1, and alpha
+PHPlot_truecolor object. This was changed in PHPlot-5.1.2, and alpha
 channel information is used for both PHPlot and PHPlot_truecolor classes.
 However, alpha channel information is not always useful with palette
 images.
@@ -1698,7 +1698,7 @@ specifying an input file as background.
 (This was changed after the initial release of truecolor support.
 In PHPlot-5.1.1, you must use the PHPlot_truecolor constructor in order to
 use some truecolor features even when you use a truecolor background
-image file. Starting after PHPlot-5.1.1 you can use either constructor.)
+image file. Starting with PHPlot-5.1.2 you can use either constructor.)
 </para>
 
 <note>

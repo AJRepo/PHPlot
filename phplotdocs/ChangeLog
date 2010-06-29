@@ -4,6 +4,11 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2010-06-28
+   For release with PHPlot-5.1.2:
+   * Change references to versions: "after 5.1.1" becomes "5.1.2".
+   * README: Corrections to file list
+
 2010-06-25
    * developer.xml: Document new error checking funtion CheckDataType.
    * variables.list: Clarify that the data array counters (num_data_rows,

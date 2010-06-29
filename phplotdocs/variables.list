@@ -51,7 +51,7 @@ grid_color	'black'	SetGridColor	Name of color to use for axes, plot area border,
 group_frac_width	0.7	CalcBarWidths	Controls fraction of bar group space used for bar
 i_border	array(194,194,194)	SetImageBorderColor	Name of color for image border, if drawn
 image_border_type	'none'	SetImageBorderType	Image border type
-image_border_width		SetImageBorderWidth	Width of image border in pixels. Default depends on image_border_type. (Added after PHPlot-5.1.1)
+image_border_width		SetImageBorderWidth	Width of image border in pixels. Default depends on image_border_type. (Added in PHPlot-5.1.2)
 image_height		PHPlot	Image height
 image_width		PHPlot	Image width
 img		PHPlot	Image resource
@@ -125,7 +125,7 @@ thousands_sep		SetNumberFormat	Character to use to group 1000s in formatted numb
 tick_color	'black'	SetTickColor	Name of color for tick marks
 title_color	'black'	SetTitleColor	Name of color for main, X, and Y titles
 title_done		DrawTitle	Flag to prevent drawing main title more than once
-title_offset		CalcMargins	Y offset of main title position (Added after PHPlot-5.1.1)
+title_offset		CalcMargins	Y offset of main title position (Added in PHPlot-5.1.2)
 title_txt	''	SetTitle	Main title text
 total_records		SetDataValues	Total number of entries (rows times columns in each row) in the data array.
 ttf_path	'.'	SetTTFPath	TrueType font directory

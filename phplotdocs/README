@@ -1,5 +1,5 @@
 This is phplotdocs/README, for the PHPlot Reference Manual source
-Last updated on 2010-06-13
+Last updated on 2010-06-28
 -----------------------------------------------------------------------------
 
 This directory contains the Docbook-XML source files for the PHPlot Reference
@@ -13,13 +13,16 @@ List of files:
   Makefile            Makefile for building the manual
   README              This file
   ChangeLog           Record of changes to the manual
+  etc/                Extra files, includes scripts for non-example images
   examples/           Directory of self-producing examples
-  html.xsl            XSL style sheet for HTML output
+  style.xsl           XSL style sheet for producing XHTML output
   images/             Image files, other than examples
   main.xml            Main source file for the manual
   *.xml               Other source files for the manual
-  phplot.php          Link to the version of PHPlot used for example files.
-  etc/                Extra files, includes scripts for non-example images.
+  phplot.php          Link to the version of PHPlot used for example files
+  phplotdoc.css       HTML style sheet for the manual
+  variables.list      Internal class variables documentation source file
+  gen.vardoc          Script to turn variables.list into Docbook-XML
 
 Tools:
 
@@ -30,8 +33,8 @@ versions may work too.
    xsltproc from libxsltproc-1.1.26 and libxml2-2.7.6
    Tcl shell (tclsh) is used to generate the table in the Variables chapter.
 
-The above are used to produce the XHTML manual. There was an attempt to
-make PDF output, but it never worked well and currently does not work at all.
+The above are used to produce the XHTML manual. No other output format is
+currently available.
 
 
 Makefile:

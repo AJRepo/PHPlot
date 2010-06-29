@@ -325,7 +325,7 @@ Used to validate the data_type for a plot_type. This works like a specialized
 version of <xref linkend="CheckOption"/>.  $valid_types contains the valid
 data type(s) for the current plot_type, separated by a comma and space if more
 than one is supported. If the current data_type is in the list, returns TRUE,
-else produces an error.  This was added after PHPlot-5.1.1 to unify the way
+else produces an error.  This was added in PHPlot-5.1.2 to unify the way
 the plot drawing functions check the data type.
     </para>
   </listitem>
@@ -390,7 +390,7 @@ errors, not run-time or user errors.  If all of the array elements to check
 are acceptable, the array is returned with each element down-cased and
 trimmed of leading and trailing spaces.  Note that an array is always
 returned, even if the opt argument is a string.
-This was added after PHPlot-5.1.1.
+This was added in PHPlot-5.1.2.
     </para>
   </listitem>
 </varlistentry>
@@ -903,7 +903,7 @@ This returns the image border width, as set with
 <xref linkend="SetImageBorderWidth" /> or as defaulted.
 It is used by <xref linkend="CalcMargins" /> to account for image border width,
 and by <xref linkend="DrawImageBorder" /> when drawing the image border.
-This was added after PHPlot-5.1.1.
+This was added in PHPlot-5.1.2.
     </para>
   </listitem>
 </varlistentry>

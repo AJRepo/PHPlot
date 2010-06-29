@@ -2553,7 +2553,7 @@ Through PHPlot-5.1.1, the choices were 'none', 'plain' for a 1 pixel wide
 border using the darker shade, or 'raised' for a 2 pixel wide border
 using the specified color for the top and left sides and a darker shade
 for the bottom and right. There was no way to control the border width.
-Starting after PHPlot-5.1.1, a new choice 'solid' was added to use the
+Starting with PHPlot-5.1.2, a new choice 'solid' was added to use the
 exact color specified with <xref linkend="SetImageBorderColor" /> rather
 than using the darker shade like 'plain' uses (which may have been a bug).
 A new function <xref linkend="SetImageBorderWidth" /> was added to control
@@ -2617,7 +2617,7 @@ border type, and 2 pixels for a 'raised' border type.
   <refsect1>
     <title>History</title>
     <para>
-This function was added after PHPlot-5.1.1.
+This function was added in PHPlot-5.1.2.
     </para>
   </refsect1>
 </refentry>
@@ -4140,7 +4140,7 @@ have no visible effect because the axis line is drawn there.
     <para>
 Through PHPlot-5.1.1, the available choices were 'left', 'sides', 'full', or
 'none', and only a single string option was supported.
-Starting after PHPlot-5.1.1, the additional choices 'right', 'top', and
+Starting with PHPlot-5.1.2, the additional choices 'right', 'top', and
 'bottom' were added, as well as the ability to pass an array of choices.
     </para>
   </refsect1>
