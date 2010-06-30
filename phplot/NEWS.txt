@@ -4,6 +4,77 @@ The project home page is http://phplot.sourceforge.net/
 Refer the the ChangeLog file for detailed source changes.
 -----------------------------------------------------------------------------
 
+2010-06-29 Release 5.1.2
+
+Overview:
+
+This is the current stable release of PHPlot. Truecolor image support is no
+longer considered 'experimental', and is now documented in the reference
+manual. There is a new experimental feature for horizontal bar charts. This
+release also contains a bug fix and new feature.
+
+
+Cautions and Important Notes:
+
+The advisory against using PHP-5.3.2 or PHP-5.2.13 with PHPlot if you use
+TrueType fonts (TTF) continues. See the item below for PHPlot-5.1.1. The
+good news is that this has been fixed by the PHP Team and will be in the
+next releases.
+
+Compatibility of data type and plot type are now checked completely.  If
+you used an incorrect data type with certain plot types, your script may no
+longer work until you fix the data type. Specifically, the area, squared,
+and thinbarline plot types failed to check the data type they received, and
+treated anything other than 'data-data' as 'text-data'.  If you have a
+squared plot with data type 'data-data-error', for example (which is not
+supposed to work), it did produce a plot, but will now result in an error.
+
+The addition of horizontal bar charts should not impact any existing plot,
+with one small exception. The function SetYDataLabelPos() used to accept
+some additional, undocumented options (plotleft, plotright, both, yaxis)
+and pass these through to SetYTickLabelPos() "for compatibility". It no
+longer does so, as some of those are now used for horizontal bar chart
+labels. To position Y tick labels, use only SetYTickLabelPos().
+
+
+New features in 5.1.2:
+
+#3002606 "Add to plot and image border options":
+  SetPlotBorderType() now accepts 'right', 'top', and 'bottom', as well
+      as an array of options. So you can now control exactly which of the 4
+      border sides will be drawn.
+  SetImageBorderType() now accepts 'solid' as a choice. This will use the
+      actual color set with SetImageBorderColor(), rather than the darker
+      shade as type 'plain' does (which may have been a bug).
+  SetImageBorderWidth() is a new function that sets the width of the image
+      border. The defaults are the same as the fixed values used before: 1
+      pixel for plain, 2 pixels for raised.  The image border width is now
+      accounted for in margin calculations, if it is greater than 2 (to make
+      sure existing plots will not change).
+
+#2885930 "Horizontal Bars":
+  Horizontal bar charts are implemented, as an experimental feature.
+  'Experimental' means they are not yet documented in the reference manual,
+  and subject to change or removal.
+  Refer to the text file HorizontalBars.txt for details.
+
+#2947679 (follow-up) "Support for alpha blending/Truecolor":
+  Truecolor support is now documented in the Reference Manual. The interim
+  documentation file Truecolor.txt has been removed. Alpha channel
+  specification now works with both constructors and both image types.  This
+  fixes an issue if the base constructor was used with a truecolor background
+  image. (In PHPlot-5.1.1, the result would be a truecolor image, but the
+  alpha channel features were not available.)
+
+
+Bug Fixed in 5.1.1:
+
+#3010116 "Bad rendering of title in multi-plot image when using TTF":
+  Make sure the main title is drawn only once, to avoid bad rendering of
+  TTF titles with multiple plots due to anti-aliasing.
+
+-----------------------------------------------------------------------------
+
 2010-04-04 Release 5.1.1
 
 Overview:
