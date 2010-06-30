@@ -1,5 +1,5 @@
 This is the README file for PHPlot
-Last updated for PHPlot-5.1.1 on 2010-04-04
+Last updated for PHPlot-5.1.2 on 2010-06-29
 The project web site is http://sourceforge.net/projects/phplot/
 The project home page is http://phplot.sourceforge.net/
 -----------------------------------------------------------------------------
@@ -20,6 +20,7 @@ CONTENTS:
 
    COPYING  . . . . . . . . . . . . LGPL 2.1 License file
    ChangeLog  . . . . . . . . . . . Lists changes to the sources
+   HorizontalBars.txt . . . . . . . Experimental feature documentation
    NEWS.txt . . . . . . . . . . . . Highlights changes in releases
    README.txt   . . . . . . . . . . This file
    contrib  . . . . . . . . . . . . "Contributed" directory, add-ons
@@ -27,15 +28,19 @@ CONTENTS:
    phplot_data.php  . . . . . . . . Auxiliary and extended functions
    rgb.inc.php  . . . . . . . . . . Optional extended color table
 
-
 REQUIREMENTS:
 
 You need a recent version of PHP5. Usually, we recommend you use the latest
 stable release, however due to problems with PHP-5.3.2 and PHP-5.2.13 you
 are advised to use the previous releases if possible. The problems are
 specific to TrueType font (TTF) text. If you are not using TTF text, you
-may use PHP-5.3.2 or 5.2.13. However, this version of PHPlot has been tested
-with PHP-5.3.1 and PHP-5.2.12 on Linux, and with PHP-5.3.1 on Windows/XP.
+may use PHP-5.3.2 or 5.2.13.  (The PHP team already has a fix for this TTF
+problem in PHP-5.3.3 development snapshots, so the fix should be in the
+next releases PHP-5.3.3 and PHP-5.2.14.)
+
+This version of PHPlot has been tested with PHP-5.3.1 and PHP-5.2.12 on
+Linux, and with PHP-5.3.1 on Windows/XP. The PHPlot Test Suite currently
+contains 432 test cases.
 
 You need the GD extension to PHP either built in to PHP or loaded as a
 module. Refer to the PHP documentation for more information - see the
@@ -48,7 +53,7 @@ web server. You can also use the PHP CLI interface without a web server.
 PHPlot supports TrueType fonts, but does not include any TrueType font
 files.  If you want to use TrueType fonts on your charts, you need to have
 TrueType support in GD, and some TrueType font files.  By default, PHPlot
-uses a simple font built-in to the GD library.
+uses a simple font which is built in to the GD library.
 
 
 INSTALLATION:
