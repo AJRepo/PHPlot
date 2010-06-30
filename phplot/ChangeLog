@@ -2,6 +2,11 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2010-06-29 (lbayuk)     ===== Released as 5.1.2 =====
+    * phplot.php: Updated version
+    * README.txt: Updated for new release
+    * NEWS.txt: Add text for new release
+
 2010-06-26
    * Feature request 2885930 "Horizontal Bars":
      Horizontal bar charts are implemented, as an experimental feature.
