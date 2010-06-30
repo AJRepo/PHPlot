@@ -67,7 +67,7 @@ New features in 5.1.2:
   alpha channel features were not available.)
 
 
-Bug Fixed in 5.1.1:
+Bug Fixed in 5.1.2:
 
 #3010116 "Bad rendering of title in multi-plot image when using TTF":
   Make sure the main title is drawn only once, to avoid bad rendering of
