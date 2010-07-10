@@ -689,7 +689,7 @@ example.
 <informalfigure>
   <mediaobject>
     <imageobject>
-      <imagedata fileref="examples/histogram.png" format="PNG" />
+      <imagedata fileref="examples/histogram.jpg" format="JPEG" />
     </imageobject>
     <textobject>
       <phrase>Truecolor Plot of Histogram Example</phrase>
