@@ -4,6 +4,12 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2010-07-09
+   * Makefile, examples/histogram.php, examples.xml : Changed the 'histogram'
+     example to output a JPEG instead of PNG, and changed the Makefile to
+     no longer assume every example makes a PNG. This is because that one
+     example image as a PNG doubled the size of the download.
+
 2010-06-28
    For release with PHPlot-5.1.2:
    * Change references to versions: "after 5.1.1" becomes "5.1.2".
