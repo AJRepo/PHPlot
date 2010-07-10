@@ -2,7 +2,8 @@ This directory contains the example sources.
 These are used in the top-level Makefile to generate both
 the source code examples and the images.
 
-These are wildcarded in the Makfile, so dependency checking won't work.
+Each file must listed in the Makfile. (They used to be wildcarded, but that
+only worked when each created a PNG, and was unable to handle JPG.)
 
 The Makefile has to be able to find the PHP CLI interpreter, and the
 scripts need to be able to find phplot.php. It is suggested that you
