@@ -1,5 +1,5 @@
 This is phplotdocs/README, for the PHPlot Reference Manual source
-Last updated on 2010-06-28
+Last updated on 2010-07-09
 -----------------------------------------------------------------------------
 
 This directory contains the Docbook-XML source files for the PHPlot Reference
@@ -60,9 +60,6 @@ The Makefile has the following targets:
     PHPlot web site on Sourceforge.net (which requires their logo on
     each page).
 
-Note: The Makefile assumes every *.php file in the examples directory is
-an example source which produces a PNG image file on standard output when
-run. Refer to the Makefile for more details.
 
 
 Example Figure Production:
@@ -75,16 +72,17 @@ create the images. Note that the PHP CLI never outputs HTTP headers, so
 SetIsInline(True) is not needed.
 
 The Makefile automatically makes two files from each PHP script (*.php). An
-image file (*.png) is created using PHPlot, and a text file (*.xml) is
-created by wrapping the PHP script in CDATA markers inside a programlisting
-element.  The image file and the text file are included into the manual to
-form the example figure and the source code which generates it.  So you
-need a working installation of PHPlot, with phplot.php found on the PHP
-include path, in order for this to work.
+image file (*.png or *.jpg) is created using PHPlot, and a text file
+(*.xml) is created by wrapping the PHP script in CDATA markers inside a
+programlisting element.  The image file and the text file are included into
+the manual to form the example figure and the source code which generates
+it.  So you need a working installation of PHPlot, with phplot.php found on
+the PHP include path, in order for this to work.
 
-The Makefile wildcards the examples/*.php scripts - it does not contain a
-list.  Every PHP script in the examples file is assumed to be an example
-source which will produce a PNG image.
+The Makefile contains a list of the examples scripts, and a list of the
+image files they need to produce when run. (The Makefile used to do this
+with a wildcard on examples/*.php and assumed each script made a PNG file,
+but that no longer works as JPEGs are also possible.)
 
 Note: It is important to use the right version of PHPlot to make the
 examples. (Otherwise, people may try an example and it won't work.) To
