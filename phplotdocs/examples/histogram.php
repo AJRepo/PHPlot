@@ -2,6 +2,9 @@
 # PHPlot Example - Histogram of a Photograph
 # Display a photo image with its value histogram overlaid
 # Note: This requires PHPlot-5.1.1 or higher for Truecolor support.
+# Unlike the other examples, and contrary to the usual PHPlot recommendation,
+# this scripts creates JPEG not PNG, because most of the image is the original
+# photograph and PNG results in an overlarge file.
 require_once 'phplot.php';
 
 # Tunable parameters:
@@ -70,6 +73,7 @@ function plot_histogram($image_filename, $param)
     if (empty($histo)) return;
     for ($i = 0; $i < 256; $i++) $data[$i] = array('', $histo[$i]);
     $p = new PHPlot_truecolor($plot_image_width, $plot_image_height);
+    $p->SetFileFormat('jpg');
     $p->SetBgImage($image_filename, 'scale');
     $p->SetDataType('text-data');
     $p->SetGridColor('white:127');  # Make the axis lines invisible
