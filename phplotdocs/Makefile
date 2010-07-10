@@ -1,8 +1,6 @@
 # $Id$
 # Makefile for PHPlot Programmer's Reference Manual (Docbook-xml version)
 # This uses xsltproc to generate HTML output.
-# The examples production assumes all examples/*.php are source files, and
-# each produces a PNG image to stdout when run.
 
 # Local: PHP CLI to run examples:
 PHP=/opt/php/bin/php
@@ -51,14 +49,68 @@ ALSO=phplotdoc.css
 # Release base name:
 RELEASE=$(PACKAGE)
 
-# All PHP example source files:
-EXAMPLES_PHP=$(wildcard examples/*.php)
+# PHP source files for examples:
+EXAMPLES_PHP=\
+  examples/annotate.php \
+  examples/area1.php \
+  examples/bars1.php \
+  examples/bars2.php \
+  examples/bars3.php \
+  examples/bars4.php \
+  examples/histogram.php \
+  examples/linepoints1.php \
+  examples/lines1.php \
+  examples/lines2.php \
+  examples/pie1.php \
+  examples/pie2.php \
+  examples/pie3.php \
+  examples/points1.php \
+  examples/points2.php \
+  examples/qs1.php \
+  examples/qs2.php \
+  examples/qs3.php \
+  examples/squared1.php \
+  examples/stackedarea1.php \
+  examples/stackedbars1.php \
+  examples/stackedbars2.php \
+  examples/stackedbars3.php \
+  examples/thinbarline1.php \
+  examples/thinbarline2.php \
+  examples/twoplot1.php \
+
 
 # Example XML files, generated from PHP scripts:
 EXAMPLES_XML=$(EXAMPLES_PHP:.php=.xml)
 
-# Example image files, also generated from PHP scripts (must be PNG):
-EXAMPLES_IMAGES=$(EXAMPLES_PHP:.php=.png)
+# Example image files. Most generate PNG but there are exception(s).
+EXAMPLES_IMAGES=\
+  examples/annotate.png \
+  examples/area1.png \
+  examples/bars1.png \
+  examples/bars2.png \
+  examples/bars3.png \
+  examples/bars4.png \
+  examples/histogram.jpg \
+  examples/linepoints1.png \
+  examples/lines1.png \
+  examples/lines2.png \
+  examples/pie1.png \
+  examples/pie2.png \
+  examples/pie3.png \
+  examples/points1.png \
+  examples/points2.png \
+  examples/qs1.png \
+  examples/qs2.png \
+  examples/qs3.png \
+  examples/squared1.png \
+  examples/stackedarea1.png \
+  examples/stackedbars1.png \
+  examples/stackedbars2.png \
+  examples/stackedbars3.png \
+  examples/thinbarline1.png \
+  examples/thinbarline2.png \
+  examples/twoplot1.png \
+
 
 # Entity list file for examples:
 # This is referenced by the manual source files, and is the file used
@@ -142,8 +194,10 @@ $(EXAMPLE_LIST): $(EXAMPLES_PHP) $(EXAMPLES_XML) $(EXAMPLES_IMAGES)
       expand --tabs=8 $<; \
       echo ']]></programlisting>'; } > $@
 
-# This rule runs an example through PHP to get an image file:
+# These rules run an example script through PHP to get an image file:
 %.png: %.php
+	$(PHP) $< > $@
+%.jpg: %.php
 	$(PHP) $< > $@
 
 # === For building the variable list documentation ===
