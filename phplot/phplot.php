@@ -1,7 +1,7 @@
 <?php
 /* $Id$ */
 /*
- * PHPLOT Version 5.1.2
+ * PHPLOT Version 5.1.2 + CVS (This is an unreleased CVS version!)
  *
  * A PHP class for creating scientific and business charts
  * Visit http://sourceforge.net/projects/phplot/
@@ -1618,12 +1618,17 @@ class PHPlot {
 /////////////////////////////////////////////
 
 
-    /*!
-     * Sets position for X labels following data points.
+    /*
+     * Sets position for X data labels. For most plot types, these are
+     * labels along the X axis (but different from X tick labels).
+     *    Accepted positions are: plotdown, plotup, both, xaxis, all, none.
+     * For horizontal bar charts, these are the labels right (or left) of the bars.
+     *    Accepted positions are: plotin, none.
      */
     function SetXDataLabelPos($which_xdlp)
     {
-        $which_xdlp = $this->CheckOption($which_xdlp, 'plotdown, plotup, both, xaxis, all, none',
+        $which_xdlp = $this->CheckOption($which_xdlp,
+                                         'plotdown, plotup, both, xaxis, all, none, plotin',
                                          __FUNCTION__);
         if (!$which_xdlp) return FALSE;
         $this->x_data_label_pos = $which_xdlp;
@@ -4213,16 +4218,29 @@ class PHPlot {
     }
 
 
-    /*!
-     * Draws the data label associated with a point in the plot at specified x/y world position.
-     * This is currently only used for Y data labels for bar charts.
+    /*
+     * Draw the data value label associated with a point in the plot.
+     * This is used for Y data value labels for bar charts, and X data value labels for
+     * horizontal bar charts.  These are the labels above, to the right, or within the bars,
+     * not the axis labels.
+     *
+     *    $which_font, $which_angle, $which_color : Text style parameters
+     *    $x_world, $y_world : World coordinates of the text (but see also next parameters)
+     *    $x_adjustment, $y_adjustment : Text position offsets, in device coordinates.
+     *    $which_halign, $which_valign : Selects 9-point text alignment.
+     *    $which_text : The text to draw, after formatting with FormatLabel().
+     *    $format_selector : Which format to use in FormatLabel. Default is 'yd' (Y Data label),
+     *         but use 'xd' (X Data label) for horizontal bars chart labels.
      */
-    protected function DrawDataLabel($which_font, $which_angle, $x_world, $y_world, $which_color, $which_text,
-                      $which_halign = 'center', $which_valign = 'bottom', $x_adjustment=0, $y_adjustment=0)
+    protected function DrawDataLabel($which_font, $which_angle, $x_world, $y_world,
+                      $which_color, $which_text, $which_halign = 'center', $which_valign = 'bottom',
+                      $x_adjustment=0, $y_adjustment=0, $format_selector = 'yd')
     {
         $this->DrawText($which_font, $which_angle,
-                        $this->xtr($x_world) + $x_adjustment, $this->ytr($y_world) + $y_adjustment,
-                        $which_color, $this->FormatLabel('yd', $which_text), $which_halign, $which_valign);
+                        $this->xtr($x_world) + $x_adjustment,
+                        $this->ytr($y_world) + $y_adjustment,
+                        $which_color, $this->FormatLabel($format_selector, $which_text),
+                        $which_halign, $which_valign);
 
         return TRUE;
     }
@@ -5187,14 +5205,15 @@ class PHPlot {
             // Draw the bars in the group:
             for ($idx = 0; $record < $this->num_recs[$row]; $record++, $idx++) {
                 if (is_numeric($this->data[$row][$record])) {       // Allow for missing Y data
+                    $y = $this->data[$row][$record];
                     $x2 = $x1 + $this->actual_bar_width;
 
-                    if ($this->data[$row][$record] < $this->x_axis_position) {
+                    if ($y < $this->x_axis_position) {
                         $y1 = $this->x_axis_y_pixels;
-                        $y2 = $this->ytr($this->data[$row][$record]);
+                        $y2 = $this->ytr($y);
                         $upgoing_bar = False;
                     } else {
-                        $y1 = $this->ytr($this->data[$row][$record]);
+                        $y1 = $this->ytr($y);
                         $y2 = $this->x_axis_y_pixels;
                         $upgoing_bar = True;
                     }
@@ -5226,8 +5245,7 @@ class PHPlot {
                           $y_offset = 2;
                         }
                         $this->DrawDataLabel($this->fonts['y_label'], $this->y_data_label_angle,
-                                $row+0.5, $this->data[$row][$record], $this->ndx_title_color,
-                                $this->data[$row][$record], 'center', $v_align,
+                                $row+0.5, $y, $this->ndx_title_color, $y, 'center', $v_align,
                                 ($idx + 0.5) * $this->record_bar_width - $x_first_bar, $y_offset);
                     }
 
@@ -5265,14 +5283,15 @@ class PHPlot {
             // Draw the bars in the group:
             for ($idx = 0; $record < $this->num_recs[$row]; $record++, $idx++) {
                 if (is_numeric($this->data[$row][$record])) {       // Allow for missing X data
+                    $x = $this->data[$row][$record];
                     $y2 = $y1 - $this->actual_bar_width;
 
-                    if ($this->data[$row][$record] < $this->y_axis_position) {
+                    if ($x < $this->y_axis_position) {
                         $x1 = $this->y_axis_x_pixels;
-                        $x2 = $this->xtr($this->data[$row][$record]);
+                        $x2 = $this->xtr($x);
                         $rightwards_bar = False;
                     } else {
-                        $x1 = $this->xtr($this->data[$row][$record]);
+                        $x1 = $this->xtr($x);
                         $x2 = $this->y_axis_x_pixels;
                         $rightwards_bar = True;
                     }
@@ -5294,8 +5313,20 @@ class PHPlot {
                         ImageRectangle($this->img, $x1, $y1, $x2,$y2, $this->ndx_data_border_colors[$idx]);
                     }
 
-                    // Draw optional data labels above the bars (or below, for negative values).
-                    // DELETED
+                    // Draw optional data labels to the right of the bars (or left, if the bar
+                    // goes left of the Y axis line).
+                    if ($this->x_data_label_pos == 'plotin') {
+                        if ($rightwards_bar) {
+                          $h_align = 'left';
+                          $x_offset = 5 + $this->shading;
+                        } else {
+                          $h_align = 'right';
+                          $x_offset = -2;
+                        }
+                        $this->DrawDataLabel($this->fonts['x_label'], $this->x_data_label_angle,
+                                $x, $row+0.5, $this->ndx_title_color, $x, $h_align, 'center',
+                                $x_offset, $y_first_bar - ($idx + 0.5) * $this->record_bar_width, 'xd');
+                    }
 
                 }
                 // Step to next bar in group:
