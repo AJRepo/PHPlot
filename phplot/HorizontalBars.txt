@@ -1,5 +1,5 @@
 phplot/HorizontalBars - Documentation for an experimental new plot type
-Last updated for PHPlot-5.1.2 on 2010-06-26
+Last updated for PHPlot-5.1.2 + CVS updates on 2010-07-26
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 Overview:
@@ -139,15 +139,22 @@ This affects horizontal bar charts if you have any data values which are
 less than zero.  The X axis is normally positioned at Y=0, and the Y axis
 is normally positioned at the left side of the plot.
 
-If you have both positive and negative values in your data array, both
-vertical and horizontal bar charts will draw the bars away from the zero
-value. For vertical bar charts, the X axis will be drawn at that zero value
-(perhaps in the middle of the plot), with bars going up and down from
-there. But for horizontal bar charts, the Y axis will by default remain at
-the left edge of the plot; the bars will start from the X=0 value
-(somewhere in the middle of the plot area) and go left and right from
-there. In this situation, you might want to use SetYAxisPosition(0) to
-force the Y axis to be at X=0.
+For both vertical bar charts and horizontal bar charts, the bars are always
+drawn 'outward' from the axis - not from the line with value zero.  This
+results in different default appearance when the data contains negative
+values, due to the difference in default axis position.
+
+For vertical bar charts, with the X axis at zero (the default), bars with
+positive values are drawn upwards and bars with negative values are drawn
+downwards.
+
+For horizontal bar charts, with the Y axis in the default position on the
+left side, all bars will be drawn to the right whether the values are
+positive or negative.
+
+You can use SetYAxisPosition(0) with horizontal bar charts to move the Y
+axis to be at X=0. This will result in negative bar values being drawn to
+the left of the axis.
 
 -----------------------------------------------------------------------------
 Scaling:
@@ -169,14 +176,45 @@ same automatic range.
 -----------------------------------------------------------------------------
 Data Value Labels:
 
-Data Value Labels are not yet available with horizontal bar charts. These
-are the text labels within the plot that identify the data value just above
-the bars. (See Example 5.19 "Bar Chart with Data Labels" in the manual.)
+Data Value labels for horizontal bar charts were implemented after
+PHPlot-5.1.2.  These are the text labels within the plot that identify the
+X value for each bar.  (See Example 5.19 "Bar Chart with Data Labels" in
+the manual for an example of data value labels for vertical bar charts.)
+
+Data Value labels are enabled and controlled in the same way for horizontal
+bar charts as for vertical bar charts, except the 'X' control functions are
+used instead of 'Y' control functions.
+
+To enable data value labels on horizontal bar charts:
+    $plot->SetXDataLabelPos('plotin');
+Note this is the same function used to enable X data labels for normal
+(vertical) plots, but a new option 'plotin' enables the data value labels
+and positions them inside the plot. This is the only valid argument value
+(other than the default 'none') for horizontal bar charts.
+
+You can control the angle and formatting type for data value labels using:
+    SetXDataLabelAngle($angle)         SetXLabelAngle($angle)
+    SetXDataLabelType($type, ...)      SetXLabelType($type, ...)
+See the manual for more information, but note that the manual does not yet
+document that these apply to data value labels.  Also note that the label
+angle defaults to 0, not 90 degrees.
+
+The font and color for data value labels are set with SetFont('x_label', ...)
+and SetTextColor(...), but note these also apply to other elements as well.
+
+Data value labels in horizontal bar charts are drawn at the ends of the
+bars. This is to the right or left, depending on which way the bar extends
+from the Y axis. As discussed above under "Y Axis Position", the behavior
+differs from vertical bar charts because the Y axis does not default to
+X=0. If you have a horizontal bar chart with negative values, and you do
+not reposition the Y axis, bars for those negative values will still be drawn
+from the left side towards the right, with the Y axis position having a
+negative X value. The data values labels will still be drawn to the right
+of the bar end in that case.
 
 Note: Data Value Labels are currently referred to in the manual as Y Data
-Labels. If horizontal bars are accepted and documented in the manual, this
-will be changed to call them 'Data Value Labels'. This is necessary to
-avoid confusion with X Data Labels and Y Data Labels.
+Labels. This will be changed to call them 'Data Value Labels'. This is
+necessary to avoid confusion with X Data Labels and Y Data Labels.
 
 -----------------------------------------------------------------------------
 Other Plot Types Not Available:
@@ -239,5 +277,28 @@ horizontal bar charts.
 
 12) DrawGraph() now decides to draw a bar or horizontal bar chart based on
 the data type (text-data or text-data-yx).
+
+(The following changes were made after PHPlot-5.1.2)
+
+13) Change SetXDataLabelPos to accept 'plotin' for data value labels.
+
+14) Add an argument $format_specifier to the internal function DrawDataLabel.
+This allows data value labels for horizontal bar charts to use the 'xd'
+format specifier instead of the 'yd' format specifier. The argument
+defaults to 'yd' so no existing caller needs to change.
+
+15) Add code to DrawHorizBars to draw the data value labels if enabled.
+
+-----------------------------------------------------------------------------
+History:
+
+2010-06-26 First version, for PHPlot-5.1.2
+
+2010-07-26 Update for CVS changes pending for next release after PHPlot-5.1.2.
+  Data Value Labels are now implemented for horizontal bar charts. These
+  display the value of each bar to the right (or left) of the end of the bar.
+
+  Corrected the description under "Y axis position". Bars are not drawn from
+  zero outwards, but from the Y axis - wherever it is.
 
 -----------------------------------------------------------------------------
