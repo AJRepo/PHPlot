@@ -2,6 +2,12 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2010-07-26
+    * Horizontal bar charts (still an experimental feature) can now have data
+      value labels.
+    * HorizontalBars.txt: Fix incorrect description of bar direction. Add
+      text explaining the new data value labels.
+
 2010-06-29 (lbayuk)     ===== Released as 5.1.2 =====
     * phplot.php: Updated version
     * README.txt: Updated for new release
