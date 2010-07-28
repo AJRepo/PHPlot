@@ -4,6 +4,10 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2010-07-27
+   * developer.xml: Document new argument to internal functions DrawLines,
+     DrawDots, DrawLinesError, and DrawDotsError.
+
 2010-07-09
    * Makefile, examples/histogram.php, examples.xml : Changed the 'histogram'
      example to output a JPEG instead of PNG, and changed the Makefile to

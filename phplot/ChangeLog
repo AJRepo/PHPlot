@@ -2,6 +2,14 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2010-07-27
+    * Fixes for error bars:
+      Code cleanup in DrawYErrorBar(), with no functional change.
+      Suppress duplicate drawing of error bars with 'linepoints' error plots.
+      This was already fixed for data labels. Now error bars will only be
+      drawn by the 'points' part, not the 'lines' part. There should be no
+      visible changes to plots. (This is needed for a future change).
+
 2010-07-26
     * Horizontal bar charts (still an experimental feature) can now have data
       value labels.
