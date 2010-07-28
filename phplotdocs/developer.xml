@@ -486,24 +486,30 @@ Called by those plotting routines that include dots:
 </varlistentry>
 
 <varlistentry>
-  <term id="DrawDots" xreflabel="DrawDots">DrawDots()</term>
+  <term id="DrawDots" xreflabel="DrawDots">DrawDots($paired = False)</term>
   <listitem>
     <para>
 Draws a dot plot.
 Called by <xref linkend="DrawGraph"/> when the plot type is either
 'linepoints' or 'points', and the data type does not select error bars
 (is not 'data-data-error').
+$paired is true for linepoints plots, to suppress drawing elements that
+would be duplicated by <xref linkend="DrawLines"/>.
+(This argument was added after PHPlot-5.1.2.)
     </para>
   </listitem>
 </varlistentry>
 
 <varlistentry>
-  <term id="DrawDotsError" xreflabel="DrawDotsError">DrawDotsError()</term>
+  <term id="DrawDotsError" xreflabel="DrawDotsError">DrawDotsError($paired = False)</term>
   <listitem>
     <para>
 Draws a dot plot with error bars.
 Called by <xref linkend="DrawGraph"/> when the plot type is either
 'linepoints' or 'points', and the data type is 'data-data-error'.
+$paired is true for linepoints error plots, to suppress drawing elements that
+would be duplicated by <xref linkend="DrawLinesError"/>.
+(This argument was added after PHPlot-5.1.2.)
     </para>
   </listitem>
 </varlistentry>
@@ -547,24 +553,30 @@ but only if legend text has been set using <xref linkend="SetLegend"/>.
 </varlistentry>
 
 <varlistentry>
-  <term id="DrawLines" xreflabel="DrawLines">DrawLines()</term>
-  <listitem>Draw lines in data-data format.
+  <term id="DrawLines" xreflabel="DrawLines">DrawLines($paired = False)</term>
+  <listitem>
     <para>
 Draws a line plot.
 Called by <xref linkend="DrawGraph"/> when the plot type is 'lines' or
 'linepoints',
 and the data type does not select error bars (is not 'data-data-error').
+$paired is true for linepoints plots, to suppress drawing elements that
+would be duplicated by <xref linkend="DrawDots"/>.
+(This argument was added after PHPlot-5.1.2 and is not currently used.)
     </para>
   </listitem>
 </varlistentry>
 
 <varlistentry>
-  <term id="DrawLinesError" xreflabel="DrawLinesError">DrawLinesError()</term>
+  <term id="DrawLinesError" xreflabel="DrawLinesError">DrawLinesError($paired = False)</term>
   <listitem>
     <para>
 Draws a lines plot with error bars.
 Called by <xref linkend="DrawGraph"/> when the plot type is either
 'linepoints' or 'lines', and the data type is 'data-data-error'.
+$paired is true for linepoints error plots, to suppress drawing elements that
+would be duplicated by <xref linkend="DrawDotsError"/>.
+(This argument was added after PHPlot-5.1.2.)
     </para>
   </listitem>
 </varlistentry>
