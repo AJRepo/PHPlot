@@ -4608,14 +4608,14 @@ class PHPlot {
      * Supports only data-data-error format, with each row of the form
      *   array("title", x, y1, error1+, error1-, y2, error2+, error2-, ...)
      * Note: plot type and data type were already checked by the calling function.
+     *   $paired is true for linepoints error plots, to make sure elements are
+     *       only drawn once.  If true, data labels are drawn by DrawLinesError, and error
+     *       bars are drawn by DrawDotsError. (This choice is for backwards compatibility.)
      */
-    protected function DrawDotsError()
+    protected function DrawDotsError($paired = False)
     {
         // Adjust the point shapes and point sizes arrays:
         $this->CheckPointParams();
-
-        // Suppress duplicate X data labels in linepoints mode; let DrawLinesError() do them.
-        $do_labels = ($this->plot_type != 'linepoints');
 
         for($row = 0, $cnt = 0; $row < $this->num_data_rows; $row++) {
             $record = 1;                                // Skip record #0 (title)
@@ -4625,7 +4625,7 @@ class PHPlot {
             $x_now_pixels = $this->xtr($x_now);             // Absolute coordinates.
 
             // Draw X Data labels?
-            if ($this->x_data_label_pos != 'none' && $do_labels)
+            if ($this->x_data_label_pos != 'none' && !$paired)
                 $this->DrawXDataLabel($this->data[$row][0], $x_now_pixels, $row);
 
             // Now go for Y, E+, E-
@@ -4658,17 +4658,16 @@ class PHPlot {
      * Supported data types:
      *  - data-data ("title", x, y1, y2, y3, ...)
      *  - text-data ("title", y1, y2, y3, ...)
+     *   $paired is true for linepoints plots, to make sure elements are
+     *       only drawn once.
      */
-    protected function DrawDots()
+    protected function DrawDots($paired = False)
     {
         if (!$this->CheckDataType('text-data, data-data'))
             return FALSE;
 
         // Adjust the point shapes and point sizes arrays:
         $this->CheckPointParams();
-
-        // Suppress duplicate X data labels in linepoints mode; let DrawLines() do them.
-        $do_labels = ($this->plot_type != 'linepoints');
 
         for ($row = 0, $cnt = 0; $row < $this->num_data_rows; $row++) {
             $rec = 1;                    // Skip record #0 (data label)
@@ -4682,7 +4681,7 @@ class PHPlot {
             $x_now_pixels = $this->xtr($x_now);
 
             // Draw X Data labels?
-            if ($this->x_data_label_pos != 'none' && $do_labels)
+            if ($this->x_data_label_pos != 'none' && !$paired)
                 $this->DrawXDataLabel($this->data[$row][0], $x_now_pixels, $row);
 
             // Proceed with Y values
@@ -4742,32 +4741,15 @@ class PHPlot {
      */
     protected function DrawYErrorBar($x_world, $y_world, $error_height, $error_bar_type, $color)
     {
-        /*
-        // TODO: add a parameter to show datalabels next to error bars?
-        // something like this:
-        if ($this->x_data_label_pos == 'plot')
-            $this->DrawText($this->fonts['error'], 90, $x1, $y2,
-                            $color, $label, 'center', 'bottom');
-        */
-
         $x1 = $this->xtr($x_world);
         $y1 = $this->ytr($y_world);
         $y2 = $this->ytr($y_world+$error_height) ;
 
         ImageSetThickness($this->img, $this->error_bar_line_width);
         ImageLine($this->img, $x1, $y1 , $x1, $y2, $color);
-
-        switch ($error_bar_type) {
-        case 'line':
-            break;
-        case 'tee':
+        if ($error_bar_type == 'tee') {
             ImageLine($this->img, $x1-$this->error_bar_size, $y2, $x1+$this->error_bar_size, $y2, $color);
-            break;
-        default:
-            ImageLine($this->img, $x1-$this->error_bar_size, $y2, $x1+$this->error_bar_size, $y2, $color);
-            break;
         }
-
         ImageSetThickness($this->img, 1);
         return TRUE;
     }
@@ -4979,8 +4961,10 @@ class PHPlot {
     /*
      * Draw a Line plot
      * Supported data-types are 'data-data' and 'text-data'.
+     *   $paired is true for linepoints plots, to make sure elements are
+     *       only drawn once. This is not currently used by DrawLines.
      */
-    protected function DrawLines()
+    protected function DrawLines($paired = False)
     {
         if (!$this->CheckDataType('text-data, data-data'))
             return FALSE;
@@ -5043,8 +5027,11 @@ class PHPlot {
      * Supports only data-data-error format, with each row of the form
      *   array("title", x, y1, error1+, error1-, y2, error2+, error2-, ...)
      * Note: plot type and data type were already checked by the calling function.
+     *   $paired is true for linepoints error plots, to make sure elements are
+     *       only drawn once.  If true, data labels are drawn by DrawLinesError, and error
+     *       bars are drawn by DrawDotsError. (This choice is for backwards compatibility.)
      */
-    protected function DrawLinesError()
+    protected function DrawLinesError($paired = False)
     {
         $start_lines = array_fill(0, $this->records_per_group, FALSE);
 
@@ -5082,15 +5069,19 @@ class PHPlot {
                         }
                     }
 
-                    // Error+
-                    $val = $this->data[$row][$record++];
-                    $this->DrawYErrorBar($x_now, $y_now, $val, $this->error_bar_shape,
-                                         $this->ndx_error_bar_colors[$idx]);
+                    if ($paired) {
+                        $record += 2; // Skip error bars - done in the 'points' part of 'linepoints'.
+                    } else {
+                        // Error+
+                        $val = $this->data[$row][$record++];
+                        $this->DrawYErrorBar($x_now, $y_now, $val, $this->error_bar_shape,
+                                             $this->ndx_error_bar_colors[$idx]);
 
-                    // Error-
-                    $val = $this->data[$row][$record++];
-                    $this->DrawYErrorBar($x_now, $y_now, -$val, $this->error_bar_shape,
-                                         $this->ndx_error_bar_colors[$idx]);
+                        // Error-
+                        $val = $this->data[$row][$record++];
+                        $this->DrawYErrorBar($x_now, $y_now, -$val, $this->error_bar_shape,
+                                             $this->ndx_error_bar_colors[$idx]);
+                    }
 
                     // Update indexes:
                     $start_lines[$idx] = TRUE;   // Tells us if we already drew the first column of points,
@@ -5540,11 +5531,11 @@ class PHPlot {
             break;
         case 'linepoints':
             if ( $this->data_type == 'data-data-error') {
-                $this->DrawLinesError();
-                $this->DrawDotsError();
+                $this->DrawLinesError(True);
+                $this->DrawDotsError(True);
             } else {
-                $this->DrawLines();
-                $this->DrawDots();
+                $this->DrawLines(True);
+                $this->DrawDots(True);
             }
             break;
         case 'points';
