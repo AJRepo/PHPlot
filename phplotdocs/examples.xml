@@ -702,4 +702,83 @@ example.
 
 <!-- =============================================== -->
 
+<sect1 id="ex-colorcallbackgradient">
+<title>Example - Creative Use of the Data Color Callback</title>
+<para>
+This example uses the data_color callback to vary the colors used in a
+thinbarline plot.
+The callback function <function>getcolor</function> simply returns the row
+number, which corresponds to each point's position along the X axis.
+PHPlot will therefore use a different color for each plotted point (modulo
+the number of defined colors). A large data color array is also defined,
+with colors set to shades of blue from dark to light and back to dark.
+</para>
+<para>
+A truecolor plot image is used to allow for more colors than would be
+allowed in a palette image.
+</para>
+<para>
+Using the data color callback is described in
+<xref linkend="conc-colors-datacolor-callback"/>.
+More information on callbacks can be found in
+<xref linkend="callbacks" />.
+More information on truecolor images can be found in
+<xref linkend="conc-truecolor" />.
+</para>
+<example id="example-colorcallbackgradient">
+<title>Creative Use of the Data Color Callback</title>
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="examples/colorcallbackgradient.png" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>Data Color Callback Example</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+&colorcallbackgradient;
+</example>
+</sect1>
+
+<!-- =============================================== -->
+
+<sect1 id="ex-colorcallbackbars">
+<title>Example - Custom Bar Colors Using the Data Color Callback</title>
+<para>
+This example uses the data_color callback to customize the colors in a bar
+chart. The goal is to have the bar colors depend on the value of the bar
+(rather than the position of the bar in the bar group). Bars above 80% will
+be drawn in green, bars below 60% will be red, and bars in between those
+two values will be yellow.
+</para>
+<para>
+The function <function>pickcolor</function> is the data_color callback.
+It accesses the data array using its pass-through argument, indexing into
+it with the current row and column. (Note col+1 is used to skip over the row
+label.) It then checks the data value, and returns an index into the data
+colors array: 0, 1, or 2, depending on the value.
+</para>
+<para>
+Using the data color callback is described in
+<xref linkend="conc-colors-datacolor-callback"/>.
+More information on callbacks can be found in <xref linkend="callbacks" />.
+</para>
+<example id="example-colorcallbackbars">
+<title>Custom Bar Colors Using the Data Color Callback</title>
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="examples/colorcallbackbars.png" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>Custom Bar Colors Example</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+&colorcallbackbars;
+</example>
+</sect1>
+
+<!-- =============================================== -->
 </chapter>
