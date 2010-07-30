@@ -422,6 +422,8 @@ that are zero or more arguments to pass to the callback, after the image
 resource and passthrough arguments. DoCallback does nothing if there is no
 callback registered for the given reason, otherwise it calls the callback
 function. See <xref linkend="callbacks"/> for more information on callbacks.
+Starting after PHPlot-5.1.2, DoCallback returns the value returned by the
+callback function, if any.
     </para>
   </listitem>
 </varlistentry>
