@@ -4,6 +4,16 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2010-07-29
+   * concepts.xml: Add section documenting use of the new data color
+     callback to customize usage of data colors.
+   * examples.xml: Add 2 new examples showing data color callback.
+   * callbacks.xml: Rewrite top warning. Callbacks can now return values.
+     Add new data_color callback to table.
+   * developer.xml: DoCallback now returns whatever the callback returns.
+   * reference.xml: Add note and link to section on data color callback
+     for 3 cases of data color array usage
+
 2010-07-27
    * developer.xml: Document new argument to internal functions DrawLines,
      DrawDots, DrawLinesError, and DrawDotsError.

@@ -13,6 +13,17 @@ see the ChangeLog file inside the PHPlot distribution.)
 </abstract>
 
 <variablelist>
+
+  <varlistentry>
+    <term>2010-07-29</term>
+    <listitem>
+      <para>
+Document the new data color customization callback with a new section in
+the Concepts chapter and two new examples.
+      </para>
+    </listitem>
+  </varlistentry>
+
   <varlistentry>
     <term>2010-06-28</term>
     <listitem>

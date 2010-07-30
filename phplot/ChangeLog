@@ -2,6 +2,16 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2010-07-28
+    * Allow callbacks to return a value (to support new data_color callback).
+    * Feature request 3034164 "Extended control of data colors":
+      Define new callback 'data_color' for picking the data color.
+      Changed internal plot drawing functions DrawDots, DrawLines, DrawSquared,
+      DrawBars, DrawStackedBars, DrawDotsError, DrawThinBarLines,
+      DrawLinesError, and DrawHorizBars to use the data_color callback
+      (if defined) to select the data colors.
+    * SetRGBArray code cleanup (no functional changes).
+
 2010-07-27
     * Fixes for error bars:
       Code cleanup in DrawYErrorBar(), with no functional change.
