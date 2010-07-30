@@ -893,6 +893,11 @@ If the argument is NULL or missing from the function call, the color map is
 reset to the defaults, but only if it has not already been set.
 This is used internal to PHPlot for one-time initialization.
     </para>
+    <para>
+A data colors callback, as described in
+<xref linkend="conc-colors-datacolor-callback" />,
+also controls selection of the color for data borders (if used).
+    </para>
   </refsect1>
 </refentry>
 
@@ -1008,6 +1013,10 @@ $plot->SetDataColors(NULL, NULL, 60);
 ]]></programlisting>
 This applies alpha=60 (meaning 60/127 transparency) to all the default
 data colors.
+    </para>
+    <para>
+You can control how the data colors array is used with a data colors callback.
+See <xref linkend="conc-colors-datacolor-callback" /> for more information.
     </para>
   </refsect1>
   <refsect1>
@@ -1732,10 +1741,15 @@ If SetErrorBarColors is never called, the default color map is the same as
 for <xref linkend="SetDataColors"/>. It contains 16 colors, starting with
 SkyBlue, green, orange, and blue.
 For the full list, see <xref linkend="conc-colors-datacolors"/>.
-   </para>
-   <para>
+    </para>
+    <para>
 If you change the data colors with <xref linkend="SetDataColors" />,
 you probably want to change the error bar colors to the same array.
+    </para>
+    <para>
+A data colors callback, as described in
+<xref linkend="conc-colors-datacolor-callback" />,
+also controls selection of the color for error bars.
     </para>
   </refsect1>
   <refsect1>
