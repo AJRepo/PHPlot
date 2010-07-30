@@ -57,6 +57,8 @@ EXAMPLES_PHP=\
   examples/bars2.php \
   examples/bars3.php \
   examples/bars4.php \
+  examples/colorcallbackbars.php \
+  examples/colorcallbackgradient.php \
   examples/histogram.php \
   examples/linepoints1.php \
   examples/lines1.php \
@@ -90,6 +92,8 @@ EXAMPLES_IMAGES=\
   examples/bars2.png \
   examples/bars3.png \
   examples/bars4.png \
+  examples/colorcallbackbars.png \
+  examples/colorcallbackgradient.png \
   examples/histogram.jpg \
   examples/linepoints1.png \
   examples/lines1.png \
