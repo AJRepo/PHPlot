@@ -17,17 +17,13 @@ development and testing of PHPlot.
 
 <warning>
   <para>
-Callbacks were added to PHPlot-5.0.4 as an experimental feature.
-This feature is subject to change in future releases. Changes in the
-implementation may be incompatible with the current interface.
-  </para>
-  <para>
-Some methods of using callbacks allow you to directly access or alter PHPlot
-class variables, or call PHPlot internal methods. (Of course, this is
-currently possible without the callback feature as well.) All PHPlot class
-variables, and all methods/functions which are not documented in the
-"Reference" section of the PHPlot Reference Manual, are considered to be
-for internal use and are subject to be changed or removed at any time.
+All PHPlot class variables, and all methods/functions which are not
+documented in the "Reference" section of the PHPlot Reference Manual, are
+considered to be for internal use and are subject to be changed or removed
+at any time.
+If you call internal functions, or access internal class variables,
+you greatly increase the risk of breaking your application with
+future PHPlot releases.
   </para>
 </warning>
 
@@ -119,6 +115,13 @@ Where $myvar_value is the value of $myvar at the time SetCallback was called.
 (The plot_area parameter is only supplied for the draw_graph callback in
 PHPlot-5.1.0 and later.)
 </para>
+
+<para>
+Some callbacks are expected to return a value. This is documented in 
+<xref linkend="callbacks-names"/>. In all other cases, the return value
+from a callback function is ignored.
+(Callbacks which return a value were implemented after PHPlot-5.1.2.)
+</para>
 </sect1>
 
 <sect1 id="callbacks-access">
@@ -204,6 +207,15 @@ The following table lists the available callback reasons.
         </row>
       </thead>
       <tbody>
+        <row>
+          <entry>data_color</entry>
+          <entry>Every time a color is needed for a data element.</entry>
+          <entry>$row, $col, $extra</entry>
+          <entry>The callback is expected to return an integer color index
+             into the data colors array. This is for custom color selection.
+             For more information, see
+             <xref linkend="conc-colors-datacolor-callback"/>.</entry>
+        </row>
         <row>
           <entry>draw_setup</entry>
           <entry>After all setup, before drawing anything.</entry>
