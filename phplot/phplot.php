@@ -215,6 +215,7 @@ class PHPlot {
         'draw_border' => NULL,
         'draw_legend' => NULL,
         'draw_all' => NULL,
+        'data_color' => NULL,
         'debug_textbox' => NULL,  // For testing/debugging text box alignment
         'debug_scale' => NULL,    // For testing/debugging scale setup
     );
@@ -488,18 +489,17 @@ class PHPlot {
     }
 
 
-    /*!
+    /*
      * Sets the array of colors to be used. It can be user defined, a small predefined one
      * or a large one included from 'rgb.inc.php'.
      *
-     * \param which_color_array If an array, the used as color array. If a string can
-     *        be one of 'small' or 'large'.
+     *    $which_color_array : A color array, or 'small' or 'large'.
+     * Color arrays map color names into arrays of R, G, B and optionally A values.
      */
     function SetRGBArray ($which_color_array)
     {
-        if ( is_array($which_color_array) ) {           // User defined array
+        if (is_array($which_color_array)) {           // User defined array
             $this->rgb_array = $which_color_array;
-            return TRUE;
         } elseif ($which_color_array == 'small') {      // Small predefined color array
             $this->rgb_array = array(
                 'white'          => array(255, 255, 255),
@@ -539,8 +539,7 @@ class PHPlot {
                 'azure1'         => array(240, 255, 255),
                 'aquamarine1'    => array(127, 255, 212)
                 );
-            return TRUE;
-        } elseif ($which_color_array === 'large')  {    // Large color array
+        } elseif ($which_color_array == 'large')  {    // Large color array
             if (!@include('rgb.inc.php')) {
                 return $this->PrintError("SetRGBArray(): Large color map could not be loaded\n"
                                        . "from 'rgb.inc.php'.");
@@ -2460,7 +2459,7 @@ class PHPlot {
      *    ... : Zero or more additional arguments to be passed to the
      *      callback function, after the passthru argument:
      *           callback_function($image, $passthru, ...)
-     * Returns: nothing.
+     * Returns: whatever value (if any) was returned by the callback.
      */
     protected function DoCallback()  # Note: Variable arguments
     {
@@ -2471,7 +2470,7 @@ class PHPlot {
         list($function, $args[0]) = $this->callbacks[$reason];
         array_unshift($args, $this->img);
         # Now args[] looks like: img, passthru, extra args...
-        call_user_func_array($function, $args);
+        return call_user_func_array($function, $args);
     }
 
 
@@ -4617,6 +4616,18 @@ class PHPlot {
         // Adjust the point shapes and point sizes arrays:
         $this->CheckPointParams();
 
+        // Is there a custom function for picking the data color?
+        $custom_color = (bool)$this->GetCallback('data_color');
+        if ($custom_color) {
+            // This uses data_colors and error_bar_colors.
+            // They are padded to the same minimum length,
+            // but are not necessarily the same length.
+            $num_data_colors = count($this->ndx_data_colors);
+            $num_error_colors = count($this->ndx_error_bar_colors);
+            // Special flag for data color callback to indicate the 'points' part of 'linepoints':
+            $altcolor = $paired ? 1 : 0;
+        }
+
         for($row = 0, $cnt = 0; $row < $this->num_data_rows; $row++) {
             $record = 1;                                // Skip record #0 (title)
 
@@ -4632,18 +4643,26 @@ class PHPlot {
             for ($idx = 0; $record < $this->num_recs[$row]; $idx++) {
                 if (is_numeric($this->data[$row][$record])) {         // Allow for missing Y data
 
+                    // Select the colors.
+                    if ($custom_color) {
+                        $col_i = $this->DoCallback('data_color', $row, $idx, $altcolor);
+                        $data_color = $this->ndx_data_colors[$col_i % $num_data_colors];
+                        $error_bar_color = $this->ndx_error_bar_colors[$col_i % $num_error_colors];
+                    } else {
+                        $data_color = $this->ndx_data_colors[$idx];
+                        $error_bar_color = $this->ndx_error_bar_colors[$idx];
+                    }
+
                     // Y:
                     $y_now = $this->data[$row][$record++];
-                    $this->DrawDot($x_now, $y_now, $idx, $this->ndx_data_colors[$idx]);
+                    $this->DrawDot($x_now, $y_now, $idx, $data_color);
 
                     // Error +
                     $val = $this->data[$row][$record++];
-                    $this->DrawYErrorBar($x_now, $y_now, $val, $this->error_bar_shape,
-                                         $this->ndx_error_bar_colors[$idx]);
+                    $this->DrawYErrorBar($x_now, $y_now, $val, $this->error_bar_shape, $error_bar_color);
                     // Error -
                     $val = $this->data[$row][$record++];
-                    $this->DrawYErrorBar($x_now, $y_now, -$val, $this->error_bar_shape,
-                                         $this->ndx_error_bar_colors[$idx]);
+                    $this->DrawYErrorBar($x_now, $y_now, -$val, $this->error_bar_shape, $error_bar_color);
                 } else {
                     $record += 3;  // Skip over missing Y and its error values
                 }
@@ -4669,6 +4688,14 @@ class PHPlot {
         // Adjust the point shapes and point sizes arrays:
         $this->CheckPointParams();
 
+        // Is there a custom function for picking the data color?
+        $custom_color = (bool)$this->GetCallback('data_color');
+        if ($custom_color) {
+            $num_data_colors = count($this->ndx_data_colors);
+            // Special flag for data color callback to indicate the 'points' part of 'linepoints':
+            $altcolor = $paired ? 1 : 0;
+        }
+
         for ($row = 0, $cnt = 0; $row < $this->num_data_rows; $row++) {
             $rec = 1;                    // Skip record #0 (data label)
 
@@ -4687,8 +4714,17 @@ class PHPlot {
             // Proceed with Y values
             for($idx = 0;$rec < $this->num_recs[$row]; $rec++, $idx++) {
                 if (is_numeric($this->data[$row][$rec])) {              // Allow for missing Y data
-                    $this->DrawDot($x_now, $this->data[$row][$rec],
-                                   $idx, $this->ndx_data_colors[$idx]);
+
+                    // Select the color
+                    if ($custom_color) {
+                        $data_col_i = $this->DoCallback('data_color', $row, $idx, $altcolor)
+                                      % $num_data_colors;
+                        $data_color = $this->ndx_data_colors[$data_col_i];
+                    } else {
+                        $data_color = $this->ndx_data_colors[$idx];
+                    }
+
+                    $this->DrawDot($x_now, $this->data[$row][$rec], $idx, $data_color);
                 }
             }
         }
@@ -4705,6 +4741,11 @@ class PHPlot {
     {
         if (!$this->CheckDataType('text-data, data-data'))
             return FALSE;
+
+        // Is there a custom function for picking the data color?
+        $custom_color = (bool)$this->GetCallback('data_color');
+        if ($custom_color)
+            $num_data_colors = count($this->ndx_data_colors);
 
         for ($row = 0, $cnt = 0; $row < $this->num_data_rows; $row++) {
             $rec = 1;                    // Skip record #0 (data label)
@@ -4725,9 +4766,18 @@ class PHPlot {
             for($idx = 0;$rec < $this->num_recs[$row]; $rec++, $idx++) {
                 if (is_numeric($this->data[$row][$rec])) {              // Allow for missing Y data
                     ImageSetThickness($this->img, $this->line_widths[$idx]);
-                    // Draws a line from user defined x axis position up to ytr($val)
+
+                    // Select the color
+                    if ($custom_color) {
+                        $data_col_i = $this->DoCallback('data_color', $row, $idx) % $num_data_colors;
+                        $data_color = $this->ndx_data_colors[$data_col_i];
+                    } else {
+                        $data_color = $this->ndx_data_colors[$idx];
+                    }
+
+                    // Draws a line from user defined x axis position up (or down) to ytr($val)
                     ImageLine($this->img, $x_now_pixels, $this->x_axis_y_pixels, $x_now_pixels,
-                              $this->ytr($this->data[$row][$rec]), $this->ndx_data_colors[$idx]);
+                              $this->ytr($this->data[$row][$rec]), $data_color);
                 }
             }
         }
@@ -4973,6 +5023,11 @@ class PHPlot {
         // If start_lines[i] is true, then (lastx[i], lasty[i]) is the previous point.
         $start_lines = array_fill(0, $this->records_per_group, FALSE);
 
+        // Is there a custom function for picking the data color?
+        $custom_color = (bool)$this->GetCallback('data_color');
+        if ($custom_color)
+            $num_data_colors = count($this->ndx_data_colors);
+
         for ($row = 0, $cnt = 0; $row < $this->num_data_rows; $row++) {
             $record = 1;                                    // Skip record #0 (data label)
 
@@ -4990,6 +5045,15 @@ class PHPlot {
                 if (($line_style = $this->line_styles[$idx]) == 'none')
                     continue; //Allow suppressing entire line, useful with linepoints
                 if (is_numeric($this->data[$row][$record])) {           //Allow for missing Y data
+
+                    // Select the color
+                    if ($custom_color) {
+                        $data_col_i = $this->DoCallback('data_color', $row, $idx) % $num_data_colors;
+                        $data_color = $this->ndx_data_colors[$data_col_i];
+                    } else {
+                        $data_color = $this->ndx_data_colors[$idx];
+                    }
+
                     $y_now_pixels = $this->ytr($this->data[$row][$record]);
 
                     if ($start_lines[$idx]) {
@@ -4997,14 +5061,11 @@ class PHPlot {
                         ImageSetThickness($this->img, $this->line_widths[$idx]);
 
                         if ($line_style == 'dashed') {
-                            $this->SetDashedStyle($this->ndx_data_colors[$idx]);
-                            ImageLine($this->img, $x_now_pixels, $y_now_pixels, $lastx[$idx], $lasty[$idx],
-                                      IMG_COLOR_STYLED);
-                        } else {
-                            ImageLine($this->img, $x_now_pixels, $y_now_pixels, $lastx[$idx], $lasty[$idx],
-                                      $this->ndx_data_colors[$idx]);
+                            $this->SetDashedStyle($data_color);
+                            $data_color = IMG_COLOR_STYLED;
                         }
-
+                        ImageLine($this->img, $x_now_pixels, $y_now_pixels,
+                                  $lastx[$idx], $lasty[$idx], $data_color);
                     }
                     $lasty[$idx] = $y_now_pixels;
                     $lastx[$idx] = $x_now_pixels;
@@ -5035,6 +5096,13 @@ class PHPlot {
     {
         $start_lines = array_fill(0, $this->records_per_group, FALSE);
 
+        // Is there a custom function for picking the data color?
+        $custom_color = (bool)$this->GetCallback('data_color');
+        if ($custom_color) {
+            $num_data_colors = count($this->ndx_data_colors);
+            $num_error_colors = count($this->ndx_error_bar_colors);
+        }
+
         for ($row = 0, $cnt = 0; $row < $this->num_data_rows; $row++) {
             $record = 1;                                    // Skip record #0 (data label)
 
@@ -5052,6 +5120,16 @@ class PHPlot {
                     continue; //Allow suppressing entire line, useful with linepoints
                 if (is_numeric($this->data[$row][$record])) {    // Allow for missing Y data
 
+                    // Select the colors.
+                    if ($custom_color) {
+                        $col_i = $this->DoCallback('data_color', $row, $idx); // Custom color index
+                        $data_color = $this->ndx_data_colors[$col_i % $num_data_colors];
+                        $error_bar_color = $this->ndx_error_bar_colors[$col_i % $num_error_colors];
+                    } else {
+                        $data_color = $this->ndx_data_colors[$idx];
+                        $error_bar_color = $this->ndx_error_bar_colors[$idx];
+                    }
+
                     // Y
                     $y_now = $this->data[$row][$record++];
                     $y_now_pixels = $this->ytr($y_now);
@@ -5060,13 +5138,11 @@ class PHPlot {
                         ImageSetThickness($this->img, $this->line_widths[$idx]);
 
                         if ($line_style == 'dashed') {
-                            $this->SetDashedStyle($this->ndx_data_colors[$idx]);
-                            ImageLine($this->img, $x_now_pixels, $y_now_pixels, $lastx[$idx], $lasty[$idx],
-                                      IMG_COLOR_STYLED);
-                        } else {
-                            ImageLine($this->img, $x_now_pixels, $y_now_pixels, $lastx[$idx], $lasty[$idx],
-                                      $this->ndx_data_colors[$idx]);
+                            $this->SetDashedStyle($data_color);
+                            $data_color = IMG_COLOR_STYLED;
                         }
+                        ImageLine($this->img, $x_now_pixels, $y_now_pixels,
+                                  $lastx[$idx], $lasty[$idx], $data_color);
                     }
 
                     if ($paired) {
@@ -5074,13 +5150,11 @@ class PHPlot {
                     } else {
                         // Error+
                         $val = $this->data[$row][$record++];
-                        $this->DrawYErrorBar($x_now, $y_now, $val, $this->error_bar_shape,
-                                             $this->ndx_error_bar_colors[$idx]);
+                        $this->DrawYErrorBar($x_now, $y_now, $val, $this->error_bar_shape, $error_bar_color);
 
                         // Error-
                         $val = $this->data[$row][$record++];
-                        $this->DrawYErrorBar($x_now, $y_now, -$val, $this->error_bar_shape,
-                                             $this->ndx_error_bar_colors[$idx]);
+                        $this->DrawYErrorBar($x_now, $y_now, -$val, $this->error_bar_shape, $error_bar_color);
                     }
 
                     // Update indexes:
@@ -5118,6 +5192,11 @@ class PHPlot {
         // If start_lines[i] is true, then (lastx[i], lasty[i]) is the previous point.
         $start_lines = array_fill(0, $this->records_per_group, FALSE);
 
+        // Is there a custom function for picking the data color?
+        $custom_color = (bool)$this->GetCallback('data_color');
+        if ($custom_color)
+            $num_data_colors = count($this->ndx_data_colors);
+
         for ($row = 0, $cnt = 0; $row < $this->num_data_rows; $row++) {
             $record = 1;                                    // Skip record #0 (data label)
 
@@ -5140,18 +5219,22 @@ class PHPlot {
                         // Set line width, revert it to normal at the end
                         ImageSetThickness($this->img, $this->line_widths[$idx]);
 
-                        if ($this->line_styles[$idx] == 'dashed') {
-                            $this->SetDashedStyle($this->ndx_data_colors[$idx]);
-                            ImageLine($this->img, $lastx[$idx], $lasty[$idx], $x_now_pixels, $lasty[$idx],
-                                      IMG_COLOR_STYLED);
-                            ImageLine($this->img, $x_now_pixels, $lasty[$idx], $x_now_pixels, $y_now_pixels,
-                                      IMG_COLOR_STYLED);
+                        // Select the color
+                        if ($custom_color) {
+                            $data_col_i = $this->DoCallback('data_color', $row, $idx) % $num_data_colors;
+                            $data_color = $this->ndx_data_colors[$data_col_i];
                         } else {
-                            ImageLine($this->img, $lastx[$idx], $lasty[$idx], $x_now_pixels, $lasty[$idx],
-                                      $this->ndx_data_colors[$idx]);
-                            ImageLine($this->img, $x_now_pixels, $lasty[$idx], $x_now_pixels, $y_now_pixels,
-                                      $this->ndx_data_colors[$idx]);
+                            $data_color = $this->ndx_data_colors[$idx];
                         }
+
+                        if ($this->line_styles[$idx] == 'dashed') {
+                            $this->SetDashedStyle($data_color);
+                            $data_color = IMG_COLOR_STYLED;
+                        }
+                        ImageLine($this->img, $lastx[$idx], $lasty[$idx],
+                                  $x_now_pixels, $lasty[$idx], $data_color);
+                        ImageLine($this->img, $x_now_pixels, $lasty[$idx],
+                                  $x_now_pixels, $y_now_pixels, $data_color);
                     }
                     $lastx[$idx] = $x_now_pixels;
                     $lasty[$idx] = $y_now_pixels;
@@ -5182,6 +5265,17 @@ class PHPlot {
         // in the group. See also CalcBarWidths above.
         $x_first_bar = (($this->records_per_group - 1) * $this->record_bar_width) / 2 - $this->bar_adjust_gap;
 
+        // Is there a custom function for picking the data color?
+        $custom_color = (bool)$this->GetCallback('data_color');
+        if ($custom_color) {
+            // This uses data_colors, data_dark_colors, and data_border_colors.
+            // data_colors and data_dark_colors are always the same length.
+            // They and data_border_colors are padded to the same minimum length,
+            // but are not necessarily the same length.
+            $num_data_colors = count($this->ndx_data_colors);
+            $num_border_colors = count($this->ndx_data_border_colors);
+        }
+
         for ($row = 0; $row < $this->num_data_rows; $row++) {
             $record = 1;                                    // Skip record #0 (data label)
 
@@ -5199,18 +5293,29 @@ class PHPlot {
                     $y = $this->data[$row][$record];
                     $x2 = $x1 + $this->actual_bar_width;
 
-                    if ($y < $this->x_axis_position) {
-                        $y1 = $this->x_axis_y_pixels;
-                        $y2 = $this->ytr($y);
-                        $upgoing_bar = False;
-                    } else {
+                    if (($upgoing_bar = $y >= $this->x_axis_position)) {
                         $y1 = $this->ytr($y);
                         $y2 = $this->x_axis_y_pixels;
-                        $upgoing_bar = True;
+                    } else {
+                        $y1 = $this->x_axis_y_pixels;
+                        $y2 = $this->ytr($y);
+                    }
+
+                    // Select the colors.
+                    if ($custom_color) {
+                        $col_i = $this->DoCallback('data_color', $row, $idx); // Custom color index
+                        $data_col_i = $col_i % $num_data_colors; // Index for data colors and dark colors
+                        $data_color = $this->ndx_data_colors[$data_col_i];
+                        $data_dark_color = $this->ndx_data_dark_colors[$data_col_i];
+                        $data_border_color = $this->ndx_data_border_colors[$col_i % $num_border_colors];
+                    } else {
+                        $data_color = $this->ndx_data_colors[$idx];
+                        $data_dark_color = $this->ndx_data_dark_colors[$idx];
+                        $data_border_color = $this->ndx_data_border_colors[$idx];
                     }
 
                     // Draw the bar
-                    ImageFilledRectangle($this->img, $x1, $y1, $x2, $y2, $this->ndx_data_colors[$idx]);
+                    ImageFilledRectangle($this->img, $x1, $y1, $x2, $y2, $data_color);
 
                     if ($this->shading) {                           // Draw the shade?
                         ImageFilledPolygon($this->img, array($x1, $y1,
@@ -5218,12 +5323,11 @@ class PHPlot {
                                                        $x2 + $this->shading, $y1 - $this->shading,
                                                        $x2 + $this->shading, $y2 - $this->shading,
                                                        $x2, $y2,
-                                                       $x2, $y1),
-                                           6, $this->ndx_data_dark_colors[$idx]);
+                                                       $x2, $y1), 6, $data_dark_color);
                     }
                     // Or draw a border?
                     else {
-                        ImageRectangle($this->img, $x1, $y1, $x2,$y2, $this->ndx_data_border_colors[$idx]);
+                        ImageRectangle($this->img, $x1, $y1, $x2,$y2, $data_border_color);
                     }
 
                     // Draw optional data labels above the bars (or below, for negative values).
@@ -5260,6 +5364,13 @@ class PHPlot {
         // in the group. See also CalcBarWidths above.
         $y_first_bar = (($this->records_per_group - 1) * $this->record_bar_width) / 2 - $this->bar_adjust_gap;
 
+        // Is there a custom function for picking the data color?
+        $custom_color = (bool)$this->GetCallback('data_color');
+        if ($custom_color) {
+            $num_data_colors = count($this->ndx_data_colors);
+            $num_border_colors = count($this->ndx_data_border_colors);
+        }
+
         for ($row = 0; $row < $this->num_data_rows; $row++) {
             $record = 1;                                    // Skip record #0 (data label)
 
@@ -5277,18 +5388,29 @@ class PHPlot {
                     $x = $this->data[$row][$record];
                     $y2 = $y1 - $this->actual_bar_width;
 
-                    if ($x < $this->y_axis_position) {
-                        $x1 = $this->y_axis_x_pixels;
-                        $x2 = $this->xtr($x);
-                        $rightwards_bar = False;
-                    } else {
+                    if (($rightwards_bar = $x >= $this->y_axis_position)) {
                         $x1 = $this->xtr($x);
                         $x2 = $this->y_axis_x_pixels;
-                        $rightwards_bar = True;
+                    } else {
+                        $x1 = $this->y_axis_x_pixels;
+                        $x2 = $this->xtr($x);
+                    }
+
+                    // Select the colors.
+                    if ($custom_color) {
+                        $col_i = $this->DoCallback('data_color', $row, $idx); // Custom color index
+                        $data_col_i = $col_i % $num_data_colors; // Index for data colors and dark colors
+                        $data_color = $this->ndx_data_colors[$data_col_i];
+                        $data_dark_color = $this->ndx_data_dark_colors[$data_col_i];
+                        $data_border_color = $this->ndx_data_border_colors[$col_i % $num_border_colors];
+                    } else {
+                        $data_color = $this->ndx_data_colors[$idx];
+                        $data_dark_color = $this->ndx_data_dark_colors[$idx];
+                        $data_border_color = $this->ndx_data_border_colors[$idx];
                     }
 
                     // Draw the bar
-                    ImageFilledRectangle($this->img, $x2, $y2, $x1, $y1, $this->ndx_data_colors[$idx]);
+                    ImageFilledRectangle($this->img, $x2, $y2, $x1, $y1, $data_color);
 
                     if ($this->shading) {                           // Draw the shade?
                         ImageFilledPolygon($this->img, array($x2, $y2,
@@ -5296,12 +5418,11 @@ class PHPlot {
                                                        $x1 + $this->shading, $y2 - $this->shading,
                                                        $x1 + $this->shading, $y1 - $this->shading,
                                                        $x1, $y1,
-                                                       $x1, $y2),
-                                           6, $this->ndx_data_dark_colors[$idx]);
+                                                       $x1, $y2), 6, $data_dark_color);
                     }
                     // Or draw a border?
                     else {
-                        ImageRectangle($this->img, $x1, $y1, $x2,$y2, $this->ndx_data_border_colors[$idx]);
+                        ImageRectangle($this->img, $x1, $y1, $x2,$y2, $data_border_color);
                     }
 
                     // Draw optional data labels to the right of the bars (or left, if the bar
@@ -5362,6 +5483,17 @@ class PHPlot {
             $data_label_y_offset = -5 - $shade;
         }
 
+        // Is there a custom function for picking the data color?
+        $custom_color = (bool)$this->GetCallback('data_color');
+        if ($custom_color) {
+            // This uses data_colors, data_dark_colors, and data_border_colors.
+            // data_colors and data_dark_colors are always the same length.
+            // They and data_border_colors are padded to the same minimum length,
+            // but are not necessarily the same length.
+            $num_data_colors = count($this->ndx_data_colors);
+            $num_border_colors = count($this->ndx_data_border_colors);
+        }
+
         for ($row = 0; $row < $this->num_data_rows; $row++) {
             $record = 1;                                    // Skip record #0 (data label)
 
@@ -5396,17 +5528,29 @@ class PHPlot {
                         $y1 = $this->ytr($wy1);
                         $y2 = $this->ytr($wy2);
 
+                        // Select the colors.
+                        if ($custom_color) {
+                            $col_i = $this->DoCallback('data_color', $row, $idx); // Custom color index
+                            $data_col_i = $col_i % $num_data_colors; // Index for data colors and dark colors
+                            $data_color = $this->ndx_data_colors[$data_col_i];
+                            $data_dark_color = $this->ndx_data_dark_colors[$data_col_i];
+                            $data_border_color = $this->ndx_data_border_colors[$col_i % $num_border_colors];
+                        } else {
+                            $data_color = $this->ndx_data_colors[$idx];
+                            $data_dark_color = $this->ndx_data_dark_colors[$idx];
+                            $data_border_color = $this->ndx_data_border_colors[$idx];
+                        }
+
                         // Draw the bar
-                        ImageFilledRectangle($this->img, $x1, $y1, $x2, $y2, $this->ndx_data_colors[$idx]);
+                        ImageFilledRectangle($this->img, $x1, $y1, $x2, $y2, $data_color);
 
                         if ($shade > 0) {                           // Draw the shade?
                             ImageFilledPolygon($this->img,
                                                array($x1, $y1, $x1 + $shade, $y1 - $shade,
                                                      $x2 + $shade, $y1 - $shade, $x2 + $shade, $y2 - $shade,
-                                                     $x2, $y2, $x2, $y1),
-                                               6, $this->ndx_data_dark_colors[$idx]);
+                                                     $x2, $y2, $x2, $y1), 6, $data_dark_color);
                         } else {        // Or draw a border?
-                            ImageRectangle($this->img, $x1, $y1, $x2,$y2, $this->ndx_data_border_colors[$idx]);
+                            ImageRectangle($this->img, $x1, $y1, $x2,$y2, $data_border_color);
                         }
 
                         // Draw optional data label for this bar segment just below the line.
