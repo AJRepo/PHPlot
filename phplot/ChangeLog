@@ -2,6 +2,26 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2010-08-04
+    * Implemented horizontal stacked bar plots:
+      Use the same data type introduced for horizontal bars, 'text-data-yx',
+      and the same plot type 'stackedbars', to make a horizontal stacked bar
+      plot.  Data value labels, both at the ends of the bars and within the
+      bars ('plotstack' labels) are available with horizontal stacked bars.
+
+    * Internal function DrawDataLabel() is replaced by DrawDataValueLabel(),
+      with different usage. The new function can also check to see if a label
+      fits in the allocated space.
+
+    * Fixed the text size check in stacked bar plots for data value labels
+      within the bars. The check only worked correctly for 0 degree labels. It
+      now works with any text angle. It suppresses the label if it is too high
+      (for vertical stacked bar plots) or too wide (for horizontal stacked bar
+      plots) to fit in the bar segment to which it belongs. Note that it only
+      checks in the bar direction. If the text is too wide (for vertical bars),
+      or too high (for horizontal bars), it will still be plotted, but will
+      cross the sides of the bar.
+
 2010-07-28
     * Allow callbacks to return a value (to support new data_color callback).
     * Feature request 3034164 "Extended control of data colors":
