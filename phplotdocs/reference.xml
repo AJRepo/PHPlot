@@ -1559,8 +1559,7 @@ True to draw the data label lines, False to not draw the lines.
   <refsect1>
     <title>Notes</title>
     <para>
-Data label lines only work with these plot types: lines, points, linepoints,
-and thinbarline.
+Data label lines only work with these plot types: lines, points, and linepoints.
     </para>
     <para>
 If a graph contains multiple data sets, data label lines drawn down will start
