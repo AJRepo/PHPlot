@@ -4,6 +4,11 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2010-08-06
+   * reference.xml: Fix SetDrawXDataLabelLines : Data label lines do
+     not in fact work with thinbarline plots, and never have. (They
+     would either overlap or extend the actual plot lines.)
+
 2010-07-29
    * concepts.xml: Add section documenting use of the new data color
      callback to customize usage of data colors.
