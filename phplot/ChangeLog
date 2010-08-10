@@ -2,6 +2,19 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2010-08-09
+    * Code cleanup. This is a large change to unify the comment and
+      coding stye used in PHPlot. The PEAR style guide is being used
+      as a reference, but PHPlot will never be 100% compliant.
+      This patch introduces no functional changes at all.
+        - Limit line length to 110.
+        - Remove obsolete, partially implemented Doxygen comments.
+        - Add descriptive comment above functions where missing.
+        - Use consistent comment markers and control structure spacing.
+        - Remove ctags-confusing end of function comments.
+        - Rewrote a few if/else blocks for cleaner logic.
+        - Re-order some functions for consistency (X, then Y).
+
 2010-08-04
     * Implemented horizontal stacked bar plots:
       Use the same data type introduced for horizontal bars, 'text-data-yx',
