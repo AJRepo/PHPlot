@@ -25,7 +25,7 @@ $param = array(
   Make a histogram from an image file, which can be palette or truecolor.
   Returns an array $histogram[i] where i is from 0 to 255. Each histogram[i]
   is the number of pixels in the image with grayscale value i.
-  (Grayscale is computed using the NTSC formula.)
+  (Grayscale is computed using the NTSC formula, but with integers.)
 */
 function get_histogram($image_file)
 {
@@ -55,7 +55,7 @@ function get_histogram($image_file)
     for ($y = 0; $y < $height; $y++) {
         for ($x = 0; $x < $width; $x++) {
             $pix = imagecolorsforindex($im, imagecolorat($im, $x, $y));
-            $value = (int)(0.3 * $pix['red'] + 0.59 * $pix['green'] + 0.11 * $pix['blue']);
+            $value = (int)((30 * $pix['red'] + 59 * $pix['green'] + 11 * $pix['blue']) / 100);
             $histogram[$value]++;
         }
     }
