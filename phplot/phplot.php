@@ -1884,15 +1884,14 @@ class PHPlot
      *    implied_y   (boolean) True if data array has an implied Y value for each set of X.
      *    err_bars    (boolean) True if data array contains error bars values for each point.
      * Note these are not independent. implied_y means swapped_xy, and implied_x means !swapped_xy.
-     * Also some possibilities are reserved for future use: swapped_xy && !implied_y would be a
-     * future swapped X/Y equivalent to data-data or data-data-error.
      */
     protected function DecodeDataType()
     {
-        $swapped_xy = ($this->data_type == 'text-data-yx'); // Only swapped type available now
-        $implied_x = ($this->data_type == 'text-data');
-        $implied_y = ($this->data_type == 'text-data-yx');
-        $err_bars = ($this->data_type == 'data-data-error');
+        $dt = $this->data_type;
+        $swapped_xy = ($dt == 'text-data-yx' || $dt == 'data-data-yx');
+        $implied_x = ($dt == 'text-data' || $dt == 'text-data-single');
+        $implied_y = ($dt == 'text-data-yx');
+        $err_bars = ($dt == 'data-data-error');
 
         return array($swapped_xy, $implied_x, $implied_y, $err_bars);
     }
@@ -2301,18 +2300,20 @@ class PHPlot
      *  text-data-single: ('label', data), for some pie charts.
      *  data-data: ('label', x, y1, y2, y3, ...)
      *  data-data-error: ('label', x1, y1, e1+, e2-, y2, e2+, e2-, y3, e3+, e3-, ...)
+     *  data-data-yx: ('label', y, x1, x2, x3, ..)
      *  text-data-yx: ('label', x1, x2, x3, ...)
      */
     function SetDataType($which_dt)
     {
         //The next four lines are for past compatibility.
-        if ($which_dt == 'text-linear') { $which_dt = 'text-data'; }
-        elseif ($which_dt == 'linear-linear') { $which_dt = 'data-data'; }
-        elseif ($which_dt == 'linear-linear-error') { $which_dt = 'data-data-error'; }
-        elseif ($which_dt == 'text-data-pie') { $which_dt = 'text-data-single'; }
+        if ($which_dt == 'text-linear') $which_dt = 'text-data';
+        elseif ($which_dt == 'linear-linear') $which_dt = 'data-data';
+        elseif ($which_dt == 'linear-linear-error') $which_dt = 'data-data-error';
+        elseif ($which_dt == 'text-data-pie') $which_dt = 'text-data-single';
 
         $this->data_type = $this->CheckOption($which_dt, 'text-data, text-data-single, '.
-                                                         'data-data, data-data-error, text-data-yx',
+                                                         'data-data, data-data-error, '.
+                                                         'data-data-yx, text-data-yx',
                                                          __FUNCTION__);
         return (boolean)$this->data_type;
     }
@@ -4750,13 +4751,21 @@ class PHPlot
 
     /*
      * Draw a Thin Bar Line plot, also known as an Impulse plot.
-     * A clean, fast routine for when you just want charts like stock volume charts
-     * Supports data-data and text-data formats.
+     * A clean, fast routine for when you just want charts like stock volume charts.
+     * Supports data-data and text-data formats for vertical plots,
+     * and data-data-yx and text-data-yx for horizontal plots.
+     * Note that although this plot type supports multiple data sets, it rarely makes
+     * sense to have more than 1, because the lines will overlay.
+     * This one function does both vertical and horizontal plots. "iv" is used for the
+     * independent variable (X for vertical plots, Y for horizontal) and "dv" is used
+     * for the dependent variable (Y for vertical plots, X for horizontal).
      */
     protected function DrawThinBarLines()
     {
-        if (!$this->CheckDataType('text-data, data-data'))
+        if (!$this->CheckDataType('text-data, data-data, text-data-yx, data-data-yx'))
             return FALSE;
+        list($swapped_xy, $implied_x, $implied_y) = $this->DecodeDataType();
+        $process_iv = !($implied_x || $implied_y);
 
         // Is there a custom function for picking the data color?
         $custom_color = (bool)$this->GetCallback('data_color');
@@ -4766,21 +4775,28 @@ class PHPlot
         for ($row = 0, $cnt = 0; $row < $this->num_data_rows; $row++) {
             $rec = 1;                    // Skip record #0 (data label)
 
-            // Do we have a value for X?
-            if ($this->data_type == 'data-data')
-                $x_now = $this->data[$row][$rec++];  // Read it, advance record index
+            // Do we have a value for the independent variable?
+            if ($process_iv)
+                $iv_now = $this->data[$row][$rec++];  // Read it, advance record index
             else
-                $x_now = 0.5 + $cnt++;       // Place text-data at X = 0.5, 1.5, 2.5, etc...
+                $iv_now = 0.5 + $cnt++;       // Place text-data at 0.5, 1.5, 2.5, etc...
 
-            $x_now_pixels = $this->xtr($x_now);
+            if ($swapped_xy) {
+                $y_now_pixels = $this->ytr($iv_now);
+                // Draw Y Data labels?
+                if ($this->y_data_label_pos != 'none')
+                    $this->DrawYDataLabel($this->data[$row][0], $y_now_pixels);
+            } else {
+                $x_now_pixels = $this->xtr($iv_now);
+                // Draw X Data labels?
+                if ($this->x_data_label_pos != 'none')
+                    $this->DrawXDataLabel($this->data[$row][0], $x_now_pixels);
+            }
 
-            // Draw X Data labels?
-            if ($this->x_data_label_pos != 'none')
-                $this->DrawXDataLabel($this->data[$row][0], $x_now_pixels);
-
-            // Proceed with Y values
+            // Proceed with dependent values
             for ($idx = 0;$rec < $this->num_recs[$row]; $rec++, $idx++) {
-                if (is_numeric($this->data[$row][$rec])) {              // Allow for missing Y data
+                if (is_numeric($this->data[$row][$rec])) {              // Allow for missing data
+                    $dv = $this->data[$row][$rec];
                     ImageSetThickness($this->img, $this->line_widths[$idx]);
 
                     // Select the color
@@ -4791,9 +4807,15 @@ class PHPlot
                         $data_color = $this->ndx_data_colors[$idx];
                     }
 
-                    // Draws a line from user defined x axis position up (or down) to ytr($val)
-                    ImageLine($this->img, $x_now_pixels, $this->x_axis_y_pixels, $x_now_pixels,
-                              $this->ytr($this->data[$row][$rec]), $data_color);
+                    if ($swapped_xy) {
+                        // Draw a line from user defined y axis position right (or left) to xtr($dv)
+                        ImageLine($this->img, $this->y_axis_x_pixels, $y_now_pixels,
+                                              $this->xtr($dv), $y_now_pixels, $data_color);
+                    } else {
+                        // Draw a line from user defined x axis position up (or down) to ytr($dv)
+                        ImageLine($this->img, $x_now_pixels, $this->x_axis_y_pixels,
+                                              $x_now_pixels, $this->ytr($dv), $data_color);
+                   }
                 }
             }
         }
