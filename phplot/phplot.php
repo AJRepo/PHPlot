@@ -2325,21 +2325,19 @@ class PHPlot
     function SetDataValues($which_dv)
     {
         $this->num_data_rows = count($which_dv);
-        $this->total_records = 0;               // Perform some useful calculations.
-        $this->records_per_group = 1;
+        $this->total_records = 0;
+        $this->data = array();
+        $this->num_recs = array();
         for ($i = 0, $recs = 0; $i < $this->num_data_rows; $i++) {
-            // Copy
             $this->data[$i] = array_values($which_dv[$i]);   // convert to numerical indices.
 
-            // Compute some values
+            // Count size of each row, and total for the array.
             $recs = count($this->data[$i]);
             $this->total_records += $recs;
-
-            if ($recs > $this->records_per_group)
-                $this->records_per_group = $recs;
-
             $this->num_recs[$i] = $recs;
         }
+        // This is the size of the widest row in the data array
+        $this->records_per_group = max($this->num_recs);
         return TRUE;
     }
 
