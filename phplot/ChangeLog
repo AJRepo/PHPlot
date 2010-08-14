@@ -2,6 +2,13 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2010-08-14
+    * Fixes to SetDataValues: need to clear out the 2 arrays before
+      setting values in a loop, else if the function is used more than
+      once then old values will remain.
+      Move records_per_group calculation outside the loop.
+      (These were split off from upcoming, larger changes.)
+
 2010-08-09
     * Code cleanup. This is a large change to unify the comment and
       coding stye used in PHPlot. The PEAR style guide is being used
