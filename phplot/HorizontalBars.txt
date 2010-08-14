@@ -1,12 +1,13 @@
 phplot/HorizontalBars - Documentation for experimental new plot types
-Last updated for PHPlot-5.1.2 + CVS updates on 2010-08-04
+Last updated for PHPlot-5.1.2 + CVS updates on 2010-08-14
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 Overview:
 
-This file documents new plot types, Horizontal Bars and Horizontal Stacked
-Bars. Horizontal Bars was added to PHPlot in version 5.1.2 as an experimental
-feature, and Horizontal Stacked Bars was added to PHPlot after version 5.1.2.
+This file documents new plot types: Horizontal Bars, Horizontal Stacked Bars,
+and Horizontal Thinbarline. Horizontal Bars was added to PHPlot in version
+5.1.2 as an experimental feature. Horizontal Stacked Bars and Horizontal
+Thinbarline were added to PHPlot after version 5.1.2.
 
     NOTICE:
 
@@ -22,8 +23,8 @@ forum at http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 Usage:
 
-In a horizontal bar chart, the X axis and Y axis are oriented the same as
-in other PHPlot plot types: X axis is horizontal, increasing towards the
+In horizontal plots, the X axis and Y axis are oriented the same as in
+other PHPlot plot types: X axis is horizontal, increasing towards the
 right, and Y axis is vertical, increasing towards the top.
 
     Y
@@ -86,22 +87,35 @@ the "A" label bar group or stack is drawn below the "B" label bar group or
 stack. If you need bars ordered from top to bottom, you will have to change
 your data array accordingly.
 
+A Horizontal Thinbarline plot is similar to a horizontal bar chart, except
+that instead of horizontal bars you get thin horizontal lines. There are
+two supported data types for horizontal thinbarline plots: text-data-yx (as
+described above), and data-data-yx which includes the Y value for each row.
+A data array with data type 'data-data-yx' looks like this:
+  $data = array(  array('Label1', Y1, X11, X12, ...),
+                  array('Label2', Y2, X21, X22, ...),
+                  ...);
+
+Note that although thinbarline plots (vertical and horizontal) support
+multiple Y (or X) values for each X (or Y), as shown in the data array
+above, it is rarely useful to have more than one, because the lines would
+be drawn on top of each other.
+
 -----------------------------------------------------------------------------
 Ticks and Labels:
 
-Since the X axis and Y axis do not change positions for horizontal bar or
-stacked bar charts, the label and tick controls still refer to the X and Y
-axis.  However, the independent values are now Y, and the dependent values
-are now X. Also, the label strings in your data array are plotted along the
-Y axis for horizontal charts, rather than along the X axis for regular
-charts.
+Since the X axis and Y axis do not change positions for horizontal plots,
+the label and tick controls still refer to the X and Y axis.  However, the
+independent values are now Y, and the dependent values are now X. Also, the
+label strings in your data array are plotted along the Y axis for
+horizontal charts, rather than along the X axis for regular charts.
 
 To control the data labels positions, use SetYDataLabelPos(). New option
 values have been added to this function, which was previously used only to
 position bar chart value labels with the options 'plotin', 'plotstack', or
-'none'. With horizontal bar and stacked bar charts, SetYDataLabelPos()
-positions the regular data labels that go along the Y axis. The new option
-values are 'plotleft', 'plotright', or 'both'.
+'none'. With horizontal plots, SetYDataLabelPos() positions the regular
+data labels that go along the Y axis. The new option values are 'plotleft',
+'plotright', or 'both'.
   'plotleft' : Draw data labels along the left side of the plot area.
   'plotright' : Draw data labels along the right side of the plot area.
   'both' : Draw data labels along both left and right sides.
@@ -114,9 +128,9 @@ marks on the Y axis. You do not normally need to use
 SetYTickLabelPos('none') to turn off the tick labels along the Y axis,
 since PHPlot will do this automatically if your data array has labels.
 
-To control the presentation of the data labels with horizontal bar and
-stacked bar charts, use the correct functions that refer to the Y data
-labels, not X data labels as with vertical bar charts.
+To control the presentation of the data labels with horizontal plots, use
+the correct functions that refer to the Y data labels, not X data labels as
+with vertical bar charts.
 
    SetYDataLabelAngle() or SetYLabelAngle()
        Set angle of data label text. Default is 0 degrees.
@@ -130,20 +144,21 @@ labels, not X data labels as with vertical bar charts.
 Note that the PHPlot Reference Manual currently says the Y Data Label
 functions are only for bar chart data value labels (see Data Value Labels
 below regarding this term). That information is out of date. These
-functions are now also used for data labels in horizontal bar charts.
+functions are now also used for data labels along the axis in horizontal
+plots.
 
 -----------------------------------------------------------------------------
 Grid:
 
-For horizontal bar and stacked bar charts, the X grid lines default on, and
-the Y grid lines default off. (This is the opposite of normal vertical charts,
-where the X grid lines default off, and the Y grid lines default on.)
+For horizontal plots, the X grid lines default on, and the Y grid lines
+default off. (This is the opposite of normal vertical plots, where the X
+grid lines default off, and the Y grid lines default on.)
 
 -----------------------------------------------------------------------------
 Y Axis Position:
 
 PHPlot uses a different default for the X axis and the Y axis positions.
-This affects horizontal bar charts if you have any data values which are
+This affects horizontal plots if you have any data values which are
 less than zero.  The X axis is normally positioned at Y=0, and the Y axis
 is normally positioned at the left side of the plot.
 
@@ -169,14 +184,19 @@ or horizontal) because the values in each group are summed. For stacked bar
 charts, the bottom margin for the dependent variable (X for horizontal
 charts) always defaults to zero, and there will never be negative values.
 
+For thinbarline plots, the lines are drawn in the same way as the bar chart
+bars. This means in a horizontal thinbarline plot with negative values, the
+Y axis will still default to the left side, and the lines will be drawn
+from the left side towards the right, for both positive and negative values.
+
 -----------------------------------------------------------------------------
 Scaling:
 
 You can use SetPlotAreaWorld() to explicitly set any or all of the 4 limits
 of the plot area. Any limits you do not provide will be calculated for you.
 The algorithm is due for replacement, but it will now apply the same
-calculations to Y and X values in horizontal charts as it currently applies
-to X and Y (respectively) in vertical charts. That is, the range for the
+calculations to Y and X values in horizontal plots as it currently applies
+to X and Y (respectively) in vertical plots. That is, the range for the
 independent variable will be calculated to contain and center the bar
 groups, and the range for the dependent variable will include and usually
 exceed the actual data range.
@@ -244,20 +264,26 @@ Note: Data Value Labels are currently referred to in the manual as Y Data
 Labels. This will be changed to call them 'Data Value Labels'. This is
 necessary to avoid confusion with X Data Labels and Y Data Labels.
 
+There are no data value labels at all for thinbarline plots.
+
 -----------------------------------------------------------------------------
 Other Plot Types Not Available:
 
 There are currently no corresponding horizontal analogs for any plot type
-other than bars and stacked bars. 
-Using data type 'text-data-yx' with other plot types will fail.
-(Starting with 5.1.2, PHPlot always checks that the selected data type
-is supported for the selected plot type.)
+other than bars, stacked bars, and thinbarline.  Using data type
+'text-data-yx' with other plot types will fail.  Using data type
+'data-data-yx' with any plot type other than thinbarline will fail.
+(Starting with 5.1.2, PHPlot always checks that the selected data type is
+supported for the selected plot type.)
 
 -----------------------------------------------------------------------------
 Implementation Notes:
 
 The following is a summary of the changes made to PHPlot to implement
-horizontal bar charts.
+horizontal plots.
+
+(Phase 1 implemented horizontal bar charts only, with no data labels.
+This was released in PHPlot-5.1.2.)
 
 1) Do not initialize y_tick_label_pos or y_data_label_pos. The defaults
 have to be dynamically calculated for horizontal bar charts, so tick labels
@@ -307,7 +333,7 @@ horizontal bar charts.
 the data type (text-data or text-data-yx).
 
 
-(The following changes were made after PHPlot-5.1.2, CVS as of 2010-07-26)
+(Phase 2 changes were made after PHPlot-5.1.2, CVS as of 2010-07-26)
 
 13) Change SetXDataLabelPos to accept 'plotin' for data value labels.
 
@@ -320,7 +346,7 @@ defaults to 'yd' so no existing caller needs to change.
 15) Add code to DrawHorizBars to draw the data value labels if enabled.
 
 
-(The following changes were made after PHPlot-5.1.2, CVS as of 2010-08-03)
+(Phase 3 changes were made after PHPlot-5.1.2, CVS as of 2010-08-03)
 
 16) Removed internal function DrawDataLabel().
 
@@ -334,6 +360,18 @@ and in-stack- data value labels for horizontal stacked bars.
 
 19) New internal function DrawHorizStackedBars() implements horizontal
 stacked bars.
+
+
+(Phase 4 changes were made after PHPlot-5.1.2, CVS as of 2010-08-14)
+
+20) SetDataType() accepts a new value: 'data-data-yx'.
+
+21) DecodeDataType() is extended to handle the new data type.
+
+22) DrawThinBarLine is extended to handle horizontal as well as vertical
+plots.  Note that since the thinbarline drawing is much simpler than bars or
+stacked bars, it was not necessary to have a separate function to handle the
+horizontal plotting in this case.
 
 -----------------------------------------------------------------------------
 History:
@@ -350,5 +388,10 @@ History:
 2010-08-04 Update for CVS changes pending for next release.
   Horizontal stacked bar plots are now implemented, including data value
   labels above the bars and in-stack data value labels.
+
+2010-08-14 Update for CVS changes pending for next release.
+  Horizontal thinbarline plots are now implemented, along with a new data
+  type 'data-data-yx'.
+
 
 -----------------------------------------------------------------------------
