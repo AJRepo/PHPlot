@@ -9,6 +9,13 @@ The project home page is http://sourceforge.net/projects/phplot/
       Move records_per_group calculation outside the loop.
       (These were split off from upcoming, larger changes.)
 
+    * Part 4 of horizontal plots: implement horizontal thinbarline plots.
+      Added new data type 'data-data-yx' (label, Y, X1, X2, ...).
+      DrawThinBarLines() now draws either vertical or horizontal plots, and
+      supports data types text-data, data-data, text-data-yx, data-data-yx.
+
+      Fixed DecodeDataType() to handle text-data-single too, for completeness.
+
 2010-08-09
     * Code cleanup. This is a large change to unify the comment and
       coding stye used in PHPlot. The PEAR style guide is being used
