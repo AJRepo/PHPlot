@@ -16,6 +16,13 @@ The project home page is http://sourceforge.net/projects/phplot/
 
       Fixed DecodeDataType() to handle text-data-single too, for completeness.
 
+    * Fix for over-padding style and color arrays. These were padded to
+      records_per_group, but that is the maximum data array row size.
+      The number of actual data sets is less, and depends on the data type.
+      Calculate the correct number as data_columns at the top of DrawGraph,
+      and use that to pad the arrays. Also moved early error checking in
+      DrawGraph() into new CheckDataArray().
+
 2010-08-09
     * Code cleanup. This is a large change to unify the comment and
       coding stye used in PHPlot. The PEAR style guide is being used

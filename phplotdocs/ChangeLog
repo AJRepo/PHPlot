@@ -4,6 +4,10 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2010-08-14
+   * variables.list : Add new internal variable data_columns.
+   * developer.xml : Add new internal function CheckDataArray.
+
 2010-08-12
    * examples/histogram.php : Fixed the grayscale value equation to use
      integers. This avoids round-off error which was visible on a test image.
