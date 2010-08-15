@@ -318,6 +318,19 @@ the graph is ready to be drawn.
 </varlistentry>
 
 <varlistentry>
+  <term id="CheckDataArray" xreflabel="CheckDataArray">CheckDataArray()</term>
+  <listitem>
+    <para>
+Checks that there is a valid data array for the plot, and calculates values
+that depend on the data type.
+Called very early by <xref linkend="DrawGraph"/>.
+This was added after PHPlot-5.1.2, moving the checking out of DrawGraph
+and adding the data_columns calculation.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
   <term id="CheckDataType" xreflabel="CheckDataType">CheckDataType($valid_types)</term>
   <listitem>
     <para>
