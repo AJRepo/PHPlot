@@ -27,6 +27,7 @@ data		SetDataValues	The data array
 data_border_colors		SetDataBorderColors	Array of color names for bar chart data borders. Initialized to array('black') by SetDefaultStyles.
 data_colors		SetDataColors	Array of color names for data lines/marks/bars/etc. See default_colors for initial value.
 data_colors_alpha	0	SetDataColors	Saved default alpha for data colors. (Added in PHPlot-5.1.1)
+data_columns		CheckDataArray	Maximum number of dependent values (Y values) in the data array rows. (Added after PHPlot-5.1.2)
 data_maxy		FindDataLimits	Array: Per row maximum Y value
 data_miny		FindDataLimits	Array: Per row minimum Y value
 data_type	'text-data'	SetDataType	Format of the data array
