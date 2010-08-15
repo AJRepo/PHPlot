@@ -1897,6 +1897,43 @@ class PHPlot
     }
 
     /*
+     * Make sure the data array is populated, and calculate the number of columns.
+     * This is called from DrawGraph. Calculates data_columns, which is the
+     * maximum number of dependent variable values (usually Y) in the data array rows.
+     * This depends on the data_type, unlike records_per_group (which was
+     * previously used to pad style arrays, but is not accurate).
+     * Returns True if the data array is OK, else reports an error (and may return False).
+     * Note error messages refer to the caller, the public DrawGraph().
+     */
+    protected function CheckDataArray()
+    {
+        // Test for missing image, which really should never happen.
+        if (!$this->img) {
+            return $this->PrintError('DrawGraph(): No image resource allocated');
+        }
+
+        // Test for missing or empty data array:
+        if (empty($this->data) || !is_array($this->data)) {
+            return $this->PrintError("DrawGraph(): No data array");
+        }
+        if ($this->total_records == 0) {
+            return $this->PrintError('DrawGraph(): Empty data set');
+        }
+
+        // Calculate the maximum number of (typically) Y values for each X.
+        list($swapped_xy, $implied_x, $implied_y, $err_bars) = $this->DecodeDataType();
+        if ($implied_x || $implied_y)
+            $skip = 1;  // Skip the data label in each row
+        else
+            $skip = 2;  // Skip the data label and independent variable in each row
+        $this->data_columns = $this->records_per_group - $skip;
+        if ($err_bars) // Each Y has +err and -err along with it
+            $this->data_columns = (int)($this->data_columns / 3);
+
+        return TRUE;
+    }
+
+    /*
      * Control headers for browser-side image caching.
      *   $which_browser_cache : True to allow browsers to cache the image.
      */
@@ -2338,6 +2375,7 @@ class PHPlot
             $this->num_recs[$i] = $recs;
         }
         // This is the size of the widest row in the data array
+        // Note records_per_group isn't used much anymore. See data_columns in CheckDataArray()
         $this->records_per_group = max($this->num_recs);
         return TRUE;
     }
@@ -2346,15 +2384,17 @@ class PHPlot
      * Pad styles arrays for later use by plot drawing functions:
      * This removes the need for $max_data_colors, etc. and $color_index = $color_index % $max_data_colors
      * in DrawBars(), DrawLines(), etc.
+     * The arrays are padded to data_columns which is the maximum number of data sets.
+     * See CheckDataArray() for the calculation.
      */
     protected function PadArrays()
     {
-        $this->pad_array($this->line_widths, $this->records_per_group);
-        $this->pad_array($this->line_styles, $this->records_per_group);
+        $this->pad_array($this->line_widths, $this->data_columns);
+        $this->pad_array($this->line_styles, $this->data_columns);
 
-        $this->pad_array($this->data_colors, $this->records_per_group);
-        $this->pad_array($this->data_border_colors, $this->records_per_group);
-        $this->pad_array($this->error_bar_colors, $this->records_per_group);
+        $this->pad_array($this->data_colors, $this->data_columns);
+        $this->pad_array($this->data_border_colors, $this->data_columns);
+        $this->pad_array($this->error_bar_colors, $this->data_columns);
 
         $this->SetDataColors();
         $this->SetDataBorderColors();
@@ -3120,12 +3160,10 @@ class PHPlot
 
         // Actual number of bar spaces in the group. This includes the drawn bars, and
         // 'bar_extra_space'-worth of extra bars.
-        // Note that 'records_per_group' includes the label, so subtract one to get
-        // the number of points in the group. 'stackedbars' have 1 bar space per group.
         if ($this->plot_type == 'stackedbars') {
           $num_spots = 1 + $this->bar_extra_space;
         } else {
-          $num_spots = $this->records_per_group - 1 + $this->bar_extra_space;
+          $num_spots = $this->data_columns + $this->bar_extra_space;
         }
 
         // record_bar_width is the width of each bar's allocated area.
@@ -4508,7 +4546,7 @@ class PHPlot
 
         if ($this->data_type == 'text-data') {
             // Get sum of each column - One pie slice per column:
-            $num_slices = $this->records_per_group - 1;  // records_per_group is the maximum row size
+            $num_slices = $this->data_columns;  // maximum over all rows
             if ($num_slices < 1) return TRUE;            // Give up early if there is no data at all.
             $sumarr = array_fill(0, $num_slices, 0);
             for ($i = 0; $i < $this->num_data_rows; $i++) {
@@ -4528,7 +4566,7 @@ class PHPlot
                     $sumarr[$i] = abs($this->data[$i][1]);
             }
         } else {          // $this->data_type == 'data-data'
-            $num_slices = $this->records_per_group - 2;  // records_per_group is the maximum row size
+            $num_slices = $this->data_columns;  // maximum over all rows
             if ($num_slices < 1) return TRUE;            // Give up early if there is no data at all.
             $sumarr = array_fill(0, $num_slices, 0);
             for ($i = 0; $i < $this->num_data_rows; $i++) {
@@ -4552,7 +4590,7 @@ class PHPlot
         } else {
             $diam2 = $diameter;
         }
-        $max_data_colors = count ($this->data_colors);
+        $max_data_colors = count ($this->ndx_data_colors);
 
         // Use the Y label format precision, with default value:
         if (isset($this->label_format['y']['precision']))
@@ -5058,7 +5096,7 @@ class PHPlot
 
         // Flag array telling if the current point is valid, one element per plot line.
         // If start_lines[i] is true, then (lastx[i], lasty[i]) is the previous point.
-        $start_lines = array_fill(0, $this->records_per_group, FALSE);
+        $start_lines = array_fill(0, $this->data_columns, FALSE);
 
         // Is there a custom function for picking the data color?
         $custom_color = (bool)$this->GetCallback('data_color');
@@ -5128,7 +5166,7 @@ class PHPlot
      */
     protected function DrawLinesError($paired = FALSE)
     {
-        $start_lines = array_fill(0, $this->records_per_group, FALSE);
+        $start_lines = array_fill(0, $this->data_columns, FALSE);
 
         // Is there a custom function for picking the data color?
         $custom_color = (bool)$this->GetCallback('data_color');
@@ -5221,7 +5259,7 @@ class PHPlot
 
         // Flag array telling if the current point is valid, one element per plot line.
         // If start_lines[i] is true, then (lastx[i], lasty[i]) is the previous point.
-        $start_lines = array_fill(0, $this->records_per_group, FALSE);
+        $start_lines = array_fill(0, $this->data_columns, FALSE);
 
         // Is there a custom function for picking the data color?
         $custom_color = (bool)$this->GetCallback('data_color');
@@ -5291,7 +5329,7 @@ class PHPlot
 
         // This is the X offset from the bar group's label center point to the left side of the first bar
         // in the group. See also CalcBarWidths above.
-        $x_first_bar = (($this->records_per_group - 1) * $this->record_bar_width) / 2 - $this->bar_adjust_gap;
+        $x_first_bar = ($this->data_columns * $this->record_bar_width) / 2 - $this->bar_adjust_gap;
 
         // Copy shading value to local variable
         $shade = $this->shading;
@@ -5390,7 +5428,7 @@ class PHPlot
     {
         // This is the Y offset from the bar group's label center point to the bottom of the first bar
         // in the group. See also CalcBarWidths above.
-        $y_first_bar = (($this->records_per_group - 1) * $this->record_bar_width) / 2 - $this->bar_adjust_gap;
+        $y_first_bar = ($this->data_columns * $this->record_bar_width) / 2 - $this->bar_adjust_gap;
 
         // Copy shading value to local variable
         $shade = $this->shading;
@@ -5715,15 +5753,8 @@ class PHPlot
     function DrawGraph()
     {
         // Test for missing image, missing data, empty data:
-        if (! $this->img) {
-            return $this->PrintError('DrawGraph(): No image resource allocated');
-        }
-        if (empty($this->data) || ! is_array($this->data)) {
-            return $this->PrintError("DrawGraph(): No data array");
-        }
-        if ($this->total_records == 0) {
-            return $this->PrintError('DrawGraph(): Empty data set');
-        }
+        if (!$this->CheckDataArray())
+            return FALSE; // Error message already reported.
 
         // For pie charts: don't draw grid or border or axes, and maximize area usage.
         // These controls can be split up in the future if needed.
