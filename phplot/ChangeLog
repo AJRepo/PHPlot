@@ -2,6 +2,25 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2010-08-16
+    * Rewrote DecodeDatatype(). Previous implementation was hard to
+      extend and inefficient. Now it uses new class variables (not a
+      returned array) and is only called once, by DrawGraph. Changed all
+      users of data_type to use the new variables.
+
+      In CheckDatArray(), calculate data_columns properly for
+      text-data-single data type (pie chart) too. Simplify DrawPie
+      to use this, and merge 2 of the 3 cases.
+
+      Have a single function handle each plot type, so it can properly
+      check the data type and report a correct error message showing
+      all supported types. For example, DrawBars is now the entry point
+      for both bars and horizontal bars; DrawGraph does not directly
+      call DrawHorizBars. Similar for DrawStackedBars and
+      DrawHorizStackedBars.  Lines, Points, and Linepoints also now
+      have a single function each, dispatching to others as needed.
+      (These changes were split off from an upcoming, larger change.)
+
 2010-08-14
     * Fixes to SetDataValues: need to clear out the 2 arrays before
       setting values in a loop, else if the function is used more than
