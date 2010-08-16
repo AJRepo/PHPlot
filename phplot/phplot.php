@@ -1878,34 +1878,36 @@ class PHPlot
 
     /*
      * Decode the data type into variables used to determine how to process a data array.
-     * Returns a numeric-indexed array with these elements in order:
-     *    swapped_xy  (boolean) True if Y is the independent variable, X dependent (e.g. horizontal bars).
-     *    implied_x   (boolean) True if data array has an implied X value for each set of Y.
-     *    implied_y   (boolean) True if data array has an implied Y value for each set of X.
-     *    err_bars    (boolean) True if data array contains error bars values for each point.
-     * Note these are not independent. implied_y means swapped_xy, and implied_x means !swapped_xy.
+     * The goal is minimize which functions understand the actual data type values.
+     * This sets the datatype_* variables for use by other member functions.
+     *   datatype_implied : Implicit independent variable (e.g. text-data vs data-data)
+     *   datatype_swapped_xy : Swapped X/Y (horizontal plot)
+     *   datatype_error_bars : Data array has error bar data
+     *   datatype_pie_single : Data array is for a pie chart with one row per slice
      */
     protected function DecodeDataType()
     {
         $dt = $this->data_type;
-        $swapped_xy = ($dt == 'text-data-yx' || $dt == 'data-data-yx');
-        $implied_x = ($dt == 'text-data' || $dt == 'text-data-single');
-        $implied_y = ($dt == 'text-data-yx');
-        $err_bars = ($dt == 'data-data-error');
 
-        return array($swapped_xy, $implied_x, $implied_y, $err_bars);
+        $this->datatype_implied = ($dt == 'text-data' || $dt == 'text-data-single'
+                                || $dt == 'text-data-yx');
+        $this->datatype_swapped_xy = ($dt == 'text-data-yx' || $dt == 'data-data-yx');
+        $this->datatype_error_bars = ($dt == 'data-data-error');
+        $this->datatype_pie_single = ($dt == 'text-data-single');
     }
 
     /*
      * Make sure the data array is populated, and calculate the number of columns.
      * This is called from DrawGraph. Calculates data_columns, which is the
      * maximum number of dependent variable values (usually Y) in the data array rows.
+     * (For pie charts, this is the number of slices.)
      * This depends on the data_type, unlike records_per_group (which was
      * previously used to pad style arrays, but is not accurate).
      * Returns True if the data array is OK, else reports an error (and may return False).
      * Note error messages refer to the caller, the public DrawGraph().
+     * Note: This method should be 'protected', but is called from test script(s).
      */
-    protected function CheckDataArray()
+    function CheckDataArray()
     {
         // Test for missing image, which really should never happen.
         if (!$this->img) {
@@ -1920,16 +1922,19 @@ class PHPlot
             return $this->PrintError('DrawGraph(): Empty data set');
         }
 
-        // Calculate the maximum number of (typically) Y values for each X.
-        list($swapped_xy, $implied_x, $implied_y, $err_bars) = $this->DecodeDataType();
-        if ($implied_x || $implied_y)
-            $skip = 1;  // Skip the data label in each row
-        else
-            $skip = 2;  // Skip the data label and independent variable in each row
-        $this->data_columns = $this->records_per_group - $skip;
-        if ($err_bars) // Each Y has +err and -err along with it
-            $this->data_columns = (int)($this->data_columns / 3);
+        // Decode the data type into functional flags.
+        $this->DecodeDataType();
 
+        // Calculate the maximum number of dependent values per independent value
+        // (e.g. Y for each X), or the number of pie slices.
+        if ($this->datatype_pie_single) {
+            $this->data_columns = $this->num_data_rows; // Special case for 1 type of pie chart.
+        } else {
+            $skip = $this->datatype_implied ? 1 : 2; // Skip data label and independent variable if used
+            $this->data_columns = $this->records_per_group - $skip;
+            if ($this->datatype_error_bars) // Each Y has +err and -err along with it
+                $this->data_columns = (int)($this->data_columns / 3);
+        }
         return TRUE;
     }
 
@@ -2366,7 +2371,7 @@ class PHPlot
         $this->total_records = 0;
         $this->data = array();
         $this->num_recs = array();
-        for ($i = 0, $recs = 0; $i < $this->num_data_rows; $i++) {
+        for ($i = 0; $i < $this->num_data_rows; $i++) {
             $this->data[$i] = array_values($which_dv[$i]);   // convert to numerical indices.
 
             // Count size of each row, and total for the array.
@@ -2542,11 +2547,6 @@ class PHPlot
      */
     function FindDataLimits()
     {
-        // Determine how to process the data array:
-        list($swapped_xy, $implied_x, $implied_y, $err_bars) = $this->DecodeDataType();
-        // process_iv is true if the data array contains independent variable values:
-        $process_iv = !($implied_x || $implied_y);
-
         // Special case processing for certain plot types:
         $process_stacked = ($this->plot_type == 'stackedbars' || $this->plot_type == 'stackedarea');
         $abs_val = ($this->plot_type == 'area' || $this->plot_type == 'pie');
@@ -2556,10 +2556,10 @@ class PHPlot
         $this->data_max = array();
 
         // Independent values are in the data array or assumed?
-        if ($process_iv) {
-            $all_iv = array();
-        } else {
+        if ($this->datatype_implied) {
             $all_iv = array(0, $this->num_data_rows - 1);
+        } else {
+            $all_iv = array();
         }
 
         // Process all rows of data:
@@ -2567,7 +2567,7 @@ class PHPlot
             $n_vals = $this->num_recs[$i];
             $j = 1; // Skips label at [0]
 
-            if ($process_iv) {
+            if (!$this->datatype_implied) {
                 $all_iv[] = (double)$this->data[$i][$j++];
             }
 
@@ -2580,7 +2580,7 @@ class PHPlot
                 if (is_numeric($this->data[$i][$j])) {
                     $val = (double)$this->data[$i][$j++];
 
-                    if ($err_bars) {
+                    if ($this->datatype_error_bars) {
                         $all_dv[] = $val + (double)$this->data[$i][$j++];
                         $all_dv[] = $val - (double)$this->data[$i][$j++];
                     } elseif ($process_stacked) {
@@ -2592,7 +2592,7 @@ class PHPlot
                     }
                 } else {    // Missing DV value
                   $j++;
-                  if ($err_bars) $j += 2;
+                  if ($this->datatype_error_bars) $j += 2;
                 }
             }
             if (!empty($all_dv)) {
@@ -2601,7 +2601,7 @@ class PHPlot
             }
         }
 
-        if ($swapped_xy) {
+        if ($this->datatype_swapped_xy) {
             // Assign min and max for swapped X/Y plots: IV=Y and DV=X
             $this->min_y = min($all_iv);
             $this->max_y = max($all_iv);
@@ -3049,13 +3049,15 @@ class PHPlot
      */
     protected function CalcPlotAreaWorld()
     {
-        list($swapped_xy, $implied_x, $implied_y) = $this->DecodeDataType();
+        // Data array omits X or Y?
+        $implied_x = $this->datatype_implied && !$this->datatype_swapped_xy;
+        $implied_y = $this->datatype_implied && $this->datatype_swapped_xy;
 
         if (isset($this->plot_min_x) && $this->plot_min_x !== '')
             $xmin = $this->plot_min_x; // Use user-provided value
         elseif ($implied_x)
             $xmin = 0;          // Implied X starts at zero
-        elseif ($swapped_xy)
+        elseif ($this->datatype_swapped_xy)
             // If X is the dependent variable, leave some room below.
             $xmin = floor($this->min_x - abs($this->min_x) * 0.1);
         else
@@ -3065,7 +3067,7 @@ class PHPlot
             $xmax = $this->plot_max_x; // Use user-provided value
         elseif ($implied_x)
             $xmax = $this->max_x + 1; // Implied X ends after last value
-        elseif ($swapped_xy)
+        elseif ($this->datatype_swapped_xy)
             // If X is the dependent variable, leave some room above.
             $xmax = ceil($this->max_x + abs($this->max_x) * 0.1);
         else
@@ -3075,7 +3077,7 @@ class PHPlot
             $ymin = $this->plot_min_y;  // Use user-provided value
         elseif ($implied_y)
             $ymin = 0;    // Implied Y starts at zero
-        elseif ($swapped_xy)
+        elseif ($this->datatype_swapped_xy)
             $ymin = $this->min_y; // Start at min data Y
         else
             // If Y is the dependent variable, leave some room below.
@@ -3085,7 +3087,7 @@ class PHPlot
             $ymax = $this->plot_max_y; // Use user-provided value
         elseif ($implied_y)
             $ymax = $this->max_y + 1; // Implied Y ends after last value
-        elseif ($swapped_xy)
+        elseif ($this->datatype_swapped_xy)
             $ymax = $this->max_y;  // End at max data Y
         else
             // If Y is the dependent variable, leave some room above.
@@ -3449,15 +3451,14 @@ class PHPlot
      */
     protected function CalcMaxDataLabelSize($which = 'x')
     {
-        list($swapped_xy) = $this->DecodeDataType();
         if ($which == 'x') {
-          if ($swapped_xy)
+          if ($this->datatype_swapped_xy)
               return 0; // Shortcut: labels aren't on top/bottom.
           $font = $this->fonts['x_label'];
           $angle = $this->x_data_label_angle;
           $format_code = 'xd';
         } elseif ($which == 'y') {
-          if (!$swapped_xy)
+          if (!$this->datatype_swapped_xy)
               return 0; // Shortcut: labels aren't on left/right.
           $font = $this->fonts['y_label'];
           $angle = $this->y_data_label_angle;
@@ -3480,7 +3481,7 @@ class PHPlot
                 'height' => $max_height, 'width' => $max_width));
         }
 
-        if ($swapped_xy)
+        if ($this->datatype_swapped_xy)
             return $max_width;
         return $max_height;
     }
@@ -3492,11 +3493,10 @@ class PHPlot
      */
     protected function CalcGridSettings()
     {
-        list($swapped_xy) = $this->DecodeDataType();
         if (!isset($this->draw_x_grid))
-            $this->draw_x_grid = $swapped_xy;
+            $this->draw_x_grid = $this->datatype_swapped_xy;
         if (!isset($this->draw_y_grid))
-            $this->draw_y_grid = !$swapped_xy;
+            $this->draw_y_grid = !$this->datatype_swapped_xy;
     }
 
     /*
@@ -3535,10 +3535,8 @@ class PHPlot
         // Note: Y data label angle defaults to zero, unlike X,
         // for compatibility with older releases.
 
-        list($swapped_xy) = $this->DecodeDataType(); // Determine if X->Y or Y->X.
-
         // X Label position fixups, for x_data_label_pos and x_tick_label_pos:
-        if ($swapped_xy) {
+        if ($this->datatype_swapped_xy) {
             // Just apply defaults - there is no position conflict for X labels.
             if (!isset($this->x_tick_label_pos))
                 $this->x_tick_label_pos = 'plotdown';
@@ -3575,7 +3573,7 @@ class PHPlot
         }
 
         // Y Label position fixups, for y_data_label_pos and y_tick_label_pos:
-        if (!$swapped_xy) {
+        if (!$this->datatype_swapped_xy) {
             // Just apply defaults - there is no position conflict.
             if (!isset($this->y_tick_label_pos))
                 $this->y_tick_label_pos = 'plotleft';
@@ -4544,35 +4542,25 @@ class PHPlot
         $diameter = min($this->plot_area_width, $this->plot_area_height);
         $radius = $diameter/2;
 
-        if ($this->data_type == 'text-data') {
-            // Get sum of each column - One pie slice per column:
-            $num_slices = $this->data_columns;  // maximum over all rows
-            if ($num_slices < 1) return TRUE;            // Give up early if there is no data at all.
-            $sumarr = array_fill(0, $num_slices, 0);
-            for ($i = 0; $i < $this->num_data_rows; $i++) {
-                for ($j = 1; $j < $this->num_recs[$i]; $j++) {  // Skip label at [0]
-                    if (is_numeric($this->data[$i][$j]))
-                        $sumarr[$j-1] += abs($this->data[$i][$j]);
-                }
-            }
-        } elseif ($this->data_type == 'text-data-single') {
-            // Or only one column per row, one pie slice per row:
-            $num_slices = $this->num_data_rows;
-            if ($num_slices < 1) return TRUE;            // Give up early if there is no data at all.
-            $sumarr = array_fill(0, $num_slices, 0);
+        $num_slices = $this->data_columns;  // See CheckDataArray which calculates this for us.
+        if ($num_slices < 1) return TRUE;   // Give up early if there is no data at all.
+        $sumarr = array_fill(0, $num_slices, 0);
+
+        if ($this->datatype_pie_single) {
+            // text-data-single: One data column per row, one pie slice per row.
             for ($i = 0; $i < $num_slices; $i++) {
                 // $legend[$i] = $this->data[$i][0];                // Note: Labels are not used yet
                 if (is_numeric($this->data[$i][1]))
                     $sumarr[$i] = abs($this->data[$i][1]);
             }
-        } else {          // $this->data_type == 'data-data'
-            $num_slices = $this->data_columns;  // maximum over all rows
-            if ($num_slices < 1) return TRUE;            // Give up early if there is no data at all.
-            $sumarr = array_fill(0, $num_slices, 0);
+        } else {
+            // text-data: Sum each column (skipping label), one pie slice per column.
+            // data-data: Sum each column (skipping X value and label), one pie slice per column.
+            $skip = ($this->datatype_implied) ? 1 : 2; // Leading values to skip in each row.
             for ($i = 0; $i < $this->num_data_rows; $i++) {
-                for ($j = 2; $j < $this->num_recs[$i]; $j++) {  // Skip label at [0] an X and [1]
+                for ($j = $skip; $j < $this->num_recs[$i]; $j++) {
                     if (is_numeric($this->data[$i][$j]))
-                        $sumarr[$j-2] += abs($this->data[$i][$j]);
+                        $sumarr[$j-$skip] += abs($this->data[$i][$j]);
                 }
             }
         }
@@ -4590,7 +4578,7 @@ class PHPlot
         } else {
             $diam2 = $diameter;
         }
-        $max_data_colors = count ($this->ndx_data_colors);
+        $max_data_colors = count($this->ndx_data_colors);
 
         // Use the Y label format precision, with default value:
         if (isset($this->label_format['y']['precision']))
@@ -4666,7 +4654,7 @@ class PHPlot
      * Draw the points and errors bars for an error plot of types points and linepoints
      * Supports only data-data-error format, with each row of the form
      *   array("title", x, y1, error1+, error1-, y2, error2+, error2-, ...)
-     * Note: plot type and data type were already checked by the calling function.
+     * This is called from DrawDots and DrawLinePoints, with data type already checked.
      *   $paired is true for linepoints error plots, to make sure elements are
      *       only drawn once.  If true, data labels are drawn by DrawLinesError, and error
      *       bars are drawn by DrawDotsError. (This choice is for backwards compatibility.)
@@ -4732,14 +4720,17 @@ class PHPlot
     }
 
     /*
-     * Draw the points for plots of type points and linepoints
+     * Draw a points plot, or the points for a linepoints plot
      * Data format can be text-data (label, y1, y2, ...) or data-data (label, x, y1, y2, ...)
+     * Points plot with error bars (data-data-error format) is redirected to DrawDotsError.
      *   $paired is true for linepoints plots, to make sure elements are only drawn once.
      */
     protected function DrawDots($paired = FALSE)
     {
-        if (!$this->CheckDataType('text-data, data-data'))
+        if (!$this->CheckDataType('text-data, data-data, data-data-error'))
             return FALSE;
+        if ($this->datatype_error_bars)
+            return $this->DrawDotsError($paired); // Redirect for points+errorbars plot
 
         // Adjust the point shapes and point sizes arrays:
         $this->CheckPointParams();
@@ -4755,11 +4746,10 @@ class PHPlot
         for ($row = 0, $cnt = 0; $row < $this->num_data_rows; $row++) {
             $rec = 1;                    // Skip record #0 (data label)
 
-            // Do we have a value for X?
-            if ($this->data_type == 'data-data')
-                $x_now = $this->data[$row][$rec++];  // Read it, advance record index
+            if ($this->datatype_implied)                    // Implied X values?
+                $x_now = 0.5 + $cnt++;                      // Place text-data at X = 0.5, 1.5, 2.5, etc...
             else
-                $x_now = 0.5 + $cnt++;       // Place text-data at X = 0.5, 1.5, 2.5, etc...
+                $x_now = $this->data[$row][$rec++];         // Read it, advance record index
 
             $x_now_pixels = $this->xtr($x_now);
 
@@ -4802,8 +4792,6 @@ class PHPlot
     {
         if (!$this->CheckDataType('text-data, data-data, text-data-yx, data-data-yx'))
             return FALSE;
-        list($swapped_xy, $implied_x, $implied_y) = $this->DecodeDataType();
-        $process_iv = !($implied_x || $implied_y);
 
         // Is there a custom function for picking the data color?
         $custom_color = (bool)$this->GetCallback('data_color');
@@ -4813,13 +4801,12 @@ class PHPlot
         for ($row = 0, $cnt = 0; $row < $this->num_data_rows; $row++) {
             $rec = 1;                    // Skip record #0 (data label)
 
-            // Do we have a value for the independent variable?
-            if ($process_iv)
-                $iv_now = $this->data[$row][$rec++];  // Read it, advance record index
+            if ($this->datatype_implied)                    // Implied independent variable values?
+                $iv_now = 0.5 + $cnt++;                     // Place text-data at 0.5, 1.5, 2.5, etc...
             else
-                $iv_now = 0.5 + $cnt++;       // Place text-data at 0.5, 1.5, 2.5, etc...
+                $iv_now = $this->data[$row][$rec++];        // Read it, advance record index
 
-            if ($swapped_xy) {
+            if ($this->datatype_swapped_xy) {
                 $y_now_pixels = $this->ytr($iv_now);
                 // Draw Y Data labels?
                 if ($this->y_data_label_pos != 'none')
@@ -4832,7 +4819,7 @@ class PHPlot
             }
 
             // Proceed with dependent values
-            for ($idx = 0;$rec < $this->num_recs[$row]; $rec++, $idx++) {
+            for ($idx = 0; $rec < $this->num_recs[$row]; $rec++, $idx++) {
                 if (is_numeric($this->data[$row][$rec])) {              // Allow for missing data
                     $dv = $this->data[$row][$rec];
                     ImageSetThickness($this->img, $this->line_widths[$idx]);
@@ -4845,7 +4832,7 @@ class PHPlot
                         $data_color = $this->ndx_data_colors[$idx];
                     }
 
-                    if ($swapped_xy) {
+                    if ($this->datatype_swapped_xy) {
                         // Draw a line from user defined y axis position right (or left) to xtr($dv)
                         ImageLine($this->img, $this->y_axis_x_pixels, $y_now_pixels,
                                               $this->xtr($dv), $y_now_pixels, $data_color);
@@ -5006,19 +4993,11 @@ class PHPlot
         // These arrays store the device X and Y coordinates for all lines:
         $xd = array();
         $yd = array();
-        if ($this->data_type == 'data-data') { // Explicit X values?
-            $x_supplied = TRUE;
-            $skip_index = 2;
-        } else {
-            $x_supplied = FALSE;
-            $skip_index = 1;
-        }
-        $num_recs = max($this->num_recs);  // Number of 'records' (label + x + y's) for each X.
-        $num_points = $num_recs - $skip_index; // Number of Y values per X, max
-        $min_points = min($this->num_recs) - $skip_index; // To check for uniform number of Y values
-        if ($num_points != $min_points) {
+
+        // Make sure each row has the same number of values. Note records_per_group is max(num_recs).
+        if ($this->records_per_group != min($this->num_recs)) {
             return $this->PrintError("DrawArea(): Data array must contain the same number"
-                      . " of Y values for each X ($num_points != $min_points)");
+                      . " of Y values for each X");
         }
 
         // Calculate the Y value for each X, and store the device
@@ -5027,10 +5006,10 @@ class PHPlot
         for ($row = 0; $row < $n; $row++) {
             $rec = 1;                                       // Skip record #0 (data label)
 
-            if ($x_supplied)
-                $x_now = $this->data[$row][$rec++];
+            if ($this->datatype_implied)                    // Implied X values?
+                $x_now = 0.5 + $row;                        // Place text-data at X = 0.5, 1.5, 2.5, etc...
             else
-                $x_now = 0.5 + $row;
+                $x_now = $this->data[$row][$rec++];         // Read it, advance record index
 
             $x_now_pixels = $this->xtr($x_now);
 
@@ -5048,7 +5027,7 @@ class PHPlot
             // Store the Y values for this X.
             // All Y values are clipped to the x axis which should be zero but can be moved.
             $y = 0;
-            while ($rec < $num_recs) {
+            while ($rec < $this->records_per_group) {
                 if (is_numeric($this->data[$row][$rec])) {  // Treat missing values as 0.
                     $y += abs($this->data[$row][$rec]);
                 }
@@ -5062,8 +5041,10 @@ class PHPlot
         }
 
         // Now draw the filled polygons.
+        // Note data_columns is the number of Y points (columns excluding label and X), and the
+        // number of entries in the yd[] arrays is data_columns+1.
         $prev_row = 0;
-        for ($row = 1; $row <= $num_points; $row++) { // 1 extra for X axis artificial row
+        for ($row = 1; $row <= $this->data_columns; $row++) { // 1 extra for X axis artificial row
             $pts = array();
             // Previous data set forms top (for area) or bottom (for stackedarea):
             for ($j = 0; $j < $n; $j++) {
@@ -5086,13 +5067,18 @@ class PHPlot
     /*
      * Draw a Line plot
      * Data format can be text-data (label, y1, y2, ...) or data-data (label, x, y1, y2, ...)
+     * Line plot with error bars (format data-data-error) is redirected to DrawLinesError.
+     * (This function is the entry point for error plots too, so the data type error message can
+     * report all the supported data types.)
      *   $paired is true for linepoints plots, to make sure elements are
-     *       only drawn once. This is not currently used by DrawLines.
+     *       only drawn once.
      */
     protected function DrawLines($paired = FALSE)
     {
-        if (!$this->CheckDataType('text-data, data-data'))
+        if (!$this->CheckDataType('text-data, data-data, data-data-error'))
             return FALSE;
+        if ($this->datatype_error_bars)
+            return $this->DrawLinesError($paired); // Redirect for lines+errorbar plot
 
         // Flag array telling if the current point is valid, one element per plot line.
         // If start_lines[i] is true, then (lastx[i], lasty[i]) is the previous point.
@@ -5106,10 +5092,10 @@ class PHPlot
         for ($row = 0, $cnt = 0; $row < $this->num_data_rows; $row++) {
             $record = 1;                                    // Skip record #0 (data label)
 
-            if ($this->data_type == 'data-data')            // Do we have a value for X?
-                $x_now = $this->data[$row][$record++];      // Read it, advance record index
-            else
+            if ($this->datatype_implied)                    // Implied X values?
                 $x_now = 0.5 + $cnt++;                      // Place text-data at X = 0.5, 1.5, 2.5, etc...
+            else
+                $x_now = $this->data[$row][$record++];      // Read it, advance record index
 
             $x_now_pixels = $this->xtr($x_now);             // Absolute coordinates
 
@@ -5159,7 +5145,7 @@ class PHPlot
      * Draw lines with error bars for an error plot of types lines and linepoints
      * Supports only data-data-error format, with each row of the form
      *   array("title", x, y1, error1+, error1-, y2, error2+, error2-, ...)
-     * Note: plot type and data type were already checked by the calling function.
+     * This is called from DrawLines and DrawLinePoints, with data type already checked.
      *   $paired is true for linepoints error plots, to make sure elements are
      *       only drawn once.  If true, data labels are drawn by DrawLinesError, and error
      *       bars are drawn by DrawDotsError. (This choice is for backwards compatibility.)
@@ -5248,6 +5234,24 @@ class PHPlot
     }
 
     /*
+     * Draw a Lines+Points plot (linepoints).
+     * This just uses DrawLines and DrawDots, or their error-bar versions.
+     */
+    protected function DrawLinePoints()
+    {
+        if (!$this->CheckDataType('text-data, data-data, data-data-error'))
+            return FALSE;
+        if ($this->datatype_error_bars) {
+            $this->DrawLinesError(TRUE);
+            $this->DrawDotsError(TRUE);
+        } else {
+            $this->DrawLines(TRUE);
+            $this->DrawDots(TRUE);
+        }
+        return TRUE;
+    }
+
+    /*
      * Draw a Squared Line plot.
      * Data format can be text-data (label, y1, y2, ...) or data-data (label, x, y1, y2, ...)
      * This is based on DrawLines(), with one more line drawn for each point.
@@ -5269,10 +5273,10 @@ class PHPlot
         for ($row = 0, $cnt = 0; $row < $this->num_data_rows; $row++) {
             $record = 1;                                    // Skip record #0 (data label)
 
-            if ($this->data_type == 'data-data')            // Do we have a value for X?
-                $x_now = $this->data[$row][$record++];      // Read it, advance record index
-            else
+            if ($this->datatype_implied)                    // Implied X values?
                 $x_now = 0.5 + $cnt++;                      // Place text-data at X = 0.5, 1.5, 2.5, etc...
+            else
+                $x_now = $this->data[$row][$record++];      // Read it, advance record index
 
             $x_now_pixels = $this->xtr($x_now);             // Absolute coordinates
 
@@ -5320,12 +5324,16 @@ class PHPlot
 
     /*
      * Draw a Bar chart
-     * Supports only text-data format, with each row in the form array(label, y1, y2, y3, ...)
+     * Supports text-data format, with each row in the form array(label, y1, y2, y3, ...)
+     * Horizontal bars (text-data-yx format) are sent to DrawHorizBars() instead.
      */
     protected function DrawBars()
     {
-        if (!$this->CheckDataType('text-data'))
+        if (!$this->CheckDataType('text-data, text-data-yx'))
             return FALSE;
+        if ($this->datatype_swapped_xy)
+            return $this->DrawHorizBars();
+        $this->CalcBarWidths();
 
         // This is the X offset from the bar group's label center point to the left side of the first bar
         // in the group. See also CalcBarWidths above.
@@ -5409,7 +5417,6 @@ class PHPlot
                         $this->DrawDataValueLabel('y', $row+0.5, $y, $y, 'center', $v_align,
                                 ($idx + 0.5) * $this->record_bar_width - $x_first_bar, $y_offset);
                     }
-
                 }
                 // Step to next bar in group:
                 $x1 += $this->record_bar_width;
@@ -5421,11 +5428,13 @@ class PHPlot
     /*
      * Draw a Horizontal Bar chart
      * Supports only text-data-yx format, with each row in the form array(label, x1, x2, x3, ...)
-     * This is an unusual case, because the data values are X not Y.
-     * Note: plot type and data type were already checked by the calling function.
+     * Note that the data values are X not Y, and the bars are drawn horizontally.
+     * This is called from DrawBars, which has already checked the data type.
      */
     protected function DrawHorizBars()
     {
+        $this->CalcBarWidths(FALSE); // Calculate bar sizes for horizontal plots
+
         // This is the Y offset from the bar group's label center point to the bottom of the first bar
         // in the group. See also CalcBarWidths above.
         $y_first_bar = ($this->data_columns * $this->record_bar_width) / 2 - $this->bar_adjust_gap;
@@ -5517,13 +5526,17 @@ class PHPlot
 
     /*
      * Draw a Stacked Bar chart
-     * Supports only text-data format, with each row in the form array(label, y1, y2, y3, ...)
+     * Supports text-data format, with each row in the form array(label, y1, y2, y3, ...)
+     * Horizontal stacked bars (text-data-yx format) are sent to DrawHorizStackedBars() instead.
      * Original stacked bars idea by Laurent Kruk < lolok at users.sourceforge.net >
      */
     protected function DrawStackedBars()
     {
-        if (!$this->CheckDataType('text-data'))
+        if (!$this->CheckDataType('text-data, text-data-yx'))
             return FALSE;
+        if ($this->datatype_swapped_xy)
+            return $this->DrawHorizStackedBars();
+        $this->CalcBarWidths();
 
         // This is the X offset from the bar's label center point to the left side of the bar.
         $x_first_bar = $this->record_bar_width / 2 - $this->bar_adjust_gap;
@@ -5636,10 +5649,12 @@ class PHPlot
      * Draw a Horizontal Stacked Bar chart
      * Supports only text-data-yx format, with each row in the form array(label, x1, x2, x3, ...)
      * Note that the data values are X not Y, and the bars are drawn horizontally.
-     * Note: plot type and data type were already checked by the calling function.
+     * This is called from DrawStackedBars, which has already checked the data type.
      */
     protected function DrawHorizStackedBars()
     {
+        $this->CalcBarWidths(FALSE); // Calculate bar sizes for horizontal plots
+
         // This is the Y offset from the bar's label center point to the bottom of the bar
         $y_first_bar = $this->record_bar_width / 2 - $this->bar_adjust_gap;
 
@@ -5822,53 +5837,26 @@ class PHPlot
             $this->DrawSquared();
             break;
         case 'lines':
-            if ( $this->data_type == 'data-data-error') {
-                $this->DrawLinesError();
-            } else {
-                $this->DrawLines();
-            }
+            $this->DrawLines();
             break;
         case 'linepoints':
-            if ( $this->data_type == 'data-data-error') {
-                $this->DrawLinesError(TRUE);
-                $this->DrawDotsError(TRUE);
-            } else {
-                $this->DrawLines(TRUE);
-                $this->DrawDots(TRUE);
-            }
+            $this->DrawLinePoints();
             break;
         case 'points';
-            if ( $this->data_type == 'data-data-error') {
-                $this->DrawDotsError();
-            } else {
-                $this->DrawDots();
-            }
+            $this->DrawDots();
             break;
         case 'pie':
             $this->DrawPieChart();
             break;
         case 'stackedbars':
-            if ($this->data_type == 'text-data-yx') {
-                $this->CalcBarWidths(FALSE);
-                $this->DrawHorizStackedBars();
-            } else {
-                $this->CalcBarWidths();
-                $this->DrawStackedBars();
-            }
+            $this->DrawStackedBars();
             break;
         case 'stackedarea':
             $this->DrawArea(TRUE);
             break;
         // case 'bars':
         default:
-            $this->plot_type = 'bars';  // Make sure it is set
-            if ($this->data_type == 'text-data-yx') {
-                $this->CalcBarWidths(FALSE);
-                $this->DrawHorizBars();
-            } else {
-                $this->CalcBarWidths();
-                $this->DrawBars();
-            }
+            $this->DrawBars();
             break;
         }   // end switch
         $this->DoCallback('draw_graph', $this->plot_area);
