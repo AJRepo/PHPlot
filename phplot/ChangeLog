@@ -2,6 +2,10 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2010-08-17
+    * Change new DrawLinePoints(). It does not have to check and
+      handle error bar plots, as DrawDots and DrawLines will do that.
+
 2010-08-16
     * Rewrote DecodeDatatype(). Previous implementation was hard to
       extend and inefficient. Now it uses new class variables (not a
