@@ -4654,7 +4654,7 @@ class PHPlot
      * Draw the points and errors bars for an error plot of types points and linepoints
      * Supports only data-data-error format, with each row of the form
      *   array("title", x, y1, error1+, error1-, y2, error2+, error2-, ...)
-     * This is called from DrawDots and DrawLinePoints, with data type already checked.
+     * This is called from DrawDots, with data type already checked.
      *   $paired is true for linepoints error plots, to make sure elements are
      *       only drawn once.  If true, data labels are drawn by DrawLinesError, and error
      *       bars are drawn by DrawDotsError. (This choice is for backwards compatibility.)
@@ -5065,13 +5065,10 @@ class PHPlot
     }
 
     /*
-     * Draw a Line plot
+     * Draw a line plot, or the lines part of a linepoints plot
      * Data format can be text-data (label, y1, y2, ...) or data-data (label, x, y1, y2, ...)
-     * Line plot with error bars (format data-data-error) is redirected to DrawLinesError.
-     * (This function is the entry point for error plots too, so the data type error message can
-     * report all the supported data types.)
-     *   $paired is true for linepoints plots, to make sure elements are
-     *       only drawn once.
+     * Line plot with error bars (data-data-error format) is redirected to DrawLinesError.
+     *   $paired is true for linepoints plots, to make sure elements are only drawn once.
      */
     protected function DrawLines($paired = FALSE)
     {
@@ -5145,7 +5142,7 @@ class PHPlot
      * Draw lines with error bars for an error plot of types lines and linepoints
      * Supports only data-data-error format, with each row of the form
      *   array("title", x, y1, error1+, error1-, y2, error2+, error2-, ...)
-     * This is called from DrawLines and DrawLinePoints, with data type already checked.
+     * This is called from DrawLines, with data type already checked.
      *   $paired is true for linepoints error plots, to make sure elements are
      *       only drawn once.  If true, data labels are drawn by DrawLinesError, and error
      *       bars are drawn by DrawDotsError. (This choice is for backwards compatibility.)
@@ -5235,19 +5232,15 @@ class PHPlot
 
     /*
      * Draw a Lines+Points plot (linepoints).
-     * This just uses DrawLines and DrawDots, or their error-bar versions.
+     * This just uses DrawLines and DrawDots. They handle the error-bar case themselves.
      */
     protected function DrawLinePoints()
     {
+        // This check is redundant, as DrawLines and DrawDots do it, but left here as insurance.
         if (!$this->CheckDataType('text-data, data-data, data-data-error'))
             return FALSE;
-        if ($this->datatype_error_bars) {
-            $this->DrawLinesError(TRUE);
-            $this->DrawDotsError(TRUE);
-        } else {
-            $this->DrawLines(TRUE);
-            $this->DrawDots(TRUE);
-        }
+        $this->DrawLines(TRUE);
+        $this->DrawDots(TRUE);
         return TRUE;
     }
 
