@@ -27,10 +27,14 @@ data		SetDataValues	The data array
 data_border_colors		SetDataBorderColors	Array of color names for bar chart data borders. Initialized to array('black') by SetDefaultStyles.
 data_colors		SetDataColors	Array of color names for data lines/marks/bars/etc. See default_colors for initial value.
 data_colors_alpha	0	SetDataColors	Saved default alpha for data colors. (Added in PHPlot-5.1.1)
-data_columns		CheckDataArray	Maximum number of dependent values (Y values) in the data array rows. (Added after PHPlot-5.1.2)
-data_maxy		FindDataLimits	Array: Per row maximum Y value
-data_miny		FindDataLimits	Array: Per row minimum Y value
+data_columns		CheckDataArray	Maximum number of dependent variable values (usually Y values, or pie slices) in the data array rows. (Added after PHPlot-5.1.2)
+data_max		FindDataLimits	Array: Per row maximum Y value. (Before PHPlot-5.1.2 this was named data_maxy.)
+data_min		FindDataLimits	Array: Per row minimum Y value. (Before PHPlot-5.1.2 this was named data_miny.)
 data_type	'text-data'	SetDataType	Format of the data array
+datatype_error_bars		DecodeDataType	Flag: data type has error bars. (Added after PHPlot-5.1.2)
+datatype_implied		DecodeDataType	Flag: data type has implied X or Y. (Added after PHPlot-5.1.2)
+datatype_pie_single		DecodeDataType	Flag: data type is one-column data for pie chart with one slice per row. (Added after PHPlot-5.1.2)
+datatype_swapped_xy		DecodeDataType	Flag: data type has swapped X and Y values. (Added after PHPlot-5.1.2)
 data_units_text	''	FormatLabel	Obsolete - suffix for 'data'-formatted labels
 decimal_point		SetNumberFormat	Character to use for decimal point in formatted numbers
 default_colors	array(...)	SetDataColors SetErrorBarColors	The default color array, used to initialize data_colors and error_bar_colors. (Added in PHPlot-5.1.0)
@@ -39,8 +43,8 @@ default_ttfont	'benjamingothic.ttf'	SetDefaultTTFont	Default TrueType font file
 draw_broken_lines	FALSE	SetDrawBrokenLines	Flag: How to handle missing Y values
 draw_plot_area_background	FALSE	SetDrawPlotAreaBackground	Flag: Draw the background of the plot area
 draw_x_data_label_lines	FALSE	SetDrawXDataLabelLines	Flag: Draw X data label lines
-draw_x_grid	FALSE	SetDrawXGrid	Flag: Draw X grid lines?
-draw_y_grid	TRUE	SetDrawYGrid	Flag: Draw Y grid lines?
+draw_x_grid		SetDrawXGrid CalcGridSettings	Flag: Draw X grid lines?
+draw_y_grid		SetDrawYGrid CalcGridSettings	Flag: Draw Y grid lines?
 error_bar_colors		SetErrorBarColors	Array of color names for error bars. See default_colors for initial value.
 error_bar_line_width	1	SetErrorBarLineWidth	Thickness of error bar lines
 error_bar_shape	'tee'	SetErrorBarShape	Shape (style) of error bars: line or tee
@@ -156,14 +160,14 @@ y_axis_position	''	SetYAxisPosition	Position of Y axis (in world coordinates)
 y_axis_x_pixels		CalcTranslation	Device coordinate for the Y axis
 y_bot_margin		CalcMargins	Calculated plot area margin - bottom
 y_data_label_angle	0	SetYDataLabelAngle	Y data label text angle (Added in PHPlot-5.1.0)
-y_data_label_pos	'none'	SetYDataLabelPos	Position of Y labels above bars
+y_data_label_pos		SetYDataLabelPos CheckLabels	Position of Y labels above bars
 y_label_angle	0	SetYLabelAngle	Y tick label text angle
 y_label_axis_offset		CalcMargins	Label offset relative to plot area
 y_label_left_offset		CalcMargins	Label offset relative to plot area
 y_label_right_offset		CalcMargins	Label offset relative to plot area
 y_tick_cross	3	SetYTickCrossing	Length of Y tick marks (inside plot area)
 y_tick_inc	''	SetYTickIncrement	Step between Y tick marks
-y_tick_label_pos	'plotleft'	SetYTickLabelPos	Position of Y tick labels
+y_tick_label_pos		SetYTickLabelPos CheckLabels	Position of Y tick labels
 y_tick_length	5	SetYTickLength	Length of Y tick marks (outside plot area)
 y_tick_pos	'plotleft'	SetYTickPos	Position of Y tick marks
 y_title_left_offset		CalcMargins	Title offset relative to plot area
