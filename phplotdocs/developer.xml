@@ -192,13 +192,29 @@ Called by <xref linkend="DrawGraph"/>.
 </varlistentry>
 
 <varlistentry>
-  <term id="CalcBarWidths" xreflabel="CalcBarWidths">CalcBarWidths()</term>
+  <term id="CalcBarWidths" xreflabel="CalcBarWidths">CalcBarWidths($verticals = TRUE)</term>
   <listitem>
     <para>
-Calculates the widths of the bars for 'bars' and 'stackedbars' plot types.
+Calculates values for 'bars' and 'stackedbars' plot types.
 It calculates the width of the bars and the margins around and between them.
-Called by <xref linkend="DrawGraph"/> before calling
-<xref linkend="DrawBars"/> or <xref linkend="DrawStackedBars"/>.
+The argument was added in PHPlot-5.1.2 to support horizontal plots.
+This is called by the bar chart drawing functions
+<xref linkend="DrawBars"/>, <xref linkend="DrawStackedBars"/>,
+<xref linkend="DrawHorizBars"/>, and <xref linkend="DrawHorizStackedBars"/>.
+(Through PHPlot-5.1.2 this was called by <xref linkend="DrawGraph"/> before a
+bars or stackedbars plot.)
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="CalcGridSettings" xreflabel="CalcGridSettings">CalcGridSettings()</term>
+  <listitem>
+    <para>
+Applies defaults to the X and Y grid settings if not user specified.
+This was added in PHPlot-5.1.2 when the previous, static defaults (X grid
+off, Y grid on) needed to be dependent on the plot type.
+Called by <xref linkend="DrawGraph"/>.
     </para>
   </listitem>
 </varlistentry>
@@ -233,13 +249,15 @@ image, but top tick marks and labels move down against the graph.
 </varlistentry>
 
 <varlistentry>
-  <term id="CalcMaxDataLabelSize" xreflabel="CalcMaxDataLabelSize">CalcMaxDataLabelSize()</term>
+  <term id="CalcMaxDataLabelSize" xreflabel="CalcMaxDataLabelSize">CalcMaxDataLabelSize($which = 'x')</term>
   <listitem>
     <para>
-Calculates the size of the biggest X data label. It returns the height
-along the Y axis of the tallest data label. This is used to allocate space
-for margins.
+Calculates the size of the biggest X or Y data label.
+For 'x' it returns the height along the Y axis of the tallest data label.
+For 'y' it returns the width along the sides of the widest data label.
+This is used to allocate space for margins.
 This was added to PHPlot-5.0.5.
+The argument supporting Y label width was added in PHPlot-5.1.2.
 Called by <xref linkend="CalcMargins"/>.
     </para>
   </listitem>
@@ -364,6 +382,18 @@ This was added in PHPlot-5.1.0.
 </varlistentry>
 
 <varlistentry>
+  <term id="CheckLabelsAllEmpty" xreflabel="CheckLabelsAllEmpty">CheckLabelsAllEmpty()</term>
+  <listitem>
+    <para>
+Returns TRUE if all of the data labels are empty strings.
+This is used by <xref linkend="CheckLabels"/> to determine whether tick or
+data labels should default on if both are left off.
+This was added in PHPlot-5.1.2.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
   <term id="CheckOption" xreflabel="CheckOption">CheckOption($which_opt, $which_acc, $which_func)</term>
   <listitem>
     <para>
@@ -425,6 +455,24 @@ This was added in PHPlot-5.1.0.
 </varlistentry>
 
 <varlistentry>
+  <term id="DecodeDataType" xreflabel="DecodeDataType">DecodeDataType()</term>
+  <listitem>
+    <para>
+Analyzes the data type and sets several member variables that other functions
+can use to understand how to process the data array. The variables it sets
+all have names starting with "datatype_" (refer to <xref linkend="dev-vars"/>).
+This is called by <xref linkend="DrawGraph"/>.
+It was added in PHPlot-5.1.2 (where it returned an array of 4 flags, and
+was called by several functions that needed to know the structure of the
+data array.)
+After PHPlot-5.1.2 it was changed to set member variables instead.
+It is now called just once, and the other functions reference the variables
+as needed.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
   <term id="DoCallback" xreflabel="DoCallback">DoCallback($reason, ...)</term>
   <listitem>
     <para>
@@ -470,6 +518,8 @@ Called by <xref linkend="DrawGraph"/>.
     <para>
 Draws a bar chart plot.
 Called by <xref linkend="DrawGraph"/> when the plot type is 'bars'.
+If the data type indicates a horizontal bar chart,
+calls <xref linkend="DrawHorizBars"/> instead.
     </para>
   </listitem>
 </varlistentry>
@@ -478,10 +528,39 @@ Called by <xref linkend="DrawGraph"/> when the plot type is 'bars'.
   <term id="DrawDataLabel" xreflabel="DrawDataLabel">DrawDataLabel($which_font, $which_angle, $x_world, $y_world, $which_color, $which_text, $which_halign = 'center', $which_valign = 'top', $x_adjustment=0, $y_adjustment=0)</term>
   <listitem>
     <para>
-Draws a data label for a point. This is separate from the X data labels,
-and is currently only available for bar charts.
-Called by <xref linkend="DrawBars"/> if enabled with
-<xref linkend="SetYDataLabelPos"/>.
+This function was removed after PHPlot-5.1.2 and replaced
+by <xref linkend="DrawDataValueLabel"/>.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="DrawDataValueLabel" xreflabel="DrawDataValueLabel">DrawDataValueLabel($x_or_y, $x_world, $y_world, $text, $halign, $valign, $x_adjustment=0, $y_adjustment=0, $min_width=NULL, min_height=NULL)</term>
+  <listitem>
+    <para>
+Draws a data value label (previously called "Y data label").
+These are the above-bar or in-bar labels on bar and stackedbar charts.
+</para>
+<para>
+x_or_y is 'x' or 'y' to select the font, angle, and formatting type.
+The label is drawn at world coordinates (x_world, y_world) after device
+coordinate offset (x_adjustment, y_adjustment) is applied.
+Two arguments halign and valign specify the text alignment relative
+to the plotting point (see <xref linkend="DrawText"/>).
+The text argument is formatted with <xref linkend="FormatLabel"/> before
+drawing.
+The final arguments min_width and min_height are used to prevent labels
+from overlapping their allocated space. If either of these is supplied, the
+text is sized before drawing, and if it won't fit in the space the text is
+not drawn. This is used to suppress labels that are too wide to be drawn
+inside their bars, for example.
+</para>
+<para>
+This function was added after PHPlot-5.1.2 and replaced
+<xref linkend="DrawDataLabel"/>.
+It is called by the bar chart drawing functions including
+<xref linkend="DrawBars"/> and <xref linkend="DrawStackedBars"/>
+if these labels are enabled.
     </para>
   </listitem>
 </varlistentry>
@@ -505,11 +584,14 @@ Called by those plotting routines that include dots:
   <listitem>
     <para>
 Draws a dot plot.
-Called by <xref linkend="DrawGraph"/> when the plot type is either
-'linepoints' or 'points', and the data type does not select error bars
-(is not 'data-data-error').
+Called by <xref linkend="DrawGraph"/> when the plot type is 'points', and by
+<xref linkend="DrawLinePoints"/> for the points portion of a 'linepoints' plot.
+If the data type indicates an error bar plot,
+it calls <xref linkend="DrawDotsError"/> instead.
+(Through PHPlot-5.1.2, this was called directly from DrawGraph for both
+'lines' and 'linepoints' plots, but not for error bar plots.)
 $paired is true for linepoints plots, to suppress drawing elements that
-would be duplicated by <xref linkend="DrawLines"/>.
+would be duplicated by the 'lines' part of the plot.
 (This argument was added after PHPlot-5.1.2.)
     </para>
   </listitem>
@@ -520,9 +602,12 @@ would be duplicated by <xref linkend="DrawLines"/>.
   <listitem>
     <para>
 Draws a dot plot with error bars.
-Called by <xref linkend="DrawGraph"/> when the plot type is either
-'linepoints' or 'points', and the data type is 'data-data-error'.
-$paired is true for linepoints error plots, to suppress drawing elements that
+Called by <xref linkend="DrawDots"/>
+(and indirectly from <xref linkend="DrawLinePoints"/>)
+when the data type indicates an error bar plot.
+(Through PHPlot-5.1.2 this was called directly by DrawGraph.)
+$paired is true for linepoints error plots, and defaults to false for
+points error plots. If true, it suppress drawing elements that
 would be duplicated by <xref linkend="DrawLinesError"/>.
 (This argument was added after PHPlot-5.1.2.)
     </para>
@@ -544,6 +629,32 @@ wrote the image, and exited.)
     </para>
   </listitem>
 </varlistentry>
+
+<varlistentry>
+  <term id="DrawHorizBars" xreflabel="DrawHorizBars">DrawHorizBars()</term>
+  <listitem>
+    <para>
+Draws a horizontal bars plot.
+Called by <xref linkend="DrawBars"/> when the data type indicates a
+horizontal plot.
+This was added in PHPlot-5.1.2 (but was called by DrawGraph).
+After PHPlot-5.1.2 it was changed to be called by DrawBars.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="DrawHorizStackedBars" xreflabel="DrawHorizStackedBars">DrawHorizStackedBars()</term>
+  <listitem>
+    <para>
+Draws a horizontal stacked bars plot.
+Called by <xref linkend="DrawStackedBars"/> when the data type indicates a
+horizontal plot.
+This was added after PHPlot-5.1.2.
+    </para>
+  </listitem>
+</varlistentry>
+
 
 <varlistentry>
   <term id="DrawImageBorder" xreflabel="DrawImageBorder">DrawImageBorder()</term>
@@ -568,16 +679,33 @@ but only if legend text has been set using <xref linkend="SetLegend"/>.
 </varlistentry>
 
 <varlistentry>
+  <term id="DrawLinePoints" xreflabel="DrawLinePoints">DrawLinePoints()</term>
+  <listitem>
+    <para>
+Draws a linepoints plot, with or without error bars.
+Called by <xref linkend="DrawGraph"/> when the plot type is 'linepoints'.
+It simply calls <xref linkend="DrawLines"/> and <xref linkend="DrawDots"/>,
+which handle both the plain and error bar cases.
+This was added after PHPlot-5.1.2 to provide a function specific to this
+plot type.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
   <term id="DrawLines" xreflabel="DrawLines">DrawLines($paired = False)</term>
   <listitem>
     <para>
 Draws a line plot.
-Called by <xref linkend="DrawGraph"/> when the plot type is 'lines' or
-'linepoints',
-and the data type does not select error bars (is not 'data-data-error').
+Called by <xref linkend="DrawGraph"/> when the plot type is 'lines', and by
+<xref linkend="DrawLinePoints"/> for the lines portion of a 'linepoints' plot.
+If the data type indicates an error bar plot,
+it calls <xref linkend="DrawLinesError"/> instead.
+(Through PHPlot-5.1.2, this was called directly from DrawGraph for both
+'lines' and 'linepoints' plots, but not for error bar plots.)
 $paired is true for linepoints plots, to suppress drawing elements that
-would be duplicated by <xref linkend="DrawDots"/>.
-(This argument was added after PHPlot-5.1.2 and is not currently used.)
+would be duplicated by the 'points' part of the plot.
+(This argument was added after PHPlot-5.1.2.)
     </para>
   </listitem>
 </varlistentry>
@@ -587,8 +715,10 @@ would be duplicated by <xref linkend="DrawDots"/>.
   <listitem>
     <para>
 Draws a lines plot with error bars.
-Called by <xref linkend="DrawGraph"/> when the plot type is either
-'linepoints' or 'lines', and the data type is 'data-data-error'.
+Called by <xref linkend="DrawLines"/>
+(and indirectly from <xref linkend="DrawLinePoints"/>)
+when the data type indicates an error bar plot.
+(Through PHPlot-5.1.2 this was called directly by DrawGraph.)
 $paired is true for linepoints error plots, to suppress drawing elements that
 would be duplicated by <xref linkend="DrawDotsError"/>.
 (This argument was added after PHPlot-5.1.2.)
@@ -649,6 +779,8 @@ Called by <xref linkend="DrawGraph"/> when the plot type is 'squared'.
     <para>
 Draws a stacked bars chart plot.
 Called by <xref linkend="DrawGraph"/> when the plot type is 'stackedbars'.
+If the data type indicates a horizontal plot,
+calls <xref linkend="DrawHorizStackedBars"/> instead.
     </para>
   </listitem>
 </varlistentry>
@@ -699,6 +831,7 @@ information.
     <para>
 Draws a thin bar lines plot. This is sometimes called an impulse plot.
 Called by <xref linkend="DrawGraph"/> when the plot type is 'thinbarline'.
+This function draws both vertical and horizontal variants of this plot type.
     </para>
   </listitem>
 </varlistentry>
@@ -813,6 +946,20 @@ tick marks and labels,
 and also draws the horizontal grid lines.
 All of these except the axis line are done in <xref linkend="DrawYTicks"/>.
 Called by <xref linkend="DrawGraph"/>.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term id="DrawYDataLabel" xreflabel="DrawYDataLabel">DrawYDataLabel($ylab, $ypos)</term>
+  <listitem>
+    <para>
+Draws a data label along the Y axis or side of the plot.
+This is used by horizontal plots which can place the labels in the data array
+along the side(s).
+This was added in PHPlot-5.1.2.
+Called by horizontal plot drawing functions such as
+<xref linkend="DrawHorizBars"/>.
     </para>
   </listitem>
 </varlistentry>
