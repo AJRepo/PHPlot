@@ -4,6 +4,17 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2010-08-17
+   Updated with changes from implementation of horizontal plots (5.1.2 and
+   later) and other recent changes. (Horizontal plots are still an
+   experimental feature and not documented in the other parts of the manual.)
+   * variables.list : Updated with changes to internal variables, including
+     new variables, changed initialization, and renamed data_maxy/data_miny.
+   * developer.xml : Updated with changes to internal functions, including
+     new arguments, new functions, replaced DrawDataLabel with
+     DrawDataValueLabel, and changes to which plot drawing functions calls
+     which others.
+
 2010-08-14
    * variables.list : Add new internal variable data_columns.
    * developer.xml : Add new internal function CheckDataArray.
