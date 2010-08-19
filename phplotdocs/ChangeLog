@@ -4,6 +4,11 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2010-08-19
+   * concepts.xml, install.xml : Removed all references to phplot_data.php,
+     including deleting the Extra Data Processing section. This file is no
+     longer distributed with PHPLot. (Reference bug report 3048267.)
+
 2010-08-17
    Updated with changes from implementation of horizontal plots (5.1.2 and
    later) and other recent changes. (Horizontal plots are still an

@@ -2,6 +2,12 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2010-08-19
+    * Makefile: Removed phplot_data.php from list of files to release.
+      Reference bug report 3048267. This file has not been maintained or
+      tested, and has bugs.  It will remain in CVS, but not be included
+      in PHPlot releases.
+
 2010-08-17
     * Change new DrawLinePoints(). It does not have to check and
       handle error bar plots, as DrawDots and DrawLines will do that.
