@@ -15,6 +15,18 @@ see the ChangeLog file inside the PHPlot distribution.)
 <variablelist>
 
   <varlistentry>
+    <term>2010-08-19</term>
+    <listitem>
+      <para>
+Removed the Extra Data Processing section in the Concepts chapter, and
+removed the <filename>phplot_data.php</filename> file from the installation
+steps. This file has been removed from the release. (Reference bug report
+3048267.)
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
     <term>2010-07-29</term>
     <listitem>
       <para>
