@@ -157,11 +157,11 @@ For example, you might change the settings in phplot.php to look like this:
 </para>
 
 <para>
-Installation of PHPlot simply involves copying three script files somewhere
+Installation of PHPlot simply involves copying the script files somewhere
 your PHP application scripts will be able to find them. The scripts are:
-<filename>phplot.php</filename>,
-<filename>phplot_data.php</filename>,
-and <filename>rgb.inc.php</filename>.
+<filename>phplot.php</filename>, the main script file,
+and <filename>rgb.inc.php</filename>, an optional script file containing a
+large color map.
 Make sure the protections on these files allow the web server to read them.
 For example:
 <screen>
@@ -170,7 +170,7 @@ $ chmod 644 *.php
 </para>
 
 <para>
-Then, simply copy the three files into a directory where PHP scripts
+Then, simply copy the files into a directory where PHP scripts
 will be able to include them.
 The ideal place is a directory outside your web server
 document area, and on your PHP include path (that you noted above in
@@ -179,7 +179,7 @@ in the PHP configuration file; consult the PHP manual for details.
 For example, if <filename>/usr/local/share/php</filename> is on
 your PHP include path, you can install PHPlot with:
 <screen>
-$ cp phplot.php phplot_data.php rgb.inc.php /usr/local/share/php
+$ cp phplot.php rgb.inc.php /usr/local/share/php
 </screen>
 </para>
 
