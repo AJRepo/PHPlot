@@ -8,7 +8,7 @@ PROJ=phplot
 # conversions in the ZIP release only:
 REL_TXTFILES=COPYING ChangeLog NEWS.txt README.txt HorizontalBars.txt
 # List of all top-level files to release:
-REL=$(REL_TXTFILES) phplot.php phplot_data.php rgb.inc.php
+REL=$(REL_TXTFILES) phplot.php rgb.inc.php
 
 # Contrib files to get CRLF line ending conversion in the Zip release:
 REL_CONTRIB_TXTFILES=contrib/README.txt
