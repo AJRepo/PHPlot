@@ -4523,6 +4523,12 @@ $plot-&gt;SetPrecisionX(<parameter>$prec</parameter>)
 for X tick and data labels, and also enables 'data' mode formatting
 of those labels with <xref linkend="SetXLabelType" />.
     </para>
+    <note>
+      <para>
+This function is retained for compatibility, but use of
+<xref linkend="SetXLabelType"/> is preferred.
+      </para>
+    </note>
   </refsect1>
 
   <refsect1>
@@ -4588,6 +4594,12 @@ $plot-&gt;SetPrecisionY(<parameter>$prec</parameter>)
 for Y tick and data labels, and also enables 'data' mode formatting
 of those labels with <xref linkend="SetYLabelType" />.
     </para>
+    <note>
+      <para>
+This function is retained for compatibility, but use of
+<xref linkend="SetYLabelType"/> is preferred.
+      </para>
+    </note>
   </refsect1>
 
   <refsect1>
@@ -6732,6 +6744,12 @@ Use <xref linkend="SetXLabelType" /> to select the formatting mode for labels.
 The formatting string is used with the PHP <function>strftime</function>
 to format labels as date/time strings.
     </para>
+    <note>
+      <para>
+This function is retained for compatibility, but use of
+<xref linkend="SetXLabelType"/> is preferred.
+      </para>
+    </note>
   </refsect1>
 
   <refsect1>
@@ -6755,9 +6773,12 @@ and '%d %b %Y' results in '31 Dec 2004'.
   <refsect1>
     <title>Notes</title>
     <para>
-This applies to both X tick labels and X data labels. To use date/time
-formatting, the label values must be Unix time_t values (number of seconds
-since Unix epoch).
+This applies to X tick labels, and also to X data labels unless overridden
+by <xref linkend="SetXDataLabelType"/>.
+    </para>
+    <para>
+To use date/time formatting, the label values must be Unix time_t
+values (number of seconds since Unix epoch).
     </para>
     <para>
 Unlike <xref linkend="SetPrecisionX" />, SetXTimeFormat does not
@@ -7985,6 +8006,12 @@ Use <xref linkend="SetYLabelType" /> to select the formatting mode for labels.
 The formatting string is used with the PHP <function>strftime</function>
 to format labels as date/time strings.
     </para>
+    <note>
+      <para>
+This function is retained for compatibility, but use of
+<xref linkend="SetYLabelType"/> is preferred.
+      </para>
+    </note>
   </refsect1>
 
   <refsect1>
@@ -8008,8 +8035,10 @@ and '%d %b %Y' results in '31 Dec 2004'.
   <refsect1>
     <title>Notes</title>
     <para>
-This applies to Y tick labels, and to Y data labels on bar charts and
-stacked bar charts.
+This applies to Y tick labels, and also to Y data labels unless overridden
+by <xref linkend="SetYDataLabelType"/>.
+    </para>
+    <para>
 To use date/time formatting, the label values must be Unix time_t
 values (number of seconds since Unix epoch).
     </para>
