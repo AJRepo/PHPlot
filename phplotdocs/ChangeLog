@@ -4,6 +4,12 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2010-08-21
+   * reference.xml: Clarify Set[XY]TimeFormat sets both types of labels
+     unless overridden by Set[XY]DataLabelType.
+     Add note to Set[XY]TimeFormat and SetPrecision[XY] that these are
+     kept for compatibility but using Set[XY]LabelType is preferred.
+
 2010-08-19
    * concepts.xml, install.xml : Removed all references to phplot_data.php,
      including deleting the Extra Data Processing section. This file is no
