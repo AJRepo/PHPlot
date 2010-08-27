@@ -2,6 +2,22 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2010-08-27
+    * Fix bug 3051832 "Let PHP/GD find the font file":
+      Instead of checking for file existence, PHPlot now uses a non-drawing GD
+      operation to validate a TrueType font in SetFontTTF(). This allows GD to
+      use its internal search path, making it likely that fonts can be found
+      without needing a platform-dependent path in your script.  Full paths
+      will still work, so there is no compatibility issue.
+
+    * Fix bug 3051906 "Better choice for default TT font":
+      Removed "benjamingothic.ttf" as the default TT font setting. This has
+      not been included in PHPlot since 2004. Changed SetFontTTF() to call
+      new GetDefaultFontTTF(), which will try a number of sans-serif font
+      names the first time it needs a default TT font. Considering the above
+      fix to finding fonts, this has a good chance of finding a working
+      font. It is known to work on Windows and some Linux distributions.
+
 2010-08-19
     * Makefile: Removed phplot_data.php from list of files to release.
       Reference bug report 3048267. This file has not been maintained or
