@@ -60,7 +60,7 @@ class PHPlot
 //Fonts
     public $use_ttf  = FALSE;              // Use True Type Fonts by default?
     public $ttf_path = '.';                // Default path to look in for TT Fonts.
-    public $default_ttfont = 'benjamingothic.ttf';
+    // public $default_ttfont;             // Initialized in GetDefaultTTFont
     public $line_spacing = 4;              // Controls line spacing of multi-line labels
 
     // Label angles: 0 or 90 degrees for fixed fonts, any for TTF
@@ -806,6 +806,39 @@ class PHPlot
     }
 
     /*
+     * Return the default TrueType font name. If no default has been set,
+     * this tries some likely candidates for a font which can be loaded.
+     * If it finds one that works, that becomes the default TT font.
+     * If there is no default and it cannot find a working font, it falls
+     * back to the original PHPlot default (which will not likely work either).
+     */
+    protected function GetDefaultTTFont()
+    {
+        if (!isset($this->default_ttfont)) {
+            // No default font yet. Try some common sans-serif fonts.
+            $fonts = array('LiberationSans-Regular.ttf',  // For Linux with a correct GD font search path
+                           'Verdana.ttf', 'Arial.ttf', 'Helvetica.ttf', // For Windows, maybe others
+                           'ttf-liberation/LiberationSans-Regular.ttf', // For Debian, Ubuntu, and friends
+                           'benjamingothic.ttf',  // Original PHPlot default 
+                          );
+            foreach ($fonts as $font) {
+                // First try the font name alone, to see if GD can find and load it.
+                if (@imagettfbbox(10, 0, $font, "1") !== False)
+                    break;
+                // If the font wasn't found, try it with the default TTF path in front.
+                $font_with_path = $this->ttf_path . DIRECTORY_SEPARATOR . $font;
+                if (@imagettfbbox(10, 0, $font_with_path, "1") !== False) {
+                    $font = $font_with_path;
+                    break;
+                }
+            }
+            // We either have a working font, or are using the last one regardless.
+            $this->default_ttfont = $font;
+        }
+        return $this->default_ttfont;
+    }
+
+    /*
      * Sets fonts to their defaults
      */
     protected function SetDefaultFonts()
@@ -877,13 +910,15 @@ class PHPlot
 
         // Empty font name means use the default font.
         if (empty($which_font))
-            $which_font = $this->default_ttfont;
+            $which_font = $this->GetDefaultTTFont();
         $path = $which_font;
 
         // First try the font name directly, if not then try with path.
-        if (!is_file($path) || !is_readable($path)) {
+        // Use GD imagettfbbox() to determine if this is a valid font.
+        // The return $bbox is used below, if valid.
+        if (($bbox = @imagettfbbox($which_size, 0, $path, "E")) === False) {
             $path = $this->ttf_path . DIRECTORY_SEPARATOR . $which_font;
-            if (!is_file($path) || !is_readable($path)) {
+            if (($bbox = @imagettfbbox($which_size, 0, $path, "E")) === False) {
                 return $this->PrintError(__FUNCTION__ . ": Can't find TrueType font $which_font");
             }
         }
@@ -895,7 +930,6 @@ class PHPlot
         // and height is in pixels, and someday GD may be able to tell the difference.
         // The character width is saved too, but not used by the normal text drawing routines - it
         // isn't necessarily a fixed-space font. It is used in DrawLegend.
-        $bbox = ImageTTFBBox($which_size, 0, $path, "E");
         $height = $bbox[1] - $bbox[5];
         $width = $bbox[2] - $bbox[0];
         $bbox = ImageTTFBBox($which_size, 0, $path, "E\nE");
