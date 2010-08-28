@@ -118,45 +118,6 @@ newer instructions.
 </para>
 
 <para>
-The main source file for PHPlot is <filename>phplot.php</filename>.
-There are some configuration settings you can make at the top of this file
-using a text editor.
-An example would be to change the default output format from PNG to GIF.
-For most installations, no changes are needed. But if you want to use
-TrueType fonts in your plot images, you can make it easier by changing the
-following two default values in phplot.php:
-<variablelist>
-  <varlistentry>
-    <term>$ttf_path</term>
-    <listitem>
-      <para>
-This should be set to the pathname of the directory where you keep TrueType
-fonts. Setting this here means scripts can find the fonts without calling
-<xref linkend="SetTTFPath" /> or including a full pathname to the font file.
-      </para>
-    </listitem>
-  </varlistentry>
-  <varlistentry>
-    <term>$default_ttfont</term>
-    <listitem>
-      <para>
-This should be set to the filename of the TrueType font you want to use as a
-default for plots which enable TrueType fonts. You can specify just
-a filename without path, and the font will be found in the $ttf_path
-directory set above, or you can specify the full pathname of the font file.
-This provides a default for <xref linkend="SetDefaultTTFont" />.
-      </para>
-    </listitem>
-  </varlistentry>
-</variablelist>
-For example, you might change the settings in phplot.php to look like this:
-<programlisting><![CDATA[
-  var $ttf_path = '/usr/local/share/fonts/truetype';
-  var $default_ttfont = 'arial.ttf';
-]]></programlisting>
-</para>
-
-<para>
 Installation of PHPlot simply involves copying the script files somewhere
 your PHP application scripts will be able to find them. The scripts are:
 <filename>phplot.php</filename>, the main script file,
