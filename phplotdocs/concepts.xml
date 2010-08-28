@@ -1729,6 +1729,12 @@ callbacks.  Here are some of the operations you can perform, and the
 corresponding GD functions.  Refer to the GD section of the PHP Manual for
 more information on these functions.
 </para>
+<note>
+  <para>
+Some of these functions are only available when PHP was built with the
+bundled version of the GD library.
+  </para>
+</note>
 
 <sect3 id="conc-truecolor-callbacks-antialias">
 <title>imageantialias()</title>
@@ -1753,7 +1759,7 @@ lines (<xref linkend="SetLineWidths"/>).
 Patterned lines do not work, so if you are displaying
 X or Y grid lines you must use <xref linkend="SetDrawDashedGrid"/>(False)
 to make these solid.
-Also note that Truetype Font (TTF) text is always anti-aliased, even on
+Also note that TrueType Font (TTF) text is always anti-aliased, even on
 palette images, regardless of the use of <function>imageantialias()</function>.
 </para>
 </sect3>
@@ -2270,32 +2276,35 @@ When using TrueType fonts, you need to specify a font filename.
 The rest of this section discusses only TrueType fonts.
 </para>
 
+<note>
+  <para>
+The material on specifying font files for PHPlot applies to releases
+after PHPlot-5.1.2. Through PHPlot-5.1.2, you generally need to specify
+the full pathname of a font file, or the full path of a font directory.
+  </para>
+</note>
+
 <para>
 On Windows systems, you need to use the font filename, not the font name.
 You can get the font filename using Control Panel - Fonts.
 For example, Windows applications may display "Arial Black", or "Arial
 Black (TrueType)" as a font name, but the actual font filename is "ariblk.ttf".
-You can tell PHPlot to look for fonts in the Windows font directory by
-passing <literal>$_SERVER['windir'] .  '\\fonts\\'</literal> to
-<xref linkend="SetTTFPath"/>, but this is not necessary since PHP will look
-there anyway. However, it is important to note that if you include a font
-directory path, you must also include the file extension ".ttf". If you do
-not specify a font directory, you can omit the file extension.
-
+Since GD knows to look for fonts in the Windows font directory, you will
+not need to specify a full pathname to font files, unless the font is
+installed in some other directory.
 </para>
 
 <para>
 On Windows, you can use the "Character Map" system tool to examine a font.
 This can also be used to find the Unicode character code of a special character.
 These will be displayed in hexadecimal, for example U+20AC for the Euro.
-See the next section for more information on using special characters.
+See <xref linkend="conc-text-special"/>
+for more information on using special characters.
 </para>
 
 <para>
 Here are some font selection examples for Windows:
 <programlisting><![CDATA[
-   # Set path; this is not really needed.
-   $plot->SetTTFPath($_SERVER['windir'] . '\\fonts\\');
    # For titles, use Arial Bold Italic at 14 points:
    $plot->SetFontTTF('title', 'ARIALBI.TTF', 14)
    # For X Title, use Verdana at 12 points:
@@ -2304,14 +2313,49 @@ Here are some font selection examples for Windows:
 </para>
 
 <para>
-On Linux and similar systems, you should specify a font directory with
-<xref linkend="SetTTFPath"/>. Typically this will be
-<literal>/usr/share/fonts/TTF</literal>. However, depending on your system
-setup, PHP may be able to find fonts without the path. As on Windows, you
-must provide a font filename with extension if using a path, but the
-extension can be omitted if no path is used. Remember that font pathnames
-are case sensitive.
+On some Linux and similar systems, GD is able to find fonts specified
+without paths, but on other systems you will have to specify a font
+directory with either <xref linkend="SetTTFPath"/> or as part of the
+font name in <xref linkend="SetFontTTF"/>.
+If you specify a full pathname to a font, you must also supply the extension
+(.ttf); you may omit the extension when relying on GD to find the font.
+Remember that font filenames are case sensitive on most of these systems.
 </para>
+
+<para>
+The font search path for GD (bundled with PHP) includes the following
+directories on Linux and similar systems:
+  <itemizedlist>
+    <listitem>
+      <para><filename>/usr/X11R6/lib/X11/fonts/TrueType</filename></para>
+    </listitem>
+    <listitem>
+      <para><filename>/usr/X11R6/lib/X11/fonts/truetype</filename></para>
+    </listitem>
+    <listitem>
+      <para><filename>/usr/X11R6/lib/X11/fonts/TTF</filename></para>
+    </listitem>
+    <listitem>
+      <para><filename>/usr/share/fonts/TrueType</filename></para>
+    </listitem>
+    <listitem>
+      <para><filename>/usr/share/fonts/truetype</filename></para>
+    </listitem>
+    <listitem>
+      <para><filename>/usr/openwin/lib/X11/fonts/TrueType</filename></para>
+    </listitem>
+  </itemizedlist>
+If your system has TrueType fonts in one of those directories, you can
+select them with a filename only. If not, you must use a full directory path
+in either the font name or with SetTTFPath.
+</para>
+<note>
+  <para>
+The environment variable <envar>GDFONTPATH</envar> can be defined to
+contain a list of directories (separated by a colon ':') to search for
+fonts. If defined, this replaces the above list.
+  </para>
+</note>
 
 <para>
 Your Linux system may include a tool for examining fonts. One such tool is
@@ -2324,15 +2368,74 @@ See the next section for more information on using special characters.
 <para>
 Here are some font selection examples for Linux:
 <programlisting><![CDATA[
-   # Set path; this may or may not be needed.
-   $plot->SetTTFPath('/usr/share/fonts/TTF/');
+   # On systems with fonts in an expected place, like Slackware Linux, just use the font filename:
    # For titles, use Liberation Sans Bold Italic at 14 points:
    $plot->SetFontTTF('title', 'LiberationSans-BoldItalic.ttf', 14)
    # For X Title, use DejaVuSans Bold at 12 points:
    $plot->SetFontTTF('x_title', 'DejaVuSans-Bold.ttf', 12)
+
+   # Ubuntu and Debian use subdirectories under a searched path.
+   # You can use a partial path here.
+   $plot->SetFontTTF('x_title', 'ttf-liberation/LiberationSans-Regular.ttf', 12)
+
+   # Fedora uses subdirectories which are not under a searched path.
+   # You must use full paths here.
+   $plot->SetTTFPath('/usr/share/fonts/liberation/');
+   $plot->SetFontTTF('x_title', 'LiberationSans-Regular.ttf', 12)
+
 ]]></programlisting>
 </para>
 
+</sect2>
+
+<sect2 id="conc-text-defaultfont">
+<title>Default TrueType Font</title>
+<note>
+  <para>
+This applies starting after PHPlot-5.1.2.
+  </para>
+</note>
+<para>
+If you try to use TrueType text without specifying a font name, PHPlot will
+use the default font. You can set the default font with
+<xref linkend="SetDefaultTTFont"/>. If you do not set a default font,
+PHPlot tries to locate a sans-serif font to use. Here are the font names
+that PHPlot tries in order. First it tries the filename alone, letting GD
+use its search path, and then it tries with the default font path, as set
+with <xref linkend="SetTTFPath"/>.
+  <itemizedlist>
+    <listitem>
+      <para>
+<filename>LiberationSans-Regular.ttf</filename>
+- Likely to work on Linux and other systems with a correct GD font search path.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+<filename>Verdana.ttf, Arial.ttf, Helvetica.ttf</filename>
+- One of these is going to work on Windows, maybe other systems too.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+<filename>ttf-liberation/LiberationSans-Regular.ttf</filename>
+- This is for Debian, Ubuntu, and similar.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+<filename>benjamingothic.ttf</filename>
+- The original PHPlot default, for compatibility.
+      </para>
+    </listitem>
+  </itemizedlist>
+The last item on the list is used regardless of whether it can be found or
+not. This means if you enable TrueType fonts without setting a default, and
+get an fatal error from PHPlot that it can't find the font benjamingothic.ttf,
+this means PHPlot was unable to find any of the standard fonts in its list.
+On that system, then, you must provide either a font directory, or use full
+font pathnames.
+</para>
 </sect2>
 
 <sect2 id="conc-text-special">
@@ -2405,7 +2508,7 @@ Here are some examples (sent in by Sourceforge user 'kalvaro'):
 $chars = html_entity_decode('&euro;', ENT_NOQUOTES, 'UTF-8');
 
 # Use iconv() to convert a character value xA4 in ISO-8859-15 to UTF:
-$chars = iconv('iso-8859-15', 'utf-8', chr(0xA4);
+$chars = iconv('iso-8859-15', 'utf-8', chr(0xA4));
 
 ]]></programlisting>
 </para>
