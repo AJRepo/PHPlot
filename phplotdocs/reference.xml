@@ -1311,8 +1311,8 @@ default font type.
         <listitem>
           <para>
 Name of the TrueType font file to use as default. Specify either a
-filename in the default TrueType font directory, or a full pathname to the
-font file.
+filename in the default TrueType font directory (or one that can be
+found by GD using its own rules), or the full pathname to a font file.
           </para>
         </listitem>
       </varlistentry>
@@ -1322,11 +1322,15 @@ font file.
   <refsect1>
     <title>Notes</title>
     <para>
-If given a filename, rather than a full path, the function expects to find
-the font file in the default TrueType font directory as set with
-<xref linkend="SetTTFPath" />.
 This function selects TrueType fonts as the default font type as if
 <xref linkend="SetUseTTF" />(True) was called.
+    </para>
+    <para>
+The supplied font name is first checked as given. If that does not work,
+it is checked prefixed with the default TrueType font directory as set
+with <xref linkend="SetTTFPath" />.
+If that does not work either, a fatal error results.
+See <xref linkend="conc-text-fonts"/> for more information.
     </para>
     <para>
 This function resets all elements to use the named font and default sizes,
@@ -1343,14 +1347,21 @@ and <xref linkend="SetFontTTF" /> after using SetDefaultTTFont.
   <refsect1>
     <title>History</title>
     <para>
+Starting after PHPlot-5.1.2, TrueType fonts are validated using GD.
+This allows GD to apply its own rules to try to locate a font file. On at
+least some platforms, this allows fonts to be specified by filename only,
+without having to set the PHPlot default font directory.
+(Through PHPlot-5.1.2, the existence of the font file was checked, which
+did not allow GD to try to find the font using its own rules.)
+    </para>
+    <para>
 Through PHPlot-5.0.5, setting a default TrueType font with this function
 also forced all text on the graph to use TrueType text.
 Starting with PHPlot-5.0.6, it just sets the default font type.
 Set <xref linkend="SetUseTTF" /> for more information on this change.
     </para>
     <para>
-This function was changed at PHPlot-5.0rc3 to work as described above.
-We are not quite sure how it worked before.
+This behavior of this function was changed significantly at PHPlot-5.0rc3.
     </para>
   </refsect1>
 
@@ -2030,11 +2041,14 @@ percentage labels and error message images.)
         <term><replaceable>$font</replaceable></term>
         <listitem>
           <para>
-Selects the font to use. For TrueType fonts, this is the filename
-(without path, if the font file is in the default TrueType font
-directory as set with <xref linkend="SetTTFPath" />, or a full
-pathname) of the TrueType font file. An empty string or NULL can be
-used to keep the same TrueType font and change the size.
+Selects the font to use.  For TrueType fonts,
+this is either the full pathname of a TrueType font filename,
+or the filename (without path) if the font file is either located in the
+default TrueType font directory set with <xref linkend="SetTTFPath" />
+or can be found by GD using its default search rules.
+An empty string or NULL can be specified to use the default TrueType font.
+          </para>
+          <para>
 For built-in GD fonts, this is a number between 1 and 5 which selects one
 of the built-in GD fonts.  Font 1 is the smallest, and font 5 is the
 largest.
@@ -2157,11 +2171,16 @@ On a 72 pixels per inch display, the text size will be 18 points, but at
   <refsect1>
     <title>History</title>
     <para>
+Starting after PHPlot-5.1.2, TrueType fonts are validated by trying to
+use the font with a non-drawing operation, rather than by seeing if the
+font file exists.
+See <xref linkend="conc-text-fonts"/> for more information.
+    </para>
+    <para>
 Simultaneous use of GD and TrueType font text was added at PHPlot-5.0.6.
 Through PHPlot-5.0.5, all text in a plot used GD fonts, or all text used
 TrueType fonts.
     </para>
-
     <para>
 The line_spacing parameter was added at PHPlot-5.0.6 to allow finer
 control over the line spacing for different elements. Through PHPlot-5.0.5,
@@ -2319,11 +2338,13 @@ percentage labels and error message images.)
         <term><replaceable>$font</replaceable></term>
         <listitem>
           <para>
-Selects the TrueType font to use. This is the filename
-(without path, if the font file is in the default TrueType font
-directory as set with <xref linkend="SetTTFPath" />, or a full
-pathname) of the TrueType font file. An empty string or NULL can be
-specified to use the default TrueType font (but see notes below).
+Selects the TrueType font to use.
+This is either the full pathname of a TrueType font filename,
+or the filename (without path) if the font file is either located in the
+default TrueType font directory set with <xref linkend="SetTTFPath" />
+or can be found by GD using its default search rules.
+See <xref linkend="conc-text-fonts"/> for more information.
+An empty string or NULL can be specified to use the default TrueType font.
           </para>
         </listitem>
       </varlistentry>
@@ -2373,6 +2394,12 @@ specify the font of an element using the specific type of font.
 
   <refsect1>
     <title>History</title>
+    <para>
+Starting after PHPlot-5.1.2, TrueType fonts are validated by trying to
+use the font with a non-drawing operation, rather than by seeing if the
+font file exists.
+See <xref linkend="conc-text-fonts"/> for more information.
+    </para>
     <para>
 This function was added at PHPlot-5.0.6, along with <xref
 linkend="SetFontGD"/>, to allow mixing GD and TrueType fonts
@@ -5054,7 +5081,7 @@ By default, no tick marks or labels are skipped.
 
   <refnamediv>
     <refname>SetTTFPath</refname>
-    <refpurpose>Set the name of the default TrueType font directory</refpurpose>
+    <refpurpose>Set the default TrueType font directory</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
@@ -5066,7 +5093,7 @@ $plot-&gt;SetTTFPath(<parameter>$path</parameter>)
   <refsect1>
     <title>Description</title>
     <para>
-<function>SetTTFPath</function> sets the name of the directory where
+<function>SetTTFPath</function> sets the directory where
 <xref linkend="SetFont" /> and <xref linkend="SetFontTTF" />
 can find TrueType font files.
     </para>
@@ -5089,19 +5116,39 @@ Full path to a directory containing TrueType fonts.
   <refsect1>
     <title>Notes</title>
     <para>
-The default TrueType font directory is '.', meaning fonts will only be
-searched for in the directory containing your main PHP script.
-This default can be changed at installation time as described in
-<xref linkend="install-install" />.
+The default TrueType font directory is '.', meaning fonts will be
+loaded from the directory containing your main PHP script.
+PHPlot also attempts to load fonts without any path, which allows GD
+to try to locate the font using its own internal rules. This works on
+some platforms, but not on others.
     </para>
     <para>
 SetTTFPath does not enable the use of TrueType fonts.
 See the note at the end of the reference for <xref linkend="SetUseTTF" />
 on how to set up and use TrueType fonts.
     </para>
+    <para>
+The default TrueType font directory is also used to find an internally-set
+default font. This means that if you use SetTTFPath, but do not specify a
+font name (with <xref linkend="SetDefaultTTFont"/>,
+<xref linkend="SetFont"/>, or <xref linkend="SetFontTTF"/>),
+PHPlot will attempt to select a default font from its internal list, but
+using the directory you specify with SetTTFPath.
+This can be useful on platforms where you are willing to use a default
+font, but the internal GD rules on how to locate fonts do not work.
+    </para>
+    <para>
+See <xref linkend="conc-text-fonts"/> for more information.
+    </para>
   </refsect1>
   <refsect1>
     <title>History</title>
+    <para>
+Use of the default TrueType font directory to locate the initial, default
+font was implemented after PHPlot-5.1.2.
+Also with this release, fonts are first searched for without a path, which
+allows GD to try to locate the font using its internal rules.
+    </para>
     <para>
 Starting with PHPlot-5.0rc3, the default TrueType font directory is used both
 for the default font set with <xref linkend="SetDefaultTTFont" /> and for
@@ -5407,39 +5454,13 @@ Changing the font type re-initializes all the font settings to the defaults.
 The default is False, to use the built-in GD fonts.
     </para>
     <para>
-There must be a valid default font before enabling TrueType fonts with
-SetUseTTF, or PHPlot will abort with an error because it cannot find
-the default font. There are three ways to
-properly set up TrueType fonts to avoid this error:
-      <itemizedlist>
-        <listitem>
-          <para>
-Call <xref linkend="SetDefaultTTFont" /> with the full pathname to a
-TrueType font file to use as the default. Since SetDefaultTTFont
-automatically selects TrueType fonts as the default,
-you don't need to call SetUseTTF if you use this option.
-          </para>
-        </listitem>
-        <listitem>
-          <para>
-Call <xref linkend="SetTTFPath" /> with the path to a directory where you
-have stored TrueType fonts, then call <xref linkend="SetDefaultTTFont" />
-with the filename (e.g. <filename>arial.ttf</filename>) of the
-TrueType font file to use as the default. Since SetDefaultTTFont
-automatically selects TrueType fonts as the default,
-you don't need to call SetUseTTF if you use this option either.
-          </para>
-        </listitem>
-        <listitem>
-          <para>
-Modify the built-in values for the default TrueType font, and the default
-font directory (if needed), in <filename>phplot.php</filename> at
-installation time as described in <xref linkend="install-install" />.
-If the built-in defaults are sufficient to find the font file, you can
-use SetUseTTF to enable TrueType fonts.
-          </para>
-        </listitem>
-      </itemizedlist>
+When you enable TrueType fonts with SetUseTTF, there must be a valid
+default font. You can use <xref linkend="SetDefaultTTFont" /> to
+establish a default font, but since this also enables TrueType fonts
+as the default, you need not use SetUseTTF in that case.
+On some platforms, PHPlot can find a valid default font on its own.
+See <xref linkend="conc-text-fonts"/> for more information on the default
+font.
     </para>
     <para>
 After enabling TrueType fonts, you can use
@@ -5451,6 +5472,19 @@ more elements, overriding the default font type.
   </refsect1>
   <refsect1>
     <title>History</title>
+    <para>
+Through PHPlot-5.1.2, there was a fixed default font called
+<filename>benjamingothic.ttf</filename>, which used to be included with PHPlot,
+but was removed in 2006. (It was not generally suitable for plotting anyway.)
+As a result, you had to use <xref linkend="SetDefaultTTFont"/> to set a
+valid default font before enabling TrueType fonts with SetUseTTF().
+But since SetDefaultTTFont() itself turned on TrueType fonts, SetUseTTF() was
+rarely useful.
+Starting after PHPlot-5.1.2, PHPlot will try a number of sans-serif font
+names, trying to find a valid font to use as the default. On platforms
+where this works, SetUseTTF(True) can be used without any other font setup
+in order to use the default TrueType font for all text.
+    </para>
     <para>
 Through PHPlot-5.0.5, this function enabled or disabled the use of TrueType
 font text, since all text on a graph had to be either TrueType or all GD.
