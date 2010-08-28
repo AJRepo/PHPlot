@@ -4,6 +4,24 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2010-08-27
+   Update with changes for new TrueType font default and handling.
+   * concepts.xml: Rewrite "TrueType Font Selection" section, correct and
+     update path usage information, and add new subsection on default font.
+   * reference.xml: Update descriptions of SetDefaultTTFont, SetFont,
+     SetFontTTF, SetTTFPath, and SetUseTTF to document how TrueType fonts
+     are located.
+   * developer.xml: Add new internal function GetDefaultTTFont.
+   * variables.list: Remove default value for default_ttfont and reference
+     new function GetDefaultTTFont.
+
+   * install.xml: Removed the text suggesting you can change some of the
+     configuration settings in phplot.php, especially the TrueType font
+     path and default font name. In general, this is a bad idea.
+
+   * concepts.xml: Add note that some GD functions on truecolor images
+     are only available with the bundled GD library.
+
 2010-08-21
    * reference.xml: Clarify Set[XY]TimeFormat sets both types of labels
      unless overridden by Set[XY]DataLabelType.
