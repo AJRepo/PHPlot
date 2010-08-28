@@ -1053,6 +1053,21 @@ PHPlot-5.1.0.
 </varlistentry>
 
 <varlistentry>
+  <term id="GetDefaultTTFont" xreflabel="GetDefaultTTFont">GetDefaultTTFont()</term>
+  <listitem>
+    <para>
+Returns the default TrueType font name. If no default font has been set
+using <xref linkend="SetDefaultTTFont"/>, the first time this is called it
+will go through a list of likely sans-serif fonts, trying to find one
+that works.  The first one that works, or the last one if none works, will
+be set as the default font.
+This was added after PHPlot-5.1.2, replacing the static initialization of
+default font.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
   <term id="GetImage" xreflabel="GetImage">GetImage($image_filename, &amp;$width, &amp;$height)</term>
   <listitem>
     <para>
