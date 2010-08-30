@@ -1,5 +1,5 @@
 phplot/HorizontalBars - Documentation for experimental new plot types
-Last updated for PHPlot-5.1.2 + CVS updates on 2010-08-14
+Last updated for PHPlot-5.1.3 on 2010-08-30
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 Overview:
@@ -7,7 +7,7 @@ Overview:
 This file documents new plot types: Horizontal Bars, Horizontal Stacked Bars,
 and Horizontal Thinbarline. Horizontal Bars was added to PHPlot in version
 5.1.2 as an experimental feature. Horizontal Stacked Bars and Horizontal
-Thinbarline were added to PHPlot after version 5.1.2.
+Thinbarline were added to PHPlot in version 5.1.3.
 
     NOTICE:
 
@@ -209,10 +209,10 @@ same automatic range.
 -----------------------------------------------------------------------------
 Data Value Labels:
 
-Data Value labels for horizontal bar charts were implemented after
-PHPlot-5.1.2.  These are the text labels within the plot that identify the
-X value for each bar.  (See Example 5.19 "Bar Chart with Data Labels" in
-the manual for an example of data value labels for vertical bar charts.)
+Data Value labels for horizontal bar charts were implemented in PHPlot-5.1.3.
+These are the text labels within the plot that identify the X value for each
+bar.  (See Example 5.19 "Bar Chart with Data Labels" in the manual for an
+example of data value labels for vertical bar charts.)
 
 Data Value labels are enabled and controlled in the same way for horizontal
 bar charts as for vertical bar charts, except the 'X' control functions are
@@ -393,5 +393,6 @@ History:
   Horizontal thinbarline plots are now implemented, along with a new data
   type 'data-data-yx'.
 
+2010-08-29 No additional changes for PHPlot-5.1.3
 
 -----------------------------------------------------------------------------

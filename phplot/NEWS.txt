@@ -4,6 +4,72 @@ The project home page is http://phplot.sourceforge.net/
 Refer the the ChangeLog file for detailed source changes.
 -----------------------------------------------------------------------------
 
+2010-08-30 Release 5.1.3
+
+Overview:
+
+This is the current stable release of PHPlot. Additional horizontal plot
+types and features have been added, however horizontal plots are still
+considered 'experimental'. A new callback has been added which allows
+greater control over the data colors. An improved method for accessing
+TrueType Font (TTF) files means that on many systems TTF text can be used
+without specifying font paths.
+
+
+Cautions and Important Notes:
+
+Since the previous PHPlot release, PHP-5.3.3 and PHP-5.2.14 have been
+released, and these include a fix for the TrueType Font (TTF) rendering
+problem. Use of these releases is now recommended.
+
+There has been extensive cleanup of the PHPlot code. If you have a
+customized version of PHPlot, you may find it difficult to update.
+
+The "additional data support" script phplot_data.php has been removed from
+this release. The script has not been developed or tested in a long time,
+and was found to have numerous problems. The script can still be found in
+the CVS repository.
+
+The changes in this release (horizontal plots, custom data color callback,
+and TrueType Font handling) should not result in any compatibility issues.
+
+
+New features in 5.1.3:
+
+#3049703 "Additional horizontal plots and features":
+  + Implemented data values labels in horizontal bar charts.
+    Use: SetXDataLabelPos('plotin').
+  + Add horizontal stacked bar charts, with data value labels.
+  + Add horizontal thinbarline plots.
+  Horizontal plots are still considered 'experimental', and documentation is
+  in the HorizontalBars.txt text file rather than the PHPlot Reference Manual.
+
+#3034164 "Extended control of data colors":
+  New callback 'data_color' can be used to customize selection of the color
+  of each bar, line segment, point marker, etc. This is documented in the
+  PHPlot Reference Manual section "Custom Data Color Selection", with new
+  examples in the Examples chapter.
+
+
+Bugs Fixed in 5.1.3:
+
+#3051906 "Better choice for default TT font":
+  Rather than always using the unlikely 'benjamingothic.ttf' as its default
+  TrueType font name, PHPlot now has a short list of sans-serif fonts, and
+  tries to find one that works if a default TT font is needed.  On many
+  systems, this will provide a high-quality default font without help.
+
+#3051832 "Let PHP/GD find the font file":
+  Instead of using file existence to validate a TT font file, PHPlot now
+  just tries to use the font. This allows PHP/GD to use its own rules to
+  try to find the font, without needing a pathname.  This works on Windows
+  and at least some Linux systems.
+
+#3048267 "phplot_data add-on is still broken"
+  Not fixed. phplot_data.php has been removed from the release.
+
+-----------------------------------------------------------------------------
+
 2010-06-29 Release 5.1.2
 
 Overview:

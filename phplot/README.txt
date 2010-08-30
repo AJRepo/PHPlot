@@ -1,5 +1,5 @@
 This is the README file for PHPlot
-Last updated for PHPlot-5.1.2 on 2010-06-29
+Last updated for PHPlot-5.1.3 on 2010-08-30
 The project web site is http://sourceforge.net/projects/phplot/
 The project home page is http://phplot.sourceforge.net/
 -----------------------------------------------------------------------------
@@ -25,22 +25,19 @@ CONTENTS:
    README.txt   . . . . . . . . . . This file
    contrib  . . . . . . . . . . . . "Contributed" directory, add-ons
    phplot.php   . . . . . . . . . . The main PHPlot source file
-   phplot_data.php  . . . . . . . . Auxiliary and extended functions
    rgb.inc.php  . . . . . . . . . . Optional extended color table
+
 
 REQUIREMENTS:
 
-You need a recent version of PHP5. Usually, we recommend you use the latest
-stable release, however due to problems with PHP-5.3.2 and PHP-5.2.13 you
-are advised to use the previous releases if possible. The problems are
-specific to TrueType font (TTF) text. If you are not using TTF text, you
-may use PHP-5.3.2 or 5.2.13.  (The PHP team already has a fix for this TTF
-problem in PHP-5.3.3 development snapshots, so the fix should be in the
-next releases PHP-5.3.3 and PHP-5.2.14.)
+You need a recent version of PHP5, and you are advised to use the latest
+stable release.  This version of PHPlot has been tested with PHP-5.3.3 and
+PHP-5.2.14 on Linux, and with PHP-5.3.3 on Windows/XP. The PHPlot Test
+Suite currently contains 501 test cases.
 
-This version of PHPlot has been tested with PHP-5.3.1 and PHP-5.2.12 on
-Linux, and with PHP-5.3.1 on Windows/XP. The PHPlot Test Suite currently
-contains 432 test cases.
+Use of PHP-5.3.2 or PHP-5.2.13 is not recommended, if you are using
+TrueType Font (TTF) text. A bug with TTF rendering in those versions
+affects PHPlot images. This was fixed in PHP-5.3.3 and PHP-5.2.14.
 
 You need the GD extension to PHP either built in to PHP or loaded as a
 module. Refer to the PHP documentation for more information - see the
@@ -61,12 +58,10 @@ INSTALLATION:
 Unpack the distribution. (If you are reading this file, you have probably
 already done that.)
 
-Installation of PHPlot simply involves copying three script files somewhere
+Installation of PHPlot simply involves copying two script files somewhere
 your PHP application scripts will be able to find them. The scripts are:
-     phplot.php
-     phplot_data.php
-     rgb.inc.php
-(Only phplot.php is necessary for most graphs.)
+     phplot.php   - The main script file
+     rgb.inc.php  - Optional large color table
 Make sure the permissions on these files allow the web server to read them.
 
 The ideal place is a directory outside your web server document area,
@@ -79,6 +74,14 @@ KNOWN ISSUES:
 Here are some of the problems we know about in PHPlot. See the bug tracker
 on the PHPlot project web site for more information.
 
+#3045131 SetTransparentColor problems
+  There is an order dependency in SetTransparentColor(), and you cannot use
+  it on a data color. This is planned to be fixed in the next release.
+
+#3049726 Optimize color allocation
+  PHPlot adds unneeded colors in the image color map. This is planned to be
+  fixed in the next release.
+
 #1795969 The automatic range calculation for Y values needs to be rewritten.  
   This is especially a problem with small offset ranges (e.g. Y=[999:1001]).
   You can use SetPlotAreaWorld to set a specific range instead.
@@ -90,8 +93,22 @@ on the PHPlot project web site for more information.
   Tick interval calculations should try for intervals of 1, 2, or 5 times
   a power of 10.
 
-PHP Bugs #51207, #51094, and others: These are PHP bugs, not PHPlot,
-on rendering of TrueType font (TTF) text in PHP-5.3.2 and 5.2.13.
+PHP Issues:
+
+  PHP has many build-time and configuration options, and these can affect
+the operation of PHPlot (as well as any other application or library). Here
+are some known issues:
+  + Slackware Linux includes a version of PHP built with --enable-gd-jis-conv
+(JIS-mapped Japanese font support). This prevents the usual UTF-8 encoding
+of characters from working in TrueType Font (TTF) text strings.
+  + The Ubuntu Linux PHP GD package (php5-gd) was built to use the external
+shared GD library, not the one bundled with PHP. This can result in small
+differences in images, and some unsupported features (such as advanced
+truecolor image operations). Also, although this Ubuntu GD library was
+built with fontconfig support, PHP does not use it, so you still need to
+specify TT fonts with their actual file names.
+  + Some PHP installations may have a memory limit set too low to support
+large images, especially truecolor images.
 
 
 If you think you found a problem with PHPlot, or want to ask questions or
