@@ -120,7 +120,7 @@ PHPlot-5.1.0 and later.)
 Some callbacks are expected to return a value. This is documented in 
 <xref linkend="callbacks-names"/>. In all other cases, the return value
 from a callback function is ignored.
-(Callbacks which return a value were implemented after PHPlot-5.1.2.)
+(Callbacks which return a value were implemented in PHPlot-5.1.3.)
 </para>
 </sect1>
 

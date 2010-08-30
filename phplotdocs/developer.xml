@@ -342,7 +342,7 @@ the graph is ready to be drawn.
 Checks that there is a valid data array for the plot, and calculates values
 that depend on the data type.
 Called very early by <xref linkend="DrawGraph"/>.
-This was added after PHPlot-5.1.2, moving the checking out of DrawGraph
+This was added in PHPlot-5.1.3, moving the checking out of DrawGraph
 and adding the data_columns calculation.
     </para>
   </listitem>
@@ -465,7 +465,7 @@ This is called by <xref linkend="DrawGraph"/>.
 It was added in PHPlot-5.1.2 (where it returned an array of 4 flags, and
 was called by several functions that needed to know the structure of the
 data array.)
-After PHPlot-5.1.2 it was changed to set member variables instead.
+In PHPlot-5.1.3, it was changed to set member variables instead.
 It is now called just once, and the other functions reference the variables
 as needed.
     </para>
@@ -483,7 +483,7 @@ that are zero or more arguments to pass to the callback, after the image
 resource and passthrough arguments. DoCallback does nothing if there is no
 callback registered for the given reason, otherwise it calls the callback
 function. See <xref linkend="callbacks"/> for more information on callbacks.
-Starting after PHPlot-5.1.2, DoCallback returns the value returned by the
+Starting with PHPlot-5.1.3, DoCallback returns the value returned by the
 callback function, if any.
     </para>
   </listitem>
@@ -528,7 +528,7 @@ calls <xref linkend="DrawHorizBars"/> instead.
   <term id="DrawDataLabel" xreflabel="DrawDataLabel">DrawDataLabel($which_font, $which_angle, $x_world, $y_world, $which_color, $which_text, $which_halign = 'center', $which_valign = 'top', $x_adjustment=0, $y_adjustment=0)</term>
   <listitem>
     <para>
-This function was removed after PHPlot-5.1.2 and replaced
+This function was removed in PHPlot-5.1.3 and replaced
 by <xref linkend="DrawDataValueLabel"/>.
     </para>
   </listitem>
@@ -556,7 +556,7 @@ not drawn. This is used to suppress labels that are too wide to be drawn
 inside their bars, for example.
 </para>
 <para>
-This function was added after PHPlot-5.1.2 and replaced
+This function was added in PHPlot-5.1.3 and replaced
 <xref linkend="DrawDataLabel"/>.
 It is called by the bar chart drawing functions including
 <xref linkend="DrawBars"/> and <xref linkend="DrawStackedBars"/>
@@ -592,7 +592,7 @@ it calls <xref linkend="DrawDotsError"/> instead.
 'lines' and 'linepoints' plots, but not for error bar plots.)
 $paired is true for linepoints plots, to suppress drawing elements that
 would be duplicated by the 'lines' part of the plot.
-(This argument was added after PHPlot-5.1.2.)
+(This argument was added in PHPlot-5.1.3.)
     </para>
   </listitem>
 </varlistentry>
@@ -609,7 +609,7 @@ when the data type indicates an error bar plot.
 $paired is true for linepoints error plots, and defaults to false for
 points error plots. If true, it suppress drawing elements that
 would be duplicated by <xref linkend="DrawLinesError"/>.
-(This argument was added after PHPlot-5.1.2.)
+(This argument was added in PHPlot-5.1.3.)
     </para>
   </listitem>
 </varlistentry>
@@ -638,7 +638,7 @@ Draws a horizontal bars plot.
 Called by <xref linkend="DrawBars"/> when the data type indicates a
 horizontal plot.
 This was added in PHPlot-5.1.2 (but was called by DrawGraph).
-After PHPlot-5.1.2 it was changed to be called by DrawBars.
+In PHPlot-5.1.3 it was changed to be called by DrawBars.
     </para>
   </listitem>
 </varlistentry>
@@ -650,7 +650,7 @@ After PHPlot-5.1.2 it was changed to be called by DrawBars.
 Draws a horizontal stacked bars plot.
 Called by <xref linkend="DrawStackedBars"/> when the data type indicates a
 horizontal plot.
-This was added after PHPlot-5.1.2.
+This was added in PHPlot-5.1.3.
     </para>
   </listitem>
 </varlistentry>
@@ -686,7 +686,7 @@ Draws a linepoints plot, with or without error bars.
 Called by <xref linkend="DrawGraph"/> when the plot type is 'linepoints'.
 It simply calls <xref linkend="DrawLines"/> and <xref linkend="DrawDots"/>,
 which handle both the plain and error bar cases.
-This was added after PHPlot-5.1.2 to provide a function specific to this
+This was added in PHPlot-5.1.3 to provide a function specific to this
 plot type.
     </para>
   </listitem>
@@ -705,7 +705,7 @@ it calls <xref linkend="DrawLinesError"/> instead.
 'lines' and 'linepoints' plots, but not for error bar plots.)
 $paired is true for linepoints plots, to suppress drawing elements that
 would be duplicated by the 'points' part of the plot.
-(This argument was added after PHPlot-5.1.2.)
+(This argument was added in PHPlot-5.1.3.)
     </para>
   </listitem>
 </varlistentry>
@@ -721,7 +721,7 @@ when the data type indicates an error bar plot.
 (Through PHPlot-5.1.2 this was called directly by DrawGraph.)
 $paired is true for linepoints error plots, to suppress drawing elements that
 would be duplicated by <xref linkend="DrawDotsError"/>.
-(This argument was added after PHPlot-5.1.2.)
+(This argument was added in PHPlot-5.1.3.)
     </para>
   </listitem>
 </varlistentry>
@@ -1061,7 +1061,7 @@ using <xref linkend="SetDefaultTTFont"/>, the first time this is called it
 will go through a list of likely sans-serif fonts, trying to find one
 that works.  The first one that works, or the last one if none works, will
 be set as the default font.
-This was added after PHPlot-5.1.2, replacing the static initialization of
+This was added in PHPlot-5.1.3, replacing the static initialization of
 default font.
     </para>
   </listitem>

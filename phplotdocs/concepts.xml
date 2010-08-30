@@ -1848,7 +1848,7 @@ TrueType Font text is always anti-aliased.)
 <abstract><title></title>
   <para>
 This section describes customizing the selection of data colors using a
-PHPlot callback. The data color callback was added after PHPlot-5.1.2.
+PHPlot callback. The data color callback was added in PHPlot-5.1.3.
   </para>
 </abstract>
 
@@ -2279,7 +2279,7 @@ The rest of this section discusses only TrueType fonts.
 <note>
   <para>
 The material on specifying font files for PHPlot applies to releases
-after PHPlot-5.1.2. Through PHPlot-5.1.2, you generally need to specify
+starting with PHPlot-5.1.3. Through PHPlot-5.1.2, you generally need to specify
 the full pathname of a font file, or the full path of a font directory.
   </para>
 </note>
@@ -2392,7 +2392,7 @@ Here are some font selection examples for Linux:
 <title>Default TrueType Font</title>
 <note>
   <para>
-This applies starting after PHPlot-5.1.2.
+This section applies starting with PHPlot-5.1.3.
   </para>
 </note>
 <para>
