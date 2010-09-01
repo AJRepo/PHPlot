@@ -10,6 +10,16 @@ The project home page is http://sourceforge.net/projects/phplot/
       SizeText(), xtr(), and ytr(), left these as public with a comment
       indicating they should be treated as protected.
 
+    * Fix bug 3057000 "Review 'deprecated' methods":
+      + Changed deprecated method SetNewPlotAreaPixels() to just call
+      SetPlotAreaPixels(). It was suspicious as coded, and was found
+      to be equivalent to SetPlotAreaPixels().
+      +  Removed SetColor(), which didn't do anything. It was calling
+      SetRGBColor and discarding the result. After reviewing the
+      history of this in all CVS versions, it does not seem to have
+      ever been coded correctly, so there is no harm in removing it.
+      + All other deprecated methods seem OK and are left as is.
+
 2010-08-30 (lbayuk)     ===== Released as 5.1.3 =====
     * phplot.php: Updated version
     * README.txt: Updated for new release
@@ -42,12 +52,12 @@ The project home page is http://sourceforge.net/projects/phplot/
       handle error bar plots, as DrawDots and DrawLines will do that.
 
 2010-08-16
-    * Rewrote DecodeDatatype(). Previous implementation was hard to
+    * Rewrote DecodeDataType(). Previous implementation was hard to
       extend and inefficient. Now it uses new class variables (not a
       returned array) and is only called once, by DrawGraph. Changed all
       users of data_type to use the new variables.
 
-      In CheckDatArray(), calculate data_columns properly for
+      In CheckDataArray(), calculate data_columns properly for
       text-data-single data type (pie chart) too. Simplify DrawPie
       to use this, and merge 2 of the 3 cases.
 
@@ -347,7 +357,7 @@ The project home page is http://sourceforge.net/projects/phplot/
         provided, and does not substitute values if they are empty.
       + SetLabelType() now takes mode='xd' and 'yd' for X Data and Y Data
         label formatting; 'x' and 'y' are for tick labels only now.
-      + Functions that work on Data labels now call FormatLabels() with the
+      + Functions that work on Data labels now call FormatLabel() with the
         new mode parameter value 'xd' or 'yd, and use the new
         data_label_angle variables.
       + New CheckLabels(), used by DrawGraph to process label parameters.
