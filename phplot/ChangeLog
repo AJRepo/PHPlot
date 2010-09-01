@@ -2,6 +2,14 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2010-09-01
+    * Fix bug 3056991 "Internal methods should be 'protected'":
+      Changed CheckDataArray(), number_format(), FindDataLimits(), and
+      DrawBackground() to be 'protected'. The test suite no longer calls
+      these directly. For SetIndexColor(), SetRGBColor(), DrawText(),
+      SizeText(), xtr(), and ytr(), left these as public with a comment
+      indicating they should be treated as protected.
+
 2010-08-30 (lbayuk)     ===== Released as 5.1.3 =====
     * phplot.php: Updated version
     * README.txt: Updated for new release
