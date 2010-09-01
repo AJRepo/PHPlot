@@ -1,7 +1,7 @@
 <?php
 /* $Id$ */
 /*
- * PHPLOT Version 5.1.3
+ * PHPLOT Version 5.1.3 + CVS (This is an unreleased CVS version!)
  *
  * A PHP class for creating scientific and business charts
  * Visit http://sourceforge.net/projects/phplot/
@@ -329,6 +329,7 @@ class PHPlot
      * Note: For palette images, this is an index into the color map.
      * For truecolor images, this is a 32 bit value 0xAARRGGBB. But this difference
      * is internal to GD.
+     * Note: This function should be considered 'protected', and is not documented for public use.
      */
     function SetIndexColor($which_color, $alpha = 0)
     {
@@ -559,6 +560,7 @@ class PHPlot
      *
      * Returns an array describing a color as (R, G, B, Alpha).
      * R, G, and B are integers 0-255, and Alpha is 0 (opaque) to 127 (transparent).
+     * Note: This function should be considered 'protected', and is not documented for public use.
      */
     function SetRGBColor($color_asked, $alpha = 0)
     {
@@ -1385,6 +1387,7 @@ class PHPlot
      *    $which_text :  The text to draw, with newlines (\n) between lines.
      *    $which_halign : Horizontal (relative to the image) alignment: left, center, or right.
      *    $which_valign : Vertical (relative to the image) alignment: top, center, or bottom.
+     * Note: This function should be considered 'protected', and is not documented for public use.
      */
     function DrawText($which_font, $which_angle, $which_xpos, $which_ypos, $which_color, $which_text,
                       $which_halign = 'left', $which_valign = 'bottom')
@@ -1404,6 +1407,7 @@ class PHPlot
      *    $which_text :  The text to draw, with newlines (\n) between lines.
      * Returns a two element array with: $width, $height.
      * This is just a wrapper for ProcessText() - see above.
+     * Note: This function should be considered 'protected', and is not documented for public use.
      */
     function SizeText($which_font, $which_angle, $which_text)
     {
@@ -1939,9 +1943,8 @@ class PHPlot
      * previously used to pad style arrays, but is not accurate).
      * Returns True if the data array is OK, else reports an error (and may return False).
      * Note error messages refer to the caller, the public DrawGraph().
-     * Note: This method should be 'protected', but is called from test script(s).
      */
-    function CheckDataArray()
+    protected function CheckDataArray()
     {
         // Test for missing image, which really should never happen.
         if (!$this->img) {
@@ -2467,9 +2470,8 @@ class PHPlot
      *   Returns the formatted result.
      * This is like PHP's number_format, but uses class variables for separators.
      * The separators will default to locale-specific values, if available.
-     * Note: This method should be 'protected', but is called from test script(s).
      */
-    function number_format($number, $decimals=0)
+    protected function number_format($number, $decimals=0)
     {
         if (!isset($this->decimal_point) || !isset($this->thousands_sep)) {
             // Load locale-specific values from environment, unless disabled:
@@ -2576,10 +2578,8 @@ class PHPlot
      * data_min[] and data_max[] with per-row min and max values. These are used for
      * data label lines. For normal (unswapped) data, these are the Y range for each X.
      * For swapped X/Y data, they are the X range for each Y.
-     *
-     * Note: This method should be 'protected', but is called from test script(s).
      */
-    function FindDataLimits()
+    protected function FindDataLimits()
     {
         // Special case processing for certain plot types:
         $process_stacked = ($this->plot_type == 'stackedbars' || $this->plot_type == 'stackedarea');
@@ -3332,6 +3332,8 @@ class PHPlot
     /*
      * Translate X world coordinate into pixel coordinate
      * See CalcTranslation() for calculation of xscale.
+     * Note: This function should be 'protected', but is left public for historical reasons.
+     * See GetDeviceXY() for a preferred public method.
      */
     function xtr($x_world)
     {
@@ -3346,6 +3348,8 @@ class PHPlot
     /*
      * Translate Y world coordinate into pixel coordinate.
      * See CalcTranslation() for calculation of yscale.
+     * Note: This function should be 'protected', but is left public for historical reasons.
+     * See GetDeviceXY() for a preferred public method.
      */
     function ytr($y_world)
     {
@@ -3850,9 +3854,8 @@ class PHPlot
 
     /*
      * Fill the image background, with a tiled image file or solid color.
-     * Note: This method should be 'protected', but is called from test script(s).
      */
-    function DrawBackground()
+    protected function DrawBackground()
     {
         // Don't draw this twice if drawing two plots on one image
         if (! $this->background_done) {
