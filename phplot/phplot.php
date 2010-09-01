@@ -5919,6 +5919,13 @@ class PHPlot
 /////////////////////////////////////////////
 
     /*
+     * Note on deprecated methods - as these pre-date the PHPlot Reference
+     * Manual, and there is minimal documentation about them, I have neither
+     * removed them nor changed them. They are not tested or documented, and
+     * should not be used.
+     */
+
+    /*
      * Deprecated, use SetYTickPos()
      */
     function SetDrawVertTicks($which_dvt)
@@ -6113,29 +6120,11 @@ class PHPlot
     }
 
     /*
-     * Deprecated (and probably broken). Use SetPlotAreaPixels()
+     * Deprecated - use SetPlotAreaPixels()
      */
     function SetNewPlotAreaPixels($x1, $y1, $x2, $y2)
     {
-        //Like in GD 0, 0 is upper left set via pixel Coordinates
-        $this->plot_area = array($x1, $y1, $x2, $y2);
-        $this->plot_area_width = $this->plot_area[2] - $this->plot_area[0];
-        $this->plot_area_height = $this->plot_area[3] - $this->plot_area[1];
-        $this->y_top_margin = $this->plot_area[1];
-
-        if (isset($this->plot_max_x))
-            $this->CalcTranslation();
-
-        return TRUE;
-    }
-
-    /*
-     * Deprecated - use SetRGBColor() ? This is broken (ignores return).
-     */
-    function SetColor($which_color)
-    {
-        $this->SetRGBColor($which_color);
-        return TRUE;
+        return $this->SetPlotAreaPixels($x1, $y1, $x2, $y2);
     }
 
     /*
