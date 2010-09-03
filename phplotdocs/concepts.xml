@@ -1176,7 +1176,7 @@ maps, as they include alternate spellings (like 'gray' and 'grey').
 Each data set plotted on a graph uses the next color in the Data Colors list.
 By default, the Data Colors list contains the following 16 colors in order.
   <informaltable>
-    <tgroup cols="2">
+    <tgroup cols="3">
     <?dbhtml table-summary="Default PHPlot Data Colors List"?>
       <thead>
         <row>
