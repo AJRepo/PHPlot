@@ -20,10 +20,10 @@ proc output_header {} {
   <tgroup cols="4">
     <?dbhtml cellpadding="5"?>
     <?dbhtml table-summary="PHPlot Member Variable Reference"?>
-    <colspec colwidth="20%" />
-    <colspec colwidth="15%" />
-    <colspec colwidth="20%" />
-    <colspec colwidth="45%" />
+    <colspec colwidth="27*" />
+    <colspec colwidth="12*" />
+    <colspec colwidth="27*" />
+    <colspec colwidth="34*" />
     <thead>
       <row>
         <entry>Variable Name:</entry>
