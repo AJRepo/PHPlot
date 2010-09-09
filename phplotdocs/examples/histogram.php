@@ -55,7 +55,8 @@ function get_histogram($image_file)
     for ($y = 0; $y < $height; $y++) {
         for ($x = 0; $x < $width; $x++) {
             $pix = imagecolorsforindex($im, imagecolorat($im, $x, $y));
-            $value = (int)((30 * $pix['red'] + 59 * $pix['green'] + 11 * $pix['blue']) / 100);
+            $value = (int)((30 * $pix['red'] + 59 * $pix['green']
+                          + 11 * $pix['blue']) / 100);
             $histogram[$value]++;
         }
     }
