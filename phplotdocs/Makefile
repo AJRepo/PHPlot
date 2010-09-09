@@ -1,12 +1,20 @@
 # $Id$
 # Makefile for PHPlot Programmer's Reference Manual (Docbook-xml version)
 # This uses xsltproc to generate HTML output.
+# And it uses xsltproc, xmllint, and Apache fop for PDF output.
+
+# Base name for some files:
+NAME=phplot
 
 # Local: PHP CLI to run examples:
 PHP=/opt/php/bin/php
 
 # Local: XSL Transformation Processor program:
 XSLTPROC=xsltproc
+# Local: XML formatting
+XMLFORMAT=xmllint -format
+# Local: FOP program:
+FOP=/opt/fop/fop
 
 # =====
 
@@ -15,12 +23,14 @@ PACKAGE=phplotdocs
 
 # XSL Style Sheet for HTML:
 XSL_HTML=style.xsl
+# XSL Style Sheet for PDF:
+XSL_PDF=pdf.xsl
 
 # Primary source file, which includes all the others:
 MAIN=main.xml
 
 # List of all source files:
-SRC=$(MAIN) $(XSL_HTML) \
+SRC=$(MAIN) $(XSL_HTML) $(XSL_PDF) \
   install.xml quickstart.xml concepts.xml functions.xml \
   examples.xml webform.xml callbacks.xml \
   reference.xml developer.xml changelog.xml
@@ -130,6 +140,8 @@ VARIABLE_LIST=variablelist.xml
 
 all: html
 html: html.mark
+pdf: $(NAME).pdf
+
 # Special version of the manual with required logo for
 # Sourceforge project web pages. See the XSLT style sheet for details.
 sfhtml:
@@ -148,14 +160,28 @@ html.mark: $(SRC) $(ALSO) version.xml $(EXAMPLE_LIST) $(VARIABLE_LIST)
 # because there is a directory by that name which interferes.)
 exampleimages: $(EXAMPLES_IMAGES)
 
+# Build PDF Manual.
+# This uses xsltproc and xmllint for the XML to FO conversion, even
+# though fop can do that, because fop gives useless messages if it
+# does the XML processing ("context not available").
+# Also xsltproc is better about using XML catalogs.
+$(NAME).pdf: $(SRC) $(ALSO) version.xml $(EXAMPLE_LIST) $(VARIABLE_LIST)
+	$(XSLTPROC) $(XSL_PDF) $(MAIN) > $(NAME).fo0
+	$(XMLFORMAT) $(NAME).fo0 > $(NAME).fo
+	-rm $(NAME).fo0
+	$(FOP) -catalog -fo $(NAME).fo -pdf $(NAME).pdf
+
+# === Additional Targets ===
+
 # Cleanup: deletes intermediate files, leaves manual.
 clean:
 	-rm -f html.mark version.xml
 	-rm -f $(EXAMPLES_XML) $(EXAMPLE_LIST) $(VARIABLE_LIST)
+	-rm -f $(NAME).fo
 
-# All cleanup: Remove all generated files. Caution: Removes all HTML files!
+# All cleanup: Remove all generated files. Caution: Removes all HTML and PDF files!
 allclean: clean
-	-rm -f *.html
+	-rm -f *.html *.pdf
 	-rm -f $(EXAMPLES_IMAGES)
 
 # Make a release of the HTML documentation only:
