@@ -82,4 +82,13 @@ area.</p></div>
   </xsl:if>
 </xsl:template>
 
+<!-- Ignore scaling on images, which are there to fix PDF rendering. -->
+<xsl:param name="ignore.image.scaling" select="1"></xsl:param>
+
+<!-- This is used with FOP (PDF output) only, to help pagination.
+     It does nothing for XHTML.
+-->
+<xsl:template match="pagebreak">
+</xsl:template>
+
 </xsl:stylesheet>
