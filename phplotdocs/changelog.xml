@@ -15,6 +15,16 @@ see the ChangeLog file inside the PHPlot distribution.)
 <variablelist>
 
   <varlistentry>
+    <term>2010-09-08</term>
+    <listitem>
+      <para>
+Changes were made throughout the manual to support production of a PDF
+version. The changes should have only a small impact on the HTML version.
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
     <term>2010-08-30</term>
     <listitem>
       <para>
