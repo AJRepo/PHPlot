@@ -1005,7 +1005,7 @@ contains 16 colors starting with SkyBlue, green, orange, and blue.
 For the full list, see <xref linkend="conc-colors-datacolors"/>.
 By default, all colors are opaque (alpha=0).
     </para>
-    <para>
+    <para><?dbfo keep-together="always"?>
 You can keep the default color map but set all colors in it to use a
 transparency (alpha) value like this:
 <programlisting><![CDATA[
@@ -1076,6 +1076,8 @@ The data array format type, which must be one of the following values:
             <informaltable>
               <tgroup cols="2">
                 <?dbhtml table-summary="Available data types"?>
+                <colspec colname="c1" colwidth="20*" />
+                <colspec colname="c2" colwidth="80*" />
                 <thead>
                   <row>
                     <entry>Format</entry>
@@ -1120,7 +1122,7 @@ The data array format type, which must be one of the following values:
     <para>
 The default data type is <literal>text-data</literal>.
     </para>
-    <para>
+    <para><?dbfo keep-together="always"?>
 An example of a <literal>text-data</literal> data array is:
       <programlisting><![CDATA[
      $data = array(  array('Jan', 100, 150, 200),
@@ -1132,7 +1134,7 @@ This defines the data for 3 plots with 4 points on each, and a month name
 as label for each point.
     </para>
 
-    <para>
+    <para><?dbfo keep-together="always"?>
 An example of a <literal>data-data</literal> data array is:
       <programlisting><![CDATA[
      $data = array(  array('', 2, 15),
@@ -1144,7 +1146,7 @@ Here the labels are empty strings, next are the X values, then a single
 set of Y values (1 plot).
     </para>
 
-    <para>
+    <para><?dbfo keep-together="always"?>
 An example of a <literal>data-data-error</literal> data array is:
       <programlisting><![CDATA[
      $data = array(  array('1999', 1, 23.5, 5, 3),
@@ -1156,7 +1158,7 @@ Here the labels are years, next are the X values 1-4, then a single
 set of Y values with error ranges between 3 and 5 for each point.
     </para>
 
-    <para>
+    <para><?dbfo keep-together="always"?>
 An example of a <literal>text-data-single</literal> data array,
 used only for pie charts, is:
       <programlisting><![CDATA[
@@ -2088,8 +2090,11 @@ If not specified, the value set by <xref linkend="SetLineSpacing"/> is used.
 When using built-in GD fonts, the default fonts are shown in the following
 table, where font 1 is the smallest font and font 5 is the biggest font.
       <informaltable>
+       <?dbfo table-width="40%"?> <!-- Table width hint for PDF only -->
         <tgroup cols="2">
           <?dbhtml table-summary="Default built-in fonts"?>
+          <colspec colname="c1" colwidth="40*" />
+          <colspec colname="c2" colwidth="60*" />
           <thead>
             <row>
               <entry>Element</entry>
@@ -2112,8 +2117,11 @@ table, where font 1 is the smallest font and font 5 is the biggest font.
 When using TrueType fonts, the default font sizes are shown in the following
 table. Use <xref linkend="SetDefaultTTFont" /> to set the default TrueType font.
       <informaltable>
+       <?dbfo table-width="40%"?> <!-- Table width hint for PDF only -->
         <tgroup cols="2">
           <?dbhtml table-summary="Default TrueType font sizes"?>
+          <colspec colname="c1" colwidth="40*" />
+          <colspec colname="c2" colwidth="60*" />
           <thead>
             <row>
               <entry>Element</entry>
@@ -3004,7 +3012,7 @@ The following figure shows the four possible alignment choices.
       <informalfigure>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="images/legendstyle.png" format="PNG" />
+            <imagedata fileref="images/legendstyle.png" scale="58" format="PNG" />
           </imageobject>
           <textobject>
             <phrase>Four possible text/color-box alignment choices</phrase>
@@ -4102,8 +4110,11 @@ drawn around the plot. By default, left and right side borders are drawn.
 A string or array indicating where to draw the plot borders. If a string,
 it must be one of the following values:
             <informaltable>
+              <?dbfo table-width="60%"?> <!-- Table width hint for PDF only -->
               <tgroup cols="2">
                 <?dbhtml table-summary="Border position values"?>
+                <colspec colname="c1" colwidth="20*" />
+                <colspec colname="c2" colwidth="80*" />
                 <thead>
                   <row>
                     <entry>Value</entry>
@@ -4293,8 +4304,11 @@ If an array, the array values name the point shapes for each subsequent
 data set in a plot.
 The following shapes are available:
             <informaltable>
+              <?dbfo table-width="75%"?> <!-- Table width hint for PDF only -->
               <tgroup cols="2">
                 <?dbhtml table-summary="Available shape names"?>
+                <colspec colname="c1" colwidth="25*" />
+                <colspec colname="c2" colwidth="75*" />
                 <thead>
                   <row>
                     <entry>Shape Name</entry>
@@ -4802,7 +4816,7 @@ color map.
   </refsect1>
   <refsect1>
     <title>Examples</title>
-    <para>
+    <para><?dbfo keep-together="always"?>
 An example of a user-defined color map is:
       <programlisting><![CDATA[
     array( 'black' => array(0, 0, 0),
@@ -5653,8 +5667,11 @@ axis), above the plot, in both positions, or neither.
           <para>
 A string indicating the desired position for the X data labels:
             <informaltable>
+              <?dbfo table-width="75%"?> <!-- Table width hint for PDF only -->
               <tgroup cols="2">
                 <?dbhtml table-summary="X data label position choices"?>
+                <colspec colname="c1" colwidth="14*" />
+                <colspec colname="c2" colwidth="86*" />
                 <thead>
                   <row>
                     <entry>Position</entry>
@@ -6176,37 +6193,41 @@ These also apply to <function>SetXLabelType</function>,
 <xref linkend="SetXDataLabelType"/>, <xref linkend="SetYLabelType"/>,
 and <xref linkend="SetYDataLabelType"/>.
       <informaltable>
-        <tgroup cols="4">
+<!-- This table's rows alternate a row spanning 3 columns with description,
+     then a 3 column row (Code, Value, Result).
+     This used to be a 4 column table, but was too wide for PDF pages.
+-->
+        <?dbfo table-width="100%"?>
+        <tgroup cols="3">
           <?dbhtml table-summary="Examples of label formatting"?>
+          <colspec colname="c1" colwidth="60*" />
+          <colspec colname="c2" colwidth="20*" />
+          <colspec colname="c3" colwidth="20*" />
           <thead>
             <row>
               <entry>Code:</entry>
               <entry>Value:</entry>
               <entry>Result:</entry>
-              <entry>Notes:</entry>
             </row>
           </thead>
 
           <tbody>
+            <row>
+              <entry namest="c1" nameend="c3">
+Data (numeric) formatting with two digits of precision.
+Grouping and decimal separators depend on locale.
+              </entry>
+            </row>
             <row>
               <entry><programlisting><![CDATA[
 $plot->SetXLabelType('data', 2);
 ]]></programlisting></entry>
               <entry>1234.56</entry>
               <entry>1,234.56</entry>
-              <entry>
-Data (numeric) formatting with two digits of precision.
-Grouping and decimal separators depend on locale.
-              </entry>
             </row>
 
             <row>
-              <entry><programlisting><![CDATA[
-$plot->SetXLabelType('data', 0, '&amp;#8364;');
-]]></programlisting></entry>
-              <entry>100000</entry>
-              <entry>&euro;1,000,000</entry>
-              <entry>
+              <entry namest="c1" nameend="c3">
 Data (numeric) formatting with prefix.
 &amp;#8364; is the entity code for the Euro sign in Unicode. (Numeric entity
 codes are handled by the GD library, but not named character entity codes.)
@@ -6215,16 +6236,16 @@ The Euro sign may appear differently in your browser. But when used with
 PHPlot it requires a Unicode font on the server.
               </entry>
             </row>
-
             <row>
               <entry><programlisting><![CDATA[
-$plot->SetNumberFormat(',', '.');
-$plot->SetXLabelType('data', 2, '',
-                     '\xe2\x82\xac');
+$plot->SetXLabelType('data', 0, '&amp;#8364;');
 ]]></programlisting></entry>
               <entry>100000</entry>
-              <entry>1.000.000,00&euro;</entry>
-              <entry>
+              <entry>&euro;1,000,000</entry>
+            </row>
+
+            <row>
+              <entry namest="c1" nameend="c3">
 Data (numeric) formatting with suffix.
 Here we use the Euro as a suffix, common usage for French.
 Unlike the previous example, here we represent it as a 3 byte UTF-8
@@ -6238,33 +6259,52 @@ The Euro sign may appear differently in your browser. But when used with
 PHPlot it requires a Unicode font on the server.
               </entry>
             </row>
+            <row>
+              <entry><programlisting><![CDATA[
+$plot->SetNumberFormat(',', '.');
+$plot->SetXLabelType('data', 2, '',
+                     '\xe2\x82\xac');
+]]></programlisting></entry>
+              <entry>100000</entry>
+              <entry>1.000.000,00&euro;</entry>
+            </row>
 
+            <row>
+              <entry namest="c1" nameend="c3">
+Date/time formatting.
+The given value is mktime(0,0,0,4,15,2008).
+The format string could be set with SetXTimeFormat instead.
+              </entry>
+            </row>
             <row>
               <entry><programlisting><![CDATA[
 $plot->SetXLabelType('time', '%m/%Y');
 ]]></programlisting></entry>
               <entry>1208232000</entry>
               <entry>04/2008</entry>
-              <entry>
-Date/time formatting.
-The given value is mktime(0,0,0,4,15,2008).
-The format string could be set with SetXTimeFormat instead.
-              </entry>
             </row>
 
+            <row>
+              <entry namest="c1" nameend="c3">
+Formatting using printf.
+Note PHP printf may differ from the standard C library. For example, PHP
+outputs only a one digit exponent here.
+              </entry>
+            </row>
             <row>
               <entry><programlisting><![CDATA[
 $plot->SetXLabelType('printf', '%8.2e');
 ]]></programlisting></entry>
               <entry>1234</entry>
               <entry>1.23e+3</entry>
-              <entry>
-Formatting using printf.
-Note PHP printf may differ from the standard C library. For example, PHP
-outputs only a one digit exponent here.
-              </entry>
             </row>
 
+            <row>
+              <entry namest="c1" nameend="c3">
+A custom formatting function is used to format values in decimal degrees as
+degrees, minutes, and seconds. (This only works for non-negative angles.)
+              </entry>
+            </row>
             <row>
               <entry><programlisting><![CDATA[
 function deg_min_sec($value)
@@ -6279,10 +6319,6 @@ $plot->SetXLabelType('custom', 'deg_min_sec');
 ]]></programlisting></entry>
               <entry>75.12345</entry>
               <entry>75d 7m 24s</entry>
-              <entry>
-A custom formatting function is used to format values in decimal degrees as
-degrees, minutes, and seconds. (This only works for non-negative angles.)
-              </entry>
             </row>
           </tbody>
         </tgroup>
@@ -6447,7 +6483,7 @@ defaults.)
       <informalfigure>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="images/ticksize.png" format="PNG" />
+            <imagedata fileref="images/ticksize.png" scale="58" format="PNG" />
           </imageobject>
           <textobject>
             <phrase>Tick size controls</phrase>
@@ -6543,8 +6579,11 @@ middle of the plot), or not drawn at all.
           <para>
 A string indicating the desired position for the X tick labels:
             <informaltable>
+              <?dbfo table-width="75%"?> <!-- Table width hint for PDF only -->
               <tgroup cols="2">
                 <?dbhtml table-summary="X tick label position choices"?>
+                <colspec colname="c1" colwidth="14*" />
+                <colspec colname="c2" colwidth="86*" />
                 <thead>
                   <row>
                     <entry>Position</entry>
@@ -6701,8 +6740,11 @@ middle of the plot), or not drawn at all.
           <para>
 A string indicating the desired position for the X tick marks:
             <informaltable>
+              <?dbfo table-width="75%"?> <!-- Table width hint for PDF only -->
               <tgroup cols="2">
                 <?dbhtml table-summary="X tick position choices"?>
+                <colspec colname="c1" colwidth="14*" />
+                <colspec colname="c2" colwidth="86*" />
                 <thead>
                   <row>
                     <entry>Position</entry>
@@ -6884,8 +6926,11 @@ The string can contain multiple lines, separated by newlines (in PHP: "\n").
 Optional position for the X axis and title. Use one of the following
 strings for the position:
             <informaltable>
+              <?dbfo table-width="50%"?> <!-- Table width hint for PDF only -->
               <tgroup cols="2">
                 <?dbhtml table-summary="X axis position choices"?>
+                <colspec colname="c1" colwidth="20*" />
+                <colspec colname="c2" colwidth="80*" />
                 <thead>
                   <row>
                     <entry>Position</entry>
@@ -7073,8 +7118,11 @@ and <xref linkend="example-stackedbars3" />.
           <para>
 A string indicating the desired position for the Y data labels:
             <informaltable>
+              <?dbfo table-width="75%"?> <!-- Table width hint for PDF only -->
               <tgroup cols="2">
                 <?dbhtml table-summary="Y data label position choices"?>
+                <colspec colname="c1" colwidth="14*" />
+                <colspec colname="c2" colwidth="86*" />
                 <thead>
                   <row>
                     <entry>Position</entry>
@@ -7811,8 +7859,11 @@ in the middle of the plot), or not drawn at all.
           <para>
 A string indicating the desired position for the Y tick labels:
             <informaltable>
+              <?dbfo table-width="75%"?> <!-- Table width hint for PDF only -->
               <tgroup cols="2">
                 <?dbhtml table-summary="Y tick label position choices"?>
+                <colspec colname="c1" colwidth="14*" />
+                <colspec colname="c2" colwidth="86*" />
                 <thead>
                   <row>
                     <entry>Position</entry>
@@ -7955,8 +8006,11 @@ it is in the middle of the plot), or not drawn at all.
           <para>
 A string indicating the desired position for the Y tick marks:
             <informaltable>
+              <?dbfo table-width="75%"?> <!-- Table width hint for PDF only -->
               <tgroup cols="2">
                 <?dbhtml table-summary="Y tick position choices"?>
+                <colspec colname="c1" colwidth="14*" />
+                <colspec colname="c2" colwidth="86*" />
                 <thead>
                   <row>
                     <entry>Position</entry>
@@ -8144,8 +8198,11 @@ The string can contain multiple lines, separated by newlines (in PHP: "\n").
 Optional position for the Y axis and title. Use one of the following
 strings for the position:
             <informaltable>
+              <?dbfo table-width="50%"?> <!-- Table width hint for PDF only -->
               <tgroup cols="2">
                 <?dbhtml table-summary="Y axis position choices"?>
+                <colspec colname="c1" colwidth="20*" />
+                <colspec colname="c2" colwidth="80*" />
                 <thead>
                   <row>
                     <entry>Position</entry>
