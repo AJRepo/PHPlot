@@ -54,7 +54,7 @@ fonts		SetFontGD SetFontTTF	Array of font information, indexed by text type (tit
 grid_at_foreground	FALSE	DrawGraph	Flag: Draw grid on top of or behind the plot
 grid_color	'black'	SetGridColor	Name of color to use for axes, plot area border, legend border, pie chart lines and text (not grid!)
 group_frac_width	0.7	CalcBarWidths	Controls fraction of bar group space used for bar
-i_border	array(194,194,194)	SetImageBorderColor	Name of color for image border, if drawn
+i_border	array(194, 194 ,194)	SetImageBorderColor	Name of color for image border, if drawn
 image_border_type	'none'	SetImageBorderType	Image border type
 image_border_width		SetImageBorderWidth	Width of image border in pixels. Default depends on image_border_type. (Added in PHPlot-5.1.2)
 image_height		PHPlot	Image height
