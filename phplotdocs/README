@@ -1,12 +1,15 @@
 This is phplotdocs/README, for the PHPlot Reference Manual source
-Last updated on 2010-07-09
+Last updated on 2010-09-08
 -----------------------------------------------------------------------------
 
 This directory contains the Docbook-XML source files for the PHPlot Reference
-Manual. That is, it contains the files you need to build the manual.  You
-also need the appropriate tools.  This manual is written with Docbook,
-using the XSL style sheets, so you need the Docbook XSL style sheets
-and associated tools.
+Manual. That is, it contains the files you need to build the manual.  You also
+need the appropriate tools.  The manual is written with Docbook, using the XSL
+style sheets, so you need the Docbook XSL style sheets and associated tools.
+
+This README is intended for authors, editors, and maintainers of the manual,
+or anyone who wants to know how the manual is created and built.
+
 
 List of files:
 
@@ -19,22 +22,28 @@ List of files:
   images/             Image files, other than examples
   main.xml            Main source file for the manual
   *.xml               Other source files for the manual
-  phplot.php          Link to the version of PHPlot used for example files
   phplotdoc.css       HTML style sheet for the manual
   variables.list      Internal class variables documentation source file
   gen.vardoc          Script to turn variables.list into Docbook-XML
+  pdf.xsl             XSL style sheet for producing PDF output
+
+Not included:
+  phplot.php          Link to the version of PHPlot used for example files
+
 
 Tools:
 
-I used the following tools and versions to produce the manual. Other
-versions may work too.
+I use the following tools and versions to produce the XHTML version of the
+manual. Other versions may work too.
 
    Docbook XSL Style Sheets docbook-xsl-1.75.2
    xsltproc from libxsltproc-1.1.26 and libxml2-2.7.6
    Tcl shell (tclsh) is used to generate the table in the Variables chapter.
+   PHP (CLI) and PHPlot are needed to produce the example figures.
 
-The above are used to produce the XHTML manual. No other output format is
-currently available.
+The following additional tool is used to produce the PDF version of the
+manual:
+   Apache FOP (Format Object Processor) fop-1.0
 
 
 Makefile:
@@ -44,6 +53,13 @@ need to change for your installation. Primarily, PHP must be set to the
 path to your PHP CLI interpreter to create the examples (see below). For
 example:    PHP=/opt/php/bin/php
 
+There are additional symbols pointing to the executables such as xsltproc.
+
+The manual sources assume your system has a working XML catalog system
+which can be used to find the DocBook DTD and XSL style sheets. If not, you
+will need to edit the manual sources: main.xml and the *.xsl style sheets.
+
+
 The Makefile has the following targets:
 
   "make html" creates the HTML files (in the current directory).
@@ -51,15 +67,20 @@ The Makefile has the following targets:
     for the manual.
     When unzipped, it will make a directory phplotdocs/ containing all
     the files, with index.html being the starting point.
+    This is used to build the release file which is uploaded to Sourceforge
+    for download.
   "make install" builds (if necessary) the HTML files, and then copies them
     and the images and stylesheet to a directory named by the DESTDIR
     variable.
+    This is used to create a working copy of the manual outside of the
+    CVS work area, and to stage the manual for uploaded (via rsync) to
+    Sourceforge where it can be viewed on-line (see "make sfhtml" below).
   "make clean" deletes some intermediate files, but leaves the manual output.
   "make allclean" deletes every generated file.
   "make sfhtml" makes a special HTML version of the manual for the
     PHPlot web site on Sourceforge.net (which requires their logo on
     each page).
-
+  "make pdf" creates the PDF version of the manual.
 
 
 Example Figure Production:
@@ -93,17 +114,18 @@ to the version of phplot.php which is to be used.
 Style Notes:
 
 Writing XML or SGML for Docbook can be a challenge and a chore. I've adopted a
-compromise position on indenting text and markup. Generally, I indent
-markup blocks by 2 spaces at each level to help show the structure of the
-document. But to keep this from getting out of hand, I usually move the top
-2 or 3 elements flush to the left margin. This prevents the indent from
-moving too far to the right, and also I feel that extremely long indent
-blocks don't really help anyone see the structure. For example, I might
-write <chapter>, <sect1>, and the top-level <para>s of the section all
-flush against the left margin. The other oddity of my SGML, and the one
-most noticeable, is that while I indent tags, I usually don't indent text.
-In my opinion, it is just not worth the difficulty typing and editing
-blocks of indented text.  So you will see writing like this:
+compromise position on indenting text and markup. Generally, I indent markup
+blocks by 2 spaces at each level to help show the structure of the document.
+But to keep this from getting out of hand, I usually move the top 2 or 3
+elements flush to the left margin. This prevents the indent from moving too
+far to the right, and also I feel that extremely long indent blocks don't
+really help anyone see the structure. For example, I might write <chapter>,
+<sect1>, and the top-level <para>s of the section all flush against the left
+margin. The other oddity of my XML/SGML, and the one most noticeable, is that
+while I indent tags, I usually don't indent text.  In my opinion, it is just
+not worth the difficulty typing and editing blocks of indented text.
+So you will see writing like this:
+
 |<itemizedlist>
 |  <listitem>
 |    <para>
@@ -118,7 +140,7 @@ XML vs SGML:
 
 The first versions of this manual were written in DocBook SGML and
 converted with DSSSL stylesheet processing tools. The current version
-is XML and converted with XSLT processing tools.
+is in XML and is processing with XSLT tools.
 
 
 HTML vs XHTML:
@@ -136,3 +158,32 @@ maintained in the tab-separated text file 'variables.list'. This is converted
 by the Makefile into a Docbook-XML file 'variablelist.xml', which is included
 into the manual. The conversion is done using a short Tcl script 'gen.vardoc',
 so you will need the Tcl shell tclsh to build the manual.
+
+
+PDF Output:
+
+Efforts toward producing a PDF version of the manual were restarted in
+August 2010. Although the result is usable, the HTML version of the manual
+is still considered to be of a higher quality than the PDF version. Some of
+this is due to constraints imposed by the need of PDF to break a document
+into equal sized pages.  Some of the problem areas in PDF are:
+  + Images are scaled in order to fit on the pages. You can zoom
+    in with your PDF reader to get a better view.
+  + Table column width settings are incompatible between HTML and PDF
+    processing.
+A great deal of effort went in to modifying the XML manual sources in order
+to produce PDF, while trying to have little or no impact on the HTML manual.
+
+The XSL stylesheet pdf.xsl contains work-arounds and parameter adjustments
+for PDF output. It includes the following:
+
+ + xref links are changed to underline and blue. (By default, there is no
+way to visually identify links within the document, and the PHPlot manual
+has a lot of internal links.)
+ + Tables are framed with borders
+ + Variablelists (definition lists) are displayed as blocks. The default is
+to make a 2 column table which does not work at all with long definitions.
+ + A new element <pagebreak/> is defined to force a page break. It would be
+better to never have to use this, but it seems hard to avoid. It is currently
+only used in the Examples chapter, to make each example start on a new page
+while still allowing them to span pages.
