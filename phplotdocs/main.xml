@@ -40,7 +40,6 @@ in all copies.
   <authorgroup>
     <author>
       <firstname>L</firstname><othername>J</othername><surname>Bayuk</surname>
-<!-- Note: Should be authorblurb, but that doesn't work -->
       <affiliation>
         <jobtitle>Primary author and editor of the manual, and current
             maintainer of PHPlot</jobtitle>
@@ -120,9 +119,6 @@ and JPEG.
 
   <para>
 PHPlot's home page is at
-<!-- 
-  Note: www.phplot.com is redirecting as of Nov 2007, so use this instead:
--->
 <ulink url="http://phplot.sourceforge.net/">http://phplot.sourceforge.net</ulink>,
 and project development takes place at
 <ulink url="http://sourceforge.net/projects/phplot/">
