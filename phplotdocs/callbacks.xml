@@ -198,6 +198,10 @@ The following table lists the available callback reasons.
   <informaltable id="callback-reasons">
     <tgroup cols="4">
       <?dbhtml table-summary="PHPlot available callback reasons"?>
+      <colspec colname="c1" colwidth="26*" />
+      <colspec colname="c2" colwidth="19*" />
+      <colspec colname="c3" colwidth="19*" />
+      <colspec colname="c4" colwidth="40*" />
       <thead>
         <row>
           <entry>Callback Name:</entry>
