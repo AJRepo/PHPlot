@@ -13,11 +13,12 @@ submitted.)
 </para>
 
 <example id="example-webform">
+<?dbfo keep-together="auto"?>
 <title>Screen Shot of Web Form with Plot</title>
 <informalfigure>
   <mediaobject>
     <imageobject>
-      <imagedata fileref="images/webform.png" format="PNG" />
+      <imagedata fileref="images/webform.png" width="6.5in" scalefit="1" format="PNG" />
     </imageobject>
     <textobject>
       <phrase>Screen Shot of Web Form with Plot</phrase>

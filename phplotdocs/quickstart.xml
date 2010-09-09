@@ -154,12 +154,13 @@ We will start with a simple line graph.
 </para>
 
 <para>
+<?dbfo keep-together="always"?>
 And that's it! What we get is the following graph:
 
 <informalfigure>
   <mediaobject>
     <imageobject>
-      <imagedata fileref="examples/qs1.png" format="PNG" />
+      <imagedata fileref="examples/qs1.png" scale="58" format="PNG" />
     </imageobject>
     <textobject>
       <phrase>Simple line graph</phrase>
@@ -236,12 +237,13 @@ printing the image. Here is the complete result:
 </para>
 
 <para>
+<?dbfo keep-together="always"?>
 And that's it! What we get is the following graph:
 
 <informalfigure>
   <mediaobject>
     <imageobject>
-      <imagedata fileref="examples/qs2.png" format="PNG" />
+      <imagedata fileref="examples/qs2.png" scale="58" format="PNG" />
     </imageobject>
     <textobject>
       <phrase>Line graph with titles and labels</phrase>
@@ -275,11 +277,12 @@ Now our data will have three Y values for each position on the X axis.
 </para>
 
 <para>
+<?dbfo keep-together="always"?>
 Which gives us:
 <informalfigure>
   <mediaobject>
     <imageobject>
-      <imagedata fileref="examples/qs3.png" format="PNG" />
+      <imagedata fileref="examples/qs3.png" scale="58" format="PNG" />
     </imageobject>
     <textobject>
       <phrase>Multiple lines on a graph</phrase>

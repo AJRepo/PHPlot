@@ -48,7 +48,7 @@ Here's what the GD section of the PHP Info listing might look like:
 <informalfigure>
   <mediaobject>
     <imageobject>
-      <imagedata fileref="images/gdinfo.png" format="PNG" />
+      <imagedata fileref="images/gdinfo.png" scale="58" format="PNG" />
     </imageobject>
     <textobject>
       <phrase>GD section of PHP Info listing</phrase>

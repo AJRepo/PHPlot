@@ -48,6 +48,7 @@ including <application>qiv</application> and <application>gqview</application>.
   </para>
 </note>
 
+<pagebreak/>
 <!-- =============================================== -->
 <sect1 id="ex-lines1">
 <title>Example - Line Plot</title>
@@ -56,11 +57,12 @@ This is a simple line plot with a single data set. Data type 'data-data'
 is used to include the X values (the years) in the data points.
 </para>
 <example id="example-lines1">
+<?dbfo keep-together="auto"?>
 <title>Line Plot</title>
 <informalfigure>
   <mediaobject>
     <imageobject>
-      <imagedata fileref="examples/lines1.png" format="PNG" />
+      <imagedata fileref="examples/lines1.png" scale="58" format="PNG" />
     </imageobject>
     <textobject>
       <phrase>Line Plot Example</phrase>
@@ -71,6 +73,7 @@ is used to include the X values (the years) in the data points.
 </example>
 </sect1>
 
+<pagebreak/>
 <!-- =============================================== -->
 <sect1 id="ex-lines2">
 <title>Example - Line Plot: Functions</title>
@@ -80,11 +83,12 @@ This uses quite a few of the PHPlot style control functions
 to tune the appearance of the plot.
 </para>
 <example id="example-lines2">
+<?dbfo keep-together="auto"?>
 <title>Line Plot: Functions</title>
 <informalfigure>
   <mediaobject>
     <imageobject>
-      <imagedata fileref="examples/lines2.png" format="PNG" />
+      <imagedata fileref="examples/lines2.png" scale="58" format="PNG" />
     </imageobject>
     <textobject>
       <phrase>Line Plot Functions Example</phrase>
@@ -95,6 +99,7 @@ to tune the appearance of the plot.
 </example>
 </sect1>
 
+<pagebreak/>
 <!-- =============================================== -->
 <sect1 id="ex-area1">
 <title>Example - Area Plot</title>
@@ -107,11 +112,12 @@ cumulative percentages.
 plot using a different data representation.)
 </para>
 <example id="example-area1">
+<?dbfo keep-together="auto"?>
 <title>Area Plot</title>
 <informalfigure>
   <mediaobject>
     <imageobject>
-      <imagedata fileref="examples/area1.png" format="PNG" />
+      <imagedata fileref="examples/area1.png" scale="58" format="PNG" />
     </imageobject>
     <textobject>
       <phrase>Area Plot Example</phrase>
@@ -122,6 +128,7 @@ plot using a different data representation.)
 </example>
 </sect1>
 
+<pagebreak/>
 <!-- =============================================== -->
 <sect1 id="ex-bars1">
 <title>Example - Bar Chart</title>
@@ -133,11 +140,12 @@ and the X tick marks and labels are turned off. This plot uses the default
 shading of bars.
 </para>
 <example id="example-bars1">
+<?dbfo keep-together="auto"?>
 <title>Bar Chart</title>
 <informalfigure>
   <mediaobject>
     <imageobject>
-      <imagedata fileref="examples/bars1.png" format="PNG" />
+      <imagedata fileref="examples/bars1.png" scale="58" format="PNG" />
     </imageobject>
     <textobject>
       <phrase>Bar Chart Example</phrase>
@@ -148,6 +156,7 @@ shading of bars.
 </example>
 </sect1>
 
+<pagebreak/>
 <!-- =============================================== -->
 <sect1 id="ex-bars2">
 <title>Example - Unshaded Bar Chart</title>
@@ -156,11 +165,12 @@ This is the same example as <xref linkend="example-bars1" /> except shading has
 been turned off. Instead we get flat rectangles with borders for the bars.
 </para>
 <example id="example-bars2">
+<?dbfo keep-together="auto"?>
 <title>Bar Chart - Unshaded</title>
 <informalfigure>
   <mediaobject>
     <imageobject>
-      <imagedata fileref="examples/bars2.png" format="PNG" />
+      <imagedata fileref="examples/bars2.png" scale="58" format="PNG" />
     </imageobject>
     <textobject>
       <phrase>Unshaded Bar Chart Example</phrase>
@@ -171,6 +181,7 @@ been turned off. Instead we get flat rectangles with borders for the bars.
 </example>
 </sect1>
 
+<pagebreak/>
 <!-- =============================================== -->
 <sect1 id="ex-bars3">
 <title>Example - Bar Chart, Label Options</title>
@@ -182,11 +193,12 @@ This example also shows how to force the Y tick marks to start at zero and
 use a nice whole number for the tick interval.
 </para>
 <example id="example-bars3">
+<?dbfo keep-together="auto"?>
 <title>Bar Chart - Label Options</title>
 <informalfigure>
   <mediaobject>
     <imageobject>
-      <imagedata fileref="examples/bars3.png" format="PNG" />
+      <imagedata fileref="examples/bars3.png" scale="58" format="PNG" />
     </imageobject>
     <textobject>
       <phrase>Bar Chart with Labels Example</phrase>
@@ -197,6 +209,7 @@ use a nice whole number for the tick interval.
 </example>
 </sect1>
 
+<pagebreak/>
 <!-- =============================================== -->
 <sect1 id="ex-linepoints1">
 <title>Example - Line/Point Plot, Point Shapes</title>
@@ -209,11 +222,12 @@ Note that the point shape sizes have been increased to 10 in this example,
 to make them easier to identify.
 </para>
 <example id="example-linepoints1">
+<?dbfo keep-together="auto"?>
 <title>Line/Point Plot, Point Shapes</title>
 <informalfigure>
   <mediaobject>
     <imageobject>
-      <imagedata fileref="examples/linepoints1.png" format="PNG" />
+      <imagedata fileref="examples/linepoints1.png" scale="58" format="PNG" />
     </imageobject>
     <textobject>
       <phrase>Line/Point Plot Example</phrase>
@@ -224,6 +238,7 @@ to make them easier to identify.
 </example>
 </sect1>
 
+<pagebreak/>
 <!-- =============================================== -->
 <sect1 id="ex-pie1">
 <title>Example - Pie Chart, text-data-single</title>
@@ -237,11 +252,12 @@ data values. This is useful because PHPlot only labels the slices with
 percentage values.
 </para>
 <example id="example-pie1">
+<?dbfo keep-together="auto"?>
 <title>Pie Chart, text-data-single</title>
 <informalfigure>
   <mediaobject>
     <imageobject>
-      <imagedata fileref="examples/pie1.png" format="PNG" />
+      <imagedata fileref="examples/pie1.png" scale="58" format="PNG" />
     </imageobject>
     <textobject>
       <phrase>Pie Chart text-data-single Example</phrase>
@@ -252,6 +268,7 @@ percentage values.
 </example>
 </sect1>
 
+<pagebreak/>
 <!-- =============================================== -->
 <sect1 id="ex-pie2">
 <title>Example - Pie Chart, text-data</title>
@@ -267,11 +284,12 @@ Data type 'data-data' is similar, except the first two entries in each
 record (label and X value for other plot types) is ignored.
 </para>
 <example id="example-pie2">
+<?dbfo keep-together="auto"?>
 <title>Pie Chart, text-data</title>
 <informalfigure>
   <mediaobject>
     <imageobject>
-      <imagedata fileref="examples/pie2.png" format="PNG" />
+      <imagedata fileref="examples/pie2.png" scale="58" format="PNG" />
     </imageobject>
     <textobject>
       <phrase>Pie Chart text-data Example</phrase>
@@ -282,6 +300,7 @@ record (label and X value for other plot types) is ignored.
 </example>
 </sect1>
 
+<pagebreak/>
 <!-- =============================================== -->
 <sect1 id="ex-pie3">
 <title>Example - Pie Chart, flat with options</title>
@@ -295,11 +314,12 @@ Finally, we moved the labels in towards the center with
 <xref linkend="SetLabelScalePosition" />.
 </para>
 <example id="example-pie3">
+<?dbfo keep-together="auto"?>
 <title>Pie Chart, flat with options</title>
 <informalfigure>
   <mediaobject>
     <imageobject>
-      <imagedata fileref="examples/pie3.png" format="PNG" />
+      <imagedata fileref="examples/pie3.png" scale="58" format="PNG" />
     </imageobject>
     <textobject>
       <phrase>Pie Chart, Flat, with Options Example</phrase>
@@ -310,6 +330,7 @@ Finally, we moved the labels in towards the center with
 </example>
 </sect1>
 
+<pagebreak/>
 <!-- =============================================== -->
 <sect1 id="ex-points1">
 <title>Example - Points Plot with Error Bars</title>
@@ -319,11 +340,12 @@ This is a point plot with error bars (as indicated by data type
 in the positive direction, and Y error in the negative direction.
 </para>
 <example id="example-points1">
+<?dbfo keep-together="auto"?>
 <title>Points Plot with Error Bars</title>
 <informalfigure>
   <mediaobject>
     <imageobject>
-      <imagedata fileref="examples/points1.png" format="PNG" />
+      <imagedata fileref="examples/points1.png" scale="58" format="PNG" />
     </imageobject>
     <textobject>
       <phrase>Points Plot with Error Bars Example</phrase>
@@ -334,6 +356,7 @@ in the positive direction, and Y error in the negative direction.
 </example>
 </sect1>
 
+<pagebreak/>
 <!-- =============================================== -->
 <sect1 id="ex-points2">
 <title>Example - Points Plot / Scatterplot</title>
@@ -348,11 +371,12 @@ For this example, the X and Y axes and tick marks were moved to 0,0, labels
 turned off, and plot borders enabled for all four sides.
 </para>
 <example id="example-points2">
+<?dbfo keep-together="auto"?>
 <title>Points Plot / Scatterplot</title>
 <informalfigure>
   <mediaobject>
     <imageobject>
-      <imagedata fileref="examples/points2.png" format="PNG" />
+      <imagedata fileref="examples/points2.png" scale="58" format="PNG" />
     </imageobject>
     <textobject>
       <phrase>Points Plot / Scatterplot Example</phrase>
@@ -363,6 +387,7 @@ turned off, and plot borders enabled for all four sides.
 </example>
 </sect1>
 
+<pagebreak/>
 <!-- =============================================== -->
 <sect1 id="ex-squared1">
 <title>Example - Squared Plot</title>
@@ -371,11 +396,12 @@ This is a squared line plot, which is similar to a line plot but
 the points are connected with steps.
 </para>
 <example id="example-squared1">
+<?dbfo keep-together="auto"?>
 <title>Squared Plot</title>
 <informalfigure>
   <mediaobject>
     <imageobject>
-      <imagedata fileref="examples/squared1.png" format="PNG" />
+      <imagedata fileref="examples/squared1.png" scale="58" format="PNG" />
     </imageobject>
     <textobject>
       <phrase>Squared Plot Example</phrase>
@@ -386,6 +412,7 @@ the points are connected with steps.
 </example>
 </sect1>
 
+<pagebreak/>
 <!-- =============================================== -->
 <sect1 id="ex-stackedbars1">
 <title>Example - Stacked Bars, Shaded</title>
@@ -395,11 +422,12 @@ This is a stacked bar chart, with the default 3-D shaded look.
 The only valid data type for stacked bars is 'text-data'.
 </para>
 <example id="example-stackedbars1">
+<?dbfo keep-together="auto"?>
 <title>Stacked Bars, Shaded</title>
 <informalfigure>
   <mediaobject>
     <imageobject>
-      <imagedata fileref="examples/stackedbars1.png" format="PNG" />
+      <imagedata fileref="examples/stackedbars1.png" scale="58" format="PNG" />
     </imageobject>
     <textobject>
       <phrase>Stacked Bars, Shaded Example</phrase>
@@ -410,6 +438,7 @@ The only valid data type for stacked bars is 'text-data'.
 </example>
 </sect1>
 
+<pagebreak/>
 <!-- =============================================== -->
 <sect1 id="ex-stackedbars2">
 <title>Example - Stacked Bars, Unshaded</title>
@@ -418,11 +447,12 @@ This is the same as <xref linkend="example-stackedbars1" /> except we have
 turned off shading and now get flat stacked bars with borders.
 </para>
 <example id="example-stackedbars2">
+<?dbfo keep-together="auto"?>
 <title>Stacked Bars, Unshaded</title>
 <informalfigure>
   <mediaobject>
     <imageobject>
-      <imagedata fileref="examples/stackedbars2.png" format="PNG" />
+      <imagedata fileref="examples/stackedbars2.png" scale="58" format="PNG" />
     </imageobject>
     <textobject>
       <phrase>Stacked Bars, Unshaded Example</phrase>
@@ -433,6 +463,7 @@ turned off shading and now get flat stacked bars with borders.
 </example>
 </sect1>
 
+<pagebreak/>
 <!-- =============================================== -->
 <sect1 id="ex-thinbarline1">
 <title>Example - Thin Bar Line Plot</title>
@@ -440,11 +471,12 @@ turned off shading and now get flat stacked bars with borders.
 This is a Thin Bar Line Plot (thinbarline).
 </para>
 <example id="example-thinbarline1">
+<?dbfo keep-together="auto"?>
 <title>Thin Bar Line</title>
 <informalfigure>
   <mediaobject>
     <imageobject>
-      <imagedata fileref="examples/thinbarline1.png" format="PNG" />
+      <imagedata fileref="examples/thinbarline1.png" scale="58" format="PNG" />
     </imageobject>
     <textobject>
       <phrase>Thin Bar Line Plot Example</phrase>
@@ -455,6 +487,7 @@ This is a Thin Bar Line Plot (thinbarline).
 </example>
 </sect1>
 
+<pagebreak/>
 <!-- =============================================== -->
 <sect1 id="ex-thinbarline2">
 <title>Example - Thin Bar Line Plot, Wider Lines</title>
@@ -464,11 +497,12 @@ This is the same as the previous plot type
 This now looks more like a bar chart.
 </para>
 <example id="example-thinbarline2">
+<?dbfo keep-together="auto"?>
 <title>Thin Bar Line Plot, Wider Lines</title>
 <informalfigure>
   <mediaobject>
     <imageobject>
-      <imagedata fileref="examples/thinbarline2.png" format="PNG" />
+      <imagedata fileref="examples/thinbarline2.png" scale="58" format="PNG" />
     </imageobject>
     <textobject>
       <phrase>Wider Thin Bar Line Plot Example</phrase>
@@ -479,6 +513,7 @@ This now looks more like a bar chart.
 </example>
 </sect1>
 
+<pagebreak/>
 <!-- =============================================== -->
 <sect1 id="ex-twoplot1">
 <title>Example - Two Plots on One Image</title>
@@ -500,11 +535,12 @@ of the X/Y titles, for example). You may also find you need to use
 plot.
 </para>
 <example id="example-twoplot1">
+<?dbfo keep-together="auto"?>
 <title>Two Plots on One Image</title>
 <informalfigure>
   <mediaobject>
     <imageobject>
-      <imagedata fileref="examples/twoplot1.png" format="PNG" />
+      <imagedata fileref="examples/twoplot1.png" scale="58" format="PNG" />
     </imageobject>
     <textobject>
       <phrase>Two Plots on One Image Example</phrase>
@@ -515,6 +551,7 @@ plot.
 </example>
 </sect1>
 
+<pagebreak/>
 <!-- =============================================== -->
 <sect1 id="ex-bars4">
 <title>Example - Bar Chart with Data Labels</title>
@@ -524,11 +561,12 @@ alternative to Y axis labels, but only with bar charts.
 (Bar chart data labels were added to PHPlot-5.0rc3.)
 </para>
 <example id="example-bars4">
+<?dbfo keep-together="auto"?>
 <title>Bar Chart with Data Labels</title>
 <informalfigure>
   <mediaobject>
     <imageobject>
-      <imagedata fileref="examples/bars4.png" format="PNG" />
+      <imagedata fileref="examples/bars4.png" scale="58" format="PNG" />
     </imageobject>
     <textobject>
       <phrase>Bar Chart with Data Labels Example</phrase>
@@ -539,6 +577,7 @@ alternative to Y axis labels, but only with bar charts.
 </example>
 </sect1>
 
+<pagebreak/>
 <!-- =============================================== -->
 <sect1 id="ex-stackedbars3">
 <title>Example - Stacked Bars with Y Data Labels</title>
@@ -548,11 +587,12 @@ Y Data Labels are turned on.
 Note this feature was added in PHPlot-5.1.1.
 </para>
 <example id="example-stackedbars3">
+<?dbfo keep-together="auto"?>
 <title>Stacked Bars with Y Data Labels</title>
 <informalfigure>
   <mediaobject>
     <imageobject>
-      <imagedata fileref="examples/stackedbars3.png" format="PNG" />
+      <imagedata fileref="examples/stackedbars3.png" scale="58" format="PNG" />
     </imageobject>
     <textobject>
       <phrase>Stacked Bars with Y Data Labels Example</phrase>
@@ -563,6 +603,7 @@ Note this feature was added in PHPlot-5.1.1.
 </example>
 </sect1>
 
+<pagebreak/>
 <!-- =============================================== -->
 <sect1 id="ex-stackedarea1">
 <title>Example - Stacked Area Plot</title>
@@ -580,11 +621,12 @@ plot example we had to sum the values to get (100, 70, 60, 54, ...).
 Note this plot type was added in PHPlot-5.1.1.
 </para>
 <example id="example-stackedarea1">
+<?dbfo keep-together="auto"?>
 <title>Stacked Area Plot</title>
 <informalfigure>
   <mediaobject>
     <imageobject>
-      <imagedata fileref="examples/stackedarea1.png" format="PNG" />
+      <imagedata fileref="examples/stackedarea1.png" scale="58" format="PNG" />
     </imageobject>
     <textobject>
       <phrase>Stacked Area Plot Example</phrase>
@@ -595,6 +637,7 @@ Note this plot type was added in PHPlot-5.1.1.
 </example>
 </sect1>
 
+<pagebreak/>
 <!-- =============================================== -->
 <sect1 id="ex-annotate">
 <title>Example - Annotating a Plot Using a Callback</title>
@@ -605,11 +648,12 @@ be found in <xref linkend="callbacks-drawing" />,
 where this example is described in detail.
 </para>
 <example id="example-annotate">
+<?dbfo keep-together="auto"?>
 <title>Annotated Plot</title>
 <informalfigure>
   <mediaobject>
     <imageobject>
-      <imagedata fileref="examples/annotate.png" format="PNG" />
+      <imagedata fileref="examples/annotate.png" scale="58" format="PNG" />
     </imageobject>
     <textobject>
       <phrase>Annotated Plot Example</phrase>
@@ -620,10 +664,12 @@ where this example is described in detail.
 </example>
 </sect1>
 
+<pagebreak/>
 <!-- =============================================== -->
 <!-- This webform.xml is long enough to get its own file. -->
 &webform;
 
+<pagebreak/>
 <!-- =============================================== -->
 <sect1 id="ex-truecolor-histogram">
 <title>Example - Using Truecolor To Make a Histogram</title>
@@ -685,11 +731,12 @@ example.
   </note>
 </para>
 <example id="example-truecolor-histogram">
+<?dbfo keep-together="auto"?>
 <title>Truecolor Plot of Histogram</title>
 <informalfigure>
   <mediaobject>
     <imageobject>
-      <imagedata fileref="examples/histogram.jpg" format="JPEG" />
+      <imagedata fileref="examples/histogram.jpg" scale="58" format="JPEG" />
     </imageobject>
     <textobject>
       <phrase>Truecolor Plot of Histogram Example</phrase>
@@ -700,8 +747,8 @@ example.
 </example>
 </sect1>
 
+<pagebreak/>
 <!-- =============================================== -->
-
 <sect1 id="ex-colorcallbackgradient">
 <title>Example - Creative Use of the Data Color Callback</title>
 <para>
@@ -726,11 +773,12 @@ More information on truecolor images can be found in
 <xref linkend="conc-truecolor" />.
 </para>
 <example id="example-colorcallbackgradient">
+<?dbfo keep-together="auto"?>
 <title>Creative Use of the Data Color Callback</title>
 <informalfigure>
   <mediaobject>
     <imageobject>
-      <imagedata fileref="examples/colorcallbackgradient.png" format="PNG" />
+      <imagedata fileref="examples/colorcallbackgradient.png" scale="58" format="PNG" />
     </imageobject>
     <textobject>
       <phrase>Data Color Callback Example</phrase>
@@ -741,8 +789,8 @@ More information on truecolor images can be found in
 </example>
 </sect1>
 
+<pagebreak/>
 <!-- =============================================== -->
-
 <sect1 id="ex-colorcallbackbars">
 <title>Example - Custom Bar Colors Using the Data Color Callback</title>
 <para>
@@ -765,11 +813,12 @@ Using the data color callback is described in
 More information on callbacks can be found in <xref linkend="callbacks" />.
 </para>
 <example id="example-colorcallbackbars">
+<?dbfo keep-together="auto"?>
 <title>Custom Bar Colors Using the Data Color Callback</title>
 <informalfigure>
   <mediaobject>
     <imageobject>
-      <imagedata fileref="examples/colorcallbackbars.png" format="PNG" />
+      <imagedata fileref="examples/colorcallbackbars.png" scale="58" format="PNG" />
     </imageobject>
     <textobject>
       <phrase>Custom Bar Colors Example</phrase>

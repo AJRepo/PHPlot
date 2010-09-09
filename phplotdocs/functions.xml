@@ -153,6 +153,7 @@ but under some conditions the GD fonts may be easier to read.
 </tip>
 
 <para>
+<?dbfo keep-together="always"?>
 The following figure shows the built-in GD fonts plus a sample TrueType
 font.  (Depending on how you are viewing this manual, the sizes of the
 fonts in this figure might differ from how they would look in a PHPlot
@@ -160,8 +161,7 @@ image. For more on font sizes, see the notes with <xref linkend="SetFont" />.)
 <informalfigure>
   <mediaobject>
     <imageobject>
-<!-- Don't scale this image, to get correct font sizes -->
-      <imagedata fileref="images/fonts.png" format="PNG" />
+      <imagedata fileref="images/fonts.png" scale="65" format="PNG" />
     </imageobject>
     <textobject>
       <phrase>A sample of the fonts</phrase>
@@ -195,12 +195,13 @@ See also <xref linkend="SetTitleColor" /> to set the title colors, and
 </para>
 
 <para>
+<?dbfo keep-together="always"?>
 Here is a sample plot with the titles called out.
 
 <informalfigure>
   <mediaobject>
     <imageobject>
-      <imagedata fileref="images/typical-titles.png" format="PNG" />
+      <imagedata fileref="images/typical-titles.png" scale="58" format="PNG" />
     </imageobject>
     <textobject>
       <phrase>Titles on a plot</phrase>
@@ -234,12 +235,13 @@ and <xref linkend="SetFont" /> to set the legend text font.
 </para>
 
 <para>
+<?dbfo keep-together="always"?>
 Here is a sample plot with the legend called out.
 
 <informalfigure>
   <mediaobject>
     <imageobject>
-      <imagedata fileref="images/typical-legend.png" format="PNG" />
+      <imagedata fileref="images/typical-legend.png" scale="58" format="PNG" />
     </imageobject>
     <textobject>
       <phrase>Legend on a plot</phrase>
@@ -295,12 +297,13 @@ By default, the horizontal (Y) grid is on, and the vertical (X) grid is off.
 </para>
 
 <para>
+<?dbfo keep-together="always"?>
 Here is a sample plot with the X Grid and Y Grid called out.
 
 <informalfigure>
   <mediaobject>
     <imageobject>
-      <imagedata fileref="images/typical-grid.png" format="PNG" />
+      <imagedata fileref="images/typical-grid.png" scale="58" format="PNG" />
     </imageobject>
     <textobject>
       <phrase>X and Y Grid</phrase>
@@ -331,12 +334,13 @@ X values.
 </para>
 
 <para>
+<?dbfo keep-together="always"?>
 Here is a sample plot with the Y tick labels and X data labels called out.
 
 <informalfigure>
   <mediaobject>
     <imageobject>
-      <imagedata fileref="images/labels.png" format="PNG" />
+      <imagedata fileref="images/labels.png" scale="58" format="PNG" />
     </imageobject>
     <textobject>
       <phrase>Tick labels and Data labels on a plot</phrase>
@@ -346,12 +350,13 @@ Here is a sample plot with the Y tick labels and X data labels called out.
 </para>
 
 <para>
+<?dbfo keep-together="always"?>
 Here is a sample plot with the pie chart labels called out.
 
 <informalfigure>
   <mediaobject>
     <imageobject>
-      <imagedata fileref="images/labels-pie.png" format="PNG" />
+      <imagedata fileref="images/labels-pie.png" scale="58" format="PNG" />
     </imageobject>
     <textobject>
       <phrase>Pie chart data labels</phrase>
