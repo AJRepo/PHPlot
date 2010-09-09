@@ -98,7 +98,7 @@ overlap the title or fall off the edge of the image.
 <informalfigure>
   <mediaobject>
     <imageobject>
-      <imagedata fileref="images/layout.png" format="PNG" />
+      <imagedata fileref="images/layout.png" scale="58" format="PNG" />
     </imageobject>
     <textobject>
       <phrase>PHPlot plot layout figure</phrase>
@@ -116,7 +116,7 @@ This figure illustrates the layout of the legend, as drawn by DrawLegend().
 <informalfigure>
   <mediaobject>
     <imageobject>
-      <imagedata fileref="images/legend-layout.png" format="PNG" />
+      <imagedata fileref="images/legend-layout.png" scale="58" format="PNG" />
     </imageobject>
     <textobject>
       <phrase>PHPlot legend layout figure</phrase>
@@ -157,7 +157,7 @@ please report this via the available PHPlot support mechanisms.
 
 <variablelist>
 <varlistentry>
-  <term id="array_merge_php4" xreflabel="array_merge_php4">array_merge_php4($array1,$array2)</term>
+  <term><anchor id="array_merge_php4" xreflabel="array_merge_php4"/>array_merge_php4($array1,$array2)</term>
   <listitem>
     <para>
 This non-member function was removed at PHPlot-5.0.4.
@@ -166,7 +166,7 @@ This non-member function was removed at PHPlot-5.0.4.
 </varlistentry>
 
 <varlistentry>
-  <term id="array_pad_array" xreflabel="array_pad_array">array_pad_array(&amp;$arr, $size, $arr2=NULL)</term>
+  <term><anchor id="array_pad_array" xreflabel="array_pad_array"/>array_pad_array(&amp;$arr, $size, $arr2=NULL)</term>
   <listitem>
     <para>
 This non-member function was removed at PHPlot-5.0.4 and replaced with
@@ -176,7 +176,7 @@ the class member function <xref linkend="pad_array"/>.
 </varlistentry>
 
 <varlistentry>
-  <term id="CalcAxisPositions" xreflabel="CalcAxisPositions">CalcAxisPositions()</term>
+  <term><anchor id="CalcAxisPositions" xreflabel="CalcAxisPositions"/>CalcAxisPositions()</term>
   <listitem>
     <para>
 Calculates the X and Y axis positions in world coordinates. These can be
@@ -192,7 +192,7 @@ Called by <xref linkend="DrawGraph"/>.
 </varlistentry>
 
 <varlistentry>
-  <term id="CalcBarWidths" xreflabel="CalcBarWidths">CalcBarWidths($verticals = TRUE)</term>
+  <term><anchor id="CalcBarWidths" xreflabel="CalcBarWidths"/>CalcBarWidths($verticals = TRUE)</term>
   <listitem>
     <para>
 Calculates values for 'bars' and 'stackedbars' plot types.
@@ -208,7 +208,7 @@ bars or stackedbars plot.)
 </varlistentry>
 
 <varlistentry>
-  <term id="CalcGridSettings" xreflabel="CalcGridSettings">CalcGridSettings()</term>
+  <term><anchor id="CalcGridSettings" xreflabel="CalcGridSettings"/>CalcGridSettings()</term>
   <listitem>
     <para>
 Applies defaults to the X and Y grid settings if not user specified.
@@ -220,7 +220,7 @@ Called by <xref linkend="DrawGraph"/>.
 </varlistentry>
 
 <varlistentry>
-  <term id="CalcMargins" xreflabel="CalcMargins">CalcMargins($maximize)</term>
+  <term><anchor id="CalcMargins" xreflabel="CalcMargins"/>CalcMargins($maximize)</term>
   <listitem>
     <para>
 Calculates the size of the four margins around the plot area:
@@ -249,7 +249,7 @@ image, but top tick marks and labels move down against the graph.
 </varlistentry>
 
 <varlistentry>
-  <term id="CalcMaxDataLabelSize" xreflabel="CalcMaxDataLabelSize">CalcMaxDataLabelSize($which = 'x')</term>
+  <term><anchor id="CalcMaxDataLabelSize" xreflabel="CalcMaxDataLabelSize"/>CalcMaxDataLabelSize($which = 'x')</term>
   <listitem>
     <para>
 Calculates the size of the biggest X or Y data label.
@@ -264,7 +264,7 @@ Called by <xref linkend="CalcMargins"/>.
 </varlistentry>
 
 <varlistentry>
-  <term id="CalcMaxTickLabelSize" xreflabel="CalcMaxTickLabelSize">CalcMaxTickLabelSize($which)</term>
+  <term><anchor id="CalcMaxTickLabelSize" xreflabel="CalcMaxTickLabelSize"/>CalcMaxTickLabelSize($which)</term>
   <listitem>
     <para>
 Calculates the size of the biggest tick label. The $which argument is 'x'
@@ -279,7 +279,7 @@ Called by <xref linkend="CalcMargins"/>.
 </varlistentry>
 
 <varlistentry>
-  <term id="CalcPlotAreaPixels" xreflabel="CalcPlotAreaPixels">CalcPlotAreaPixels()</term>
+  <term><anchor id="CalcPlotAreaPixels" xreflabel="CalcPlotAreaPixels"/>CalcPlotAreaPixels()</term>
   <listitem>
     <para>
 Calculates the pixel coordinates of the plot area.
@@ -293,7 +293,7 @@ is used to calculate margins.
 </varlistentry>
 
 <varlistentry>
-  <term id="CalcPlotAreaWorld" xreflabel="CalcPlotAreaWorld">CalcPlotAreaWorld()</term>
+  <term><anchor id="CalcPlotAreaWorld" xreflabel="CalcPlotAreaWorld"/>CalcPlotAreaWorld()</term>
   <listitem>
     <para>
 Calculates the world coordinate limits of the plot area.
@@ -306,7 +306,7 @@ is used to examine the data array values.
 </varlistentry>
 
 <varlistentry>
-  <term id="CalcTicks" xreflabel="CalcTicks">CalcTicks($which)</term>
+  <term><anchor id="CalcTicks" xreflabel="CalcTicks"/>CalcTicks($which)</term>
   <listitem>
     <para>
 Calculates the tick parameters. $which is 'x' or 'y'. Returns an array of 3
@@ -321,7 +321,7 @@ Called by <xref linkend="CalcMaxTickLabelSize"/>,
 </varlistentry>
 
 <varlistentry>
-  <term id="CalcTranslation" xreflabel="CalcTranslation">CalcTranslation()</term>
+  <term><anchor id="CalcTranslation" xreflabel="CalcTranslation"/>CalcTranslation()</term>
   <listitem>
     <para>
 Calculates the parameters for transforming world to pixel coordinates.
@@ -336,7 +336,7 @@ the graph is ready to be drawn.
 </varlistentry>
 
 <varlistentry>
-  <term id="CheckDataArray" xreflabel="CheckDataArray">CheckDataArray()</term>
+  <term><anchor id="CheckDataArray" xreflabel="CheckDataArray"/>CheckDataArray()</term>
   <listitem>
     <para>
 Checks that there is a valid data array for the plot, and calculates values
@@ -349,7 +349,7 @@ and adding the data_columns calculation.
 </varlistentry>
 
 <varlistentry>
-  <term id="CheckDataType" xreflabel="CheckDataType">CheckDataType($valid_types)</term>
+  <term><anchor id="CheckDataType" xreflabel="CheckDataType"/>CheckDataType($valid_types)</term>
   <listitem>
     <para>
 Used to validate the data_type for a plot_type. This works like a specialized
@@ -363,7 +363,7 @@ the plot drawing functions check the data type.
 </varlistentry>
 
 <varlistentry>
-  <term id="CheckLabels" xreflabel="CheckLabels">CheckLabels()</term>
+  <term><anchor id="CheckLabels" xreflabel="CheckLabels"/>CheckLabels()</term>
   <listitem>
     <para>
 Fixes up the data and tick label position, angle, and format settings.
@@ -382,7 +382,7 @@ This was added in PHPlot-5.1.0.
 </varlistentry>
 
 <varlistentry>
-  <term id="CheckLabelsAllEmpty" xreflabel="CheckLabelsAllEmpty">CheckLabelsAllEmpty()</term>
+  <term><anchor id="CheckLabelsAllEmpty" xreflabel="CheckLabelsAllEmpty"/>CheckLabelsAllEmpty()</term>
   <listitem>
     <para>
 Returns TRUE if all of the data labels are empty strings.
@@ -394,7 +394,7 @@ This was added in PHPlot-5.1.2.
 </varlistentry>
 
 <varlistentry>
-  <term id="CheckOption" xreflabel="CheckOption">CheckOption($which_opt, $which_acc, $which_func)</term>
+  <term><anchor id="CheckOption" xreflabel="CheckOption"/>CheckOption($which_opt, $which_acc, $which_func)</term>
   <listitem>
     <para>
 Checks the validity of an option passed to a PHPlot member function.
@@ -415,7 +415,7 @@ $which_opt and disallow partial matches.
 </varlistentry>
 
 <varlistentry>
-  <term id="CheckOptionArray" xreflabel="CheckOptionArray">CheckOptionArray($opt, $acc, $func)</term>
+  <term><anchor id="CheckOptionArray" xreflabel="CheckOptionArray"/>CheckOptionArray($opt, $acc, $func)</term>
   <listitem>
     <para>
 Checks the validity of an option argument passed to a PHPlot member function
@@ -440,7 +440,7 @@ This was added in PHPlot-5.1.2.
 
 
 <varlistentry>
-  <term id="CheckPointParams" xreflabel="CheckPointParams">CheckPointParams()</term>
+  <term><anchor id="CheckPointParams" xreflabel="CheckPointParams"/>CheckPointParams()</term>
   <listitem>
     <para>
 Adjusts the point_shapes and point_sizes arrays so they have the same size,
@@ -455,7 +455,7 @@ This was added in PHPlot-5.1.0.
 </varlistentry>
 
 <varlistentry>
-  <term id="DecodeDataType" xreflabel="DecodeDataType">DecodeDataType()</term>
+  <term><anchor id="DecodeDataType" xreflabel="DecodeDataType"/>DecodeDataType()</term>
   <listitem>
     <para>
 Analyzes the data type and sets several member variables that other functions
@@ -473,7 +473,7 @@ as needed.
 </varlistentry>
 
 <varlistentry>
-  <term id="DoCallback" xreflabel="DoCallback">DoCallback($reason, ...)</term>
+  <term><anchor id="DoCallback" xreflabel="DoCallback"/>DoCallback($reason, ...)</term>
   <listitem>
     <para>
 Call a callback (hook) function.  $reason is the name given to the
@@ -490,7 +490,7 @@ callback function, if any.
 </varlistentry>
 
 <varlistentry>
-  <term id="DrawArea" xreflabel="DrawArea">DrawArea($do_stacked = False)</term>
+  <term><anchor id="DrawArea" xreflabel="DrawArea"/>DrawArea($do_stacked = False)</term>
   <listitem>
     <para>
 Draws an area plot, or a stacked area plot (if the optional argument is True).
@@ -503,7 +503,7 @@ function did not have a parameter and was used only for area plots.
 </varlistentry>
 
 <varlistentry>
-  <term id="DrawBackground" xreflabel="DrawBackground">DrawBackground()</term>
+  <term><anchor id="DrawBackground" xreflabel="DrawBackground"/>DrawBackground()</term>
   <listitem>
     <para>
 Draws the image background, either an image file or solid fill or nothing.
@@ -513,7 +513,7 @@ Called by <xref linkend="DrawGraph"/>.
 </varlistentry>
 
 <varlistentry>
-  <term id="DrawBars" xreflabel="DrawBars">DrawBars()</term>
+  <term><anchor id="DrawBars" xreflabel="DrawBars"/>DrawBars()</term>
   <listitem>
     <para>
 Draws a bar chart plot.
@@ -525,7 +525,7 @@ calls <xref linkend="DrawHorizBars"/> instead.
 </varlistentry>
 
 <varlistentry>
-  <term id="DrawDataLabel" xreflabel="DrawDataLabel">DrawDataLabel($which_font, $which_angle, $x_world, $y_world, $which_color, $which_text, $which_halign = 'center', $which_valign = 'top', $x_adjustment=0, $y_adjustment=0)</term>
+  <term><anchor id="DrawDataLabel" xreflabel="DrawDataLabel"/>DrawDataLabel($which_font, $which_angle, $x_world, $y_world, $which_color, $which_text, $which_halign = 'center', $which_valign = 'top', $x_adjustment=0, $y_adjustment=0)</term>
   <listitem>
     <para>
 This function was removed in PHPlot-5.1.3 and replaced
@@ -535,7 +535,7 @@ by <xref linkend="DrawDataValueLabel"/>.
 </varlistentry>
 
 <varlistentry>
-  <term id="DrawDataValueLabel" xreflabel="DrawDataValueLabel">DrawDataValueLabel($x_or_y, $x_world, $y_world, $text, $halign, $valign, $x_adjustment=0, $y_adjustment=0, $min_width=NULL, min_height=NULL)</term>
+  <term><anchor id="DrawDataValueLabel" xreflabel="DrawDataValueLabel"/>DrawDataValueLabel($x_or_y, $x_world, $y_world, $text, $halign, $valign, $x_adjustment=0, $y_adjustment=0, $min_width=NULL, min_height=NULL)</term>
   <listitem>
     <para>
 Draws a data value label (previously called "Y data label").
@@ -566,7 +566,7 @@ if these labels are enabled.
 </varlistentry>
 
 <varlistentry>
-  <term id="DrawDot" xreflabel="DrawDot">DrawDot($x_world, $y_world, $record, $color)</term>
+  <term><anchor id="DrawDot" xreflabel="DrawDot"/>DrawDot($x_world, $y_world, $record, $color)</term>
   <listitem>
     <para>
 Draws a single marker point ('dot') at the given X and Y world coordinates,
@@ -580,7 +580,7 @@ Called by those plotting routines that include dots:
 </varlistentry>
 
 <varlistentry>
-  <term id="DrawDots" xreflabel="DrawDots">DrawDots($paired = False)</term>
+  <term><anchor id="DrawDots" xreflabel="DrawDots"/>DrawDots($paired = False)</term>
   <listitem>
     <para>
 Draws a dot plot.
@@ -598,7 +598,7 @@ would be duplicated by the 'lines' part of the plot.
 </varlistentry>
 
 <varlistentry>
-  <term id="DrawDotsError" xreflabel="DrawDotsError">DrawDotsError($paired = False)</term>
+  <term><anchor id="DrawDotsError" xreflabel="DrawDotsError"/>DrawDotsError($paired = False)</term>
   <listitem>
     <para>
 Draws a dot plot with error bars.
@@ -615,7 +615,7 @@ would be duplicated by <xref linkend="DrawLinesError"/>.
 </varlistentry>
 
 <varlistentry>
-  <term id="DrawError" xreflabel="DrawError">DrawError($error_message, [$where_x], [$where_y])</term>
+  <term><anchor id="DrawError" xreflabel="DrawError"/>DrawError($error_message, [$where_x], [$where_y])</term>
   <listitem>
     <para>
 Starting with PHPlot-5.0.5, this function is an alias for
@@ -631,7 +631,7 @@ wrote the image, and exited.)
 </varlistentry>
 
 <varlistentry>
-  <term id="DrawHorizBars" xreflabel="DrawHorizBars">DrawHorizBars()</term>
+  <term><anchor id="DrawHorizBars" xreflabel="DrawHorizBars"/>DrawHorizBars()</term>
   <listitem>
     <para>
 Draws a horizontal bars plot.
@@ -644,7 +644,7 @@ In PHPlot-5.1.3 it was changed to be called by DrawBars.
 </varlistentry>
 
 <varlistentry>
-  <term id="DrawHorizStackedBars" xreflabel="DrawHorizStackedBars">DrawHorizStackedBars()</term>
+  <term><anchor id="DrawHorizStackedBars" xreflabel="DrawHorizStackedBars"/>DrawHorizStackedBars()</term>
   <listitem>
     <para>
 Draws a horizontal stacked bars plot.
@@ -657,7 +657,7 @@ This was added in PHPlot-5.1.3.
 
 
 <varlistentry>
-  <term id="DrawImageBorder" xreflabel="DrawImageBorder">DrawImageBorder()</term>
+  <term><anchor id="DrawImageBorder" xreflabel="DrawImageBorder"/>DrawImageBorder()</term>
   <listitem>
     <para>
 Draws a border around the image, if enabled by
@@ -668,7 +668,7 @@ Called by <xref linkend="DrawGraph"/>.
 </varlistentry>
 
 <varlistentry>
-  <term id="DrawLegend" xreflabel="DrawLegend">DrawLegend(x,y,type)</term>
+  <term><anchor id="DrawLegend" xreflabel="DrawLegend"/>DrawLegend(x,y,type)</term>
   <listitem>
     <para>
 Draws the plot legend. This includes the box, text labels, and color boxes.
@@ -679,7 +679,7 @@ but only if legend text has been set using <xref linkend="SetLegend"/>.
 </varlistentry>
 
 <varlistentry>
-  <term id="DrawLinePoints" xreflabel="DrawLinePoints">DrawLinePoints()</term>
+  <term><anchor id="DrawLinePoints" xreflabel="DrawLinePoints"/>DrawLinePoints()</term>
   <listitem>
     <para>
 Draws a linepoints plot, with or without error bars.
@@ -693,7 +693,7 @@ plot type.
 </varlistentry>
 
 <varlistentry>
-  <term id="DrawLines" xreflabel="DrawLines">DrawLines($paired = False)</term>
+  <term><anchor id="DrawLines" xreflabel="DrawLines"/>DrawLines($paired = False)</term>
   <listitem>
     <para>
 Draws a line plot.
@@ -711,7 +711,7 @@ would be duplicated by the 'points' part of the plot.
 </varlistentry>
 
 <varlistentry>
-  <term id="DrawLinesError" xreflabel="DrawLinesError">DrawLinesError($paired = False)</term>
+  <term><anchor id="DrawLinesError" xreflabel="DrawLinesError"/>DrawLinesError($paired = False)</term>
   <listitem>
     <para>
 Draws a lines plot with error bars.
@@ -727,7 +727,7 @@ would be duplicated by <xref linkend="DrawDotsError"/>.
 </varlistentry>
 
 <varlistentry>
-  <term id="DrawPieChart" xreflabel="DrawPieChart">DrawPieChart()</term>
+  <term><anchor id="DrawPieChart" xreflabel="DrawPieChart"/>DrawPieChart()</term>
   <listitem>
     <para>
 Draws a pie chart plot.
@@ -737,7 +737,7 @@ Called by <xref linkend="DrawGraph"/> with the plot type is 'pie'.
 </varlistentry>
 
 <varlistentry>
-  <term id="DrawPlotAreaBackground" xreflabel="DrawPlotAreaBackground">DrawPlotAreaBackground()</term>
+  <term><anchor id="DrawPlotAreaBackground" xreflabel="DrawPlotAreaBackground"/>DrawPlotAreaBackground()</term>
   <listitem>
     <para>
 Draws the plot area background, either an image file set with
@@ -751,7 +751,7 @@ Called by <xref linkend="DrawGraph"/>.
 </varlistentry>
 
 <varlistentry>
-  <term id="DrawPlotBorder" xreflabel="DrawPlotBorder">DrawPlotBorder()</term>
+  <term><anchor id="DrawPlotBorder" xreflabel="DrawPlotBorder"/>DrawPlotBorder()</term>
   <listitem>
     <para>
 Draws the border around the plot area.
@@ -764,7 +764,7 @@ Called by <xref linkend="DrawGraph"/>.
 </varlistentry>
 
 <varlistentry>
-  <term id="DrawSquared" xreflabel="DrawSquared">DrawSquared()</term>
+  <term><anchor id="DrawSquared" xreflabel="DrawSquared"/>DrawSquared()</term>
   <listitem>
     <para>
 Draws a squared (stepped lines) plot.
@@ -774,7 +774,7 @@ Called by <xref linkend="DrawGraph"/> when the plot type is 'squared'.
 </varlistentry>
 
 <varlistentry>
-  <term id="DrawStackedBars" xreflabel="DrawStackedBars">DrawStackedBars()</term>
+  <term><anchor id="DrawStackedBars" xreflabel="DrawStackedBars"/>DrawStackedBars()</term>
   <listitem>
     <para>
 Draws a stacked bars chart plot.
@@ -786,7 +786,7 @@ calls <xref linkend="DrawHorizStackedBars"/> instead.
 </varlistentry>
 
 <varlistentry>
-  <term id="DrawText" xreflabel="DrawText">DrawText($which_font, $which_angle, $which_xpos, $which_ypos, $which_color, $which_text, $which_halign = 'left', $which_valign = 'bottom')</term>
+  <term><anchor id="DrawText" xreflabel="DrawText"/>DrawText($which_font, $which_angle, $which_xpos, $which_ypos, $which_color, $which_text, $which_halign = 'left', $which_valign = 'bottom')</term>
   <listitem>
     <para>
 Draws a string of text $which_text, at position ($which_xpos, $which_ypos).
@@ -826,7 +826,7 @@ information.
 </varlistentry>
 
 <varlistentry>
-  <term id="DrawThinBarLines" xreflabel="DrawThinBarLines">DrawThinBarLines()</term>
+  <term><anchor id="DrawThinBarLines" xreflabel="DrawThinBarLines"/>DrawThinBarLines()</term>
   <listitem>
     <para>
 Draws a thin bar lines plot. This is sometimes called an impulse plot.
@@ -837,7 +837,7 @@ This function draws both vertical and horizontal variants of this plot type.
 </varlistentry>
 
 <varlistentry>
-  <term id="DrawTitle" xreflabel="DrawTitle">DrawTitle()</term>
+  <term><anchor id="DrawTitle" xreflabel="DrawTitle"/>DrawTitle()</term>
   <listitem>
     <para>
 Draws the main plot title as set with <xref linkend="SetTitle"/>. This is centered at the
@@ -848,7 +848,7 @@ Called by <xref linkend="DrawGraph"/>.
 </varlistentry>
 
 <varlistentry>
-  <term id="DrawXAxis" xreflabel="DrawXAxis">DrawXAxis()</term>
+  <term><anchor id="DrawXAxis" xreflabel="DrawXAxis"/>DrawXAxis()</term>
   <listitem>
     <para>
 Draws the X (horizontal) axis, including the axis line,
@@ -861,7 +861,7 @@ Called by <xref linkend="DrawGraph"/>.
 </varlistentry>
 
 <varlistentry>
-  <term id="DrawXDataLabel" xreflabel="DrawXDataLabel">DrawXDataLabel($xlab, $xpos, $row=FALSE)</term>
+  <term><anchor id="DrawXDataLabel" xreflabel="DrawXDataLabel"/>DrawXDataLabel($xlab, $xpos, $row=FALSE)</term>
   <listitem>
     <para>
 Draws a data label for an X value. The labels are above or below the plot
@@ -884,7 +884,7 @@ Called by plot drawing routines for all plot types except 'pie':
 </varlistentry>
 
 <varlistentry>
-  <term id="DrawXDataLine" xreflabel="DrawXDataLine">DrawXDataLine($xpos, $row)</term>
+  <term><anchor id="DrawXDataLine" xreflabel="DrawXDataLine"/>DrawXDataLine($xpos, $row)</term>
   <listitem>
     <para>
 Draws X data lines, which are vertical lines from the bottom or top of the
@@ -898,7 +898,7 @@ Called by <xref linkend="DrawXDataLabel"/>.
 </varlistentry>
 
 <varlistentry>
-  <term id="DrawXTick" xreflabel="DrawXTick">DrawXTick($which_xlab, $which_xpix)</term>
+  <term><anchor id="DrawXTick" xreflabel="DrawXTick"/>DrawXTick($which_xlab, $which_xpix)</term>
   <listitem>
     <para>
 Draws a single X value tick mark and its label.
@@ -914,7 +914,7 @@ for symmetry with DrawYTicks.
 </varlistentry>
 
 <varlistentry>
-  <term id="DrawXTicks" xreflabel="DrawXTicks">DrawXTicks()</term>
+  <term><anchor id="DrawXTicks" xreflabel="DrawXTicks"/>DrawXTicks()</term>
   <listitem>
     <para>
 Draws the vertical grid lines, the tick marks, and tick labels.
@@ -926,7 +926,7 @@ Called by <xref linkend="DrawXAxis"/>.
 </varlistentry>
 
 <varlistentry>
-  <term id="DrawXTitle" xreflabel="DrawXTitle">DrawXTitle()</term>
+  <term><anchor id="DrawXTitle" xreflabel="DrawXTitle"/>DrawXTitle()</term>
   <listitem>
     <para>
 Draws the X axis title. There can be zero, one, or two of them depending on
@@ -938,7 +938,7 @@ Called by <xref linkend="DrawGraph"/>.
 </varlistentry>
 
 <varlistentry>
-  <term id="DrawYAxis" xreflabel="DrawYAxis">DrawYAxis()</term>
+  <term><anchor id="DrawYAxis" xreflabel="DrawYAxis"/>DrawYAxis()</term>
   <listitem>
     <para>
 Draws the Y (vertical) axis, including the axis line,
@@ -951,7 +951,7 @@ Called by <xref linkend="DrawGraph"/>.
 </varlistentry>
 
 <varlistentry>
-  <term id="DrawYDataLabel" xreflabel="DrawYDataLabel">DrawYDataLabel($ylab, $ypos)</term>
+  <term><anchor id="DrawYDataLabel" xreflabel="DrawYDataLabel"/>DrawYDataLabel($ylab, $ypos)</term>
   <listitem>
     <para>
 Draws a data label along the Y axis or side of the plot.
@@ -965,7 +965,7 @@ Called by horizontal plot drawing functions such as
 </varlistentry>
 
 <varlistentry>
-  <term id="DrawYErrorBar" xreflabel="DrawYErrorBar">DrawYErrorBar($x_world, $y_world, $error_height, $error_bar_type, $color)</term>
+  <term><anchor id="DrawYErrorBar" xreflabel="DrawYErrorBar"/>DrawYErrorBar($x_world, $y_world, $error_height, $error_bar_type, $color)</term>
   <listitem>
     <para>
 Draws an error bar for the point at world coordinates ($x_world, $y_world).
@@ -979,7 +979,7 @@ plot (upper range error and lower range error).
 </varlistentry>
 
 <varlistentry>
-  <term id="DrawYTick" xreflabel="DrawYTick">DrawYTick($which_ylab, $which_ypix)</term>
+  <term><anchor id="DrawYTick" xreflabel="DrawYTick"/>DrawYTick($which_ylab, $which_ypix)</term>
   <listitem>
     <para>
 Draws a single Y value tick mark and its label.
@@ -993,7 +993,7 @@ Called by <xref linkend="DrawYTicks"/>.
 </varlistentry>
 
 <varlistentry>
-  <term id="DrawYTicks" xreflabel="DrawYTicks">DrawYTicks()</term>
+  <term><anchor id="DrawYTicks" xreflabel="DrawYTicks"/>DrawYTicks()</term>
   <listitem>
     <para>
 Draws the horizontal grid lines, the tick marks, and tick labels.
@@ -1004,7 +1004,7 @@ Called by <xref linkend="DrawYAxis"/>.
 </varlistentry>
 
 <varlistentry>
-  <term id="DrawYTitle" xreflabel="DrawYTitle">DrawYTitle()</term>
+  <term><anchor id="DrawYTitle" xreflabel="DrawYTitle"/>DrawYTitle()</term>
   <listitem>
     <para>
 Draws the Y axis title. There can be zero, one, or two of them depending on
@@ -1016,7 +1016,7 @@ Called by <xref linkend="DrawGraph"/>.
 </varlistentry>
 
 <varlistentry>
-  <term id="FindDataLimits" xreflabel="FindDataLimits">FindDataLimits()</term>
+  <term><anchor id="FindDataLimits" xreflabel="FindDataLimits"/>FindDataLimits()</term>
   <listitem>
     <para>
 Finds the limits of the data. Using the data_type and the data array, it
@@ -1036,7 +1036,7 @@ from various places, with a flag data_limits_done to indicate it was called.)
 </varlistentry>
 
 <varlistentry>
-  <term id="FormatLabel" xreflabel="FormatLabel">FormatLabel($which_pos, $which_lab)</term>
+  <term><anchor id="FormatLabel" xreflabel="FormatLabel"/>FormatLabel($which_pos, $which_lab)</term>
   <listitem>
     <para>
 Formats a value for use as a tick or data label. This implements the format
@@ -1053,7 +1053,7 @@ PHPlot-5.1.0.
 </varlistentry>
 
 <varlistentry>
-  <term id="GetDefaultTTFont" xreflabel="GetDefaultTTFont">GetDefaultTTFont()</term>
+  <term><anchor id="GetDefaultTTFont" xreflabel="GetDefaultTTFont"/>GetDefaultTTFont()</term>
   <listitem>
     <para>
 Returns the default TrueType font name. If no default font has been set
@@ -1068,7 +1068,7 @@ default font.
 </varlistentry>
 
 <varlistentry>
-  <term id="GetImage" xreflabel="GetImage">GetImage($image_filename, &amp;$width, &amp;$height)</term>
+  <term><anchor id="GetImage" xreflabel="GetImage"/>GetImage($image_filename, &amp;$width, &amp;$height)</term>
   <listitem>
     <para>
 Reads an image file from $image_filename, stores the width and height
@@ -1085,7 +1085,7 @@ two calling functions.
 </varlistentry>
 
 <varlistentry>
-  <term id="GetImageBorderWidth" xreflabel="GetImageBorderWidth">GetImageBorderWidth()</term>
+  <term><anchor id="GetImageBorderWidth" xreflabel="GetImageBorderWidth"/>GetImageBorderWidth()</term>
   <listitem>
     <para>
 This returns the image border width, as set with
@@ -1098,7 +1098,7 @@ This was added in PHPlot-5.1.2.
 </varlistentry>
 
 <varlistentry>
-  <term id="GetLineSpacing" xreflabel="GetLineSpacing">GetLineSpacing($font)</term>
+  <term><anchor id="GetLineSpacing" xreflabel="GetLineSpacing"/>GetLineSpacing($font)</term>
   <listitem>
     <para>
 Given a font array variable, returns the proper spacing in pixels between lines
@@ -1113,7 +1113,7 @@ fonts.
 </varlistentry>
 
 <varlistentry>
-  <term id="number_format" xreflabel="number_format">number_format($number, $decimals=0)</term>
+  <term><anchor id="number_format" xreflabel="number_format"/>number_format($number, $decimals=0)</term>
   <listitem>
     <para>
 Formats a floating point number, like PHP's number_format(), inserting
@@ -1133,7 +1133,7 @@ This is used by <xref linkend="FormatLabel"/> when the formatting type is
 </varlistentry>
 
 <varlistentry>
-  <term id="pad_array" xreflabel="pad_array">pad_array(&amp;$arr, $size)</term>
+  <term><anchor id="pad_array" xreflabel="pad_array"/>pad_array(&amp;$arr, $size)</term>
   <listitem>
     <para>
 Pads an array $arr with copies of itself until it reaches the given size.
@@ -1150,7 +1150,7 @@ however that had an unused 3rd argument, and worked on general indexed arrays.
 </varlistentry>
 
 <varlistentry>
-  <term id="PadArrays" xreflabel="PadArrays">PadArrays()</term>
+  <term><anchor id="PadArrays" xreflabel="PadArrays"/>PadArrays()</term>
   <listitem>
     <para>
 Pads the style arrays (line_widths, line_styles, data_colors, etc.) so they
@@ -1162,7 +1162,7 @@ Called by <xref linkend="DrawGraph"/> before drawing anything.
 </varlistentry>
 
 <varlistentry>
-  <term id="PrintError" xreflabel="PrintError">PrintError($error_message)</term>
+  <term><anchor id="PrintError" xreflabel="PrintError"/>PrintError($error_message)</term>
   <listitem>
     <para>
 Handles a fatal error within PHPlot. Starting with PHPlot-5.0.5 this and
@@ -1185,7 +1185,7 @@ and exited.)
 </varlistentry>
 
 <varlistentry>
-  <term id="ProcessText" xreflabel="ProcessText">ProcessText($draw_it, $font, $angle, $x, $y, $color, $text, $halign, $valign)</term>
+  <term><anchor id="ProcessText" xreflabel="ProcessText"/>ProcessText($draw_it, $font, $angle, $x, $y, $color, $text, $halign, $valign)</term>
   <listitem>
     <para>
 This function acts as a bridge, or switch, between the two functions
@@ -1207,7 +1207,7 @@ This function is only called by
 </varlistentry>
 
 <varlistentry>
-  <term id="ProcessTextGD" xreflabel="ProcessTextGD">ProcessTextGD($draw_it, $font, $angle, $x, $y, $color, $text, $h_factor, $v_factor)</term>
+  <term><anchor id="ProcessTextGD" xreflabel="ProcessTextGD"/>ProcessTextGD($draw_it, $font, $angle, $x, $y, $color, $text, $h_factor, $v_factor)</term>
   <listitem>
     <para>
 Draws GD fixed-font text, or calculates the size of GD fixed-font text.
@@ -1239,7 +1239,7 @@ font number, width, and height.
 </varlistentry>
 
 <varlistentry>
-  <term id="ProcessTextTTF" xreflabel="ProcessTextTTF">ProcessTextTTF($draw_it, $font, $angle, $x, $y, $color, $text, $h_factor, $v_factor)</term>
+  <term><anchor id="ProcessTextTTF" xreflabel="ProcessTextTTF"/>ProcessTextTTF($draw_it, $font, $angle, $x, $y, $color, $text, $h_factor, $v_factor)</term>
   <listitem>
     <para>
 Draws TTF text, or calculates the size of TTF text.
@@ -1277,7 +1277,7 @@ font filename and size.
 </varlistentry>
 
 <varlistentry>
-  <term id="SetDashedStyle" xreflabel="SetDashedStyle">SetDashedStyle($which_ndxcol)</term>
+  <term><anchor id="SetDashedStyle" xreflabel="SetDashedStyle"/>SetDashedStyle($which_ndxcol)</term>
   <listitem>
     <para>
 Sets the GD line style to select a dashed line, in preparation for drawing
@@ -1300,7 +1300,7 @@ such as <xref linkend="DrawLines"/> if dashed lines are used.
 </varlistentry>
 
 <varlistentry>
-  <term id="SetDefaultFonts" xreflabel="SetDefaultFonts">SetDefaultFonts()</term>
+  <term><anchor id="SetDefaultFonts" xreflabel="SetDefaultFonts"/>SetDefaultFonts()</term>
   <listitem>
     <para>
 Selects all the default font values and sizes. See <xref linkend="SetFont"/>
@@ -1313,7 +1313,7 @@ defaults when changing from or to TrueType font usage.
 </varlistentry>
 
 <varlistentry>
-  <term id="SetDefaultStyles" xreflabel="SetDefaultStyles">SetDefaultStyles()</term>
+  <term><anchor id="SetDefaultStyles" xreflabel="SetDefaultStyles"/>SetDefaultStyles()</term>
   <listitem>
     <para>
 Initializes default colors and styles for PHPlot objects. Mostly this calls
@@ -1327,7 +1327,7 @@ the plot object.
 </varlistentry>
 
 <varlistentry>
-  <term id="SetIndexColor" xreflabel="SetIndexColor">SetIndexColor($which_color, $alpha = 0)</term>
+  <term><anchor id="SetIndexColor" xreflabel="SetIndexColor"/>SetIndexColor($which_color, $alpha = 0)</term>
   <listitem>
     <para>
 Given a color specification (see <xref linkend="SetRGBColor"/>),
@@ -1345,7 +1345,7 @@ The default alpha parameter was added in PHPlot-5.1.1.
 </varlistentry>
 
 <varlistentry>
-  <term id="SetIndexDarkColor" xreflabel="SetIndexDarkColor">SetIndexDarkColor($which_color, $alpha = 0)</term>
+  <term><anchor id="SetIndexDarkColor" xreflabel="SetIndexDarkColor"/>SetIndexDarkColor($which_color, $alpha = 0)</term>
   <listitem>
     <para>
 Given a color specification (see <xref linkend="SetRGBColor"/>),
@@ -1363,7 +1363,7 @@ The default alpha parameter was added in PHPlot-5.1.1.
 </varlistentry>
 
 <varlistentry>
-  <term id="SetInputFile" xreflabel="SetInputFile">SetInputFile($which_input_file)</term>
+  <term><anchor id="SetInputFile" xreflabel="SetInputFile"/>SetInputFile($which_input_file)</term>
   <listitem>
     <para>
 Sets an image file $which_input_file to be used as the background image for
@@ -1381,7 +1381,7 @@ creating an instance of the object.
 </varlistentry>
 
 <varlistentry>
-  <term id="SetLabelType" xreflabel="SetLabelType">SetLabelType($mode, $args)</term>
+  <term><anchor id="SetLabelType" xreflabel="SetLabelType"/>SetLabelType($mode, $args)</term>
   <listitem>
     <para>
 Sets the formatting used for tick and data labels. This implements
@@ -1401,7 +1401,7 @@ PHPlot-5.1.0.
 </varlistentry>
 
 <varlistentry>
-  <term id="SetRGBColor" xreflabel="SetRGBColor">SetRGBColor($color_asked, $alpha = 0)</term>
+  <term><anchor id="SetRGBColor" xreflabel="SetRGBColor"/>SetRGBColor($color_asked, $alpha = 0)</term>
   <listitem>
     <para>
 Converts a general color specification into a standard form as an array of
@@ -1423,7 +1423,7 @@ Use of alpha in the color specification, the default alpha argument, and the
 </varlistentry>
 
 <varlistentry>
-  <term id="SizeText" xreflabel="SizeText">SizeText($which_font, $which_angle, $which_text)</term>
+  <term><anchor id="SizeText" xreflabel="SizeText"/>SizeText($which_font, $which_angle, $which_text)</term>
   <listitem>
     <para>
 Calculates the size of a block of text. It works on both GD (fixed-font) and TTF
@@ -1444,7 +1444,7 @@ This function replaced <xref linkend="TTFBBoxSize"/> at PHPlot-5.0.5.
 </varlistentry>
 
 <varlistentry>
-  <term id="tile_img" xreflabel="tile_img">tile_img($file, $xorig, $yorig, $width, $height, $mode)</term>
+  <term><anchor id="tile_img" xreflabel="tile_img"/>tile_img($file, $xorig, $yorig, $width, $height, $mode)</term>
   <listitem>
     <para>
 Tiles an image file over another the current plot image.
@@ -1465,7 +1465,7 @@ if an image file is selected for the plot area or overall background.
 </varlistentry>
 
 <varlistentry>
-  <term id="TTFBBoxSize" xreflabel="TTFBBoxSize">TTFBBoxSize($size, $angle, $font, $string)</term>
+  <term><anchor id="TTFBBoxSize" xreflabel="TTFBBoxSize"/>TTFBBoxSize($size, $angle, $font, $string)</term>
   <listitem>
     <para>
 This function was removed at PHPlot-5.0.5.
@@ -1475,7 +1475,7 @@ It was replaced by <xref linkend="SizeText"/>.
 </varlistentry>
 
 <varlistentry>
-  <term id="xtr" xreflabel="xtr">xtr($x_world)</term>
+  <term><anchor id="xtr" xreflabel="xtr"/>xtr($x_world)</term>
   <listitem>
     <para>
 Translates an X world coordinate value into a pixel coordinate value.
@@ -1486,7 +1486,7 @@ See <xref linkend="GetDeviceXY"/> for a public interface.
 </varlistentry>
 
 <varlistentry>
-  <term id="ytr" xreflabel="ytr">ytr($y_world)</term>
+  <term><anchor id="ytr" xreflabel="ytr"/>ytr($y_world)</term>
   <listitem>
     <para>
 Translates a Y world coordinate value into a pixel coordinate value.
