@@ -15,6 +15,34 @@ see the ChangeLog file inside the PHPlot distribution.)
 <variablelist>
 
   <varlistentry>
+    <term>2010-09-13</term>
+    <listitem>
+      <para>
+Documentation was added and changes made for horizontal plot types and their
+new data types.
+(This was previously an experimental feature, documented in a text file
+included in with the PHPlot release.)
+Three new examples were added, showing horizontal plot types.
+      </para>
+      <para>
+A terminology change was necessary due to the introduction of horizontal plots
+and dual use of Y data labels, which are now symmetrical with X data labels.
+Previously, <emphasis>data labels</emphasis> referred to labels from the
+data array which were displayed along the X axis or top edge, and
+<emphasis>Y data labels</emphasis> referred to the Y bar value labels
+displayed within the plot area.
+The manual now distinguishes these by type, not axis. <emphasis>Axis data
+labels</emphasis> are labels from the data array which are displayed along the
+independent variable axis, and <emphasis>data value labels</emphasis> show the
+value of a data point using the dependent variable. The general term
+<emphasis>data labels</emphasis> is used to refer to both types of labels. (For
+example, SetXDataLabelAngle applies to data labels - both axis data labels
+and data value labels.)
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
     <term>2010-09-08</term>
     <listitem>
       <para>
