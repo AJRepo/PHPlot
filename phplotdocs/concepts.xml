@@ -94,6 +94,17 @@ tick marks, and labels.
     </varlistentry>
 
     <varlistentry>
+      <term><anchor id="def-horizplot" />Horizontal Plot</term>
+      <listitem>
+        <para>
+A plot in which the Y axis represents the independent variable, and the X
+axis represents the dependent variable values. In a horizontal bar chart,
+for example, the bars extend to the right from the Y axis.
+        </para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
       <term><anchor id="def-image" />Image</term>
       <listitem>
         <para>
@@ -147,13 +158,27 @@ See also <link linkend="def-palette">Palette Image</link>.
     </varlistentry>
 
     <varlistentry>
+      <term><anchor id="def-vertplot" />Vertical Plot</term>
+      <listitem>
+        <para>
+A plot in which the X axis represents the independent variable, and the Y
+axis represents the dependent variable values. This is the usual orientation
+for plots. Compare with <link linkend="def-horizplot">horizontal plot</link>.
+        </para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
       <term><anchor id="def-worldcoor" />World Coordinates</term>
       <listitem>
         <para>
-The coordinate space of the plotted data. This is the "real world"
+The coordinate space of the plotted data. This is the real world
 coordinate space, in the units of whatever the plotted data measures.
 The origin of the world coordinate space is the 0,0 point on the X and Y
 axes.
+The X coordinate increases to the right, and the Y coordinate increases upwards.
+Note that the Y direction of world coordinates is opposite that of device
+coordinates.
         </para>
       </listitem>
     </varlistentry>
@@ -296,10 +321,7 @@ you call, and saving a copy of your data array. Nothing really happens
 until you complete the plot with DrawGraph.
 </para>
 
-
 </sect2>
-
-
 
 </sect1>
 
@@ -331,7 +353,7 @@ The following data types are available in PHPlot:
 <variablelist>
 
   <varlistentry>
-    <term>text-data</term>
+    <term><anchor id="text-data" xreflabel="text-data"/>text-data</term>
     <listitem>
       <para>
 Each record contains a label, followed by one or more Y values:
@@ -344,7 +366,7 @@ This data type works with all plot types.
   </varlistentry>
 
   <varlistentry>
-    <term>data-data</term>
+    <term><anchor id="data-data" xreflabel="data-data"/>data-data</term>
     <listitem>
       <para>
 Each record contains a label, an X value, then one or more Y values:
@@ -365,7 +387,7 @@ to have out-of-order or duplicate X values in the data array.
   </varlistentry>
 
   <varlistentry>
-    <term>data-data-error</term>
+    <term><anchor id="data-data-error" xreflabel="data-data-error"/>data-data-error</term>
     <listitem>
       <para>
 Each record contains a label, an X value, then sets of 3 values for each Y
@@ -383,12 +405,39 @@ directions respectively.
   </varlistentry>
 
   <varlistentry>
-    <term>text-data-single</term>
+    <term><anchor id="text-data-single" xreflabel="text-data-single"/>text-data-single</term>
     <listitem>
       <para>
 Each record contains a label and a single value:
 <literal>array('label', factor)</literal>.
 This data type is only for the pie chart plot type.
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
+    <term><anchor id="text-data-yx" xreflabel="text-data-yx"/>text-data-yx</term>
+    <listitem>
+      <para>
+Each record contains a label, followed by one or more X values:
+<literal>array('label', x1, x2, ...)</literal>.
+The corresponding Y value for all X values in a record is implicit.
+PHPlot assigns y=0.5 to the first data record, y=1.5 to the second, etc.
+This data type is for horizontal plots, and works with bar, stackedbar,
+and thinbarline plot types.
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
+    <term><anchor id="data-data-yx" xreflabel="data-data-yx"/>data-data-yx</term>
+    <listitem>
+      <para>
+Each record contains a label, a Y value, then one or more X values:
+<literal>array('label', y, x1, x2, ...)</literal>.
+This is the same as 'text-data-yx' except the X values are explicitly given.
+This data type is for horizontal plots, and only works with the thinbarline
+plot type.
       </para>
     </listitem>
   </varlistentry>
@@ -624,7 +673,8 @@ The following plot types are available:
       </row>
       <row>
         <entry><link linkend="plottype-thinbarline">thinbarline</link></entry>
-        <entry>Vertical lines from X axis up. Also known as impulse.</entry>
+        <entry>Vertical lines from X axis up, or horizontal lines from
+             the Y axis towards the right. Also known as impulse.</entry>
       </row>
     </tbody>
   </tgroup>
@@ -644,8 +694,8 @@ so the values are (generally) decreasing within each row, because later
 drawn filled areas will cover previously drawn areas.
 </para>
 <para>
-This plot type works with data types 'text-data' and 'data-data'
-(see <xref linkend="conc-datatypes-types" />).
+This plot type works with data types <xref linkend="text-data"/>
+and <xref linkend="data-data"/>.
 For 'text-data', the data X values are assumed to be at 0.5+N for N=0,1,2...
 </para>
 <para>
@@ -665,15 +715,20 @@ An example of this plot type can be seen in
 <sect2 id="plottype-bars">
 <title>Plot Type: bars (Bar Graph)</title>
 <para>
-This plot type draws a bar chart, with filled rectangles centered on
-the X values. The rectangles can have a 3-D look or be flat with a border.
+This plot type draws a bar chart, with filled rectangles.
+Both vertical and horizontal bar charts are available.
+The bars are centered on the X values (for vertical charts),
+or on the Y values (for horizontal charts).
+The rectangles can have a 3-D look, or be flat with a border.
 Multiple data-set plots work, with each one producing a set of bars
 offset from the previous set.
 </para>
 <para>
-This plot type only works with data type 'text-data'
-(see <xref linkend="conc-datatypes-types" />).
+For vertical bars, use data type <xref linkend="text-data"/>.
 The data X values are assumed to be at 0.5+N for N=0,1,2...
+For horizontal bars, use data type <xref linkend="text-data-yx"/>.
+The data Y values are assumed to be at 0.5+N for N=0,1,2...
+No other data type works with bar graphs.
 </para>
 <para>
 If shading is on with <xref linkend="SetShading" /> (default is on with value
@@ -687,22 +742,26 @@ The border color (if shading is off) can be set with
 Examples of this plot type can be seen in
 <xref linkend="ex-bars1" />,
 <xref linkend="ex-bars2" />,
-<xref linkend="ex-bars3" />, and
-<xref linkend="ex-bars4" />.
+<xref linkend="ex-bars3" />,
+<xref linkend="ex-bars4" />, and
+<xref linkend="ex-horizbar" />.
+</para>
+<para>
+Horizontal bar plots were added in PHPlot-5.1.2.
 </para>
 </sect2>
 
 <sect2 id="plottype-linepoints">
 <title>Plot Type: linepoints (Lines and Points)</title>
 <para>
-This plot type draws a line graph with a markers at each point, thus
+This plot type draws a line graph with a marker at each point, thus
 combining the 'line' and 'point' plot types.
 </para>
 <para>
-This plot type works with data types 'text-data' and 'data-data'
-(see <xref linkend="conc-datatypes-types" />).
+This plot type works with data types <xref linkend="text-data"/>
+and <xref linkend="data-data"/>.
 For 'text-data', the data X values are assumed to be at 0.5+N for N=0,1,2...
-It also works with 'data-data-error' for error bars.
+It also works with <xref linkend="data-data-error"/> for error bars.
 </para>
 <para>
 Line and marker colors for each line are set with
@@ -740,10 +799,10 @@ An example of this plot type can be seen in
 This plot type simply draws a line from each point to the next.
 </para>
 <para>
-This plot type works with data types 'text-data' and 'data-data'
-(see <xref linkend="conc-datatypes-types" />).
+This plot type works with data types <xref linkend="text-data"/>
+and <xref linkend="data-data"/>.
 For 'text-data', the data X values are assumed to be at 0.5+N for N=0,1,2...
-It also works with 'data-data-error' for error bars.
+It also works with <xref linkend="data-data-error"/> for error bars.
 </para>
 <para>
 Line colors for each line are set with <xref linkend="SetDataColors" />.
@@ -776,9 +835,9 @@ the pie in a counter-clockwise direction.
 Each segment is labeled with its percentage.
 </para>
 <para>
-This plot type works with data types 'text-data', 'data-data', and
-'text-data-single' (see <xref linkend="conc-datatypes-types" />).
-Data arrays for pie charts are handled differently than with other plot types,
+This plot type works with data types <xref linkend="text-data"/>,
+<xref linkend="data-data"/>, and <xref linkend="text-data-single"/>.
+Data arrays for pie charts are handled differently from with other plot types,
 so the data types are described in more detail below.
 </para>
 <para>
@@ -873,10 +932,10 @@ The empty strings and '1' and '2' are ignored.
 This plot type draws a point marker at each X,Y value.
 </para>
 <para>
-This plot type works with data types 'text-data' and 'data-data'
-(see <xref linkend="conc-datatypes-types" />).
+This plot type works with data types <xref linkend="text-data"/>
+and <xref linkend="data-data"/>.
 For 'text-data', the data X values are assumed to be at 0.5+N for N=0,1,2...
-It also works with 'data-data-error' for points with error bars.
+It also works with <xref linkend="data-data-error"/> for error bars.
 </para>
 <para>
 Marker colors for each line are set with <xref linkend="SetDataColors" />.
@@ -893,8 +952,8 @@ Error bar line width is set with <xref linkend="SetErrorBarLineWidth" />.
 </para>
 <para>
 Examples of this plot type can be seen in
-<xref linkend="ex-points2" /> (scatterplot), and
-<xref linkend="ex-points1" /> (with error bars).
+<xref linkend="ex-points2" />, and
+<xref linkend="ex-points1" />.
 </para>
 </sect2>
 
@@ -906,8 +965,8 @@ line from the previous point to the current X, then a vertical line to
 the current Y.
 </para>
 <para>
-This plot type works with data types 'text-data' and 'data-data'
-(see <xref linkend="conc-datatypes-types" />).
+This plot type works with data types <xref linkend="text-data"/>
+and <xref linkend="data-data"/>.
 For 'text-data', the data X values are assumed to be at 0.5+N for N=0,1,2...
 </para>
 <para>
@@ -927,7 +986,8 @@ An example of this plot type can be seen in
 <para>
 This plot type draws filled areas between lines, similar to
 <xref linkend="plottype-area" /> except the values are accumulated
-in the same manner as for <xref linkend="plottype-stackedbars" />.
+in the same manner as for <link linkend="plottype-stackedbars">stacked
+bars</link>.
 For each data set (set of corresponding Y values from each record in the
 data array), the area between the X axis and the first Y value is filled.
 The area between the first Y value and the sum of the first and second Y
@@ -935,8 +995,8 @@ values is filled next, and so on. The top-most line is the sum of all the Y
 values for each record.
 </para>
 <para>
-This plot type works with data types 'text-data' and 'data-data'
-(see <xref linkend="conc-datatypes-types" />).
+This plot type works with data types <xref linkend="text-data"/>
+and <xref linkend="data-data"/>.
 For 'text-data', the data X values are assumed to be at 0.5+N for N=0,1,2...
 </para>
 <para>
@@ -964,18 +1024,23 @@ This plot type was added in PHPlot-5.1.1.
 <sect2 id="plottype-stackedbars">
 <title>Plot Type: stackedbars</title>
 <para>
-This plot type draws a bar chart with stacked bars centered on each X value.
+This plot type draws a bar chart with stacked bars.
+Both vertical and horizontal stacked bar charts are available.
+The bars are centered on the X values (for vertical charts),
+or on the Y values (for horizontal charts).
 Each data set value contributes one segment of a stack.
-That is, the first data set is drawn at the X axis in the first
-color, then the second data set is drawn stacked above the first
-in the second color, etc.
-For this plot type, all Y data values must be greater than or equal to 0.
+That is, the first data set is drawn from the axis in the first
+color, then the second data set is drawn stacked on the first
+using the second color, etc.
+For this plot type, all data values must be greater than or equal to 0.
 Negative values are not supported.
 </para>
 <para>
-This plot type only works with data type 'text-data'
-(see <xref linkend="conc-datatypes-types" />).
+For vertical bars, use data type <xref linkend="text-data"/>.
 The data X values are assumed to be at 0.5+N for N=0,1,2...
+For horizontal bars, use data type <xref linkend="text-data-yx"/>.
+The data Y values are assumed to be at 0.5+N for N=0,1,2...
+No other data type works with bar graphs.
 </para>
 <para>
 If shading is on with <xref linkend="SetShading" /> (default is on with value
@@ -989,32 +1054,172 @@ The border color (if shading is off) can be set with
 <para>
 Examples of this plot type can be seen in
 <xref linkend="ex-stackedbars1" />,
-<xref linkend="ex-stackedbars2" />, and
-<xref linkend="ex-stackedbars3" />.
+<xref linkend="ex-stackedbars2" />,
+<xref linkend="ex-stackedbars3" />, and
+<xref linkend="ex-horizstackedbar" />.
+</para>
+<para>
+Horizontal stacked bar plots were added in PHPlot-5.1.3.
 </para>
 </sect2>
 
 <sect2 id="plottype-thinbarline">
 <title>Plot Type: thinbarline</title>
 <para>
-This plot type draws vertical lines up from the X axis to the Y value at
-each point.
+This plot type draws lines from the axis to the data value.
 Other implementations call this type of plot 'impulses'.
+Both vertical and horizontal thinbarline plots are available.
 Plotting multiple data sets does not work, because the lines are drawn on
 top of each other and only one can typically be seen.
+This plot type can be more readable than a bar chart when there are a large
+number of data points.
 </para>
 <para>
-This plot type works with data types 'text-data' and 'data-data'
-(see <xref linkend="conc-datatypes-types" />).
+For vertical plots, use data type <xref linkend="text-data"/>
+or <xref linkend="data-data"/>.
 For 'text-data', the data X values are assumed to be at 0.5+N for N=0,1,2...
+For horizontal plots, use data type <xref linkend="text-data-yx"/>
+or <xref linkend="data-data-yx"/>.
+For 'text-data-yx', the data Y values are assumed to be at 0.5+N for N=0,1,2...
 </para>
 <para>
-Impulse width can be controlled with <xref linkend="SetLineWidths" />.
+The width of the plot lines can be controlled with <xref linkend="SetLineWidths" />.
 </para>
 <para>
 Examples of this plot type can be seen in
-<xref linkend="ex-thinbarline1" /> and
-<xref linkend="ex-thinbarline2" />.
+<xref linkend="ex-thinbarline1" />,
+<xref linkend="ex-thinbarline2" />, and
+<xref linkend="ex-horizthinbarline" />.
+</para>
+
+</sect2>
+
+<sect2 id="conc-plottype-datatype">
+<title>Plot Types and Data Types</title>
+<para>
+The following table indicates which plot types support which data types.
+Refer to <xref linkend="conc-datatypes"/> for more information on data
+types.
+<informaltable>
+  <?dbfo keep-together="always"?>
+  <tgroup cols="7">
+    <?dbhtml table-summary="Supported plot type/data type combinations."?>
+    <?dbhtml cellpadding="4"?>
+    <colspec colname="pt" align="left" colwidth="16*" />
+    <colspec colname="dt1" align="center" colwidth="14*" />
+    <colspec colname="dt2" align="center" colwidth="14*" />
+    <colspec colname="dt3" align="center" colwidth="14*" />
+    <colspec colname="dt4" align="center" colwidth="14*" />
+    <colspec colname="dt5" align="center" colwidth="14*" />
+    <colspec colname="dt6" align="center" colwidth="14*" />
+    <thead>
+      <row>
+        <entry morerows="1" valign="bottom">Plot Type:</entry>
+        <entry namest="dt1" nameend="dt6">Data Type:</entry>
+      </row>
+      <row>
+        <entry><xref linkend="text-data" /></entry>
+        <entry><xref linkend="data-data" /></entry>
+        <entry><xref linkend="data-data-error" /></entry>
+        <entry><xref linkend="text-data-single" /></entry>
+        <entry><xref linkend="text-data-yx" /></entry>
+        <entry><xref linkend="data-data-yx" /></entry>
+      </row>
+    </thead>
+    <tbody>
+      <row>
+        <entry><link linkend="plottype-area">area</link></entry>
+        <entry>Yes</entry>
+        <entry>Yes</entry>
+        <entry> </entry>
+        <entry> </entry>
+        <entry> </entry>
+        <entry> </entry>
+      </row>
+      <row>
+        <entry><link linkend="plottype-bars">bars</link></entry>
+        <entry>Yes</entry>
+        <entry> </entry>
+        <entry> </entry>
+        <entry> </entry>
+        <entry>Yes</entry>
+        <entry> </entry>
+      </row>
+      <row>
+        <entry><link linkend="plottype-linepoints">linepoints</link></entry>
+        <entry>Yes</entry>
+        <entry>Yes</entry>
+        <entry>Yes</entry>
+        <entry> </entry>
+        <entry> </entry>
+        <entry> </entry>
+      </row>
+      <row>
+        <entry><link linkend="plottype-lines">lines</link></entry>
+        <entry>Yes</entry>
+        <entry>Yes</entry>
+        <entry>Yes</entry>
+        <entry> </entry>
+        <entry> </entry>
+        <entry> </entry>
+      </row>
+      <row>
+        <entry><link linkend="plottype-pie">pie</link></entry>
+        <entry>Yes</entry>
+        <entry>Yes</entry>
+        <entry> </entry>
+        <entry>Yes</entry>
+        <entry> </entry>
+        <entry> </entry>
+      </row>
+      <row>
+        <entry><link linkend="plottype-points">points</link></entry>
+        <entry>Yes</entry>
+        <entry>Yes</entry>
+        <entry>Yes</entry>
+        <entry> </entry>
+        <entry> </entry>
+        <entry> </entry>
+      </row>
+      <row>
+        <entry><link linkend="plottype-squared">squared</link></entry>
+        <entry>Yes</entry>
+        <entry>Yes</entry>
+        <entry> </entry>
+        <entry> </entry>
+        <entry> </entry>
+        <entry> </entry>
+      </row>
+      <row>
+        <entry><link linkend="plottype-stackedarea">stackedarea</link></entry>
+        <entry>Yes</entry>
+        <entry>Yes</entry>
+        <entry> </entry>
+        <entry> </entry>
+        <entry> </entry>
+        <entry> </entry>
+      </row>
+      <row>
+        <entry><link linkend="plottype-stackedbars">stackedbars</link></entry>
+        <entry>Yes</entry>
+        <entry> </entry>
+        <entry> </entry>
+        <entry> </entry>
+        <entry>Yes</entry>
+        <entry> </entry>
+      </row>
+      <row>
+        <entry><link linkend="plottype-thinbarline">thinbarline</link></entry>
+        <entry>Yes</entry>
+        <entry>Yes</entry>
+        <entry> </entry>
+        <entry> </entry>
+        <entry>Yes</entry>
+        <entry>Yes</entry>
+      </row>
+    </tbody>
+  </tgroup>
+</informaltable>
 </para>
 
 </sect2>
@@ -2070,14 +2275,110 @@ For examples of using a data color callback, see
   <para>
 This section contains information about creating labels which identify data
 values on the plot.
+For a list of functions used to control labels,
+see <xref linkend="ref-labels"/>.
   </para>
 </abstract>
 <para>
-There are two types of labels for X values: data labels and tick labels.
-There are also tick labels for Y values, and data labels for Y values
-which only work with bar charts and stacked bar charts.
-None of this applies to pie charts, which have no tick labels
-and internally-generated data value labels.
+Several types of labels are available in PHPlot:
+  <itemizedlist>
+    <listitem>
+      <para>
+Tick labels identify the values along the axis at the tick positions. There
+are X tick labels and Y tick labels.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+Axis data labels display the label values from your data array, along the
+independent variable's axis.
+X axis data labels are available for vertical plots, and
+Y axis data labels are available for horizontal plots.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+Data value labels display the actual value of a data point.
+These are available only for bar and stacked bar plots.
+Y data value labels are available for vertical plots, and
+X data value labels are available for horizontal plots.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+Pie chart data labels show the percentage of each pie slice.
+      </para>
+    </listitem>
+  </itemizedlist>
+</para>
+<note>
+  <para>
+The term <emphasis>data label</emphasis> is often used to refer to both axis
+data labels and data value labels. The same PHPlot functions are used
+to configure axis data labels and data value labels.
+  </para>
+</note>
+
+<para>
+<?dbfo keep-together="always"?>
+Here is a sample plot with the Y tick labels and X axis data labels called out.
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="images/labels.png" scale="58" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>Tick labels and Data labels on a plot</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+</para>
+
+<para>
+<?dbfo keep-together="always"?>
+Here is a sample plot with the pie chart labels called out.
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="images/labels-pie.png" scale="58" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>Pie chart data labels</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+</para>
+
+<para>
+<?dbfo keep-together="always"?>
+Here is a sample vertical bar plot with the Y tick labels,
+Y data value labels, and X axis data labels called out.
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="images/labels-bar.png" scale="58" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>Tick labels, Data labels, and Data Value labels on a plot</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+</para>
+
+<para>
+<?dbfo keep-together="always"?>
+Here is a sample horizontal bar plot with the Y (axis) data labels,
+X data value labels, and X tick labels called out.
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="images/labels-horizbar.png" scale="58" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>Tick labels, Data labels, and Data Value labels on a plot</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
 </para>
 
 <sect2 id="conc-labels-tick">
@@ -2104,10 +2405,11 @@ every 1 data unit.
 </para>
 
 <para>
-Note that even with data type 'data-data', where explicit X values for the
-data are supplied, the X tick labels are still calculated automatically
-(unless modified by the functions named above). That is, your supplied X
-values in the data array are not used for tick labels.
+Note that even with data type 'data-data', where explicit independent
+variable values for the data are supplied, the tick labels along that
+axis are still calculated automatically (unless modified by the functions 
+named above). For example, for vertical plots, your supplied X values in the
+data array are not used for the X tick labels.
 </para>
 
 <para>
@@ -2117,10 +2419,11 @@ You can enable, disable, or position the tick labels with
 </sect2>
 
 <sect2 id="conc-labels-data">
-<title>Data Labels</title>
+<title>Axis Data Labels</title>
 <para>
-Data labels apply to X values for all plot types.
-X data labels are supplied in your data array for each data point.
+Axis data labels are available for the independent variable axis. This is X
+for vertical plots, and Y for horizontal plots.
+These data labels are supplied in your data array for each data point.
 For example, with data type text-data :
 <programlisting><![CDATA[
      $data = array( array('Peaches',100),
@@ -2128,44 +2431,85 @@ For example, with data type text-data :
                     array('Pears', 90));
 ]]></programlisting>
 The three points have data labels 'Peaches', 'Apples', and 'Pears'.
-These data labels will be drawn at the bottom of the plot (by default)
-below the corresponding X values.
-You can disable or reposition the X data labels with
-<xref linkend="SetXDataLabelPos" />.
+For vertical plots, these data labels will be drawn at the bottom of the plot
+(by default) below the corresponding X values.
+For horizontal plots, these data labels will be drawn to the left of the plot
+(by default), to the left of the corresponding Y values.
+You can disable or reposition the data labels with
+<xref linkend="SetXDataLabelPos" /> and
+<xref linkend="SetYDataLabelPos" />.
 </para>
 
 <para>
-You will generally not want both X tick labels and X data labels on,
+You will generally not want both tick labels and axis data labels on,
 because they will overlap and be unreadable. If you are not using data
 labels, you should either make them all empty strings in your data array,
-or else use <xref linkend="SetXDataLabelPos"/>('none') to turn them off.
-You can also call <xref linkend="SetXTickLabelPos"/> to explicitly position
-the tick labels; PHPlot will then disable the data labels.
+or else use <xref linkend="SetXDataLabelPos"/>('none') (for vertical plots)
+or <xref linkend="SetYDataLabelPos"/>('none') (for horizontal plots)
+to turn them off.
+You can also call <xref linkend="SetXTickLabelPos"/> (for vertical plots)
+or <xref linkend="SetYTickLabelPos"/> (for horizontal plots)
+to explicitly position the tick labels.
+PHPlot will then disable the data labels.
 </para>
 
 <para>
-If you don't tell PHPlot what to do with X data and X tick labels,
+If you don't tell PHPlot what to do with data and tick labels,
 the behavior depends on the PHPlot version.
 PHPlot 5.1.0 and later will examine your data array to see if there are any
 non-empty data labels, and if so it will draw only data labels, and omit
 tick labels.
-If all of the data labels are empty, tick labels will be drawn.
+If all of the labels in your data array are empty, tick labels will be drawn.
 (PHPlot through 5.0.7 will draw both tick and data labels in these cases.)
 </para>
 
+</sect2>
+
+<sect2 id="conc-labels-datavalue">
+<title>Data Value Labels</title>
 <para>
-There is one type of Y data label for bar charts, which indicates the Y
-value above each bar.
-There are two types of Y data labels for stacked bar charts. Bar total
-labels indicate the total Y value for a bar stack, and are drawn above the
-bar. Bar segment labels indicate the incremental value of each segment
-within the bar, and are drawn inside the segment below the top.
-Use <xref linkend="SetYDataLabelPos" /> to enable Y data labels.
-<xref linkend="ex-bars4" /> shows a bar chart with Y data labels.
-<xref linkend="ex-stackedbars3" /> shows a stacked bar chart with Y data
-labels.
-(Note that Y data labels for stacked bars was first implemented
-in PHPlot-5.1.1.)
+Data value labels are available only for bar and stackedbar charts.
+These are displayed inside the plot, and show the value at
+the end of each bar (or bar segment).
+</para>
+<para>
+For vertical bar charts, Y data value labels indicate the Y value for each
+bar, and are drawn above the bar for positive values, or below the bar for
+negative values.
+For vertical stackedbar charts, Y data value labels indicate the total Y
+value for each stack, and optionally indicate the value of each segment.
+Use <xref linkend="SetYDataLabelPos" /> to enable Y data value labels.
+</para>
+<para>
+For horizontal bar charts, X data value labels indicate the X value for each
+bar, and are drawn to the left or right of the end of the bar.
+For horizontal stackedbar charts, X data value labels indicate the total X
+value for each stack, and optionally indicate the value of each segment.
+Use <xref linkend="SetXDataLabelPos" /> to enable X data value labels.
+</para>
+<para>
+  <note>
+    <para>
+The same function is used to position X axis data labels and X data value
+labels, and the same function is used to position Y axis data labels and Y data
+value labels. There is no ambiguity, because one type of label is available
+for each axis for vertical plots, and the other type for horizontal plots.
+    </para>
+  </note>
+</para>
+
+<para>
+<xref linkend="example-bars4" /> shows a vertical bar chart
+with Y data value labels.
+<xref linkend="example-stackedbars3" /> shows a vertical stacked bar chart
+with Y data value labels.
+</para>
+
+<para>
+<xref linkend="example-horizbar" /> shows a horizontal bar chart
+with X data value labels.
+<xref linkend="example-horizstackedbar" /> shows a horizontal stacked bar chart
+with X data value labels.
 </para>
 
 </sect2>
@@ -2179,8 +2523,9 @@ Use <xref linkend="SetXLabelType" /> and <xref linkend="SetYLabelType" /> to
 select one of the other format types for tick labels.
 Use <xref linkend="SetXDataLabelType" /> and
 <xref linkend="SetYDataLabelType" /> to select one of the other format
-types for data labels. (Note that SetXLabelType also sets the default
-format for X data labels, for use if SetXDataLabelType is not called.
+types for data labels (both axis data labels and data value labels).
+(Note that SetXLabelType also sets the default format for X data labels,
+for use if SetXDataLabelType is not called.
 Also SetYLabelType sets the default for Y data labels, for use if
 SetYDataLabelType is not called.)
 </para>
@@ -2274,6 +2619,135 @@ details about these format types.
 
 </sect1>
 
+<sect1 id="conc-otherelements">
+<title>Other Plot Elements</title>
+<abstract><title></title>
+  <para>
+This section contains information about other elements which can be part of
+a plot.
+  </para>
+</abstract>
+
+<sect2 id="conc-titles">
+<title>Titles</title>
+<para>
+PHPlot can draw three types of titles:
+  <itemizedlist>
+    <listitem>
+      <para>
+The main plot title, which is centered at the top of the image.
+This is typically used to identify the plot as a whole.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+The X title, which is drawn horizontally and can appear below the plot,
+above the plot, or in both places.
+This is typically used to identify the values along the X axis.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+The Y title, which is drawn vertically and can appear to the left of the plot,
+to the right of the plot, or on both sides.
+This is typically used to identify the values along the Y axis.
+      </para>
+    </listitem>
+  </itemizedlist>
+For a list of functions used to control titles,
+see <xref linkend="ref-titles"/>.
+</para>
+
+<para>
+<?dbfo keep-together="always"?>
+Here is a sample plot with the titles called out.
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="images/typical-titles.png" scale="58" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>Titles on a plot</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+</para>
+</sect2>
+
+<sect2 id="conc-legend">
+<title>Legend</title>
+<para>
+PHPlot can draw a legend on the plot. This is normally used with multiple
+data sets, to identify the data sets by color.
+A legend can also be used with pie charts to identify the sections.
+For a list of functions used to control the legend,
+see <xref linkend="ref-legend"/>.
+</para>
+
+<para>
+<?dbfo keep-together="always"?>
+Here is a sample plot with the legend called out.
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="images/typical-legend.png" scale="58" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>Legend on a plot</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+</para>
+</sect2>
+
+<sect2 id="conc-grid">
+<title>Grid Lines</title>
+<para>
+PHPlot can draw horizontal (Y) and/or vertical (X) grid lines on a plot.
+You can independently enable the horizontal (Y) and vertical (X)
+lines in the grid, and use dashed or solid lines.
+For a list of functions used to control the grid,
+see <xref linkend="ref-grid"/>.
+</para>
+
+<para>
+<?dbfo keep-together="always"?>
+Here is a sample plot with the X Grid and Y Grid called out.
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="images/typical-grid.png" scale="58" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>X and Y Grid</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+</para>
+</sect2>
+
+<sect2 id="conc-ticks">
+<title>Tick Marks</title>
+<para>
+Tick marks are drawn by default along both the X and Y axis.
+You can set the tick interval or control the number of ticks, suppress the
+first or last tick on an axis, and control the tick mark size.
+For a list of functions used to control tick marks,
+see <xref linkend="ref-ticks"/>.
+</para>
+<para>
+Left to its own, PHPlot will determine tick values for X and Y axes, but it
+currently isn't too smart about choosing values and you may not be happy
+with the results. You can use PHPlot functions to set the desired tick
+interval or number of ticks, but you will most likely also
+have to call <xref linkend="SetPlotAreaWorld" /> to set the X and/or Y data
+range limits. Otherwise, you get the tick intervals you want, but the
+actual values will depend on a somewhat arbitrary base value.
+</para>
+
+</sect2>
+
+</sect1>
 
 <sect1 id="conc-text">
 <title>Text Fonts</title>
@@ -2284,6 +2758,41 @@ See <xref linkend="ref-textfonts"/> for PHPlot functions used with text
 fonts.
   </para>
 </abstract>
+
+<sect2 id="conc-text-overview">
+<title>Overview</title>
+<para>
+PHPlot supports both built-in GD fonts and TrueType fonts (if available on
+your system).
+TrueType fonts generally produce higher quality text, but using them
+requires more internal computations. The built-in GD fonts are faster
+to render, but are limited to one typeface and 5 available sizes.
+TrueType fonts can be drawn at any size and angle, and many typefaces are
+available.
+On most systems, TrueType fonts are anti-aliased for improved appearance,
+but under some conditions the GD fonts may be easier to read.
+TrueType fonts support much wider character sets, including special
+symbols, while the GD fonts are more limited.
+</para>
+
+<para>
+<?dbfo keep-together="always"?>
+The following figure shows the built-in GD fonts plus a sample TrueType
+font.  (Depending on how you are viewing this manual, the sizes of the
+fonts in this figure might differ from how they would look in a PHPlot
+image. For more on font sizes, see the notes with <xref linkend="SetFont" />.)
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="images/fonts.png" scale="65" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>A sample of the fonts</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+</para>
+</sect2>
 
 <sect2 id="conc-text-fonts">
 <title>TrueType Font Selection</title>
@@ -2451,7 +2960,7 @@ with <xref linkend="SetTTFPath"/>.
   </itemizedlist>
 The last item on the list is used regardless of whether it can be found or
 not. This means if you enable TrueType fonts without setting a default, and
-get an fatal error from PHPlot that it can't find the font benjamingothic.ttf,
+get a fatal error from PHPlot that it can't find the font benjamingothic.ttf,
 this means PHPlot was unable to find any of the standard fonts in its list.
 On that system, then, you must provide either a font directory, or use full
 font pathnames.
@@ -2677,7 +3186,6 @@ even if you have established an error handler.
 </para>
 
 </sect2>
-
 
 </sect1>
 
