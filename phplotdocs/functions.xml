@@ -23,6 +23,7 @@ If you want to produce plots with little or no customization, you need use
 no other functions.
 These functions are used to create a PHPlot object, select the type of
 plot you want, provide the data to be plotted, and output the plot.
+For more information, see <xref linkend="conc-overview"/>.
 </para>
 
 <para>
@@ -136,40 +137,9 @@ error bars.
 <sect1 id="ref-textfonts">
 <title>Text Fonts</title>
 <para>
-The functions in this section control the text fonts used by PHPlot. PHPlot
-supports both built-in GD fonts and TrueType fonts (if available on your system).
-PHPlot does not support Adobe Type1 fonts, even if your GD supports them.
-See <xref linkend="conc-text"/> for more information about font selection.
+The functions in this section control the text fonts used by PHPlot.
+For more information, see <xref linkend="conc-text"/>.
 </para>
-<tip>
-  <para>
-TrueType fonts produce generally higher quality text, but using them
-requires more internal computations. The built-in GD fonts are faster
-to render, but are limited to one typeface and 5 available sizes.
-TrueType fonts can be any size and angle, and many typefaces are available.
-On most systems, TrueType fonts are anti-aliased for improved appearance,
-but under some conditions the GD fonts may be easier to read.
-  </para>
-</tip>
-
-<para>
-<?dbfo keep-together="always"?>
-The following figure shows the built-in GD fonts plus a sample TrueType
-font.  (Depending on how you are viewing this manual, the sizes of the
-fonts in this figure might differ from how they would look in a PHPlot
-image. For more on font sizes, see the notes with <xref linkend="SetFont" />.)
-<informalfigure>
-  <mediaobject>
-    <imageobject>
-      <imagedata fileref="images/fonts.png" scale="65" format="PNG" />
-    </imageobject>
-    <textobject>
-      <phrase>A sample of the fonts</phrase>
-    </textobject>
-  </mediaobject>
-</informalfigure>
-</para>
-
 <para>
 <itemizedlist>
   <listitem><para><xref linkend="SetDefaultTTFont" /></para></listitem>
@@ -188,27 +158,9 @@ image. For more on font sizes, see the notes with <xref linkend="SetFont" />.)
 <para>
 The functions in this section set the title strings: the overall plot
 title, and optional titles for the X and Y axes.
-</para>
-<para>
+For more information, see <xref linkend="conc-titles"/>.
 See also <xref linkend="SetTitleColor" /> to set the title colors, and
 <xref linkend="SetFont" /> to set the title fonts.
-</para>
-
-<para>
-<?dbfo keep-together="always"?>
-Here is a sample plot with the titles called out.
-
-<informalfigure>
-  <mediaobject>
-    <imageobject>
-      <imagedata fileref="images/typical-titles.png" scale="58" format="PNG" />
-    </imageobject>
-    <textobject>
-      <phrase>Titles on a plot</phrase>
-    </textobject>
-  </mediaobject>
-</informalfigure>
-
 </para>
 
 <para>
@@ -223,32 +175,11 @@ Here is a sample plot with the titles called out.
 <sect1 id="ref-legend">
 <title>Legend</title>
 <para>
-The functions in this section control the legend, which is an optional
-element on the plot. A legend is usually used to identify each plot
-line or set of points when a plot contains multiple data sets. A legend can
-also be used with pie charts to identify the sections.
-</para>
-<para>
+The functions in this section control the legend.
+For more information, see <xref linkend="conc-legend"/>.
 See also <xref linkend="SetTextColor" /> to set the legend text color,
 <xref linkend="SetGridColor" /> to set the legend border color,
 and <xref linkend="SetFont" /> to set the legend text font.
-</para>
-
-<para>
-<?dbfo keep-together="always"?>
-Here is a sample plot with the legend called out.
-
-<informalfigure>
-  <mediaobject>
-    <imageobject>
-      <imagedata fileref="images/typical-legend.png" scale="58" format="PNG" />
-    </imageobject>
-    <textobject>
-      <phrase>Legend on a plot</phrase>
-    </textobject>
-  </mediaobject>
-</informalfigure>
-
 </para>
 
 <para>
@@ -281,36 +212,9 @@ control the axis position and optionally use logarithmic scaling.
 <sect1 id="ref-grid">
 <title>Grid Controls</title>
 <para>
-The functions in this section control the optional grid drawn behind the
-plot. You can independently enable the horizontal (Y) and vertical (X)
-lines in the grid, and use dashed or solid lines.
-</para>
-<para>
+The functions in this section control the optional grid lines.
+For more information, see <xref linkend="conc-grid"/>.
 See also <xref linkend="SetLightGridColor" /> to set the grid color.
-</para>
-<para>
-  <note>
-    <para>
-By default, the horizontal (Y) grid is on, and the vertical (X) grid is off.
-    </para>
-  </note>
-</para>
-
-<para>
-<?dbfo keep-together="always"?>
-Here is a sample plot with the X Grid and Y Grid called out.
-
-<informalfigure>
-  <mediaobject>
-    <imageobject>
-      <imagedata fileref="images/typical-grid.png" scale="58" format="PNG" />
-    </imageobject>
-    <textobject>
-      <phrase>X and Y Grid</phrase>
-    </textobject>
-  </mediaobject>
-</informalfigure>
-
 </para>
 
 <para>
@@ -326,44 +230,11 @@ Here is a sample plot with the X Grid and Y Grid called out.
 <title>Labels</title>
 <para>
 The functions in this section control the formatting and display of labels.
-This includes data labels (text strings which are supplied with the data
-array), tick labels (automatically generated by PHPlot), and the special
+This includes data labels (axis data labels which come from your data array,
+and data value labels),
+tick labels (automatically generated by PHPlot), and the special data
 labels used on pie charts to show the percentage of each pie slice.
-Tick labels apply to both X and Y values, while data labels only apply to
-X values.
-</para>
-
-<para>
-<?dbfo keep-together="always"?>
-Here is a sample plot with the Y tick labels and X data labels called out.
-
-<informalfigure>
-  <mediaobject>
-    <imageobject>
-      <imagedata fileref="images/labels.png" scale="58" format="PNG" />
-    </imageobject>
-    <textobject>
-      <phrase>Tick labels and Data labels on a plot</phrase>
-    </textobject>
-  </mediaobject>
-</informalfigure>
-</para>
-
-<para>
-<?dbfo keep-together="always"?>
-Here is a sample plot with the pie chart labels called out.
-
-<informalfigure>
-  <mediaobject>
-    <imageobject>
-      <imagedata fileref="images/labels-pie.png" scale="58" format="PNG" />
-    </imageobject>
-    <textobject>
-      <phrase>Pie chart data labels</phrase>
-    </textobject>
-  </mediaobject>
-</informalfigure>
-
+For more information, see <xref linkend="conc-labels"/>.
 </para>
 
 <para>
@@ -395,17 +266,7 @@ Here is a sample plot with the pie chart labels called out.
 <title>Ticks</title>
 <para>
 The functions in this section control the X axis and Y axis tick marks.
-You can set the tick interval or control the number of ticks, suppress the
-first or last tick on an axis, and control the tick size.
-</para>
-<para>
-Left to its own, PHPlot will determine tick values for X and Y axes, but it
-currently isn't too smart about choosing values and you may not be happy
-with the results. You can use the functions in this section to set the
-desired tick interval or number of ticks, but you will most likely also
-have to call <xref linkend="SetPlotAreaWorld" /> to set the X and/or Y data
-range limits. Otherwise, you get the tick intervals you want, but the
-actual values will depend on a somewhat arbitrary base value.
+For more information, see <xref linkend="conc-ticks"/>.
 </para>
 
 <para>
