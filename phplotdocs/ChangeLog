@@ -4,6 +4,48 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2010-09-13
+   Documentation for horizontal plot types (which were implemented in
+   PHPlot-5.1.2 and PHPlot-5.1.3 as an experimental feature).
+
+   * concepts.xml: Changes for horizontal plots.
+     + Add definitions: horizontal plot, vertical plot. Clarify: world coords.
+     + Add anchors to data type terms, to allow linking.
+     + Add new data types for horizontal plots.
+     + Update plot types section to indicate which support horizontal plots.
+     + Add table of plot type / data type support.
+     + Rewrite "Labels" section to describe new data label types. See note
+       in the Changelog appendix of the manual concerning the terminology.
+       New subsection: Data value labels.
+     + Redid the figures showing labels, to adjust the terminology.
+
+   * reference.xml: Changes for horizontal plots.
+     + SetDataType: Accepts 2 new data types.
+     + SetDrawXGrid, SetDrawYGrid: Defaults differ for horizontal, vertical.
+     + SetXDataLabelPos, SetYDataLabelPos: Horizontal plot data value labels.
+     + SetXTickLabelPos, SetYTickLabelPos: Defaults for horizontal plots.
+     + Other data label related functions: Add link to Concepts section.
+
+   * examples.xml: Add 3 new examples of horizontal plots.
+       Clarify data label type in other examples.
+   * quickstart.xml: Mention horizontal and vertical plot types available.
+   * developer.xml: Clarify layout picture in reference to vertical vs
+     horizontal plots. In internal function list, clarify label types.
+   * examples/horizbar.php, horizstackedbar.php, horizthinbarline.php: New
+
+   Other changes:
+   * functions.xml: Move explanatory text and figures out of this chapter
+     and into the Concepts chapter. The Functions chapter was meant to
+     just contain functions listed by category, but more content crept in.
+     Add links from function categories to sections in the Concepts chapter.
+   * concepts.xml: Add new section "Other Elements" with subsections. This
+     contains text and figures relocated from the Functions chapter.
+   * .ispell_words: Additions
+   * Makefile: Add files from 3 new examples
+   * examples/colorcallback*.php: Add image border for better presentation.
+   * images/ : Add 1 background file, add 3 new figures, update 2 figures.
+   * etc/ : Updated and added scripts used for figures.
+
 2010-09-09
    * variables.list: Forgot this file when preparing for release with
      PHPlot-5.1.3 and setting the specific PHPlot version. Fixed.
