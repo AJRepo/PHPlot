@@ -313,7 +313,7 @@ PHPlot can draw these types of plots:
   <itemizedlist>
     <listitem>
       <para>
-Bars (with optional shadows) and Stacked Bars
+Bars (with optional shadows) and Stacked Bars, both vertical and horizontal
       </para>
     </listitem>
     <listitem>
@@ -343,7 +343,7 @@ Pie (2D or 3D)
     </listitem>
     <listitem>
       <para>
-Thinbarline (sometimes also called impulse)
+Thinbarline (sometimes also called impulse), both vertical and horizontal
       </para>
     </listitem>
     <listitem>
