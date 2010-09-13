@@ -70,6 +70,9 @@ EXAMPLES_PHP=\
   examples/colorcallbackbars.php \
   examples/colorcallbackgradient.php \
   examples/histogram.php \
+  examples/horizbar.php \
+  examples/horizstackedbar.php \
+  examples/horizthinbarline.php \
   examples/linepoints1.php \
   examples/lines1.php \
   examples/lines2.php \
@@ -105,6 +108,9 @@ EXAMPLES_IMAGES=\
   examples/colorcallbackbars.png \
   examples/colorcallbackgradient.png \
   examples/histogram.jpg \
+  examples/horizbar.png \
+  examples/horizstackedbar.png \
+  examples/horizthinbarline.png \
   examples/linepoints1.png \
   examples/lines1.png \
   examples/lines2.png \
