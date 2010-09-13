@@ -15,9 +15,7 @@ $data = array(
 );
 
 # Size of plot is set by PDF 72dpi resolution:
-$p =& new PHPlot(400, 300);
-# If running under CLI, just output the image data - no headers.
-if (php_sapi_name() == 'cli') $p->SetIsInline(1);
+$p = new PHPlot(400, 300);
 
 $p->SetDataType('data-data');
 $p->SetDataValues($data);
