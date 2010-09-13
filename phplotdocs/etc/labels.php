@@ -1,5 +1,5 @@
 <?php
-# Testing phplot - Bars.
+# Bar chart with labels, for manual.
 require_once 'phplot.php';
 
 $data = array(
@@ -11,9 +11,7 @@ $data = array(
   array('Jun',  7),
 );
 
-$p =& new PHPlot(400,300);
-# If running under CLI, just output the image data - no headers.
-if (php_sapi_name() == 'cli') $p->SetIsInline(1);
+$p = new PHPlot(400,300);
 $p->SetDataType('text-data');
 $p->SetDataValues($data);
 
@@ -23,4 +21,5 @@ $p->SetXTickLabelPos('none');
 $p->SetXTickPos('none');
 
 $p->SetPlotType('bars');
+$p->SetImageBorderType('plain');
 $p->DrawGraph();

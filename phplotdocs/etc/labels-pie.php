@@ -1,5 +1,5 @@
 <?php
-# Testing phplot - Pie/text-data-single
+# Pie chart with labels, for manual.
 require_once 'phplot.php';
 
 $data = array(
@@ -8,10 +8,9 @@ $data = array(
   array('', 50),
 );
 
-$p =& new PHPlot(400,300);
-# If running under CLI, just output the image data - no headers.
-if (php_sapi_name() == 'cli') $p->SetIsInline(1);
+$p = new PHPlot(400,300);
 $p->SetDataType('text-data-single');
 $p->SetDataValues($data);
 $p->SetPlotType('pie');
+$p->SetImageBorderType('plain');
 $p->DrawGraph();
