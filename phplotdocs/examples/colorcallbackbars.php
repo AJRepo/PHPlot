@@ -24,6 +24,7 @@ $data = array(
 );
 
 $plot = new PHPlot(800, 600);
+$plot->SetImageBorderType('plain'); // Improves presentation in the manual
 $plot->SetPlotType('bars');
 $plot->SetDataValues($data);
 $plot->SetDataType('text-data');

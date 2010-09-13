@@ -26,6 +26,7 @@ for ($b = 255; $b >= 32; $b -= 2) $colors[] = array(0, 0, $b);
 
 # Use a truecolor plot image in order to get more colors.
 $plot = new PHPlot_truecolor(800, 600);
+$plot->SetImageBorderType('plain'); // Improves presentation in the manual
 
 $plot->SetPlotType('thinbarline');
 $plot->SetDataType('data-data');
