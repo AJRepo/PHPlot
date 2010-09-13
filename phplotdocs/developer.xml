@@ -24,6 +24,13 @@ Use the following notes to help understand the figure.
 <itemizedlist>
   <listitem>
     <para>
+A vertical plot is shown. The X and Y coordinate system is the same for
+horizontal plots, but the roles are reversed: Y is the independent
+variable, and X is the dependent variable.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
 The safe_margin (box with X) is a gap of 5 pixels used to separate elements.
     </para>
   </listitem>
@@ -36,15 +43,18 @@ gap. This is shown in the figure with an arrow.
   </listitem>
   <listitem>
     <para>
-Similarly, the X tick labels, X data labels, and Y tick labels are optional.
+Similarly, the X tick labels, X axis data labels (for vertical plots),
+Y tick labels, and Y axis data labels (for horizontal plots) are optional.
 If these labels are not used, the space allocated to them collapses,
 including the safe_margin.
     </para>
   </listitem>
   <listitem>
     <para>
-X data labels and X tick labels occupy the same space. Normally only one of
-these should be present; if both are on for some reason they will overlay.
+For vertical plots, X axis data labels and X tick labels occupy the same space.
+For horizontal plots, Y axis data labels and Y tick labels occupy the same space.
+Normally only one of these should be present; if both are on for some reason
+they will overlay.
     </para>
   </listitem>
   <listitem>
@@ -367,7 +377,7 @@ the plot drawing functions check the data type.
   <listitem>
     <para>
 Fixes up the data and tick label position, angle, and format settings.
-This applies defaults to X data label and tick label positions but avoids
+This applies defaults to data label and tick label positions but avoids
 having them overlap unless the user deliberately positioned them that way.
 Also sets the default angle for X data labels, and the default formatting
 for X and Y data labels, to match the corresponding settings for tick
@@ -385,9 +395,9 @@ This was added in PHPlot-5.1.0.
   <term><anchor id="CheckLabelsAllEmpty" xreflabel="CheckLabelsAllEmpty"/>CheckLabelsAllEmpty()</term>
   <listitem>
     <para>
-Returns TRUE if all of the data labels are empty strings.
+Returns TRUE if all of the labels in the data array are empty strings.
 This is used by <xref linkend="CheckLabels"/> to determine whether tick or
-data labels should default on if both are left off.
+axis data labels should default on if both are left off.
 This was added in PHPlot-5.1.2.
     </para>
   </listitem>
@@ -864,11 +874,12 @@ Called by <xref linkend="DrawGraph"/>.
   <term><anchor id="DrawXDataLabel" xreflabel="DrawXDataLabel"/>DrawXDataLabel($xlab, $xpos, $row=FALSE)</term>
   <listitem>
     <para>
-Draws a data label for an X value. The labels are above or below the plot
+Draws an axis data label for an X value. The labels are above or below the plot
 area or both, depending on the value set with
 <xref linkend="SetXDataLabelPos"/>.
 This also calls <xref linkend="DrawXDataLine"/> to draw a line from the
 label to the point, if enabled.
+This is used by vertical plots.
 Called by plot drawing routines for all plot types except 'pie':
 <xref linkend="DrawArea"/>, 
 <xref linkend="DrawBars"/>,
@@ -890,7 +901,7 @@ Called by plot drawing routines for all plot types except 'pie':
 Draws X data lines, which are vertical lines from the bottom or top of the
 plot to the data points. This is enabled with
 <xref linkend="SetDrawXDataLabelLines"/>. The lines are drawn from the
-position (above, below, or both) of the X data labels, which are set with
+position (above, below, or both) of the X axis data labels, which are set with
 <xref linkend="SetXDataLabelPos"/>.
 Called by <xref linkend="DrawXDataLabel"/>.
     </para>
@@ -954,10 +965,10 @@ Called by <xref linkend="DrawGraph"/>.
   <term><anchor id="DrawYDataLabel" xreflabel="DrawYDataLabel"/>DrawYDataLabel($ylab, $ypos)</term>
   <listitem>
     <para>
-Draws a data label along the Y axis or side of the plot.
-This is used by horizontal plots which can place the labels in the data array
-along the side(s).
-This was added in PHPlot-5.1.2.
+Draws an axis data label for a Y value. The labels are along the Y axis or
+side of the plot, or both, depending on the value set with
+<xref linkend="SetYDataLabelPos"/>.
+This is used by horizontal plots, and was added in PHPlot-5.1.2.
 Called by horizontal plot drawing functions such as
 <xref linkend="DrawHorizBars"/>.
     </para>
