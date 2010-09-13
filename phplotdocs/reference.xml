@@ -1108,6 +1108,18 @@ The data array format type, which must be one of the following values:
                       array entry is an array with a label and a single
                       data value.</entry>
                   </row>
+                  <row>
+                    <entry>text-data-yx</entry>
+                    <entry>Each data array entry is an array with a label,
+                      followed by one or more X values. The Y value is
+                      implied. This is used for horizontal plots.</entry>
+                  </row>
+                  <row>
+                    <entry>data-data-yx</entry>
+                    <entry>Each data array entry is an array with a label,
+                      a Y value, then one or more X values.
+                      This is used for horizontal plots.</entry>
+                  </row>
                 </tbody>
               </tgroup>
             </informaltable>
@@ -1132,6 +1144,7 @@ An example of a <literal>text-data</literal> data array is:
 ]]></programlisting>
 This defines the data for 3 plots with 4 points on each, and a month name
 as label for each point.
+This is also a valid data array for data type <literal>text-data-yx</literal>.
     </para>
 
     <para><?dbfo keep-together="always"?>
@@ -1144,6 +1157,8 @@ An example of a <literal>data-data</literal> data array is:
 ]]></programlisting>
 Here the labels are empty strings, next are the X values, then a single
 set of Y values (1 plot).
+This is also a valid data array for data type <literal>data-data-yx</literal>,
+with each row containing a Y value, followed by a single X value.
     </para>
 
     <para><?dbfo keep-together="always"?>
@@ -1168,6 +1183,15 @@ used only for pie charts, is:
 ]]></programlisting>
 Here the labels are empty (they aren't used with a pie chart anyway),
 and 3 slices with relative weights of 10, 40, and 50 are defined.
+    </para>
+  </refsect1>
+  <refsect1>
+    <title>History</title>
+    <para>
+Data type <literal>text-data-yx</literal> for horizontal plots was added
+in PHPlot-5.1.2.
+Data type <literal>data-data-yx</literal> for horizontal plots was added
+in PHPlot-5.1.3.
     </para>
   </refsect1>
 </refentry>
@@ -1541,7 +1565,7 @@ $plot-&gt;SetDrawXDataLabelLines(<parameter>$dxdl</parameter>)
     <title>Description</title>
     <para>
 <function>SetDrawXDataLabelLines</function> enables drawing of data label lines.
-Data label lines are vertical lines drawn from the X data label positions
+Data label lines are vertical lines drawn from the X axis data label positions
 to the data points. In the usual case, with the X axis at the bottom of the
 plot and the data labels just below the X axis, the data label lines would be
 drawn up from the X axis to the data points. Depending on the data label
@@ -1607,7 +1631,8 @@ $plot-&gt;SetDrawXGrid(<parameter>$dxg</parameter>)
 <function>SetDrawXGrid</function> enables or disables the drawing of the X
 grid lines. (The X grid lines are the vertical lines which intersect the
 X axis and are parallel to the Y axis.)
-The default is to not draw the X grid.
+The default is to not draw the X grid for vertical plots,
+and to draw the X grid for horizontal plots.
     </para>
   </refsect1>
 
@@ -1655,7 +1680,8 @@ $plot-&gt;SetDrawYGrid(<parameter>$dyg</parameter>)
 <function>SetDrawYGrid</function> enables or disables the drawing of the Y
 grid lines. (The Y grid lines are the horizontal lines which intersect the
 Y axis and are parallel to the X axis.)
-The default is to draw the Y grid.
+The default is to draw the Y grid for vertical plots,
+and not draw the Y grid for horizontal plots.
     </para>
   </refsect1>
 
@@ -2677,7 +2703,7 @@ This function was added in PHPlot-5.1.2.
 
   <refnamediv>
     <refname>SetIsInline</refname>
-    <refpurpose>Set the output image to be <quote>inline</quote> - without HTTP headers</refpurpose>
+    <refpurpose>Set the output image to be inline - without HTTP headers</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
@@ -5616,6 +5642,10 @@ Desired angle for label text, in degrees.
   <refsect1>
     <title>Notes</title>
     <para>
+This function applies to both X axis data labels and X data value labels.
+See <xref linkend="conc-labels"/> for more information on data labels.
+    </para>
+    <para>
 By default, X Data Labels are drawn at the same angle as X Tick Labels, as
 set with <xref linkend="SetXLabelAngle"/>.
     </para>
@@ -5640,7 +5670,7 @@ simply called SetXLabelAngle.
 
   <refnamediv>
     <refname>SetXDataLabelPos</refname>
-    <refpurpose>Where to draw the X data labels</refpurpose>
+    <refpurpose>Position and control X data labels</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
@@ -5652,9 +5682,15 @@ $plot-&gt;SetXDataLabelPos(<parameter>$xdlp</parameter>)
   <refsect1>
     <title>Description</title>
     <para>
-<function>SetXDataLabelPos</function> determines where the X data labels
-are drawn. The labels can be drawn at the bottom of the plot (below the X
-axis), above the plot, in both positions, or neither.
+<function>SetXDataLabelPos</function> determines if and where X data labels
+are drawn.
+For vertical plots, these are X axis data labels, which display the label
+strings from your data array.
+The labels can be drawn at the bottom of the plot (below the X axis),
+above the plot, in both positions, or neither.
+For horizontal plots, these are X data value labels, displaying the value of the
+data point. They can be drawn within the plot to label bars and bar segments.
+This type of label is only available for 'bars' and 'stackedbars' plots.
     </para>
   </refsect1>
 
@@ -5681,19 +5717,40 @@ A string indicating the desired position for the X data labels:
                 <tbody>
                   <row>
                     <entry>plotdown</entry>
-                    <entry>Data labels below the plot</entry>
+                    <entry>Data labels below the plot.
+                        This is for vertical plots.</entry>
                   </row>
                   <row>
                     <entry>plotup</entry>
-                    <entry>Data labels above the plot</entry>
+                    <entry>Data labels above the plot.
+                        This is for vertical plots.</entry>
                   </row>
                   <row>
                     <entry>both</entry>
-                    <entry>Data labels both below and above the plot</entry>
+                    <entry>Data labels both below and above the plot.
+                        This is for vertical plots.</entry>
+                  </row>
+                  <row>
+                    <entry>plotin</entry>
+                    <entry>Data value labels to the right (or left) of each
+                        bar.  For stacked bar charts, this means only the
+                        bar total labels and not the bar segment labels.
+                        This is valid for horizontal bar and horizontal
+                        stacked bar plots only.
+                    </entry>
+                  </row>
+                  <row>
+                    <entry>plotstack</entry>
+                    <entry>Data value labels to the right of each bar, and
+                      just left of the end of each bar segment.
+                      This is valid for horizontal stacked bar plots only.
+                      It turns on both bar total labels (as with 'plotin')
+                      and bar segment labels.
+                    </entry>
                   </row>
                   <row>
                     <entry>none</entry>
-                    <entry>No data labels</entry>
+                    <entry>No data labels or data value labels</entry>
                   </row>
                 </tbody>
               </tgroup>
@@ -5707,23 +5764,54 @@ A string indicating the desired position for the X data labels:
   <refsect1>
     <title>Notes</title>
     <para>
-The default position for X data labels is below the plot. However PHPlot
-only enables the data labels if SetXDataLabelPos was used to position them,
-or if <xref linkend="SetXTickLabelPos"/> was not used to enable the tick
-labels and the data labels are non-empty.
+With vertical plots, this function controls the X axis data labels.
+For an example, see <xref linkend="ex-area1"/>,
+where the labels are enabled by default and displayed below the X axis.
+With horizontal plots, this function controls the X data value labels.
+For examples, see <xref linkend="example-horizbar"/> 
+and <xref linkend="example-horizstackedbar" />.
     </para>
     <para>
-This applies only to data labels.
+The default position for X data labels (for vertical plots) is below the plot.
+However, PHPlot only enables the data labels if SetXDataLabelPos was used to
+position them, or if <xref linkend="SetXTickLabelPos"/> was not used to
+enable the tick labels and the data labels are not all empty.
+    </para>
+    <para>
+The default position for X data value labels (for horizontal plots) is 'none',
+meaning no labels.
+X data value labels only apply to horizontal bar and stackedbar plots.
+    </para>
+    <para>
 For tick labels, see <xref linkend="SetXTickLabelPos" />.
+    </para>
+    <para>
+The bar segment labels, if enabled ('plotstack'), are drawn inside the bars
+and may not be very visible if dark colors are used for the bar fill.
+Bar segment labels will be omitted for segments which are too short.
+    </para>
+    <para>
+X data value labels will be drawn to the left of the bars for negative values.
+This only applies to horizontal bar charts.
+Stacked bar charts are not allowed to have negative values.
     </para>
     <para>
 If X data lines are enabled with <xref linkend="SetDrawXDataLabelLines"/>,
 then SetXDataLabelPos() also determines the direction of the lines which
 are drawn from the data points.
     </para>
+    <para>
+The X data label text angle is set with <xref linkend="SetXDataLabelAngle"/>.
+The X data label text format can be controlled with
+<xref linkend="SetXDataLabelType"/> or <xref linkend="SetXLabelType"/>.
+    </para>
   </refsect1>
   <refsect1>
     <title>History</title>
+    <para>
+Horizontal bar plot data value labels were added in PHPlot-5.1.3.
+Through PHPlot-5.1.2, the 'plotin' and 'plotstack' values were not available.
+    </para>
     <para>
 Through PHPlot-5.0.7, the default position for X data labels was below the
 plot ('plotdown').
@@ -5904,6 +5992,10 @@ If omitted, NULL is used.
 
   <refsect1>
     <title>Notes</title>
+    <para>
+This function applies to both X axis data labels and X data value labels.
+See <xref linkend="conc-labels"/> for more information on data labels.
+    </para>
     <para>
 The default formatting mode is to do no special formatting of the labels.
 Strings will be output as-is, and numbers will be output using PHP's
@@ -6624,12 +6716,15 @@ A string indicating the desired position for the X tick labels:
   <refsect1>
     <title>Notes</title>
     <para>
-The default position for the X tick labels is below the plot. However,
-PHPlot will disable X tick labels by default if X data labels are
-positioned with <xref linkend="SetXDataLabelPos"/>.
+The default position for the X tick labels is chosen to avoid overlapping
+tick and data labels.
+For vertical plots, the X tick labels will default to 'none' if the X data
+labels have been enabled using <xref linkend="SetXDataLabelPos"/>.
 If neither SetXTickLabelPos nor SetXDataLabelPos are used, PHPlot will
 enable just data labels if they are non-empty, and otherwise it will enable
 just tick labels, and position them below the plot.
+For horizontal plots, there is no conflict (because data labels are along
+the Y axis), so the tick label position defaults to 'plotdown'.
     </para>
     <para>
 This applies only to tick labels.
@@ -7038,8 +7133,6 @@ $plot-&gt;SetYDataLabelAngle(<parameter>$ydla</parameter>)
     <title>Description</title>
     <para>
 <function>SetYDataLabelAngle</function> sets the text angle for Y data labels.
-These are the labels that can be used with bar charts and stacked bar charts.
-See <xref linkend="SetYDataLabelPos"/>.
 If using TrueType fonts, any angle can be used.
 If using built-in GD fonts, only 0 degree and 90 degree text can be used.
     </para>
@@ -7061,6 +7154,10 @@ Desired angle for label text, in degrees.
 
   <refsect1>
     <title>Notes</title>
+    <para>
+This function applies to both Y axis data labels and Y data value labels.
+See <xref linkend="conc-labels"/> for more information on data labels.
+    </para>
     <para>
 By default, Y data labels are drawn at 0 degrees.
 (This is different from X data labels, which default to the angle set
@@ -7096,16 +7193,14 @@ $plot-&gt;SetYDataLabelPos(<parameter>$ydlp</parameter>)
     <title>Description</title>
     <para>
 <function>SetYDataLabelPos</function> determines if and where Y data labels
-are drawn. Currently, Y data labels are only implemented for 'bars'
-and 'stackedbars' plot types.
-For bar charts, the Y data label shows the Y value above each bar.
-For stacked bar charts, there are two types of data labels.
-Bar total labels indicate the total Y value for a bar stack, and are drawn
-above the bar.
-Bar segment labels indicate the incremental value of each segment
-within the bar, and are drawn inside the segment below the top.
-Y data labels are shown in <xref linkend="example-bars4" />
-and <xref linkend="example-stackedbars3" />.
+are drawn.
+For horizontal plots, these are Y axis data labels, which display the label
+strings from your data array.
+The labels can be drawn at the left side of the plot (left of the Y axis),
+on the right side, in both positions, or neither.
+For vertical plots, these are Y data value labels, displaying the value of the
+data point. They can be drawn within the plot to label bars and bar segments.
+This type of label is only available for 'bars' and 'stackedbars' plots.
     </para>
   </refsect1>
 
@@ -7131,22 +7226,41 @@ A string indicating the desired position for the Y data labels:
                 </thead>
                 <tbody>
                   <row>
+                    <entry>plotleft</entry>
+                    <entry>Data labels left of the plot.
+                        This is for horizontal plots.</entry>
+                  </row>
+                  <row>
+                    <entry>plotright</entry>
+                    <entry>Data labels right of the plot.
+                        This is for horizontal plots.</entry>
+                  </row>
+                  <row>
+                    <entry>both</entry>
+                    <entry>Data labels both left and right of the plot.
+                        This is for horizontal plots.</entry>
+                  </row>
+                  <row>
                     <entry>plotin</entry>
-                    <entry>Data labels above each bar. For stacked bar charts,
-                        this means only the bar total labels and not the
-                        bar segment labels.
+                    <entry>Data value labels above (or below) each bar.
+                        For stacked bar charts, this means only the bar total
+                        labels and not the bar segment labels.
+                        This is valid for vertical bar and vertical
+                        stacked bar plots only.
                     </entry>
                   </row>
                   <row>
                     <entry>plotstack</entry>
-                    <entry>Data labels above each bar and below the top of
-                      each segment. This is valid only for stacked bar charts,
-                      and turns on both bar total labels and bar segment labels.
+                    <entry>Data value labels above (or below) each bar, and
+                      below the top of each bar segment.
+                      This is valid for vertical stacked bar plots only.
+                      It turns on both bar total labels (as with 'plotin')
+                      and bar segment labels.
                     </entry>
                   </row>
                   <row>
                     <entry>none</entry>
-                    <entry>No data labels</entry>
+                    <entry>No data labels or data value labels</entry>
                   </row>
                 </tbody>
               </tgroup>
@@ -7160,19 +7274,37 @@ A string indicating the desired position for the Y data labels:
   <refsect1>
     <title>Notes</title>
     <para>
-These labels are only available for plot type 'bars' and 'stackedbars'.
-The default is not to draw Y data labels.
-Y data labels work best when the values are short enough to fit.
+With vertical plots, this function controls the Y data value labels.
+For examples, see <xref linkend="example-bars4" />
+and <xref linkend="example-stackedbars3" />.
+With horizontal plots, this function controls the Y axis data labels.
+For examples, see <xref linkend="example-horizbar"/> 
+and <xref linkend="example-horizstackedbar" />,
+where the labels are enabled by default and displayed to the left of the Y axis.
     </para>
     <para>
-The bar segment labels, if enabled, are drawn inside the bars and may not
-be very visible if dark colors are used for the bar fill.
-Bar segment labels will be omitted for segments which are too short.
+The default position for Y data labels (for horizontal plots) is left of the plot.
+However, PHPlot only enables the data labels if SetYDataLabelPos was used to
+position them, or if <xref linkend="SetYTickLabelPos"/> was not used to
+enable the tick labels and the data labels are not all empty.
     </para>
     <para>
-Y data labels will be drawn below the bars for negative values. This only
-applies to bar charts. Stacked bar charts are not allowed to have negative
-values.
+The default position for Y data value labels (for vertical plots) is 'none',
+meaning no labels.
+Y data value labels only apply to vertical bar and stackedbar plots.
+    </para>
+    <para>
+For tick labels, see <xref linkend="SetYTickLabelPos" />.
+    </para>
+    <para>
+The bar segment labels, if enabled ('plotstack'), are drawn inside the bars
+and may not be very visible if dark colors are used for the bar fill.
+Bar segment labels will be omitted for segments which are too narrow.
+    </para>
+    <para>
+Y data value labels will be drawn below the bars for negative values.
+This only applies to vertical bar charts.
+Stacked bar charts are not allowed to have negative values.
     </para>
     <para>
 The Y data label text angle is set with <xref linkend="SetYDataLabelAngle"/>.
@@ -7183,10 +7315,15 @@ The Y data label text format can be controlled with
   <refsect1>
     <title>History</title>
     <para>
-The Y data label feature for stacked bar graphs was added in PHPlot-5.1.1.
+Horizontal plot types were added in PHPlot-5.1.2 and PHPlot-5.1.3, and
+the Y Data Labels were extended to include the Y axis data labels for
+horizontal plots in addition to the data value labels for vertical plots.
     </para>
     <para>
-The Y data label feature for bar graphs was added to PHPlot-5.0rc3.
+The data value label feature for stacked bar graphs was added in PHPlot-5.1.1.
+    </para>
+    <para>
+The data value label feature for bar graphs was added to PHPlot-5.0rc3.
     </para>
   </refsect1>
 </refentry>
@@ -7211,9 +7348,7 @@ $plot-&gt;SetYDataLabelType(<parameter>$type</parameter>, <optional><parameter>.
     <title>Description</title>
     <para>
 <function>SetYDataLabelType</function> sets the formatting type for Y data
-labels.
-(Y data labels are only available with bar charts and stacked bar charts.)
-By default, data labels are formatted the same as tick labels.
+labels.  By default, data labels are formatted the same as tick labels.
 If <xref linkend="SetYLabelType"/> is not used, then there is no special
 formatting for either label type, so the labels are output as-is.
 Available format types are 'data', 'time', 'printf', and 'custom'.
@@ -7359,6 +7494,10 @@ If omitted, NULL is used.
   <refsect1>
     <title>Notes</title>
     <para>
+This function applies to both Y axis data labels and Y data value labels.
+See <xref linkend="conc-labels"/> for more information on data labels.
+    </para>
+    <para>
 The default formatting mode is to do no special formatting of the labels.
 Strings will be output as-is, and numbers will be output using PHP's
 default formatting.
@@ -7433,7 +7572,7 @@ Desired angle for label text, in degrees.
 The default text angle for Y labels is 0 degrees, for horizontal text.
     </para>
     <para>
-This does not apply to Y data labels on bar and stacked bar charts.
+This does not apply to Y data labels.
 For those, see <xref linkend="SetYDataLabelAngle"/>.
     </para>
   </refsect1>
@@ -7905,7 +8044,15 @@ A string indicating the desired position for the Y tick labels:
   <refsect1>
     <title>Notes</title>
     <para>
-The default position for the Y tick labels is on the left side of the plot.
+The default position for the Y tick labels is chosen to avoid overlapping
+tick and data labels.
+For vertical plots, there is no conflict (because data labels are along
+the X axis), so the tick label position defaults to 'plotleft'.
+For horizontal plots, the Y tick labels will default to 'none' if the Y data
+labels have been enabled using <xref linkend="SetYDataLabelPos"/>.
+If neither SetYTickLabelPos nor SetYDataLabelPos are used, PHPlot will
+enable just data labels if they are non-empty, and otherwise it will enable
+just tick labels, and position them to the left of the plot.
     </para>
     <para>
 This applies only to tick labels.
