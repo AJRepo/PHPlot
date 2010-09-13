@@ -1,5 +1,5 @@
 This is phplotdocs/etc/README, for the PHPlot Reference Manual extra files
-Last updated on 2009-12-20
+Last updated on 2010-09-13
 -----------------------------------------------------------------------------
 
 These are extra files and scripts which were originally used to produce the
@@ -21,6 +21,12 @@ labels-pie.php
 
 labels.php
   A basic bar chart, used to produce labels.png before it is annotated.
+
+labels-bars.php
+  A bar chart which includes data value labels.
+
+labels-horizbars.php
+  A horizontal bar chart which includes data value labels.
 
 layout.fig
   The Xfig source for the "Plot Layout" figure in the Developer's Guide
