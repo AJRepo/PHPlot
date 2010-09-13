@@ -187,7 +187,7 @@ been turned off. Instead we get flat rectangles with borders for the bars.
 <title>Example - Bar Chart, Label Options</title>
 <para>
 This is a bar chart showing data per year. Because the Y values are so
-large, we enable numeric formatting of Y labels, with precision 0.
+large, we enable numeric formatting of Y tick labels, with precision 0.
 This results in a comma separator between thousands.
 This example also shows how to force the Y tick marks to start at zero and
 use a nice whole number for the tick interval.
@@ -419,7 +419,8 @@ the points are connected with steps.
 <para>
 This is a stacked bar chart, with the default 3-D shaded look.
 (Compare with <xref linkend="example-stackedbars2" /> which has no shading.)
-The only valid data type for stacked bars is 'text-data'.
+The only valid data types for stacked bars are 'text-data' (for vertical
+plots), and 'text-data-yx' (for horizontal plots).
 </para>
 <example id="example-stackedbars1">
 <?dbfo keep-together="auto"?>
@@ -554,22 +555,23 @@ plot.
 <pagebreak/>
 <!-- =============================================== -->
 <sect1 id="ex-bars4">
-<title>Example - Bar Chart with Data Labels</title>
+<title>Example - Bar Chart with Data Value Labels</title>
 <para>
-This is a bar chart with data labels. Data labels can be used as an
-alternative to Y axis labels, but only with bar charts.
-(Bar chart data labels were added to PHPlot-5.0rc3.)
+This is a bar chart with data value labels. Data value labels can be used as an
+alternative to (or along with) Y tick labels, but only with bar and stackedbar
+charts.
+(Bar chart data value labels were added to PHPlot-5.0rc3.)
 </para>
 <example id="example-bars4">
 <?dbfo keep-together="auto"?>
-<title>Bar Chart with Data Labels</title>
+<title>Bar Chart with Data Value Labels</title>
 <informalfigure>
   <mediaobject>
     <imageobject>
       <imagedata fileref="examples/bars4.png" scale="58" format="PNG" />
     </imageobject>
     <textobject>
-      <phrase>Bar Chart with Data Labels Example</phrase>
+      <phrase>Bar Chart with Data Value Labels Example</phrase>
     </textobject>
   </mediaobject>
 </informalfigure>
@@ -580,22 +582,22 @@ alternative to Y axis labels, but only with bar charts.
 <pagebreak/>
 <!-- =============================================== -->
 <sect1 id="ex-stackedbars3">
-<title>Example - Stacked Bars with Y Data Labels</title>
+<title>Example - Stacked Bars with Y Data Value Labels</title>
 <para>
 This is the same as <xref linkend="example-stackedbars2" /> except that
-Y Data Labels are turned on.
+Y data value labels are turned on.
 Note this feature was added in PHPlot-5.1.1.
 </para>
 <example id="example-stackedbars3">
 <?dbfo keep-together="auto"?>
-<title>Stacked Bars with Y Data Labels</title>
+<title>Stacked Bars with Y Data Value Labels</title>
 <informalfigure>
   <mediaobject>
     <imageobject>
       <imagedata fileref="examples/stackedbars3.png" scale="58" format="PNG" />
     </imageobject>
     <textobject>
-      <phrase>Stacked Bars with Y Data Labels Example</phrase>
+      <phrase>Stacked Bars with Y Data Value Labels Example</phrase>
     </textobject>
   </mediaobject>
 </informalfigure>
@@ -826,6 +828,94 @@ More information on callbacks can be found in <xref linkend="callbacks" />.
   </mediaobject>
 </informalfigure>
 &colorcallbackbars;
+</example>
+</sect1>
+
+<pagebreak/>
+<!-- =============================================== -->
+<sect1 id="ex-horizbar">
+<title>Example - Horizontal Bar Chart</title>
+<para>
+This example shows a horizontal bar chart.
+As always, the X axis is horizontal, and the Y axis is vertical.
+But the data array contains the X value for each implicit Y.
+The data type 'text-data-yx' indicates this is a
+horizontal plot.
+</para>
+<para>
+This example also has a tiled background image under the plot area.
+</para>
+<example id="example-horizbar">
+<?dbfo keep-together="auto"?>
+<title>Horizontal Bar Chart</title>
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="examples/horizbar.png" scale="58" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>Horizontal Bar Chart Example</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+&horizbar;
+</example>
+</sect1>
+
+<pagebreak/>
+<!-- =============================================== -->
+<sect1 id="ex-horizstackedbar">
+<title>Example - Horizontal Stacked Bar Chart</title>
+<para>
+This example shows a horizontal stacked bar chart.
+As always, the X axis is horizontal, and the Y axis is vertical.
+But the data array contains the X value for each implicit Y.
+The data type 'text-data-yx' indicates this is a
+horizontal plot.
+</para>
+<example id="example-horizstackedbar">
+<?dbfo keep-together="auto"?>
+<title>Horizontal Stacked Bar Chart</title>
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="examples/horizstackedbar.png" scale="58" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>Horizontal Stacked Bar Chart Example</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+&horizstackedbar;
+</example>
+</sect1>
+
+<pagebreak/>
+<!-- =============================================== -->
+<sect1 id="ex-horizthinbarline">
+<title>Example - Horizontal Thin Bar Line Plot</title>
+<para>
+This example shows a horizontal thin bar line (thinbarline) plot.
+As always, the X axis is horizontal, and the Y axis is vertical.
+The data type 'data-data-yx' indicates this is a
+horizontal plot, with explicit independent (Y) variables. There is
+one X for each Y. With this data type, the independent variable
+values need not be in order or sequential in the data array.
+</para>
+<example id="example-horizthinbarline">
+<?dbfo keep-together="auto"?>
+<title>Horizontal Thin Bar Line Plot</title>
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="examples/horizthinbarline.png" scale="58" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>Horizontal Thin Bar Line Plot Example</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+&horizthinbarline;
 </example>
 </sect1>
 
