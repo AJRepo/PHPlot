@@ -51,8 +51,8 @@ class PHPlot
 
     public $safe_margin = 5;               // Extra margin used in several places, in pixels
 
-    public $x_axis_position = '';          // Where to draw both axis (world coordinates),
-    public $y_axis_position = '';          // leave blank for X axis at 0 and Y axis at left of plot.
+    public $x_axis_position = '';          // X axis position in Y world coordinates, blank for default.
+    public $y_axis_position = '';          // Y axis position in X world coordinates, blank for default.
 
     public $xscale_type = 'linear';        // linear, log
     public $yscale_type = 'linear';
@@ -3239,32 +3239,47 @@ class PHPlot
      * This does not calculate the pixel values of the axes. That happens in
      * CalcTranslation, after scaling is set up (which has to happen after
      * margins are set up).
+     *
+     * For vertical plots, the X axis defaults to Y=0 if that is inside the plot range, else whichever
+     * of the top or bottom that has the smallest absolute value (that is, the value closest to 0).
+     * The Y axis defaults to the left edge. For horizontal plots, the axis roles and defaults are switched.
      */
     protected function CalcAxisPositions()
     {
-        // If no user-provided Y axis position, default to axis on left side.
-        // Otherwise, make sure user-provided position is inside the plot area.
-        if ($this->y_axis_position === '')
-            $this->y_axis_position = $this->plot_min_x;
-        else
-            $this->y_axis_position = min(max($this->plot_min_x, $this->y_axis_position), $this->plot_max_x);
-
-        // Validate user-provided X axis position, or auto-calculate if not:
+        // Validate user-provided X axis position, or calculate a default if not provided:
         if ($this->x_axis_position !== '') {
-            // User-provided X axis position: make sure it is inside the range.
+            // Force user-provided X axis position to be within the plot range:
             $this->x_axis_position = min(max($this->plot_min_y, $this->x_axis_position), $this->plot_max_y);
         } elseif ($this->yscale_type == 'log') {
             // Always use 1 for X axis position on log scale plots.
             $this->x_axis_position = 1;
-        } elseif ($this->plot_min_y <= 0 && 0 <= $this->plot_max_y) {
-            // Plot range includes Y=0, so use that for X axis:
-            $this->x_axis_position = 0;
-        } elseif ($this->plot_min_y > 0) {
-            // The entire Y range is > 0, so use the bottom for the X axis:
+        } elseif ($this->datatype_swapped_xy || $this->plot_min_y > 0) {
+            // Horizontal plot, or Vertical Plot with all Y > 0: Place X axis on the bottom.
             $this->x_axis_position = $this->plot_min_y;
-        } else {
-            // The entire Y range is < 0, so use the top for the X axis:
+        } elseif ($this->plot_max_y < 0) {
+            // Vertical plot with all Y < 0, so place the X axis at the top.
             $this->x_axis_position = $this->plot_max_y;
+        } else {
+            // Vertical plot range includes Y=0, so place X axis at 0.
+            $this->x_axis_position = 0;
+        }
+
+        // Validate user-provided Y axis position, or calculate a default if not provided:
+        if ($this->y_axis_position !== '') {
+            // Force user-provided Y axis position to be within the plot range:
+            $this->y_axis_position = min(max($this->plot_min_x, $this->y_axis_position), $this->plot_max_x);
+        } elseif ($this->xscale_type == 'log') {
+            // Always use 1 for Y axis position on log scale plots.
+            $this->y_axis_position = 1;
+        } elseif (!$this->datatype_swapped_xy || $this->plot_min_x > 0) {
+            // Vertical plot, or Horizontal Plot with all X > 0: Place Y axis on left side.
+            $this->y_axis_position = $this->plot_min_x;
+        } elseif ($this->plot_max_x < 0) {
+            // Horizontal plot with all X < 0, so place the Y axis on the right side.
+            $this->y_axis_position = $this->plot_max_x;
+        } else {
+            // Horizontal plot range includes X=0: place Y axis at 0.
+            $this->y_axis_position = 0;
         }
 
         if ($this->GetCallback('debug_scale')) {
