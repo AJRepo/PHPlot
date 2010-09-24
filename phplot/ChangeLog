@@ -2,6 +2,13 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2010-09-24
+    * Fix bug 3074402 "Fix Y axis default for horizontal plots":
+      Make the default axis positions symmetrical for vertical plots
+      (X and Y) and horizontal plots (Y and X). This fixes the problem
+      with horizontal bar/thinbarline plots that have negative data,
+      where the Y axis stayed on the left and the bars went rightward.
+
 2010-09-01
     * Fix bug 3056991 "Internal methods should be 'protected'":
       Changed CheckDataArray(), number_format(), FindDataLimits(), and
