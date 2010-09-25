@@ -4199,16 +4199,12 @@ The default color is black.
     </para>
     <para>
 The X and Y axis lines and the plot border are all drawn in the same color.
-Usually, the X axis line is drawn at the bottom of the plot area.
-Unless it is moved with <xref linkend="SetXAxisPosition" /> or because the
-plot contains negative Y data values, enabling or disabling the bottom
-plot border will have no visible effect because the axis line is drawn there.
-    </para>
-    <para>
-Usually, the Y axis line is drawn on the left side of the plot area.
-Unless it is moved with <xref linkend="SetYAxisPosition" />,
-enabling or disabling the left side plot border will
-have no visible effect because the axis line is drawn there.
+Usually, the X axis line is drawn at the bottom of the plot area, and the Y
+axis line is drawn on the left side of the plot area.
+(See <xref linkend="SetXAxisPosition" /> and <xref linkend="SetYAxisPosition" />
+for more information on the axis positions.)
+Enabling or disabling a plot border edge that corresponds to an axis line will
+have no visible effect because the axis line will be drawn there.
     </para>
   </refsect1>
 
@@ -5555,8 +5551,7 @@ $plot-&gt;SetXAxisPosition(<parameter>$pos</parameter>)
   <refsect1>
     <title>Description</title>
     <para>
-<function>SetXAxisPosition</function> sets the position of the X axis,
-which is normally at Y=0.
+<function>SetXAxisPosition</function> sets the position of the X axis.
     </para>
   </refsect1>
 
@@ -5581,17 +5576,23 @@ The Y position in world coordinates for the X axis.
 The given position is truncated (towards 0) to an integer value.
     </para>
     <para>
-The default position for the X axis is Y=0, provided Y=0 is within the
-range of the graph. If Y=0 is not within the range of the graph, the X axis
-will default to the edge with the smallest absolute Y value.
-This means the X axis will be at the bottom of the graph if all values of Y
-are greater than zero, and at the top of the graph if all values of Y are
-less than zero.
-(For log scale plots, however, the default X axis position is Y=1.)
+The default axis position differs for vertical and horizontal plots.
+For vertical plots, the X axis position defaults to Y=0, provided Y=0 is
+within the range of the graph. If Y=0 is not within the range of the graph,
+the X axis position will default to the edge with the smallest absolute Y
+value.  This means the X axis will be at the bottom of the graph if all
+values of Y are greater than zero, and at the top of the graph if all
+values of Y are less than zero.  (For log scale plots, however, the default
+X axis position is Y=1.)
+For horizontal plots, the X axis position defaults to the bottom of the plot.
     </para>
   </refsect1>
   <refsect1>
     <title>History</title>
+    <para>
+Through PHPlot-5.1.3, there was no special handling for horizontal plots.
+The X axis always defaulted to Y=0 or the Y with the smallest absolute value.
+    </para>
     <para>
 Through PHPlot-5.1.0, the default position for the X axis was the bottom of
 the graph whenever Y=0 was not within the range the graph, regardless of
@@ -6723,14 +6724,17 @@ labels have been enabled using <xref linkend="SetXDataLabelPos"/>.
 If neither SetXTickLabelPos nor SetXDataLabelPos are used, PHPlot will
 enable just data labels if they are non-empty, and otherwise it will enable
 just tick labels, and position them below the plot.
-For horizontal plots, there is no conflict (because data labels are along
-the Y axis), so the tick label position defaults to 'plotdown'.
+For horizontal plots, there is no conflict (because data labels are drawn
+along Y), so the tick label position defaults to 'plotdown'.
     </para>
     <para>
 This applies only to tick labels.
 For data labels, see <xref linkend="SetXDataLabelPos" />.
-You probably want the tick marks to be in the same positions as the tick
-labels.  To position the tick marks, see <xref linkend="SetXTickPos" />.
+You may want the tick marks to be in the same position as the tick labels.
+To position the tick marks, see <xref linkend="SetXTickPos" />.
+    </para>
+    <para>
+See <xref linkend="SetXAxisPosition" /> for positioning the X axis.
     </para>
   </refsect1>
   <refsect1>
@@ -6807,7 +6811,7 @@ See figure under <xref linkend="SetXTickCrossing" />.
 
   <refnamediv>
     <refname>SetXTickPos</refname>
-    <refpurpose>Position the X axis tick marks</refpurpose>
+    <refpurpose>Position the X tick marks</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
@@ -6886,6 +6890,9 @@ The default position for the X tick marks is below the plot.
 This applies only to tick marks.
 You may want the tick labels to be in the same positions as the tick
 marks.  To position the tick labels, see <xref linkend="SetXTickLabelPos" />.
+    </para>
+    <para>
+See <xref linkend="SetXAxisPosition" /> for positioning the X axis.
     </para>
   </refsect1>
 </refentry>
@@ -7080,8 +7087,7 @@ $plot-&gt;SetYAxisPosition(<parameter>$pos</parameter>)
   <refsect1>
     <title>Description</title>
     <para>
-<function>SetYAxisPosition</function> sets the position of the Y axis,
-which is normally at the left edge of the plot.
+<function>SetYAxisPosition</function> sets the position of the Y axis.
     </para>
   </refsect1>
 
@@ -7106,10 +7112,25 @@ The X position in world coordinates for the Y axis.
 The given position is truncated (towards 0) to an integer value.
     </para>
     <para>
-Unless this function is used to move it, the Y axis is always drawn
-at the left of the graph.
+The default axis position differs for vertical and horizontal plots.
+For vertical plots, the Y axis position defaults to the left side of the plot.
+For horizontal plots, the Y axis position defaults to X=0, provided X=0 is
+within the range of the graph. If X=0 is not within the range of the graph,
+the Y axis position will default to the edge with the smallest absolute X
+value.  This means the Y axis will be on the left side of the graph if all
+values of X are greater than zero, and on the right side of the graph if all
+values of X are less than zero.  (For log scale plots, however, the default
+Y axis position is X=1.)
     </para>
-
+  </refsect1>
+  <refsect1>
+    <title>History</title>
+    <para>
+Through PHPlot-5.1.3, there was no special handling for horizontal plots.
+The Y axis always defaulted to the left side of the plot. When plotting
+negative data with horizontal plots, it was usually necessary to use
+<literal>SetYAxisPosition(0)</literal> to force the bars to start from X=0.
+    </para>
   </refsect1>
 </refentry>
 
@@ -8046,8 +8067,8 @@ A string indicating the desired position for the Y tick labels:
     <para>
 The default position for the Y tick labels is chosen to avoid overlapping
 tick and data labels.
-For vertical plots, there is no conflict (because data labels are along
-the X axis), so the tick label position defaults to 'plotleft'.
+For vertical plots, there is no conflict (because data labels are drawn
+along X), so the tick label position defaults to 'plotleft'.
 For horizontal plots, the Y tick labels will default to 'none' if the Y data
 labels have been enabled using <xref linkend="SetYDataLabelPos"/>.
 If neither SetYTickLabelPos nor SetYDataLabelPos are used, PHPlot will
@@ -8056,14 +8077,12 @@ just tick labels, and position them to the left of the plot.
     </para>
     <para>
 This applies only to tick labels.
-You may want the tick marks to be in the same positions as the tick
-labels.  To position the tick marks, see <xref linkend="SetYTickPos" />.
+For data labels, see <xref linkend="SetYDataLabelPos" />.
+You may want the tick marks to be in the same position as the tick labels.
+To position the tick marks, see <xref linkend="SetYTickPos" />.
     </para>
     <para>
-Unlike the X axis, which is by default drawn at Y=0, the Y axis is by
-default drawn at the left side of the plot, not at X=0.
-It can be moved to a different position with <xref linkend="SetYAxisPosition" />.
-If it isn't moved, 'yaxis' and 'plotleft' positions are the same.
+See <xref linkend="SetYAxisPosition" /> for positioning the Y axis.
     </para>
   </refsect1>
 </refentry>
@@ -8125,7 +8144,7 @@ See figure under <xref linkend="SetXTickCrossing" />.
 
   <refnamediv>
     <refname>SetYTickPos</refname>
-    <refpurpose>Position the Y axis tick marks</refpurpose>
+    <refpurpose>Position the Y tick marks</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
@@ -8207,10 +8226,7 @@ You may want the tick labels to be in the same positions as the tick
 marks.  To position the tick labels, see <xref linkend="SetYTickLabelPos" />.
     </para>
     <para>
-Unlike the X axis, which is by default drawn at Y=0, the Y axis is by
-default drawn at the left side of the plot, not at X=0.
-It can be moved to a different position with <xref linkend="SetYAxisPosition" />.
-If it isn't moved, 'yaxis' and 'plotleft' positions are the same.
+See <xref linkend="SetYAxisPosition" /> for positioning the Y axis.
     </para>
   </refsect1>
 </refentry>
