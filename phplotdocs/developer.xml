@@ -191,12 +191,11 @@ the class member function <xref linkend="pad_array"/>.
     <para>
 Calculates the X and Y axis positions in world coordinates. These can be
 supplied by the user, in which case they are only changed if they are
-outside the data range. If not supplied by the user, the Y axis is set to
-the minimum X value, so it appears on the left. If not supplied the the
-user, the X axis is set to Y=0 (Y=1 for log scale plots) if the Y data
-range includes 0, else to the minimum Y value.
-Note: This code was moved out of CalcTranslation at PHPlot-5.0.5.
+outside the data range. If axis positions are not supplied by the user, 
+CalcAxisPositions applies defaults as described in
+<xref linkend="SetXAxisPosition"/> and <xref linkend="SetYAxisPosition"/>.
 Called by <xref linkend="DrawGraph"/>.
+Note: This code was moved out of CalcTranslation at PHPlot-5.0.5.
     </para>
   </listitem>
 </varlistentry>
