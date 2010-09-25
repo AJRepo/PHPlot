@@ -4,6 +4,21 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2010-09-25
+   * Makefile: Add 2 missing static image filenames. These need to be in
+     the Makefile or they won't get copied into the release.
+
+   Document change to axis default positioning:
+   * developer.xml: In CalcAxisPositions, replace obsolete defaults text
+        with links to references where the new defaults are described.
+   * concepts.xml: Clarify thinbarline - lines are not always up or right.
+        Fix some quoting, and rewrite some plot type descriptions.
+        Clarify or fix use of "axis" when describing ticks and labels.  These
+        might not actually be on the axis lines.
+   * reference.xml: Specify new defaults in SetXAxisPosition, SetYAxisPosition.
+        Also corrected text on axis position in SetYTickLabelPos, SetYTickPos, 
+        SetPlotBorderType, and others.
+
 2010-09-13
    Documentation for horizontal plot types (which were implemented in
    PHPlot-5.1.2 and PHPlot-5.1.3 as an experimental feature).

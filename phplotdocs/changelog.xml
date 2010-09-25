@@ -15,6 +15,15 @@ see the ChangeLog file inside the PHPlot distribution.)
 <variablelist>
 
   <varlistentry>
+    <term>2010-09-25</term>
+    <listitem>
+      <para>
+Changes for new X and Y axis position defaults.
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
     <term>2010-09-13</term>
     <listitem>
       <para>
