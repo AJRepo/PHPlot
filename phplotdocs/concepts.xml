@@ -634,29 +634,30 @@ The following plot types are available:
     <tbody>
       <row>
         <entry><link linkend="plottype-area">area</link></entry>
-        <entry>Filled areas between lines. Also known as 'cumulative line
-            plot' or 'component line plot'.</entry>
+        <entry>Filled areas between lines. Also known as <emphasis>cumulative
+            line plot</emphasis> or <emphasis>component line plot</emphasis>.
+            </entry>
       </row>
       <row>
         <entry><link linkend="plottype-bars">bars</link></entry>
-        <entry>Filled bars with optional 3-D look, multiple datasets are offset</entry>
+        <entry>Filled bars with optional 3-D look. Multiple datasets are offset.</entry>
       </row>
       <row>
         <entry><link linkend="plottype-linepoints">linepoints</link></entry>
-        <entry>Lines between points, a marker at each point, optional error bars
-</entry>
+        <entry>Lines between points, with a marker at each point, and optional
+            error bars.</entry>
       </row>
       <row>
         <entry><link linkend="plottype-lines">lines</link></entry>
-        <entry>Straight lines between data points, optional error bars</entry>
+        <entry>Straight lines between data points, with optional error bars.</entry>
       </row>
       <row>
         <entry><link linkend="plottype-pie">pie</link></entry>
-        <entry>Pie chart with or without 3-D affects</entry>
+        <entry>Pie chart with or without 3-D affects.</entry>
       </row>
       <row>
         <entry><link linkend="plottype-points">points</link></entry>
-        <entry>Draws a marker at each data point, optional error bars</entry>
+        <entry>Draws a marker at each data point, with optional error bars.</entry>
       </row>
       <row>
         <entry><link linkend="plottype-squared">squared</link></entry>
@@ -664,17 +665,18 @@ The following plot types are available:
       </row>
       <row>
         <entry><link linkend="plottype-stackedarea">stackedarea</link></entry>
-        <entry>Filled areas between lines, with multiple data sets accumulated</entry>
+        <entry>Filled areas between lines, with multiple data sets accumulated.</entry>
       </row>
       <row>
         <entry><link linkend="plottype-stackedbars">stackedbars</link></entry>
-        <entry>Filled bars with optional 3-D look, multiple data sets
-            are accumulated and the sum is graphed</entry>
+        <entry>Filled bars with optional 3-D look. Multiple data sets
+            are accumulated and the sum is graphed.</entry>
       </row>
       <row>
         <entry><link linkend="plottype-thinbarline">thinbarline</link></entry>
-        <entry>Vertical lines from X axis up, or horizontal lines from
-             the Y axis towards the right. Also known as impulse.</entry>
+        <entry>Vertical lines from the X axis to the value, or horizontal lines
+            from the Y axis to the value. Also known as <emphasis>impulse</emphasis>.
+            </entry>
       </row>
     </tbody>
   </tgroup>
@@ -685,7 +687,8 @@ The following plot types are available:
 <title>Plot Type: area (Area Plot)</title>
 <para>
 This plot type draws filled areas between lines.
-This is often called a 'cumulative line plot' or 'component line plot'.
+This is often called a <emphasis>cumulative line plot</emphasis> or
+<emphasis>component line plot</emphasis>.
 Each data set (set of corresponding Y values from each record in the
 data array) is plotted in order, with the area
 between each line and the next line filled solid. The area between the
@@ -1067,7 +1070,7 @@ Horizontal stacked bar plots were added in PHPlot-5.1.3.
 <title>Plot Type: thinbarline</title>
 <para>
 This plot type draws lines from the axis to the data value.
-Other implementations call this type of plot 'impulses'.
+Other implementations call this type of plot <emphasis>impulses</emphasis>.
 Both vertical and horizontal thinbarline plots are available.
 Plotting multiple data sets does not work, because the lines are drawn on
 top of each other and only one can typically be seen.
@@ -2284,14 +2287,13 @@ Several types of labels are available in PHPlot:
   <itemizedlist>
     <listitem>
       <para>
-Tick labels identify the values along the axis at the tick positions. There
-are X tick labels and Y tick labels.
+Tick labels identify the values at the tick positions.
+There are X tick labels and Y tick labels.
       </para>
     </listitem>
     <listitem>
       <para>
-Axis data labels display the label values from your data array, along the
-independent variable's axis.
+Axis data labels display the label values from your data array.
 X axis data labels are available for vertical plots, and
 Y axis data labels are available for horizontal plots.
       </para>
@@ -2439,6 +2441,17 @@ You can disable or reposition the data labels with
 <xref linkend="SetXDataLabelPos" /> and
 <xref linkend="SetYDataLabelPos" />.
 </para>
+
+<note>
+  <para>
+The axis data labels are not necessarily drawn along axis lines. They are
+usually drawn along the bottom (for X) or left side (for Y) of the plot.
+Although these are also the usual positions for the X axis and Y axis, the
+actual axis lines may be drawn elsewhere.
+See <xref linkend="SetXAxisPosition"/> or <xref linkend="SetYAxisPosition"/>
+for more information on axis positions.
+  </para>
+</note>
 
 <para>
 You will generally not want both tick labels and axis data labels on,
@@ -2729,7 +2742,9 @@ Here is a sample plot with the X Grid and Y Grid called out.
 <sect2 id="conc-ticks">
 <title>Tick Marks</title>
 <para>
-Tick marks are drawn by default along both the X and Y axis.
+Tick marks are drawn by default along the bottom edge of the plot (X tick
+marks) and the left side of the plot (Y tick marks).
+These usually, but not always, correspond to the X and Y axis lines.
 You can set the tick interval or control the number of ticks, suppress the
 first or last tick on an axis, and control the tick mark size.
 For a list of functions used to control tick marks,
