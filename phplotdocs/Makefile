@@ -39,9 +39,12 @@ SRC=$(MAIN) $(XSL_HTML) $(XSL_PDF) \
 STATIC_IMAGES=\
   images/alpha-blending.png \
   images/colors.png \
+  images/drop.png \
   images/error-image.png \
   images/fonts.png \
   images/gdinfo.png \
+  images/labels-bar.png \
+  images/labels-horizbar.png \
   images/labels-pie.png \
   images/labels.png \
   images/layout.png \
@@ -52,6 +55,7 @@ STATIC_IMAGES=\
   images/typical-legend.png \
   images/typical-titles.png \
   images/webform.png \
+
 
 # Files to add to release, in addition to *.html files:
 ALSO=phplotdoc.css
