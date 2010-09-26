@@ -1607,14 +1607,13 @@ class PHPlot
     /*
      * Sets position for X data labels. For most plot types, these are
      * labels along the X axis (but different from X tick labels).
-     *    Accepted positions are: plotdown, plotup, both, xaxis, all, none.
+     *    Accepted positions are: plotdown, plotup, both, none.
      * For horizontal bar charts, these are the labels right (or left) of the bars.
      *    Accepted positions are: plotin, plotstack, none.
      */
     function SetXDataLabelPos($which_xdlp)
     {
-        $which_xdlp = $this->CheckOption($which_xdlp,
-                                         'plotdown, plotup, both, xaxis, all, none, plotin, plotstack',
+        $which_xdlp = $this->CheckOption($which_xdlp, 'plotdown, plotup, both, none, plotin, plotstack',
                                          __FUNCTION__);
         if (!$which_xdlp) return FALSE;
         $this->x_data_label_pos = $which_xdlp;
@@ -1626,13 +1625,12 @@ class PHPlot
      * Sets position for Y data labels.
      * For bars and stackedbars, these are labels above the bars with the Y values.
      *    Accepted positions are: plotin, plotstack, none.
-     * For horizontal bar charts, these are the labels along the Y axis or sides.
+     * For horizontal bar charts, these are the labels along the Y axis.
      *    Accepted positions are: plotleft, plotright, both, none.
      */
     function SetYDataLabelPos($which_ydlp)
     {
-        $which_ydlp = $this->CheckOption($which_ydlp,
-                                         'plotleft, plotright, both, none, plotin, plotstack',
+        $which_ydlp = $this->CheckOption($which_ydlp, 'plotleft, plotright, both, none, plotin, plotstack',
                                           __FUNCTION__);
         if (!$which_ydlp) return FALSE;
         $this->y_data_label_pos = $which_ydlp;
@@ -1645,7 +1643,7 @@ class PHPlot
      */
     function SetXTickLabelPos($which_xtlp)
     {
-        $which_xtlp = $this->CheckOption($which_xtlp, 'plotdown, plotup, both, xaxis, all, none',
+        $which_xtlp = $this->CheckOption($which_xtlp, 'plotdown, plotup, both, xaxis, none',
                                          __FUNCTION__);
         if (!$which_xtlp) return FALSE;
         $this->x_tick_label_pos = $which_xtlp;
@@ -1658,7 +1656,7 @@ class PHPlot
      */
     function SetYTickLabelPos($which_ytlp)
     {
-        $which_ytlp = $this->CheckOption($which_ytlp, 'plotleft, plotright, both, yaxis, all, none',
+        $which_ytlp = $this->CheckOption($which_ytlp, 'plotleft, plotright, both, yaxis, none',
                                          __FUNCTION__);
         if (!$which_ytlp) return FALSE;
         $this->y_tick_label_pos = $which_ytlp;
