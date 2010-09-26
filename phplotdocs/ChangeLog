@@ -19,6 +19,15 @@ manual, which only contains summaries of changes.
         Also corrected text on axis position in SetYTickLabelPos, SetYTickPos, 
         SetPlotBorderType, and others.
 
+
+   * Makefile, callbacks.xml, concepts.xml, examples.xml, install.xml,
+     quickstart.xml, reference.xml, webform.xml: Improve PDF production.
+     First line of verbatim blocks (programlisting, screen) needs to be on
+     the same line as the opening tag, or the PDF version will contain a
+     shaded blank line at the top.
+   * pdf.xsl: Add a little padding around monospace verbatim blocks.
+
+
 2010-09-13
    Documentation for horizontal plot types (which were implemented in
    PHPlot-5.1.2 and PHPlot-5.1.3 as an experimental feature).
