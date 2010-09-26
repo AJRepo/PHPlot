@@ -2,6 +2,11 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2010-09-26
+    * Don't let SetXDataLabelPos() accept 'xaxis' or 'all' as valid.
+      Don't let SetXTickLabelPos(), SetYTickLabelPos() accept 'all' as valid.
+      These were never implemented and never documented.
+
 2010-09-24
     * Fix bug 3074402 "Fix Y axis default for horizontal plots":
       Make the default axis positions symmetrical for vertical plots
