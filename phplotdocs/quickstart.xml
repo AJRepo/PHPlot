@@ -53,8 +53,7 @@ of several <emphasis>elements</emphasis> (like lines, axes, and labels).
 
 <para>
 To use PHPlot, you create a PHP object from the PHPlot class, for example:
-<programlisting><![CDATA[
-  $plot = new PHPlot;
+<programlisting><![CDATA[$plot = new PHPlot;
 ]]></programlisting>
 Then you set the properties of the object, by using a series of function
 calls (actually methods of the class). These define the characteristics of
@@ -83,9 +82,8 @@ The user will be see the image either as a result of accessing your
 script directly with a URL, like
 <literal>http://www.example.com/graphs/myplot.php</literal>,
 or you can embed the image in a web page using an image tag, like this:
-<screen>
-  &lt;IMG SRC="http://www.example.com/graphs/myplot.php"&gt;
-</screen>
+<screen><![CDATA[<IMG SRC="http://www.example.com/graphs/myplot.php">
+]]></screen>
 </para>
 
 <para>
@@ -130,8 +128,7 @@ More information about PHPlot can be found at
 <para>
 You create a PHPlot object by first including the code to be used,
 and then defining the variable:
-<programlisting><![CDATA[
-<?php
+<programlisting><![CDATA[<?php
 require_once 'phplot.php';  // here we include the PHPlot code 
 $plot = new PHPlot;    // here we define the variable
 
@@ -181,14 +178,12 @@ of the image, and add some titles.
 <para>
 Let's say we want our plot to be bigger, 800 pixels wide and 600 pixels high.
 So instead of having the line
-  <programlisting><![CDATA[
-  $plot = new PHPlot;
+  <programlisting><![CDATA[$plot = new PHPlot;
 ]]></programlisting>
 </para>
 <para>
 We replace it with
-  <programlisting><![CDATA[
-  $plot = new PHPlot(800,600);
+  <programlisting><![CDATA[$plot = new PHPlot(800,600);
 ]]></programlisting>
 and you have specified the size in pixels of the image to be created.
 </para>

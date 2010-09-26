@@ -230,7 +230,7 @@ $(EXAMPLE_LIST): $(EXAMPLES_PHP) $(EXAMPLES_XML) $(EXAMPLES_IMAGES)
 # This rule turns a PHP file into an XML file for inclusion as an example.
 %.xml: %.php
 	@echo "  $@"
-	@{ echo '<programlisting><![CDATA['; \
+	@{ echo -n '<programlisting><![CDATA['; \
       expand --tabs=8 $<; \
       echo ']]></programlisting>'; } > $@
 

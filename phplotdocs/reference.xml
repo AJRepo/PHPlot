@@ -323,8 +323,7 @@ plot image.
     <para>
 Earlier versions of this manual said that the created object should always
 be returned as a reference, like this:
-      <programlisting><![CDATA[
-  $plot =& new PHPlot(...);  // Do not use this
+      <programlisting><![CDATA[$plot =& new PHPlot(...);  // Do not use this
 ]]></programlisting>
 This was because PHPlot included a function to deallocate memory used by
 the object at script shutdown, but that would only work if a reference
@@ -972,8 +971,7 @@ calls 'the usual integer indices (starting from zero, increasing by one)'.
     <para>
 Usually the <parameter>$data_colors</parameter> argument is an array of colors,
 one for each data set to be plotted. For example:
-      <programlisting><![CDATA[
-$plot->SetDataColors(array('red', 'green', 'blue'));
+      <programlisting><![CDATA[$plot->SetDataColors(array('red', 'green', 'blue'));
 $plot->SetDataType('data-data');
 $plot->SetDataValues(array( array('', 1, 4, 10, 5),
                             array('', 2, 6, 20, 3)));
@@ -1008,8 +1006,7 @@ By default, all colors are opaque (alpha=0).
     <para><?dbfo keep-together="always"?>
 You can keep the default color map but set all colors in it to use a
 transparency (alpha) value like this:
-<programlisting><![CDATA[
-$plot->SetDataColors(NULL, NULL, 60);
+<programlisting><![CDATA[$plot->SetDataColors(NULL, NULL, 60);
 ]]></programlisting>
 This applies alpha=60 (meaning 60/127 transparency) to all the default
 data colors.
@@ -1136,11 +1133,10 @@ The default data type is <literal>text-data</literal>.
     </para>
     <para><?dbfo keep-together="always"?>
 An example of a <literal>text-data</literal> data array is:
-      <programlisting><![CDATA[
-     $data = array(  array('Jan', 100, 150, 200),
-                     array('Feb', 110, 140, 210),
-                     array('Mar', 120, 145, 200),
-                     array('Apr', 110, 160, 220) );
+      <programlisting><![CDATA[$data = array(  array('Jan', 100, 150, 200),
+                array('Feb', 110, 140, 210),
+                array('Mar', 120, 145, 200),
+                array('Apr', 110, 160, 220) );
 ]]></programlisting>
 This defines the data for 3 plots with 4 points on each, and a month name
 as label for each point.
@@ -1149,11 +1145,10 @@ This is also a valid data array for data type <literal>text-data-yx</literal>.
 
     <para><?dbfo keep-together="always"?>
 An example of a <literal>data-data</literal> data array is:
-      <programlisting><![CDATA[
-     $data = array(  array('', 2, 15),
-                     array('', 4, 14),
-                     array('', 6, 10),
-                     array('', 8, 20) );
+      <programlisting><![CDATA[$data = array(  array('', 2, 15),
+                array('', 4, 14),
+                array('', 6, 10),
+                array('', 8, 20) );
 ]]></programlisting>
 Here the labels are empty strings, next are the X values, then a single
 set of Y values (1 plot).
@@ -1163,11 +1158,10 @@ with each row containing a Y value, followed by a single X value.
 
     <para><?dbfo keep-together="always"?>
 An example of a <literal>data-data-error</literal> data array is:
-      <programlisting><![CDATA[
-     $data = array(  array('1999', 1, 23.5, 5, 3),
-                     array('2000', 2, 20.1, 4, 4),
-                     array('2001', 3, 19.1, 3, 4),
-                     array('2002', 4, 16.8, 4, 3) );
+      <programlisting><![CDATA[$data = array(  array('1999', 1, 23.5, 5, 3),
+                array('2000', 2, 20.1, 4, 4),
+                array('2001', 3, 19.1, 3, 4),
+                array('2002', 4, 16.8, 4, 3) );
 ]]></programlisting>
 Here the labels are years, next are the X values 1-4, then a single
 set of Y values with error ranges between 3 and 5 for each point.
@@ -1176,10 +1170,9 @@ set of Y values with error ranges between 3 and 5 for each point.
     <para><?dbfo keep-together="always"?>
 An example of a <literal>text-data-single</literal> data array,
 used only for pie charts, is:
-      <programlisting><![CDATA[
-     $data = array(  array('', 10),
-                     array('', 40),
-                     array('', 50) );
+      <programlisting><![CDATA[$data = array(  array('', 10),
+                array('', 40),
+                array('', 50) );
 ]]></programlisting>
 Here the labels are empty (they aren't used with a pie chart anyway),
 and 3 slices with relative weights of 10, 40, and 50 are defined.
@@ -3470,8 +3463,7 @@ last one called will have an effect.
 Trailing defaulted arguments can be omitted, but non-trailing defaulted
 arguments must be specified as NULL. For example, to set the right margin
 to 100 pixels, and let PHPlot calculate the other three margins, use:
-      <programlisting><![CDATA[
-$plot->SetMarginsPixels(NULL, 100);
+      <programlisting><![CDATA[$plot->SetMarginsPixels(NULL, 100);
 ]]></programlisting>
     </para>
   </refsect1>
@@ -3570,10 +3562,9 @@ PHPlot has (see the History section below) a special member variable
 locale settings from the system. For example, if the following code is used,
 numeric formatting will use the fr_CA locale settings, regardless of
 the system locale.
-      <programlisting><![CDATA[
-   setlocale(LC_ALL, 'fr_CA');  # On Windows use: 'French_Canada'
-   $plot = new PHPlot(800, 600);
-   $plot->locale_override = True;
+      <programlisting><![CDATA[setlocale(LC_ALL, 'fr_CA');  # On Windows use: 'French_Canada'
+$plot = new PHPlot(800, 600);
+$plot->locale_override = True;
 ]]></programlisting>
     </para>
   </refsect1>
@@ -3904,14 +3895,12 @@ Trailing defaulted arguments can be omitted, but non-trailing defaulted
 arguments must be specified as NULL. For example, to fix the bottom right
 corner of the plot area at (600, 400) and let PHPlot calculate the upper
 left corner use:
-      <programlisting><![CDATA[
-$plot->SetPlotAreaPixels(NULL, NULL, 600, 400);
+      <programlisting><![CDATA[$plot->SetPlotAreaPixels(NULL, NULL, 600, 400);
 ]]></programlisting>
 You do not have to specify both X and Y. The following example sets the right
 edge of the plot area at X=600 and lets the other 3 edges be automatically
 calculated:
-      <programlisting><![CDATA[
-$plot->SetPlotAreaPixels(NULL, NULL, 600);
+      <programlisting><![CDATA[$plot->SetPlotAreaPixels(NULL, NULL, 600);
 ]]></programlisting>
     </para>
   </refsect1>
@@ -4016,8 +4005,7 @@ Trailing defaulted arguments can be omitted, but non-trailing defaulted
 arguments must be specified as NULL. For example, to set the minimum X
 value to 10, the maximum X value to 100, and default the Y scaling, you can
 use:
-      <programlisting><![CDATA[
-$plot->SetPlotAreaWorld(10, NULL, 100);
+      <programlisting><![CDATA[$plot->SetPlotAreaWorld(10, NULL, 100);
 ]]></programlisting>
     </para>
   </refsect1>
@@ -4840,13 +4828,12 @@ color map.
     <title>Examples</title>
     <para><?dbfo keep-together="always"?>
 An example of a user-defined color map is:
-      <programlisting><![CDATA[
-    array( 'black' => array(0, 0, 0),
-           'white' => array(255, 255, 255),
-           'gray'  => array(190, 190, 190),
-           'red'   => array(255, 0, 0),
-           'green' => array(0, 255, 0),
-           'blue'  => array(0, 0, 255) )
+      <programlisting><![CDATA[array( 'black' => array(0, 0, 0),
+       'white' => array(255, 255, 255),
+       'gray'  => array(190, 190, 190),
+       'red'   => array(255, 0, 0),
+       'green' => array(0, 255, 0),
+       'blue'  => array(0, 0, 255) )
 ]]></programlisting>
     </para>
   </refsect1>
@@ -5434,8 +5421,7 @@ PNG format also supports transparency, but viewer support is more limited.
 To set the plot image background to be transparent, pick a color (here
 'yellow') that won't be used anywhere else on the image, and use code
 like this:
-      <programlisting><![CDATA[
-$plot->SetBackgroundColor('yellow');
+      <programlisting><![CDATA[$plot->SetBackgroundColor('yellow');
 $plot->SetTransparentColor('yellow');
 ]]></programlisting>
     </para>
@@ -6312,8 +6298,7 @@ Grouping and decimal separators depend on locale.
               </entry>
             </row>
             <row>
-              <entry><programlisting><![CDATA[
-$plot->SetXLabelType('data', 2);
+              <entry><programlisting><![CDATA[$plot->SetXLabelType('data', 2);
 ]]></programlisting></entry>
               <entry>1234.56</entry>
               <entry>1,234.56</entry>
@@ -6330,8 +6315,7 @@ PHPlot it requires a Unicode font on the server.
               </entry>
             </row>
             <row>
-              <entry><programlisting><![CDATA[
-$plot->SetXLabelType('data', 0, '&amp;#8364;');
+              <entry><programlisting><![CDATA[$plot->SetXLabelType('data', 0, '&amp;#8364;');
 ]]></programlisting></entry>
               <entry>100000</entry>
               <entry>&euro;1,000,000</entry>
@@ -6353,8 +6337,7 @@ PHPlot it requires a Unicode font on the server.
               </entry>
             </row>
             <row>
-              <entry><programlisting><![CDATA[
-$plot->SetNumberFormat(',', '.');
+              <entry><programlisting><![CDATA[$plot->SetNumberFormat(',', '.');
 $plot->SetXLabelType('data', 2, '',
                      '\xe2\x82\xac');
 ]]></programlisting></entry>
@@ -6370,8 +6353,7 @@ The format string could be set with SetXTimeFormat instead.
               </entry>
             </row>
             <row>
-              <entry><programlisting><![CDATA[
-$plot->SetXLabelType('time', '%m/%Y');
+              <entry><programlisting><![CDATA[$plot->SetXLabelType('time', '%m/%Y');
 ]]></programlisting></entry>
               <entry>1208232000</entry>
               <entry>04/2008</entry>
@@ -6385,8 +6367,7 @@ outputs only a one digit exponent here.
               </entry>
             </row>
             <row>
-              <entry><programlisting><![CDATA[
-$plot->SetXLabelType('printf', '%8.2e');
+              <entry><programlisting><![CDATA[$plot->SetXLabelType('printf', '%8.2e');
 ]]></programlisting></entry>
               <entry>1234</entry>
               <entry>1.23e+3</entry>
@@ -6399,8 +6380,7 @@ degrees, minutes, and seconds. (This only works for non-negative angles.)
               </entry>
             </row>
             <row>
-              <entry><programlisting><![CDATA[
-function deg_min_sec($value)
+              <entry><programlisting><![CDATA[function deg_min_sec($value)
 {
   $deg = (int)$value;
   $value = ($value - $deg) * 60;

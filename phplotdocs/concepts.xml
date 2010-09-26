@@ -257,8 +257,7 @@ More examples can be found in <xref linkend="examples" />.
 </para>
 
 <para>
-<programlisting><![CDATA[
-require_once 'phplot.php';
+<programlisting><![CDATA[require_once 'phplot.php';
 ]]></programlisting>
 This brings in the PHPlot source into your script. For this to work,
 PHP needs to be able to find the PHPlot source file. A good way to arrange
@@ -269,16 +268,14 @@ path to <filename>phplot.php</filename> when including it, or to copy
 </para>
 
 <para>
-<programlisting><![CDATA[
-$plot = new PHPlot();
+<programlisting><![CDATA[$plot = new PHPlot();
 ]]></programlisting>
 Here we create a new PHPlot object and call it <literal>plot</literal>.
 Everything else we do with the plot will be through the $plot object.
 </para>
 
 <para>
-<programlisting><![CDATA[
-$plot->SetPlotType('lines');
+<programlisting><![CDATA[$plot->SetPlotType('lines');
 $plot->SetDataType('text-data');
 ]]></programlisting>
 Here we select the plot type 'lines', for a line plot
@@ -288,8 +285,7 @@ and indicate our data will be represented in the 'text-data' format
 </para>
 
 <para>
-<programlisting><![CDATA[
-$plot->SetDataValues($data);
+<programlisting><![CDATA[$plot->SetDataValues($data);
 ]]></programlisting>
 The data array $data is where we store the values to be plotted.
 We haven't shown where the data came from, but in a typical application
@@ -299,8 +295,7 @@ How the data array is constructed is described in
 </para>
 
 <para>
-<programlisting><![CDATA[
-$plot->SetXDataLabelPos('none');
+<programlisting><![CDATA[$plot->SetXDataLabelPos('none');
 $plot->SetLineWidths(3);
 $plot->SetDrawXGrid(True);
 ]]></programlisting>
@@ -308,8 +303,7 @@ These three functions illustrate how to change the appearance of the plot.
 </para>
 
 <para>
-<programlisting><![CDATA[
-$plot->DrawGraph();
+<programlisting><![CDATA[$plot->DrawGraph();
 ]]></programlisting>
 This final function call outputs the plot.
 More accurately,
@@ -450,14 +444,13 @@ plot type.
 <para>
 In most of the examples in this manual, the data array is built from
 constant values in PHP code. For example:
-<programlisting><![CDATA[
-$data = array(
+<programlisting><![CDATA[$data = array(
   array('',  0,   0,   0,   0),
   array('',  1,   1,   1, -10),
   array('',  2,   8,   4, -20),
   array('',  3,  27,   9, -30),
-  array('',  4,  64,  16, -40)
-  array('',  5, 125,  25, -50)
+  array('',  4,  64,  16, -40),
+  array('',  5, 125,  25, -50),
 );
 ]]></programlisting>
 Which contains 6 records, each with an empty label, an X value (assuming
@@ -476,8 +469,7 @@ array using <literal>$array[] = ...</literal>.
 <para>
 This code fragment creates a data array of type 'text-data' with three
 data sets for Y=X+1, Y=X*X/2, and Y=X*X*X/3.
-<programlisting><![CDATA[
-$data = array();
+<programlisting><![CDATA[$data = array();
 for ($x = 0; $x <= 5; $x++) $data[] = array('', $x+1, $x*$x/2, $x*$x*$x/3);
 ]]></programlisting>
 </para>
@@ -485,8 +477,7 @@ for ($x = 0; $x <= 5; $x++) $data[] = array('', $x+1, $x*$x/2, $x*$x*$x/3);
 <para>
 This code fragment creates a data array of type 'data-data' with about
 100 points from the equation X * Y = 10.
-<programlisting><![CDATA[
-$data = array();
+<programlisting><![CDATA[$data = array();
 for ($x = 1.0; $x <= 10.0; $x += 0.1) $data[] = array('', $x, 10.0/$x);
 ]]></programlisting>
 </para>
@@ -507,8 +498,7 @@ or you will not get predictable plots.
 <para>
 Database access methods differ. This code is for PostgreSQL; for MySQL there are
 similar functions like <function>mysql_fetch_row()</function>.
-<programlisting><![CDATA[
-$r = pg_query($db, 'SELECT ...');
+<programlisting><![CDATA[$r = pg_query($db, 'SELECT ...');
 if (!$r) exit();
 $data = array();
 $n_rows = pg_num_rows($r);
@@ -536,8 +526,7 @@ and PHPlot will see both copies of the data.
 Going even further, with a properly designed query you can use
 <function>pg_fetch_all()</function> to fetch the entire query result and
 assign it to a data array with one statement.
-<programlisting><![CDATA[
-$r = pg_query($db, 'SELECT ...');
+<programlisting><![CDATA[$r = pg_query($db, 'SELECT ...');
 if (!$r) exit();
 $data = pg_fetch_all($r);
 ...
@@ -555,8 +544,7 @@ The 'lines' (<xref linkend="plottype-lines" />)
 and 'squared' (<xref linkend="plottype-squared" />) plot types support the
 concept of missing points. A missing point is represented in your data
 array with an empty string instead of a Y value. For example:
-<programlisting><![CDATA[
-  $data = array( array('1996', 45.5),
+<programlisting><![CDATA[$data = array( array('1996', 45.5),
                  array('1997', 53.8),
                  array('1998', ''),   # No data available for 1998
                  array('1999', 34.1));
@@ -871,8 +859,7 @@ PHPlot totals up the values and computes the relative size of each segment.
 </para>
 <para>
 For example:
-<programlisting><![CDATA[
-$data = array(array('', 1), array('',4), array('',5));
+<programlisting><![CDATA[$data = array(array('', 1), array('',4), array('',5));
 ]]></programlisting>
 This makes a pie chart with 3 segments, with sizes 10%, 40%, and 50%.
 </para>
@@ -892,8 +879,7 @@ data values in each record.
 </para>
 <para>
 For example:
-<programlisting><![CDATA[
-$data = array(array('', 10, 10, 20, 10),
+<programlisting><![CDATA[$data = array(array('', 10, 10, 20, 10),
               array('', 15, 10, 15, 10));
 ]]></programlisting>
 This results in 4 segments with sizes 25%, 20%, 35%, and 20%.
@@ -918,8 +904,7 @@ data values in each record.
 </para>
 <para>
 For example:
-<programlisting><![CDATA[
-$data = array(array('', 1, 10, 10, 20, 10),
+<programlisting><![CDATA[$data = array(array('', 1, 10, 10, 20, 10),
               array('', 2, 15, 10, 15, 10));
 ]]></programlisting>
 This results in 4 segments with sizes 25%, 20%, 35%, and 20%.
@@ -1587,12 +1572,10 @@ To make a Truecolor image in PHPlot, create an object of the derived class
 <literal>PHPlot_truecolor</literal> instead of the class
 <literal>PHPlot</literal>.
 For example, replace this:
-<programlisting><![CDATA[
-$plot = new PHPlot(800, 600);
+<programlisting><![CDATA[$plot = new PHPlot(800, 600);
 ]]></programlisting>
 with this:
-<programlisting><![CDATA[
-$plot = new PHPlot_truecolor(800, 600);
+<programlisting><![CDATA[$plot = new PHPlot_truecolor(800, 600);
 ]]></programlisting>
 </para>
 
@@ -1702,16 +1685,14 @@ Here are some examples of using colors with an alpha specification.
 <para>
 This sets the color used for labels to red=192, green=192, blue=33, and
 alpha=50 (that is, 50/127 transparency).
-<programlisting><![CDATA[
-$plot->SetTextColor(array(192, 192, 33, 50));
+<programlisting><![CDATA[$plot->SetTextColor(array(192, 192, 33, 50));
 ]]></programlisting>
 </para>
 
 <para>
 This sets the color used for tick marks to the color 'blue' from the color
 map, with alpha value 64 (64/127 transparency).
-<programlisting><![CDATA[
-$plot->SetTickColor('blue:64');
+<programlisting><![CDATA[$plot->SetTickColor('blue:64');
 ]]></programlisting>
 </para>
 
@@ -1719,8 +1700,7 @@ $plot->SetTickColor('blue:64');
 This sets colors for the first three data sets to red, green, and blue with
 different alpha values. The three colors are represented using
 different formats for illustration purposes.
-<programlisting><![CDATA[
-$plot->SetDataColors(array(
+<programlisting><![CDATA[$plot->SetDataColors(array(
       array(255, 0, 0, 60), // Red with alpha=60
       '#00ff0050',          // Green with alpha=80 (0x50)
       'blue:70'));          // Blue with alpha=70
@@ -1734,8 +1714,7 @@ This uses the colors specified in $my_color_array with a default alpha of
 50. The default is applied to any color definition which does not already
 have an alpha value.
 <xref linkend="SetDataColors"/>.
-<programlisting><![CDATA[
-    $plot->SetDataColors($my_color_array, NULL, 50);
+<programlisting><![CDATA[$plot->SetDataColors($my_color_array, NULL, 50);
 ]]></programlisting>
 </para>
 
@@ -1744,8 +1723,7 @@ This can also be used to apply an alpha value to the default data colors.
 This retains the default data colors, but applies alpha = 50 (50/127
 transparency) to all the colors. This is a quick way to get partially
 transparent data colors without re-specifying all the colors.
-<programlisting><![CDATA[
-    $plot->SetDataColors(NULL, NULL, 50);
+<programlisting><![CDATA[$plot->SetDataColors(NULL, NULL, 50);
 ]]></programlisting>
 </para>
 </sect2>
@@ -1913,8 +1891,7 @@ portions of the bars. With alpha blending, the overlaps take on new colors.
 When creating a PHPlot or PHPlot_truecolor object, you can provide an
 existing image filename to the constructor as the fourth argument,
 <parameter>$input_file</parameter>.
-<programlisting><![CDATA[
-$plot = new PHPlot(800, 600, NULL, 'myimage.png');
+<programlisting><![CDATA[$plot = new PHPlot(800, 600, NULL, 'myimage.png');
 ]]></programlisting>
 This image file becomes the background for your plot. (The function
 <xref linkend="SetInputFile"/> also does this,
@@ -1965,8 +1942,7 @@ bundled version of the GD library.
 You can turn on anti-aliasing of truecolor images. This must be done before
 anything is drawn, so the pre-drawing callback <literal>draw_setup</literal>
 is used. Here is a partial example:
-<programlisting><![CDATA[
-function pre_plot($img)
+<programlisting><![CDATA[function pre_plot($img)
 {
     imageantialias($img, True);
 }
@@ -2003,8 +1979,7 @@ Note that alpha blending is on by default with all truecolor images.
 You can have the GD library perform gamma adjustment on a truecolor image.
 This must be done after all drawing, so the post-drawing callback
 <literal>draw_all</literal> is used. Here is a partial example:
-<programlisting><![CDATA[
-function post_plot($img)
+<programlisting><![CDATA[function post_plot($img)
 {
     imagegammacorrect($img, 1.0, 0.5); // Input gamma=1, output gamma=.5
 }
@@ -2197,8 +2172,7 @@ the results you want.
 
 <para>
 A function to act as a data color callback might look like this:
-<programlisting><![CDATA[
-function pickcolor($img, $passthrough, $row, $col, $extra = 0)
+<programlisting><![CDATA[function pickcolor($img, $passthrough, $row, $col, $extra = 0)
 {
   $color_index = ...;
 
@@ -2249,8 +2223,7 @@ supply the value.
 <para>
 The above function would be established as a data color callback for a
 PHPlot object $plot like this:
-<programlisting><![CDATA[
-$plot->SetCallback('data_color', 'pickcolor', $passthru_arg);
+<programlisting><![CDATA[$plot->SetCallback('data_color', 'pickcolor', $passthru_arg);
 ]]></programlisting>
 The first argument is the callback name, or 'reason':
 <literal>data_color</literal>.
@@ -2398,8 +2371,7 @@ to set the number of tick marks.
 These don't affect the value of the first tick mark, only the interval.
 To set the value for the first tick mark, you define the World Coordinate
 mapping with <xref linkend="SetPlotAreaWorld" />. For example:
-<programlisting><![CDATA[
-$plot->SetPlotAreaWorld(-10, NULL, 10, NULL);
+<programlisting><![CDATA[$plot->SetPlotAreaWorld(-10, NULL, 10, NULL);
 $plot->SetXTickIncrement(1);
 ]]></programlisting>
 This results in the X tick labels going from -10 to 10, with a tick mark
@@ -2427,8 +2399,7 @@ Axis data labels are available for the independent variable axis. This is X
 for vertical plots, and Y for horizontal plots.
 These data labels are supplied in your data array for each data point.
 For example, with data type text-data :
-<programlisting><![CDATA[
-     $data = array( array('Peaches',100),
+<programlisting><![CDATA[$data = array( array('Peaches',100),
                     array('Apples', 140),
                     array('Pears', 90));
 ]]></programlisting>
@@ -2847,8 +2818,7 @@ for more information on using special characters.
 
 <para>
 Here are some font selection examples for Windows:
-<programlisting><![CDATA[
-   # For titles, use Arial Bold Italic at 14 points:
+<programlisting><![CDATA[# For titles, use Arial Bold Italic at 14 points:
    $plot->SetFontTTF('title', 'ARIALBI.TTF', 14)
    # For X Title, use Verdana at 12 points:
    $plot->SetFontTTF('x_title', 'VERDANA.TTF', 12)
@@ -2910,8 +2880,7 @@ See the next section for more information on using special characters.
 
 <para>
 Here are some font selection examples for Linux:
-<programlisting><![CDATA[
-   # On systems with fonts in an expected place, like Slackware Linux,
+<programlisting><![CDATA[# On systems with fonts in an expected place, like Slackware Linux,
    # just use the font filename:
    # For titles, use Liberation Sans Bold Italic at 14 points:
    $plot->SetFontTTF('title', 'LiberationSans-BoldItalic.ttf', 14)
@@ -2926,7 +2895,6 @@ Here are some font selection examples for Linux:
    # You must use full paths here.
    $plot->SetTTFPath('/usr/share/fonts/liberation/');
    $plot->SetFontTTF('x_title', 'LiberationSans-Regular.ttf', 12)
-
 ]]></programlisting>
 </para>
 
@@ -3034,8 +3002,7 @@ of hex escapes. For example, the Euro symbol is: "\xe2\x82\xac".
 <para>
 These are shown in the example below, both of which set the Y axis title to
 "Items per &euro;100".
-<programlisting><![CDATA[
-  $plot->SetYTitle("Items per &#8364;100"); # Numeric character entity
+<programlisting><![CDATA[$plot->SetYTitle("Items per &#8364;100"); # Numeric character entity
   $plot->SetYTitle("Items per \xe2\x82\xac100"); # UTF-8 encoding
 ]]></programlisting>
 </para>
@@ -3046,14 +3013,11 @@ PHPlot text strings. See the PHP documentation for the functions
 <function>html_entity_decode()</function>
 and <function>iconv()</function>.
 Here are some examples (sent in by Sourceforge user 'kalvaro'):
-<programlisting><![CDATA[
-
-# Encode the Euro symbol into UTF-8:
+<programlisting><![CDATA[# Encode the Euro symbol into UTF-8:
 $chars = html_entity_decode('&euro;', ENT_NOQUOTES, 'UTF-8');
 
 # Use iconv() to convert a character value xA4 in ISO-8859-15 to UTF:
 $chars = iconv('iso-8859-15', 'utf-8', chr(0xA4));
-
 ]]></programlisting>
 </para>
 </sect2>
@@ -3110,8 +3074,7 @@ PHP <command>display_errors</command> parameter, otherwise PHP will also
 write the error messages to standard output. This can be turned off in the
 php.ini configuration file, where it affects all scripts, or in an
 application script using:
-<programlisting><![CDATA[
-   ini_set('display_errors', 'off');
+<programlisting><![CDATA[ini_set('display_errors', 'off');
 ]]></programlisting>
 </para>
 <para>

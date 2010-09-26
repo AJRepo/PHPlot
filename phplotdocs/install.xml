@@ -37,8 +37,7 @@ will work fine.
 If you aren't sure what extensions you have in PHP, create this PHP
 script called <filename>phpinfo.php</filename> somewhere in
 your web server's document tree:
-<programlisting><![CDATA[
-<?php phpinfo(); ?>
+<programlisting><![CDATA[<?php phpinfo(); ?>
 ]]></programlisting>
 Access this page with your browser to view your PHP configuration.
 Look for the section labeled 'gd'. If you have no 'gd' section in the
@@ -108,10 +107,9 @@ Unpack the PHPlot distribution into a convenient directory. Recent releases
 of PHPlot are available both as ZIP files, and as gzip-compressed TAR files.
 Use whichever format is more convenient for you. In the example below, the
 TAR format is unpacked.
-<screen>
-$ tar -xvzf phplot-5.*.tar.gz
+<screen><![CDATA[$ tar -xvzf phplot-5.*.tar.gz
 $ cd phplot-5.*
-</screen>
+]]></screen>
 (Use the appropriate filename.)
 Check the distribution for README and/or INSTALL files which may contain
 newer instructions.
@@ -125,9 +123,8 @@ and <filename>rgb.inc.php</filename>, an optional script file containing a
 large color map.
 Make sure the protections on these files allow the web server to read them.
 For example:
-<screen>
-$ chmod 644 *.php
-</screen>
+<screen><![CDATA[$ chmod 644 *.php
+]]></screen>
 </para>
 
 <para>
@@ -139,9 +136,8 @@ the PHP Info report). You can add to the include path
 in the PHP configuration file; consult the PHP manual for details.
 For example, if <filename>/usr/local/share/php</filename> is on
 your PHP include path, you can install PHPlot with:
-<screen>
-$ cp phplot.php rgb.inc.php /usr/local/share/php
-</screen>
+<screen><![CDATA[$ cp phplot.php rgb.inc.php /usr/local/share/php
+]]></screen>
 </para>
 
 </sect1>
@@ -152,8 +148,7 @@ $ cp phplot.php rgb.inc.php /usr/local/share/php
 You can test PHPlot with any of the examples in <xref linkend="examples" />,
 or by entering this minimal script into a file called (for example)
 <filename>plottest.php</filename>.
-<programlisting><![CDATA[
-<?php
+<programlisting><![CDATA[<?php
 require 'phplot.php';
 $data = array(array('', 10), array('', 1));
 $plot = new PHPlot();

@@ -64,8 +64,7 @@ Whether calling a function or an object method as a callback,
 the same calling sequence is used.
 </para>
 <para>
-  <programlisting><![CDATA[
-function_name($img, $passthrough_arg, [other_args...])
+  <programlisting><![CDATA[function_name($img, $passthrough_arg, [other_args...])
 ]]></programlisting>
 </para>
 <para>
@@ -104,12 +103,10 @@ reasons supply extra arguments.
 
 <para>
 For example, given this callback setup:
-  <programlisting><![CDATA[
-$plot->SetCallback('draw_graph', 'my_drawing_callback', $myvar);
+  <programlisting><![CDATA[$plot->SetCallback('draw_graph', 'my_drawing_callback', $myvar);
 ]]></programlisting>
 Then PHPlot will call:
-  <programlisting><![CDATA[
-my_drawing_callback($img, $myvar_value, $plot_area);
+  <programlisting><![CDATA[my_drawing_callback($img, $myvar_value, $plot_area);
 ]]></programlisting>
 Where $myvar_value is the value of $myvar at the time SetCallback was called.
 (The plot_area parameter is only supplied for the draw_graph callback in
@@ -318,8 +315,7 @@ extension of the PHPlot class.
 Consider the following setup:
 </para>
 <para>
-  <programlisting><![CDATA[
-class my_PHPlot extends PHPlot
+  <programlisting><![CDATA[class my_PHPlot extends PHPlot
 {
   function my_PHPlot($width=600, $height=400, $outfile=NULL, $infile=NULL)
   {
@@ -345,8 +341,7 @@ You can use the PHP5 constructor method instead.)
 
 <para>
 We will then create an instance of the extended class, and set a callback.
-  <programlisting><![CDATA[
-$plot = new my_PHPlot(400,300);
+  <programlisting><![CDATA[$plot = new my_PHPlot(400,300);
 $plot->SetCallback('draw_titles', array($plot, 'callback'));
 ]]></programlisting>
 This is for PHP5. For PHP4, you need to use a reference to the $plot instance.
@@ -492,8 +487,7 @@ output from this example.
 
     <para>
 The script starts with the usual PHPlot object creation and setup.
-      <programlisting><![CDATA[
-$plot = new PHPlot(800, 600);
+      <programlisting><![CDATA[$plot = new PHPlot(800, 600);
 $plot->SetTitle('Monthly Widget Sales');
 ...
 ]]></programlisting>
@@ -509,8 +503,7 @@ The name of our callback function is <literal>annotate_plot</literal>,
 and we are passing the PHPlot object ($plot) as a pass-through parameter.
 You can use a global or class callback instead -
 see <xref linkend="callbacks-api"/> for more on these options.
-      <programlisting><![CDATA[
-$plot->SetCallback('draw_all', 'annotate_plot', $plot);
+      <programlisting><![CDATA[$plot->SetCallback('draw_all', 'annotate_plot', $plot);
 ]]></programlisting>
     </para>
 
@@ -522,8 +515,7 @@ above when establishing the callback.
 Some callbacks make other parameters available. In fact, 'draw_all' provides
 the plot area coordinates as an additional parameter, but we don't need that
 here so we do not have to include that in the function declaration.
-      <programlisting><![CDATA[
-function annotate_plot($img, $plot)
+      <programlisting><![CDATA[function annotate_plot($img, $plot)
 {
 ]]></programlisting>
     </para>
@@ -532,8 +524,7 @@ function annotate_plot($img, $plot)
 As stated above, you should allocate your own colors, rather than trying to
 get into PHPlot's internals for color values. Here we allocate two colors
 and assign the color indexes to local variables:
-      <programlisting><![CDATA[
-$red = imagecolorresolve($img, 255, 0, 0);
+      <programlisting><![CDATA[$red = imagecolorresolve($img, 255, 0, 0);
 $green = imagecolorresolve($img, 0, 216, 0);
 ]]></programlisting>
     </para>
@@ -546,8 +537,7 @@ translate the values from
 <link linkend="def-worldcoor">World Coordinates</link> to
 <link linkend="def-devcoor">Device Coordinates</link>.
 This is done using the PHPlot function <xref linkend="GetDeviceXY"/>.
-      <programlisting><![CDATA[
-list($best_x, $best_y) = $plot->GetDeviceXY($best_index, $best_sales);
+      <programlisting><![CDATA[list($best_x, $best_y) = $plot->GetDeviceXY($best_index, $best_sales);
 list($worst_x, $worst_y) = $plot->GetDeviceXY($worst_index, $worst_sales);
 ]]></programlisting>
     </para>
@@ -555,8 +545,7 @@ list($worst_x, $worst_y) = $plot->GetDeviceXY($worst_index, $worst_sales);
     <para>
 Now we are ready to draw some ellipses, centered on our two data points.
 The values 50 and 20 are the width and height, in pixels.
-      <programlisting><![CDATA[
-imageellipse($img, $best_x, $best_y, 50, 20, $green);
+      <programlisting><![CDATA[imageellipse($img, $best_x, $best_y, 50, 20, $green);
 imageellipse($img, $worst_x, $worst_y, 50, 20, $red);
 ]]></programlisting>
     </para>
@@ -567,8 +556,7 @@ We can draw text using the GD functions, but we have to do a little more
 work to position the text. Here the text is approximately centered
 horizontally and above the data point. (Note ImageString by default uses the
 upper left corner of the text string for positioning.)
-      <programlisting><![CDATA[
-$font = '3';
+      <programlisting><![CDATA[$font = '3';
 $fh = imagefontheight($font);
 $fw = imagefontwidth($font);
 imagestring($img, $font, $best_x-$fw*4, $best_y-$fh-10, 'Good Job!', $green);
@@ -579,8 +567,7 @@ imagestring($img, $font, $best_x-$fw*4, $best_y-$fh-10, 'Good Job!', $green);
 Or, we can use the PHPlot internal function DrawText. With a PHPlot version
 5.1.0 and later, we omit the font specification and it will default to the
 generic font, which can be set with <xref linkend="SetFont"/>('generic', ...)
-      <programlisting><![CDATA[
-$plot->DrawText('', 0, $worst_x, $worst_y-10, $red, 'Bad News!', 'center', 'bottom');
+      <programlisting><![CDATA[$plot->DrawText('', 0, $worst_x, $worst_y-10, $red, 'Bad News!', 'center', 'bottom');
 ]]></programlisting>
     </para>
 

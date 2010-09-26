@@ -36,10 +36,9 @@ readily see any error messages.
 Run your PHPlot scripts with the PHP CLI like this (using the
 <ulink url="http://www.imagemagick.org/">ImageMagick</ulink>
 display program to view the results):
-    <screen>
-$  php myscript.php &gt; output.png
+    <screen><![CDATA[$  php myscript.php > output.png
 $  display output.png
-    </screen>
+]]></screen>
   </para>
   <para>
 <application>ImageMagick</application> is available for several operating systems.
