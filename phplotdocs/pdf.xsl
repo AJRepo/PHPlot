@@ -40,13 +40,15 @@
     <xsl:attribute name="background-color">#E0E0E0</xsl:attribute>
 </xsl:attribute-set>
 
-<!-- Decrease font size in programlistings -->
-<!-- Copied from default and edited -->
+<!-- Decrease font size and add some padding in programlistings -->
 <xsl:attribute-set name="monospace.verbatim.properties"
      use-attribute-sets="verbatim.properties monospace.properties">
   <xsl:attribute name="text-align">start</xsl:attribute>
   <xsl:attribute name="wrap-option">no-wrap</xsl:attribute>
   <xsl:attribute name="font-size">9pt</xsl:attribute>
+  <xsl:attribute name="padding-top">0.5em</xsl:attribute>
+  <xsl:attribute name="padding-bottom">0.5em</xsl:attribute>
+  <xsl:attribute name="padding-left">0.5em</xsl:attribute>
 </xsl:attribute-set>
 
 <!-- By default there is no visual clue about an internal xref link.
