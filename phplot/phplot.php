@@ -2568,9 +2568,8 @@ class PHPlot
      * For most plots, IV is X and DV is Y. For swapped X/Y plots, IV is Y and DV is X.
      * At the end of the function, IV and DV ranges get assigned into X or Y.
      *
-     * Plot types 'stackedbars' and 'stackedarea' are special cases, because the bars or area always
-     *    start at 0 (although they may be clipped below the X axis, if the axis is moved up),
-     *    absolute values are used, and the Y values in each row accumulate.
+     * This has to know how certain plot types use the data. 'area' and 'pie' use absolute
+     * values, 'stackedbars' sums values, and 'stackedarea' sums absolute values.
      *
      * This calculates min_x, max_x, min_y, and max_y. It also calculates two arrays
      * data_min[] and data_max[] with per-row min and max values. These are used for
@@ -2580,8 +2579,9 @@ class PHPlot
     protected function FindDataLimits()
     {
         // Special case processing for certain plot types:
-        $process_stacked = ($this->plot_type == 'stackedbars' || $this->plot_type == 'stackedarea');
-        $abs_val = ($this->plot_type == 'area' || $this->plot_type == 'pie');
+        $sum_abs = ($this->plot_type == 'stackedarea'); // Sum of absolute values
+        $sum_val = ($this->plot_type == 'stackedbars'); // Sum of values
+        $abs_val = ($this->plot_type == 'area' || $this->plot_type == 'pie'); // Absolute values
 
         // These need to be initialized in case there are multiple plots and missing data points.
         $this->data_min = array();
@@ -2603,8 +2603,8 @@ class PHPlot
                 $all_iv[] = (double)$this->data[$i][$j++];
             }
 
-            if ($process_stacked) {
-                $all_dv = array(0, 0); // Min (always 0) and max
+            if ($sum_abs || $sum_val) {
+                $all_dv = array(0, 0); // One limit is 0, other calculated below
             } else {
                 $all_dv = array();
             }
@@ -2615,12 +2615,14 @@ class PHPlot
                     if ($this->datatype_error_bars) {
                         $all_dv[] = $val + (double)$this->data[$i][$j++];
                         $all_dv[] = $val - (double)$this->data[$i][$j++];
-                    } elseif ($process_stacked) {
-                        $all_dv[1] += abs($val);
+                    } elseif ($sum_abs) {
+                        $all_dv[1] += abs($val); // Sum of absolute values
+                    } elseif ($sum_val) {
+                        $all_dv[1] += $val;  // Sum of values
                     } elseif ($abs_val) {
-                        $all_dv[] = abs($val);
+                        $all_dv[] = abs($val); // List of all absolute values
                     } else {
-                        $all_dv[] = $val;
+                        $all_dv[] = $val; // List of all values
                     }
                 } else {    // Missing DV value
                   $j++;
@@ -5366,6 +5368,51 @@ class PHPlot
     }
 
     /*
+     * Draw a bar (or segment of a bar), with optional shading or border.
+     * This is used by the bar and stackedbar plots, vertical and horizontal.
+     *   $x1, $y1 : One corner of the bar.
+     *   $x2, $y2 : Other corner of the bar.
+     *   $data_color, $data_dark_color, $data_border_color : Color indexes to use.
+     *   $shade_top : Shade the top? (Suppressed for downward stack segments except first.)
+     *   $shade_side : Shade the right side? (Suppressed for leftward stack segments except first.)
+     *      Only one of $shade_top or $shade_side can be FALSE. Both default to TRUE.
+     */
+    protected function DrawBar($x1, $y1, $x2, $y2, $data_color, $data_dark_color, $data_border_color,
+            $shade_top = TRUE, $shade_side = TRUE)
+    {
+        // Sort the points so x1,y1 is upper left and x2,y2 is lower right. This
+        // is needed in order to get the shading right, and imagerectangle may require it.
+        if ($x1 > $x2) {
+            $t = $x1; $x1 = $x2; $x2 = $t;
+        }
+        if ($y1 > $y2) {
+            $t = $y1; $y1 = $y2; $y2 = $t;
+        }
+
+        // Draw the bar
+        ImageFilledRectangle($this->img, $x1, $y1, $x2, $y2, $data_color);
+
+        // Draw a shade, or a border.
+        if (($shade = $this->shading) > 0) {
+            if ($shade_top && $shade_side) {
+                $npts = 6;
+                $pts = array($x1, $y1, $x1 + $shade, $y1 - $shade, $x2 + $shade, $y1 - $shade,
+                             $x2 + $shade, $y2 - $shade, $x2, $y2, $x2, $y1);
+            } else {
+                $npts = 4;
+                if ($shade_top) { // Suppress side shading
+                    $pts = array($x1, $y1, $x1 + $shade, $y1 - $shade, $x2 + $shade, $y1 - $shade, $x2, $y1);
+                } else { // Suppress top shading
+                    $pts = array($x2, $y2, $x2, $y1, $x2 + $shade, $y1 - $shade, $x2 + $shade, $y2 - $shade);
+                }
+            }
+            ImageFilledPolygon($this->img, $pts, $npts, $data_dark_color);
+        } else {
+            ImageRectangle($this->img, $x1, $y1, $x2,$y2, $data_border_color);
+        }
+    }
+
+    /*
      * Draw a Bar chart
      * Supports text-data format, with each row in the form array(label, y1, y2, y3, ...)
      * Horizontal bars (text-data-yx format) are sent to DrawHorizBars() instead.
@@ -5381,9 +5428,6 @@ class PHPlot
         // This is the X offset from the bar group's label center point to the left side of the first bar
         // in the group. See also CalcBarWidths above.
         $x_first_bar = ($this->data_columns * $this->record_bar_width) / 2 - $this->bar_adjust_gap;
-
-        // Copy shading value to local variable
-        $shade = $this->shading;
 
         // Is there a custom function for picking the data color?
         $custom_color = (bool)$this->GetCallback('data_color');
@@ -5434,25 +5478,14 @@ class PHPlot
                         $data_border_color = $this->ndx_data_border_colors[$idx];
                     }
 
-                    // Draw the bar
-                    ImageFilledRectangle($this->img, $x1, $y1, $x2, $y2, $data_color);
-
-                    if ($shade > 0) {                           // Draw the shade?
-                        ImageFilledPolygon($this->img, array($x1, $y1,
-                                                       $x1 + $shade, $y1 - $shade,
-                                                       $x2 + $shade, $y1 - $shade,
-                                                       $x2 + $shade, $y2 - $shade,
-                                                       $x2, $y2,
-                                                       $x2, $y1), 6, $data_dark_color);
-                    } else {        // Or draw a border?
-                        ImageRectangle($this->img, $x1, $y1, $x2,$y2, $data_border_color);
-                    }
+                    // Draw the bar, and the shade or border:
+                    $this->DrawBar($x1, $y1, $x2, $y2, $data_color, $data_dark_color, $data_border_color);
 
                     // Draw optional data labels above the bars (or below, for negative values).
                     if ( $this->y_data_label_pos == 'plotin') {
                         if ($upgoing_bar) {
                           $v_align = 'bottom';
-                          $y_offset = -5 - $shade;
+                          $y_offset = -5 - $this->shading;
                         } else {
                           $v_align = 'top';
                           $y_offset = 2;
@@ -5481,9 +5514,6 @@ class PHPlot
         // This is the Y offset from the bar group's label center point to the bottom of the first bar
         // in the group. See also CalcBarWidths above.
         $y_first_bar = ($this->data_columns * $this->record_bar_width) / 2 - $this->bar_adjust_gap;
-
-        // Copy shading value to local variable
-        $shade = $this->shading;
 
         // Is there a custom function for picking the data color?
         $custom_color = (bool)$this->GetCallback('data_color');
@@ -5530,26 +5560,15 @@ class PHPlot
                         $data_border_color = $this->ndx_data_border_colors[$idx];
                     }
 
-                    // Draw the bar
-                    ImageFilledRectangle($this->img, $x2, $y2, $x1, $y1, $data_color);
-
-                    if ($shade > 0) {                           // Draw the shade?
-                        ImageFilledPolygon($this->img, array($x2, $y2,
-                                                       $x2 + $shade, $y2 - $shade,
-                                                       $x1 + $shade, $y2 - $shade,
-                                                       $x1 + $shade, $y1 - $shade,
-                                                       $x1, $y1,
-                                                       $x1, $y2), 6, $data_dark_color);
-                    } else {        // Or draw a border?
-                        ImageRectangle($this->img, $x1, $y1, $x2,$y2, $data_border_color);
-                    }
+                    // Draw the bar, and the shade or border:
+                    $this->DrawBar($x1, $y1, $x2, $y2, $data_color, $data_dark_color, $data_border_color);
 
                     // Draw optional data labels to the right of the bars (or left, if the bar
                     // goes left of the Y axis line).
                     if ($this->x_data_label_pos == 'plotin') {
                         if ($rightwards_bar) {
                           $h_align = 'left';
-                          $x_offset = 5 + $shade;
+                          $x_offset = 5 + $this->shading;
                         } else {
                           $h_align = 'right';
                           $x_offset = -2;
@@ -5584,13 +5603,10 @@ class PHPlot
         // This is the X offset from the bar's label center point to the left side of the bar.
         $x_first_bar = $this->record_bar_width / 2 - $this->bar_adjust_gap;
 
-        // Copy shading value to local variable
-        $shade = $this->shading;
-
         // Determine if any data labels are on:
         $data_labels_within = ($this->y_data_label_pos == 'plotstack');
         $data_labels_end = $data_labels_within || ($this->y_data_label_pos == 'plotin');
-        $data_label_y_offset = -5 - $shade;
+        $data_label_y_offset = -5 - $this->shading; // For upward labels only.
 
         // Is there a custom function for picking the data color?
         $custom_color = (bool)$this->GetCallback('data_color');
@@ -5615,27 +5631,30 @@ class PHPlot
             $x1 = $x_now_pixels - $x_first_bar;
             $x2 = $x1 + $this->actual_bar_width;
 
-            // Draw the bar segments in this stack. The first segment is drawn from the X axis to Y1.
-            // Each additional segment is drawn from the top of the previous segment to the new
-            // cumulative Y. Skip over any segment of 0 size or part below the X axis.
-            $wy1 = 0;                       // World coordinates Y1, upper value
-            $wy2 = $this->x_axis_position;  // World coordinates Y2, lower value
+            // Draw the bar segments in this stack.
+            $wy1 = 0;                       // World coordinates Y1, current sum of values
+            $wy2 = $this->x_axis_position;  // World coordinates Y2, last drawn value
+            $first = TRUE;
 
             for ($idx = 0; $record < $this->num_recs[$row]; $record++, $idx++) {
 
                 // Skip missing Y values, and ignore Y=0 values.
                 if (is_numeric($this->data[$row][$record])
-                    && ($this_y = abs($this->data[$row][$record])) > 0) {
+                    && ($this_y = $this->data[$row][$record]) != 0) {
 
-                    $wy1 += $this_y;  // Accumulate Y value in world coordinates - top of current segment.
+                    // First non-zero value sets the direction, $upward. Note this compares to 0,
+                    // not the axis position. Segments are based at 0 but clip to the axis.
+                    if ($first)
+                        $upward = ($this_y > 0);
 
-                    // Draw nothing if top of segment is below X axis.
-                    // Bottom (wy2) will not go below X axis, so we will get a partial
-                    // segment from X axis up if the segment would cross the X axis.
-                    if ($wy1 > $this->x_axis_position) {
+                    $wy1 += $this_y;    // Keep the running total for this bar stack
 
-                        $y1 = $this->ytr($wy1);
-                        $y2 = $this->ytr($wy2);
+                    // Draw nothing if this segment would not increase the bar height.
+                    // Upward bars: draw if wy1>wy2.  Downward bars: Draw if wy1<wy2.
+                    if (($wy1 < $wy2) XOR $upward) {
+
+                        $y1 = $this->ytr($wy1); // Convert to device coordinates. $y1 is outermost value.
+                        $y2 = $this->ytr($wy2); // $y2 is innermost (closest to axis).
 
                         // Select the colors.
                         if ($custom_color) {
@@ -5650,39 +5669,32 @@ class PHPlot
                             $data_border_color = $this->ndx_data_border_colors[$idx];
                         }
 
-                        // Draw the bar
-                        ImageFilledRectangle($this->img, $x1, $y1, $x2, $y2, $data_color);
+                        // Draw the bar, and the shade or border:
+                        $this->DrawBar($x1, $y1, $x2, $y2, $data_color, $data_dark_color, $data_border_color,
+                            // Only shade the top for upward bars, or the first segment of downward bars:
+                            $upward || $first, TRUE);
 
-                        if ($shade > 0) {                           // Draw the shade?
-                            ImageFilledPolygon($this->img,
-                                               array($x1, $y1, $x1 + $shade, $y1 - $shade,
-                                                     $x2 + $shade, $y1 - $shade, $x2 + $shade, $y2 - $shade,
-                                                     $x2, $y2, $x2, $y1), 6, $data_dark_color);
-                        } else {        // Or draw a border?
-                            ImageRectangle($this->img, $x1, $y1, $x2,$y2, $data_border_color);
-                        }
-
-                        // Draw optional data label for this bar segment just below the line.
+                        // Draw optional data label for this bar segment just inside the end.
                         // Text value is the current Y, but position is the cumulative Y.
-                        // The label is only drawn if it fits in the segment height y2-y1.
+                        // The label is only drawn if it fits in the segment height |y2-y1|.
                         if ($data_labels_within) {
-                            $this->DrawDataValueLabel('y', $row+0.5, $wy1, $this_y, 'center', 'top',
-                                                      0, 3, NULL, $y2 - $y1);
+                            $this->DrawDataValueLabel('y', $row+0.5, $wy1, $this_y,
+                                                      'center', $upward ? 'top' : 'bottom',
+                                                      0, $upward ? 3 : -3, NULL, abs($y1 - $y2));
                         }
+                        // Mark the new end of the bar, conditional on segment height > 0.
+                        $wy2 = $wy1;
                     }
-                    // Make the top of this segment become the bottom of the next segment, but not if
-                    // it is still below the X axis.
-                    $wy2 = max($this->x_axis_position, $wy1);
+                    $first = FALSE;
                 }
             }   // end for
 
             // Draw optional data label above the bar with the total value.
-            // Value is wy1, but position is wy2. This only makes a difference when
-            // the stacked bar ends completely below the X axis. Then we see the actual
-            // cumulative value (wy1), positioned above the axis, with no bar at all.
+            // Value is wy1 (total value), but position is wy2 (end of the bar stack).
+            // These differ only with wrong-direction segments, or a stack completely clipped by the axis.
             if ($data_labels_end) {
-                $this->DrawDataValueLabel('y', $row+0.5, $wy2, $wy1, 'center', 'bottom',
-                                          0, $data_label_y_offset);
+                $this->DrawDataValueLabel('y', $row+0.5, $wy2, $wy1, 'center', $upward ? 'bottom' : 'top',
+                                          0, $upward ? $data_label_y_offset : 5);
             }
         }   // end for
         return TRUE;
@@ -5701,13 +5713,10 @@ class PHPlot
         // This is the Y offset from the bar's label center point to the bottom of the bar
         $y_first_bar = $this->record_bar_width / 2 - $this->bar_adjust_gap;
 
-        // Copy shading value to local variable
-        $shade = $this->shading;
-
         // Determine if any data labels are on:
         $data_labels_within = ($this->x_data_label_pos == 'plotstack');
         $data_labels_end = $data_labels_within || ($this->x_data_label_pos == 'plotin');
-        $data_label_x_offset = 5 + $shade;
+        $data_label_x_offset = 5 + $this->shading; // For rightward labels only
 
         // Is there a custom function for picking the data color?
         $custom_color = (bool)$this->GetCallback('data_color');
@@ -5728,27 +5737,30 @@ class PHPlot
             $y1 = $y_now_pixels + $y_first_bar;
             $y2 = $y1 - $this->actual_bar_width;
 
-            // Draw the bar segments in this stack. The first segment is drawn from the Y axis to X1.
-            // Each additional segment is drawn from the top of the previous segment to the new
-            // cumulative Y. Skip over any segment of 0 size or part below the Y axis.
-            $wx1 = 0;                       // World coordinates X1, right value (current level)
-            $wx2 = $this->y_axis_position;  // World coordinates X2, left value (previous level)
+            // Draw the bar segments in this stack:
+            $wx1 = 0;                       // World coordinates X1, current sum of values
+            $wx2 = $this->y_axis_position;  // World coordinates X2, last drawn value
+            $first = TRUE;
 
             for ($idx = 0; $record < $this->num_recs[$row]; $record++, $idx++) {
 
                 // Skip missing X values, and ignore X<0 values.
                 if (is_numeric($this->data[$row][$record])
-                    && ($this_x = abs($this->data[$row][$record])) > 0) {
+                    && ($this_x = $this->data[$row][$record]) != 0) {
 
-                    $wx1 += $this_x;  // Accumulate X value in world coordinates - right of current segment.
+                    // First non-zero value sets the direction, $rightward. Note this compares to 0,
+                    // not the axis position. Segments are based at 0 but clip to the axis.
+                    if ($first)
+                        $rightward = ($this_x > 0);
 
-                    // Draw nothing if right end of segment is left Y axis.
-                    // Left end (wx2) will not go left of Y axis, so we will get a partial
-                    // segment from Y axis right-wards if the segment would cross the Y axis.
-                    if ($wx1 > $this->y_axis_position) {
+                    $wx1 += $this_x;  // Keep the running total for this bar stack
 
-                        $x1 = $this->xtr($wx1);
-                        $x2 = $this->xtr($wx2);
+                    // Draw nothing if this segment would not increase the bar length.
+                    // Rightward bars: draw if wx1>wx2. Leftward bars: Draw if wx1<wx2.
+                    if (($wx1 < $wx2) XOR $rightward) {
+
+                        $x1 = $this->xtr($wx1); // Convert to device coordinates. $x1 is outermost value.
+                        $x2 = $this->xtr($wx2); // $x2 is innermost (closest to axis).
 
                         // Select the colors.
                         if ($custom_color) {
@@ -5763,40 +5775,32 @@ class PHPlot
                             $data_border_color = $this->ndx_data_border_colors[$idx];
                         }
 
-                        // Draw the bar
-                        ImageFilledRectangle($this->img, $x2, $y2, $x1, $y1, $data_color);
+                        // Draw the bar, and the shade or border:
+                        $this->DrawBar($x1, $y1, $x2, $y2, $data_color, $data_dark_color, $data_border_color,
+                            // Only shade the side for rightward bars, or the first segment of leftward bars:
+                            TRUE, $rightward || $first);
 
-                        if ($shade > 0) {                           // Draw the shade?
-                            ImageFilledPolygon($this->img,
-                                               array($x2, $y2, $x2 + $shade, $y2 - $shade,
-                                                     $x1 + $shade, $y2 - $shade, $x1 + $shade, $y1 - $shade,
-                                                     $x1, $y1, $x1, $y2), 6, $data_dark_color);
-                        } else {        // Or draw a border?
-                            ImageRectangle($this->img, $x2, $y2, $x1, $y1, $data_border_color);
-                        }
-
-                        // Draw optional data label for this bar segment just left of the line.
+                        // Draw optional data label for this bar segment just inside the end.
                         // Text value is the current X, but position is the cumulative X.
-                        // The label is only drawn if it fits in the segment width x1-x2.
+                        // The label is only drawn if it fits in the segment width |x2-x1|.
                         if ($data_labels_within) {
-                            $this->DrawDataValueLabel('x', $wx1, $row+0.5, $this_x, 'right', 'center',
-                                                      -3, 0, $x1 - $x2, NULL);
+                            $this->DrawDataValueLabel('x', $wx1, $row+0.5, $this_x,
+                                                      $rightward ? 'right' : 'left', 'center',
+                                                      $rightward ? -3 : 3, 0, abs($x1 - $x2), NULL);
                         }
-
+                        // Mark the new end of the bar, conditional on segment width > 0.
+                        $wx2 = $wx1;
                     }
-                    // Make the right side of this segment become the left of the next segment,
-                    // but not if it is still left of the Y axis.
-                    $wx2 = max($this->y_axis_position, $wx1);
+                    $first = FALSE;
                 }
             }   // end for
 
             // Draw optional data label right of the bar with the total value.
-            // Value is wx1, but position is wx2. This only makes a difference when
-            // the stacked bar ends completely left of the Y axis. Then we see the actual
-            // cumulative value (wx1), positioned above the axis, with no bar at all.
+            // Value is wx1 (total value), but position is wx2 (end of the bar stack).
+            // These differ only with wrong-direction segments, or a stack completely clipped by the axis.
             if ($data_labels_end) {
-                $this->DrawDataValueLabel('x', $wx2, $row+0.5, $wx1, 'left', 'center',
-                                          $data_label_x_offset, 0);
+                $this->DrawDataValueLabel('x', $wx2, $row+0.5, $wx1, $rightward ? 'left' : 'right', 'center',
+                                          $rightward ? $data_label_x_offset : -5, 0);
             }
         }   // end for
         return TRUE;
