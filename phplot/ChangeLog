@@ -7,6 +7,20 @@ The project home page is http://sourceforge.net/projects/phplot/
       Don't let SetXTickLabelPos(), SetYTickLabelPos() accept 'all' as valid.
       These were never implemented and never documented.
 
+
+    * Feature request #3073679 "Stacked bar plots with negative values":
+      Allow stacked bar plots (vertical and horizontal) to work with negative
+      values.  Changed FindDataLimits() to not take abs() values for
+      stackedbar when calculating the data range.  Changed DrawStackedBars()
+      and DrawHorizStackedBars() to handle negative values, including proper
+      label positions.  The first non-zero value in a row sets the direction
+      of the bar. Mixing positive and negative values within a row works but
+      the results are not useful.
+
+    * New internal DrawBar() moves common code from 4 bars and stackedbars
+      drawing functions and makes it easier to deal with shading vs bar
+      direction.
+
 2010-09-24
     * Fix bug 3074402 "Fix Y axis default for horizontal plots":
       Make the default axis positions symmetrical for vertical plots
