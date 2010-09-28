@@ -4,6 +4,12 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2010-09-27
+   * developer.xml: Document new internal function DrawBar().
+   * concepts.xml: Update description of stackedbars plot type, which now
+     works with negative values as well. Fix some links to plot types.
+     Rewrote confusing (incorrect) description of stackedarea plot type.
+
 2010-09-25
    * Makefile: Add 2 missing static image filenames. These need to be in
      the Makefile or they won't get copied into the release.
