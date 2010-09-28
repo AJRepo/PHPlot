@@ -522,6 +522,23 @@ Called by <xref linkend="DrawGraph"/>.
 </varlistentry>
 
 <varlistentry>
+  <term><anchor id="DrawBar" xreflabel="DrawBar"/>DrawBar($x1, $y1, $x2, $y2, $data_color, $data_dark_color, $data_border_color, $shade_top = TRUE, $shade_side = TRUE)</term>
+  <listitem>
+    <para>
+Draws a single bar (or bar segment), with either shading or border.
+Four corner coordinates and 3 colors are provided. The last two arguments
+are flags used to suppress the top or side shading for certain cases of
+stacked bar segments.
+Called by <xref linkend="DrawBars"/> and <xref linkend="DrawHorizBars"/>
+to draw each bar.
+Called by <xref linkend="DrawStackedBars"/> and
+<xref linkend="DrawHorizStackedBars"/> to draw each bar segment.
+This was added after PHPlot-5.1.3, moving common code from those 4 functions.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
   <term><anchor id="DrawBars" xreflabel="DrawBars"/>DrawBars()</term>
   <listitem>
     <para>
