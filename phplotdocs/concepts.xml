@@ -540,8 +540,8 @@ will convert the data array to use numeric indexes.
 <sect2 id="conc-datatypes-missing">
 <title>Missing Data in Data Arrays</title>
 <para>
-The 'lines' (<xref linkend="plottype-lines" />)
-and 'squared' (<xref linkend="plottype-squared" />) plot types support the
+The <link linkend="plottype-lines">lines</link> and
+<link linkend="plottype-squared">squared</link> plot types support the
 concept of missing points. A missing point is represented in your data
 array with an empty string instead of a Y value. For example:
 <programlisting><![CDATA[$data = array( array('1996', 45.5),
@@ -973,14 +973,13 @@ An example of this plot type can be seen in
 <title>Plot Type: stackedarea (Stacked Area Plot)</title>
 <para>
 This plot type draws filled areas between lines, similar to
-<xref linkend="plottype-area" /> except the values are accumulated
-in the same manner as for <link linkend="plottype-stackedbars">stacked
-bars</link>.
-For each data set (set of corresponding Y values from each record in the
-data array), the area between the X axis and the first Y value is filled.
-The area between the first Y value and the sum of the first and second Y
-values is filled next, and so on. The top-most line is the sum of all the Y
-values for each record.
+<link linkend="plottype-area">area</link> except the values are accumulated
+as in <link linkend="plottype-stackedbars">stackedbars</link> plots.
+The area between the X axis and the first data set (the line resulting from
+the first Y value from each record) is filled first.  Then the area above that
+line, up to the sum of the first and second Y values in each record, is
+filled next. This repeats until filling the area up to the top-most line,
+which is the sum of all the Y values from each record.
 </para>
 <para>
 This plot type works with data types <xref linkend="text-data"/>
@@ -1020,15 +1019,25 @@ Each data set value contributes one segment of a stack.
 That is, the first data set is drawn from the axis in the first
 color, then the second data set is drawn stacked on the first
 using the second color, etc.
-For this plot type, all data values must be greater than or equal to 0.
-Negative values are not supported.
+</para>
+<para>
+Data values greater than zero result in an upward (or rightward) bar.
+Data values less than zero result in a downward (or leftward) bar.
+Mixing negative and positive values within a row does work, but
+the results are not generally useful.
+The first non-zero value in any given row determines the direction of that
+bar stack.
+PHPlot keeps a running total for each row, but does not draw any segment unless
+it increases the bar stack height (or length, for horizontal plots).
+It also does not draw any segment on the wrong side of the axis
+(which is normally at 0).
 </para>
 <para>
 For vertical bars, use data type <xref linkend="text-data"/>.
 The data X values are assumed to be at 0.5+N for N=0,1,2...
 For horizontal bars, use data type <xref linkend="text-data-yx"/>.
 The data Y values are assumed to be at 0.5+N for N=0,1,2...
-No other data type works with bar graphs.
+No other data type works with stacked bar plots.
 </para>
 <para>
 If shading is on with <xref linkend="SetShading" /> (default is on with value
@@ -1048,6 +1057,7 @@ Examples of this plot type can be seen in
 </para>
 <para>
 Horizontal stacked bar plots were added in PHPlot-5.1.3.
+Support for negative values in stacked bar plots was added after PHPlot-5.1.3.
 </para>
 </sect2>
 
