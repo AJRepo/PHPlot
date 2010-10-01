@@ -5097,90 +5097,6 @@ By default, no tick marks or labels are skipped.
   </refsect1>
 </refentry>
 
-<refentry id="SetTTFPath">
-  <refmeta>
-    <refentrytitle>SetTTFPath</refentrytitle>
-  </refmeta>
-
-  <refnamediv>
-    <refname>SetTTFPath</refname>
-    <refpurpose>Set the default TrueType font directory</refpurpose>
-  </refnamediv>
-
-  <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetTTFPath(<parameter>$path</parameter>)
-    </synopsis>
-  </refsynopsisdiv>
-
-  <refsect1>
-    <title>Description</title>
-    <para>
-<function>SetTTFPath</function> sets the directory where
-<xref linkend="SetFont" /> and <xref linkend="SetFontTTF" />
-can find TrueType font files.
-    </para>
-  </refsect1>
-
-  <refsect1>
-    <title>Parameters</title>
-    <variablelist>
-      <varlistentry>
-        <term><replaceable>$path</replaceable></term>
-        <listitem>
-          <para>
-Full path to a directory containing TrueType fonts.
-          </para>
-        </listitem>
-      </varlistentry>
-    </variablelist>
-  </refsect1>
-
-  <refsect1>
-    <title>Notes</title>
-    <para>
-The default TrueType font directory is '.', meaning fonts will be
-loaded from the directory containing your main PHP script.
-PHPlot also attempts to load fonts without any path, which allows GD
-to try to locate the font using its own internal rules. This works on
-some platforms, but not on others.
-    </para>
-    <para>
-SetTTFPath does not enable the use of TrueType fonts.
-See the note at the end of the reference for <xref linkend="SetUseTTF" />
-on how to set up and use TrueType fonts.
-    </para>
-    <para>
-The default TrueType font directory is also used to find an internally-set
-default font. This means that if you use SetTTFPath, but do not specify a
-font name (with <xref linkend="SetDefaultTTFont"/>,
-<xref linkend="SetFont"/>, or <xref linkend="SetFontTTF"/>),
-PHPlot will attempt to select a default font from its internal list, but
-using the directory you specify with SetTTFPath.
-This can be useful on platforms where you are willing to use a default
-font, but the internal GD rules on how to locate fonts do not work.
-    </para>
-    <para>
-See <xref linkend="conc-text-fonts"/> for more information.
-    </para>
-  </refsect1>
-  <refsect1>
-    <title>History</title>
-    <para>
-Use of the default TrueType font directory to locate the initial, default
-font was implemented in PHPlot-5.1.3.
-Also with this release, fonts are first searched for without a path, which
-allows GD to try to locate the font using its internal rules.
-    </para>
-    <para>
-Starting with PHPlot-5.0rc3, the default TrueType font directory is used both
-for the default font set with <xref linkend="SetDefaultTTFont" /> and for
-fonts set with <xref linkend="SetFont" />. Refer to those two functions for
-details.
-    </para>
-  </refsect1>
-</refentry>
-
 <refentry id="SetTextColor">
   <refmeta>
     <refentrytitle>SetTextColor</refentrytitle>
@@ -5322,7 +5238,7 @@ The string can contain multiple lines, separated by newlines (in PHP: "\n").
 
   <refnamediv>
     <refname>SetTitleColor</refname>
-    <refpurpose>Set the color of the plot titles</refpurpose>
+    <refpurpose>Set the color of the main plot title</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
@@ -5334,9 +5250,10 @@ $plot-&gt;SetTitleColor(<parameter>$color</parameter>)
   <refsect1>
     <title>Description</title>
     <para>
-<function>SetTitleColor</function> sets the color of the plot title
-(as set with <xref linkend="SetTitle" />), and the X and Y axis titles
-(as set with <xref linkend="SetXTitle" /> and <xref linkend="SetYTitle" />).
+<function>SetTitleColor</function> sets the color of the main plot title
+(as set with <xref linkend="SetTitle" />), and the default color for the
+X and Y titles (as set with <xref linkend="SetXTitle" /> and
+<xref linkend="SetYTitle" />).
     </para>
   </refsect1>
 
@@ -5358,7 +5275,22 @@ See <xref linkend="conc-colors" /> for more on color values.
   <refsect1>
     <title>Notes</title>
     <para>
-The default color for the titles is black.
+The default color for the main title is black.
+    </para>
+    <para>
+Use just SetTitleColor if you want all three titles to have the same color.
+If you want different colors for the main, X, and/or Y titles,
+use SetTitleColor to set the main title color,
+and use <xref linkend="SetXTitleColor"/>
+and/or <xref linkend="SetYTitleColor"/> to set the color of the other titles.
+    </para>
+  </refsect1>
+  <refsect1>
+    <title>History</title>
+    <para>
+Through PHPlot-5.1.3, this function set the color for all three titles.
+After PHPlot-5.1.3, it sets the main title color, and the default color for X
+and Y titles.
     </para>
   </refsect1>
 </refentry>
@@ -5424,6 +5356,90 @@ like this:
       <programlisting><![CDATA[$plot->SetBackgroundColor('yellow');
 $plot->SetTransparentColor('yellow');
 ]]></programlisting>
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetTTFPath">
+  <refmeta>
+    <refentrytitle>SetTTFPath</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetTTFPath</refname>
+    <refpurpose>Set the default TrueType font directory</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetTTFPath(<parameter>$path</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetTTFPath</function> sets the directory where
+<xref linkend="SetFont" /> and <xref linkend="SetFontTTF" />
+can find TrueType font files.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$path</replaceable></term>
+        <listitem>
+          <para>
+Full path to a directory containing TrueType fonts.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The default TrueType font directory is '.', meaning fonts will be
+loaded from the directory containing your main PHP script.
+PHPlot also attempts to load fonts without any path, which allows GD
+to try to locate the font using its own internal rules. This works on
+some platforms, but not on others.
+    </para>
+    <para>
+SetTTFPath does not enable the use of TrueType fonts.
+See the note at the end of the reference for <xref linkend="SetUseTTF" />
+on how to set up and use TrueType fonts.
+    </para>
+    <para>
+The default TrueType font directory is also used to find an internally-set
+default font. This means that if you use SetTTFPath, but do not specify a
+font name (with <xref linkend="SetDefaultTTFont"/>,
+<xref linkend="SetFont"/>, or <xref linkend="SetFontTTF"/>),
+PHPlot will attempt to select a default font from its internal list, but
+using the directory you specify with SetTTFPath.
+This can be useful on platforms where you are willing to use a default
+font, but the internal GD rules on how to locate fonts do not work.
+    </para>
+    <para>
+See <xref linkend="conc-text-fonts"/> for more information.
+    </para>
+  </refsect1>
+  <refsect1>
+    <title>History</title>
+    <para>
+Use of the default TrueType font directory to locate the initial, default
+font was implemented in PHPlot-5.1.3.
+Also with this release, fonts are first searched for without a path, which
+allows GD to try to locate the font using its internal rules.
+    </para>
+    <para>
+Starting with PHPlot-5.0rc3, the default TrueType font directory is used both
+for the default font set with <xref linkend="SetDefaultTTFont" /> and for
+fonts set with <xref linkend="SetFont" />. Refer to those two functions for
+details.
     </para>
   </refsect1>
 </refentry>
@@ -7048,6 +7064,67 @@ The default is 'plotdown'.
   </refsect1>
 </refentry>
 
+<refentry id="SetXTitleColor">
+  <refmeta>
+    <refentrytitle>SetXTitleColor</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetXTitleColor</refname>
+    <refpurpose>Set the color of the X Title</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetXTitleColor(<parameter>$color</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetXTitleColor</function> sets the color of the X title
+(as set with <xref linkend="SetXTitle" />).
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$color</replaceable></term>
+        <listitem>
+          <para>
+Color value to use.
+See <xref linkend="conc-colors" /> for more on color values.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+Use this function if you want the X title to have a different color than
+the main title.
+See <xref linkend="conc-titles"/> for more about plot titles.
+    </para>
+    <para>
+By default, the X title defaults to use the same color as the main plot title.
+The main plot title color is set with <xref linkend="SetTitleColor"/>, and
+it defaults to black.
+    </para>
+  </refsect1>
+  <refsect1>
+    <title>History</title>
+    <para>
+This function was added after PHPlot-5.1.3.
+Through PHPlot-5.1.3, the main, X, and Y titles always used the same color.
+    </para>
+  </refsect1>
+</refentry>
+
 <refentry id="SetYAxisPosition">
   <refmeta>
     <refentrytitle>SetYAxisPosition</refentrytitle>
@@ -8378,6 +8455,67 @@ The default is 'plotleft'.
       </varlistentry>
 
     </variablelist>
+  </refsect1>
+</refentry>
+
+<refentry id="SetYTitleColor">
+  <refmeta>
+    <refentrytitle>SetYTitleColor</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetYTitleColor</refname>
+    <refpurpose>Set the color of the Y Title</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetYTitleColor(<parameter>$color</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetYTitleColor</function> sets the color of the Y title
+(as set with <xref linkend="SetYTitle" />).
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$color</replaceable></term>
+        <listitem>
+          <para>
+Color value to use.
+See <xref linkend="conc-colors" /> for more on color values.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+Use this function if you want the Y title to have a different color than
+the main title.
+See <xref linkend="conc-titles"/> for more about plot titles.
+    </para>
+    <para>
+By default, the Y title defaults to use the same color as the main plot title.
+The main plot title color is set with <xref linkend="SetTitleColor"/>, and
+it defaults to black.
+    </para>
+  </refsect1>
+  <refsect1>
+    <title>History</title>
+    <para>
+This function was added after PHPlot-5.1.3.
+Through PHPlot-5.1.3, the main, X, and Y titles always used the same color.
+    </para>
   </refsect1>
 </refentry>
 
