@@ -13,6 +13,24 @@ see the ChangeLog file inside the PHPlot distribution.)
 </abstract>
 
 <variablelist>
+  <varlistentry>
+    <term>2010-09-30</term>
+    <listitem>
+      <para>
+Changes for new color processing. Mostly internal functions and methods,
+but also two new public methods were added for controlling title colors.
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
+    <term>2010-09-27</term>
+    <listitem>
+      <para>
+Document new behavior of stackedbar plots with negative values.
+      </para>
+    </listitem>
+  </varlistentry>
 
   <varlistentry>
     <term>2010-09-25</term>

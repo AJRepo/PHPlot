@@ -4,6 +4,29 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2010-10-01
+   * reference.xml: Fix out-of-order reference entries.
+   * .ispell_words: Additions - new function names
+
+2010-09-30
+   Document changes associated with new color processing method.
+   * reference.xml: Document new functions SetXTitleColor and SetYTitleColor,
+     and modify description of SetTitleColor to reference them.
+   * developer.xml:
+     + Changed arguments to internal function DrawBar.
+     + New internal functions: GetBarColors, GetColorIndex, GetDarkColorIndex,
+       GetDataColor, GetDataErrorColors, NeedDataDarkColors, NeedErrorBarColors,
+       SetColorIndexes, truncate_array.
+     + Removed internal functions: SetIndexColor, SetIndexDarkColor.
+   * functions.xml: Add new SetXTitleColor, SetYTitleColor (2 places).
+   * variables.list:
+     + Most ndx_*color* variables are now set in SetColorIndexes.
+     + Other *color variables now contain a color component array (R,G,B,A)
+       rather than a color name or other caller-provided color specification.
+     + Removed data_colors_alpha. This became unneeded due to other changes.
+     + New member variables: ndx_x_title_color, ndx_y_title_color,
+       x_title_color, y_title_color.
+
 2010-09-27
    * developer.xml: Document new internal function DrawBar().
    * concepts.xml: Update description of stackedbars plot type, which now

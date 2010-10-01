@@ -2,6 +2,62 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2010-10-01
+    * Rewrite color handling. Default and specified colors are now validated,
+      converted to RGBA arrays, and saved. The colors indexes are not
+      allocated until graph drawing time. Unneeded colors are not allocated.
+
+      Fix bug 3045131 "SetTransparentColor problems": Transparency setup is
+      deferred to graph drawing time, after most other colors are allocated.
+      Fixes SetTransparentColor order dependency, and works with data colors.
+
+      Fix bug 3049726 "Optimize color allocation": Colors allocation is
+      deferred to graph drawing time, and colors for most elements are only
+      allocated if needed. In particular, the data colors and dark colors,
+      which used 32 slots, now only get defined as needed.
+
+      Feature request (partial) 3077554 "Finer control over plot element
+      colors": The colors of the main, X, and Y titles can now be controlled
+      separately.
+
+      Change details:
+      New internal functions:
+          GetColorIndex(), GetDarkColorIndex()
+              Allocate pre-parsed colors for elements.
+          SetColorIndexes()
+              Does the deferred color allocation and defaults.
+          NeedDataDarkColors(), NeedErrorBarColors()
+              Called by graph drawing functions if those colors are needed.
+          GetDataColor(), GetDataErrorColors(), GetBarColors()
+              Custom or standard data color assignment for most plot types.
+          truncate_array()
+             Shorten an array. Used to limit data color allocation.
+
+      Removed internal functions:
+          SetIndexColor(), SetIndexDarkColor()
+              Unneeded. Color handling is now in two separate phases.
+
+      Removed internal member variable:
+          data_colors_alpha
+              PHPlot no longer calls SetDataColors before plotting, so this
+              variable is not needed to preserve the default alpha.
+
+      New internal member variables:
+          transparent_color
+              Saves color value from SetTransparentColor. For bug 3045131.
+          x_title_color, y_title_color, ndx_x_title_color, ndx_y_title_color
+              For title colors. DrawXTitle and DrawYTitle use them now.
+
+      Changed internal member variables:
+          i_border, plot_bg_color, bg_color, label_color, text_color, etc.
+              All variables for colors now always hold a parsed 4-component
+              (RGBA) color specification as an array, and are no longer
+              statically initialized to a color name.
+
+      New public functions:
+          SetXTitleColor(), SetYTitleColor()
+              These can be used to make the 3 titles have different colors.
+
 2010-09-26
     * Don't let SetXDataLabelPos() accept 'xaxis' or 'all' as valid.
       Don't let SetXTickLabelPos(), SetYTickLabelPos() accept 'all' as valid.
