@@ -25,6 +25,7 @@ DimGrey
 DoCallback
 DrawArea
 DrawBackground
+DrawBar
 DrawBars
 DrawDataLabel
 DrawDataValueLabel
@@ -65,7 +66,12 @@ FormatLabel
 FreeBSD
 FreeType
 GD
+GetBarColors
 GetCallback
+GetColorIndex
+GetDarkColorIndex
+GetDataColor
+GetDataErrorColors
 GetDefaultTTFont
 GetDeviceXY
 GetImage
@@ -79,6 +85,8 @@ LiberationSans
 MAXY
 MINY
 MySQL
+NeedDataDarkColors
+NeedErrorBarColors
 PHP
 PHPlot
 PNG
@@ -100,6 +108,7 @@ SetBackgroundcolor
 SetBgImage
 SetBrowserCache
 SetCallback
+SetColorIndexes
 SetDashedStyle
 SetDataBorderColors
 SetDataColors
@@ -187,6 +196,7 @@ SetXTickLength
 SetXTickPos
 SetXTimeFormat
 SetXTitle
+SetXTitleColor
 SetYAxisPosition
 SetYDataLabelAngle
 SetYDataLabelPos
@@ -201,6 +211,7 @@ SetYTickLength
 SetYTickPos
 SetYTimeFormat
 SetYTitle
+SetYTitleColor
 SizeText
 SkyBlue
 SlateBlue
