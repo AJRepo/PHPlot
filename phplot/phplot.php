@@ -160,24 +160,11 @@ class PHPlot
 //Colors and styles       (all colors can be array (R,G,B) or named color)
     public $color_array = 'small';             // 'small', 'large' or array (define your own colors)
                                             // See rgb.inc.php and SetRGBArray()
-    public $i_border = array(194, 194, 194);
-    public $plot_bg_color = 'white';
-    public $bg_color = 'white';
-    public $label_color = 'black';
-    public $text_color = 'black';
-    public $grid_color = 'black';
-    public $light_grid_color = 'gray';
-    public $tick_color = 'black';
-    public $title_color = 'black';
     public $default_colors = array(       // The default colors for data and error bars
         'SkyBlue', 'green', 'orange', 'blue', 'red', 'DarkGreen', 'purple', 'peru',
         'cyan', 'salmon', 'SlateBlue', 'YellowGreen', 'magenta', 'aquamarine1', 'gold', 'violet');
 
-    // data_colors and error_bar_colors are initialized to default_colors by SetDefaultStyles.
-    // public $data_colors;                    // Data colors
-    // public $error_bar_colors;               // Error bar colors
-    // data_border_colors is initialized to black by SetDefaultStyles.
-    // public $data_border_colors;             // Data border colors
+    // See SetDefaultStyles() for default colors for PHPlot elements.
 
     public $line_widths = 1;                  // single value or array
     public $line_styles = array('solid', 'solid', 'dashed');   // single value or array
@@ -200,8 +187,6 @@ class PHPlot
 
     public $draw_plot_area_background = FALSE;
     public $draw_broken_lines = FALSE;          // Tells not to draw lines for missing Y data.
-
-    public $data_colors_alpha = 0;              // Default alpha for data colors. See SetDataColors()
 
 //Miscellaneous
     public $callbacks = array(                  // Valid callback reasons (see SetCallBack)
@@ -321,38 +306,31 @@ class PHPlot
 /////////////////////////////////////////////
 
     /*
-     * Returns a GD color index value to a color specified as for SetRGBColor().
-     * This works with both palette and truecolor images.
-     *    $which_color : The color specification. See SetRGBColor for formats.
-     *    $alpha : Optional default Alpha value, if $which_color does not include alpha.
-     * Returns a GD color index, or NULL on error.
-     * Note: For palette images, this is an index into the color map.
-     * For truecolor images, this is a 32 bit value 0xAARRGGBB. But this difference
-     * is internal to GD.
-     * Note: This function should be considered 'protected', and is not documented for public use.
+     * Allocate a GD color index for a color specified by a 4 component array.
+     * When a color is requested, it is parsed and checked by SetRGBColor, and then saved as an array
+     * of (R,G,B,A) components. At graph drawing time, this function is used to allocate the color.
+     *   $color : The color specification as a 4 component array: R, G, B, A.
+     * Returns: A GD color index that can be used when drawing.
      */
-    function SetIndexColor($which_color, $alpha = 0)
+    protected function GetColorIndex($color)
     {
-        list ($r, $g, $b, $a) = $this->SetRGBColor($which_color, $alpha);  //Translate to RGBA
-        if (!isset($r)) return NULL;
-        return ImageColorResolveAlpha($this->img, $r, $g, $b, $a);
+        list($r, $g, $b, $a) = $color;
+        return imagecolorresolvealpha($this->img, $r, $g, $b, $a);
     }
 
     /*
-     * Returns an index to a slightly darker color than the one requested.
-     * This works with both palette and truecolor images.
-     *    $which_color : The color specification. See SetRGBColor for formats.
-     *    $alpha : Optional default Alpha value, if $which_color does not include alpha.
-     * Returns a GD color index, or NULL on error.
+     * Allocate a GD color index for a darker shade of a color specified by a 4 component array.
+     * See notes for GetColorIndex() above.
+     *   $color : The color specification as a 4 component array: R, G, B, A.
+     * Returns: A GD color index that can be used when drawing.
      */
-    protected function SetIndexDarkColor($which_color, $alpha = 0)
+    protected function GetDarkColorIndex($color)
     {
-        list ($r, $g, $b, $a) = $this->SetRGBColor($which_color, $alpha);
-        if (!isset($r)) return NULL;
+        list ($r, $g, $b, $a) = $color;
         $r = max(0, $r - 0x30);
         $g = max(0, $g - 0x30);
         $b = max(0, $b - 0x30);
-        return ImageColorResolveAlpha($this->img, $r, $g, $b, $a);
+        return imagecolorresolvealpha($this->img, $r, $g, $b, $a);
     }
 
     /*
@@ -360,17 +338,17 @@ class PHPlot
      */
     protected function SetDefaultStyles()
     {
-        /* Some of the Set*() functions use default values when they get no parameters. */
         $this->SetDefaultDashedStyle($this->dashed_style);
-        $this->SetImageBorderColor($this->i_border);
-        $this->SetPlotBgColor($this->plot_bg_color);
-        $this->SetBackgroundColor($this->bg_color);
-        $this->SetLabelColor($this->label_color);
-        $this->SetTextColor($this->text_color);
-        $this->SetGridColor($this->grid_color);
-        $this->SetLightGridColor($this->light_grid_color);
-        $this->SetTickColor($this->tick_color);
-        $this->SetTitleColor($this->title_color);
+        $this->SetImageBorderColor(array(194, 194, 194));
+        $this->SetPlotBgColor('white');
+        $this->SetBackgroundColor('white');
+        $this->SetLabelColor('black');
+        $this->SetTextColor('black');
+        $this->SetGridColor('black');
+        $this->SetLightGridColor('gray');
+        $this->SetTickColor('black');
+        $this->SetTitleColor('black');
+        // These functions set up the default colors when called without parameters
         $this->SetDataColors();
         $this->SetErrorBarColors();
         $this->SetDataBorderColors();
@@ -382,9 +360,7 @@ class PHPlot
      */
     function SetBackgroundColor($which_color)
     {
-        $this->bg_color= $which_color;
-        $this->ndx_bg_color= $this->SetIndexColor($this->bg_color);
-        return isset($this->ndx_bg_color);
+        return (bool)($this->bg_color = $this->SetRGBColor($which_color));
     }
 
     /*
@@ -392,19 +368,34 @@ class PHPlot
      */
     function SetPlotBgColor($which_color)
     {
-        $this->plot_bg_color= $which_color;
-        $this->ndx_plot_bg_color= $this->SetIndexColor($this->plot_bg_color);
-        return isset($this->ndx_plot_bg_color);
+        return (bool)($this->plot_bg_color = $this->SetRGBColor($which_color));
     }
 
-   /*
-    * Set the color of the titles (main, X, and Y) to $which_color.
-    */
+    /*
+     * Set the color of the titles (main, X, and Y) to $which_color.
+     * See also SetXTitleColor and SetYTitleColor.
+     */
     function SetTitleColor($which_color)
     {
-        $this->title_color= $which_color;
-        $this->ndx_title_color= $this->SetIndexColor($this->title_color);
-        return isset($this->ndx_title_color);
+        return (bool)($this->title_color = $this->SetRGBColor($which_color));
+    }
+
+    /*
+     * Set the color of the X title to $which_color.
+     * This overrides the color set with SetTitleColor.
+     */
+    function SetXTitleColor($which_color)
+    {
+        return (bool)($this->x_title_color = $this->SetRGBColor($which_color));
+    }
+
+    /*
+     * Set the color of the Y title to $which_color.
+     * This overrides the color set with SetTitleColor.
+     */
+    function SetYTitleColor($which_color)
+    {
+        return (bool)($this->y_title_color = $this->SetRGBColor($which_color));
     }
 
     /*
@@ -412,9 +403,7 @@ class PHPlot
      */
     function SetTickColor($which_color)
     {
-        $this->tick_color= $which_color;
-        $this->ndx_tick_color= $this->SetIndexColor($this->tick_color);
-        return isset($this->ndx_tick_color);
+        return (bool)($this->tick_color = $this->SetRGBColor($which_color));
     }
 
     /*
@@ -422,9 +411,7 @@ class PHPlot
      */
     function SetLabelColor($which_color)
     {
-        $this->label_color = $which_color;
-        $this->ndx_title_color= $this->SetIndexColor($this->label_color);
-        return isset($this->ndx_title_color);
+        return $this->SetTitleColor($which_color);
     }
 
     /*
@@ -432,9 +419,7 @@ class PHPlot
      */
     function SetTextColor($which_color)
     {
-        $this->text_color= $which_color;
-        $this->ndx_text_color= $this->SetIndexColor($this->text_color);
-        return isset($this->ndx_text_color);
+        return (bool)($this->text_color = $this->SetRGBColor($which_color));
     }
 
     /*
@@ -442,9 +427,7 @@ class PHPlot
      */
     function SetLightGridColor($which_color)
     {
-        $this->light_grid_color= $which_color;
-        $this->ndx_light_grid_color= $this->SetIndexColor($this->light_grid_color);
-        return isset($this->ndx_light_grid_color);
+        return (bool)($this->light_grid_color = $this->SetRGBColor($which_color));
     }
 
     /*
@@ -453,9 +436,7 @@ class PHPlot
      */
     function SetGridColor($which_color)
     {
-        $this->grid_color = $which_color;
-        $this->ndx_grid_color= $this->SetIndexColor($this->grid_color);
-        return isset($this->ndx_grid_color);
+        return (bool)($this->grid_color = $this->SetRGBColor($which_color));
     }
 
     /*
@@ -463,10 +444,7 @@ class PHPlot
      */
     function SetImageBorderColor($which_color)
     {
-        $this->i_border = $which_color;
-        $this->ndx_i_border = $this->SetIndexColor($this->i_border);
-        $this->ndx_i_border_dark = $this->SetIndexDarkColor($this->i_border);
-        return isset($this->ndx_i_border);
+        return (bool)($this->i_border = $this->SetRGBColor($which_color));
     }
 
     /*
@@ -474,11 +452,7 @@ class PHPlot
      */
     function SetTransparentColor($which_color)
     {
-        $ndx = $this->SetIndexColor($which_color);
-        if (!isset($ndx))
-            return FALSE;
-        ImageColorTransparent($this->img, $ndx);
-        return TRUE;
+        return (bool)($this->transparent_color = $this->SetRGBColor($which_color));
     }
 
     /*
@@ -488,7 +462,7 @@ class PHPlot
      *    $which_color_array : A color array, or 'small' or 'large'.
      * Color arrays map color names into arrays of R, G, B and optionally A values.
      */
-    function SetRGBArray ($which_color_array)
+    function SetRGBArray($which_color_array)
     {
         if (is_array($which_color_array)) {           // User defined array
             $this->rgb_array = $which_color_array;
@@ -604,30 +578,44 @@ class PHPlot
      *    SetDataColors(colorname)   : Use an array of just colorname as the color map.
      *    SetDataColors() or SetDataColors(NULL) : Load default color map if no color map is already set.
      *    SetDataColors('') or SetDataColors(False) : Load default color map (even if one is already set).
+     *  $which_border is passed to SetDataBorderColors, for backward compatibility.
+     *  $alpha is a default Alpha to apply to all data colors that do not have alpha.
+     *    The default for this is NULL, not 0, so we can tell if it was defaulted. But the effective
+     *    default value is 0 (opaque).
      */
     function SetDataColors($which_data = NULL, $which_border = NULL, $alpha = NULL)
     {
         if (is_array($which_data)) {
-            $this->data_colors = $which_data;  // Use supplied array
+            $colors = $which_data;  // Use supplied array
         } elseif (!empty($which_data)) {
-            $this->data_colors = array($which_data);  // Use supplied single color
+            $colors = array($which_data);  // Use supplied single color
         } elseif (empty($this->data_colors) || !is_null($which_data)) {
-            $this->data_colors = $this->default_colors;  // Use default color array
-        } // Else do nothing: which_data is NULL or missing and a color array is already set.
+            $colors = $this->default_colors;  // Use default color array
+        } else {
+            // which_data is NULL or missing and a color array is already set.
+            // The existing color array is left alone, except that if $alpha is
+            // given this will replace the alpha value of each existing color.
+            // This makes SetDataColors(NULL, NULL, $alpha) work.
+            if (isset($alpha)) {
+                $n_colors = count($this->data_colors);
+                for ($i = 0; $i < $n_colors; $i++) {
+                    $this->data_colors[$i][3] = $alpha; // Component 3 = alpha value
+                }
+            }
+            // No need to reparse the colors or anything else.
+            return TRUE;
+        }
 
-        // If an alpha value is supplied, use it as the new default. Need to save and restore
-        // this because the color indexes will be regenerated when the arrays are padded.
-        if (!empty($alpha))
-            $this->data_colors_alpha = $alpha;
+        if (!isset($alpha))
+            $alpha = 0; // Actual default is opaque colors.
 
-        $i = 0;
-        foreach ($this->data_colors as $col) {
-            $ndx = $this->SetIndexColor($col, $this->data_colors_alpha);
-            if (!isset($ndx))
-                return FALSE;
-            $this->ndx_data_colors[$i] = $ndx;
-            $this->ndx_data_dark_colors[$i] = $this->SetIndexDarkColor($col, $this->data_colors_alpha);
-            $i++;
+        // Check each color and convert to array (r,g,b,a) form.
+        // Use the $alpha argument as a default for the alpha value of each color.
+        $this->data_colors = array();
+        foreach ($colors as $color) {
+            $color_array = $this->SetRGBColor($color, $alpha);
+            if (!$color_array) return FALSE; // SetRGBColor already did an error message.
+            $this->data_colors[] = $color_array;
         }
 
         // For past compatibility:
@@ -641,20 +629,21 @@ class PHPlot
     function SetDataBorderColors($which_br = NULL)
     {
         if (is_array($which_br)) {
-            $this->data_border_colors = $which_br; // Use supplied array
+            $colors = $which_br; // Use supplied array
         } elseif (!empty($which_br)) {
-            $this->data_border_colors = array($which_br);  // Use supplied single color
+            $colors = array($which_br);  // Use supplied single color
         } elseif (empty($this->data_border_colors) || !is_null($which_br)) {
-            $this->data_border_colors = array('black'); // Use default
-        } // Else do nothing: which_br is NULL or missing and a color array is already set.
+            $colors = array('black'); // Use default
+        } else {
+            return TRUE; // Do nothing: which_br is NULL or missing and a color array is already set.
+        }
 
-        $i = 0;
-        foreach ($this->data_border_colors as $col) {
-            $ndx = $this->SetIndexColor($col);
-            if (!isset($ndx))
-                return FALSE;
-            $this->ndx_data_border_colors[$i] = $ndx;
-            $i++;
+        // Check each color and convert to array (r,g,b,a) form.
+        $this->data_border_colors = array();
+        foreach ($colors as $color) {
+            $color_array = $this->SetRGBColor($color);
+            if (!$color_array) return FALSE; // SetRGBColor already did an error message.
+            $this->data_border_colors[] = $color_array;
         }
         return TRUE;
     }
@@ -666,20 +655,21 @@ class PHPlot
     function SetErrorBarColors($which_err = NULL)
     {
         if (is_array($which_err)) {
-            $this->error_bar_colors = $which_err;  // Use supplied array
+            $colors = $which_err;  // Use supplied array
         } elseif (!empty($which_err)) {
-            $this->error_bar_colors = array($which_err);  // Use supplied single color
+            $colors = array($which_err);  // Use supplied single color
         } elseif (empty($this->error_bar_colors) || !is_null($which_err)) {
-            $this->error_bar_colors = $this->default_colors;  // Use default color array
-        } // Else do nothing: which_err is NULL or missing and a color array is already set.
+            $colors = $this->default_colors;  // Use default color array
+        } else {
+            return TRUE; // Do nothing: which_err is NULL or missing and a color array is already set.
+        }
 
-        $i = 0;
-        foreach ($this->error_bar_colors as $col) {
-            $ndx = $this->SetIndexColor($col);
-            if (!isset($ndx))
-                return FALSE;
-            $this->ndx_error_bar_colors[$i] = $ndx;
-            $i++;
+        // Check each color and convert to array (r,g,b,a) form.
+        $this->error_bar_colors = array();
+        foreach ($colors as $color) {
+            $color_array = $this->SetRGBColor($color);
+            if (!$color_array) return FALSE; // SetRGBColor already did an error message.
+            $this->error_bar_colors[] = $color_array;
         }
         return TRUE;
     }
@@ -2431,14 +2421,9 @@ class PHPlot
     {
         $this->pad_array($this->line_widths, $this->data_columns);
         $this->pad_array($this->line_styles, $this->data_columns);
-
-        $this->pad_array($this->data_colors, $this->data_columns);
-        $this->pad_array($this->data_border_colors, $this->data_columns);
-        $this->pad_array($this->error_bar_colors, $this->data_columns);
-
-        $this->SetDataColors();
-        $this->SetDataBorderColors();
-        $this->SetErrorBarColors();
+        $this->pad_array($this->ndx_data_colors, $this->data_columns);
+        $this->pad_array($this->ndx_data_border_colors, $this->data_columns);
+        // Other data color arrays are handled in the Need*Colors() functions.
 
         return TRUE;
     }
@@ -2459,6 +2444,17 @@ class PHPlot
         $n = count($arr);
         $base = 0;
         while ($n < $size) $arr[$n++] = $arr[$base++];
+    }
+
+    /*
+     * Truncate an array to a maximum size.
+     * This only works on 0-based sequential integer indexed arrays.
+     *    $arr : The array to truncate.
+     *    $size : Maximum size of the resulting array.
+     */
+    protected function truncate_array(&$arr, $size)
+    {
+        for ($n = count($arr) - 1; $n >= $size; $n--) unset($arr[$n]);
     }
 
     /*
@@ -2556,6 +2552,89 @@ class PHPlot
         array_unshift($args, $this->img);
         // Now args[] looks like: img, passthru, extra args...
         return call_user_func_array($function, $args);
+    }
+
+    /*
+     * Allocate colors for the plot.
+     * This is called by DrawGraph to allocate the colors needed for the plot.  Each selectable
+     * color has already been validated, parsed into an array (r,g,b,a), and stored into a member
+     * variable. Now the GD color indexes are assigned and stored into the ndx_*_color variables.
+     * This is deferred here to avoid allocating unneeded colors and to avoid order dependencies,
+     * especially with the transparent color.
+     *
+     * For drawing data elements, only the main data colors and border colors are allocated here.
+     * Dark colors and error bar colors are allocated by Need*Color() functions.
+     * (Data border colors default to just black, so there is no cost to always allocating.)
+     *
+     * Data color allocation works as follows. If there is a data_color callback, then allocate all
+     * defined data colors (because the callback can use them however it wants). Otherwise, truncate
+     * the array to the number of colors that will be used. This is the larger of the number of data
+     * sets and the number of legend lines.
+     */
+    protected function SetColorIndexes()
+    {
+        $this->ndx_bg_color         = $this->GetColorIndex($this->bg_color); // Background first
+        $this->ndx_plot_bg_color    = $this->GetColorIndex($this->plot_bg_color);
+        if ($this->image_border_type != 'none') {
+            $this->ndx_i_border         = $this->GetColorIndex($this->i_border);
+            $this->ndx_i_border_dark    = $this->GetDarkColorIndex($this->i_border);
+        }
+
+        // Handle defaults for X and Y title colors.
+        $this->ndx_title_color      = $this->GetColorIndex($this->title_color);
+        if (empty($this->x_title_color)) {
+            $this->ndx_x_title_color = $this->ndx_title_color;
+        } else {
+            $this->ndx_x_title_color = $this->GetColorIndex($this->x_title_color);
+        }
+        if (empty($this->y_title_color)) {
+            $this->ndx_y_title_color = $this->ndx_title_color;
+        } else {
+            $this->ndx_y_title_color = $this->GetColorIndex($this->y_title_color);
+        }
+
+        $this->ndx_text_color       = $this->GetColorIndex($this->text_color);
+        $this->ndx_grid_color       = $this->GetColorIndex($this->grid_color);
+        $this->ndx_light_grid_color = $this->GetColorIndex($this->light_grid_color);
+        $this->ndx_tick_color       = $this->GetColorIndex($this->tick_color);
+
+        // If no data_color callback is being used, only allocate needed colors.
+        if (!$this->GetCallback('data_color')) {
+            $data_colors_needed = max($this->data_columns, empty($this->legend) ? 0 : count($this->legend));
+            $this->truncate_array($this->data_colors, $data_colors_needed);
+            $this->truncate_array($this->data_border_colors, $data_colors_needed);
+            $this->truncate_array($this->error_bar_colors, $data_colors_needed);
+        }
+
+        // Allocate main data colors. For other colors used for data, see the functions which follow.
+        $getcolor_cb = array($this, 'GetColorIndex');
+        $this->ndx_data_colors = array_map($getcolor_cb, $this->data_colors);
+        $this->ndx_data_border_colors = array_map($getcolor_cb, $this->data_border_colors);
+
+        // Set up a color as transparent, if SetTransparentColor was used.
+        if (!empty($this->transparent_color)) {
+            imagecolortransparent($this->img, $this->GetColorIndex($this->transparent_color));
+        }
+    }
+
+    /*
+     * Allocate dark-shade data colors. Called if needed by graph drawing functions.
+     */
+    protected function NeedDataDarkColors()
+    {
+        $getdarkcolor_cb = array($this, 'GetDarkColorIndex');
+        $this->ndx_data_dark_colors = array_map($getdarkcolor_cb, $this->data_colors);
+        $this->pad_array($this->ndx_data_dark_colors, $this->data_columns);
+    }
+
+    /*
+     * Allocate error bar colors. Called if needed by graph drawing functions.
+     */
+    protected function NeedErrorBarColors()
+    {
+        $getcolor_cb = array($this, 'GetColorIndex');
+        $this->ndx_error_bar_colors = array_map($getcolor_cb, $this->error_bar_colors);
+        $this->pad_array($this->ndx_error_bar_colors, $this->data_columns);
     }
 
 //////////////////////////////////////////////////////////
@@ -4042,13 +4121,13 @@ class PHPlot
         // Upper title
         if ($this->x_title_pos == 'plotup' || $this->x_title_pos == 'both') {
             $ypos = $this->plot_area[1] - $this->x_title_top_offset;
-            $this->DrawText($this->fonts['x_title'], 0, $xpos, $ypos, $this->ndx_title_color,
+            $this->DrawText($this->fonts['x_title'], 0, $xpos, $ypos, $this->ndx_x_title_color,
                             $this->x_title_txt, 'center', 'bottom');
         }
         // Lower title
         if ($this->x_title_pos == 'plotdown' || $this->x_title_pos == 'both') {
             $ypos = $this->plot_area[3] + $this->x_title_bot_offset;
-            $this->DrawText($this->fonts['x_title'], 0, $xpos, $ypos, $this->ndx_title_color,
+            $this->DrawText($this->fonts['x_title'], 0, $xpos, $ypos, $this->ndx_x_title_color,
                             $this->x_title_txt, 'center', 'top');
         }
         return TRUE;
@@ -4067,12 +4146,12 @@ class PHPlot
 
         if ($this->y_title_pos == 'plotleft' || $this->y_title_pos == 'both') {
             $xpos = $this->plot_area[0] - $this->y_title_left_offset;
-            $this->DrawText($this->fonts['y_title'], 90, $xpos, $ypos, $this->ndx_title_color,
+            $this->DrawText($this->fonts['y_title'], 90, $xpos, $ypos, $this->ndx_y_title_color,
                             $this->y_title_txt, 'right', 'center');
         }
         if ($this->y_title_pos == 'plotright' || $this->y_title_pos == 'both') {
             $xpos = $this->plot_area[2] + $this->y_title_right_offset;
-            $this->DrawText($this->fonts['y_title'], 90, $xpos, $ypos, $this->ndx_title_color,
+            $this->DrawText($this->fonts['y_title'], 90, $xpos, $ypos, $this->ndx_y_title_color,
                             $this->y_title_txt, 'left', 'center');
         }
 
@@ -4589,6 +4668,10 @@ class PHPlot
         if (!$this->CheckDataType('text-data, text-data-single, data-data'))
             return FALSE;
 
+        // Allocate dark colors only if they will be used for shading.
+        if ($this->shading > 0)
+            $this->NeedDataDarkColors();
+
         $xpos = $this->plot_area[0] + $this->plot_area_width/2;
         $ypos = $this->plot_area[1] + $this->plot_area_height/2;
         $diameter = min($this->plot_area_width, $this->plot_area_height);
@@ -4703,6 +4786,65 @@ class PHPlot
     }
 
     /*
+     * Get data color to use for plotting.
+     *   $row, $idx : Index arguments for the current data point.
+     *   &$vars : Variable storage. Caller makes an empty array, and this function uses it.
+     *   &$data_color : Returned result - Color index for the data point.
+     *   $extra : Extra info flag passed through to data color callback.
+     */
+    protected function GetDataColor($row, $idx, &$vars, &$data_color, $extra = 0)
+    {
+        // Initialize or extract variables:
+        if (empty($vars)) {
+            $custom_color = (bool)$this->GetCallback('data_color');
+            $num_data_colors = count($this->ndx_data_colors);
+            $vars = compact('custom_color', 'num_data_colors');
+        } else {
+          extract($vars);
+        }
+
+        // Select the colors.
+        if ($custom_color) {
+            $col_i = $this->DoCallback('data_color', $row, $idx, $extra); // Custom color index
+            $data_color = $this->ndx_data_colors[$col_i % $num_data_colors];
+        } else {
+            $data_color = $this->ndx_data_colors[$idx];
+        }
+    }
+
+    /*
+     * Get data color and error bar color to use for plotting.
+     *   $row, $idx : Index arguments for the current bar.
+     *   &$vars : Variable storage. Caller makes an empty array, and this function uses it.
+     *   &$data_color : Returned result - Color index for the data (bar fill)
+     *   &$error_color : Returned result - Color index for the error bars
+     *   $extra : Extra info flag passed through to data color callback.
+     */
+    protected function GetDataErrorColors($row, $idx, &$vars, &$data_color, &$error_color, $extra = 0)
+    {
+        // Initialize or extract variables:
+        if (empty($vars)) {
+            $this->NeedErrorBarColors();   // This plot needs error bar colors.
+            $custom_color = (bool)$this->GetCallback('data_color');
+            $num_data_colors = count($this->ndx_data_colors);
+            $num_error_colors = count($this->ndx_error_bar_colors);
+            $vars = compact('custom_color', 'num_data_colors', 'num_error_colors');
+        } else {
+          extract($vars);
+        }
+
+        // Select the colors.
+        if ($custom_color) {
+            $col_i = $this->DoCallback('data_color', $row, $idx, $extra); // Custom color index
+            $data_color = $this->ndx_data_colors[$col_i % $num_data_colors];
+            $error_color = $this->ndx_error_bar_colors[$col_i % $num_error_colors];
+        } else {
+            $data_color = $this->ndx_data_colors[$idx];
+            $error_color = $this->ndx_error_bar_colors[$idx];
+        }
+    }
+
+    /*
      * Draw the points and errors bars for an error plot of types points and linepoints
      * Supports only data-data-error format, with each row of the form
      *   array("title", x, y1, error1+, error1-, y2, error2+, error2-, ...)
@@ -4716,17 +4858,9 @@ class PHPlot
         // Adjust the point shapes and point sizes arrays:
         $this->CheckPointParams();
 
-        // Is there a custom function for picking the data color?
-        $custom_color = (bool)$this->GetCallback('data_color');
-        if ($custom_color) {
-            // This uses data_colors and error_bar_colors.
-            // They are padded to the same minimum length,
-            // but are not necessarily the same length.
-            $num_data_colors = count($this->ndx_data_colors);
-            $num_error_colors = count($this->ndx_error_bar_colors);
-            // Special flag for data color callback to indicate the 'points' part of 'linepoints':
-            $altcolor = $paired ? 1 : 0;
-        }
+        $gcvars = array(); // For GetDataErrorColors, which initializes and uses this.
+        // Special flag for data color callback to indicate the 'points' part of 'linepoints':
+        $alt_flag = $paired ? 1 : 0;
 
         for ($row = 0, $cnt = 0; $row < $this->num_data_rows; $row++) {
             $record = 1;                                // Skip record #0 (title)
@@ -4743,15 +4877,8 @@ class PHPlot
             for ($idx = 0; $record < $this->num_recs[$row]; $idx++) {
                 if (is_numeric($this->data[$row][$record])) {         // Allow for missing Y data
 
-                    // Select the colors.
-                    if ($custom_color) {
-                        $col_i = $this->DoCallback('data_color', $row, $idx, $altcolor);
-                        $data_color = $this->ndx_data_colors[$col_i % $num_data_colors];
-                        $error_bar_color = $this->ndx_error_bar_colors[$col_i % $num_error_colors];
-                    } else {
-                        $data_color = $this->ndx_data_colors[$idx];
-                        $error_bar_color = $this->ndx_error_bar_colors[$idx];
-                    }
+                    // Select the colors:
+                    $this->GetDataErrorColors($row, $idx, $gcvars, $data_color, $error_color, $alt_flag);
 
                     // Y:
                     $y_now = $this->data[$row][$record++];
@@ -4759,10 +4886,10 @@ class PHPlot
 
                     // Error +
                     $val = $this->data[$row][$record++];
-                    $this->DrawYErrorBar($x_now, $y_now, $val, $this->error_bar_shape, $error_bar_color);
+                    $this->DrawYErrorBar($x_now, $y_now, $val, $this->error_bar_shape, $error_color);
                     // Error -
                     $val = $this->data[$row][$record++];
-                    $this->DrawYErrorBar($x_now, $y_now, -$val, $this->error_bar_shape, $error_bar_color);
+                    $this->DrawYErrorBar($x_now, $y_now, -$val, $this->error_bar_shape, $error_color);
                 } else {
                     $record += 3;  // Skip over missing Y and its error values
                 }
@@ -4787,13 +4914,9 @@ class PHPlot
         // Adjust the point shapes and point sizes arrays:
         $this->CheckPointParams();
 
-        // Is there a custom function for picking the data color?
-        $custom_color = (bool)$this->GetCallback('data_color');
-        if ($custom_color) {
-            $num_data_colors = count($this->ndx_data_colors);
-            // Special flag for data color callback to indicate the 'points' part of 'linepoints':
-            $altcolor = $paired ? 1 : 0;
-        }
+        $gcvars = array(); // For GetDataColor, which initializes and uses this.
+        // Special flag for data color callback to indicate the 'points' part of 'linepoints':
+        $alt_flag = $paired ? 1 : 0;
 
         for ($row = 0, $cnt = 0; $row < $this->num_data_rows; $row++) {
             $rec = 1;                    // Skip record #0 (data label)
@@ -4813,15 +4936,9 @@ class PHPlot
             for ($idx = 0;$rec < $this->num_recs[$row]; $rec++, $idx++) {
                 if (is_numeric($this->data[$row][$rec])) {              // Allow for missing Y data
 
-                    // Select the color
-                    if ($custom_color) {
-                        $data_col_i = $this->DoCallback('data_color', $row, $idx, $altcolor)
-                                      % $num_data_colors;
-                        $data_color = $this->ndx_data_colors[$data_col_i];
-                    } else {
-                        $data_color = $this->ndx_data_colors[$idx];
-                    }
-
+                    // Select the color:
+                    $this->GetDataColor($row, $idx, $gcvars, $data_color, $alt_flag);
+                    // Draw the marker:
                     $this->DrawDot($x_now, $this->data[$row][$rec], $idx, $data_color);
                 }
             }
@@ -4845,10 +4962,7 @@ class PHPlot
         if (!$this->CheckDataType('text-data, data-data, text-data-yx, data-data-yx'))
             return FALSE;
 
-        // Is there a custom function for picking the data color?
-        $custom_color = (bool)$this->GetCallback('data_color');
-        if ($custom_color)
-            $num_data_colors = count($this->ndx_data_colors);
+        $gcvars = array(); // For GetDataColor, which initializes and uses this.
 
         for ($row = 0, $cnt = 0; $row < $this->num_data_rows; $row++) {
             $rec = 1;                    // Skip record #0 (data label)
@@ -4876,13 +4990,8 @@ class PHPlot
                     $dv = $this->data[$row][$rec];
                     ImageSetThickness($this->img, $this->line_widths[$idx]);
 
-                    // Select the color
-                    if ($custom_color) {
-                        $data_col_i = $this->DoCallback('data_color', $row, $idx) % $num_data_colors;
-                        $data_color = $this->ndx_data_colors[$data_col_i];
-                    } else {
-                        $data_color = $this->ndx_data_colors[$idx];
-                    }
+                    // Select the color:
+                    $this->GetDataColor($row, $idx, $gcvars, $data_color);
 
                     if ($this->datatype_swapped_xy) {
                         // Draw a line from user defined y axis position right (or left) to xtr($dv)
@@ -5133,10 +5242,7 @@ class PHPlot
         // If start_lines[i] is true, then (lastx[i], lasty[i]) is the previous point.
         $start_lines = array_fill(0, $this->data_columns, FALSE);
 
-        // Is there a custom function for picking the data color?
-        $custom_color = (bool)$this->GetCallback('data_color');
-        if ($custom_color)
-            $num_data_colors = count($this->ndx_data_colors);
+        $gcvars = array(); // For GetDataColor, which initializes and uses this.
 
         for ($row = 0, $cnt = 0; $row < $this->num_data_rows; $row++) {
             $record = 1;                                    // Skip record #0 (data label)
@@ -5156,13 +5262,8 @@ class PHPlot
                     continue; //Allow suppressing entire line, useful with linepoints
                 if (is_numeric($this->data[$row][$record])) {           //Allow for missing Y data
 
-                    // Select the color
-                    if ($custom_color) {
-                        $data_col_i = $this->DoCallback('data_color', $row, $idx) % $num_data_colors;
-                        $data_color = $this->ndx_data_colors[$data_col_i];
-                    } else {
-                        $data_color = $this->ndx_data_colors[$idx];
-                    }
+                    // Select the color:
+                    $this->GetDataColor($row, $idx, $gcvars, $data_color);
 
                     $y_now_pixels = $this->ytr($this->data[$row][$record]);
 
@@ -5203,12 +5304,7 @@ class PHPlot
     {
         $start_lines = array_fill(0, $this->data_columns, FALSE);
 
-        // Is there a custom function for picking the data color?
-        $custom_color = (bool)$this->GetCallback('data_color');
-        if ($custom_color) {
-            $num_data_colors = count($this->ndx_data_colors);
-            $num_error_colors = count($this->ndx_error_bar_colors);
-        }
+        $gcvars = array(); // For GetDataErrorColors, which initializes and uses this.
 
         for ($row = 0, $cnt = 0; $row < $this->num_data_rows; $row++) {
             $record = 1;                                    // Skip record #0 (data label)
@@ -5226,15 +5322,8 @@ class PHPlot
                     continue; //Allow suppressing entire line, useful with linepoints
                 if (is_numeric($this->data[$row][$record])) {    // Allow for missing Y data
 
-                    // Select the colors.
-                    if ($custom_color) {
-                        $col_i = $this->DoCallback('data_color', $row, $idx); // Custom color index
-                        $data_color = $this->ndx_data_colors[$col_i % $num_data_colors];
-                        $error_bar_color = $this->ndx_error_bar_colors[$col_i % $num_error_colors];
-                    } else {
-                        $data_color = $this->ndx_data_colors[$idx];
-                        $error_bar_color = $this->ndx_error_bar_colors[$idx];
-                    }
+                    // Select the colors:
+                    $this->GetDataErrorColors($row, $idx, $gcvars, $data_color, $error_color);
 
                     // Y
                     $y_now = $this->data[$row][$record++];
@@ -5256,11 +5345,11 @@ class PHPlot
                     } else {
                         // Error+
                         $val = $this->data[$row][$record++];
-                        $this->DrawYErrorBar($x_now, $y_now, $val, $this->error_bar_shape, $error_bar_color);
+                        $this->DrawYErrorBar($x_now, $y_now, $val, $this->error_bar_shape, $error_color);
 
                         // Error-
                         $val = $this->data[$row][$record++];
-                        $this->DrawYErrorBar($x_now, $y_now, -$val, $this->error_bar_shape, $error_bar_color);
+                        $this->DrawYErrorBar($x_now, $y_now, -$val, $this->error_bar_shape, $error_color);
                     }
 
                     // Update indexes:
@@ -5310,10 +5399,7 @@ class PHPlot
         // If start_lines[i] is true, then (lastx[i], lasty[i]) is the previous point.
         $start_lines = array_fill(0, $this->data_columns, FALSE);
 
-        // Is there a custom function for picking the data color?
-        $custom_color = (bool)$this->GetCallback('data_color');
-        if ($custom_color)
-            $num_data_colors = count($this->ndx_data_colors);
+        $gcvars = array(); // For GetDataColor, which initializes and uses this.
 
         for ($row = 0, $cnt = 0; $row < $this->num_data_rows; $row++) {
             $record = 1;                                    // Skip record #0 (data label)
@@ -5337,13 +5423,8 @@ class PHPlot
                         // Set line width, revert it to normal at the end
                         ImageSetThickness($this->img, $this->line_widths[$idx]);
 
-                        // Select the color
-                        if ($custom_color) {
-                            $data_col_i = $this->DoCallback('data_color', $row, $idx) % $num_data_colors;
-                            $data_color = $this->ndx_data_colors[$data_col_i];
-                        } else {
-                            $data_color = $this->ndx_data_colors[$idx];
-                        }
+                        // Select the color:
+                        $this->GetDataColor($row, $idx, $gcvars, $data_color);
 
                         if ($this->line_styles[$idx] == 'dashed') {
                             $this->SetDashedStyle($data_color);
@@ -5372,12 +5453,15 @@ class PHPlot
      * This is used by the bar and stackedbar plots, vertical and horizontal.
      *   $x1, $y1 : One corner of the bar.
      *   $x2, $y2 : Other corner of the bar.
-     *   $data_color, $data_dark_color, $data_border_color : Color indexes to use.
+     *   $data_color : Color index to use for the bar fill.
+     *   $alt_color : Color index to use for the shading (if shading is on), else for the border.
+     *      Note the same color is NOT used for shading and border - just the same argument.
+     *      See GetBarColors() for where these arguments come from.
      *   $shade_top : Shade the top? (Suppressed for downward stack segments except first.)
      *   $shade_side : Shade the right side? (Suppressed for leftward stack segments except first.)
      *      Only one of $shade_top or $shade_side can be FALSE. Both default to TRUE.
      */
-    protected function DrawBar($x1, $y1, $x2, $y2, $data_color, $data_dark_color, $data_border_color,
+    protected function DrawBar($x1, $y1, $x2, $y2, $data_color, $alt_color,
             $shade_top = TRUE, $shade_side = TRUE)
     {
         // Sort the points so x1,y1 is upper left and x2,y2 is lower right. This
@@ -5406,9 +5490,47 @@ class PHPlot
                     $pts = array($x2, $y2, $x2, $y1, $x2 + $shade, $y1 - $shade, $x2 + $shade, $y2 - $shade);
                 }
             }
-            ImageFilledPolygon($this->img, $pts, $npts, $data_dark_color);
+            ImageFilledPolygon($this->img, $pts, $npts, $alt_color);
         } else {
-            ImageRectangle($this->img, $x1, $y1, $x2,$y2, $data_border_color);
+            ImageRectangle($this->img, $x1, $y1, $x2,$y2, $alt_color);
+        }
+    }
+
+    /*
+     * Get colors to use for a bar chart. There is a data color, and either a border color
+     * or a shading color (data dark color).
+     *   $row, $idx : Index arguments for the current bar.
+     *   &$vars : Variable storage. Caller makes an empty array, and this function uses it.
+     *   &$data_color : Returned result - Color index for the data (bar fill).
+     *   &$alt_color : Returned result - Color index for the shading or outline.
+     */
+    protected function GetBarColors($row, $idx, &$vars, &$data_color, &$alt_color)
+    {
+        // Initialize or extract variables:
+        if (empty($vars)) {
+            if ($this->shading > 0)    // This plot needs dark colors if shading is on.
+                $this->NeedDataDarkColors();
+            $custom_color = (bool)$this->GetCallback('data_color');
+            $num_data_colors = count($this->ndx_data_colors);
+            $num_border_colors = count($this->ndx_data_border_colors);
+            $vars = compact('custom_color', 'num_data_colors', 'num_border_colors');
+        } else {
+          extract($vars);
+        }
+
+        // Select the colors.
+        if ($custom_color) {
+            $col_i = $this->DoCallback('data_color', $row, $idx); // Custom color index
+            $i_data = $col_i % $num_data_colors; // Index for data colors and dark colors
+            $i_border = $col_i % $num_border_colors; // Index for data borders (if used)
+        } else {
+            $i_data = $i_border = $idx;
+        }
+        $data_color = $this->ndx_data_colors[$i_data];
+        if ($this->shading > 0) {
+            $alt_color = $this->ndx_data_dark_colors[$i_data];
+        } else {
+            $alt_color = $this->ndx_data_border_colors[$i_border];
         }
     }
 
@@ -5429,16 +5551,7 @@ class PHPlot
         // in the group. See also CalcBarWidths above.
         $x_first_bar = ($this->data_columns * $this->record_bar_width) / 2 - $this->bar_adjust_gap;
 
-        // Is there a custom function for picking the data color?
-        $custom_color = (bool)$this->GetCallback('data_color');
-        if ($custom_color) {
-            // This uses data_colors, data_dark_colors, and data_border_colors.
-            // data_colors and data_dark_colors are always the same length.
-            // They and data_border_colors are padded to the same minimum length,
-            // but are not necessarily the same length.
-            $num_data_colors = count($this->ndx_data_colors);
-            $num_border_colors = count($this->ndx_data_border_colors);
-        }
+        $gcvars = array(); // For GetBarColors, which initializes and uses this.
 
         for ($row = 0; $row < $this->num_data_rows; $row++) {
             $record = 1;                                    // Skip record #0 (data label)
@@ -5465,21 +5578,11 @@ class PHPlot
                         $y2 = $this->ytr($y);
                     }
 
-                    // Select the colors.
-                    if ($custom_color) {
-                        $col_i = $this->DoCallback('data_color', $row, $idx); // Custom color index
-                        $data_col_i = $col_i % $num_data_colors; // Index for data colors and dark colors
-                        $data_color = $this->ndx_data_colors[$data_col_i];
-                        $data_dark_color = $this->ndx_data_dark_colors[$data_col_i];
-                        $data_border_color = $this->ndx_data_border_colors[$col_i % $num_border_colors];
-                    } else {
-                        $data_color = $this->ndx_data_colors[$idx];
-                        $data_dark_color = $this->ndx_data_dark_colors[$idx];
-                        $data_border_color = $this->ndx_data_border_colors[$idx];
-                    }
+                    // Select the colors:
+                    $this->GetBarColors($row, $idx, $gcvars, $data_color, $alt_color);
 
                     // Draw the bar, and the shade or border:
-                    $this->DrawBar($x1, $y1, $x2, $y2, $data_color, $data_dark_color, $data_border_color);
+                    $this->DrawBar($x1, $y1, $x2, $y2, $data_color, $alt_color);
 
                     // Draw optional data labels above the bars (or below, for negative values).
                     if ( $this->y_data_label_pos == 'plotin') {
@@ -5515,12 +5618,7 @@ class PHPlot
         // in the group. See also CalcBarWidths above.
         $y_first_bar = ($this->data_columns * $this->record_bar_width) / 2 - $this->bar_adjust_gap;
 
-        // Is there a custom function for picking the data color?
-        $custom_color = (bool)$this->GetCallback('data_color');
-        if ($custom_color) {
-            $num_data_colors = count($this->ndx_data_colors);
-            $num_border_colors = count($this->ndx_data_border_colors);
-        }
+        $gcvars = array(); // For GetBarColors, which initializes and uses this.
 
         for ($row = 0; $row < $this->num_data_rows; $row++) {
             $record = 1;                                    // Skip record #0 (data label)
@@ -5547,21 +5645,11 @@ class PHPlot
                         $x2 = $this->xtr($x);
                     }
 
-                    // Select the colors.
-                    if ($custom_color) {
-                        $col_i = $this->DoCallback('data_color', $row, $idx); // Custom color index
-                        $data_col_i = $col_i % $num_data_colors; // Index for data colors and dark colors
-                        $data_color = $this->ndx_data_colors[$data_col_i];
-                        $data_dark_color = $this->ndx_data_dark_colors[$data_col_i];
-                        $data_border_color = $this->ndx_data_border_colors[$col_i % $num_border_colors];
-                    } else {
-                        $data_color = $this->ndx_data_colors[$idx];
-                        $data_dark_color = $this->ndx_data_dark_colors[$idx];
-                        $data_border_color = $this->ndx_data_border_colors[$idx];
-                    }
+                    // Select the colors:
+                    $this->GetBarColors($row, $idx, $gcvars, $data_color, $alt_color);
 
                     // Draw the bar, and the shade or border:
-                    $this->DrawBar($x1, $y1, $x2, $y2, $data_color, $data_dark_color, $data_border_color);
+                    $this->DrawBar($x1, $y1, $x2, $y2, $data_color, $alt_color);
 
                     // Draw optional data labels to the right of the bars (or left, if the bar
                     // goes left of the Y axis line).
@@ -5603,21 +5691,12 @@ class PHPlot
         // This is the X offset from the bar's label center point to the left side of the bar.
         $x_first_bar = $this->record_bar_width / 2 - $this->bar_adjust_gap;
 
+        $gcvars = array(); // For GetBarColors, which initializes and uses this.
+
         // Determine if any data labels are on:
         $data_labels_within = ($this->y_data_label_pos == 'plotstack');
         $data_labels_end = $data_labels_within || ($this->y_data_label_pos == 'plotin');
         $data_label_y_offset = -5 - $this->shading; // For upward labels only.
-
-        // Is there a custom function for picking the data color?
-        $custom_color = (bool)$this->GetCallback('data_color');
-        if ($custom_color) {
-            // This uses data_colors, data_dark_colors, and data_border_colors.
-            // data_colors and data_dark_colors are always the same length.
-            // They and data_border_colors are padded to the same minimum length,
-            // but are not necessarily the same length.
-            $num_data_colors = count($this->ndx_data_colors);
-            $num_border_colors = count($this->ndx_data_border_colors);
-        }
 
         for ($row = 0; $row < $this->num_data_rows; $row++) {
             $record = 1;                                    // Skip record #0 (data label)
@@ -5656,21 +5735,11 @@ class PHPlot
                         $y1 = $this->ytr($wy1); // Convert to device coordinates. $y1 is outermost value.
                         $y2 = $this->ytr($wy2); // $y2 is innermost (closest to axis).
 
-                        // Select the colors.
-                        if ($custom_color) {
-                            $col_i = $this->DoCallback('data_color', $row, $idx); // Custom color index
-                            $data_col_i = $col_i % $num_data_colors; // Index for data colors and dark colors
-                            $data_color = $this->ndx_data_colors[$data_col_i];
-                            $data_dark_color = $this->ndx_data_dark_colors[$data_col_i];
-                            $data_border_color = $this->ndx_data_border_colors[$col_i % $num_border_colors];
-                        } else {
-                            $data_color = $this->ndx_data_colors[$idx];
-                            $data_dark_color = $this->ndx_data_dark_colors[$idx];
-                            $data_border_color = $this->ndx_data_border_colors[$idx];
-                        }
+                        // Select the colors:
+                        $this->GetBarColors($row, $idx, $gcvars, $data_color, $alt_color);
 
                         // Draw the bar, and the shade or border:
-                        $this->DrawBar($x1, $y1, $x2, $y2, $data_color, $data_dark_color, $data_border_color,
+                        $this->DrawBar($x1, $y1, $x2, $y2, $data_color, $alt_color,
                             // Only shade the top for upward bars, or the first segment of downward bars:
                             $upward || $first, TRUE);
 
@@ -5713,17 +5782,12 @@ class PHPlot
         // This is the Y offset from the bar's label center point to the bottom of the bar
         $y_first_bar = $this->record_bar_width / 2 - $this->bar_adjust_gap;
 
+        $gcvars = array(); // For GetBarColors, which initializes and uses this.
+
         // Determine if any data labels are on:
         $data_labels_within = ($this->x_data_label_pos == 'plotstack');
         $data_labels_end = $data_labels_within || ($this->x_data_label_pos == 'plotin');
         $data_label_x_offset = 5 + $this->shading; // For rightward labels only
-
-        // Is there a custom function for picking the data color?
-        $custom_color = (bool)$this->GetCallback('data_color');
-        if ($custom_color) {
-            $num_data_colors = count($this->ndx_data_colors);
-            $num_border_colors = count($this->ndx_data_border_colors);
-        }
 
         for ($row = 0; $row < $this->num_data_rows; $row++) {
             $record = 1;                                    // Skip record #0 (data label)
@@ -5762,24 +5826,13 @@ class PHPlot
                         $x1 = $this->xtr($wx1); // Convert to device coordinates. $x1 is outermost value.
                         $x2 = $this->xtr($wx2); // $x2 is innermost (closest to axis).
 
-                        // Select the colors.
-                        if ($custom_color) {
-                            $col_i = $this->DoCallback('data_color', $row, $idx); // Custom color index
-                            $data_col_i = $col_i % $num_data_colors; // Index for data colors and dark colors
-                            $data_color = $this->ndx_data_colors[$data_col_i];
-                            $data_dark_color = $this->ndx_data_dark_colors[$data_col_i];
-                            $data_border_color = $this->ndx_data_border_colors[$col_i % $num_border_colors];
-                        } else {
-                            $data_color = $this->ndx_data_colors[$idx];
-                            $data_dark_color = $this->ndx_data_dark_colors[$idx];
-                            $data_border_color = $this->ndx_data_border_colors[$idx];
-                        }
+                        // Select the colors:
+                        $this->GetBarColors($row, $idx, $gcvars, $data_color, $alt_color);
 
                         // Draw the bar, and the shade or border:
-                        $this->DrawBar($x1, $y1, $x2, $y2, $data_color, $data_dark_color, $data_border_color,
+                        $this->DrawBar($x1, $y1, $x2, $y2, $data_color, $alt_color,
                             // Only shade the side for rightward bars, or the first segment of leftward bars:
                             TRUE, $rightward || $first);
-
                         // Draw optional data label for this bar segment just inside the end.
                         // Text value is the current X, but position is the cumulative X.
                         // The label is only drawn if it fits in the segment width |x2-x1|.
@@ -5811,12 +5864,16 @@ class PHPlot
      * This is the function that performs the actual drawing, after all
      * the parameters and data are set up.
      * It also outputs the finished image, unless told not to.
+     * Note: It is possible for this to be called multiple times.
      */
     function DrawGraph()
     {
         // Test for missing image, missing data, empty data:
         if (!$this->CheckDataArray())
             return FALSE; // Error message already reported.
+
+        // Allocate colors for the plot:
+        $this->SetColorIndexes();
 
         // For pie charts: don't draw grid or border or axes, and maximize area usage.
         // These controls can be split up in the future if needed.
