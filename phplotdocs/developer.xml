@@ -93,8 +93,9 @@ will move inwards with the newer releases.
   </listitem>
   <listitem>
     <para>
-It is possible to position X ticks and X tick labels to 'xaxis', and
-Y ticks and Y tick labels to 'yaxis', so the ticks and/or labels will
+It is possible to position X ticks and X tick labels to
+<literal>xaxis</literal>, and Y ticks and Y tick labels to
+<literal>yaxis</literal>, so the ticks and/or labels will
 float to the axis positions rather than always appear on the edges of the
 plot area. Space will be allocated for the corresponding margin only if the
 axis happens to fall exactly at the data limits for that side. This may
@@ -204,7 +205,8 @@ Note: This code was moved out of CalcTranslation at PHPlot-5.0.5.
   <term><anchor id="CalcBarWidths" xreflabel="CalcBarWidths"/>CalcBarWidths($verticals = TRUE)</term>
   <listitem>
     <para>
-Calculates values for 'bars' and 'stackedbars' plot types.
+Calculates values for <literal>bars</literal> and <literal>stackedbars</literal>
+plot types.
 It calculates the width of the bars and the margins around and between them.
 The argument was added in PHPlot-5.1.2 to support horizontal plots.
 This is called by the bar chart drawing functions
@@ -486,7 +488,8 @@ as needed.
   <listitem>
     <para>
 Call a callback (hook) function.  $reason is the name given to the
-callback, for example 'draw_titles' (meaning: call after drawing titles).
+callback, for example <literal>draw_titles</literal>
+(meaning: call after drawing titles).
 The reasons are array indexes in the $callbacks class variable. Following
 that are zero or more arguments to pass to the callback, after the image
 resource and passthrough arguments. DoCallback does nothing if there is no
@@ -503,8 +506,8 @@ callback function, if any.
   <listitem>
     <para>
 Draws an area plot, or a stacked area plot (if the optional argument is True).
-Called by <xref linkend="DrawGraph"/> when the plot type is 'area' or
-'stackedarea'.
+Called by <xref linkend="DrawGraph"/> when the plot type is
+<literal>area</literal> or <literal>stackedarea</literal>.
 Stacked area plots were added in PHPlot-5.1.1; through PHPlot-5.1.0 this
 function did not have a parameter and was used only for area plots.
     </para>
@@ -522,13 +525,16 @@ Called by <xref linkend="DrawGraph"/>.
 </varlistentry>
 
 <varlistentry>
-  <term><anchor id="DrawBar" xreflabel="DrawBar"/>DrawBar($x1, $y1, $x2, $y2, $data_color, $data_dark_color, $data_border_color, $shade_top = TRUE, $shade_side = TRUE)</term>
+  <term><anchor id="DrawBar" xreflabel="DrawBar"/>DrawBar($x1, $y1, $x2, $y2, $data_color, $alt_color, $shade_top = TRUE, $shade_side = TRUE)</term>
   <listitem>
     <para>
 Draws a single bar (or bar segment), with either shading or border.
-Four corner coordinates and 3 colors are provided. The last two arguments
-are flags used to suppress the top or side shading for certain cases of
-stacked bar segments.
+Four corner coordinates and 2 color indexes are provided.
+The first color $data_color is the bar fill color.
+The second color $alt_color is either the shading color or the border color,
+depending on whether shading is on or not (see <xref linkend="GetBarColors"/>).
+The last two arguments are flags used to suppress the top or side shading
+for certain cases of stacked bar segments.
 Called by <xref linkend="DrawBars"/> and <xref linkend="DrawHorizBars"/>
 to draw each bar.
 Called by <xref linkend="DrawStackedBars"/> and
@@ -543,7 +549,8 @@ This was added after PHPlot-5.1.3, moving common code from those 4 functions.
   <listitem>
     <para>
 Draws a bar chart plot.
-Called by <xref linkend="DrawGraph"/> when the plot type is 'bars'.
+Called by <xref linkend="DrawGraph"/> when the plot type is
+<literal>bars</literal>.
 If the data type indicates a horizontal bar chart,
 calls <xref linkend="DrawHorizBars"/> instead.
     </para>
@@ -610,12 +617,14 @@ Called by those plotting routines that include dots:
   <listitem>
     <para>
 Draws a dot plot.
-Called by <xref linkend="DrawGraph"/> when the plot type is 'points', and by
-<xref linkend="DrawLinePoints"/> for the points portion of a 'linepoints' plot.
+Called by <xref linkend="DrawGraph"/> when the plot type is 
+<literal>points</literal>, and by <xref linkend="DrawLinePoints"/> for the
+points portion of a <literal>linepoints</literal> plot.
 If the data type indicates an error bar plot,
 it calls <xref linkend="DrawDotsError"/> instead.
 (Through PHPlot-5.1.2, this was called directly from DrawGraph for both
-'lines' and 'linepoints' plots, but not for error bar plots.)
+<literal>lines</literal> and <literal>linepoints</literal> plots,
+but not for error bar plots.)
 $paired is true for linepoints plots, to suppress drawing elements that
 would be duplicated by the 'lines' part of the plot.
 (This argument was added in PHPlot-5.1.3.)
@@ -709,7 +718,8 @@ but only if legend text has been set using <xref linkend="SetLegend"/>.
   <listitem>
     <para>
 Draws a linepoints plot, with or without error bars.
-Called by <xref linkend="DrawGraph"/> when the plot type is 'linepoints'.
+Called by <xref linkend="DrawGraph"/> when the plot type is
+<literal>linepoints</literal>.
 It simply calls <xref linkend="DrawLines"/> and <xref linkend="DrawDots"/>,
 which handle both the plain and error bar cases.
 This was added in PHPlot-5.1.3 to provide a function specific to this
@@ -723,14 +733,17 @@ plot type.
   <listitem>
     <para>
 Draws a line plot.
-Called by <xref linkend="DrawGraph"/> when the plot type is 'lines', and by
-<xref linkend="DrawLinePoints"/> for the lines portion of a 'linepoints' plot.
+Called by <xref linkend="DrawGraph"/> when the plot type is
+<literal>lines</literal>, and by <xref linkend="DrawLinePoints"/> for the
+lines portion of a <literal>linepoints</literal> plot.
 If the data type indicates an error bar plot,
 it calls <xref linkend="DrawLinesError"/> instead.
 (Through PHPlot-5.1.2, this was called directly from DrawGraph for both
-'lines' and 'linepoints' plots, but not for error bar plots.)
-$paired is true for linepoints plots, to suppress drawing elements that
-would be duplicated by the 'points' part of the plot.
+<literal>lines</literal> and <literal>linepoints</literal> plots,
+but not for error bar plots.)
+$paired is true for <literal>linepoints</literal> plots,
+to suppress drawing elements that
+would be duplicated by the <literal>points</literal> part of the plot.
 (This argument was added in PHPlot-5.1.3.)
     </para>
   </listitem>
@@ -757,7 +770,8 @@ would be duplicated by <xref linkend="DrawDotsError"/>.
   <listitem>
     <para>
 Draws a pie chart plot.
-Called by <xref linkend="DrawGraph"/> with the plot type is 'pie'.
+Called by <xref linkend="DrawGraph"/> with the plot type is
+<literal>pie</literal>.
     </para>
   </listitem>
 </varlistentry>
@@ -794,7 +808,8 @@ Called by <xref linkend="DrawGraph"/>.
   <listitem>
     <para>
 Draws a squared (stepped lines) plot.
-Called by <xref linkend="DrawGraph"/> when the plot type is 'squared'.
+Called by <xref linkend="DrawGraph"/> when the plot type is
+<literal>squared</literal>.
     </para>
   </listitem>
 </varlistentry>
@@ -804,7 +819,8 @@ Called by <xref linkend="DrawGraph"/> when the plot type is 'squared'.
   <listitem>
     <para>
 Draws a stacked bars chart plot.
-Called by <xref linkend="DrawGraph"/> when the plot type is 'stackedbars'.
+Called by <xref linkend="DrawGraph"/> when the plot type is
+<literal>stackedbars</literal>.
 If the data type indicates a horizontal plot,
 calls <xref linkend="DrawHorizStackedBars"/> instead.
     </para>
@@ -821,8 +837,10 @@ the object.
 The text is drawn at angle $which_angle (built-in fonts can be used at 0
 and 90 degrees only, TrueType at any angle). $which_color is a GD color
 index for the image. Text alignment relative to the (x,y) point is
-controlled with $which_halign ('center', 'left', or 'right')
-and $which_valign ('center', 'bottom', 'top').
+controlled with $which_halign (<literal>center</literal>,
+<literal>left</literal>, or <literal>right</literal>)
+and $which_valign (<literal>center</literal>, <literal>bottom</literal>,
+or <literal>top</literal>).
 Multi-line text strings are supported. This function accounts for the
 limitations and differences in GD text drawing routines for built-in and
 TrueType fonts.
@@ -839,12 +857,13 @@ There are 7 font array variables in the PHPlot object.
 Through PHPlot-5.0.5, these were separate variables: generic_font,
 title_font, legend_font, x_label_font, y_label_font, x_title_font, and
 y_title_font. Starting with PHPlot-5.0.6, these were combined into a
-single class array variable 'fonts', indexed by the element name, for
-example $fonts['generic'].
+single class array variable <literal>fonts</literal>,
+indexed by the element name, for example $fonts['generic'].
     </para>
     <para>
 Starting with PHPlot-5.1.0, $which_font can be NULL or an empty string to
-use the 'generic' font. This was intended to allow callbacks to avoid
+use the <emphasis>generic</emphasis> font.
+This was intended to allow callbacks to avoid
 having to reference the internal class array variable which stores font
 information.
     </para>
@@ -856,7 +875,8 @@ information.
   <listitem>
     <para>
 Draws a thin bar lines plot. This is sometimes called an impulse plot.
-Called by <xref linkend="DrawGraph"/> when the plot type is 'thinbarline'.
+Called by <xref linkend="DrawGraph"/> when the plot type is
+<literal>thinbarline</literal>.
 This function draws both vertical and horizontal variants of this plot type.
     </para>
   </listitem>
@@ -896,7 +916,8 @@ area or both, depending on the value set with
 This also calls <xref linkend="DrawXDataLine"/> to draw a line from the
 label to the point, if enabled.
 This is used by vertical plots.
-Called by plot drawing routines for all plot types except 'pie':
+Called by plot drawing routines for all plot types except
+<literal>pie</literal>:
 <xref linkend="DrawArea"/>, 
 <xref linkend="DrawBars"/>,
 <xref linkend="DrawDots"/>, 
@@ -998,7 +1019,8 @@ Called by horizontal plot drawing functions such as
 Draws an error bar for the point at world coordinates ($x_world, $y_world).
 $error_height is the height (in world coordinates) of the error bar:
 positive for the upper range error, negative for the lower range error.
-The $error_bar_type is set to 'tee' or 'line' by <xref linkend="SetErrorBarShape"/>.
+The $error_bar_type is set to <literal>tee</literal> or <literal>line</literal>
+by <xref linkend="SetErrorBarShape"/>.
 Called by <xref linkend="DrawDotsError"/> and <xref linkend="DrawLinesError"/>, twice for each point on the
 plot (upper range error and lower range error).
     </para>
@@ -1080,6 +1102,98 @@ PHPlot-5.1.0.
 </varlistentry>
 
 <varlistentry>
+  <term><anchor id="GetBarColors" xreflabel="GetBarColors"/>GetBarColors($row, $idx, &amp;$vars, &amp;$data_color, &amp;$alt_color)</term>
+  <listitem>
+    <para>
+Gets the color indexes to be used for a bar plot.
+This is used by bar and stackedbar plot drawing functions, and
+accounts for a custom data color callback if defined.
+$row and $idx are the indexes for the current bar or bar segment.
+$vars is an array argument that maintains information across calls - the
+caller allocates an empty array, and this function updates it.
+The color index for bar filling is returned in $data_color.
+$alt_color is the color index to use for shading (if shading is on), else
+the color index to use for the bar border (if shading is off). (This dual
+use argument corresponds to the usage of <xref linkend="DrawBar"/>.)
+This was added after PHPlot-5.1.3, moving common code into a function.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term><anchor id="GetColorIndex" xreflabel="GetColorIndex"/>GetColorIndex($color)</term>
+  <listitem>
+    <para>
+Allocate a GD color index for a color given as a 4 component array (R,G,B,A).
+Returns a color index to be used in GD drawing functions.
+The color returned is the exact color requested if it already exists in the
+image, or if can be allocated.
+For palette images, if the color map is full, no new colors can be allocated,
+and this function will return an index to the closest existing color.
+For truecolor images, this function always returns an index for the exact
+requested color.
+This was added after PHPlot-5.1.3, replacing the second half of
+<xref linkend="SetIndexColor"/>.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term><anchor id="GetDarkColorIndex" xreflabel="GetDarkColorIndex"/>GetDarkColorIndex($color)</term>
+  <listitem>
+    <para>
+Allocate a GD color index for a darker shade of a color given as a 4 component
+array (R,G,B,A).
+Returns a color index to be used in GD drawing functions.
+The method used is to subtract 48 from each red, green, and blue component
+(without letting any go negative).
+The alpha component is not adjusted.
+The color returned is the exact color requested if it already exists in the
+image, or if can be allocated, else the closest color available.
+This is used for shadow colors (for example, in bar charts and pie charts).
+This was added after PHPlot-5.1.3, replacing the second half of
+<xref linkend="SetIndexDarkColor"/>.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term><anchor id="GetDataColor" xreflabel="GetDataColor"/>GetDataColor($row, $idx, &amp;$vars, &amp;$data_color, $extra=0)</term>
+  <listitem>
+    <para>
+Gets the color index to be used for a data element (a point or line
+segment, for example).
+This is used by multiple plot drawing functions to get the data color,
+accounting for a custom data color callback if defined.
+$row and $idx are the indexes for the data point. $vars is an array argument 
+that maintains information across calls - the caller allocates an empty
+array, and this function updates it.
+The color index to use is returned in $data_color.
+$extra contains extra information for a data color callback.
+This was added after PHPlot-5.1.3, moving common code into a function.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term><anchor id="GetDataErrorColors" xreflabel="GetDataErrorColors"/>GetDataErrorColors($row, $idx, &amp;$vars, &amp;$data_color, &amp;$error_color, $extra=0)</term>
+  <listitem>
+    <para>
+This is an extended version of <xref linkend="GetDataColor"/> which is used
+for error bar plots. It returns two color index values: $data_color for the
+data element, and $error_color for the error bar.
+This is used by error plot drawing functions, and accounts for a custom
+data color callback if defined.
+$row and $idx are the indexes for the data point. $vars is an array argument 
+that maintains information across calls - the caller allocates an empty
+array, and this function updates it.
+$extra contains extra information for a data color callback.
+This was added after PHPlot-5.1.3, moving common code into a function.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
   <term><anchor id="GetDefaultTTFont" xreflabel="GetDefaultTTFont"/>GetDefaultTTFont()</term>
   <listitem>
     <para>
@@ -1140,6 +1254,29 @@ fonts.
 </varlistentry>
 
 <varlistentry>
+  <term><anchor id="NeedDataDarkColors" xreflabel="NeedDataDarkColors"/>NeedDataDarkColors()</term>
+  <listitem>
+    <para>
+Allocates darker data colors, which are used for shading.
+This is called by graph drawing functions such as <xref linkend="DrawPieChart"/>
+if they need to use these colors for shading.
+This was added after PHPlot-5.1.3.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term><anchor id="NeedErrorBarColors" xreflabel="NeedErrorBarColors"/>NeedErrorBarColors()</term>
+  <listitem>
+    <para>
+Allocates colors used for error bars.
+This is called by any graph drawing functions that is going to draw error bars.
+This was added after PHPlot-5.1.3.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
   <term><anchor id="number_format" xreflabel="number_format"/>number_format($number, $decimals=0)</term>
   <listitem>
     <para>
@@ -1154,7 +1291,8 @@ As a fall-back, if locale information is not available, '.' is used for
 decimal point, and ',' for thousands separator. This fall-back is equivalent
 to the behavior in PHPlot 5.0rc3 and earlier.
 This is used by <xref linkend="FormatLabel"/> when the formatting type is
-'data', and also for the pie chart labels in <xref linkend="DrawPieChart"/>.
+<literal>data</literal>, and also for the pie chart labels in
+<xref linkend="DrawPieChart"/>.
     </para>
   </listitem>
 </varlistentry>
@@ -1304,6 +1442,17 @@ font filename and size.
 </varlistentry>
 
 <varlistentry>
+  <term><anchor id="SetColorIndexes" xreflabel="SetColorIndexes"/>SetColorIndexes()</term>
+  <listitem>
+    <para>
+Allocates all the colors needed for a plot.
+Called by <xref linkend="DrawGraph"/> before drawing anything.
+This was added after PHPlot-5.1.3.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
   <term><anchor id="SetDashedStyle" xreflabel="SetDashedStyle"/>SetDashedStyle($which_ndxcol)</term>
   <listitem>
     <para>
@@ -1357,16 +1506,11 @@ the plot object.
   <term><anchor id="SetIndexColor" xreflabel="SetIndexColor"/>SetIndexColor($which_color, $alpha = 0)</term>
   <listitem>
     <para>
-Given a color specification (see <xref linkend="SetRGBColor"/>),
-and a default alpha value,
-returns a color index to be used in GD drawing functions.
-The color is the exact color requested if it already exists in the image,
-or if can be allocated.
-For palette images, if the color map is full, no new colors can be allocated,
-and this function will return an index to the closest existing color.
-For truecolor images, this function always returns an index for the exact
-requested color.
-The default alpha parameter was added in PHPlot-5.1.1.
+This function was removed after PHPlot-5.1.3.
+It parsed a color specification, and allocated a GD color index.
+The first part is replaced by calling <xref linkend="SetRGBColor"/> directly,
+and the second part is implemented with <xref linkend="GetColorIndex"/>
+at graph drawing time.
     </para>
   </listitem>
 </varlistentry>
@@ -1375,16 +1519,12 @@ The default alpha parameter was added in PHPlot-5.1.1.
   <term><anchor id="SetIndexDarkColor" xreflabel="SetIndexDarkColor"/>SetIndexDarkColor($which_color, $alpha = 0)</term>
   <listitem>
     <para>
-Given a color specification (see <xref linkend="SetRGBColor"/>),
-and a default alpha value,
-returns an index for a slightly darker color to be used in GD drawing functions.
-The method used is to subtract 48 from each red, green, and blue component
-(without letting any go negative).
-The alpha component is not adjusted.
-This is used for shadow colors (for example, in bar charts and pie charts).
-The same method as in <xref linkend="SetIndexColor"/> is used to select a
-color index.
-The default alpha parameter was added in PHPlot-5.1.1.
+This function was removed after PHPlot-5.1.3.
+It parsed a color specification, and allocated a GD color index for a
+slightly darker shade of the color.
+The first part is replaced by calling <xref linkend="SetRGBColor"/> directly,
+and the second part is implemented with <xref linkend="GetDarkColorIndex"/>
+at graph drawing time.
     </para>
   </listitem>
 </varlistentry>
@@ -1417,8 +1557,9 @@ Sets the formatting used for tick and data labels. This implements
 $mode is either 'x', 'xd', 'y', or 'yd' and selects the axis to configure
 and type of label being drawn (x, y for tick labels; xd, yd for data labels).
 $args is an array of arguments, with $args[0] selecting the type of
-formatting (for example, 'data'). Additional array elements depend on
-the formatting type. For more details, see the above-referenced functions.
+formatting (for example, <literal>data</literal>).
+Additional array elements depend on the formatting type.
+For more details, see the above-referenced functions.
 All arguments to those functions are combined into an array and passed to
 <function>SetLabelType</function> as $args.
 Separation of data and tick label formatting was available starting with
@@ -1440,9 +1581,8 @@ linkend="conc-colors-forms"/> and <xref linkend="conc-truecolor-forms"/>,
 and include color names, component arrays, and strings of the form #RRGGBB
 and #RRGGBBAA.  The alpha argument provides a default value if the color
 specification does not include alpha; the default 0 makes the color
-opaque.  This is used directly by <xref linkend="SetIndexColor"/> and
-<xref linkend="SetIndexDarkColor"/>, and indirectly by all functions that
-accept a color specification.
+opaque.
+This is used directly by all functions that accept a color specification.
 Use of alpha in the color specification, the default alpha argument, and the
 4th component in the returned array were added in PHPlot-5.1.1.
     </para>
@@ -1479,7 +1619,8 @@ $file is the filename of the image to use as the tile.
 ($xorig, $yorig) are the origin point for the tiling,
 and ($width, $height) are the area to be tiled. These are used to tile just
 under the plot area versus the entire image. The $mode can be
-'centeredtile', 'tile', or 'scale'. Scale mode scales the source image to
+<literal>centeredtile</literal>, <literal>tile</literal>, or
+<literal>scale</literal>.  cale mode scales the source image to
 fit the target area. Tile and centeredtile modes repeat the source image as
 needed to fit into the target area; the difference is that centeredtile
 offsets the tile start position by half its size, which works better for
@@ -1487,6 +1628,17 @@ some tiles.
 Called by
 <xref linkend="DrawBackground"/> and <xref linkend="DrawPlotAreaBackground"/>
 if an image file is selected for the plot area or overall background.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term><anchor id="truncate_array" xreflabel="truncate_array"/>truncate_array(&amp;$array, $size)</term>
+  <listitem>
+    <para>
+Truncates a 0-based sequential integer indexed array so it has no more than
+$size elements. This is used to trim the data colors arrays.
+This was added after PHPlot-5.1.3.
     </para>
   </listitem>
 </varlistentry>
