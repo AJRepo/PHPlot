@@ -15,7 +15,7 @@ background_done	FALSE	SetInputFile DrawBackground	True if background has already
 bar_adjust_gap		CalcBarWidths	Calculated bar gap
 bar_extra_space	0.5	CalcBarWidths	Extra space between groups of bars
 bar_width_adjust	1	CalcBarWidths	Width of bar relative to space for one bar
-bg_color	'white'	SetBackgroundColor	Name of image background color
+bg_color	'white'	SetBackgroundColor	Color (R,G,B,A) for image background
 bgimg		SetBgImage	Background image filename
 bgmode		SetBgImage	Background image tiling mode
 browser_cache	FALSE	SetBrowserCache	Flag: Don't send cache suppression headers
@@ -24,9 +24,8 @@ color_array	'small'	PHPlot	Name of the initial color map
 dashed_grid	TRUE	SetDrawDashedGrid	Flag: Draw dashed or solid grid lines?
 dashed_style	'2-4'	SetDefaultStyles	Initial dashed pattern code
 data		SetDataValues	The data array
-data_border_colors		SetDataBorderColors	Array of color names for bar chart data borders. Initialized to array('black') by SetDefaultStyles.
-data_colors		SetDataColors	Array of color names for data lines/marks/bars/etc. See default_colors for initial value.
-data_colors_alpha	0	SetDataColors	Saved default alpha for data colors. (Added in PHPlot-5.1.1)
+data_border_colors	'black'	SetDataBorderColors	Array of colors (R,G,B,A) for bar chart data borders.
+data_colors		SetDataColors	Array of colors (R,G,B,A) for data lines/marks/bars/etc. See default_colors for initial value.
 data_columns		CheckDataArray	Maximum number of dependent variable values (usually Y values, or pie slices) in the data array rows. (Added in PHPlot-5.1.3)
 data_max		FindDataLimits	Array: Per row maximum Y value. (Before PHPlot-5.1.2 this was named data_maxy.)
 data_min		FindDataLimits	Array: Per row minimum Y value. (Before PHPlot-5.1.2 this was named data_miny.)
@@ -45,16 +44,16 @@ draw_plot_area_background	FALSE	SetDrawPlotAreaBackground	Flag: Draw the backgro
 draw_x_data_label_lines	FALSE	SetDrawXDataLabelLines	Flag: Draw X data label lines
 draw_x_grid		SetDrawXGrid CalcGridSettings	Flag: Draw X grid lines?
 draw_y_grid		SetDrawYGrid CalcGridSettings	Flag: Draw Y grid lines?
-error_bar_colors		SetErrorBarColors	Array of color names for error bars. See default_colors for initial value.
+error_bar_colors		SetErrorBarColors	Array of colors (R,G,B,A) for error bars. See default_colors for initial value.
 error_bar_line_width	1	SetErrorBarLineWidth	Thickness of error bar lines
 error_bar_shape	'tee'	SetErrorBarShape	Shape (style) of error bars: line or tee
 error_bar_size	5	SetErrorBarSize	Size of error bars
 file_format	'png'	SetFileFormat	Image format: png, gif, jpg, wbmp
 fonts		SetFontGD SetFontTTF	Array of font information, indexed by text type (title, x_label, etc). Value is an array of font information, with indexes including: 'ttf' (True if TrueType), 'font' (font path or designator), 'size' (point size for TrueType).
 grid_at_foreground	FALSE	DrawGraph	Flag: Draw grid on top of or behind the plot
-grid_color	'black'	SetGridColor	Name of color to use for axes, plot area border, legend border, pie chart lines and text (not grid!)
+grid_color	'black'	SetGridColor	Color (R,G,B,A) to use for axes, plot area border, legend border, pie chart lines and text (not grid!)
 group_frac_width	0.7	CalcBarWidths	Controls fraction of bar group space used for bar
-i_border	array(194, 194 ,194)	SetImageBorderColor	Name of color for image border, if drawn
+i_border	array(194, 194 ,194)	SetImageBorderColor	Color (R,G,B,A) for image border, if drawn
 image_border_type	'none'	SetImageBorderType	Image border type
 image_border_width		SetImageBorderWidth	Width of image border in pixels. Default depends on image_border_type. (Added in PHPlot-5.1.2)
 image_height		PHPlot	Image height
@@ -71,7 +70,7 @@ legend_text_align		SetLegendStyle	Legend style setting, left or right
 legend_x_pos		SetLegendPixels SetLegendWorld	Forced legend position
 legend_xy_world		SetLegendPixels SetLegendWorld	Flag indicating legend position was set in World coords
 legend_y_pos		SetLegendPixels SetLegendWorld	Forced legend position
-light_grid_color	'gray'	SetLightGridColor	Name of color for grid lines and X data lines
+light_grid_color	'gray'	SetLightGridColor	Color (R,G,B,A) for grid lines and X data lines
 line_spacing	4	SetLineSpacing	Controls inter-line spacing of text
 line_styles	array(...)	SetLineStyles	Plot line style(s)
 line_widths	1	SetLineWidths	Plot line width(s)
@@ -80,19 +79,21 @@ max_x		FindDataLimits	Overall max X value in the data array
 max_y		FindDataLimits	Overall max Y value in the data array
 min_x		FindDataLimits	Overall min X value in the data array
 min_y		FindDataLimits	Overall min Y value in the data array
-ndx_bg_color		SetBackgroundColor	Color index of image background
-ndx_data_border_colors		SetDataBorderColors	Array of color indexes for bar chart data borders
-ndx_data_colors		SetDataColors	Color index array for plot data lines/marks/bars/etc.
-ndx_data_dark_colors		SetDataColors	Color index array for plot data, darker shade
-ndx_error_bar_colors		SetErrorBarColors	Array of color indexes for error bars
-ndx_grid_color		SetGridColor	Color index for axes, plot area border, legend border, pie chart lines and text
-ndx_i_border		SetImageBorderColor	Color index for image border lines
-ndx_i_border_dark		SetImageBorderColor	Color index for image border lines, darker shade
-ndx_light_grid_color		SetLightGridColor	Color index for grid lines and X data lines
-ndx_plot_bg_color		SetPlotBgColor	Color index of plot area background
-ndx_text_color		SetTextColor	Color index for labels and legend text
-ndx_tick_color		SetTickColor	Color index for tick marks
-ndx_title_color		SetTitleColor SetLabelColor	Color index for titles
+ndx_bg_color		SetColorIndexes	Color index of image background
+ndx_data_border_colors		SetColorIndexes	Color index array for bar chart data borders
+ndx_data_colors		SetColorIndexes	Color index array for plot data lines/marks/bars/etc.
+ndx_data_dark_colors		NeedDataDarkColors	Color index array for plot data, darker shade
+ndx_error_bar_colors		NeedErrorBarColors	Color index array for error bars
+ndx_grid_color		SetColorIndexes	Color index for axes, plot area border, legend border, pie chart lines and text
+ndx_i_border		SetColorIndexes	Color index for image border lines
+ndx_i_border_dark		SetColorIndexes	Color index for image border lines, darker shade
+ndx_light_grid_color		SetColorIndexes	Color index for grid lines and X data lines
+ndx_plot_bg_color		SetColorIndexes	Color index of plot area background
+ndx_text_color		SetColorIndexes	Color index for labels and legend text
+ndx_tick_color		SetColorIndexes	Color index for tick marks
+ndx_title_color		SetColorIndexes	Color index for main title
+ndx_x_title_color		SetColorIndexes	Color index for X title (Added after PHPlot-5.1.3)
+ndx_y_title_color		SetColorIndexes	Color index for Y title (Added after PHPlot-5.1.3)
 num_data_rows		SetDataValues	Number of rows in the data array (number of points along X, or number of bar groups, for example)
 num_recs		SetDataValues	Array with number of entries in each data row (including label and X if present)
 num_x_ticks	''	SetNumXTicks	Forced number of X tick marks
@@ -101,7 +102,7 @@ output_file	''	SetOutputFile	Redirect to output file
 plot_area		CalcPlotAreaPixels	Array defining the calculated plot area. ([0],[1]) is the top left corner, ([2],[3]) is the bottom right corner.
 plot_area_height		CalcPlotAreaPixels	Height of the plot area
 plot_area_width		CalcPlotAreaPixels	Width of the plot area
-plot_bg_color	'white'	SetPlotBgColor	Name of color for plot area background
+plot_bg_color	'white'	SetPlotBgColor	Color (R,G,B,A) for plot area background
 plot_border_type	'sides'	SetPlotBorderType	Where to draw plot borders. Can be scalar or array of choices.
 plot_max_x		SetPlotAreaWorld CalcPlotAreaWorld	Max X of the plot area in world coordinates
 plot_max_y		SetPlotAreaWorld CalcPlotAreaWorld	Max Y of the plot area in world coordinates
@@ -125,14 +126,15 @@ skip_bottom_tick	FALSE	SetSkipBottomTick	Skip bottom tick mark
 skip_left_tick	FALSE	SetSkipLeftTick	Skip left tick mark
 skip_right_tick	FALSE	SetSkipRightTick	Skip right tick mark
 skip_top_tick	FALSE	SetSkipTopTick	Skip top tick mark
-text_color	'black'	SetTextColor	Name of color for labels and legend text
+text_color	'black'	SetTextColor	Color (R,G,B,A) for labels and legend text
 thousands_sep		SetNumberFormat	Character to use to group 1000s in formatted numbers
-tick_color	'black'	SetTickColor	Name of color for tick marks
-title_color	'black'	SetTitleColor	Name of color for main, X, and Y titles
+tick_color	'black'	SetTickColor	Color (R,G,B,A) for tick marks
+title_color	'black'	SetTitleColor	Color (R,G,B,A) for main title (and default for X and Y titles)
 title_done		DrawTitle	Flag to prevent drawing main title more than once
 title_offset		CalcMargins	Y offset of main title position (Added in PHPlot-5.1.2)
 title_txt	''	SetTitle	Main title text
 total_records		SetDataValues	Total number of entries (rows times columns in each row) in the data array.
+transparent_color		SetTransparentColor	Color (R,G,B,A) designated as transparent (Added after PHPlot-5.1.3)
 ttf_path	'.'	SetTTFPath	TrueType font directory
 use_ttf	FALSE	SetUseTTF	Default font type, True for TrueType, False for GD
 x_axis_position	''	SetXAxisPosition	Position of X axis (in world coordinates)
@@ -151,6 +153,7 @@ x_tick_label_pos		SetXTickLabelPos	Position of X tick labels. (Default was 'plot
 x_tick_length	5	SetXTickLength	Length of X tick marks (outside plot area)
 x_tick_pos	'plotdown'	SetXTickPos	Position of X tick marks
 x_title_bot_offset		CalcMargins	Title offset relative to plot area
+x_title_color		SetXTitleColor	Color (R,G,B,A) for X title (Aded after PHPlot-5.1.3)
 x_title_pos	'plotdown'	SetXTitle	X Axis title position
 x_title_top_offset		CalcMargins	Title offset relative to plot area
 x_title_txt	''	SetXTitle	X Axis title text
@@ -170,6 +173,7 @@ y_tick_inc	''	SetYTickIncrement	Step between Y tick marks
 y_tick_label_pos		SetYTickLabelPos CheckLabels	Position of Y tick labels
 y_tick_length	5	SetYTickLength	Length of Y tick marks (outside plot area)
 y_tick_pos	'plotleft'	SetYTickPos	Position of Y tick marks
+y_title_color		SetYTitleColor	Color (R,G,B,A) for Y title (Added after PHPlot-5.1.3)
 y_title_left_offset		CalcMargins	Title offset relative to plot area
 y_title_pos	'plotleft'	SetYTitle	Y Axis title position
 y_title_right_offset		CalcMargins	Title offset relative to plot area
