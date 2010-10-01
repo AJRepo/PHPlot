@@ -87,6 +87,8 @@ More information about using colors in PHPlot can be found in
   <listitem><para><xref linkend="SetTickColor" /></para></listitem>
   <listitem><para><xref linkend="SetTitleColor" /></para></listitem>
   <listitem><para><xref linkend="SetTransparentColor" /></para></listitem>
+  <listitem><para><xref linkend="SetXTitleColor" /></para></listitem>
+  <listitem><para><xref linkend="SetYTitleColor" /></para></listitem>
 </itemizedlist>
 </para>
 </sect1>
@@ -159,8 +161,10 @@ For more information, see <xref linkend="conc-text"/>.
 The functions in this section set the title strings: the overall plot
 title, and optional titles for the X and Y axes.
 For more information, see <xref linkend="conc-titles"/>.
-See also <xref linkend="SetTitleColor" /> to set the title colors, and
-<xref linkend="SetFont" /> to set the title fonts.
+See also <xref linkend="SetTitleColor" />,
+<xref linkend="SetXTitleColor" />, and
+<xref linkend="SetYTitleColor" /> to set the title colors,
+and <xref linkend="SetFont" /> to set the title fonts.
 </para>
 
 <para>
