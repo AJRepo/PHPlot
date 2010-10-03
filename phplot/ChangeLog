@@ -2,6 +2,13 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2010-10-03 (lbayuk)     ===== Released as 5.2.0 =====
+    * phplot.php: Updated version
+    * README.txt: Updated for new release
+    * NEWS.txt: Add text for new release
+    * Makefile: Removed HorizontalBars.txt from release. This is now all
+          documented in the reference manual.
+
 2010-10-01
     * Rewrite color handling. Default and specified colors are now validated,
       converted to RGBA arrays, and saved. The colors indexes are not
