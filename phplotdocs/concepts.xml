@@ -1057,7 +1057,7 @@ Examples of this plot type can be seen in
 </para>
 <para>
 Horizontal stacked bar plots were added in PHPlot-5.1.3.
-Support for negative values in stacked bar plots was added after PHPlot-5.1.3.
+Support for negative values in stacked bar plots was added in PHPlot-5.2.0.
 </para>
 </sect2>
 

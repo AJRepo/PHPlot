@@ -5289,7 +5289,7 @@ and/or <xref linkend="SetYTitleColor"/> to set the color of the other titles.
     <title>History</title>
     <para>
 Through PHPlot-5.1.3, this function set the color for all three titles.
-After PHPlot-5.1.3, it sets the main title color, and the default color for X
+Starting with PHPlot-5.2.0, it sets the main title color, and the default color for X
 and Y titles.
     </para>
   </refsect1>
@@ -7119,7 +7119,7 @@ it defaults to black.
   <refsect1>
     <title>History</title>
     <para>
-This function was added after PHPlot-5.1.3.
+This function was added in PHPlot-5.2.0.
 Through PHPlot-5.1.3, the main, X, and Y titles always used the same color.
     </para>
   </refsect1>
@@ -8513,7 +8513,7 @@ it defaults to black.
   <refsect1>
     <title>History</title>
     <para>
-This function was added after PHPlot-5.1.3.
+This function was added in PHPlot-5.2.0.
 Through PHPlot-5.1.3, the main, X, and Y titles always used the same color.
     </para>
   </refsect1>

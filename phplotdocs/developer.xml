@@ -539,7 +539,7 @@ Called by <xref linkend="DrawBars"/> and <xref linkend="DrawHorizBars"/>
 to draw each bar.
 Called by <xref linkend="DrawStackedBars"/> and
 <xref linkend="DrawHorizStackedBars"/> to draw each bar segment.
-This was added after PHPlot-5.1.3, moving common code from those 4 functions.
+This was added in PHPlot-5.2.0, moving common code from those 4 functions.
     </para>
   </listitem>
 </varlistentry>
@@ -1115,7 +1115,7 @@ The color index for bar filling is returned in $data_color.
 $alt_color is the color index to use for shading (if shading is on), else
 the color index to use for the bar border (if shading is off). (This dual
 use argument corresponds to the usage of <xref linkend="DrawBar"/>.)
-This was added after PHPlot-5.1.3, moving common code into a function.
+This was added in PHPlot-5.2.0, moving common code into a function.
     </para>
   </listitem>
 </varlistentry>
@@ -1132,7 +1132,7 @@ For palette images, if the color map is full, no new colors can be allocated,
 and this function will return an index to the closest existing color.
 For truecolor images, this function always returns an index for the exact
 requested color.
-This was added after PHPlot-5.1.3, replacing the second half of
+This was added in PHPlot-5.2.0, replacing the second half of
 <xref linkend="SetIndexColor"/>.
     </para>
   </listitem>
@@ -1151,7 +1151,7 @@ The alpha component is not adjusted.
 The color returned is the exact color requested if it already exists in the
 image, or if can be allocated, else the closest color available.
 This is used for shadow colors (for example, in bar charts and pie charts).
-This was added after PHPlot-5.1.3, replacing the second half of
+This was added in PHPlot-5.2.0, replacing the second half of
 <xref linkend="SetIndexDarkColor"/>.
     </para>
   </listitem>
@@ -1170,7 +1170,7 @@ that maintains information across calls - the caller allocates an empty
 array, and this function updates it.
 The color index to use is returned in $data_color.
 $extra contains extra information for a data color callback.
-This was added after PHPlot-5.1.3, moving common code into a function.
+This was added in PHPlot-5.2.0, moving common code into a function.
     </para>
   </listitem>
 </varlistentry>
@@ -1188,7 +1188,7 @@ $row and $idx are the indexes for the data point. $vars is an array argument
 that maintains information across calls - the caller allocates an empty
 array, and this function updates it.
 $extra contains extra information for a data color callback.
-This was added after PHPlot-5.1.3, moving common code into a function.
+This was added in PHPlot-5.2.0, moving common code into a function.
     </para>
   </listitem>
 </varlistentry>
@@ -1260,7 +1260,7 @@ fonts.
 Allocates darker data colors, which are used for shading.
 This is called by graph drawing functions such as <xref linkend="DrawPieChart"/>
 if they need to use these colors for shading.
-This was added after PHPlot-5.1.3.
+This was added in PHPlot-5.2.0.
     </para>
   </listitem>
 </varlistentry>
@@ -1271,7 +1271,7 @@ This was added after PHPlot-5.1.3.
     <para>
 Allocates colors used for error bars.
 This is called by any graph drawing functions that is going to draw error bars.
-This was added after PHPlot-5.1.3.
+This was added in PHPlot-5.2.0.
     </para>
   </listitem>
 </varlistentry>
@@ -1447,7 +1447,7 @@ font filename and size.
     <para>
 Allocates all the colors needed for a plot.
 Called by <xref linkend="DrawGraph"/> before drawing anything.
-This was added after PHPlot-5.1.3.
+This was added in PHPlot-5.2.0.
     </para>
   </listitem>
 </varlistentry>
@@ -1506,7 +1506,7 @@ the plot object.
   <term><anchor id="SetIndexColor" xreflabel="SetIndexColor"/>SetIndexColor($which_color, $alpha = 0)</term>
   <listitem>
     <para>
-This function was removed after PHPlot-5.1.3.
+This function was removed in PHPlot-5.2.0.
 It parsed a color specification, and allocated a GD color index.
 The first part is replaced by calling <xref linkend="SetRGBColor"/> directly,
 and the second part is implemented with <xref linkend="GetColorIndex"/>
@@ -1519,7 +1519,7 @@ at graph drawing time.
   <term><anchor id="SetIndexDarkColor" xreflabel="SetIndexDarkColor"/>SetIndexDarkColor($which_color, $alpha = 0)</term>
   <listitem>
     <para>
-This function was removed after PHPlot-5.1.3.
+This function was removed in PHPlot-5.2.0.
 It parsed a color specification, and allocated a GD color index for a
 slightly darker shade of the color.
 The first part is replaced by calling <xref linkend="SetRGBColor"/> directly,
@@ -1638,7 +1638,7 @@ if an image file is selected for the plot area or overall background.
     <para>
 Truncates a 0-based sequential integer indexed array so it has no more than
 $size elements. This is used to trim the data colors arrays.
-This was added after PHPlot-5.1.3.
+This was added in PHPlot-5.2.0.
     </para>
   </listitem>
 </varlistentry>
