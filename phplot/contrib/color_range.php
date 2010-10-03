@@ -39,6 +39,9 @@
     to convert a color name or #rrggbb notation into the required array
     of 3 values (r, g, b) for color_a and color_b.
 
+    Newer versions of PHPlot use 4 components (r, g, b, a) arrays for color.
+    This script ignores the alpha component in those arrays.
+
 */
 function color_range($color_a, $color_b, $n_steps)
 {
@@ -86,10 +89,10 @@ function count_data_sets($data, $data_type)
     foreach ($data as $row)
         if (($n = count($row)) > $max_row) $max_row = $n;
 
-   if ($data_type == 'text-data')
+   if ($data_type == 'text-data' || $data_type == 'text-data-yx')
       return ($max_row - 1);  # Each record is (label Y1 Y2...)
 
-   if ($data_type == 'data-data')
+   if ($data_type == 'data-data' || $data_type == 'data-data-yx')
       return ($max_row - 2); # Each record is (label X Y1 Y2...)
 
    if ($data_type == 'data-data-error')
