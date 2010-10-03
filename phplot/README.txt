@@ -1,5 +1,5 @@
 This is the README file for PHPlot
-Last updated for PHPlot-5.1.3 on 2010-08-30
+Last updated for PHPlot-5.2.0 on 2010-10-03
 The project web site is http://sourceforge.net/projects/phplot/
 The project home page is http://phplot.sourceforge.net/
 -----------------------------------------------------------------------------
@@ -20,7 +20,6 @@ CONTENTS:
 
    COPYING  . . . . . . . . . . . . LGPL 2.1 License file
    ChangeLog  . . . . . . . . . . . Lists changes to the sources
-   HorizontalBars.txt . . . . . . . Experimental feature documentation
    NEWS.txt . . . . . . . . . . . . Highlights changes in releases
    README.txt   . . . . . . . . . . This file
    contrib  . . . . . . . . . . . . "Contributed" directory, add-ons
@@ -32,8 +31,7 @@ REQUIREMENTS:
 
 You need a recent version of PHP5, and you are advised to use the latest
 stable release.  This version of PHPlot has been tested with PHP-5.3.3 and
-PHP-5.2.14 on Linux, and with PHP-5.3.3 on Windows/XP. The PHPlot Test
-Suite currently contains 501 test cases.
+PHP-5.2.14 on Linux, and with PHP-5.3.3 on Windows/XP.
 
 Use of PHP-5.3.2 or PHP-5.2.13 is not recommended, if you are using
 TrueType Font (TTF) text. A bug with TTF rendering in those versions
@@ -74,14 +72,6 @@ KNOWN ISSUES:
 Here are some of the problems we know about in PHPlot. See the bug tracker
 on the PHPlot project web site for more information.
 
-#3045131 SetTransparentColor problems
-  There is an order dependency in SetTransparentColor(), and you cannot use
-  it on a data color. This is planned to be fixed in the next release.
-
-#3049726 Optimize color allocation
-  PHPlot adds unneeded colors in the image color map. This is planned to be
-  fixed in the next release.
-
 #1795969 The automatic range calculation for Y values needs to be rewritten.  
   This is especially a problem with small offset ranges (e.g. Y=[999:1001]).
   You can use SetPlotAreaWorld to set a specific range instead.
@@ -106,7 +96,7 @@ shared GD library, not the one bundled with PHP. This can result in small
 differences in images, and some unsupported features (such as advanced
 truecolor image operations). Also, although this Ubuntu GD library was
 built with fontconfig support, PHP does not use it, so you still need to
-specify TT fonts with their actual file names.
+specify TrueType fonts with their actual file names.
   + Some PHP installations may have a memory limit set too low to support
 large images, especially truecolor images.
 

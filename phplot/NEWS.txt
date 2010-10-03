@@ -4,6 +4,101 @@ The project home page is http://phplot.sourceforge.net/
 Refer the the ChangeLog file for detailed source changes.
 -----------------------------------------------------------------------------
 
+2010-10-03 Release 5.2.0
+
+Overview:
+
+This is the current stable release of PHPlot. This release includes some
+bug fixes and new features, described below, and a reimplementation of
+internal processing of colors.
+
+The PHPlot reference manual has been updated to match this release.
+Horizontal plots are now documented in the manual, and the interim
+documentation in the source release (HorizontalBars.txt) has been removed.
+The manual is available in HTML format as a separate download from
+Sourceforge.  The manual is also available for on-line viewing from the
+project home page.  Starting with this release, the manual is also
+available in PDF format from the project home page.
+
+
+Cautions, Important Notes, and Compatibility Issues:
+
+Due to changes in color allocation (see bug #3049726 below), image files
+produced with PHPlot-5.2.0 will differ when compared byte-for-byte with
+those created by earlier releases, even when the images are identical (as
+they nearly always are).
+
+If you are creating a horizontal plot with any negative X values, and not
+setting the Y axis position, your plot will change (see bug #3074402 below)
+because PHPlot no longer leaves the Y axis on the left for horizontal plots.
+
+Some internal methods that used to have 'public' visibility are now protected.
+This will generally prevent you from using them. The list of changed functions
+can be found in the release ChangeLog. Avoid using any internal methods.
+
+If you are making a stackedbar plot with any negative values, PHPlot-5.1.3
+and earlier took the absolute value of each data value (which was not
+documented), but PHPlot-5.2.0 does not. See Feature Request #3073679 below.
+
+If your plot fills the 256 available color map slots in a palette image,
+your image may look different with PHPlot-5.2.0 due to changes in color
+allocation order.  This was seen on two of the tests in the PHPlot test
+suite. These tests tiled a JPEG image into the plot area or image
+background.  Being a truecolor image, the JPEG had a huge number of colors,
+which filled all available slots in the color map. Additional colors for
+plot elements had to be approximated, and different colors resulted with
+PHPlot-5.2.0 versus previous releases. To avoid this problem, either use a
+truecolor PHPlot object (PHPlot_truecolor constructor), or reduce the
+number of colors in the background image and convert it to PNG or GIF.
+
+This release contains significant changes to PHPlot internals. In particular,
+variables and functions related to element colors and color handling have
+changed. Refer to the PHPlot release ChangeLog for more details.  Remember,
+if you rely on accessing any member variable, or on using any non-public
+function or any function not documented in the reference section of the manual,
+your code is at risk of breaking with each new release.
+
+
+New features in 5.2.0:
+
+#3077554 "Finer control over plot element colors" (partial):
+  The X, Y, and main titles can now have different colors. See the PHPlot
+  Reference Manual entries for SetXTitleColor and SetYTitleColor.
+
+#3073679 "Stacked bar plots with negative values":
+  A stacked bar plot can now include negative values, and stacks of negative
+  values will be drawn downwards (or leftwards). See the PHPlot Reference
+  Manual under "Plot Type: stackedbars" for details.
+
+
+Bugs Fixed in 5.2.0:
+
+#3045131 "SetTransparentColor problems":
+  Setting a transparent color now works whether before or after setting
+  the background color (for example), and also now works with a data color.
+
+#3049726 "Optimize color allocation"
+  PHPlot now defers allocating colors until drawing time, and tries to allocate
+  only the colors which are actually needed. For palette images, this results
+  in use of fewer color slots and slightly smaller image files.
+
+#3074402 "Fix Y axis default for horizontal plots":
+  When horizontal plots were introduced, an asymmetry with the X and Y axis
+  position defaults was known but left. This behavior was later determined
+  to be unhelpful. So now the Y axis on horizontal plots will default to X=0,
+  or the X value closest to zero within the plot area range. This is the same
+  behavior as for the X axis in vertical plots.
+
+#3056991 "Internal methods should be 'protected'":
+  More of the internal PHPlot functions were changed to 'protected' visibility,
+  as the test suite was fixed to not call them directly.
+
+#3057000 "Review 'deprecated' methods":
+  One broken deprecated method (SetColor) was removed and one changed.
+  Note that deprecated methods are not documented and not tested.
+
+-----------------------------------------------------------------------------
+
 2010-08-30 Release 5.1.3
 
 Overview:
@@ -172,7 +267,7 @@ New features in 5.1.1:
   Refer to the text file Truecolor.txt included in the PHPlot release for
   information on using truecolor.
   Two drawing changes were made to improve plot appearance with Truecolor:
-  + Filled dots (in points & linespoints plots) are now drawn better. This
+  + Filled dots (in points & linepoints plots) are now drawn better. This
     also makes them look rounder with regular (non-Truecolor) plots.
   + Area plots have the areas filled without overlapping each area down to
     the Y axis. This was needed to fix problems with alpha blending, and
