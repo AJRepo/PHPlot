@@ -202,13 +202,15 @@ Note: This code was moved out of CalcTranslation at PHPlot-5.0.5.
 </varlistentry>
 
 <varlistentry>
-  <term><anchor id="CalcBarWidths" xreflabel="CalcBarWidths"/>CalcBarWidths($verticals = TRUE)</term>
+  <term><anchor id="CalcBarWidths" xreflabel="CalcBarWidths"/>CalcBarWidths($stacked, $verticals)</term>
   <listitem>
     <para>
 Calculates values for <literal>bars</literal> and <literal>stackedbars</literal>
 plot types.
 It calculates the width of the bars and the margins around and between them.
-The argument was added in PHPlot-5.1.2 to support horizontal plots.
+An argument was added in PHPlot-5.1.2 to support horizontal plots.
+Arguments were changed after PHPlot-5.2.0 to explicitly select stacked or
+grouped bars, and vertical or horizontal plots.
 This is called by the bar chart drawing functions
 <xref linkend="DrawBars"/>, <xref linkend="DrawStackedBars"/>,
 <xref linkend="DrawHorizBars"/>, and <xref linkend="DrawHorizStackedBars"/>.

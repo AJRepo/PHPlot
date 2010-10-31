@@ -1,7 +1,7 @@
 <?php
 /* $Id$ */
 /*
- * PHPLOT Version 5.2.0
+ * PHPLOT Version 5.2.0 + CVS (This is an unreleased CVS version!)
  *
  * A PHP class for creating scientific and business charts
  * Visit http://sourceforge.net/projects/phplot/
@@ -3256,6 +3256,8 @@ class PHPlot
 
     /*
      * Calculate the width (or height) of bars for bar plots.
+     *   $stacked : If true, this is a stacked bar plot (1 bar per group).
+     *   $verticals : If false, this is a horizontal bar plot.
      * This calculates:
      *    record_bar_width : Allocated width for each bar (including gaps)
      *    actual_bar_width : Actual drawn width of each bar
@@ -3264,7 +3266,7 @@ class PHPlot
      * but the same variable names are used. Think of "bar_width" as being
      * the width if you are standing on the Y axis looking towards positive X.
      */
-    protected function CalcBarWidths($verticals = TRUE)
+    protected function CalcBarWidths($stacked, $verticals)
     {
         // group_width is the width of a group, including padding
         if ($verticals) {
@@ -3275,10 +3277,10 @@ class PHPlot
 
         // Actual number of bar spaces in the group. This includes the drawn bars, and
         // 'bar_extra_space'-worth of extra bars.
-        if ($this->plot_type == 'stackedbars') {
-          $num_spots = 1 + $this->bar_extra_space;
+        if ($stacked) {
+            $num_spots = 1 + $this->bar_extra_space;
         } else {
-          $num_spots = $this->data_columns + $this->bar_extra_space;
+            $num_spots = $this->data_columns + $this->bar_extra_space;
         }
 
         // record_bar_width is the width of each bar's allocated area.
@@ -5545,7 +5547,7 @@ class PHPlot
             return FALSE;
         if ($this->datatype_swapped_xy)
             return $this->DrawHorizBars();
-        $this->CalcBarWidths();
+        $this->CalcBarWidths(FALSE, TRUE); // Calculate bar widths for unstacked, vertical
 
         // This is the X offset from the bar group's label center point to the left side of the first bar
         // in the group. See also CalcBarWidths above.
@@ -5612,7 +5614,7 @@ class PHPlot
      */
     protected function DrawHorizBars()
     {
-        $this->CalcBarWidths(FALSE); // Calculate bar sizes for horizontal plots
+        $this->CalcBarWidths(FALSE, FALSE); // Calculate bar widths for unstacked, vertical
 
         // This is the Y offset from the bar group's label center point to the bottom of the first bar
         // in the group. See also CalcBarWidths above.
@@ -5686,7 +5688,7 @@ class PHPlot
             return FALSE;
         if ($this->datatype_swapped_xy)
             return $this->DrawHorizStackedBars();
-        $this->CalcBarWidths();
+        $this->CalcBarWidths(TRUE, TRUE); // Calculate bar widths for stacked, vertical
 
         // This is the X offset from the bar's label center point to the left side of the bar.
         $x_first_bar = $this->record_bar_width / 2 - $this->bar_adjust_gap;
@@ -5777,7 +5779,7 @@ class PHPlot
      */
     protected function DrawHorizStackedBars()
     {
-        $this->CalcBarWidths(FALSE); // Calculate bar sizes for horizontal plots
+        $this->CalcBarWidths(TRUE, FALSE); // Calculate bar widths for stacked, horizontal
 
         // This is the Y offset from the bar's label center point to the bottom of the bar
         $y_first_bar = $this->record_bar_width / 2 - $this->bar_adjust_gap;
