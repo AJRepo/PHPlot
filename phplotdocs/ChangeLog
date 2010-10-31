@@ -4,6 +4,9 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2010-10-31
+   * developer.xml: Change arguments to internal CalcBarWidths().
+
 2010-10-03
    For release with PHPlot-5.2.0:
    * Change vague references to release "after 5.1.3" to "5.2.0".

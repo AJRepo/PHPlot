@@ -2,6 +2,12 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2010-10-31
+    * Changed internal CalcBarWidths() to take two arguments which indicate
+      how it should calculate bar widths, rather than having it check the
+      plot_type directly. (Taken from another, experimental change. This
+      minimizes places where plot_type is directly used.)
+
 2010-10-03 (lbayuk)     ===== Released as 5.2.0 =====
     * phplot.php: Updated version
     * README.txt: Updated for new release
