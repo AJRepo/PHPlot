@@ -113,6 +113,7 @@ plot_origin_y		CalcTranslation	Y device coordinate of the plot area origin
 plot_type	'linepoints'	SetPlotType	Selected plot type
 plotbgimg		SetPlotAreaBgImage	Plot area background image filename
 plotbgmode		SetPlotAreaBgImage	Plot area background image tiling mode
+plots	array(...)	DrawGraph SetPlotType FindDataLimits	Static array of plot type information (Added after PHPlot-5.2.0) <link linkend="var-plots">(See notes for more)</link>
 point_counts		CheckPointParams	Size of point_shapes and point_sizes arrays (added in PHPlot-5.1.0)
 point_shapes	array(...)	SetPointShapes	Marker shapes for point plots
 point_sizes	array(...)	SetPointSizes	Marker sizes for point plots
