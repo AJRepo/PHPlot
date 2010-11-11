@@ -4,6 +4,11 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2010-11-09
+   * variables.list, developer.xml: Split the Member Variables chapter into
+     two sections: one with the variables list, and one with detailed
+     explanations of some (curently two) of the more complex variables.
+
 2010-10-31
    * developer.xml: Change arguments to internal CalcBarWidths().
 
