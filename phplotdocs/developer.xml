@@ -140,10 +140,13 @@ This figure illustrates the layout of the legend, as drawn by DrawLegend().
 
 <chapter id="dev-internal">
 <title>Internal Functions</title>
-<para>
+<abstract><title></title>
+  <para>
 This chapter documents PHPlot internal functions. These functions are
 intended to be used only by PHPlot itself.
-</para>
+  </para>
+</abstract>
+
 <note>
   <para>
 Starting with PHPlot-5.1.0, most of the internal functions are declared as
@@ -412,7 +415,7 @@ This was added in PHPlot-5.1.2.
     <para>
 Checks the validity of an option passed to a PHPlot member function.
 $which_opt is the string to check, and $which_acc is a string of acceptable
-choices (with a comma and then a space between each choice).
+choices (with a comma and then a space between choices).
 If the string to check is not found in the string of acceptable choices, a
 fatal error will be reported using <xref linkend="DrawError"/>.
 The error message will include $which_func which should
@@ -434,7 +437,7 @@ $which_opt and disallow partial matches.
 Checks the validity of an option argument passed to a PHPlot member function
 that can accept its argument as either a string or an array of strings.
 $opt is the string or array to check, and $acc is a string of acceptable
-choices (with a comma and then a space between each choice).
+choices (with a comma and then a space between choices).
 If the $opt argument is supplied as a string, it is first converted to an
 array with one element. Then the elements of the array are each checked
 for validity. If any element of the array of strings to check is not
@@ -1622,7 +1625,7 @@ $file is the filename of the image to use as the tile.
 and ($width, $height) are the area to be tiled. These are used to tile just
 under the plot area versus the entire image. The $mode can be
 <literal>centeredtile</literal>, <literal>tile</literal>, or
-<literal>scale</literal>.  cale mode scales the source image to
+<literal>scale</literal>.  Scale mode scales the source image to
 fit the target area. Tile and centeredtile modes repeat the source image as
 needed to fit into the target area; the difference is that centeredtile
 offsets the tile start position by half its size, which works better for
@@ -1682,13 +1685,21 @@ See <xref linkend="GetDeviceXY"/> for a public interface.
 
 <chapter id="dev-vars">
 <title>Member Variables</title>
+<abstract><title></title>
+  <para>
+This chapter provides information about the PHPlot class member variables.
+  </para>
+</abstract>
+
 <para>
-This chapter provides a list of PHPlot class member variables.
 All PHPlot class member variables are meant for internal use only,
 although they are declared as <emphasis>public</emphasis>.
 You may use these in applications, but they are subject to change in future
 releases without concern for backward compatibility.
 </para>
+
+<sect1 id="dev-vars-list">
+<title>List of Member Variables</title>
 
 <para>
 The table below lists the PHPlot class member variables.
@@ -1706,5 +1717,219 @@ are only a few.
 &variablelist;
 
 </para>
+</sect1>
+<pagebreak/>
+<sect1 id="dev-var-notes">
+<title>Member Variable Notes</title>
+<abstract><title></title>
+  <para>
+This section contains details on some of the PHPlot class member variables
+listed in the previous section.
+Remember that all PHPlot class member variables are meant for internal use only.
+  </para>
+</abstract>
+
+<sect2 id="var-fonts">
+<title>fonts[]</title>
+<para>
+<?dbfo keep-together="always"?> <!-- Prevent PDF break before table -->
+The <varname>fonts[]</varname> array contains information about the fonts to
+use for text on the plot. The array keys are the element names (such as
+<literal>title</literal> or <literal>legend</literal>) as used in
+<xref linkend="SetFont"/>, <xref linkend="SetFontGD"/>, or
+<xref linkend="SetFontTTF"/>. The array values are arrays which contain
+information about the font to use for that element. The keys and values of
+the second-level arrays are:
+
+<informaltable>
+  <?dbfo table-width="80%"?> <!-- Table width hint for PDF only -->
+  <tgroup cols="3">
+    <?dbhtml table-summary="fonts[] array elements"?>
+<!-- Note: Unable to specify column widths that work in both HTML and PDF.
+     For HTML, it only accepts %, and for FO/PDF it only takes *.
+     The only work-around is to move longer content out of table cells, so
+     HTML can automatically get columns widths that are acceptable.
+-->
+    <colspec colname="c1" colwidth="20*" />
+    <colspec colname="c2" colwidth="40*" />
+    <colspec colname="c3" colwidth="40*" />
+    <thead>
+      <row>
+        <entry>Key</entry>
+        <entry>Value for TTF</entry>
+        <entry>Value for GD Font</entry>
+      </row>
+    </thead>
+    <tbody>
+      <row>
+        <entry>ttf</entry>
+        <entry>True for a TrueType font</entry>
+        <entry>False for a GD font</entry>
+      </row>
+      <row>
+        <entry>font</entry>
+        <entry>Pathname of the font file</entry>
+        <entry>Font number: 1 through 5</entry>
+      </row>
+      <row>
+        <entry>size</entry>
+        <entry>Font point size</entry>
+        <entry>Not used</entry>
+      </row>
+      <row>
+        <entry>height</entry>
+        <entry>Height in pixels of an upper-case "E" in the font</entry>
+        <entry>Font height in pixels</entry>
+      </row>
+      <row>
+        <entry>width</entry>
+        <entry>Width in pixels of an upper-case "E" in the font.</entry>
+        <entry>Font width in pixels</entry>
+      </row>
+      <row>
+        <entry>spacing</entry>
+        <entry>Font's built-in inter-line spacing</entry>
+        <entry>Not used</entry>
+      </row>
+      <row>
+        <entry>line_spacing</entry>
+        <entry>User-requested inter-line spacing factor.</entry>
+        <entry>Same as for TTF</entry>
+      </row>
+    </tbody>
+  </tgroup>
+</informaltable>
+</para>
+<para>
+For TrueType fonts, the height and width can vary by character. The fonts
+array stores a height and width value for the font, but these are only used
+for sizing non-text plot elements (such as the legend color boxes). When
+PHPlot needs to know the drawn size of a string that will use TTF, it calculates
+the exact size of that specific string when drawn with the designated font.
+</para>
+<para>
+GD fonts have fixed character width and height, so the values stored in
+the fonts array can be used to calculate text string sizes.
+</para>
+
+<para>
+The <literal>spacing</literal> key stores the TrueType font's built-in
+inter-line spacing. Although TrueType fonts have this information
+internally, PHP cannot access it, so PHPlot calculates it by taking the
+height of the string "E\nE" and subtracting twice the height of the letter E.
+</para>
+
+<para>
+The <literal>line_spacing</literal> key stores the user-specified line spacing
+adjustment for a text element, if any, from <xref linkend="SetFont"/> or
+one of the two related functions. It will be NULL if the spacing was
+not set for this element, meaning use the default line spacing.
+See <xref linkend="SetLineSpacing"/> for more information on how this is used.
+</para>
+
+<para>
+Here is an example of part of a fonts array, for the title element:
+<programlisting><![CDATA[$plot->fonts['title'] = array(
+    'ttf' => FALSE,          // This element uses a GD font
+    'font' => 2,             // Use GD font 2
+    'height' => 13,          // Provided by GD
+    'width' => 6,            // Provided by GD
+    'line_spacing' => NULL,  // Use default line spacing
+)
+]]></programlisting>
+</para>
+</sect2>
+
+<sect2 id="var-label-format">
+<title>label_format[]</title>
+<para>
+The <varname>label_format[]</varname> array contains information about how
+text labels should be formatted. This array has 4 entries, with keys 'x',
+'y', 'xd', and 'yd'. The 'x' and 'y' entries are for tick labels, and the
+'xd' and 'yd' entries are for data labels. (Note that PHPlot defaults data
+label formatting to match tick label formatting, but this is handled in
+<xref linkend="CheckLabels"/>, with the tick label format information copied
+to the data label format information if necessary.)
+</para>
+
+<para>
+<?dbfo keep-together="always"?> <!-- Prevent PDF break before table -->
+The value of each entry in <varname>label_format</varname> is an array
+containing formatting information. The arrays are empty by default, meaning
+there is no special formatting. If formatting has been enabled, for example
+with <xref linkend="SetXLabelType"/>, the arrays can contain the following
+keys and values:
+
+<informaltable>
+  <?dbfo keep-together="always"?>
+  <tgroup cols="3">
+    <?dbhtml table-summary="label_format[] array elements"?>
+    <colspec colname="c1" colwidth="20*" />
+    <colspec colname="c2" colwidth="20*" />
+    <colspec colname="c3" colwidth="60*" />
+    <thead>
+      <row>
+        <entry>Key</entry>
+        <entry>Used with type</entry>
+        <entry>Value</entry>
+      </row>
+    </thead>
+    <tbody>
+      <row>
+        <entry>type</entry>
+        <entry></entry>
+        <entry>Formatting type: data, time, printf, or custom.</entry>
+      </row>
+      <row>
+        <entry>precision</entry>
+        <entry>data</entry>
+        <entry>The number of decimal positions to produce.</entry>
+      </row>
+      <row>
+        <entry>prefix</entry>
+        <entry>data</entry>
+        <entry>A prefix string to append to the label (for example, a currency
+            sign).</entry>
+      </row>
+      <row>
+        <entry>suffix</entry>
+        <entry>data</entry>
+        <entry>A suffix string to append to the label (for example, a currency
+           sign or percent sign).
+           This replaces data_units_text (which still works too).</entry>
+      </row>
+      <row>
+        <entry>time_format</entry>
+        <entry>time</entry>
+        <entry>The date/time format string for the PHP strftime()
+            function.</entry>
+      </row>
+      <row>
+        <entry>printf_format</entry>
+        <entry>printf</entry>
+        <entry>The format string for the PHP printf() function.</entry>
+      </row>
+      <row>
+        <entry>custom_callback</entry>
+        <entry>custom</entry>
+        <entry>The function (or array with object and method name) to call to
+            format the label.</entry>
+      </row>
+      <row>
+        <entry>custom_arg</entry>
+        <entry>custom</entry>
+        <entry>An additional argument to pass to the custom_callback
+            function.</entry>
+      </row>
+    </tbody>
+  </tgroup>
+</informaltable>
+</para>
+
+</sect2>
+
+</sect1>
+
 </chapter>
+
 </part>
