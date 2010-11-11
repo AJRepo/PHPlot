@@ -49,7 +49,7 @@ error_bar_line_width	1	SetErrorBarLineWidth	Thickness of error bar lines
 error_bar_shape	'tee'	SetErrorBarShape	Shape (style) of error bars: line or tee
 error_bar_size	5	SetErrorBarSize	Size of error bars
 file_format	'png'	SetFileFormat	Image format: png, gif, jpg, wbmp
-fonts		SetFontGD SetFontTTF	Array of font information, indexed by text type (title, x_label, etc). Value is an array of font information, with indexes including: 'ttf' (True if TrueType), 'font' (font path or designator), 'size' (point size for TrueType).
+fonts		SetFontGD SetFontTTF	Array of font information. <link linkend="var-fonts">(See notes for more)</link>
 grid_at_foreground	FALSE	DrawGraph	Flag: Draw grid on top of or behind the plot
 grid_color	'black'	SetGridColor	Color (R,G,B,A) to use for axes, plot area border, legend border, pie chart lines and text (not grid!)
 group_frac_width	0.7	CalcBarWidths	Controls fraction of bar group space used for bar
@@ -62,7 +62,7 @@ img		PHPlot	Image resource
 in_error		PrintError	Prevent recursion in error message image production
 is_inline	FALSE	SetIsInline	Don't sent headers
 label_color	'black'	SetLabelColor	Unused - see SetTitleColor
-label_format	array(...)	SetXLabelType SetYLabelType SetXDataLabelType SetYDataLabelType SetXTimeFormat SetYTimeFormat SetPrecisionX SetPrecisionY	Label format info. Indexes 'x', 'y' (for tick labels), 'xd', and 'yd' (for data labels) are each an array, with index 'type' indicating the label format type (data, time, printf, or custom), and other indexes depending on that value.
+label_format	array(...)	SetXLabelType SetYLabelType SetXDataLabelType SetYDataLabelType SetXTimeFormat SetYTimeFormat SetPrecisionX SetPrecisionY	Label format info. <link linkend="var-label-format">(See notes for more)</link>
 label_scale_position	0.5	SetLabelScalePosition	Pie chart label position factor
 legend	''	SetLegend	Legend text array. Each index is a legend text line.
 legend_colorbox_align		SetLegendStyle	Legend alignment of color boxes, left, right, or none
@@ -114,8 +114,8 @@ plot_type	'linepoints'	SetPlotType	Selected plot type
 plotbgimg		SetPlotAreaBgImage	Plot area background image filename
 plotbgmode		SetPlotAreaBgImage	Plot area background image tiling mode
 point_counts		CheckPointParams	Size of point_shapes and point_sizes arrays (added in PHPlot-5.1.0)
-point_shapes	array(...)	SetPointShapes	Shapes of markers in point plots
-point_sizes	array(...)	SetPointSizes	Sizes of markers in point plots
+point_shapes	array(...)	SetPointShapes	Marker shapes for point plots
+point_sizes	array(...)	SetPointSizes	Marker sizes for point plots
 print_image	TRUE	SetPrintImage	Flag: Automatic PrintImage after DrawGraph?
 record_bar_width		CalcBarWidths	Area for each bar in a bar chart
 records_per_group		SetDataValues	Maximum of num_recs[], max number of entries (including label and X if present) for all data rows
