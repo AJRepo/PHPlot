@@ -75,7 +75,7 @@ class PHPlot
 
 //Data
     public $data_type = 'text-data';       // Structure of the data array
-    public $plot_type= 'linepoints';       // bars, lines, linepoints, area, points, pie, thinbarline, squared
+    public $plot_type = 'linepoints';      // See $plots[] below
 
     public $label_scale_position = 0.5;    // Shifts data labels in pie charts. 1 = top, 0 = bottom
     public $group_frac_width = 0.7;        // Bars use this fraction (0 to 1) of a group's space
@@ -202,6 +202,53 @@ class PHPlot
         'data_color' => NULL,
         'debug_textbox' => NULL,  // For testing/debugging text box alignment
         'debug_scale' => NULL,    // For testing/debugging scale setup
+    );
+
+    // Defined plot types static array:
+    // Array key is the plot type. (Upper case letters are not allowed due to CheckOption)
+    // Value is an array with these keys:
+    //   draw_method (required) : Class method to call to draw the plot.
+    //   draw_arg : Optional array of arguments to pass to draw_method.
+    //   draw_axes : If FALSE, do not draw X/Y axis lines, labels, ticks, grid, titles.
+    //   abs_vals, sum_vals : Data array processing flags. See FindDataLimits().
+    static protected $plots = array(
+        'area' => array(
+            'draw_method' => 'DrawArea',
+            'abs_vals' => TRUE,
+        ),
+        'bars' => array(
+            'draw_method' => 'DrawBars',
+        ),
+        'linepoints' => array(
+            'draw_method' => 'DrawLinePoints',
+        ),
+        'lines' => array(
+            'draw_method' => 'DrawLines',
+        ),
+        'pie' => array(
+            'draw_method' => 'DrawPieChart',
+            'draw_axes' => FALSE,
+            'abs_vals' => TRUE,
+        ),
+        'points' => array(
+            'draw_method' => 'DrawDots',
+        ),
+        'squared' => array(
+            'draw_method' => 'DrawSquared',
+        ),
+        'stackedarea' => array(
+            'draw_method' => 'DrawArea',
+            'draw_arg' => array(TRUE), // Tells DrawArea to draw stacked area plot
+            'sum_vals' => TRUE,
+            'abs_vals' => TRUE,
+        ),
+        'stackedbars' => array(
+            'draw_method' => 'DrawStackedBars',
+            'sum_vals' => TRUE,
+        ),
+        'thinbarline' => array(
+            'draw_method' => 'DrawThinBarLines',
+        ),
     );
 
 //////////////////////////////////////////////////////
@@ -2176,9 +2223,8 @@ class PHPlot
      */
     function SetPlotType($which_pt)
     {
-        $this->plot_type = $this->CheckOption($which_pt, 'bars, stackedbars, lines, linepoints,'
-                            . ' area, points, pie, thinbarline, squared, stackedarea',
-                            __FUNCTION__);
+        $avail_plot_types = implode(', ', array_keys(PHPlot::$plots)); // List of known plot types
+        $this->plot_type = $this->CheckOption($which_pt, $avail_plot_types, __FUNCTION__);
         return (boolean)$this->plot_type;
     }
 
@@ -2647,8 +2693,8 @@ class PHPlot
      * For most plots, IV is X and DV is Y. For swapped X/Y plots, IV is Y and DV is X.
      * At the end of the function, IV and DV ranges get assigned into X or Y.
      *
-     * This has to know how certain plot types use the data. 'area' and 'pie' use absolute
-     * values, 'stackedbars' sums values, and 'stackedarea' sums absolute values.
+     * The data type mostly determines the data array structure, but some plot types do special
+     * things such as sum the values in a row. This information is in the plots[] array.
      *
      * This calculates min_x, max_x, min_y, and max_y. It also calculates two arrays
      * data_min[] and data_max[] with per-row min and max values. These are used for
@@ -2657,10 +2703,9 @@ class PHPlot
      */
     protected function FindDataLimits()
     {
-        // Special case processing for certain plot types:
-        $sum_abs = ($this->plot_type == 'stackedarea'); // Sum of absolute values
-        $sum_val = ($this->plot_type == 'stackedbars'); // Sum of values
-        $abs_val = ($this->plot_type == 'area' || $this->plot_type == 'pie'); // Absolute values
+        // Does this plot type need special processing of the data values?
+        $sum_vals = !empty(PHPlot::$plots[$this->plot_type]['sum_vals']); // Add up values in each row
+        $abs_vals = !empty(PHPlot::$plots[$this->plot_type]['abs_vals']); // Take absolute values
 
         // These need to be initialized in case there are multiple plots and missing data points.
         $this->data_min = array();
@@ -2682,7 +2727,7 @@ class PHPlot
                 $all_iv[] = (double)$this->data[$i][$j++];
             }
 
-            if ($sum_abs || $sum_val) {
+            if ($sum_vals) {
                 $all_dv = array(0, 0); // One limit is 0, other calculated below
             } else {
                 $all_dv = array();
@@ -2694,14 +2739,15 @@ class PHPlot
                     if ($this->datatype_error_bars) {
                         $all_dv[] = $val + (double)$this->data[$i][$j++];
                         $all_dv[] = $val - (double)$this->data[$i][$j++];
-                    } elseif ($sum_abs) {
-                        $all_dv[1] += abs($val); // Sum of absolute values
-                    } elseif ($sum_val) {
-                        $all_dv[1] += $val;  // Sum of values
-                    } elseif ($abs_val) {
-                        $all_dv[] = abs($val); // List of all absolute values
                     } else {
-                        $all_dv[] = $val; // List of all values
+                        if ($abs_vals) {
+                            $val = abs($val); // Use absolute values
+                        }
+                        if ($sum_vals) {
+                            $all_dv[1] += $val;  // Sum of values
+                        } else {
+                            $all_dv[] = $val; // List of all values
+                        }
                     }
                 } else {    // Missing DV value
                   $j++;
@@ -5874,12 +5920,13 @@ class PHPlot
         if (!$this->CheckDataArray())
             return FALSE; // Error message already reported.
 
+        // Set defaults then import plot type configuration:
+        $draw_axes = TRUE;
+        $draw_arg = array(); // Default is: no arguments to the drawing function
+        extract(PHPlot::$plots[$this->plot_type]);
+
         // Allocate colors for the plot:
         $this->SetColorIndexes();
-
-        // For pie charts: don't draw grid or border or axes, and maximize area usage.
-        // These controls can be split up in the future if needed.
-        $draw_axes = ($this->plot_type != 'pie');
 
         // Get maxima and minima for scaling:
         if (!$this->FindDataLimits())
@@ -5932,39 +5979,8 @@ class PHPlot
             $this->DoCallback('draw_axes');
         }
 
-        switch ($this->plot_type) {
-        case 'thinbarline':
-            $this->DrawThinBarLines();
-            break;
-        case 'area':
-            $this->DrawArea();
-            break;
-        case 'squared':
-            $this->DrawSquared();
-            break;
-        case 'lines':
-            $this->DrawLines();
-            break;
-        case 'linepoints':
-            $this->DrawLinePoints();
-            break;
-        case 'points';
-            $this->DrawDots();
-            break;
-        case 'pie':
-            $this->DrawPieChart();
-            break;
-        case 'stackedbars':
-            $this->DrawStackedBars();
-            break;
-        case 'stackedarea':
-            $this->DrawArea(TRUE);
-            break;
-        // case 'bars':
-        default:
-            $this->DrawBars();
-            break;
-        }   // end switch
+        // Call the plot-type drawing method:
+        call_user_func_array(array($this, $draw_method), $draw_arg);
         $this->DoCallback('draw_graph', $this->plot_area);
 
         if ($draw_axes && $this->grid_at_foreground) {   // Usually one wants grids to go back, but...
