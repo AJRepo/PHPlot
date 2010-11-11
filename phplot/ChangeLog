@@ -2,6 +2,14 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2010-11-11
+    * Moved information about plot types into a new static member array
+      plots[]. (This is an internal change with no impact on usage, but will
+      make it easier to add new plot types.) SetPlotType() no longer needs a
+      list of plot types to check, FindDataLimits() does not need to check for
+      specific plot types to to process the data array, and DrawGraph() uses
+      data from the array rather than knowing about all the plot types.
+
 2010-10-31
     * Changed internal CalcBarWidths() to take two arguments which indicate
       how it should calculate bar widths, rather than having it check the
