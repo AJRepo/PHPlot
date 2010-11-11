@@ -1928,6 +1928,86 @@ keys and values:
 
 </sect2>
 
+<sect2 id="var-plots">
+<title>plots[]</title>
+<para>
+The <varname>plots[]</varname> array contains information about known plot
+types. This was added after PHPlot-5.2.0. This is a static member variable in
+the PHPlot class, so it must be accessed as <varname>PHPlot::$plots</varname>
+and not through an instance of the class. It has protected visibility, so is
+not accessible from outside the class or derived classes.
+</para>
+
+<para>
+<?dbfo keep-together="always"?> <!-- Prevent PDF break before table -->
+The array keys are the plot types (for example: 'bars', 'linepoints').
+These must not include upper case letters.
+The values are arrays which contain information about the plot type.
+The keys and values of the second-level arrays are:
+
+<informaltable>
+  <tgroup cols="2">
+    <?dbhtml table-summary="plots[] array elements"?>
+    <colspec colname="c1" colwidth="30*" />
+    <colspec colname="c2" colwidth="70*" />
+    <thead>
+      <row>
+        <entry>Key</entry>
+        <entry>Value</entry>
+      </row>
+    </thead>
+    <tbody>
+      <row>
+        <entry>draw_method</entry>
+        <entry>Name of the PHPlot class method (function) to call to draw the
+            'insides' of the plot.  This is the only required entry.
+            The function is responsible for drawing everything inside the
+            plot area. (That is, everything except the plot titles, axis lines,
+            tick marks and tick labels, grid lines, and legend.)</entry>
+      </row>
+      <row>
+        <entry>draw_arg</entry>
+        <entry>Optional argument(s) for the drawing method named by draw_method.
+            If present, this must be an array. Each element of the array
+            is passed to the draw_method function as a separate argument.
+            If this is not specified, the drawing method is called with no
+            arguments.
+            This is generally used to 'overload' drawing methods so they
+            handle multiple similar plot types.</entry>
+      </row>
+      <row>
+        <entry>draw_axes</entry>
+        <entry>A flag to indicate if the X axis and Y axis should be drawn.
+            The default is TRUE. This is set to FALSE for pie charts.</entry>
+      </row>
+      <row>
+        <entry>abs_vals</entry>
+        <entry>Special data processing flag. If TRUE, this tells
+            <xref linkend="FindDataLimits"/> that the plot type will take
+            the absolute value of all independent variable values in the
+            data array. FindDataLimits needs this information so it knows
+            how to find the minimum and maximum values in the data array.
+            The default if omitted is FALSE.
+            </entry>
+      </row>
+      <row>
+        <entry>sum_vals</entry>
+        <entry>Special data processing flag. If TRUE, this tells
+            <xref linkend="FindDataLimits"/> that the plot type will sum
+            up the independent variable values in each row of the data array.
+            FindDataLimits needs this information so it knows how to find the
+            minimum and maximum values in the data array.
+            The default if omitted is FALSE.
+            If both abs_vals and sum_vals are TRUE, this means the plot type
+            sums up the absolute values from the data array.
+            (The stackedarea plot type does this.)</entry>
+      </row>
+    </tbody>
+  </tgroup>
+</informaltable>
+</para>
+</sect2>
+
 </sect1>
 
 </chapter>
