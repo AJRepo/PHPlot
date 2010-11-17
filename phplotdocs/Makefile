@@ -58,7 +58,7 @@ STATIC_IMAGES=\
 
 
 # Files to add to release, in addition to *.html files:
-ALSO=phplotdoc.css
+ALSO=phplotdoc.css examples/ohlcdata.csv
 
 # Release base name:
 RELEASE=$(PACKAGE)
@@ -80,6 +80,9 @@ EXAMPLES_PHP=\
   examples/linepoints1.php \
   examples/lines1.php \
   examples/lines2.php \
+  examples/ohlcbasic.php \
+  examples/ohlccandlesticks.php \
+  examples/ohlccandlesticks2.php \
   examples/pie1.php \
   examples/pie2.php \
   examples/pie3.php \
@@ -118,6 +121,9 @@ EXAMPLES_IMAGES=\
   examples/linepoints1.png \
   examples/lines1.png \
   examples/lines2.png \
+  examples/ohlcbasic.png \
+  examples/ohlccandlesticks.png \
+  examples/ohlccandlesticks2.png \
   examples/pie1.png \
   examples/pie2.png \
   examples/pie3.png \
