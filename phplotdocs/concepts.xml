@@ -631,6 +631,16 @@ The following plot types are available:
         <entry>Filled bars with optional 3-D look. Multiple datasets are offset.</entry>
       </row>
       <row>
+        <entry><link linkend="plottype-candlesticks">candlesticks</link></entry>
+        <entry>An Open/High/Low/Close (OHLC) financial plot using filled
+            and unfilled candlesticks.</entry>
+      </row>
+      <row>
+        <entry><link linkend="plottype-candlesticks2">candlesticks2</link></entry>
+        <entry>An Open/High/Low/Close (OHLC) financial plot using filled
+            candlesticks.</entry>
+      </row>
+      <row>
         <entry><link linkend="plottype-linepoints">linepoints</link></entry>
         <entry>Lines between points, with a marker at each point, and optional
             error bars.</entry>
@@ -638,6 +648,11 @@ The following plot types are available:
       <row>
         <entry><link linkend="plottype-lines">lines</link></entry>
         <entry>Straight lines between data points, with optional error bars.</entry>
+      </row>
+      <row>
+        <entry><link linkend="plottype-ohlc">ohlc</link></entry>
+        <entry>A basic Open/High/Low/Close (OHLC) financial plot using lines
+            and ticks.</entry>
       </row>
       <row>
         <entry><link linkend="plottype-pie">pie</link></entry>
@@ -742,6 +757,88 @@ Horizontal bar plots were added in PHPlot-5.1.2.
 </para>
 </sect2>
 
+<sect2 id="plottype-candlesticks">
+<title>Plot Type: candlesticks (OHLC Candlesticks Plot)</title>
+<para>
+This plot type represents the changing price of a financial instrument
+(such as a stock or other security) over time.
+At each time point, 4 values are plotted: the opening price, the highest price,
+the lowest price, and the closing price.
+The candlesticks plot type is one of three Open/High/Low/Close (OHLC) plot
+types available. It shows the opening and closing prices as the top and bottom
+of a narrow rectangle (the candlestick), with an upper wick showing the
+highest price, and a lower wick showing the lowest price.
+The candlestick body is drawn solid filled if the closing price is lower
+than the opening price, and as an outline (unfilled) if the closing price
+is higher than the opening price.
+(For a variation on this, see
+<link linkend="plottype-candlesticks2">candlesticks2</link>.)
+</para>
+<para>
+This plot type works with data types <xref linkend="text-data"/>
+and <xref linkend="data-data"/>.
+For 'text-data', the data X values are assumed to be at 0.5+N for N=0,1,2...
+</para>
+<para>
+This plot type requires exactly 4 Y values for each X. These represent the
+Open, High, Low, and Close prices in that order.
+Multiple data sets are not supported. Missing Y values are not allowed.
+</para>
+<para>
+This plot type uses 4 colors from the data colors array.
+If the security closed lower than it opened for that time period,
+then color 0 is used for the candlestick body, and color 2 is used
+for the upper and lower wicks.
+If the security closed higher or the same as it opened for that time period,
+then color 1 is used for the candlestick body, and color 3 is used
+for the upper and lower wicks.
+</para>
+<para>
+<xref linkend="SetLineWidths"/> can be used to set line widths.
+Index 0 will be used to draw the candlestick bodies, and index 1 will
+be used to draw the wicks.
+</para>
+<para>
+An example of this plot type can be seen in
+<xref linkend="ex-ohlccandlesticks"/>.
+</para>
+<para>
+This plot type was added after PHPlot-5.2.0.
+</para>
+</sect2>
+
+<sect2 id="plottype-candlesticks2">
+<title>Plot Type: candlesticks2 (OHLC Filled Candlesticks Plot)</title>
+<para>
+This plot type represents the changing price of a financial instrument
+(such as a stock or other security) over time.
+The candlesticks2 plot type is the same as the
+<link linkend="plottype-candlesticks">candlesticks</link> plot type,
+except the candlestick bodies are always drawn filled, regardless of whether
+the security closes up or down.
+Color usage and line width usage are the same.
+</para>
+<para>
+Be sure to set the data colors with <xref linkend="SetDataColors"/> for this
+plot type. Unlike candlesticks, candlesticks2 plots use only color to
+show the difference between a security closing up or closing down.
+</para>
+<para>
+This plot type works with data types <xref linkend="text-data"/>
+and <xref linkend="data-data"/>.
+For 'text-data', the data X values are assumed to be at 0.5+N for N=0,1,2...
+As with candlesticks, this plot type requires exactly 4 Y values for each X:
+Open, High, Low, and Close prices.
+</para>
+<para>
+An example of this plot type can be seen in
+<xref linkend="ex-ohlccandlesticks2"/>.
+</para>
+<para>
+This plot type was added after PHPlot-5.2.0.
+</para>
+</sect2>
+
 <sect2 id="plottype-linepoints">
 <title>Plot Type: linepoints (Lines and Points)</title>
 <para>
@@ -813,6 +910,52 @@ Error bar line width is set with <xref linkend="SetErrorBarLineWidth" />.
 Examples of this plot type can be seen in
 <xref linkend="ex-lines1" /> and
 <xref linkend="ex-lines2" />.
+</para>
+</sect2>
+
+<sect2 id="plottype-ohlc">
+<title>Plot Type: ohlc (Basic OHLC Plot)</title>
+<para>
+This plot type represents the changing price of a financial instrument
+(such as a stock or other security) over time.
+At each time point, 4 values are plotted: the opening price, the highest price,
+the lowest price, and the closing price.
+The ohlc plot type is one of three Open/High/Low/Close (OHLC) plot
+types available. It shows a vertical line connecting the low and high prices,
+with small horizontal tick marks showing the opening and closing prices.
+The opening price tick mark is on the left of the vertical line, and the
+closing price tick mark is on the right.
+</para>
+<para>
+This plot type works with data types <xref linkend="text-data"/>
+and <xref linkend="data-data"/>.
+For 'text-data', the data X values are assumed to be at 0.5+N for N=0,1,2...
+</para>
+<para>
+This plot type requires exactly 4 Y values for each X. These represent the
+Open, High, Low, and Close prices in that order.
+Multiple data sets are not supported. Missing Y values are not allowed.
+</para>
+<para>
+This plot type uses 4 colors from the data colors array.
+If the security closed lower than it opened for that time period,
+then color 0 is used for the vertical line, and color 2 is used
+for the open and close tick marks.
+If the security closed higher or the same as it opened for that time period,
+then color 1 is used for the vertical line, and color 3 is used
+for the open and close tick marks.
+</para>
+<para>
+<xref linkend="SetLineWidths"/> can be used to set line widths.
+Index 0 will be used to draw the vertical lines, and index 1 will
+be used to draw the tick marks.
+</para>
+<para>
+An example of this plot type can be seen in
+<xref linkend="ex-ohlcbasic"/>.
+</para>
+<para>
+This plot type was added after PHPlot-5.2.0.
 </para>
 </sect2>
 
@@ -1144,6 +1287,24 @@ types.
         <entry> </entry>
       </row>
       <row>
+        <entry><link linkend="plottype-candlesticks">candlesticks</link></entry>
+        <entry>Yes</entry>
+        <entry>Yes</entry>
+        <entry> </entry>
+        <entry> </entry>
+        <entry> </entry>
+        <entry> </entry>
+      </row>
+      <row>
+        <entry><link linkend="plottype-candlesticks2">candlesticks2</link></entry>
+        <entry>Yes</entry>
+        <entry>Yes</entry>
+        <entry> </entry>
+        <entry> </entry>
+        <entry> </entry>
+        <entry> </entry>
+      </row>
+      <row>
         <entry><link linkend="plottype-linepoints">linepoints</link></entry>
         <entry>Yes</entry>
         <entry>Yes</entry>
@@ -1167,6 +1328,15 @@ types.
         <entry>Yes</entry>
         <entry> </entry>
         <entry>Yes</entry>
+        <entry> </entry>
+        <entry> </entry>
+      </row>
+      <row>
+        <entry><link linkend="plottype-ohlc">ohlc</link></entry>
+        <entry>Yes</entry>
+        <entry>Yes</entry>
+        <entry> </entry>
+        <entry> </entry>
         <entry> </entry>
         <entry> </entry>
       </row>
