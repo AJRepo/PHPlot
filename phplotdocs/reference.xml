@@ -4244,8 +4244,11 @@ A string indicating the type of plot. The following types are available:
             <itemizedlist spacing="compact">
               <listitem><para>area</para></listitem>
               <listitem><para>bars</para></listitem>
+              <listitem><para>candlesticks</para></listitem>
+              <listitem><para>candlesticks2</para></listitem>
               <listitem><para>linepoints</para></listitem>
               <listitem><para>lines</para></listitem>
+              <listitem><para>ohlc</para></listitem>
               <listitem><para>pie</para></listitem>
               <listitem><para>points</para></listitem>
               <listitem><para>squared</para></listitem>
@@ -4266,6 +4269,10 @@ The default plot type is 'linepoints'.
   </refsect1>
   <refsect1>
     <title>History</title>
+    <para>
+Plot types 'candlesticks', 'candlesticks2', and 'ohlc'
+were added after PHPlot-5.2.0.
+     </para>
     <para>
 Plot type 'stackedarea' was added in PHPlot-5.1.1.
      </para>
