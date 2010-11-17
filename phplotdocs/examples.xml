@@ -919,4 +919,144 @@ values need not be in order or sequential in the data array.
 </sect1>
 
 <!-- =============================================== -->
+<sect1 id="ex-ohlcbasic">
+<title>Example - Basic OHLC (Open, High, Low, Close) Financial Plot</title>
+<para>
+This example shows an <link linkend="plottype-ohlc">ohlc</link> plot, which
+is a basic form of the Open, High, Low, Close (OHLC) financial plot.
+Each X is a point in time or interval, and there are 4 corresponding Y values
+for the four prices (open, high, low, and close).
+Compare this with the next two examples,
+<xref linkend="example-ohlccandlesticks"/>
+and <xref linkend="example-ohlccandlesticks2"/>,
+which show the same data but with a different presentation.
+</para>
+<para>
+In this example, the data array is read from an external file in Comma
+Separated Value (CSV) format. (Financial data in this format is available
+for download from sites such as Yahoo! Finance.)
+An portion example of the data file can be found below.
+</para>
+<para>
+This example uses the dates from the data file as row labels in the data
+array, with text-data data format. For this to work, the rows have to be sorted
+by increasing date, so the <function>read_prices_text_data()</function>
+first reads the data into a temporary array, sorts by the date, then copies
+the data into a PHPlot data array. Compare this with the other two OHLC
+examples, where the same data is used differently.
+</para>
+<example id="example-ohlcbasic">
+<?dbfo keep-together="auto"?>
+<title>Basic OHLC Plot</title>
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="examples/ohlcbasic.png" scale="58" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>Basic OHLC Financial Plot Example</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+&ohlcbasic;
+</example>
+<para>
+Here is the top portion of the data file used for the three OHLC examples.
+This file is called <ulink url="ohlcdata.csv">ohlcdata.csv</ulink>.
+<programlisting><![CDATA[Date,Open,High,Low,Close,Volume,Adj Close
+2009-03-31,17.83,18.79,17.78,18.37,92095500,17.81
+2009-03-30,17.74,17.76,17.27,17.48,49633000,16.95
+2009-03-27,18.54,18.62,18.05,18.13,47670400,17.58
+2009-03-26,18.17,18.88,18.12,18.83,63775100,18.26
+2009-03-25,17.98,18.31,17.52,17.88,73927100,17.34
+...
+]]></programlisting>
+</para>
+</sect1>
+
+<!-- =============================================== -->
+<sect1 id="ex-ohlccandlesticks">
+<title>Example - Candlesticks OHLC (Open, High, Low, Close) Financial Plot</title>
+<para>
+This example shows a <link linkend="plottype-candlesticks">candlesticks</link>
+plot, which is a form of the Open, High, Low, Close (OHLC) financial plot.
+Each X is a point in time or interval, and there are 4 corresponding Y values
+for the four prices (open, high, low, and close).
+Compare this with <xref linkend="example-ohlcbasic"/>
+and <xref linkend="example-ohlccandlesticks2"/>,
+which show the same data but with a different presentation.
+</para>
+<para>
+The data values for this example are read from an external file.
+Refer to <xref linkend="ex-ohlcbasic"/> for more information.
+Unlike that example, this candlesticks example uses the dates from the
+data file as the X values in the data array, with the PHPlot data type
+data-data. The dates read from the file are converted into timestamp values
+with <function>strtotime()</function> inside
+<function>read_prices_data_data()</function>.
+Since each row in a data-data array specifies its X value, the rows do not
+need to be sorted (as they were in the previous example).
+</para>
+<para>
+PHPlot will format the X values as dates because <xref linkend="SetXLabelType"/>
+is used to select date/time formatting.  Unlike the text-data example, this
+also lets us use <xref linkend="SetXTickIncrement"/> to control the label
+density along the X axis.
+</para>
+<example id="example-ohlccandlesticks">
+<?dbfo keep-together="auto"?>
+<title>Candlesticks OHLC Plot</title>
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="examples/ohlccandlesticks.png" scale="58" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>Candlesticks OHLC Financial Plot Example</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+&ohlccandlesticks;
+</example>
+</sect1>
+
+<!-- =============================================== -->
+<sect1 id="ex-ohlccandlesticks2">
+<title>Example - Filled Candlesticks OHLC (Open, High, Low, Close) Financial Plot</title>
+<para>
+This example shows a <link linkend="plottype-candlesticks2">candlesticks2</link>
+plot, which is a form of the Open, High, Low, Close (OHLC) financial plot.
+Each X is a point in time or interval, and there are 4 corresponding Y values
+for the four prices (open, high, low, and close).
+Compare this with <xref linkend="example-ohlcbasic"/>
+and <xref linkend="example-ohlccandlesticks"/>,
+which show the same data but with a different presentation.
+With the candlesticks2 plot type, all the candlestick bodies are filled in,
+meaning you must set meaningful data colors in order to be able to tell if
+a security closes up or down.
+</para>
+<para>
+The data values for this example are read from an external file.
+Refer to <xref linkend="ex-ohlcbasic"/> for more information.
+This example uses the data-data format, with the dates read from the file
+converted to X values in the data array.
+</para>
+<example id="example-ohlccandlesticks2">
+<?dbfo keep-together="auto"?>
+<title>Filled Candlesticks OHLC Plot</title>
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="examples/ohlccandlesticks2.png" scale="58" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>Filled Candlesticks OHLC Financial Plot Example</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+&ohlccandlesticks2;
+</example>
+</sect1>
+
+<!-- =============================================== -->
 </chapter>
