@@ -1,6 +1,11 @@
 This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
+2010-11-16
+    * Feature request 3093483 "Investing support chart types":
+      Added 3 new plot types: Basic OHLC (Open/High/Low/Close), Candlesticks,
+      and Filled Candlesticks. Implemented with one new function to handle the
+      3 new plot types: ohlc, candlesticks, and candlesticks2.
 
 2010-11-11
     * Moved information about plot types into a new static member array

@@ -4,6 +4,12 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2010-11-16
+   * concepts.xml, reference.xml: Document 3 new plot types.
+   * examples.xml, Makefile: Added 3 new examples for new OHLC plot types.
+   * developer.xml: Add new internal function to draw OHLC plots.
+   * variables.list: Add 3 new variables for adjusting OHLC plots.
+
 2010-11-11
    * variables.list, developer.xml: Document new plots[] static array.
 

@@ -15,6 +15,15 @@ see the ChangeLog file inside the PHPlot distribution.)
 <variablelist>
 
   <varlistentry>
+    <term>2010-11-16</term>
+    <listitem>
+      <para>
+Documented 3 new plot types - OHLC financial plots, with examples.
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
     <term>2010-10-03</term>
     <listitem>
       <para>
