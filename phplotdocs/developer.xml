@@ -771,6 +771,26 @@ would be duplicated by <xref linkend="DrawDotsError"/>.
 </varlistentry>
 
 <varlistentry>
+  <term><anchor id="DrawOHLC" xreflabel="DrawOHLC"/>DrawOHLC($draw_candles, $always_fill = FALSE)</term>
+  <listitem>
+    <para>
+Draws one of the three types of OHLC (Open/High/Low/Close) plots.
+If $draw_candles is FALSE, draws a basic OHLC plot
+(plot type <literal>ohlc</literal>).
+If $draw_candles is TRUE and $always_fill is FALSE,
+draws a candlestick OHLC plot
+(plot type <literal>candlesticks</literal>).
+If $draw_candles is TRUE and $always_fill is TRUE,
+draws a filled candlestick OHLC plot
+(plot type <literal>candlesticks2</literal>).
+Called by <xref linkend="DrawGraph"/> when the plot type is one of those
+three types.
+This was added after PHPlot-5.2.0.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
   <term><anchor id="DrawPieChart" xreflabel="DrawPieChart"/>DrawPieChart()</term>
   <listitem>
     <para>
