@@ -219,11 +219,23 @@ class PHPlot
         'bars' => array(
             'draw_method' => 'DrawBars',
         ),
+        'candlesticks' => array(
+            'draw_method' => 'DrawOHLC',
+            'draw_arg' => array(TRUE, FALSE), // Draw candlesticks, only fill if "closed down"
+        ),
+        'candlesticks2' => array(
+            'draw_method' => 'DrawOHLC',
+            'draw_arg' => array(TRUE, TRUE), // Draw candlesticks, fill always
+        ),
         'linepoints' => array(
             'draw_method' => 'DrawLinePoints',
         ),
         'lines' => array(
             'draw_method' => 'DrawLines',
+        ),
+        'ohlc' => array(
+            'draw_method' => 'DrawOHLC',
+            'draw_arg' => array(FALSE), // Don't draw candlesticks
         ),
         'pie' => array(
             'draw_method' => 'DrawPieChart',
@@ -5904,6 +5916,128 @@ class PHPlot
                                           $rightward ? $data_label_x_offset : -5, 0);
             }
         }   // end for
+        return TRUE;
+    }
+
+    /*
+     * Draw a financial "Open/High/Low/Close" (OHLC) plot, including candlestick plots.
+     * Data format can be text-data (label, Yo, Yh, Yl, Yc) or data-data (label, X, Yo, Yh, Yl, Yc).
+     * Yo="Opening price", Yc="Closing price", Yl="Low price", Yh="High price".
+     * Each row must have exactly 4 Y values. No multiple data sets, no missing values.
+     * There are 3 subtypes, selected by $draw_candles and $always_fill.
+     *   $draw_candles  $always_fill  Description:
+     *    FALSE          N/A          A basic OHLC chart with a vertical line for price range, horizontal
+     *                                tick marks on left for opening price and right for closing price.
+     *    TRUE           FALSE        A candlestick plot with filled body indicating close down, outline
+     *                                for closing up, and vertical wicks for low and high prices.
+     *    TRUE           TRUE         A candlestick plot where the candle bodies are always filled.
+     * These map to 3 plot types per the $plots[] array.
+     *
+     * Data color usage:                        If closes down:   If closes up or unchanged:
+     *    Candlestick body, ohlc range line:      color 0           color 1
+     *    Candlestick wicks, ohlc tick marks:     color 2           color 3
+     * There are three member variables that control the width (candlestick body or tick marks):
+     *     ohlc_max_width, ohlc_min_width, ohlc_frac_width
+     * (There is no API to change them at this time.)
+     */
+    protected function DrawOHLC($draw_candles, $always_fill = FALSE)
+    {
+        if (!$this->CheckDataType('text-data, data-data'))
+            return FALSE;
+
+        // Assign name of GD function to draw candlestick bodies for stocks that close up.
+        $draw_body_close_up = $always_fill ? 'imagefilledrectangle' : 'imagerectangle';
+
+        // These 3 variables control the calculation of the half-width of the candle body, or length of
+        // the tick marks. This is scaled based on the plot density, but within tight limits.
+        $min_width = isset($this->ohlc_min_width) ? $this->ohlc_min_width : 2;
+        $max_width = isset($this->ohlc_max_width) ? $this->ohlc_max_width : 8;
+        $width_factor = isset($this->ohlc_frac_width) ? $this->ohlc_frac_width : 0.3;
+        $dw = max($min_width, min($max_width,
+                     (int)($width_factor * $this->plot_area_width / $this->num_data_rows)));
+
+        // Get line widths to use: index 0 for body/stroke, 1 for wick/tick.
+        list($body_thickness, $wick_thickness) = $this->line_widths;
+
+        $gcvars = array(); // For GetDataColor, which initializes and uses this.
+
+        for ($row = 0, $cnt = 0; $row < $this->num_data_rows; $row++) {
+            $record = 1;                                    // Skip record #0 (data label)
+
+            if ($this->datatype_implied)                    // Implied X values?
+                $x_now = 0.5 + $cnt++;                      // Place text-data at X = 0.5, 1.5, 2.5, etc...
+            else
+                $x_now = $this->data[$row][$record++];      // Read it, advance record index
+
+            $x_now_pixels = $this->xtr($x_now);             // Convert X to device coordinates
+            $x_left = $x_now_pixels - $dw;
+            $x_right = $x_now_pixels + $dw;
+
+            if ($this->x_data_label_pos != 'none')          // Draw X Data labels?
+                $this->DrawXDataLabel($this->data[$row][0], $x_now_pixels, $row);
+
+            // Require and use 4 numeric values in each row.
+            if ($this->num_recs[$row] - $record != 4
+                    || !is_numeric($yo = $this->data[$row][$record++])
+                    || !is_numeric($yh = $this->data[$row][$record++])
+                    || !is_numeric($yl = $this->data[$row][$record++])
+                    || !is_numeric($yc = $this->data[$row][$record++])) {
+                return $this->PrintError("DrawOHLC: row $row must have 4 values.");
+            }
+
+            // Set device coordinates for each value and direction flag:
+            $yh_pixels = $this->ytr($yh);
+            $yl_pixels = $this->ytr($yl);
+            $yc_pixels = $this->ytr($yc);
+            $yo_pixels = $this->ytr($yo);
+            $closed_up = $yc >= $yo;
+
+            // Get data colors and line thicknesses:
+            if ($closed_up) {
+                $this->GetDataColor($row, 1, $gcvars, $body_color); // Color 1 for body, closing up
+                $this->GetDataColor($row, 3, $gcvars, $ext_color);  // Color 3 for wicks/ticks
+            } else {
+                $this->GetDataColor($row, 0, $gcvars, $body_color); // Color 0 for body, closing down
+                $this->GetDataColor($row, 2, $gcvars, $ext_color);  // Color 2 for wicks/ticks
+            }
+            imagesetthickness($this->img, $body_thickness);
+
+            if ($draw_candles) {
+                // Note: Unlike ImageFilledRectangle, ImageRectangle 'requires' its arguments in
+                // order with upper left corner first.
+                if ($closed_up) {
+                    $yb1_pixels = $yc_pixels; // Upper body Y
+                    $yb2_pixels = $yo_pixels; // Lower body Y
+                    $draw_body = $draw_body_close_up;
+                    // Avoid a PHP/GD bug resulting in "T"-shaped ends to zero height unfilled rectangle:
+                    if ($yb1_pixels == $yb2_pixels)
+                        $draw_body = 'imagefilledrectangle';
+                } else {
+                    $yb1_pixels = $yo_pixels;
+                    $yb2_pixels = $yc_pixels;
+				    $draw_body = 'imagefilledrectangle';
+                }
+
+                // Draw candle body
+                $draw_body($this->img, $x_left, $yb1_pixels, $x_right, $yb2_pixels, $body_color);
+
+                // Draw upper and lower wicks, if they have height. (In device coords, that's dY<0)
+                imagesetthickness($this->img, $wick_thickness);
+                if ($yh_pixels < $yb1_pixels) {
+                    imageline($this->img, $x_now_pixels, $yb1_pixels, $x_now_pixels, $yh_pixels, $ext_color);
+                }
+                if ($yl_pixels > $yb2_pixels) {
+                    imageline($this->img, $x_now_pixels, $yb2_pixels, $x_now_pixels, $yl_pixels, $ext_color);
+                }
+            } else {
+                // Basic OHLC
+                imageline($this->img, $x_now_pixels, $yl_pixels, $x_now_pixels, $yh_pixels, $body_color);
+                imagesetthickness($this->img, $wick_thickness);
+                imageline($this->img, $x_left, $yo_pixels, $x_now_pixels, $yo_pixels, $ext_color);
+                imageline($this->img, $x_right, $yc_pixels, $x_now_pixels, $yc_pixels, $ext_color);
+            }
+            imagesetthickness($this->img, 1);
+        }
         return TRUE;
     }
 
