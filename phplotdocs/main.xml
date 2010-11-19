@@ -11,7 +11,7 @@
 <!ENTITY concepts SYSTEM "concepts.xml">
 <!ENTITY examples SYSTEM "examples.xml">
 <!ENTITY functions SYSTEM "functions.xml">
-<!ENTITY callbacks SYSTEM "callbacks.xml">
+<!ENTITY advanced SYSTEM "advanced.xml">
 <!ENTITY developer SYSTEM "developer.xml">
 <!ENTITY changelog SYSTEM "changelog.xml">
 <!ENTITY reference SYSTEM "reference.xml">
@@ -143,9 +143,9 @@ There is a chapter to help get you started, and a chapter of examples.
 &install;
 &quickstart;
 &concepts;
-&functions;
+&advanced;
 &examples;
-&callbacks;
+&functions;
 </part>
 
 <!-- Part 2 is the reference -->
