@@ -1718,6 +1718,14 @@ You may use these in applications, but they are subject to change in future
 releases without concern for backward compatibility.
 </para>
 
+<para>
+<xref linkend="conc-tuning"/> describes how some of these PHPlot variables
+can be used to adjust plot appearance. Although these are also internal
+variables, setting them from your script is generally safe, as they have
+relatively small effects on plots, and are less likely to change in future
+releases.
+</para>
+
 <sect1 id="dev-vars-list">
 <title>List of Member Variables</title>
 
@@ -1952,10 +1960,13 @@ keys and values:
 <title>plots[]</title>
 <para>
 The <varname>plots[]</varname> array contains information about known plot
-types. This was added after PHPlot-5.2.0. This is a static member variable in
-the PHPlot class, so it must be accessed as <varname>PHPlot::$plots</varname>
-and not through an instance of the class. It has protected visibility, so is
-not accessible from outside the class or derived classes.
+types. Essentially, it tells <xref linkend="FindDataLimits"/> and
+<xref linkend="DrawGraph"/> how to produce the main portion of the plot.
+This was added after PHPlot-5.2.0.
+This is a static member variable in the PHPlot class, so it must be
+accessed as <varname>PHPlot::$plots</varname> and not through an instance
+of the class. It has protected visibility, so is not accessible from
+outside the class or derived classes.
 </para>
 
 <para>
