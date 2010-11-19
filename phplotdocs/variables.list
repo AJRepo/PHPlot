@@ -13,8 +13,8 @@ VARNAME	DEFAULT	REFERENCE	DESCRIPTION
 actual_bar_width		CalcBarWidths	Calculated width of bars for bar charts
 background_done	FALSE	SetInputFile DrawBackground	True if background has already been drawn, to avoid drawing a background fill over a background image.
 bar_adjust_gap		CalcBarWidths	Calculated bar gap
-bar_extra_space	0.5	CalcBarWidths	Extra space between groups of bars
-bar_width_adjust	1	CalcBarWidths	Width of bar relative to space for one bar
+bar_extra_space	0.5	CalcBarWidths	Extra space between groups of bars <link linkend="conc-tuning-bars">(See Tuning Parameters for more)</link>
+bar_width_adjust	1	CalcBarWidths	Width of bar relative to space for one bar <link linkend="conc-tuning-bars">(See Tuning Parameters for more)</link>
 bg_color	'white'	SetBackgroundColor	Color (R,G,B,A) for image background
 bgimg		SetBgImage	Background image filename
 bgmode		SetBgImage	Background image tiling mode
@@ -50,9 +50,9 @@ error_bar_shape	'tee'	SetErrorBarShape	Shape (style) of error bars: line or tee
 error_bar_size	5	SetErrorBarSize	Size of error bars
 file_format	'png'	SetFileFormat	Image format: png, gif, jpg, wbmp
 fonts		SetFontGD SetFontTTF	Array of font information. <link linkend="var-fonts">(See notes for more)</link>
-grid_at_foreground	FALSE	DrawGraph	Flag: Draw grid on top of or behind the plot
+grid_at_foreground	FALSE	DrawGraph	Flag: Draw grid on top of or behind the plot <link linkend="conc-tuning-misc">(See Tuning Parameters for more)</link>
 grid_color	'black'	SetGridColor	Color (R,G,B,A) to use for axes, plot area border, legend border, pie chart lines and text (not grid!)
-group_frac_width	0.7	CalcBarWidths	Controls fraction of bar group space used for bar
+group_frac_width	0.7	CalcBarWidths	Controls fraction of bar group space used for bar <link linkend="conc-tuning-bars">(See Tuning Parameters for more)</link>
 i_border	array(194, 194 ,194)	SetImageBorderColor	Color (R,G,B,A) for image border, if drawn
 image_border_type	'none'	SetImageBorderType	Image border type
 image_border_width		SetImageBorderWidth	Width of image border in pixels. Default depends on image_border_type. (Added in PHPlot-5.1.2)
@@ -74,7 +74,7 @@ light_grid_color	'gray'	SetLightGridColor	Color (R,G,B,A) for grid lines and X d
 line_spacing	4	SetLineSpacing	Controls inter-line spacing of text
 line_styles	array(...)	SetLineStyles	Plot line style(s)
 line_widths	1	SetLineWidths	Plot line width(s)
-locale_override		number_format	Flag to avoid importing locale info
+locale_override		number_format	Flag to avoid importing locale info <link linkend="conc-tuning-misc">(See Tuning Parameters for more)</link>
 max_x		FindDataLimits	Overall max X value in the data array
 max_y		FindDataLimits	Overall max Y value in the data array
 min_x		FindDataLimits	Overall min X value in the data array
@@ -98,9 +98,9 @@ num_data_rows		SetDataValues	Number of rows in the data array (number of points 
 num_recs		SetDataValues	Array with number of entries in each data row (including label and X if present)
 num_x_ticks	''	SetNumXTicks	Forced number of X tick marks
 num_y_ticks	''	SetNumYTicks	Forced number of Y tick marks
-ohlc_min_width		DrawOHLC	Minimum half-width for elements in OHLC plots (candlestick bodies or tick pairs). Default is 2 pixels.
-ohlc_max_width		DrawOHLC	Maximum half-width for elements in OHLC plots (candlestick bodies or tick pairs). Default is 8 pixels.
-ohlc_frac_width		DrawOHLC	Scale factor for element widths in OHLC plots. Default is 0.3, meaning within min and max limits the elements will use 30% of the available space for half their width.
+ohlc_min_width		DrawOHLC	Minimum half-width for elements in OHLC plots (candlestick bodies or tick pairs). Default is 2 pixels. <link linkend="conc-tuning-ohlc">(See Tuning Parameters for more)</link>
+ohlc_max_width		DrawOHLC	Maximum half-width for elements in OHLC plots (candlestick bodies or tick pairs). Default is 8 pixels. <link linkend="conc-tuning-ohlc">(See Tuning Parameters for more)</link>
+ohlc_frac_width		DrawOHLC	Scale factor for element widths in OHLC plots. Default is 0.3, meaning within min and max limits the elements will use 30% of the available space for half their width. <link linkend="conc-tuning-ohlc">(See Tuning Parameters for more)</link>
 output_file	''	SetOutputFile	Redirect to output file
 plot_area		CalcPlotAreaPixels	Array defining the calculated plot area. ([0],[1]) is the top left corner, ([2],[3]) is the bottom right corner.
 plot_area_height		CalcPlotAreaPixels	Height of the plot area
@@ -124,7 +124,7 @@ print_image	TRUE	SetPrintImage	Flag: Automatic PrintImage after DrawGraph?
 record_bar_width		CalcBarWidths	Area for each bar in a bar chart
 records_per_group		SetDataValues	Maximum of num_recs[], max number of entries (including label and X if present) for all data rows
 rgb_array		SetRGBArray	Array mapping color names to array of R, G, B values
-safe_margin	5		Fixed extra margin used in multiple places
+safe_margin	5		Fixed extra margin used in multiple places <link linkend="conc-tuning-misc">(See Tuning Parameters for more)</link>
 shading	5	SetShading	Drop shadow size for pie and bar charts
 skip_bottom_tick	FALSE	SetSkipBottomTick	Skip bottom tick mark
 skip_left_tick	FALSE	SetSkipLeftTick	Skip left tick mark
