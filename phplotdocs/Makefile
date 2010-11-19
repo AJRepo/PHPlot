@@ -32,7 +32,7 @@ MAIN=main.xml
 # List of all source files:
 SRC=$(MAIN) $(XSL_HTML) $(XSL_PDF) \
   install.xml quickstart.xml concepts.xml functions.xml \
-  examples.xml webform.xml callbacks.xml \
+  examples.xml webform.xml advanced.xml \
   reference.xml developer.xml changelog.xml
 
 # Static image files used by the manual:
