@@ -15,6 +15,25 @@ see the ChangeLog file inside the PHPlot distribution.)
 <variablelist>
 
   <varlistentry>
+    <term>2010-11-18</term>
+    <listitem>
+      <para>
+Restructuring.
+Too much advanced material was ending up in the basic programming chapter
+"Concepts". There is now a new chapter "Advanced", which includes the material
+on Callbacks (demoted from chapter to section), plus two sections previously
+in "Concepts": custom data color callback, and truecolor images.
+Also moved the Functions by Category chapter after Examples, not before.
+      </para>
+      <para>
+Added new section "Tuning Parameters" in the Advanced chapter, to provide
+more information about class variables that can be set to adjust plot
+appearance.
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
     <term>2010-11-16</term>
     <listitem>
       <para>

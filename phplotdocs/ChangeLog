@@ -4,6 +4,20 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2010-11-18
+   Restructuring, to move advanced material out of the Concepts chapter.
+   * advanced.xml: New chapter. This started with all material on Callbacks
+     from callbacks.xml (demoted from chapter to section level 1). Then
+     two sections were moved from concepts.xml to the new chapter: custom
+     data color callback, and truecolor images.
+   * callbacks.xml: Deleted. Material moved to advanced.xml
+   * main.xml: Changed chapters, moved Functions by Category to after Examples.
+   * Makefile: Changed file list due to new chapter.
+
+   Improved documentation for variables used to adjust plot appearance:
+   * advanced.xml: New section for tunable parameters.
+   * developer.xml, variables.list: Add info/links to new section.
+
 2010-11-16
    * concepts.xml, reference.xml: Document 3 new plot types.
    * examples.xml, Makefile: Added 3 new examples for new OHLC plot types.
