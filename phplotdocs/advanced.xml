@@ -1389,6 +1389,7 @@ For candlesticks plots, they adjust the calculation of the width of the
 candlestick body.
 For basic OHLC plots, they adjust the calculation of the length of the tick
 marks which represent opening and closing prices.
+(All of these were added after PHPlot-5.2.0)
 </para>
 <para>
   <variablelist>
@@ -1433,6 +1434,29 @@ Where avail_area = plot_area_width / number_data_points
 </para>
 </sect2>
 
+<sect2 id="conc-tuning-legend">
+<title>Tuning the Legend</title>
+<para>
+This variable adjusts the appearance of the legend.
+</para>
+<para>
+  <variablelist>
+    <varlistentry>
+      <term><varname>legend_colorbox_width</varname></term>
+      <listitem>
+        <para>
+This is an adjustment factor for the width of the color boxes in the legend.
+With the default value 1.0, the color boxes are as wide as one character in
+the font used in the legend (width of "E" for TrueType fonts).
+A value of 2.0 makes the color boxes twice as wide, and 0.5 makes them half
+the character width.
+(This was added after PHPlot-5.2.0)
+        </para>
+      </listitem>
+    </varlistentry>
+  </variablelist>
+</para>
+</sect2>
 
 <sect2 id="conc-tuning-misc">
 <title>Miscellaneous Tuning</title>
