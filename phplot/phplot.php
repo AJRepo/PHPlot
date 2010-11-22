@@ -4612,14 +4612,17 @@ class PHPlot
         // Sizing parameters:
         $v_margin = $char_h/2;                   // Between vertical borders and labels
         $dot_height = $char_h + $line_spacing;   // Height of the small colored boxes
+        // Color boxes are $char_w wide, but can be adjusted using legend_colorbox_width:
+        $colorbox_width = $char_w;
+        if (isset($this->legend_colorbox_width))
+            $colorbox_width *= $this->legend_colorbox_width;
+
         // Overall legend box width e.g.: | space colorbox space text space |
-        // where colorbox and each space are 1 char width.
-        if ($colorbox_align != 'none') {
-            $width = $max_width + 4 * $char_w;
-            $draw_colorbox = TRUE;
+        // where each space adds $char_w, and colorbox adds $char_w * its width adjustment.
+        if (($draw_colorbox = ($colorbox_align != 'none'))) {
+            $width = $max_width + 3 * $char_w + $colorbox_width;
         } else {
             $width = $max_width + 2 * $char_w;
-            $draw_colorbox = FALSE;
         }
 
         //////// Calculate box position
@@ -4660,14 +4663,14 @@ class PHPlot
                 $x_pos = $box_end_x - $char_w;
         } elseif ($colorbox_align == 'left') {
             $dot_left_x = $box_start_x + $char_w;
-            $dot_right_x = $dot_left_x + $char_w;
+            $dot_right_x = $dot_left_x + $colorbox_width;
             if ($text_align == 'left')
-                $x_pos = $dot_left_x + 2 * $char_w;
+                $x_pos = $dot_right_x + $char_w;
             else
                 $x_pos = $box_end_x - $char_w;
-        } else {
-            $dot_left_x = $box_end_x - 2 * $char_w;
-            $dot_right_x = $dot_left_x + $char_w;
+        } else {      // $colorbox_align == 'right'
+            $dot_right_x = $box_end_x - $char_w;
+            $dot_left_x = $dot_right_x - $colorbox_width;
             if ($text_align == 'left')
                 $x_pos = $box_start_x + $char_w;
             else
