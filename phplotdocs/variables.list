@@ -66,6 +66,7 @@ label_format	array(...)	SetXLabelType SetYLabelType SetXDataLabelType SetYDataLa
 label_scale_position	0.5	SetLabelScalePosition	Pie chart label position factor
 legend	''	SetLegend	Legend text array. Each index is a legend text line.
 legend_colorbox_align		SetLegendStyle	Legend alignment of color boxes, left, right, or none
+legend_colorbox_width		DrawLegend	Adjusts width of color boxes in the legend <link linkend="conc-tuning-legend">(See Tuning Parameters for more)</link> (Added after PHPlot-5.2.0)
 legend_text_align		SetLegendStyle	Legend style setting, left or right
 legend_x_pos		SetLegendPixels SetLegendWorld	Forced legend position
 legend_xy_world		SetLegendPixels SetLegendWorld	Flag indicating legend position was set in World coords
@@ -98,9 +99,9 @@ num_data_rows		SetDataValues	Number of rows in the data array (number of points 
 num_recs		SetDataValues	Array with number of entries in each data row (including label and X if present)
 num_x_ticks	''	SetNumXTicks	Forced number of X tick marks
 num_y_ticks	''	SetNumYTicks	Forced number of Y tick marks
-ohlc_min_width		DrawOHLC	Minimum half-width for elements in OHLC plots (candlestick bodies or tick pairs). Default is 2 pixels. <link linkend="conc-tuning-ohlc">(See Tuning Parameters for more)</link>
-ohlc_max_width		DrawOHLC	Maximum half-width for elements in OHLC plots (candlestick bodies or tick pairs). Default is 8 pixels. <link linkend="conc-tuning-ohlc">(See Tuning Parameters for more)</link>
-ohlc_frac_width		DrawOHLC	Scale factor for element widths in OHLC plots. Default is 0.3, meaning within min and max limits the elements will use 30% of the available space for half their width. <link linkend="conc-tuning-ohlc">(See Tuning Parameters for more)</link>
+ohlc_min_width		DrawOHLC	Minimum half-width for elements in OHLC plots (candlestick bodies or tick pairs). Default is 2 pixels. <link linkend="conc-tuning-ohlc">(See Tuning Parameters for more)</link> (Added after PHPlot-5.2.0)
+ohlc_max_width		DrawOHLC	Maximum half-width for elements in OHLC plots (candlestick bodies or tick pairs). Default is 8 pixels. <link linkend="conc-tuning-ohlc">(See Tuning Parameters for more)</link> (Added after PHPlot-5.2.0)
+ohlc_frac_width		DrawOHLC	Scale factor for element widths in OHLC plots. Default is 0.3, meaning within min and max limits the elements will use 30% of the available space for half their width. <link linkend="conc-tuning-ohlc">(See Tuning Parameters for more)</link> (Added after PHPlot-5.2.0)
 output_file	''	SetOutputFile	Redirect to output file
 plot_area		CalcPlotAreaPixels	Array defining the calculated plot area. ([0],[1]) is the top left corner, ([2],[3]) is the bottom right corner.
 plot_area_height		CalcPlotAreaPixels	Height of the plot area
