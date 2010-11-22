@@ -4,6 +4,15 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2010-11-21
+   * advanced.xml: Document new tunable parameter for legend colorbox width.
+   * variables.list: New variable legend_colorbox_width.
+       Added note about version for ohlc* variables.
+   * etc/legend-layout.fig: Update to show adjustable colorbox width.
+   * images/legend-layout.png: Regenerated from xfig source.
+   * images/layout.png: Regenerated with xfig smoothing option.
+   * developer.xml: Updated notes on the legend-layout figure.
+
 2010-11-18
    Restructuring, to move advanced material out of the Concepts chapter.
    * advanced.xml: New chapter. This started with all material on Callbacks

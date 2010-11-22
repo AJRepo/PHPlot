@@ -1,6 +1,11 @@
 This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
+2010-11-21
+    * Feature request 3111166 "Control legend colorbox width":
+      Added a class variable legend_colorbox_width which can be changed
+      to make the colorboxes wider or narrower.
+
 2010-11-16
     * Feature request 3093483 "Investing support chart types":
       Added 3 new plot types: Basic OHLC (Open/High/Low/Close), Candlesticks,
