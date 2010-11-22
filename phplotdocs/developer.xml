@@ -123,11 +123,22 @@ overlap the title or fall off the edge of the image.
 <title>Legend Layout</title>
 <para>
 This figure illustrates the layout of the legend, as drawn by DrawLegend().
+Two of six possible arrangements of the colorboxes and text are shown.
+See <xref linkend="SetLegendStyle"/> for more information.
+</para>
+<para>
+Through PHPlot-5.2.0, the width of the colorboxes was always
+<varname>char_w</varname>, the width of one character (or the width of the
+upper case letter "E") in the legend text font.
+Starting after PHPlot-5.2.0, this can be adjusted using a class variable.
+See <xref linkend="conc-tuning-legend"/> for more.
+</para>
 
+<para>
 <informalfigure>
   <mediaobject>
     <imageobject>
-      <imagedata fileref="images/legend-layout.png" scale="58" format="PNG" />
+      <imagedata fileref="images/legend-layout.png" scale="75" format="PNG" />
     </imageobject>
     <textobject>
       <phrase>PHPlot legend layout figure</phrase>
