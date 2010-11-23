@@ -4703,6 +4703,277 @@ class PHPlot
         return TRUE;
     }
 
+/////////////////////////////////////////////////////
+////////////////////             PLOT DRAWING HELPERS
+/////////////////////////////////////////////////////
+
+    /*
+     * Get data color to use for plotting.
+     *   $row, $idx : Index arguments for the current data point.
+     *   &$vars : Variable storage. Caller makes an empty array, and this function uses it.
+     *   &$data_color : Returned result - Color index for the data point.
+     *   $extra : Extra info flag passed through to data color callback.
+     */
+    protected function GetDataColor($row, $idx, &$vars, &$data_color, $extra = 0)
+    {
+        // Initialize or extract variables:
+        if (empty($vars)) {
+            $custom_color = (bool)$this->GetCallback('data_color');
+            $num_data_colors = count($this->ndx_data_colors);
+            $vars = compact('custom_color', 'num_data_colors');
+        } else {
+          extract($vars);
+        }
+
+        // Select the colors.
+        if ($custom_color) {
+            $col_i = $this->DoCallback('data_color', $row, $idx, $extra); // Custom color index
+            $data_color = $this->ndx_data_colors[$col_i % $num_data_colors];
+        } else {
+            $data_color = $this->ndx_data_colors[$idx];
+        }
+    }
+
+    /*
+     * Get data color and error bar color to use for plotting.
+     *   $row, $idx : Index arguments for the current bar.
+     *   &$vars : Variable storage. Caller makes an empty array, and this function uses it.
+     *   &$data_color : Returned result - Color index for the data (bar fill)
+     *   &$error_color : Returned result - Color index for the error bars
+     *   $extra : Extra info flag passed through to data color callback.
+     */
+    protected function GetDataErrorColors($row, $idx, &$vars, &$data_color, &$error_color, $extra = 0)
+    {
+        // Initialize or extract variables:
+        if (empty($vars)) {
+            $this->NeedErrorBarColors();   // This plot needs error bar colors.
+            $custom_color = (bool)$this->GetCallback('data_color');
+            $num_data_colors = count($this->ndx_data_colors);
+            $num_error_colors = count($this->ndx_error_bar_colors);
+            $vars = compact('custom_color', 'num_data_colors', 'num_error_colors');
+        } else {
+          extract($vars);
+        }
+
+        // Select the colors.
+        if ($custom_color) {
+            $col_i = $this->DoCallback('data_color', $row, $idx, $extra); // Custom color index
+            $data_color = $this->ndx_data_colors[$col_i % $num_data_colors];
+            $error_color = $this->ndx_error_bar_colors[$col_i % $num_error_colors];
+        } else {
+            $data_color = $this->ndx_data_colors[$idx];
+            $error_color = $this->ndx_error_bar_colors[$idx];
+        }
+    }
+
+    /*
+     * Get colors to use for a bar chart. There is a data color, and either a border color
+     * or a shading color (data dark color).
+     *   $row, $idx : Index arguments for the current bar.
+     *   &$vars : Variable storage. Caller makes an empty array, and this function uses it.
+     *   &$data_color : Returned result - Color index for the data (bar fill).
+     *   &$alt_color : Returned result - Color index for the shading or outline.
+     */
+    protected function GetBarColors($row, $idx, &$vars, &$data_color, &$alt_color)
+    {
+        // Initialize or extract variables:
+        if (empty($vars)) {
+            if ($this->shading > 0)    // This plot needs dark colors if shading is on.
+                $this->NeedDataDarkColors();
+            $custom_color = (bool)$this->GetCallback('data_color');
+            $num_data_colors = count($this->ndx_data_colors);
+            $num_border_colors = count($this->ndx_data_border_colors);
+            $vars = compact('custom_color', 'num_data_colors', 'num_border_colors');
+        } else {
+          extract($vars);
+        }
+
+        // Select the colors.
+        if ($custom_color) {
+            $col_i = $this->DoCallback('data_color', $row, $idx); // Custom color index
+            $i_data = $col_i % $num_data_colors; // Index for data colors and dark colors
+            $i_border = $col_i % $num_border_colors; // Index for data borders (if used)
+        } else {
+            $i_data = $i_border = $idx;
+        }
+        $data_color = $this->ndx_data_colors[$i_data];
+        if ($this->shading > 0) {
+            $alt_color = $this->ndx_data_dark_colors[$i_data];
+        } else {
+            $alt_color = $this->ndx_data_border_colors[$i_border];
+        }
+    }
+
+    /*
+     * Draws a styled dot. Uses world coordinates.
+     * The list of supported shapes can also be found in SetPointShapes().
+     * All shapes are drawn using a 3x3 grid, centered on the data point.
+     * The center is (x_mid, y_mid) and the corners are (x1, y1) and (x2, y2).
+     *   $record is the 0-based index that selects the shape and size.
+     */
+    protected function DrawDot($x_world, $y_world, $record, $color)
+    {
+        $index = $record % $this->point_counts;
+        $point_size = $this->point_sizes[$index];
+
+        $half_point = (int)($point_size / 2);
+
+        $x_mid = $this->xtr($x_world);
+        $y_mid = $this->ytr($y_world);
+
+        $x1 = $x_mid - $half_point;
+        $x2 = $x_mid + $half_point;
+        $y1 = $y_mid - $half_point;
+        $y2 = $y_mid + $half_point;
+
+        switch ($this->point_shapes[$index]) {
+        case 'halfline':
+            ImageLine($this->img, $x1, $y_mid, $x_mid, $y_mid, $color);
+            break;
+        case 'line':
+            ImageLine($this->img, $x1, $y_mid, $x2, $y_mid, $color);
+            break;
+        case 'plus':
+            ImageLine($this->img, $x1, $y_mid, $x2, $y_mid, $color);
+            ImageLine($this->img, $x_mid, $y1, $x_mid, $y2, $color);
+            break;
+        case 'cross':
+            ImageLine($this->img, $x1, $y1, $x2, $y2, $color);
+            ImageLine($this->img, $x1, $y2, $x2, $y1, $color);
+            break;
+        case 'circle':
+            ImageArc($this->img, $x_mid, $y_mid, $point_size, $point_size, 0, 360, $color);
+            break;
+        case 'dot':
+            ImageFilledEllipse($this->img, $x_mid, $y_mid, $point_size, $point_size, $color);
+            break;
+        case 'diamond':
+            $arrpoints = array( $x1, $y_mid, $x_mid, $y1, $x2, $y_mid, $x_mid, $y2);
+            ImageFilledPolygon($this->img, $arrpoints, 4, $color);
+            break;
+        case 'triangle':
+            $arrpoints = array( $x1, $y_mid, $x2, $y_mid, $x_mid, $y2);
+            ImageFilledPolygon($this->img, $arrpoints, 3, $color);
+            break;
+        case 'trianglemid':
+            $arrpoints = array( $x1, $y1, $x2, $y1, $x_mid, $y_mid);
+            ImageFilledPolygon($this->img, $arrpoints, 3, $color);
+            break;
+        case 'yield':
+            $arrpoints = array( $x1, $y1, $x2, $y1, $x_mid, $y2);
+            ImageFilledPolygon($this->img, $arrpoints, 3, $color);
+            break;
+        case 'delta':
+            $arrpoints = array( $x1, $y2, $x2, $y2, $x_mid, $y1);
+            ImageFilledPolygon($this->img, $arrpoints, 3, $color);
+            break;
+        case 'star':
+            ImageLine($this->img, $x1, $y_mid, $x2, $y_mid, $color);
+            ImageLine($this->img, $x_mid, $y1, $x_mid, $y2, $color);
+            ImageLine($this->img, $x1, $y1, $x2, $y2, $color);
+            ImageLine($this->img, $x1, $y2, $x2, $y1, $color);
+            break;
+        case 'hourglass':
+            $arrpoints = array( $x1, $y1, $x2, $y1, $x1, $y2, $x2, $y2);
+            ImageFilledPolygon($this->img, $arrpoints, 4, $color);
+            break;
+        case 'bowtie':
+            $arrpoints = array( $x1, $y1, $x1, $y2, $x2, $y1, $x2, $y2);
+            ImageFilledPolygon($this->img, $arrpoints, 4, $color);
+            break;
+        case 'target':
+            ImageFilledRectangle($this->img, $x1, $y1, $x_mid, $y_mid, $color);
+            ImageFilledRectangle($this->img, $x_mid, $y_mid, $x2, $y2, $color);
+            ImageRectangle($this->img, $x1, $y1, $x2, $y2, $color);
+            break;
+        case 'box':
+            ImageRectangle($this->img, $x1, $y1, $x2, $y2, $color);
+            break;
+        case 'home': /* As in: "home plate" (baseball), also looks sort of like a house. */
+            $arrpoints = array( $x1, $y2, $x2, $y2, $x2, $y_mid, $x_mid, $y1, $x1, $y_mid);
+            ImageFilledPolygon($this->img, $arrpoints, 5, $color);
+            break;
+        case 'up':
+            ImagePolygon($this->img, array($x_mid, $y1, $x2, $y2, $x1, $y2), 3, $color);
+            break;
+        case 'down':
+            ImagePolygon($this->img, array($x_mid, $y2, $x1, $y1, $x2, $y1), 3, $color);
+            break;
+        case 'none': /* Special case, no point shape here */
+            break;
+        default: /* Also 'rect' */
+            ImageFilledRectangle($this->img, $x1, $y1, $x2, $y2, $color);
+            break;
+        }
+        return TRUE;
+    }
+
+    /*
+     * Draw a bar (or segment of a bar), with optional shading or border.
+     * This is used by the bar and stackedbar plots, vertical and horizontal.
+     *   $x1, $y1 : One corner of the bar.
+     *   $x2, $y2 : Other corner of the bar.
+     *   $data_color : Color index to use for the bar fill.
+     *   $alt_color : Color index to use for the shading (if shading is on), else for the border.
+     *      Note the same color is NOT used for shading and border - just the same argument.
+     *      See GetBarColors() for where these arguments come from.
+     *   $shade_top : Shade the top? (Suppressed for downward stack segments except first.)
+     *   $shade_side : Shade the right side? (Suppressed for leftward stack segments except first.)
+     *      Only one of $shade_top or $shade_side can be FALSE. Both default to TRUE.
+     */
+    protected function DrawBar($x1, $y1, $x2, $y2, $data_color, $alt_color,
+            $shade_top = TRUE, $shade_side = TRUE)
+    {
+        // Sort the points so x1,y1 is upper left and x2,y2 is lower right. This
+        // is needed in order to get the shading right, and imagerectangle may require it.
+        if ($x1 > $x2) {
+            $t = $x1; $x1 = $x2; $x2 = $t;
+        }
+        if ($y1 > $y2) {
+            $t = $y1; $y1 = $y2; $y2 = $t;
+        }
+
+        // Draw the bar
+        ImageFilledRectangle($this->img, $x1, $y1, $x2, $y2, $data_color);
+
+        // Draw a shade, or a border.
+        if (($shade = $this->shading) > 0) {
+            if ($shade_top && $shade_side) {
+                $npts = 6;
+                $pts = array($x1, $y1, $x1 + $shade, $y1 - $shade, $x2 + $shade, $y1 - $shade,
+                             $x2 + $shade, $y2 - $shade, $x2, $y2, $x2, $y1);
+            } else {
+                $npts = 4;
+                if ($shade_top) { // Suppress side shading
+                    $pts = array($x1, $y1, $x1 + $shade, $y1 - $shade, $x2 + $shade, $y1 - $shade, $x2, $y1);
+                } else { // Suppress top shading
+                    $pts = array($x2, $y2, $x2, $y1, $x2 + $shade, $y1 - $shade, $x2 + $shade, $y2 - $shade);
+                }
+            }
+            ImageFilledPolygon($this->img, $pts, $npts, $alt_color);
+        } else {
+            ImageRectangle($this->img, $x1, $y1, $x2,$y2, $alt_color);
+        }
+    }
+
+    /*
+     *  Draw an Error Bar set. Used by DrawDotsError and DrawLinesError
+     */
+    protected function DrawYErrorBar($x_world, $y_world, $error_height, $error_bar_type, $color)
+    {
+        $x1 = $this->xtr($x_world);
+        $y1 = $this->ytr($y_world);
+        $y2 = $this->ytr($y_world+$error_height) ;
+
+        ImageSetThickness($this->img, $this->error_bar_line_width);
+        ImageLine($this->img, $x1, $y1 , $x1, $y2, $color);
+        if ($error_bar_type == 'tee') {
+            ImageLine($this->img, $x1-$this->error_bar_size, $y2, $x1+$this->error_bar_size, $y2, $color);
+        }
+        ImageSetThickness($this->img, 1);
+        return TRUE;
+    }
+
 /////////////////////////////////////////////
 ////////////////////             PLOT DRAWING
 /////////////////////////////////////////////
@@ -4846,65 +5117,6 @@ class PHPlot
             }   // end for
         }   // end for
         return TRUE;
-    }
-
-    /*
-     * Get data color to use for plotting.
-     *   $row, $idx : Index arguments for the current data point.
-     *   &$vars : Variable storage. Caller makes an empty array, and this function uses it.
-     *   &$data_color : Returned result - Color index for the data point.
-     *   $extra : Extra info flag passed through to data color callback.
-     */
-    protected function GetDataColor($row, $idx, &$vars, &$data_color, $extra = 0)
-    {
-        // Initialize or extract variables:
-        if (empty($vars)) {
-            $custom_color = (bool)$this->GetCallback('data_color');
-            $num_data_colors = count($this->ndx_data_colors);
-            $vars = compact('custom_color', 'num_data_colors');
-        } else {
-          extract($vars);
-        }
-
-        // Select the colors.
-        if ($custom_color) {
-            $col_i = $this->DoCallback('data_color', $row, $idx, $extra); // Custom color index
-            $data_color = $this->ndx_data_colors[$col_i % $num_data_colors];
-        } else {
-            $data_color = $this->ndx_data_colors[$idx];
-        }
-    }
-
-    /*
-     * Get data color and error bar color to use for plotting.
-     *   $row, $idx : Index arguments for the current bar.
-     *   &$vars : Variable storage. Caller makes an empty array, and this function uses it.
-     *   &$data_color : Returned result - Color index for the data (bar fill)
-     *   &$error_color : Returned result - Color index for the error bars
-     *   $extra : Extra info flag passed through to data color callback.
-     */
-    protected function GetDataErrorColors($row, $idx, &$vars, &$data_color, &$error_color, $extra = 0)
-    {
-        // Initialize or extract variables:
-        if (empty($vars)) {
-            $this->NeedErrorBarColors();   // This plot needs error bar colors.
-            $custom_color = (bool)$this->GetCallback('data_color');
-            $num_data_colors = count($this->ndx_data_colors);
-            $num_error_colors = count($this->ndx_error_bar_colors);
-            $vars = compact('custom_color', 'num_data_colors', 'num_error_colors');
-        } else {
-          extract($vars);
-        }
-
-        // Select the colors.
-        if ($custom_color) {
-            $col_i = $this->DoCallback('data_color', $row, $idx, $extra); // Custom color index
-            $data_color = $this->ndx_data_colors[$col_i % $num_data_colors];
-            $error_color = $this->ndx_error_bar_colors[$col_i % $num_error_colors];
-        } else {
-            $data_color = $this->ndx_data_colors[$idx];
-            $error_color = $this->ndx_error_bar_colors[$idx];
-        }
     }
 
     /*
@@ -5070,128 +5282,6 @@ class PHPlot
         }
 
         ImageSetThickness($this->img, 1);
-        return TRUE;
-    }
-
-    /*
-     *  Draw an Error Bar set. Used by DrawDotsError and DrawLinesError
-     */
-    protected function DrawYErrorBar($x_world, $y_world, $error_height, $error_bar_type, $color)
-    {
-        $x1 = $this->xtr($x_world);
-        $y1 = $this->ytr($y_world);
-        $y2 = $this->ytr($y_world+$error_height) ;
-
-        ImageSetThickness($this->img, $this->error_bar_line_width);
-        ImageLine($this->img, $x1, $y1 , $x1, $y2, $color);
-        if ($error_bar_type == 'tee') {
-            ImageLine($this->img, $x1-$this->error_bar_size, $y2, $x1+$this->error_bar_size, $y2, $color);
-        }
-        ImageSetThickness($this->img, 1);
-        return TRUE;
-    }
-
-    /*
-     * Draws a styled dot. Uses world coordinates.
-     * The list of supported shapes can also be found in SetPointShapes().
-     * All shapes are drawn using a 3x3 grid, centered on the data point.
-     * The center is (x_mid, y_mid) and the corners are (x1, y1) and (x2, y2).
-     *   $record is the 0-based index that selects the shape and size.
-     */
-    protected function DrawDot($x_world, $y_world, $record, $color)
-    {
-        $index = $record % $this->point_counts;
-        $point_size = $this->point_sizes[$index];
-
-        $half_point = (int)($point_size / 2);
-
-        $x_mid = $this->xtr($x_world);
-        $y_mid = $this->ytr($y_world);
-
-        $x1 = $x_mid - $half_point;
-        $x2 = $x_mid + $half_point;
-        $y1 = $y_mid - $half_point;
-        $y2 = $y_mid + $half_point;
-
-        switch ($this->point_shapes[$index]) {
-        case 'halfline':
-            ImageLine($this->img, $x1, $y_mid, $x_mid, $y_mid, $color);
-            break;
-        case 'line':
-            ImageLine($this->img, $x1, $y_mid, $x2, $y_mid, $color);
-            break;
-        case 'plus':
-            ImageLine($this->img, $x1, $y_mid, $x2, $y_mid, $color);
-            ImageLine($this->img, $x_mid, $y1, $x_mid, $y2, $color);
-            break;
-        case 'cross':
-            ImageLine($this->img, $x1, $y1, $x2, $y2, $color);
-            ImageLine($this->img, $x1, $y2, $x2, $y1, $color);
-            break;
-        case 'circle':
-            ImageArc($this->img, $x_mid, $y_mid, $point_size, $point_size, 0, 360, $color);
-            break;
-        case 'dot':
-            ImageFilledEllipse($this->img, $x_mid, $y_mid, $point_size, $point_size, $color);
-            break;
-        case 'diamond':
-            $arrpoints = array( $x1, $y_mid, $x_mid, $y1, $x2, $y_mid, $x_mid, $y2);
-            ImageFilledPolygon($this->img, $arrpoints, 4, $color);
-            break;
-        case 'triangle':
-            $arrpoints = array( $x1, $y_mid, $x2, $y_mid, $x_mid, $y2);
-            ImageFilledPolygon($this->img, $arrpoints, 3, $color);
-            break;
-        case 'trianglemid':
-            $arrpoints = array( $x1, $y1, $x2, $y1, $x_mid, $y_mid);
-            ImageFilledPolygon($this->img, $arrpoints, 3, $color);
-            break;
-        case 'yield':
-            $arrpoints = array( $x1, $y1, $x2, $y1, $x_mid, $y2);
-            ImageFilledPolygon($this->img, $arrpoints, 3, $color);
-            break;
-        case 'delta':
-            $arrpoints = array( $x1, $y2, $x2, $y2, $x_mid, $y1);
-            ImageFilledPolygon($this->img, $arrpoints, 3, $color);
-            break;
-        case 'star':
-            ImageLine($this->img, $x1, $y_mid, $x2, $y_mid, $color);
-            ImageLine($this->img, $x_mid, $y1, $x_mid, $y2, $color);
-            ImageLine($this->img, $x1, $y1, $x2, $y2, $color);
-            ImageLine($this->img, $x1, $y2, $x2, $y1, $color);
-            break;
-        case 'hourglass':
-            $arrpoints = array( $x1, $y1, $x2, $y1, $x1, $y2, $x2, $y2);
-            ImageFilledPolygon($this->img, $arrpoints, 4, $color);
-            break;
-        case 'bowtie':
-            $arrpoints = array( $x1, $y1, $x1, $y2, $x2, $y1, $x2, $y2);
-            ImageFilledPolygon($this->img, $arrpoints, 4, $color);
-            break;
-        case 'target':
-            ImageFilledRectangle($this->img, $x1, $y1, $x_mid, $y_mid, $color);
-            ImageFilledRectangle($this->img, $x_mid, $y_mid, $x2, $y2, $color);
-            ImageRectangle($this->img, $x1, $y1, $x2, $y2, $color);
-            break;
-        case 'box':
-            ImageRectangle($this->img, $x1, $y1, $x2, $y2, $color);
-            break;
-        case 'home': /* As in: "home plate" (baseball), also looks sort of like a house. */
-            $arrpoints = array( $x1, $y2, $x2, $y2, $x2, $y_mid, $x_mid, $y1, $x1, $y_mid);
-            ImageFilledPolygon($this->img, $arrpoints, 5, $color);
-            break;
-        case 'up':
-            ImagePolygon($this->img, array($x_mid, $y1, $x2, $y2, $x1, $y2), 3, $color);
-            break;
-        case 'down':
-            ImagePolygon($this->img, array($x_mid, $y2, $x1, $y1, $x2, $y1), 3, $color);
-            break;
-        case 'none': /* Special case, no point shape here */
-            break;
-        default: /* Also 'rect' */
-            ImageFilledRectangle($this->img, $x1, $y1, $x2, $y2, $color);
-            break;
-        }
         return TRUE;
     }
 
@@ -5509,92 +5599,6 @@ class PHPlot
 
         ImageSetThickness($this->img, 1);
         return TRUE;
-    }
-
-    /*
-     * Draw a bar (or segment of a bar), with optional shading or border.
-     * This is used by the bar and stackedbar plots, vertical and horizontal.
-     *   $x1, $y1 : One corner of the bar.
-     *   $x2, $y2 : Other corner of the bar.
-     *   $data_color : Color index to use for the bar fill.
-     *   $alt_color : Color index to use for the shading (if shading is on), else for the border.
-     *      Note the same color is NOT used for shading and border - just the same argument.
-     *      See GetBarColors() for where these arguments come from.
-     *   $shade_top : Shade the top? (Suppressed for downward stack segments except first.)
-     *   $shade_side : Shade the right side? (Suppressed for leftward stack segments except first.)
-     *      Only one of $shade_top or $shade_side can be FALSE. Both default to TRUE.
-     */
-    protected function DrawBar($x1, $y1, $x2, $y2, $data_color, $alt_color,
-            $shade_top = TRUE, $shade_side = TRUE)
-    {
-        // Sort the points so x1,y1 is upper left and x2,y2 is lower right. This
-        // is needed in order to get the shading right, and imagerectangle may require it.
-        if ($x1 > $x2) {
-            $t = $x1; $x1 = $x2; $x2 = $t;
-        }
-        if ($y1 > $y2) {
-            $t = $y1; $y1 = $y2; $y2 = $t;
-        }
-
-        // Draw the bar
-        ImageFilledRectangle($this->img, $x1, $y1, $x2, $y2, $data_color);
-
-        // Draw a shade, or a border.
-        if (($shade = $this->shading) > 0) {
-            if ($shade_top && $shade_side) {
-                $npts = 6;
-                $pts = array($x1, $y1, $x1 + $shade, $y1 - $shade, $x2 + $shade, $y1 - $shade,
-                             $x2 + $shade, $y2 - $shade, $x2, $y2, $x2, $y1);
-            } else {
-                $npts = 4;
-                if ($shade_top) { // Suppress side shading
-                    $pts = array($x1, $y1, $x1 + $shade, $y1 - $shade, $x2 + $shade, $y1 - $shade, $x2, $y1);
-                } else { // Suppress top shading
-                    $pts = array($x2, $y2, $x2, $y1, $x2 + $shade, $y1 - $shade, $x2 + $shade, $y2 - $shade);
-                }
-            }
-            ImageFilledPolygon($this->img, $pts, $npts, $alt_color);
-        } else {
-            ImageRectangle($this->img, $x1, $y1, $x2,$y2, $alt_color);
-        }
-    }
-
-    /*
-     * Get colors to use for a bar chart. There is a data color, and either a border color
-     * or a shading color (data dark color).
-     *   $row, $idx : Index arguments for the current bar.
-     *   &$vars : Variable storage. Caller makes an empty array, and this function uses it.
-     *   &$data_color : Returned result - Color index for the data (bar fill).
-     *   &$alt_color : Returned result - Color index for the shading or outline.
-     */
-    protected function GetBarColors($row, $idx, &$vars, &$data_color, &$alt_color)
-    {
-        // Initialize or extract variables:
-        if (empty($vars)) {
-            if ($this->shading > 0)    // This plot needs dark colors if shading is on.
-                $this->NeedDataDarkColors();
-            $custom_color = (bool)$this->GetCallback('data_color');
-            $num_data_colors = count($this->ndx_data_colors);
-            $num_border_colors = count($this->ndx_data_border_colors);
-            $vars = compact('custom_color', 'num_data_colors', 'num_border_colors');
-        } else {
-          extract($vars);
-        }
-
-        // Select the colors.
-        if ($custom_color) {
-            $col_i = $this->DoCallback('data_color', $row, $idx); // Custom color index
-            $i_data = $col_i % $num_data_colors; // Index for data colors and dark colors
-            $i_border = $col_i % $num_border_colors; // Index for data borders (if used)
-        } else {
-            $i_data = $i_border = $idx;
-        }
-        $data_color = $this->ndx_data_colors[$i_data];
-        if ($this->shading > 0) {
-            $alt_color = $this->ndx_data_dark_colors[$i_data];
-        } else {
-            $alt_color = $this->ndx_data_border_colors[$i_border];
-        }
     }
 
     /*
