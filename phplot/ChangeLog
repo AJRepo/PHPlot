@@ -1,6 +1,10 @@
 This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
+2010-11-23
+    * Code cleanup. Moved some functions around to group "plot drawing
+      helpers" separately from "plot drawing". No changes to operation.
+
 2010-11-21
     * Feature request 3111166 "Control legend colorbox width":
       Added a class variable legend_colorbox_width which can be changed
