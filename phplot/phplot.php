@@ -1654,10 +1654,10 @@ class PHPlot
 /////////////////////////////////////////////
 
     /*
-     * Sets position for X data labels. For most plot types, these are
-     * labels along the X axis (but different from X tick labels).
+     * Sets position for X data labels.
+     * For vertical plots, these are X axis data labels, showing label strings from the data array.
      *    Accepted positions are: plotdown, plotup, both, none.
-     * For horizontal bar charts, these are the labels right (or left) of the bars.
+     * For horizontal plots (bar, stackedbar only), these are X data value labels, show the data values.
      *    Accepted positions are: plotin, plotstack, none.
      */
     function SetXDataLabelPos($which_xdlp)
@@ -1672,9 +1672,9 @@ class PHPlot
 
     /*
      * Sets position for Y data labels.
-     * For bars and stackedbars, these are labels above the bars with the Y values.
+     * For vertical plots (where available), these are Y data value labels, showing the data values.
      *    Accepted positions are: plotin, plotstack, none.
-     * For horizontal bar charts, these are the labels along the Y axis.
+     * For horizontal plots, these are Y axis data labels, showing label strings from the data array.
      *    Accepted positions are: plotleft, plotright, both, none.
      */
     function SetYDataLabelPos($which_ydlp)
@@ -2693,6 +2693,38 @@ class PHPlot
         $getcolor_cb = array($this, 'GetColorIndex');
         $this->ndx_error_bar_colors = array_map($getcolor_cb, $this->error_bar_colors);
         $this->pad_array($this->ndx_error_bar_colors, $this->data_columns);
+    }
+
+    /*
+     * Determine if, and where, to draw Data Value Labels.
+     *   $label_control : Label position control. Either x_data_label_pos or y_data_label_pos.
+     *   &$x_adj, &$y_adj : Returns X,Y adjustments (offset in pixels) to the text position.
+     *   &$h_align, &$v_align : Returns horizontal and vertical alignment for the label.
+     *      The above 4 argument values should be passed to DrawDataValueLabel()
+     * Returns True if data value labels should be drawn (based on $label_control), else False.
+     * This is used for plot types other than bars/stackedbars (which have their own way of doing it).
+     * It uses two member variables (unset by default): data_value_label_angle and data_value_label_distance
+     * to define the vector to the label. Default is 90 degrees at 5 pixels.
+     */
+    protected function CheckDataValueLabels($label_control, &$x_adj, &$y_adj, &$h_align, &$v_align)
+    {
+        if ($label_control != 'plotin')
+            return FALSE; // No data value labels
+        $angle = deg2rad(isset($this->data_value_label_angle) ? $this->data_value_label_angle : 90);
+        $radius = isset($this->data_value_label_distance) ? $this->data_value_label_distance : 5;
+        $cos = cos($angle);
+        $sin = sin($angle);
+        $x_adj = (int)($radius * $cos);
+        $y_adj = -(int)($radius * $sin); // Y is reversed in device coordinates
+
+        // Choose from 8 (not 9, center/center can't happen) text alignments based on angle:
+        if ($sin >= 0.383) $v_align = 'bottom'; // 0.383 = sin(360deg / 16)
+        elseif ($sin >= -0.383) $v_align = 'center';
+        else $v_align = 'top';
+        if ($cos >= 0.383) $h_align = 'left';
+        elseif ($cos >= -0.383) $h_align = 'center';
+        else $h_align = 'right';
+        return TRUE;
     }
 
 //////////////////////////////////////////////////////////
@@ -4459,8 +4491,8 @@ class PHPlot
 
     /*
      * Draw the data value label associated with a point in the plot.
-     * This is used for bar and stacked bar charts. These are the labels above,
-     * to the right, or within the bars, not the axis labels.
+     * These are labels that show the value (dependent variable, usually Y) of the data point,
+     * and are drawn within the plot area (not to be confused with axis data labels).
      *
      *    $x_or_y : Specify 'x' or 'y' labels. This selects font, angle, and formatting.
      *    $x_world, $y_world : World coordinates of the text (see also x/y_adjustment).
@@ -4469,7 +4501,6 @@ class PHPlot
      *    $x_adjustment, $y_adjustment : Text position offsets, in device coordinates.
      *    $min_width, $min_height : If supplied, suppress the text if it will not fit.
      * Returns True, if the text was drawn, or False, if it will not fit.
-     *
      */
     protected function DrawDataValueLabel($x_or_y, $x_world, $y_world, $text, $halign, $valign,
                       $x_adjustment=0, $y_adjustment=0, $min_width=NULL, $min_height=NULL)
@@ -4500,7 +4531,7 @@ class PHPlot
     }
 
     /*
-     * Draws the data label associated with a point in the plot.
+     * Draws the axis data label associated with a point in the plot.
      * This is different from x_labels drawn by DrawXTicks() and care
      * should be taken not to draw both, as they'd probably overlap.
      * Calling of this function in DrawLines(), etc is decided after x_data_label_pos value.
@@ -4703,9 +4734,9 @@ class PHPlot
         return TRUE;
     }
 
-/////////////////////////////////////////////////////
-////////////////////             PLOT DRAWING HELPERS
-/////////////////////////////////////////////////////
+/////////////////////////////////////////////
+////////////////////     PLOT DRAWING HELPERS
+/////////////////////////////////////////////
 
     /*
      * Get data color to use for plotting.
@@ -5193,6 +5224,10 @@ class PHPlot
         // Special flag for data color callback to indicate the 'points' part of 'linepoints':
         $alt_flag = $paired ? 1 : 0;
 
+        // Data Value Labels? (Skip if doing the points from a linepoints plot)
+        $do_dvls = !$paired && $this->CheckDataValueLabels($this->y_data_label_pos,
+                      $dvl_x_off, $dvl_y_off, $dvl_h_align, $dvl_v_align);
+
         for ($row = 0, $cnt = 0; $row < $this->num_data_rows; $row++) {
             $rec = 1;                    // Skip record #0 (data label)
 
@@ -5204,17 +5239,24 @@ class PHPlot
             $x_now_pixels = $this->xtr($x_now);
 
             // Draw X Data labels?
-            if ($this->x_data_label_pos != 'none' && !$paired)
+            if (!$paired && $this->x_data_label_pos != 'none')
                 $this->DrawXDataLabel($this->data[$row][0], $x_now_pixels, $row);
 
             // Proceed with Y values
             for ($idx = 0;$rec < $this->num_recs[$row]; $rec++, $idx++) {
                 if (is_numeric($this->data[$row][$rec])) {              // Allow for missing Y data
+                    $y_now = (double)$this->data[$row][$rec];
 
                     // Select the color:
                     $this->GetDataColor($row, $idx, $gcvars, $data_color, $alt_flag);
                     // Draw the marker:
-                    $this->DrawDot($x_now, $this->data[$row][$rec], $idx, $data_color);
+                    $this->DrawDot($x_now, $y_now, $idx, $data_color);
+
+                    // Draw data value labels?
+                    if ($do_dvls) {
+                        $this->DrawDataValueLabel('y', $x_now, $y_now, $y_now, $dvl_h_align, $dvl_v_align,
+                                                  $dvl_x_off, $dvl_y_off);
+                    }
                 }
             }
         }
@@ -5397,6 +5439,10 @@ class PHPlot
 
         $gcvars = array(); // For GetDataColor, which initializes and uses this.
 
+        // Data Value Labels?
+        $do_dvls = $this->CheckDataValueLabels($this->y_data_label_pos,
+                      $dvl_x_off, $dvl_y_off, $dvl_h_align, $dvl_v_align);
+
         for ($row = 0, $cnt = 0; $row < $this->num_data_rows; $row++) {
             $record = 1;                                    // Skip record #0 (data label)
 
@@ -5414,15 +5460,15 @@ class PHPlot
                 if (($line_style = $this->line_styles[$idx]) == 'none')
                     continue; //Allow suppressing entire line, useful with linepoints
                 if (is_numeric($this->data[$row][$record])) {           //Allow for missing Y data
-
-                    // Select the color:
-                    $this->GetDataColor($row, $idx, $gcvars, $data_color);
-
-                    $y_now_pixels = $this->ytr($this->data[$row][$record]);
+                    $y_now = (double)$this->data[$row][$record];
+                    $y_now_pixels = $this->ytr($y_now);
 
                     if ($start_lines[$idx]) {
                         // Set line width, revert it to normal at the end
                         ImageSetThickness($this->img, $this->line_widths[$idx]);
+
+                        // Select the color:
+                        $this->GetDataColor($row, $idx, $gcvars, $data_color);
 
                         if ($line_style == 'dashed') {
                             $this->SetDashedStyle($data_color);
@@ -5431,6 +5477,13 @@ class PHPlot
                         ImageLine($this->img, $x_now_pixels, $y_now_pixels,
                                   $lastx[$idx], $lasty[$idx], $data_color);
                     }
+
+                    // Draw data value labels?
+                    if ($do_dvls) {
+                        $this->DrawDataValueLabel('y', $x_now, $y_now, $y_now, $dvl_h_align, $dvl_v_align,
+                                                  $dvl_x_off, $dvl_y_off);
+                    }
+
                     $lasty[$idx] = $y_now_pixels;
                     $lastx[$idx] = $x_now_pixels;
                     $start_lines[$idx] = TRUE;
@@ -5554,6 +5607,10 @@ class PHPlot
 
         $gcvars = array(); // For GetDataColor, which initializes and uses this.
 
+        // Data Value Labels?
+        $do_dvls = $this->CheckDataValueLabels($this->y_data_label_pos,
+                      $dvl_x_off, $dvl_y_off, $dvl_h_align, $dvl_v_align);
+
         for ($row = 0, $cnt = 0; $row < $this->num_data_rows; $row++) {
             $record = 1;                                    // Skip record #0 (data label)
 
@@ -5570,7 +5627,8 @@ class PHPlot
             // Draw Lines
             for ($idx = 0; $record < $this->num_recs[$row]; $record++, $idx++) {
                 if (is_numeric($this->data[$row][$record])) {               // Allow for missing Y data
-                    $y_now_pixels = $this->ytr($this->data[$row][$record]);
+                    $y_now = (double)$this->data[$row][$record];
+                    $y_now_pixels = $this->ytr($y_now);
 
                     if ($start_lines[$idx]) {
                         // Set line width, revert it to normal at the end
@@ -5588,6 +5646,13 @@ class PHPlot
                         ImageLine($this->img, $x_now_pixels, $lasty[$idx],
                                   $x_now_pixels, $y_now_pixels, $data_color);
                     }
+
+                    // Draw data value labels?
+                    if ($do_dvls) {
+                        $this->DrawDataValueLabel('y', $x_now, $y_now, $y_now, $dvl_h_align, $dvl_v_align,
+                                                  $dvl_x_off, $dvl_y_off);
+                    }
+
                     $lastx[$idx] = $x_now_pixels;
                     $lasty[$idx] = $y_now_pixels;
                     $start_lines[$idx] = TRUE;
