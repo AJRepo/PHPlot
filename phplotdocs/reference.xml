@@ -7284,8 +7284,7 @@ strings from your data array.
 The labels can be drawn at the left side of the plot (left of the Y axis),
 on the right side, in both positions, or neither.
 For vertical plots, these are Y data value labels, displaying the value of the
-data point. They can be drawn within the plot to label bars and bar segments.
-This type of label is only available for 'bars' and 'stackedbars' plots.
+data point within the plot area.
     </para>
   </refsect1>
 
@@ -7327,11 +7326,12 @@ A string indicating the desired position for the Y data labels:
                   </row>
                   <row>
                     <entry>plotin</entry>
-                    <entry>Data value labels above (or below) each bar.
-                        For stacked bar charts, this means only the bar total
+                    <entry>Data value labels within the plot area.
+                        For bar charts, this displays the value above (or
+                        below) each bar.
+                        For stacked bar charts, this displays only the bar total
                         labels and not the bar segment labels.
-                        This is valid for vertical bar and vertical
-                        stacked bar plots only.
+                        For other plot types, see notes below.
                     </entry>
                   </row>
                   <row>
@@ -7360,8 +7360,9 @@ A string indicating the desired position for the Y data labels:
     <title>Notes</title>
     <para>
 With vertical plots, this function controls the Y data value labels.
-For examples, see <xref linkend="example-bars4" />
-and <xref linkend="example-stackedbars3" />.
+For examples, see <xref linkend="example-bars4" />,
+<xref linkend="example-stackedbars3" />,
+and <xref linkend="example-linepoints2" />.
 With horizontal plots, this function controls the Y axis data labels.
 For examples, see <xref linkend="example-horizbar"/> 
 and <xref linkend="example-horizstackedbar" />,
@@ -7376,7 +7377,14 @@ enable the tick labels and the data labels are not all empty.
     <para>
 The default position for Y data value labels (for vertical plots) is 'none',
 meaning no labels.
-Y data value labels only apply to vertical bar and stackedbar plots.
+For plot types 'bars' and 'stackedbars', Y data value labels are drawn
+(if enabled) at fixed positions within or above/below the bars.
+For plot types 'lines', 'points', 'linepoints', and 'squared', Y data labels
+are drawn (if enabled) above the data points by default.
+The position can be changed (see <xref linkend="conc-tuning-labels"/>), but
+PHPlot does not attempt to prevent interference between the labels and
+other plot elements.
+Y data value labels are not available with other plot types.
     </para>
     <para>
 For tick labels, see <xref linkend="SetYTickLabelPos" />.
@@ -7399,6 +7407,12 @@ The Y data label text format can be controlled with
   </refsect1>
   <refsect1>
     <title>History</title>
+    <para>
+Through PHPlot-5.2.0, data value labels were only available for bars and
+stackedbars plot types.
+Starting after PHPlot-5.2.0, data value labels are also implemented for
+lines, points, linepoints, and squared plot types.
+    </para>
     <para>
 Horizontal plot types were added in PHPlot-5.1.2 and PHPlot-5.1.3, and
 the Y Data Labels were extended to include the Y axis data labels for
