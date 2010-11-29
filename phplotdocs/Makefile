@@ -78,6 +78,7 @@ EXAMPLES_PHP=\
   examples/horizstackedbar.php \
   examples/horizthinbarline.php \
   examples/linepoints1.php \
+  examples/linepoints2.php \
   examples/lines1.php \
   examples/lines2.php \
   examples/ohlcbasic.php \
@@ -119,6 +120,7 @@ EXAMPLES_IMAGES=\
   examples/horizstackedbar.png \
   examples/horizthinbarline.png \
   examples/linepoints1.png \
+  examples/linepoints2.png \
   examples/lines1.png \
   examples/lines2.png \
   examples/ohlcbasic.png \
