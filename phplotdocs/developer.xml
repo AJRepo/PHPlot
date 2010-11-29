@@ -390,6 +390,24 @@ the plot drawing functions check the data type.
 </varlistentry>
 
 <varlistentry>
+  <term><anchor id="CheckDataValueLabels" xreflabel="CheckDataValueLabels"/>CheckDataValueLabels($label_control, &amp;$x_adj, &amp;$y_adj, &amp;$h_align, &amp;$v_align)</term>
+  <listitem>
+    <para>
+Checks to see if data value labels should be drawn, based on $label_control
+(which is always <literal>$this->y_data_label_pos</literal>, since only
+vertical plot functions currently use this).
+Returns FALSE if the labels are off, else returns TRUE and sets 4 variables
+which are used by <xref linkend="DrawDataValueLabel"/> to position the label.
+$x_adj and $y_adj are pixel offsets for the label,
+and $h_align and $v_align set the text alignment.
+Called by plot type drawing functions such as <xref linkend="DrawDots"/>
+which do data value labels, other than bars and stackedbars.
+This was added after PHPlot-5.2.0.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
   <term><anchor id="CheckLabels" xreflabel="CheckLabels"/>CheckLabels()</term>
   <listitem>
     <para>
