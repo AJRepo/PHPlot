@@ -1458,6 +1458,51 @@ the character width.
 </para>
 </sect2>
 
+<sect2 id="conc-tuning-labels">
+<title>Label Tuning</title>
+<para>
+These variables affect the display of labels.
+</para>
+
+<para>
+  <variablelist>
+    <varlistentry>
+      <term><varname>data_value_label_angle</varname></term>
+      <listitem>
+        <para>
+This sets the angle, in degrees, for the position of data value labels near
+the data points they label.
+Together with <varname>data_value_label_distance</varname>,
+it determines the position of the reference point for the label.
+(This does not apply to data value labels for bars or stackedbars plots, as
+the label position is fixed for these plot types.)
+The default if unset is 90 degrees, which places the label above the data point.
+PHPlot automatically selects which text alignment to use, based on the angle.
+For example, with the default 90 degree angle, the label will
+be horizontally centered, vertically bottom aligned.  If the angle is 0
+degrees, the alignment is horizontally left, vertically centered.
+        </para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term><varname>data_value_label_distance</varname></term>
+      <listitem>
+        <para>
+This sets the distance, in pixels, for the position of data value labels near
+the data points they label.
+Together with <varname>data_value_label_angle</varname>,
+it determines the position of the reference point for the label.
+(This does not apply to data value labels for bars or stackedbars plots, as
+the label position is fixed for these plot types.)
+The default if unset is 5 pixels.
+        </para>
+      </listitem>
+    </varlistentry>
+  </variablelist>
+</para>
+
+</sect2>
+
 <sect2 id="conc-tuning-misc">
 <title>Miscellaneous Tuning</title>
 <para>
