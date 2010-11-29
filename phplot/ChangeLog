@@ -1,6 +1,17 @@
 This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
+2010-11-28
+    * Feature request 3117873 "Data value labels in more plot types":
+      Implemented Data Value Labels for plot types points, lines,
+      linepoints, and squared.  Added 2 class variables which can be
+      set to control the distance and angle of the labels from points.
+      New internal function CheckDataValueLabels() calculates position
+      and text alignment for these labels.
+
+    * Updated comments for Set[XY]DataLabelPos to match the text in
+      the manual, which was rewritten to clarify label types.
+
 2010-11-23
     * Code cleanup. Moved some functions around to group "plot drawing
       helpers" separately from "plot drawing". No changes to operation.

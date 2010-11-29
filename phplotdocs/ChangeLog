@@ -4,6 +4,19 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2010-11-28
+   Document availability of data value labels with more plot types.
+   * Makefile, examples.xml, examples/linepoints.php: Add new example of
+     linepoints plot with data value labels.
+   * advanced.xml: New subsection under Tuning for data value label
+     position control variables.
+   * concepts.xml: Change data value labels subsection to mention
+     newly supported plot types.
+   * developer.xml: Document new internal function CheckDataValueLabels.
+   * reference.xml: Update SetYDataLabelPos, works with more plot types.
+   * variables.list: Add 2 new variables which control data value label
+     position for the newly supported plot types.
+
 2010-11-21
    * advanced.xml: Document new tunable parameter for legend colorbox width.
    * variables.list: New variable legend_colorbox_width.
