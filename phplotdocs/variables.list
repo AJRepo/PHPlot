@@ -35,6 +35,8 @@ datatype_implied		DecodeDataType	Flag: data type has implied X or Y. (Added in P
 datatype_pie_single		DecodeDataType	Flag: data type is one-column data for pie chart with one slice per row. (Added in PHPlot-5.1.3)
 datatype_swapped_xy		DecodeDataType	Flag: data type has swapped X and Y values. (Added in PHPlot-5.1.3)
 data_units_text	''	FormatLabel	Obsolete - suffix for 'data'-formatted labels
+data_value_label_angle		CheckDataValueLabels	Angle (in degrees) for data value labels <link linkend="conc-tuning-labels">(See Tuning Parameters for more)</link>
+data_value_label_distance		CheckDataValueLabels	Distance (in pixels) for data value labels <link linkend="conc-tuning-labels">(See Tuning Parameters for more)</link>
 decimal_point		SetNumberFormat	Character to use for decimal point in formatted numbers
 default_colors	array(...)	SetDataColors SetErrorBarColors	The default color array, used to initialize data_colors and error_bar_colors. (Added in PHPlot-5.1.0)
 default_dashed_style		SetDefaultDashedStyle	Formatted PHP code to build a dashed line pattern
