@@ -24,7 +24,7 @@ $plot->SetImageBorderType('plain'); // Improves presentation in the manual
 $plot->SetPlotType('linepoints');
 $plot->SetDataType('text-data');
 $plot->SetDataValues($data);
-$plot->SetTitle("US Federal Emergency Food Asistance, 1995 - 2008\n"
+$plot->SetTitle("US Federal Emergency Food Assistance, 1995 - 2008\n"
               . "(in $ millions)");
 
 # Turn on Y data labels:
