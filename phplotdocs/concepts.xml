@@ -1745,7 +1745,7 @@ Y axis data labels are available for horizontal plots.
     <listitem>
       <para>
 Data value labels display the actual value of a data point.
-These are available only for bar and stacked bar plots.
+These are available only for some plot types.
 Y data value labels are available for vertical plots, and
 X data value labels are available for horizontal plots.
       </para>
@@ -1923,9 +1923,9 @@ If all of the labels in your data array are empty, tick labels will be drawn.
 <sect2 id="conc-labels-datavalue">
 <title>Data Value Labels</title>
 <para>
-Data value labels are available only for bar and stackedbar charts.
+Data value labels are available only for some plot types.
 These are displayed inside the plot, and show the value at
-the end of each bar (or bar segment).
+each data point, bar, or bar segment.
 </para>
 <para>
 For vertical bar charts, Y data value labels indicate the Y value for each
@@ -1942,6 +1942,21 @@ For horizontal stackedbar charts, X data value labels indicate the total X
 value for each stack, and optionally indicate the value of each segment.
 Use <xref linkend="SetXDataLabelPos" /> to enable X data value labels.
 </para>
+
+<para>
+For vertical plots of types lines, linepoints, points, and squared,
+Y data value labels indicate the value of each point and are displayed
+(by default) above each point.
+PHPlot does not attempt to prevent interference between the labels and
+other plot elements.
+Use <xref linkend="SetYDataLabelPos" /> to enable Y data value labels.
+To change the position of the labels, see <xref linkend="conc-tuning-labels"/>.
+Note: data value labels for these plot types was added after PHPlot-5.2.0.
+</para>
+<para>
+Data value labels are not available with other plot types.
+</para>
+
 <para>
   <note>
     <para>
@@ -1957,6 +1972,8 @@ for each axis for vertical plots, and the other type for horizontal plots.
 <xref linkend="example-bars4" /> shows a vertical bar chart
 with Y data value labels.
 <xref linkend="example-stackedbars3" /> shows a vertical stacked bar chart
+with Y data value labels.
+<xref linkend="example-linepoints2" /> shows a linepoints plot
 with Y data value labels.
 </para>
 
