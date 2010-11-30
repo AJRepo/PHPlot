@@ -2044,7 +2044,7 @@ The keys and values of the second-level arrays are:
         <entry>abs_vals</entry>
         <entry>Special data processing flag. If TRUE, this tells
             <xref linkend="FindDataLimits"/> that the plot type will take
-            the absolute value of all independent variable values in the
+            the absolute value of all dependent variable values in the
             data array. FindDataLimits needs this information so it knows
             how to find the minimum and maximum values in the data array.
             The default if omitted is FALSE.
@@ -2054,7 +2054,7 @@ The keys and values of the second-level arrays are:
         <entry>sum_vals</entry>
         <entry>Special data processing flag. If TRUE, this tells
             <xref linkend="FindDataLimits"/> that the plot type will sum
-            up the independent variable values in each row of the data array.
+            up the dependent variable values in each row of the data array.
             FindDataLimits needs this information so it knows how to find the
             minimum and maximum values in the data array.
             The default if omitted is FALSE.
