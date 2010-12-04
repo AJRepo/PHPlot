@@ -77,7 +77,8 @@ function plot_histogram($image_filename, $param)
     $p->SetFileFormat('jpg');
     $p->SetBgImage($image_filename, 'scale');
     $p->SetDataType('text-data');
-    $p->SetGridColor('white:127');  # Make the axis lines invisible
+    $p->SetDrawXAxis(False);
+    $p->SetDrawYAxis(False);
     $p->SetDataValues($data);
     $p->SetXDataLabelPos('none');
     $p->SetXTickLabelPos('none');
