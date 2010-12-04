@@ -1065,7 +1065,7 @@ converted to X values in the data array.
 This example shows a linepoints plot with data value labels. These are
 text strings which show the Y value above each point.
 (This feature was implemented for lines, points, and linepoints plots
-after PHPlot-5.2.0.)
+in PHPlot-5.3.0.)
 Because the Y values are shown with the data value labels, we have chosen
 to turn off the Y axis ticks and tick labels, which would be somewhat
 redundant.

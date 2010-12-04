@@ -1389,7 +1389,7 @@ For candlesticks plots, they adjust the calculation of the width of the
 candlestick body.
 For basic OHLC plots, they adjust the calculation of the length of the tick
 marks which represent opening and closing prices.
-(All of these were added after PHPlot-5.2.0)
+(All of these were added in PHPlot-5.3.0.)
 </para>
 <para>
   <variablelist>
@@ -1450,7 +1450,7 @@ With the default value 1.0, the color boxes are as wide as one character in
 the font used in the legend (width of "E" for TrueType fonts).
 A value of 2.0 makes the color boxes twice as wide, and 0.5 makes them half
 the character width.
-(This was added after PHPlot-5.2.0)
+(This was added in PHPlot-5.3.0.)
         </para>
       </listitem>
     </varlistentry>

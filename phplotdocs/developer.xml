@@ -130,7 +130,7 @@ See <xref linkend="SetLegendStyle"/> for more information.
 Through PHPlot-5.2.0, the width of the colorboxes was always
 <varname>char_w</varname>, the width of one character (or the width of the
 upper case letter "E") in the legend text font.
-Starting after PHPlot-5.2.0, this can be adjusted using a class variable.
+Starting with PHPlot-5.3.0, this can be adjusted using a class variable.
 See <xref linkend="conc-tuning-legend"/> for more.
 </para>
 
@@ -223,7 +223,7 @@ Calculates values for <literal>bars</literal> and <literal>stackedbars</literal>
 plot types.
 It calculates the width of the bars and the margins around and between them.
 An argument was added in PHPlot-5.1.2 to support horizontal plots.
-Arguments were changed after PHPlot-5.2.0 to explicitly select stacked or
+Arguments were changed in PHPlot-5.3.0 to explicitly select stacked or
 grouped bars, and vertical or horizontal plots.
 This is called by the bar chart drawing functions
 <xref linkend="DrawBars"/>, <xref linkend="DrawStackedBars"/>,
@@ -402,7 +402,7 @@ $x_adj and $y_adj are pixel offsets for the label,
 and $h_align and $v_align set the text alignment.
 Called by plot type drawing functions such as <xref linkend="DrawDots"/>
 which do data value labels, other than bars and stackedbars.
-This was added after PHPlot-5.2.0.
+This was added in PHPlot-5.3.0.
     </para>
   </listitem>
 </varlistentry>
@@ -814,7 +814,7 @@ draws a filled candlestick OHLC plot
 (plot type <literal>candlesticks2</literal>).
 Called by <xref linkend="DrawGraph"/> when the plot type is one of those
 three types.
-This was added after PHPlot-5.2.0.
+This was added in PHPlot-5.3.0.
     </para>
   </listitem>
 </varlistentry>
@@ -1991,7 +1991,7 @@ keys and values:
 The <varname>plots[]</varname> array contains information about known plot
 types. Essentially, it tells <xref linkend="FindDataLimits"/> and
 <xref linkend="DrawGraph"/> how to produce the main portion of the plot.
-This was added after PHPlot-5.2.0.
+This was added in PHPlot-5.3.0.
 This is a static member variable in the PHPlot class, so it must be
 accessed as <varname>PHPlot::$plots</varname> and not through an instance
 of the class. It has protected visibility, so is not accessible from

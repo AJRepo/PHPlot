@@ -3,6 +3,10 @@ This is phplotdocs/ChangeLog, listing changes to the PHPlot Reference Manual
 Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
+2010-12-04
+   For release with PHPlot-5.3.0:
+   * Change vague references to release "after 5.2.0" to "5.3.0".
+
 2010-12-03
    * reference.xml: Markup fix. Remove newlines from <synopsis> elements
      to get rid of unwanted blank lines (1 per in HTML, 2 per in PDF).

@@ -1546,7 +1546,7 @@ change the plot margin calculation.  To produce a completely 'bare' plot,
 you must turn off the grid, tick marks, tick labels, and data labels.  You
 also need to turn off the plot area border, which defaults to left and
 right sides.  Lastly, you might want to reduce the margins, since the
-default minumum margin is 15 pixels on each side of the plot area, even if
+default minimum margin is 15 pixels on each side of the plot area, even if
 there are no axis lines, labels, or titles.  Here is an example:
 <programlisting><![CDATA[// 'Bare' plot partial code example
 $plot->SetXTickPos('none');          // Turn off X tick marks
@@ -1573,7 +1573,7 @@ visible unless they are suppressed as shown.)
   <refsect1>
     <title>History</title>
     <para>
-This function was added after PHPlot-5.2.0.
+This function was added in PHPlot-5.3.0.
     </para>
   </refsect1>
 </refentry>
@@ -1735,7 +1735,7 @@ change the plot margin calculation.  To produce a completely 'bare' plot,
 you must turn off the grid, tick marks, tick labels, and data labels.  You
 also need to turn off the plot area border, which defaults to left and
 right sides.  Lastly, you might want to reduce the margins, since the
-default minumum margin is 15 pixels on each side of the plot area, even if
+default minimum margin is 15 pixels on each side of the plot area, even if
 there are no axis lines, labels, or titles.
 See <xref linkend="SetDrawXAxis"/> for sample code.
     </para>
@@ -1743,7 +1743,7 @@ See <xref linkend="SetDrawXAxis"/> for sample code.
   <refsect1>
     <title>History</title>
     <para>
-This function was added after PHPlot-5.2.0.
+This function was added in PHPlot-5.3.0.
     </para>
   </refsect1>
 </refentry>
@@ -4298,7 +4298,7 @@ The default plot type is 'linepoints'.
     <title>History</title>
     <para>
 Plot types 'candlesticks', 'candlesticks2', and 'ohlc'
-were added after PHPlot-5.2.0.
+were added in PHPlot-5.3.0.
      </para>
     <para>
 Plot type 'stackedarea' was added in PHPlot-5.1.1.
@@ -7365,7 +7365,7 @@ The Y data label text format can be controlled with
     <para>
 Through PHPlot-5.2.0, data value labels were only available for bars and
 stackedbars plot types.
-Starting after PHPlot-5.2.0, data value labels are also implemented for
+Starting with PHPlot-5.3.0, data value labels are also implemented for
 lines, points, linepoints, and squared plot types.
     </para>
     <para>
