@@ -1,6 +1,12 @@
 This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
+
+2010-12-04 (lbayuk)     ===== Released as 5.3.0 =====
+    * phplot.php: Updated version
+    * README.txt: Updated for new release
+    * NEWS.txt: Add text for new release
+
 2010-12-03
     * Feature request 3127005 "Ability to suppress X/Y axis lines":
       Added SetDrawXAxis() and SetDrawYAxis() to control flags which
