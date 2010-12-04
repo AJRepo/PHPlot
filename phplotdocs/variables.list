@@ -133,6 +133,8 @@ skip_bottom_tick	FALSE	SetSkipBottomTick	Skip bottom tick mark
 skip_left_tick	FALSE	SetSkipLeftTick	Skip left tick mark
 skip_right_tick	FALSE	SetSkipRightTick	Skip right tick mark
 skip_top_tick	FALSE	SetSkipTopTick	Skip top tick mark
+suppress_x_axis		SetDrawXAxis	Flag: Don't draw the X axis line. Unset (by default) means FALSE. (Added after PHPlot-5.2.0)
+suppress_y_axis		SetDrawYAxis	Flag: Don't draw the Y axis line. Unset (by default) means FALSE. (Added after PHPlot-5.2.0)
 text_color	'black'	SetTextColor	Color (R,G,B,A) for labels and legend text
 thousands_sep		SetNumberFormat	Character to use to group 1000s in formatted numbers
 tick_color	'black'	SetTickColor	Color (R,G,B,A) for tick marks
