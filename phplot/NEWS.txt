@@ -4,6 +4,44 @@ The project home page is http://phplot.sourceforge.net/
 Refer the the ChangeLog file for detailed source changes.
 -----------------------------------------------------------------------------
 
+2010-12-04 Release 5.3.0
+
+Overview:
+
+This is the current stable release of PHPlot. This release includes new
+plot types and some new features.
+
+The PHPlot reference manual has been updated to match this release. Some of
+the sections have been moved, there are new examples for the new plot types,
+and a new section on tunable parameters has been added.
+
+
+New features in 5.3.0:
+
+#3093483 "Investing support chart types":
+  Added 3 new plot types: Basic OHLC (Open/High/Low/Close), Candlesticks,
+  and Filled Candlesticks. These are variations of plots that show the
+  performance of a stock or other financial security.
+
+#3111166 "Control legend colorbox width":
+  It is now possible to control the width of the color boxes in the
+  legend, using a class variable which is documented in the manual.
+
+#3117873 "Data value labels in more plot types":
+  Data value labels, which show the dependent variable values near the
+  data points, are now available for more plot types: lines, linepoints,
+  points, and squared. (These were previously available only for bars and
+  stackedbars plots.)
+
+#3127005 "Ability to suppress X/Y axis lines":
+  New functions SetDrawXAxis() and SetDrawYAxis() were added to control
+  display of the X and Y axis lines. (These lines were probably the only
+  PHPlot elements that could not be turned off.) In special cases, these
+  can be used to produce a "bare" plot image.
+
+
+-----------------------------------------------------------------------------
+
 2010-10-03 Release 5.2.0
 
 Overview:

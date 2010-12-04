@@ -1,5 +1,5 @@
 This is the README file for PHPlot
-Last updated for PHPlot-5.2.0 on 2010-10-03
+Last updated for PHPlot-5.3.0 on 2010-12-04
 The project web site is http://sourceforge.net/projects/phplot/
 The project home page is http://phplot.sourceforge.net/
 -----------------------------------------------------------------------------
@@ -13,7 +13,8 @@ complete information, download the PHPlot Reference Manual from the
 Sourceforge project web site. You can also view the manual online at
 http://phplot.sourceforge.net
 
-For important changes in this release, see the NEWS.txt file.
+For information about changes in this release, including any possible
+incompatibilities, see the NEWS.txt file.
 
 
 CONTENTS:
