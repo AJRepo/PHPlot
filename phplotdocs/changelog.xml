@@ -15,6 +15,15 @@ see the ChangeLog file inside the PHPlot distribution.)
 <variablelist>
 
   <varlistentry>
+    <term>2010-12-03</term>
+    <listitem>
+      <para>
+Document 2 new functions to control drawing of the axis lines.
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
     <term>2010-11-18</term>
     <listitem>
       <para>

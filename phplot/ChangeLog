@@ -1,6 +1,14 @@
 This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
+2010-12-03
+    * Feature request 3127005 "Ability to suppress X/Y axis lines":
+      Added SetDrawXAxis() and SetDrawYAxis() to control flags which
+      will suppress drawing the X or Y axis lines. (These lines were
+      probably the only PHPlot elements that could not be turned off.)
+      Changed DrawXAxis() and DrawYAxis() to conditionally draw the
+      axis lines.
+
 2010-11-28
     * Feature request 3117873 "Data value labels in more plot types":
       Implemented Data Value Labels for plot types points, lines,

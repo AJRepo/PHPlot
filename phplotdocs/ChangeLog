@@ -3,6 +3,15 @@ This is phplotdocs/ChangeLog, listing changes to the PHPlot Reference Manual
 Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
+2010-12-03
+   New feature to allow suppressing X and/or Y axis lines.
+   * functions.xml: Add links to 2 new functions under Axis Controls.
+   * reference.xml: Document new functions SetDrawXAxis and SetDrawYAxis.
+   * variables.list: Document 2 new flag variables for axis control.
+   * examples/histogram.php: Use new SetDraw*Axis functions to hide the
+     axis lines, instead of setting grid color to be transparent.
+
+   * .ispell_words: Additions
 
 2010-11-28
    Document availability of data value labels with more plot types.
