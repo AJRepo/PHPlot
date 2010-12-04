@@ -30,9 +30,7 @@ used to represent an instance of the PHPlot class.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;DrawGraph()
-    </synopsis>
+    <synopsis>$plot-&gt;DrawGraph()</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -65,9 +63,7 @@ None
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;GetCallback(<parameter>$reason</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;GetCallback(<parameter>$reason</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -130,9 +126,7 @@ Refer to <xref linkend="callbacks"/> for more information.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-list($x, $y) = $plot-&gt;GetDeviceXY(<parameter>$x_world</parameter>, <parameter>$y_world</parameter>)
-    </synopsis>
+    <synopsis>list($x, $y) = $plot-&gt;GetDeviceXY(<parameter>$x_world</parameter>, <parameter>$y_world</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -233,9 +227,7 @@ This function was added in PHPlot-5.1.0.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot = new PHPlot(<optional><parameter>$width</parameter></optional>, <optional><parameter>$height</parameter></optional>, <optional><parameter>$output_file</parameter></optional>, <optional><parameter>$input_file</parameter></optional>)
-    </synopsis>
+    <synopsis>$plot = new PHPlot(<optional><parameter>$width</parameter></optional>, <optional><parameter>$height</parameter></optional>, <optional><parameter>$output_file</parameter></optional>, <optional><parameter>$input_file</parameter></optional>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -347,9 +339,7 @@ is deprecated starting with PHP5.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot = new PHPlot_truecolor(<optional><parameter>$width</parameter></optional>, <optional><parameter>$height</parameter></optional>, <optional><parameter>$output_file</parameter></optional>, <optional><parameter>$input_file</parameter></optional>)
-    </synopsis>
+    <synopsis>$plot = new PHPlot_truecolor(<optional><parameter>$width</parameter></optional>, <optional><parameter>$height</parameter></optional>, <optional><parameter>$output_file</parameter></optional>, <optional><parameter>$input_file</parameter></optional>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -474,9 +464,7 @@ internal storage space.</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;PrintImage()
-    </synopsis>
+    <synopsis>$plot-&gt;PrintImage()</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -513,9 +501,7 @@ None
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;RemoveCallback(<parameter>$reason</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;RemoveCallback(<parameter>$reason</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -571,9 +557,7 @@ Refer to <xref linkend="callbacks"/> for more information.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetBackgroundColor(<parameter>$color</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetBackgroundColor(<parameter>$color</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -622,9 +606,7 @@ background color is ignored if a background image was set with
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetBgImage(<parameter>$input_file</parameter>, <optional><parameter>$mode</parameter></optional>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetBgImage(<parameter>$input_file</parameter>, <optional><parameter>$mode</parameter></optional>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -693,9 +675,7 @@ of the overall background.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetBrowserCache(<parameter>$browser_cache</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetBrowserCache(<parameter>$browser_cache</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -737,9 +717,7 @@ browser to cache the image.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetCallback(<parameter>$reason</parameter>, <parameter>$function</parameter>, <optional><parameter>$arg</parameter></optional>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetCallback(<parameter>$reason</parameter>, <parameter>$function</parameter>, <optional><parameter>$arg</parameter></optional>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -820,9 +798,7 @@ Refer to <xref linkend="callbacks"/> for more information.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetDataBorderColors(<parameter>$border</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetDataBorderColors(<parameter>$border</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -911,9 +887,7 @@ also controls selection of the color for data borders (if used).
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetDataColors(<parameter>$data_colors</parameter>, <optional><parameter>$border</parameter></optional>, <optional><parameter>$default_alpha</parameter></optional>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetDataColors(<parameter>$data_colors</parameter>, <optional><parameter>$border</parameter></optional>, <optional><parameter>$default_alpha</parameter></optional>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -1048,9 +1022,7 @@ default color map.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetDataType(<parameter>$dt</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetDataType(<parameter>$dt</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -1200,9 +1172,7 @@ in PHPlot-5.1.3.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetDataValues(<parameter>$dv</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetDataValues(<parameter>$dv</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -1252,9 +1222,7 @@ the same order in which they were defined, regardless of the index values.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetDefaultDashedStyle(<parameter>$style</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetDefaultDashedStyle(<parameter>$style</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -1308,9 +1276,7 @@ line style set to dashed with <xref linkend="SetLineStyles" />.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetDefaultTTFont(<parameter>$font</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetDefaultTTFont(<parameter>$font</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -1397,9 +1363,7 @@ This behavior of this function was changed significantly at PHPlot-5.0rc3.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetDrawBrokenLines(<parameter>$bl</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetDrawBrokenLines(<parameter>$bl</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -1454,9 +1418,7 @@ A missing Y value can be represented in the data array by an empty string.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetDrawDashedGrid(<parameter>$ddg</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetDrawDashedGrid(<parameter>$ddg</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -1495,9 +1457,7 @@ True to use dashed lines, False to use solid lines.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetDrawPlotAreaBackground(<parameter>$dpab</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetDrawPlotAreaBackground(<parameter>$dpab</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -1549,9 +1509,7 @@ set with <xref linkend="SetPlotAreaBgImage" />.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetDrawXAxis(<parameter>$draw</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetDrawXAxis(<parameter>$draw</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -1631,9 +1589,7 @@ This function was added after PHPlot-5.2.0.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetDrawXDataLabelLines(<parameter>$dxdl</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetDrawXDataLabelLines(<parameter>$dxdl</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -1695,9 +1651,7 @@ By default, data label lines are not drawn.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetDrawXGrid(<parameter>$dxg</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetDrawXGrid(<parameter>$dxg</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -1744,9 +1698,7 @@ True to draw the X grid lines, False to not draw the X grid lines.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetDrawYAxis(<parameter>$draw</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetDrawYAxis(<parameter>$draw</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -1807,9 +1759,7 @@ This function was added after PHPlot-5.2.0.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetDrawYGrid(<parameter>$dyg</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetDrawYGrid(<parameter>$dyg</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -1856,9 +1806,7 @@ True to draw the Y grid lines, False to not draw the Y grid lines.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetErrorBarColors(<parameter>$error_bar_colors</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetErrorBarColors(<parameter>$error_bar_colors</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -1954,9 +1902,7 @@ default color map.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetErrorBarLineWidth(<parameter>$seblw</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetErrorBarLineWidth(<parameter>$seblw</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -2008,9 +1954,7 @@ All lines in a plot use the same error bar width.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetErrorBarShape(<parameter>$ebs</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetErrorBarShape(<parameter>$ebs</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -2061,9 +2005,7 @@ All lines in a plot use the same error bar shape.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetErrorBarSize(<parameter>$ebs</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetErrorBarSize(<parameter>$ebs</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -2115,9 +2057,7 @@ All lines in a plot use the same error bar size.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetFileFormat(<parameter>$format</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetFileFormat(<parameter>$format</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -2171,9 +2111,7 @@ compression reduces the quality of lines and text.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetFont(<parameter>$elem</parameter>, <parameter>$font</parameter>, <optional><parameter>$size</parameter></optional>, <optional><parameter>$line_spacing</parameter></optional>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetFont(<parameter>$elem</parameter>, <parameter>$font</parameter>, <optional><parameter>$size</parameter></optional>, <optional><parameter>$line_spacing</parameter></optional>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -2379,9 +2317,7 @@ implemented in PHPlot-5.0rc3.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetFontGD(<parameter>$elem</parameter>, <parameter>$font</parameter>, <optional><parameter>$line_spacing</parameter></optional>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetFontGD(<parameter>$elem</parameter>, <parameter>$font</parameter>, <optional><parameter>$line_spacing</parameter></optional>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -2474,9 +2410,7 @@ in the same graph.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetFontTTF(<parameter>$elem</parameter>, <parameter>$font</parameter>, <optional><parameter>$size</parameter></optional>, <optional><parameter>$line_spacing</parameter></optional>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetFontTTF(<parameter>$elem</parameter>, <parameter>$font</parameter>, <optional><parameter>$size</parameter></optional>, <optional><parameter>$line_spacing</parameter></optional>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -2591,9 +2525,7 @@ in the same graph.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetGridColor(<parameter>$color</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetGridColor(<parameter>$color</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -2647,9 +2579,7 @@ slice borders.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetImageBorderColor(<parameter>$color</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetImageBorderColor(<parameter>$color</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -2705,9 +2635,7 @@ The border width can be set with <xref linkend="SetImageBorderWidth" />.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetImageBorderType(<parameter>$sibt</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetImageBorderType(<parameter>$sibt</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -2788,9 +2716,7 @@ Use of 'none' to turn the border off was added in PHPlot-5.1.0.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetImageBorderWidth(<parameter>$width</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetImageBorderWidth(<parameter>$width</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -2845,9 +2771,7 @@ This function was added in PHPlot-5.1.2.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetIsInline(<parameter>$is_inline</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetIsInline(<parameter>$is_inline</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -2902,9 +2826,7 @@ the <xref linkend="PHPlot" /> constructor.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetLabelColor(<parameter>$color</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetLabelColor(<parameter>$color</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -2948,9 +2870,7 @@ Data labels currently use the color set with <xref linkend="SetTextColor" />.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetLabelScalePosition(<parameter>$blp</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetLabelScalePosition(<parameter>$blp</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -3004,9 +2924,7 @@ for each slice, try putting it in the legend with <xref linkend="SetLegend" />.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetLegend(<parameter>$leg</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetLegend(<parameter>$leg</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -3063,9 +2981,7 @@ By default, no legend is displayed.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetLegendPixels(<parameter>$x</parameter>, <parameter>$y</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetLegendPixels(<parameter>$x</parameter>, <parameter>$y</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -3111,9 +3027,7 @@ See also <xref linkend="SetLegendWorld" />.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetLegendStyle(<parameter>$text_align</parameter>, <optional><parameter>$colorbox_align</parameter></optional>, <optional><parameter>$style</parameter></optional>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetLegendStyle(<parameter>$text_align</parameter>, <optional><parameter>$colorbox_align</parameter></optional>, <optional><parameter>$style</parameter></optional>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -3211,9 +3125,7 @@ This function was added to PHPlot-5.0.4.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetLegendWorld(<parameter>$x</parameter>, <parameter>$y</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetLegendWorld(<parameter>$x</parameter>, <parameter>$y</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -3270,9 +3182,7 @@ you supply are not scaled until the plot is drawn.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetLightGridColor(<parameter>$color</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetLightGridColor(<parameter>$color</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -3321,9 +3231,7 @@ The default color is gray.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetLineSpacing(<parameter>$spc</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetLineSpacing(<parameter>$spc</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -3408,9 +3316,7 @@ set in either order.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetLineStyles(<parameter>$ls</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetLineStyles(<parameter>$ls</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -3475,9 +3381,7 @@ plot type for that data set: markers only, but no lines.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetLineWidths(<parameter>$lw</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetLineWidths(<parameter>$lw</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -3527,9 +3431,7 @@ By default, all data set plot lines are 1 pixel wide.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetMarginsPixels(<optional><parameter>$lm</parameter></optional>, <optional><parameter>$rm</parameter></optional>, <optional><parameter>$tm</parameter></optional>, <optional><parameter>$bm</parameter></optional>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetMarginsPixels(<optional><parameter>$lm</parameter></optional>, <optional><parameter>$rm</parameter></optional>, <optional><parameter>$tm</parameter></optional>, <optional><parameter>$bm</parameter></optional>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -3633,9 +3535,7 @@ either be specified or automatically calculated.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetNumberFormat(<parameter>$decimal_point</parameter>, <parameter>$thousands_sep</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetNumberFormat(<parameter>$decimal_point</parameter>, <parameter>$thousands_sep</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -3740,9 +3640,7 @@ always used a period for decimal point, and comma for thousands separator.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetNumXTicks(<parameter>$nt</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetNumXTicks(<parameter>$nt</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -3790,9 +3688,7 @@ is calculated as 1/10th of the X data range.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetNumYTicks(<parameter>$nt</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetNumYTicks(<parameter>$nt</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -3840,9 +3736,7 @@ is calculated as 1/10th of the Y data range.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetOutputFile(<parameter>$output_file</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetOutputFile(<parameter>$output_file</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -3893,9 +3787,7 @@ or standard output.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetPlotAreaBgImage(<parameter>$input_file</parameter>, <optional><parameter>$mode</parameter></optional>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetPlotAreaBgImage(<parameter>$input_file</parameter>, <optional><parameter>$mode</parameter></optional>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -3963,9 +3855,7 @@ of the overall background.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetPlotAreaPixels(<optional><parameter>$x1</parameter></optional>, <optional><parameter>$y1</parameter></optional>, <optional><parameter>$x2</parameter></optional>, <optional><parameter>$y2</parameter></optional>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetPlotAreaPixels(<optional><parameter>$x1</parameter></optional>, <optional><parameter>$y1</parameter></optional>, <optional><parameter>$x2</parameter></optional>, <optional><parameter>$y2</parameter></optional>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -4078,9 +3968,7 @@ and no calculations take place until <xref linkend="DrawGraph" /> is used.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetPlotAreaWorld(<optional><parameter>$xmin</parameter></optional>, <optional><parameter>$ymin</parameter></optional>, <optional><parameter>$xmax</parameter></optional>, <optional><parameter>$ymax</parameter></optional>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetPlotAreaWorld(<optional><parameter>$xmin</parameter></optional>, <optional><parameter>$ymin</parameter></optional>, <optional><parameter>$xmax</parameter></optional>, <optional><parameter>$ymax</parameter></optional>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -4185,9 +4073,7 @@ functions can be called in any order.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetPlotBgColor(<parameter>$color</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetPlotBgColor(<parameter>$color</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -4246,9 +4132,7 @@ background color (or image) will be seen in the plot area.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetPlotBorderType(<parameter>$pbt</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetPlotBorderType(<parameter>$pbt</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -4363,9 +4247,7 @@ Starting with PHPlot-5.1.2, the additional choices 'right', 'top', and
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetPlotType(<parameter>$pt</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetPlotType(<parameter>$pt</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -4435,9 +4317,7 @@ Plot type 'stackedarea' was added in PHPlot-5.1.1.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetPointShapes(<parameter>$pt</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetPointShapes(<parameter>$pt</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -4633,9 +4513,7 @@ Using 'none' as a point shape was added in PHPlot-5.0rc3.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetPointSizes(<parameter>$ps</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetPointSizes(<parameter>$ps</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -4714,9 +4592,7 @@ Also, for some point sizes, PHPlot rounded the size up to the next even number.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetPrecisionX(<parameter>$prec</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetPrecisionX(<parameter>$prec</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -4785,9 +4661,7 @@ is exactly the same as calling <code>SetXLabelType('data', $n)</code>.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetPrecisionY(<parameter>$prec</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetPrecisionY(<parameter>$prec</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -4856,9 +4730,7 @@ when the plot is drawn</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetPrintImage(<parameter>$pi</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetPrintImage(<parameter>$pi</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -4909,9 +4781,7 @@ When all the plots are drawn, output the image with <xref linkend="PrintImage" /
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetRGBArray(<parameter>$color_array</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetRGBArray(<parameter>$color_array</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -5002,9 +4872,7 @@ An example of a user-defined color map is:
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetShading(<parameter>$s</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetShading(<parameter>$s</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -5056,9 +4924,7 @@ will be drawn with borders. The color of the borders is set with
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetSkipBottomTick(<parameter>$skip</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetSkipBottomTick(<parameter>$skip</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -5107,9 +4973,7 @@ By default, no tick marks or labels are skipped.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetSkipLeftTick(<parameter>$skip</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetSkipLeftTick(<parameter>$skip</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -5158,9 +5022,7 @@ By default, no tick marks or labels are skipped.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetSkipRightTick(<parameter>$skip</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetSkipRightTick(<parameter>$skip</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -5209,9 +5071,7 @@ By default, no tick marks or labels are skipped.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetSkipTopTick(<parameter>$skip</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetSkipTopTick(<parameter>$skip</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -5260,9 +5120,7 @@ By default, no tick marks or labels are skipped.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetTextColor(<parameter>$color</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetTextColor(<parameter>$color</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -5308,9 +5166,7 @@ The default text color is black.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetTickColor(<parameter>$color</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetTickColor(<parameter>$color</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -5354,9 +5210,7 @@ The default color for the tick marks is black.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetTitle(<parameter>$title</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetTitle(<parameter>$title</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -5394,9 +5248,7 @@ The string can contain multiple lines, separated by newlines (in PHP: "\n").
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetTitleColor(<parameter>$color</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetTitleColor(<parameter>$color</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -5458,9 +5310,7 @@ and Y titles.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetTransparentColor(<parameter>$color</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetTransparentColor(<parameter>$color</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -5523,9 +5373,7 @@ $plot->SetTransparentColor('yellow');
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetTTFPath(<parameter>$path</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetTTFPath(<parameter>$path</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -5607,9 +5455,7 @@ details.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetUseTTF(<parameter>$ttf</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetUseTTF(<parameter>$ttf</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -5697,9 +5543,7 @@ used on a graph.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetXAxisPosition(<parameter>$pos</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetXAxisPosition(<parameter>$pos</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -5766,9 +5610,7 @@ whether the data was all positive or all negative.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetXDataLabelAngle(<parameter>$xdla</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetXDataLabelAngle(<parameter>$xdla</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -5829,9 +5671,7 @@ simply called SetXLabelAngle.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetXDataLabelPos(<parameter>$xdlp</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetXDataLabelPos(<parameter>$xdlp</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -5993,9 +5833,7 @@ as described in the notes above.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetXDataLabelType(<parameter>$type</parameter>, <optional><parameter>...</parameter></optional>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetXDataLabelType(<parameter>$type</parameter>, <optional><parameter>...</parameter></optional>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -6194,9 +6032,7 @@ formatting, as set with <xref linkend="SetXLabelType"/>.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetXLabelAngle(<parameter>$xla</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetXLabelAngle(<parameter>$xla</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -6253,9 +6089,7 @@ angles with SetXLabelAngle.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetXLabelType(<parameter>$type</parameter>, <optional><parameter>...</parameter></optional>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetXLabelType(<parameter>$type</parameter>, <optional><parameter>...</parameter></optional>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -6629,9 +6463,7 @@ locale.  You can set the separator characters yourself instead with
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetXScaleType(<parameter>$st</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetXScaleType(<parameter>$st</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -6683,9 +6515,7 @@ The default X and Y scale types are linear.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetXTickCrossing(<parameter>$xc</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetXTickCrossing(<parameter>$xc</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -6746,9 +6576,7 @@ defaults.)
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetXTickIncrement(<parameter>$ti</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetXTickIncrement(<parameter>$ti</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -6796,9 +6624,7 @@ is calculated as 1/10th of the X data range.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetXTickLabelPos(<parameter>$xtlp</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetXTickLabelPos(<parameter>$xtlp</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -6913,9 +6739,7 @@ as described in the notes above.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetXTickLength(<parameter>$xln</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetXTickLength(<parameter>$xln</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -6963,9 +6787,7 @@ See figure under <xref linkend="SetXTickCrossing" />.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetXTickPos(<parameter>$tp</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetXTickPos(<parameter>$tp</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -7056,9 +6878,7 @@ See <xref linkend="SetXAxisPosition" /> for positioning the X axis.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetXTimeFormat(<parameter>$xtf</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetXTimeFormat(<parameter>$xtf</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -7140,9 +6960,7 @@ The default time format was undefined prior to PHPlot-5.0rc3.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetXTitle(<parameter>$xtitle</parameter>, <optional><parameter>$xpos</parameter></optional>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetXTitle(<parameter>$xtitle</parameter>, <optional><parameter>$xpos</parameter></optional>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -7227,9 +7045,7 @@ The default is 'plotdown'.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetXTitleColor(<parameter>$color</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetXTitleColor(<parameter>$color</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -7288,9 +7104,7 @@ Through PHPlot-5.1.3, the main, X, and Y titles always used the same color.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetYAxisPosition(<parameter>$pos</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetYAxisPosition(<parameter>$pos</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -7354,9 +7168,7 @@ negative data with horizontal plots, it was usually necessary to use
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetYDataLabelAngle(<parameter>$ydla</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetYDataLabelAngle(<parameter>$ydla</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -7414,9 +7226,7 @@ Y data labels were always drawn at 0 degrees.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetYDataLabelPos(<parameter>$ydlp</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetYDataLabelPos(<parameter>$ydlp</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -7583,9 +7393,7 @@ The data value label feature for bar graphs was added to PHPlot-5.0rc3.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetYDataLabelType(<parameter>$type</parameter>, <optional><parameter>...</parameter></optional>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetYDataLabelType(<parameter>$type</parameter>, <optional><parameter>...</parameter></optional>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -7782,9 +7590,7 @@ formatting, as set with <xref linkend="SetYLabelType"/>.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetYLabelAngle(<parameter>$yla</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetYLabelAngle(<parameter>$yla</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -7833,9 +7639,7 @@ For those, see <xref linkend="SetYDataLabelAngle"/>.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetYLabelType(<parameter>$type</parameter>, <optional><parameter>...</parameter></optional>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetYLabelType(<parameter>$type</parameter>, <optional><parameter>...</parameter></optional>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -8064,9 +7868,7 @@ locale.  You can set the separator characters yourself instead with
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetYScaleType(<parameter>$st</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetYScaleType(<parameter>$st</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -8118,9 +7920,7 @@ The default X and Y scale types are linear.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetYTickCrossing(<parameter>$yc</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetYTickCrossing(<parameter>$yc</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -8168,9 +7968,7 @@ See figure under <xref linkend="SetXTickCrossing" />.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetYTickIncrement(<parameter>$ti</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetYTickIncrement(<parameter>$ti</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -8218,9 +8016,7 @@ is calculated as 1/10th of the Y data range.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetYTickLabelPos(<parameter>$ytlp</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetYTickLabelPos(<parameter>$ytlp</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -8321,9 +8117,7 @@ See <xref linkend="SetYAxisPosition" /> for positioning the Y axis.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetYTickLength(<parameter>$yln</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetYTickLength(<parameter>$yln</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -8371,9 +8165,7 @@ See figure under <xref linkend="SetXTickCrossing" />.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetYTickPos(<parameter>$tp</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetYTickPos(<parameter>$tp</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -8465,9 +8257,7 @@ See <xref linkend="SetYAxisPosition" /> for positioning the Y axis.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetYTimeFormat(<parameter>$ytf</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetYTimeFormat(<parameter>$ytf</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -8550,9 +8340,7 @@ The default time format was undefined prior to PHPlot-5.0rc3.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetYTitle(<parameter>$ytitle</parameter>, <optional><parameter>$ypos</parameter></optional>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetYTitle(<parameter>$ytitle</parameter>, <optional><parameter>$ypos</parameter></optional>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -8635,9 +8423,7 @@ The default is 'plotleft'.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>
-$plot-&gt;SetYTitleColor(<parameter>$color</parameter>)
-    </synopsis>
+    <synopsis>$plot-&gt;SetYTitleColor(<parameter>$color</parameter>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
