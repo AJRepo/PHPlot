@@ -201,10 +201,13 @@ and <xref linkend="SetFont" /> to set the legend text font.
 <para>
 The functions in this section control aspects of the X and Y axes. You can
 control the axis position and optionally use logarithmic scaling.
+You can also prevent drawing the axis lines.
 </para>
 
 <para>
 <itemizedlist>
+  <listitem><para><xref linkend="SetDrawXAxis" /></para></listitem>
+  <listitem><para><xref linkend="SetDrawYAxis" /></para></listitem>
   <listitem><para><xref linkend="SetXAxisPosition" /></para></listitem>
   <listitem><para><xref linkend="SetXScaleType" /></para></listitem>
   <listitem><para><xref linkend="SetYAxisPosition" /></para></listitem>
