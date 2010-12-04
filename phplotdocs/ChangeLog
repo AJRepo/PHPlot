@@ -4,6 +4,9 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 2010-12-03
+   * reference.xml: Markup fix. Remove newlines from <synopsis> elements
+     to get rid of unwanted blank lines (1 per in HTML, 2 per in PDF).
+
    New feature to allow suppressing X and/or Y axis lines.
    * functions.xml: Add links to 2 new functions under Axis Controls.
    * reference.xml: Document new functions SetDrawXAxis and SetDrawYAxis.
