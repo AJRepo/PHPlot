@@ -1538,6 +1538,88 @@ set with <xref linkend="SetPlotAreaBgImage" />.
   </refsect1>
 </refentry>
 
+<refentry id="SetDrawXAxis">
+  <refmeta>
+    <refentrytitle>SetDrawXAxis</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetDrawXAxis</refname>
+    <refpurpose>Enable or disable drawing of the X axis line</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetDrawXAxis(<parameter>$draw</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetDrawXAxis</function> enables or disables drawing of the X axis
+line. Disabling the X axis line should be necessary only in special
+applications.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$draw</replaceable></term>
+        <listitem>
+          <para>
+True to draw the X axis line, False to not draw the X axis line.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+By default, the X axis line is drawn.
+    </para>
+    <para>
+Disabling the X axis line does not disable associated plot elements, nor
+change the plot margin calculation.  To produce a completely 'bare' plot,
+you must turn off the grid, tick marks, tick labels, and data labels.  You
+also need to turn off the plot area border, which defaults to left and
+right sides.  Lastly, you might want to reduce the margins, since the
+default minumum margin is 15 pixels on each side of the plot area, even if
+there are no axis lines, labels, or titles.  Here is an example:
+<programlisting><![CDATA[// 'Bare' plot partial code example
+$plot->SetXTickPos('none');          // Turn off X tick marks
+$plot->SetXTickLabelPos('none');     // Turn off X tick labels
+$plot->SetXDataLabelPos('none');     // Turn off X data labels
+$plot->SetYTickPos('none');          // Turn off Y tick marks
+$plot->SetYTickLabelPos('none');     // Turn off Y tick labels
+$plot->SetPlotBorderType('none');    // Turn off plot area border
+$plot->SetDrawXGrid(False);          // Turn off X grid lines
+$plot->SetDrawYGrid(False);          // Turn off Y grid lines
+$plot->SetDrawXAxis(False);          // Don't draw X axis line
+$plot->SetDrawYAxis(False);          // Don't draw Y axis line
+$plot->SetMarginsPixels(2, 2, 2, 2); // Reduce plot margins to 2 pixels
+]]></programlisting>
+    </para>
+    <para>
+See <xref linkend="ex-truecolor-histogram"/> for an example of a plot
+where axis lines are not desired. (The configuration data as shown
+in the example draws a full plot area border, so the axis lines would be
+covered anyway. But if the border is turned off, the axis lines would be
+visible unless they are suppressed as shown.)
+    </para>
+  </refsect1>
+  <refsect1>
+    <title>History</title>
+    <para>
+This function was added after PHPlot-5.2.0.
+    </para>
+  </refsect1>
+</refentry>
+
 <refentry id="SetDrawXDataLabelLines">
   <refmeta>
     <refentrytitle>SetDrawXDataLabelLines</refentrytitle>
@@ -1647,6 +1729,69 @@ True to draw the X grid lines, False to not draw the X grid lines.
     <title>Notes</title>
     <para>
 <xref linkend="SetLightGridColor" /> sets the color of the grid lines.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetDrawYAxis">
+  <refmeta>
+    <refentrytitle>SetDrawYAxis</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetDrawYAxis</refname>
+    <refpurpose>Enable or disable drawing of the Y axis line</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>
+$plot-&gt;SetDrawYAxis(<parameter>$draw</parameter>)
+    </synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetDrawYAxis</function> enables or disables drawing of the Y axis
+line. Disabling the Y axis line should be necessary only in special
+applications.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$draw</replaceable></term>
+        <listitem>
+          <para>
+True to draw the Y axis line, False to not draw the Y axis line.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+By default, the Y axis line is drawn.
+    </para>
+    <para>
+Disabling the Y axis line does not disable associated plot elements, nor
+change the plot margin calculation.  To produce a completely 'bare' plot,
+you must turn off the grid, tick marks, tick labels, and data labels.  You
+also need to turn off the plot area border, which defaults to left and
+right sides.  Lastly, you might want to reduce the margins, since the
+default minumum margin is 15 pixels on each side of the plot area, even if
+there are no axis lines, labels, or titles.
+See <xref linkend="SetDrawXAxis"/> for sample code.
+    </para>
+  </refsect1>
+  <refsect1>
+    <title>History</title>
+    <para>
+This function was added after PHPlot-5.2.0.
     </para>
   </refsect1>
 </refentry>
