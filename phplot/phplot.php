@@ -2261,6 +2261,28 @@ class PHPlot
     }
 
     /*
+     * Enable or disable drawing of the X axis line.
+     *  $draw : True to draw the axis (default if not called), False to suppress it.
+     * This controls drawing of the axis line only, and not the ticks, labels, or grid.
+     */
+    function SetDrawXAxis($draw)
+    {
+        $this->suppress_x_axis = !$draw; // See DrawXAxis()
+        return TRUE;
+    }
+
+    /*
+     * Enable or disable drawing of the Y axis line.
+     *  $draw : True to draw the axis (default if not called), False to suppress it.
+     * This controls drawing of the axis line only, and not the ticks, labels, or grid.
+     */
+    function SetDrawYAxis($draw)
+    {
+        $this->suppress_y_axis = !$draw; // See DrawYAxis()
+        return TRUE;
+    }
+
+    /*
      * Select linear or log scale for the X axis.
      */
     function SetXScaleType($which_xst)
@@ -4258,10 +4280,11 @@ class PHPlot
         // Draw ticks, labels and grid
         $this->DrawXTicks();
 
-        //Draw X Axis at Y = x_axis_y_pixels
-        ImageLine($this->img, $this->plot_area[0]+1, $this->x_axis_y_pixels,
-                  $this->plot_area[2]-1, $this->x_axis_y_pixels, $this->ndx_grid_color);
-
+        //Draw X Axis at Y = x_axis_y_pixels, unless suppressed (See SetXAxisPosition)
+        if (empty($this->suppress_x_axis)) {
+            ImageLine($this->img, $this->plot_area[0]+1, $this->x_axis_y_pixels,
+                      $this->plot_area[2]-1, $this->x_axis_y_pixels, $this->ndx_grid_color);
+        }
         return TRUE;
     }
 
@@ -4271,13 +4294,14 @@ class PHPlot
      */
     protected function DrawYAxis()
     {
-        // Draw ticks, labels and grid, if any
+        // Draw ticks, labels and grid
         $this->DrawYTicks();
 
-        // Draw Y axis at X = y_axis_x_pixels
-        ImageLine($this->img, $this->y_axis_x_pixels, $this->plot_area[1],
-                  $this->y_axis_x_pixels, $this->plot_area[3], $this->ndx_grid_color);
-
+        // Draw Y axis at X = y_axis_x_pixels, unless suppressed (See SetYAxisPosition)
+        if (empty($this->suppress_y_axis)) {
+            ImageLine($this->img, $this->y_axis_x_pixels, $this->plot_area[1],
+                      $this->y_axis_x_pixels, $this->plot_area[3], $this->ndx_grid_color);
+        }
         return TRUE;
     }
 
@@ -4562,7 +4586,7 @@ class PHPlot
 
     /*
      * Draw a data label along the Y axis or side.
-     * This is only used by horizontal bar charts.
+     * This is used by horizontal plots.
      */
     protected function DrawYDataLabel($ylab, $ypos)
     {
