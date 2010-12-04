@@ -13,6 +13,7 @@ Callback
 Callbacks
 CheckDataArray
 CheckDataType
+CheckDataValueLabels
 CheckLabels
 CheckLabelsAllEmpty
 CheckOption
@@ -41,6 +42,7 @@ DrawLegend
 DrawLinePoints
 DrawLines
 DrawLinesError
+DrawOHLC
 DrawPieChart
 DrawPlotAreaBackground
 DrawPlotBorder
@@ -77,6 +79,7 @@ GetDeviceXY
 GetImage
 GetImageBorderWidth
 GetLineSpacing
+Helvetica
 ImageMagick
 ImageSetStyle
 ImageString
@@ -121,8 +124,10 @@ SetDefaultTTFont
 SetDrawBrokenLines
 SetDrawDashedGrid
 SetDrawPlotAreaBackground
+SetDrawXAxis
 SetDrawXDataLabelLines
 SetDrawXGrid
+SetDrawYAxis
 SetDrawYDataLabelLines
 SetDrawYGrid
 SetErrorBarColors
