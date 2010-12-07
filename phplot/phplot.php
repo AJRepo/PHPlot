@@ -1,7 +1,7 @@
 <?php
 /* $Id$ */
 /*
- * PHPLOT Version 5.3.0
+ * PHPLOT Version 5.3.0 + CVS (This is an unreleased CVS version!)
  *
  * A PHP class for creating scientific and business charts
  * Visit http://sourceforge.net/projects/phplot/
@@ -3258,10 +3258,6 @@ class PHPlot
      * Pre-requisites: FindDataLimits() calculates min_x, max_x, min_y, max_y
      * which are the limits of the data to be plotted.
      *
-     * Note: $implied_y and $swapped_xy are currently equivalent, but in the
-     * future there may be a data type with swapped X/Y and explicit Y values.
-     * The 4 code blocks below for plot_min_x, plot_max_x, plot_min_y, and
-     * plot_max_y already contain logic for this case.
      * The general method is this:
      *   If any part of the range is user-defined (via SetPlotAreaWorld),
      *      use the user-defined value.
@@ -3348,7 +3344,6 @@ class PHPlot
                 'plot_min_x' => $this->plot_min_x, 'plot_min_y' => $this->plot_min_y,
                 'plot_max_x' => $this->plot_max_x, 'plot_max_y' => $this->plot_max_y));
         }
-
         return TRUE;
     }
 
