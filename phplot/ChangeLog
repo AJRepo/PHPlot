@@ -2,6 +2,10 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2010-12-06
+    * Fix comments above CalcPlotAreaWorld(). Deleted incorrect information
+      from before data-data-yx existed, and before DecodeDataType rewrite.
+
 2010-12-04 (lbayuk)     ===== Released as 5.3.0 =====
     * phplot.php: Updated version
     * README.txt: Updated for new release
