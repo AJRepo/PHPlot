@@ -3,6 +3,13 @@ This is phplotdocs/ChangeLog, listing changes to the PHPlot Reference Manual
 Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
+2010-12-16
+   * pdf.xsl: Customize the page headers for PDF so the chapter title or
+     reference entry name is show on the top of all pages. (By default, it
+     isn't shown on the first page of a chapter or refentry, which is a
+     problem since most reference entries are only one page.)
+   * developer.xml: Small change to chapter titles.
+
 2010-12-04
    For release with PHPlot-5.3.0:
    * Change vague references to release "after 5.2.0" to "5.3.0".
