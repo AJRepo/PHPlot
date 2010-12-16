@@ -14,7 +14,7 @@ itself.
 </partintro>
 
 <chapter id="dev-layout">
-<title>Plot Layout</title>
+<title>PHPlot Plot Layout</title>
 <para>
 This figure illustrates the plot layout, starting with PHPlot-5.0.5 when
 the margin calculations were rewritten.
@@ -120,7 +120,7 @@ overlap the title or fall off the edge of the image.
 </chapter>
 
 <chapter id="dev-legend">
-<title>Legend Layout</title>
+<title>PHPlot Legend Layout</title>
 <para>
 This figure illustrates the layout of the legend, as drawn by DrawLegend().
 Two of six possible arrangements of the colorboxes and text are shown.
@@ -150,7 +150,7 @@ See <xref linkend="conc-tuning-legend"/> for more.
 </chapter>
 
 <chapter id="dev-internal">
-<title>Internal Functions</title>
+<title>PHPlot Class Internal Functions</title>
 <abstract><title></title>
   <para>
 This chapter documents PHPlot internal functions. These functions are
@@ -1733,7 +1733,7 @@ See <xref linkend="GetDeviceXY"/> for a public interface.
 </chapter>
 
 <chapter id="dev-vars">
-<title>Member Variables</title>
+<title>PHPlot Class Member Variables</title>
 <abstract><title></title>
   <para>
 This chapter provides information about the PHPlot class member variables.
