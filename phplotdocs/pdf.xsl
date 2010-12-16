@@ -94,6 +94,27 @@
   </fo:block>
 </xsl:template>
 
+<!-- Customize page header so title is even on the first page of chapters
+    and Reference Entries (which are almost all only a single page anyway).
+    Otherwise there are too many pages without headers.
+-->
+<xsl:template name="header.content">
+  <xsl:param name="pageclass" select="''"/>
+  <xsl:param name="sequence" select="''"/>
+  <xsl:param name="position" select="''"/>
+  <xsl:param name="gentext-key" select="''"/>
+  <fo:block>
+    <xsl:choose>
+      <xsl:when test="$sequence='blank' or $pageclass='titlepage' or $pageclass='front'">
+        <!-- nothing -->
+      </xsl:when>
+      <xsl:when test="$position='center'">
+        <xsl:apply-templates select="." mode="titleabbrev.markup"/>
+      </xsl:when>
+    </xsl:choose>
+  </fo:block>
+</xsl:template>
+
 <!-- ===== XHTML and PDF common parameters ===== -->
 
 <!-- Number sections, and include parent number -->
