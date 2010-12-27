@@ -2,6 +2,19 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2010-12-27
+    * Do not have SetDefaultStyles() call deprecated SetLabelColor().
+
+    * Fixes for bug 3143586 "Multiple plots per image - fixes & docs":
+      + Fix DrawLegend so it doesn't forget that the legend position
+        was specified in world coordinates. This fixes the legend
+        position for plots after the first.
+      + Don't draw the image border more than once (although this would
+        probably have no impact on the resulting image). This parallels
+        the behavior for the main plot title and the image background.
+        Replaced member variables background_done and title_done with a new
+        member array done[] which will track when these elements were done.
+
 2010-12-06
     * Fix comments above CalcPlotAreaWorld(). Deleted incorrect information
       from before data-data-yx existed, and before DecodeDataType rewrite.
