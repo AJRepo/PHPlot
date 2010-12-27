@@ -4,6 +4,17 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 2010-12-26
+   * advanced.xml: Fix wrong-case color name.
+
+   * reference.xml: Document that SetBgImage() and SetPlotAreaBgImage()
+     take NULL as an input_file argument to disable the background image.
+
+   * reference.xml, functions.xml: Remove SetLabelColor() from the manual.
+     This is a deprecated function, and no other deprecated functions are
+     documented.
+   * variables.list: Remove label_color variable. There is no such variable.
+     It might have been associated with SetLabelColor at one time.
+
    * concepts.xml: Add new section "Plot Element Colors" with a table that
      maps plot elements to the functions that set their color.
 
