@@ -1714,6 +1714,150 @@ transparency.
 </para>
 </sect2>
 
+<sect2 id="conc-colors-elements">
+<title>Plot Element Colors</title>
+<para>
+The following table shows the function used to set the color of each
+element on a plot.
+<informaltable>
+  <tgroup cols="2">
+    <?dbhtml table-summary="Functions to set color of plot elements"?>
+    <colspec colname="c1" colwidth="40*"/>
+    <colspec colname="c2" colwidth="60*"/>
+    <thead>
+      <row>
+        <entry>Plot element:</entry>
+        <entry>Function used to set color:</entry>
+      </row>
+    </thead>
+    <tbody>
+      <row>
+        <entry>Bar chart bar outlines</entry>
+        <entry><xref linkend="SetDataBorderColors"/></entry>
+      </row>
+      <row>
+        <entry>Data elements (points, lines, bar fill, etc.)</entry>
+        <entry><xref linkend="SetDataColors"/></entry>
+      </row>
+      <row>
+        <entry>Data value labels</entry>
+        <entry><xref linkend="SetTextColor"/></entry>
+      </row>
+      <row>
+        <entry>Error bars</entry>
+        <entry><xref linkend="SetErrorBarColors"/></entry>
+      </row>
+      <row>
+        <entry>Image background</entry>
+        <entry><xref linkend="SetBackgroundColor"/></entry>
+      </row>
+      <row>
+        <entry>Image border</entry>
+        <entry><xref linkend="SetImageBorderColor"/></entry>
+      </row>
+      <row>
+        <entry>Legend background</entry>
+        <entry><xref linkend="SetBackgroundColor"/></entry>
+      </row>
+      <row>
+        <entry>Legend color box fill</entry>
+        <entry><xref linkend="SetDataColors"/></entry>
+      </row>
+      <row>
+        <entry>Legend color box outline</entry>
+        <entry><xref linkend="SetTextColor"/></entry>
+      </row>
+      <row>
+        <entry>Legend outline</entry>
+        <entry><xref linkend="SetGridColor"/></entry>
+      </row>
+      <row>
+        <entry>Legend text</entry>
+        <entry><xref linkend="SetTextColor"/></entry>
+      </row>
+      <row>
+        <entry>Main title</entry>
+        <entry><xref linkend="SetTitleColor"/></entry>
+      </row>
+      <row>
+        <entry>Pie chart data labels</entry>
+        <entry><xref linkend="SetGridColor"/></entry>
+      </row>
+      <row>
+        <entry>Pie slice fill</entry>
+        <entry><xref linkend="SetDataColors"/></entry>
+      </row>
+      <row>
+        <entry>Pie slice outlines</entry>
+        <entry><xref linkend="SetGridColor"/></entry>
+      </row>
+      <row>
+        <entry>Plot area background</entry>
+        <entry><xref linkend="SetPlotBgColor"/></entry>
+      </row>
+      <row>
+        <entry>Plot border</entry>
+        <entry><xref linkend="SetGridColor"/></entry>
+      </row>
+      <row>
+        <entry>X axis line</entry>
+        <entry><xref linkend="SetGridColor"/></entry>
+      </row>
+      <row>
+        <entry>X axis data labels</entry>
+        <entry><xref linkend="SetTextColor"/></entry>
+      </row>
+      <row>
+        <entry>X data lines</entry>
+        <entry><xref linkend="SetLightGridColor"/></entry>
+      </row>
+      <row>
+        <entry>X grid lines</entry>
+        <entry><xref linkend="SetLightGridColor"/></entry>
+      </row>
+      <row>
+        <entry>X tick labels</entry>
+        <entry><xref linkend="SetTextColor"/></entry>
+      </row>
+      <row>
+        <entry>X tick marks</entry>
+        <entry><xref linkend="SetTickColor"/></entry>
+      </row>
+      <row>
+        <entry>X title</entry>
+        <entry><xref linkend="SetXTitleColor"/>, <xref linkend="SetTitleColor"/></entry>
+      </row>
+      <row>
+        <entry>Y axis lines</entry>
+        <entry><xref linkend="SetGridColor"/></entry>
+      </row>
+      <row>
+        <entry>Y axis data labels</entry>
+        <entry><xref linkend="SetTextColor"/></entry>
+      </row>
+      <row>
+        <entry>Y grid lines</entry>
+        <entry><xref linkend="SetLightGridColor"/></entry>
+      </row>
+      <row>
+        <entry>Y tick labels</entry>
+        <entry><xref linkend="SetTextColor"/></entry>
+      </row>
+      <row>
+        <entry>Y tick marks</entry>
+        <entry><xref linkend="SetTickColor"/></entry>
+      </row>
+      <row>
+        <entry>Y title</entry>
+        <entry><xref linkend="SetYTitleColor"/>, <xref linkend="SetTitleColor"/></entry>
+      </row>
+    </tbody>
+  </tgroup>
+</informaltable>
+</para>
+
+</sect2>
+
 </sect1>
 
 <sect1 id="conc-labels">
