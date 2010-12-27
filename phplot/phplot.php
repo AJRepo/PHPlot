@@ -47,7 +47,6 @@ class PHPlot
     public $browser_cache = FALSE;         // FALSE = Sends headers for browser to not cache the image,
                                            // (only if is_inline = FALSE also)
     public $print_image = TRUE;            // DrawGraph calls PrintImage. See SetPrintImage
-    public $background_done = FALSE;       // TRUE after background image is drawn once
 
     public $safe_margin = 5;               // Extra margin used in several places, in pixels
 
@@ -355,7 +354,7 @@ class PHPlot
         $this->img = $im;
 
         // Do not overwrite the input file with the background color.
-        $this->background_done = TRUE;
+        $this->done['background'] = TRUE;
 
         return TRUE;
     }
@@ -401,7 +400,6 @@ class PHPlot
         $this->SetImageBorderColor(array(194, 194, 194));
         $this->SetPlotBgColor('white');
         $this->SetBackgroundColor('white');
-        $this->SetLabelColor('black');
         $this->SetTextColor('black');
         $this->SetGridColor('black');
         $this->SetLightGridColor('gray');
@@ -466,7 +464,7 @@ class PHPlot
     }
 
     /*
-     * Do not use. Use SetTitleColor instead.
+     * Deprecated. Use SetTitleColor()
      */
     function SetLabelColor($which_color)
     {
@@ -4061,14 +4059,14 @@ class PHPlot
     protected function DrawBackground()
     {
         // Don't draw this twice if drawing two plots on one image
-        if (! $this->background_done) {
+        if (empty($this->done['background'])) {
             if (isset($this->bgimg)) {    // If bgimg is defined, use it
                 $this->tile_img($this->bgimg, 0, 0, $this->image_width, $this->image_height, $this->bgmode);
             } else {                        // Else use solid color
                 ImageFilledRectangle($this->img, 0, 0, $this->image_width, $this->image_height,
                                      $this->ndx_bg_color);
             }
-            $this->background_done = TRUE;
+            $this->done['background'] = TRUE;
         }
         return TRUE;
     }
@@ -4160,8 +4158,9 @@ class PHPlot
      */
     protected function DrawImageBorder()
     {
-        if ($this->image_border_type == 'none')
-            return TRUE; // Early test for default case.
+        // Do nothing if already drawn, or if no border has been set.
+        if ($this->image_border_type == 'none' || !empty($this->done['border']))
+            return TRUE;
         $width = $this->GetImageBorderWidth();
         $color1 = $this->ndx_i_border;
         $color2 = $this->ndx_i_border_dark;
@@ -4190,6 +4189,7 @@ class PHPlot
             return $this->PrintError(
                           "DrawImageBorder(): unknown image_border_type: '$this->image_border_type'");
         }
+        $this->done['border'] = TRUE; // Border should only be drawn once per image.
         return TRUE;
     }
 
@@ -4200,7 +4200,7 @@ class PHPlot
      */
     protected function DrawTitle()
     {
-        if (isset($this->title_done) || $this->title_txt === '')
+        if (!empty($this->done['title']) || $this->title_txt === '')
             return TRUE;
 
         // Center of the image:
@@ -4212,7 +4212,7 @@ class PHPlot
         $this->DrawText($this->fonts['title'], 0, $xpos, $ypos,
                         $this->ndx_title_color, $this->title_txt, 'center', 'top');
 
-        $this->title_done = TRUE;
+        $this->done['title'] = TRUE;
         return TRUE;
     }
 
@@ -4685,7 +4685,6 @@ class PHPlot
             // User-defined position in world-coordinates (See SetLegendWorld).
             $box_start_x = $this->xtr($this->legend_x_pos);
             $box_start_y = $this->ytr($this->legend_y_pos);
-            unset($this->legend_xy_world);
         } else {
             // User-defined position in pixel coordinates.
             $box_start_x = $this->legend_x_pos;
