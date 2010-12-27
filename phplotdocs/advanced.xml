@@ -1134,7 +1134,7 @@ bar will be drawn with the first color in the data colors array (the color
 with index 0), the second bar will use the second color from
 the data colors array, and the third bar will use the third color.
 You can see this in <xref linkend="example-bars1"/>, where the first three
-colors in the data colors array are skyblue, green, and orange.
+colors in the data colors array are SkyBlue, green, and orange.
 </para>
 
 <para>
