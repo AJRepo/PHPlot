@@ -2815,50 +2815,6 @@ the <xref linkend="PHPlot" /> constructor.
   </refsect1>
 </refentry>
 
-<refentry id="SetLabelColor">
-  <refmeta>
-    <refentrytitle>SetLabelColor</refentrytitle>
-  </refmeta>
-
-  <refnamediv>
-    <refname>SetLabelColor</refname>
-    <refpurpose>Do not use</refpurpose>
-  </refnamediv>
-
-  <refsynopsisdiv>
-    <synopsis>$plot-&gt;SetLabelColor(<parameter>$color</parameter>)</synopsis>
-  </refsynopsisdiv>
-
-  <refsect1>
-    <title>Description</title>
-    <para>
-<function>SetLabelColor</function> should not be used.
-    </para>
-  </refsect1>
-
-  <refsect1>
-    <title>Parameters</title>
-    <variablelist>
-      <varlistentry>
-        <term><replaceable>$color</replaceable></term>
-        <listitem>
-          <para>
-Color to use.
-          </para>
-        </listitem>
-      </varlistentry>
-    </variablelist>
-  </refsect1>
-
-  <refsect1>
-    <title>Notes</title>
-    <para>
-This function should not be used. It duplicates <xref linkend="SetTitleColor" />.
-Data labels currently use the color set with <xref linkend="SetTextColor" />.
-    </para>
-  </refsect1>
-</refentry>
-
 <refentry id="SetLabelScalePosition">
   <refmeta>
     <refentrytitle>SetLabelScalePosition</refentrytitle>

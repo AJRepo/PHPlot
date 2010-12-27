@@ -77,7 +77,6 @@ More information about using colors in PHPlot can be found in
   <listitem><para><xref linkend="SetGridColor" /></para></listitem>
   <listitem><para><xref linkend="SetImageBorderColor" /></para></listitem>
   <listitem><para><xref linkend="SetImageBorderWidth" /></para></listitem>
-  <listitem><para><xref linkend="SetLabelColor" /></para></listitem>
   <listitem><para><xref linkend="SetLightGridColor" /></para></listitem>
   <listitem><para><xref linkend="SetLineStyles" /></para></listitem>
   <listitem><para><xref linkend="SetLineWidths" /></para></listitem>
