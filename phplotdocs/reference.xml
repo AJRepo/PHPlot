@@ -661,6 +661,10 @@ the plot area (generally, the area between the axes).
 If both are used, the plot area background overlays that portion
 of the overall background.
     </para>
+    <para>
+If <varname>$input_file</varname> is <literal>NULL</literal>, no background
+image will be used.
+    </para>
   </refsect1>
 </refentry>
 
@@ -3796,6 +3800,10 @@ SetPlotAreaBgImage sets a background for the plot area, while
 <xref linkend="SetBgImage" /> sets a background for the entire image area.
 If both are used, the plot area background overlays that portion
 of the overall background.
+    </para>
+    <para>
+If <varname>$input_file</varname> is <literal>NULL</literal>, no background
+image will be used for the plot area.
     </para>
   </refsect1>
 </refentry>
