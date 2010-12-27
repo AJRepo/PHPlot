@@ -63,7 +63,6 @@ image_width		PHPlot	Image width
 img		PHPlot	Image resource
 in_error		PrintError	Prevent recursion in error message image production
 is_inline	FALSE	SetIsInline	Don't sent headers
-label_color	'black'	SetLabelColor	Unused - see SetTitleColor
 label_format	array(...)	SetXLabelType SetYLabelType SetXDataLabelType SetYDataLabelType SetXTimeFormat SetYTimeFormat SetPrecisionX SetPrecisionY	Label format info. <link linkend="var-label-format">(See notes for more)</link>
 label_scale_position	0.5	SetLabelScalePosition	Pie chart label position factor
 legend	''	SetLegend	Legend text array. Each index is a legend text line.
