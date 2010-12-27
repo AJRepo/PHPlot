@@ -15,6 +15,16 @@ see the ChangeLog file inside the PHPlot distribution.)
 <variablelist>
 
   <varlistentry>
+    <term>2010-12-26</term>
+    <listitem>
+      <para>
+New sub-section in Concepts chapter, Colors section, showing which function
+is used to set the color for each plot element.
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
     <term>2010-12-04</term>
     <listitem>
       <para>

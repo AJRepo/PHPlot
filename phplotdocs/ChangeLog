@@ -3,6 +3,10 @@ This is phplotdocs/ChangeLog, listing changes to the PHPlot Reference Manual
 Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
+2010-12-26
+   * concepts.xml: Add new section "Plot Element Colors" with a table that
+     maps plot elements to the functions that set their color.
+
 2010-12-16
    * pdf.xsl: Customize the page headers for PDF so the chapter title or
      reference entry name is show on the top of all pages. (By default, it
