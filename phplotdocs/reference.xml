@@ -2927,6 +2927,17 @@ the data sets in the data array).
     <para>
 By default, no legend is displayed.
     </para>
+    <para>
+To cancel a legend (perhaps as part of drawing multiple plots on an image),
+pass an empty array or NULL as <varname>$leg</varname>.
+    </para>
+  </refsect1>
+  <refsect1>
+    <title>History</title>
+    <para>
+Accepting NULL as a valid argument value was added after PHPlot-5.3.0.
+Through PHPlot-5.3.0, passing NULL would cause an error.
+    </para>
   </refsect1>
 </refentry>
 
