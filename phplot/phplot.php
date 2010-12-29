@@ -2044,15 +2044,16 @@ class PHPlot
      * Set text to display in the graph's legend.
      *   $which_leg : Array of strings for the complete legend, or a single string
      *                to be appended to the legend.
+     *                Or NULL (or an empty array) to cancel the legend.
      */
     function SetLegend($which_leg)
     {
-        if (is_array($which_leg)) {             // use array
+        if (is_array($which_leg)) {           // use array (or cancel, if empty array)
             $this->legend = $which_leg;
-        } elseif (! is_null($which_leg)) {     // append string
+        } elseif (!is_null($which_leg)) {     // append string
             $this->legend[] = $which_leg;
         } else {
-            return $this->PrintError("SetLegend(): argument must not be null.");
+            $this->legend = '';  // Reinitialize to empty, meaning no legend.
         }
         return TRUE;
     }
@@ -4636,7 +4637,7 @@ class PHPlot
 
     /*
      * Draws the graph legend
-     *
+     * This is called by DrawGraph only if $this->legend is not empty.
      * Base code submitted by Marlin Viss
      */
     protected function DrawLegend()
