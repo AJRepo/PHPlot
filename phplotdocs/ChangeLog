@@ -3,6 +3,9 @@ This is phplotdocs/ChangeLog, listing changes to the PHPlot Reference Manual
 Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
+2010-12-28
+   * reference.xml: SetLegend(NULL) now clears the legend array.
+
 2010-12-26
    * advanced.xml: Fix wrong-case color name.
 

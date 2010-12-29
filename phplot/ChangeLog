@@ -2,6 +2,11 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2010-12-28
+    * Instead of throwing an error, SetLegend(NULL) now clears the legend
+      array. This can be useful with multiple plots on an image. Before
+      this change, only SetLegend(array()) did that (possibly by accident).
+
 2010-12-27
     * Do not have SetDefaultStyles() call deprecated SetLabelColor().
 
