@@ -377,6 +377,38 @@ class PHPlot
     }
 
     /*
+     * Allocate an array of GD color indexes for an array of color specifications.
+     * This is used for the data_colors array, for example.
+     *  $color_array : Array of color specifications, each an array of R,G,B,A components.
+     *     This must use 0-based sequential integer indexes.
+     *  $max_colors : Limit color allocation to no more than this.
+     * Returns an array of GD color indexes.
+     */
+    protected function GetColorIndexArray($color_array, $max_colors)
+    {
+        $n = min(count($color_array), $max_colors);
+        $result = array();
+        for ($i = 0; $i < $n; $i++)
+            $result[] = $this->GetColorIndex($color_array[$i]);
+        return $result;
+    }
+
+    /*
+     * Allocate an array of GD color indexes for darker shades of an array of color specifications.
+     *  $color_array : Array of color specifications, each an array of R,G,B,A components.
+     *  $max_colors : Limit color allocation to this many colors from the array.
+     * Returns an array of GD color indexes.
+     */
+    protected function GetDarkColorIndexArray($color_array, $max_colors)
+    {
+        $n = min(count($color_array), $max_colors);
+        $result = array();
+        for ($i = 0; $i < $n; $i++)
+            $result[] = $this->GetDarkColorIndex($color_array[$i]);
+        return $result;
+    }
+
+    /*
      * Allocate a GD color index for a darker shade of a color specified by a 4 component array.
      * See notes for GetColorIndex() above.
      *   $color : The color specification as a 4 component array: R, G, B, A.
@@ -2526,17 +2558,6 @@ class PHPlot
     }
 
     /*
-     * Truncate an array to a maximum size.
-     * This only works on 0-based sequential integer indexed arrays.
-     *    $arr : The array to truncate.
-     *    $size : Maximum size of the resulting array.
-     */
-    protected function truncate_array(&$arr, $size)
-    {
-        for ($n = count($arr) - 1; $n >= $size; $n--) unset($arr[$n]);
-    }
-
-    /*
      * Format a floating-point number.
      *   $number : A floating point number to format
      *   $decimals : Number of decimal places in the result
@@ -2646,9 +2667,9 @@ class PHPlot
      * (Data border colors default to just black, so there is no cost to always allocating.)
      *
      * Data color allocation works as follows. If there is a data_color callback, then allocate all
-     * defined data colors (because the callback can use them however it wants). Otherwise, truncate
-     * the array to the number of colors that will be used. This is the larger of the number of data
-     * sets and the number of legend lines.
+     * defined data colors (because the callback can use them however it wants). Otherwise, only allocate
+     * the number of colors that will be used. This is the larger of the number of data sets and the
+     * number of legend lines.
      */
     protected function SetColorIndexes()
     {
@@ -2677,18 +2698,18 @@ class PHPlot
         $this->ndx_light_grid_color = $this->GetColorIndex($this->light_grid_color);
         $this->ndx_tick_color       = $this->GetColorIndex($this->tick_color);
 
-        // If no data_color callback is being used, only allocate needed colors.
-        if (!$this->GetCallback('data_color')) {
-            $data_colors_needed = max($this->data_columns, empty($this->legend) ? 0 : count($this->legend));
-            $this->truncate_array($this->data_colors, $data_colors_needed);
-            $this->truncate_array($this->data_border_colors, $data_colors_needed);
-            $this->truncate_array($this->error_bar_colors, $data_colors_needed);
+        // Maximum number of data & border colors to allocate:
+        if ($this->GetCallback('data_color')) {
+            $n_data = count($this->data_colors); // Need all of them
+            $n_border = count($this->data_border_colors);
+        } else {
+            $n_data = max($this->data_columns, empty($this->legend) ? 0 : count($this->legend));
+            $n_border = $n_data; // One border color per data color
         }
 
         // Allocate main data colors. For other colors used for data, see the functions which follow.
-        $getcolor_cb = array($this, 'GetColorIndex');
-        $this->ndx_data_colors = array_map($getcolor_cb, $this->data_colors);
-        $this->ndx_data_border_colors = array_map($getcolor_cb, $this->data_border_colors);
+        $this->ndx_data_colors = $this->GetColorIndexArray($this->data_colors, $n_data);
+        $this->ndx_data_border_colors = $this->GetColorIndexArray($this->data_border_colors, $n_border);
 
         // Set up a color as transparent, if SetTransparentColor was used.
         if (!empty($this->transparent_color)) {
@@ -2701,8 +2722,13 @@ class PHPlot
      */
     protected function NeedDataDarkColors()
     {
-        $getdarkcolor_cb = array($this, 'GetDarkColorIndex');
-        $this->ndx_data_dark_colors = array_map($getdarkcolor_cb, $this->data_colors);
+        // This duplicates the calculation in SetColorIndexes() for number of data colors to allocate.
+        if ($this->GetCallback('data_color')) {
+            $n_data = count($this->data_colors);
+        } else {
+            $n_data = max($this->data_columns, empty($this->legend) ? 0 : count($this->legend));
+        }
+        $this->ndx_data_dark_colors = $this->GetDarkColorIndexArray($this->data_colors, $n_data);
         $this->pad_array($this->ndx_data_dark_colors, $this->data_columns);
     }
 
@@ -2711,8 +2737,13 @@ class PHPlot
      */
     protected function NeedErrorBarColors()
     {
-        $getcolor_cb = array($this, 'GetColorIndex');
-        $this->ndx_error_bar_colors = array_map($getcolor_cb, $this->error_bar_colors);
+        // This is similar to the calculation in SetColorIndexes() for number of data colors to allocate.
+        if ($this->GetCallback('data_color')) {
+            $n_err = count($this->error_bar_colors);
+        } else {
+            $n_err = max($this->data_columns, empty($this->legend) ? 0 : count($this->legend));
+        }
+        $this->ndx_error_bar_colors = $this->GetColorIndexArray($this->error_bar_colors, $n_err);
         $this->pad_array($this->ndx_error_bar_colors, $this->data_columns);
     }
 
