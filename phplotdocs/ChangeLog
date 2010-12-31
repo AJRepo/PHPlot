@@ -3,6 +3,11 @@ This is phplotdocs/ChangeLog, listing changes to the PHPlot Reference Manual
 Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
+2010-12-29
+   * developer.xml: Document changes as a result of fixing a bug with
+     color allocation vs multiple plots per image. Add 2 new internal
+     functions and remove 1 unused internal function.
+
 2010-12-28
    * reference.xml: SetLegend(NULL) now clears the legend array.
 
