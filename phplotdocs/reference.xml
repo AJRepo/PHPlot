@@ -4362,99 +4362,262 @@ If an array, the array values name the point shapes for each subsequent
 data set in a plot.
 The following shapes are available:
             <informaltable>
-              <?dbfo table-width="75%"?> <!-- Table width hint for PDF only -->
-              <tgroup cols="2">
+              <?dbfo table-width="100%"?> <!-- Table width hint for PDF only -->
+              <tgroup cols="3">
                 <?dbhtml table-summary="Available shape names"?>
-                <colspec colname="c1" colwidth="25*" />
-                <colspec colname="c2" colwidth="75*" />
+                <colspec colname="c1" colwidth="10*" />
+                <colspec colname="c2" colwidth="20*" />
+                <colspec colname="c3" colwidth="70*" />
                 <thead>
                   <row>
+                    <entry>Shape</entry>
                     <entry>Shape Name</entry>
                     <entry>Description</entry>
                   </row>
                 </thead>
                 <tbody>
                   <row>
+                    <entry align="center"> 
+                      <inlinemediaobject>
+                        <imageobject>
+                          <imagedata fileref="images/shape-bowtie.png" scale="50" format="PNG" />
+                        </imageobject>
+                        <textobject><phrase>bowtie shape</phrase></textobject>
+                      </inlinemediaobject>
+                    </entry>
                     <entry>bowtie</entry>
                     <entry>Two filled triangles pointing right and left towards the point.</entry>
                   </row>
                   <row>
+                    <entry align="center"> 
+                      <inlinemediaobject>
+                        <imageobject>
+                          <imagedata fileref="images/shape-box.png" scale="50" format="PNG" />
+                        </imageobject>
+                        <textobject><phrase>box shape</phrase></textobject>
+                      </inlinemediaobject>
+                    </entry>
                     <entry>box</entry>
                     <entry>A square outline centered on the point.</entry>
                   </row>
                   <row>
+                    <entry align="center"> 
+                      <inlinemediaobject>
+                        <imageobject>
+                          <imagedata fileref="images/shape-circle.png" scale="50" format="PNG" />
+                        </imageobject>
+                        <textobject><phrase>circle shape</phrase></textobject>
+                      </inlinemediaobject>
+                    </entry>
                     <entry>circle</entry>
                     <entry>A hollow circle centered on the point.</entry>
                   </row>
                   <row>
+                    <entry align="center"> 
+                      <inlinemediaobject>
+                        <imageobject>
+                          <imagedata fileref="images/shape-cross.png" scale="50" format="PNG" />
+                        </imageobject>
+                        <textobject><phrase>cross shape</phrase></textobject>
+                      </inlinemediaobject>
+                    </entry>
                     <entry>cross</entry>
                     <entry>An X centered on the point.</entry>
                   </row>
                   <row>
+                    <entry align="center"> 
+                      <inlinemediaobject>
+                        <imageobject>
+                          <imagedata fileref="images/shape-delta.png" scale="50" format="PNG" />
+                        </imageobject>
+                        <textobject><phrase>delta shape</phrase></textobject>
+                      </inlinemediaobject>
+                    </entry>
                     <entry>delta</entry>
                     <entry>A filled triangle pointing up, centered on the point.</entry>
                   </row>
                   <row>
+                    <entry align="center"> 
+                      <inlinemediaobject>
+                        <imageobject>
+                          <imagedata fileref="images/shape-diamond.png" scale="50" format="PNG" />
+                        </imageobject>
+                        <textobject><phrase>diamond shape</phrase></textobject>
+                      </inlinemediaobject>
+                    </entry>
                     <entry>diamond</entry>
                     <entry>A filled diamond (square rotated 45 degrees), centered on the point.</entry>
                   </row>
                   <row>
+                    <entry align="center"> 
+                      <inlinemediaobject>
+                        <imageobject>
+                          <imagedata fileref="images/shape-dot.png" scale="50" format="PNG" />
+                        </imageobject>
+                        <textobject><phrase>dot shape</phrase></textobject>
+                      </inlinemediaobject>
+                    </entry>
                     <entry>dot</entry>
                     <entry>A filled circle centered on the point.</entry>
                   </row>
                   <row>
+                    <entry align="center"> 
+                      <inlinemediaobject>
+                        <imageobject>
+                          <imagedata fileref="images/shape-down.png" scale="50" format="PNG" />
+                        </imageobject>
+                        <textobject><phrase>down shape</phrase></textobject>
+                      </inlinemediaobject>
+                    </entry>
                     <entry>down</entry>
                     <entry>An unfilled triangle pointing down, centered on the point.</entry>
                   </row>
                   <row>
+                    <entry align="center"> 
+                      <inlinemediaobject>
+                        <imageobject>
+                          <imagedata fileref="images/shape-halfline.png" scale="50" format="PNG" />
+                        </imageobject>
+                        <textobject><phrase>halfline shape</phrase></textobject>
+                      </inlinemediaobject>
+                    </entry>
                     <entry>halfline</entry>
                     <entry>A short line from the point going left.</entry>
                   </row>
                   <row>
+                    <entry align="center"> 
+                      <inlinemediaobject>
+                        <imageobject>
+                          <imagedata fileref="images/shape-home.png" scale="50" format="PNG" />
+                        </imageobject>
+                        <textobject><phrase>home shape</phrase></textobject>
+                      </inlinemediaobject>
+                    </entry>
                     <entry>home</entry>
                     <entry>A filled 5-sided shape, centered on the point.</entry>
                   </row>
                   <row>
+                    <entry align="center"> 
+                      <inlinemediaobject>
+                        <imageobject>
+                          <imagedata fileref="images/shape-hourglass.png" scale="50" format="PNG" />
+                        </imageobject>
+                        <textobject><phrase>hourglass shape</phrase></textobject>
+                      </inlinemediaobject>
+                    </entry>
                     <entry>hourglass</entry>
                     <entry>Two filled triangles pointing up and down towards the point.</entry>
                   </row>
                   <row>
+                    <entry align="center"> 
+                      <inlinemediaobject>
+                        <imageobject>
+                          <imagedata fileref="images/shape-line.png" scale="50" format="PNG" />
+                        </imageobject>
+                        <textobject><phrase>line shape</phrase></textobject>
+                      </inlinemediaobject>
+                    </entry>
                     <entry>line</entry>
                     <entry>A horizontal line centered on the point.</entry>
                   </row>
                   <row>
+                    <entry align="center"> 
+                      <inlinemediaobject>
+                        <imageobject>
+                          <imagedata fileref="images/shape-plus.png" scale="50" format="PNG" />
+                        </imageobject>
+                        <textobject><phrase>plus shape</phrase></textobject>
+                      </inlinemediaobject>
+                    </entry>
                     <entry>plus</entry>
                     <entry>A plus sign centered on the point.</entry>
                   </row>
                   <row>
+                    <entry align="center"> 
+                      <inlinemediaobject>
+                        <imageobject>
+                          <imagedata fileref="images/shape-rect.png" scale="50" format="PNG" />
+                        </imageobject>
+                        <textobject><phrase>rect shape</phrase></textobject>
+                      </inlinemediaobject>
+                    </entry>
                     <entry>rect</entry>
                     <entry>A filled square centered on the point.</entry>
                   </row>
                   <row>
+                    <entry align="center"> 
+                      <inlinemediaobject>
+                        <imageobject>
+                          <imagedata fileref="images/shape-star.png" scale="50" format="PNG" />
+                        </imageobject>
+                        <textobject><phrase>star shape</phrase></textobject>
+                      </inlinemediaobject>
+                    </entry>
                     <entry>star</entry>
                     <entry>Four lines crossing at the point.</entry>
                   </row>
                   <row>
+                    <entry align="center"> 
+                      <inlinemediaobject>
+                        <imageobject>
+                          <imagedata fileref="images/shape-target.png" scale="50" format="PNG" />
+                        </imageobject>
+                        <textobject><phrase>target shape</phrase></textobject>
+                      </inlinemediaobject>
+                    </entry>
                     <entry>target</entry>
                     <entry>A square outline with two filled squares and two open squares, centered on the point.</entry>
                   </row>
                   <row>
+                    <entry align="center"> 
+                      <inlinemediaobject>
+                        <imageobject>
+                          <imagedata fileref="images/shape-triangle.png" scale="50" format="PNG" />
+                        </imageobject>
+                        <textobject><phrase>triangle shape</phrase></textobject>
+                      </inlinemediaobject>
+                    </entry>
                     <entry>triangle</entry>
                     <entry>A filled triangle pointing down from the point.</entry>
                   </row>
                   <row>
+                    <entry align="center"> 
+                      <inlinemediaobject>
+                        <imageobject>
+                          <imagedata fileref="images/shape-trianglemid.png" scale="50" format="PNG" />
+                        </imageobject>
+                        <textobject><phrase>trianglemid shape</phrase></textobject>
+                      </inlinemediaobject>
+                    </entry>
                     <entry>trianglemid</entry>
                     <entry>A filled triangle pointing down to the point.</entry>
                   </row>
                   <row>
+                    <entry align="center"> 
+                      <inlinemediaobject>
+                        <imageobject>
+                          <imagedata fileref="images/shape-up.png" scale="50" format="PNG" />
+                        </imageobject>
+                        <textobject><phrase>up shape</phrase></textobject>
+                      </inlinemediaobject>
+                    </entry>
                     <entry>up</entry>
                     <entry>An unfilled triangle pointing up, centered on the point.</entry>
                   </row>
                   <row>
+                    <entry align="center"> 
+                      <inlinemediaobject>
+                        <imageobject>
+                          <imagedata fileref="images/shape-yield.png" scale="50" format="PNG" />
+                        </imageobject>
+                        <textobject><phrase>yield shape</phrase></textobject>
+                      </inlinemediaobject>
+                    </entry>
                     <entry>yield</entry>
                     <entry>A filled triangle pointing down, centered on the point.</entry>
                   </row>
                   <row>
+                    <entry> </entry>
                     <entry>none</entry>
                     <entry>No marker (see notes).</entry>
                   </row>
@@ -4462,7 +4625,7 @@ The following shapes are available:
                 </tbody>
               </tgroup>
             </informaltable>
-See <xref linkend="example-linepoints1" /> for a picture of the shapes.
+<xref linkend="example-linepoints1" /> also shows all of the point shapes.
           </para>
         </listitem>
       </varlistentry>
