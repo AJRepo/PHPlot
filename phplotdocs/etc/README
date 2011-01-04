@@ -1,5 +1,5 @@
 This is phplotdocs/etc/README, for the PHPlot Reference Manual extra files
-Last updated on 2010-09-13
+Last updated on 2011-01-04
 -----------------------------------------------------------------------------
 
 These are extra files and scripts which were originally used to produce the
@@ -35,6 +35,11 @@ layout.fig
 legend-layout.fig
   The Xfig source for the "Legend Layout" figure in the Developer's Guide
   section of the manual.
+
+pointshapes.php
+  Script to generate the 'icon' pictures of point shapes for the table
+  in SetPointShapes() reference page. This creates 20 individual PNG
+  files, one for each point shape.
 
 typical.png
   A plot used as the basis for several figures: typical-grid.png,
