@@ -3,6 +3,10 @@ This is phplotdocs/ChangeLog, listing changes to the PHPlot Reference Manual
 Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
+2011-01-04
+   * reference.xml: Add icons showing the point shapes in SetPointShapes().
+   * images/shape-*.png: Add 20 new image files for point shapes.
+
 2011-01-03
    * reference.xml: Document new behavior of functions to reset parameters
      to defaults when no arguments (or special values) are supplied:
