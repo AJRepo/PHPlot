@@ -50,12 +50,31 @@ STATIC_IMAGES=\
   images/layout.png \
   images/legend-layout.png \
   images/legendstyle.png \
+  images/shape-bowtie.png \
+  images/shape-box.png \
+  images/shape-circle.png \
+  images/shape-cross.png \
+  images/shape-delta.png \
+  images/shape-diamond.png \
+  images/shape-dot.png \
+  images/shape-down.png \
+  images/shape-halfline.png \
+  images/shape-home.png \
+  images/shape-hourglass.png \
+  images/shape-line.png \
+  images/shape-plus.png \
+  images/shape-rect.png \
+  images/shape-star.png \
+  images/shape-target.png \
+  images/shape-triangle.png \
+  images/shape-trianglemid.png \
+  images/shape-up.png \
+  images/shape-yield.png \
   images/ticksize.png \
   images/typical-grid.png \
   images/typical-legend.png \
   images/typical-titles.png \
-  images/webform.png \
-
+  images/webform.png
 
 # Files to add to release, in addition to *.html files:
 ALSO=phplotdoc.css examples/ohlcdata.csv
