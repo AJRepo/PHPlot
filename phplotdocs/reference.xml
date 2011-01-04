@@ -2952,7 +2952,7 @@ Through PHPlot-5.3.0, passing NULL would cause an error.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>$plot-&gt;SetLegendPixels(<parameter>$x</parameter>, <parameter>$y</parameter>)</synopsis>
+    <synopsis>$plot-&gt;SetLegendPixels(<optional><parameter>$x</parameter>, <parameter>$y</parameter></optional>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -2973,6 +2973,7 @@ image, using device coordinates, rather than letting PHPlot position it for you.
           <para>
 Absolute device coordinates of the upper left corner of the legend box.
 The units are pixels and the origin is in the upper left corner of the image.
+If the values are omitted or NULL, the default behavior is restored.
           </para>
         </listitem>
       </varlistentry>
@@ -2982,7 +2983,21 @@ The units are pixels and the origin is in the upper left corner of the image.
   <refsect1>
     <title>Notes</title>
     <para>
+The default behavior is for PHPlot to position the legend in the
+upper right corner of the plot area.
+    </para>
+    <para>
 See also <xref linkend="SetLegendWorld" />.
+    </para>
+  </refsect1>
+  <refsect1>
+    <title>History</title>
+    <para>
+Through PHPlot-5.3.0, the arguments were required.
+To restore the default behavior, it was necessary to use
+<literal>SetLegendPixels(NULL, NULL)</literal>.
+Starting after PHPlot-5.3.0, the arguments may be omitted to restore the
+default behavior.
     </para>
   </refsect1>
 </refentry>
@@ -3126,6 +3141,10 @@ The units and origin are the same as the data you are plotting.
 
   <refsect1>
     <title>Notes</title>
+    <para>
+The default behavior is for PHPlot to position the legend in the
+upper right corner of the plot area.
+    </para>
     <para>
 See also <xref linkend="SetLegendPixels" />.
     </para>
@@ -3611,7 +3630,7 @@ always used a period for decimal point, and comma for thousands separator.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>$plot-&gt;SetNumXTicks(<parameter>$nt</parameter>)</synopsis>
+    <synopsis>$plot-&gt;SetNumXTicks(<optional><parameter>$nt</parameter></optional>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -3632,6 +3651,7 @@ You can use either this function or <xref linkend="SetXTickIncrement" />
         <listitem>
           <para>
 Integer number of tick marks to draw.
+If the value is omitted or an empty string, the default behavior is restored.
           </para>
         </listitem>
       </varlistentry>
@@ -3644,6 +3664,16 @@ Integer number of tick marks to draw.
 If neither <function>SetNumXTicks</function> nor 
 <xref linkend="SetXTickIncrement" /> is used, the tick mark interval
 is calculated as 1/10th of the X data range.
+    </para>
+  </refsect1>
+  <refsect1>
+    <title>History</title>
+    <para>
+Through PHPlot-5.3.0, the argument was required.
+To restore the default behavior, it was necessary to use
+<literal>SetNumXTicks('')</literal>.
+Starting after PHPlot-5.3.0, the argument may be omitted to restore the
+default behavior.
     </para>
   </refsect1>
 </refentry>
@@ -3659,7 +3689,7 @@ is calculated as 1/10th of the X data range.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>$plot-&gt;SetNumYTicks(<parameter>$nt</parameter>)</synopsis>
+    <synopsis>$plot-&gt;SetNumYTicks(<optional><parameter>$nt</parameter></optional>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -3680,6 +3710,7 @@ You can use either this function or <xref linkend="SetYTickIncrement" />
         <listitem>
           <para>
 Integer number of tick marks to draw.
+If the value is omitted or an empty string, the default behavior is restored.
           </para>
         </listitem>
       </varlistentry>
@@ -3692,6 +3723,16 @@ Integer number of tick marks to draw.
 If neither <function>SetNumYTicks</function> nor 
 <xref linkend="SetYTickIncrement" /> is used, the tick mark interval
 is calculated as 1/10th of the Y data range.
+    </para>
+  </refsect1>
+  <refsect1>
+    <title>History</title>
+    <para>
+Through PHPlot-5.3.0, the argument was required.
+To restore the default behavior, it was necessary to use
+<literal>SetNumYTicks('')</literal>.
+Starting after PHPlot-5.3.0, the argument may be omitted to restore the
+default behavior.
     </para>
   </refsect1>
 </refentry>
@@ -5518,7 +5559,7 @@ used on a graph.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>$plot-&gt;SetXAxisPosition(<parameter>$pos</parameter>)</synopsis>
+    <synopsis>$plot-&gt;SetXAxisPosition(<optional><parameter>$pos</parameter></optional>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -5537,6 +5578,7 @@ used on a graph.
           <para>
 The Y position in world coordinates for the X axis.
 (World coordinates are the coordinate space of your data points.)
+If the value is omitted or an empty string, the default behavior is restored.
           </para>
         </listitem>
       </varlistentry>
@@ -5562,6 +5604,13 @@ For horizontal plots, the X axis position defaults to the bottom of the plot.
   </refsect1>
   <refsect1>
     <title>History</title>
+    <para>
+Through PHPlot-5.3.0, the argument was required, and there was no way to
+restore the default behavior (because the argument value was always converted
+to an integer).
+Starting after PHPlot-5.3.0, the argument may be given as an empty string,
+or omitted, to restore the default behavior.
+    </para>
     <para>
 Through PHPlot-5.1.3, there was no special handling for horizontal plots.
 The X axis always defaulted to Y=0 or the Y with the smallest absolute value.
@@ -6551,7 +6600,7 @@ defaults.)
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>$plot-&gt;SetXTickIncrement(<parameter>$ti</parameter>)</synopsis>
+    <synopsis>$plot-&gt;SetXTickIncrement(<optional><parameter>$ti</parameter></optional>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -6572,6 +6621,7 @@ You can use either this function or <xref linkend="SetNumXTicks" />
         <listitem>
           <para>
 Desired tick interval, in world coordinates.
+If the value is omitted or an empty string, the default behavior is restored.
           </para>
         </listitem>
       </varlistentry>
@@ -7007,6 +7057,15 @@ The default is 'plotdown'.
 
     </variablelist>
   </refsect1>
+  <refsect1>
+    <title>Notes</title>
+    <para>
+By default, there is no X axis title.
+If <function>SetXTitle</function> is called with an empty string as the title,
+the default behavior is restored.
+This includes not leaving space on the graph for the title.
+    </para>
+  </refsect1>
 </refentry>
 
 <refentry id="SetXTitleColor">
@@ -7079,7 +7138,7 @@ Through PHPlot-5.1.3, the main, X, and Y titles always used the same color.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>$plot-&gt;SetYAxisPosition(<parameter>$pos</parameter>)</synopsis>
+    <synopsis>$plot-&gt;SetYAxisPosition(<option><parameter>$pos</parameter></option>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -7098,6 +7157,7 @@ Through PHPlot-5.1.3, the main, X, and Y titles always used the same color.
           <para>
 The X position in world coordinates for the Y axis.
 (World coordinates are the coordinate space of your data points.)
+If the value is omitted or an empty string, the default behavior is restored.
           </para>
         </listitem>
       </varlistentry>
@@ -7123,6 +7183,13 @@ Y axis position is X=1.)
   </refsect1>
   <refsect1>
     <title>History</title>
+    <para>
+Through PHPlot-5.3.0, the argument was required, and there was no way to
+restore the default behavior (because the argument value was always converted
+to an integer).
+Starting after PHPlot-5.3.0, the argument may be given as an empty string,
+or omitted, to restore the default behavior.
+    </para>
     <para>
 Through PHPlot-5.1.3, there was no special handling for horizontal plots.
 The Y axis always defaulted to the left side of the plot. When plotting
@@ -7943,7 +8010,7 @@ See figure under <xref linkend="SetXTickCrossing" />.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>$plot-&gt;SetYTickIncrement(<parameter>$ti</parameter>)</synopsis>
+    <synopsis>$plot-&gt;SetYTickIncrement(<optional><parameter>$ti</parameter></optional>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -7964,6 +8031,7 @@ You can use either this function or <xref linkend="SetNumYTicks" />
         <listitem>
           <para>
 Desired tick interval, in world coordinates.
+If the value is omitted or an empty string, the default behavior is restored.
           </para>
         </listitem>
       </varlistentry>
@@ -8384,6 +8452,15 @@ The default is 'plotleft'.
       </varlistentry>
 
     </variablelist>
+  </refsect1>
+  <refsect1>
+    <title>Notes</title>
+    <para>
+By default, there is no Y axis title.
+If <function>SetYTitle</function> is called with an empty string as the title,
+the default behavior is restored.
+This includes not leaving space on the graph for the title.
+    </para>
   </refsect1>
 </refentry>
 
