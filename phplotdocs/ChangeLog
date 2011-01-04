@@ -3,6 +3,14 @@ This is phplotdocs/ChangeLog, listing changes to the PHPlot Reference Manual
 Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
+2011-01-03
+   * reference.xml: Document new behavior of functions to reset parameters
+     to defaults when no arguments (or special values) are supplied:
+     SetLegendPixels(), SetNumXTicks(), SetNumYTicks(), SetXAxisPosition(),
+     and SetYAxisPosition(). Documented existing behavior of functions to
+     reset parameters to defaults: SetXTickIncrement(), SetYTickIncrement(),
+     SetXTitle(), and SetYTitle().
+
 2010-12-29
    * developer.xml: Document changes as a result of fixing a bug with
      color allocation vs multiple plots per image. Add 2 new internal

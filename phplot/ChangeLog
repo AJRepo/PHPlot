@@ -2,6 +2,29 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2011-01-03
+    * For bug 3143586 "Multiple plots per image - fixes & docs":
+      Make sure there is a documented way to reset PHPlot feature
+      settings, especially those for which the default settings result
+      in automatic calculated values. Where possible, calling a Set*()
+      function with no arguments should reset the feature to defaults.
+
+      + Changed SetLegendPixels() arguments to be optional with default
+        NULL meaning reset to automatic positioning.
+
+      + Fixed SetXAxisPosition() and SetYAxisPosition() to accept empty
+        string '' to mean reset to default automatic positioning.
+        Make arguments optional, defaulting to empty string.
+
+      + Changed SetNumXTicks() and SetNumYTicks() arguments to be
+        optional with default empty string '' meaning reset to
+        of automatic calculation.
+
+    * Changed SetPointShapes() to use CheckOptionArray(). This
+      simplifies the function with no change in operation.
+
+    * Extend copyright years to 2011.
+
 2010-12-30
     * Fix for bug 3147397 "Data colors missing with multiple plots":
       + Do not truncate the data_colors and related arrays, so the full
