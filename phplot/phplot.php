@@ -7,7 +7,7 @@
  * Visit http://sourceforge.net/projects/phplot/
  * for PHPlot documentation, downloads, and discussions.
  * ---------------------------------------------------------------------
- * Copyright (C) 1998-2010 Afan Ottenheimer
+ * Copyright (C) 1998-2011 Afan Ottenheimer
  *
  * This is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -2093,8 +2093,9 @@ class PHPlot
     /*
      * Specifies the position of the legend's upper/leftmost corner,
      * in pixel (device) coordinates.
+     * Both X and Y must be provided, or both omitted (or use NULL) to restore auto-positioning.
      */
-    function SetLegendPixels($which_x, $which_y)
+    function SetLegendPixels($which_x=NULL, $which_y=NULL)
     {
         $this->legend_x_pos = $which_x;
         $this->legend_y_pos = $which_y;
@@ -2275,9 +2276,9 @@ class PHPlot
      * Set the position of the X axis.
      *  $pos : Axis position in world coordinates (as an integer).
      */
-    function SetXAxisPosition($pos)
+    function SetXAxisPosition($pos='')
     {
-        $this->x_axis_position = (int)$pos;
+        $this->x_axis_position = ($pos === '') ? $pos : (int)$pos;
         return TRUE;
     }
 
@@ -2285,9 +2286,9 @@ class PHPlot
      * Set the position of the Y axis.
      *  $pos : Axis position in world coordinates (as an integer).
      */
-    function SetYAxisPosition($pos)
+    function SetYAxisPosition($pos='')
     {
-        $this->y_axis_position = (int)$pos;
+        $this->y_axis_position = ($pos === '') ? $pos : (int)$pos;
         return TRUE;
     }
 
@@ -2418,29 +2419,16 @@ class PHPlot
 
     /*
      * Set the point shape for each data set.
-     *   $which_pt : Array (or single value) of valid point shapes.
+     *   $which_pt : Array (or single value) of valid point shapes. See also DrawDot() for valid shapes.
      * The point shape and point sizes arrays are synchronized before drawing a graph
      * that uses points. See CheckPointParams()
      */
     function SetPointShapes($which_pt)
     {
-        if (is_array($which_pt)) {
-            // Use provided array:
-            $this->point_shapes = $which_pt;
-        } elseif (!is_null($which_pt)) {
-            // Make the single value into an array:
-            $this->point_shapes = array($which_pt);
-        }
-
-        // Validate all the shapes. This list must agree with DrawDot().
-        foreach ($this->point_shapes as $shape)
-        {
-            if (!$this->CheckOption($shape, 'halfline, line, plus, cross, rect, circle, dot,'
-                       . ' diamond, triangle, trianglemid, delta, yield, star, hourglass,'
-                       . ' bowtie, target, box, home, up, down, none', __FUNCTION__))
-                return FALSE;
-        }
-        return TRUE;
+        $this->point_shapes = $this->CheckOptionArray($which_pt, 'halfline, line, plus, cross, rect,'
+                       . ' circle, dot, diamond, triangle, trianglemid, delta, yield, star, hourglass,'
+                       . ' bowtie, target, box, home, up, down, none', __FUNCTION__);
+        return !empty($this->point_shapes);
     }
 
     /*
@@ -3961,7 +3949,7 @@ class PHPlot
      * Set the number of X tick marks.
      * Use either this or SetXTickIncrement(), not both, to control the X tick marks.
      */
-    function SetNumXTicks($which_nt)
+    function SetNumXTicks($which_nt='')
     {
         $this->num_x_ticks = $which_nt;
         if (!empty($which_nt)) {
@@ -3974,7 +3962,7 @@ class PHPlot
      * Set the number of Y tick marks.
      * Use either this or SetYTickIncrement(), not both, to control the Y tick marks.
      */
-    function SetNumYTicks($which_nt)
+    function SetNumYTicks($which_nt='')
     {
         $this->num_y_ticks = $which_nt;
         if (!empty($which_nt)) {
