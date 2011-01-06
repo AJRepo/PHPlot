@@ -1,5 +1,5 @@
 This is phplotdocs/etc/README, for the PHPlot Reference Manual extra files
-Last updated on 2011-01-04
+Last updated on 2011-01-05
 -----------------------------------------------------------------------------
 
 These are extra files and scripts which were originally used to produce the
@@ -40,6 +40,10 @@ pointshapes.php
   Script to generate the 'icon' pictures of point shapes for the table
   in SetPointShapes() reference page. This creates 20 individual PNG
   files, one for each point shape.
+
+truecolor-formats.fig
+  The Xfig source for the figure in the "Truecolor - Image Formats & File
+  Formats" section.
 
 typical.png
   A plot used as the basis for several figures: typical-grid.png,
