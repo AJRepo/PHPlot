@@ -376,6 +376,21 @@ channels. Refer to the PHP Manual page on
 </para>
 
 <para>
+The following figure shows the relationship between constructor, background
+image format, GD image type, and image file format.
+  <informalfigure>
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/truecolor-formats.png" scale="62" format="PNG" />
+      </imageobject>
+      <textobject>
+        <phrase>Constrictor, GD image type, and image file formats.</phrase>
+      </textobject>
+    </mediaobject>
+  </informalfigure>
+</para>
+
+<para>
 In the initial release of Truecolor support in PHPlot-5.1.1, alpha channel
 information was ignored when using a PHPlot object, and only used with a
 PHPlot_truecolor object. This was changed in PHPlot-5.1.2, and alpha
