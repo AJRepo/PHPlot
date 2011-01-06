@@ -15,6 +15,16 @@ see the ChangeLog file inside the PHPlot distribution.)
 <variablelist>
 
   <varlistentry>
+    <term>2011-01-05</term>
+    <listitem>
+      <para>
+Added a short new section in the Advanced chapter showing how to extend
+the PHPlot class to customize default settings.
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
     <term>2010-12-26</term>
     <listitem>
       <para>
