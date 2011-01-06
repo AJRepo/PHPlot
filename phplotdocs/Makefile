@@ -71,6 +71,7 @@ STATIC_IMAGES=\
   images/shape-up.png \
   images/shape-yield.png \
   images/ticksize.png \
+  images/truecolor-formats.png \
   images/typical-grid.png \
   images/typical-legend.png \
   images/typical-titles.png \
