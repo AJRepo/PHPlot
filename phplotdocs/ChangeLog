@@ -4,6 +4,8 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 2011-01-05
+    * advanced.xml: Added figure to Truecolor section showing file formats.
+
     * advanced.xml: Added new section showing how to extend the PHPlot class
       in order to customize default settings.
 
