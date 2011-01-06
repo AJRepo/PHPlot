@@ -2,7 +2,8 @@
      PHPlot Advanced Programming Topics
      Note: The "callbacks" section used to be its own chapter. Other material
      was moved from the "concepts" chapter. The IDs (for cross-references) for
-     relocated text were left alone, to avoid changing all xrefs.
+     relocated text were left alone (conc-*), to avoid changing all xrefs.
+     New sections added after the changes use the prefix "adv-*" in IDs.
 -->
 <chapter id="advanced">
 <title>PHPlot Advanced Topics</title>
@@ -12,6 +13,66 @@ This chapter documents advanced PHPlot programming topics, going beyond the
 material in <xref linkend="concepts"/>.
   </para>
 </abstract>
+
+<sect1 id="adv-customclass">
+<title>Custom PHPlot Class</title>
+<abstract><title></title>
+  <para>
+This section describes how to create a custom PHPlot class.
+  </para>
+</abstract>
+<para>
+If you have a number of applications that use PHPlot, and you want to
+standardize some of the PHPlot default settings, you can define your
+own class which extends the PHPlot class and changes the default settings.
+Here is a short example of a custom PHPlot class, which changes the
+following defaults:
+  <itemizedlist>
+    <listitem>
+      <para>Use a TrueType font for all text</para>
+    </listitem>
+    <listitem>
+      <para>Change the default image size to 800 x 600</para>
+    </listitem>
+    <listitem>
+      <para>Change the default title colors to red</para>
+    </listitem>
+  </itemizedlist>
+</para>
+
+<para>
+To extend the PHPlot class, declare your class as shown below. Make sure
+your class constructor calls the PHPlot class constructor before changing
+any settings.
+<programlisting><![CDATA[<?php
+# Define a custom PHPlot class
+
+// Load the PHPlot class first
+require_once 'phplot.php';
+
+// Define a class which extends PHPlot:
+class my_phplot extends PHPlot {
+  function __construct($width=800, $height=600, $out=NULL, $in=NULL)
+  {
+    parent::__construct($width, $height, $out, $in);
+    $this->SetDefaultTTFont('LiberationSans-Bold'); // System dependent
+    $this->SetTitleColor('red');
+  }
+}
+]]></programlisting>
+</para>
+
+<para>
+To use this custom PHPlot class, use <literal>require_once</literal> to
+include the file containing the class definition, then create an instance
+of the custom class.
+<programlisting><![CDATA[$plot = new my_phplot();
+]]></programlisting>
+You can then use the <literal>$plot</literal> object exactly the same as
+you might use any other PHPlot object.
+</para>
+
+</sect1>
 
 <sect1 id="conc-truecolor">
 <title>Truecolor Images</title>
