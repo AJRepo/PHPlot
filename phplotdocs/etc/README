@@ -12,12 +12,11 @@ images were edited, for example to call out features, as noted below.
 colors.php
   This makes colors.png, the color chart showing the built-in color map.
 
+error-image.php
+  This makes error-image.png, the figure in Concepts showing an error.
+
 fonts.php
   This makes fonts.png, the figure showing built-in and TrueType fonts.
-
-labels-pie.php
-  This makes labels-pie.png, figure of pie chart labels, before it is
-  annotated to call out the label.
 
 labels.php
   A basic bar chart, used to produce labels.png before it is annotated.
@@ -27,6 +26,10 @@ labels-bars.php
 
 labels-horizbars.php
   A horizontal bar chart which includes data value labels.
+
+labels-pie.php
+  This makes labels-pie.png, figure of pie chart labels, before it is
+  annotated to call out the label.
 
 layout.fig
   The Xfig source for the "Plot Layout" figure in the Developer's Guide
@@ -45,7 +48,7 @@ truecolor-formats.fig
   The Xfig source for the figure in the "Truecolor - Image Formats & File
   Formats" section.
 
-typical.png
+typical.php
   A plot used as the basis for several figures: typical-grid.png,
   typical-legend.png, typical-titles.png.
   The output is annotated to call out the different label types.
