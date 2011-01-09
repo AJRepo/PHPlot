@@ -2561,14 +2561,13 @@ class PHPlot
                 @setlocale(LC_ALL, '');
             // Fetch locale settings:
             $locale = @localeconv();
-            if (!empty($locale) && isset($locale['decimal_point']) &&
-                    isset($locale['thousands_sep'])) {
-              $this->decimal_point = $locale['decimal_point'];
-              $this->thousands_sep = $locale['thousands_sep'];
+            if (isset($locale['decimal_point']) && isset($locale['thousands_sep'])) {
+                $this->decimal_point = $locale['decimal_point'];
+                $this->thousands_sep = $locale['thousands_sep'];
             } else {
-              // Locale information not available.
-              $this->decimal_point = '.';
-              $this->thousands_sep = ',';
+                // Locale information not available.
+                $this->decimal_point = '.';
+                $this->thousands_sep = ',';
             }
         }
         return number_format($number, $decimals, $this->decimal_point, $this->thousands_sep);
@@ -3624,7 +3623,7 @@ class PHPlot
             $skip_lo = $this->skip_bottom_tick;
             $skip_hi = $this->skip_top_tick;
         } else {
-          return $this->PrintError("CalcTicks: Invalid usage ($which)");
+            return $this->PrintError("CalcTicks: Invalid usage ($which)");
         }
 
         if (!empty($tick_inc)) {
@@ -3664,13 +3663,13 @@ class PHPlot
         list($tick_start, $tick_end, $tick_step) = $this->CalcTicks($which);
 
         if ($which == 'x') {
-          $font = $this->fonts['x_label'];
-          $angle = $this->x_label_angle;
+            $font = $this->fonts['x_label'];
+            $angle = $this->x_label_angle;
         } elseif ($which == 'y') {
-          $font = $this->fonts['y_label'];
-          $angle = $this->y_label_angle;
+            $font = $this->fonts['y_label'];
+            $angle = $this->y_label_angle;
         } else {
-          return $this->PrintError("CalcMaxTickLabelSize: Invalid usage ($which)");
+            return $this->PrintError("CalcMaxTickLabelSize: Invalid usage ($which)");
         }
 
         $max_width = 0;
@@ -4791,7 +4790,7 @@ class PHPlot
             $num_data_colors = count($this->ndx_data_colors);
             $vars = compact('custom_color', 'num_data_colors');
         } else {
-          extract($vars);
+            extract($vars);
         }
 
         // Select the colors.
@@ -4821,7 +4820,7 @@ class PHPlot
             $num_error_colors = count($this->ndx_error_bar_colors);
             $vars = compact('custom_color', 'num_data_colors', 'num_error_colors');
         } else {
-          extract($vars);
+            extract($vars);
         }
 
         // Select the colors.
@@ -4854,7 +4853,7 @@ class PHPlot
             $num_border_colors = count($this->ndx_data_border_colors);
             $vars = compact('custom_color', 'num_data_colors', 'num_border_colors');
         } else {
-          extract($vars);
+            extract($vars);
         }
 
         // Select the colors.
@@ -6125,7 +6124,7 @@ class PHPlot
                 } else {
                     $yb1_pixels = $yo_pixels;
                     $yb2_pixels = $yc_pixels;
-				    $draw_body = 'imagefilledrectangle';
+                    $draw_body = 'imagefilledrectangle';
                 }
 
                 // Draw candle body
