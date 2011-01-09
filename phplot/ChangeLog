@@ -2,6 +2,9 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2011-01-09
+    * Fixed some style / indent errors, and 1 redundant test.
+
 2011-01-03
     * For bug 3143586 "Multiple plots per image - fixes & docs":
       Make sure there is a documented way to reset PHPlot feature
