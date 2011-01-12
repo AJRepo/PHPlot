@@ -47,8 +47,8 @@ including <application>qiv</application> and <application>gqview</application>.
   </para>
 </note>
 
-<pagebreak/>
 <!-- =============================================== -->
+<pagebreak/>
 <sect1 id="ex-lines1">
 <title>Example - Line Plot</title>
 <para>
@@ -72,8 +72,8 @@ is used to include the X values (the years) in the data points.
 </example>
 </sect1>
 
-<pagebreak/>
 <!-- =============================================== -->
+<pagebreak/>
 <sect1 id="ex-lines2">
 <title>Example - Line Plot: Functions</title>
 <para>
@@ -98,8 +98,8 @@ to tune the appearance of the plot.
 </example>
 </sect1>
 
-<pagebreak/>
 <!-- =============================================== -->
+<pagebreak/>
 <sect1 id="ex-area1">
 <title>Example - Area Plot</title>
 <para>
@@ -127,8 +127,8 @@ plot using a different data representation.)
 </example>
 </sect1>
 
-<pagebreak/>
 <!-- =============================================== -->
+<pagebreak/>
 <sect1 id="ex-bars1">
 <title>Example - Bar Chart</title>
 <para>
@@ -155,8 +155,8 @@ shading of bars.
 </example>
 </sect1>
 
-<pagebreak/>
 <!-- =============================================== -->
+<pagebreak/>
 <sect1 id="ex-bars2">
 <title>Example - Unshaded Bar Chart</title>
 <para>
@@ -180,8 +180,8 @@ been turned off. Instead we get flat rectangles with borders for the bars.
 </example>
 </sect1>
 
-<pagebreak/>
 <!-- =============================================== -->
+<pagebreak/>
 <sect1 id="ex-bars3">
 <title>Example - Bar Chart, Label Options</title>
 <para>
@@ -208,8 +208,8 @@ use a nice whole number for the tick interval.
 </example>
 </sect1>
 
-<pagebreak/>
 <!-- =============================================== -->
+<pagebreak/>
 <sect1 id="ex-linepoints1">
 <title>Example - Line/Point Plot, Point Shapes</title>
 <para>
@@ -237,8 +237,8 @@ to make them easier to identify.
 </example>
 </sect1>
 
-<pagebreak/>
 <!-- =============================================== -->
+<pagebreak/>
 <sect1 id="ex-pie1">
 <title>Example - Pie Chart, text-data-single</title>
 <para>
@@ -267,8 +267,8 @@ percentage values.
 </example>
 </sect1>
 
-<pagebreak/>
 <!-- =============================================== -->
+<pagebreak/>
 <sect1 id="ex-pie2">
 <title>Example - Pie Chart, text-data</title>
 <para>
@@ -299,8 +299,8 @@ record (label and X value for other plot types) is ignored.
 </example>
 </sect1>
 
-<pagebreak/>
 <!-- =============================================== -->
+<pagebreak/>
 <sect1 id="ex-pie3">
 <title>Example - Pie Chart, flat with options</title>
 <para>
@@ -329,8 +329,8 @@ Finally, we moved the labels in towards the center with
 </example>
 </sect1>
 
-<pagebreak/>
 <!-- =============================================== -->
+<pagebreak/>
 <sect1 id="ex-points1">
 <title>Example - Points Plot with Error Bars</title>
 <para>
@@ -355,8 +355,8 @@ in the positive direction, and Y error in the negative direction.
 </example>
 </sect1>
 
-<pagebreak/>
 <!-- =============================================== -->
+<pagebreak/>
 <sect1 id="ex-points2">
 <title>Example - Points Plot / Scatterplot</title>
 <para>
@@ -386,8 +386,8 @@ turned off, and plot borders enabled for all four sides.
 </example>
 </sect1>
 
-<pagebreak/>
 <!-- =============================================== -->
+<pagebreak/>
 <sect1 id="ex-squared1">
 <title>Example - Squared Plot</title>
 <para>
@@ -411,8 +411,8 @@ the points are connected with steps.
 </example>
 </sect1>
 
-<pagebreak/>
 <!-- =============================================== -->
+<pagebreak/>
 <sect1 id="ex-stackedbars1">
 <title>Example - Stacked Bars, Shaded</title>
 <para>
@@ -438,8 +438,8 @@ plots), and 'text-data-yx' (for horizontal plots).
 </example>
 </sect1>
 
-<pagebreak/>
 <!-- =============================================== -->
+<pagebreak/>
 <sect1 id="ex-stackedbars2">
 <title>Example - Stacked Bars, Unshaded</title>
 <para>
@@ -463,8 +463,8 @@ turned off shading and now get flat stacked bars with borders.
 </example>
 </sect1>
 
-<pagebreak/>
 <!-- =============================================== -->
+<pagebreak/>
 <sect1 id="ex-thinbarline1">
 <title>Example - Thin Bar Line Plot</title>
 <para>
@@ -487,8 +487,8 @@ This is a Thin Bar Line Plot (thinbarline).
 </example>
 </sect1>
 
-<pagebreak/>
 <!-- =============================================== -->
+<pagebreak/>
 <sect1 id="ex-thinbarline2">
 <title>Example - Thin Bar Line Plot, Wider Lines</title>
 <para>
@@ -513,26 +513,21 @@ This now looks more like a bar chart.
 </example>
 </sect1>
 
-<pagebreak/>
 <!-- =============================================== -->
+<pagebreak/>
 <sect1 id="ex-twoplot1">
 <title>Example - Two Plots on One Image</title>
 <para>
-This example shows that it is possible to place two plots on one image.
-The idea is to disable automatic output with
-<xref linkend="SetPrintImage" />(0), then define each plot area
-with <xref linkend="SetPlotAreaPixels" /> and create each plot, finishing
-each with <xref linkend="DrawGraph" />.
-At the end, <xref linkend="PrintImage" /> outputs the image containing both
-plots.
+This example shows multiple plots tiled on a single image.
+To place multiple plots on an image, first disable automatic output with
+<xref linkend="SetPrintImage" />(False). Then define each plot area using
+<xref linkend="SetPlotAreaPixels" /> and create the plot.
+Finish each plot with <xref linkend="DrawGraph" />.
+At the end, <xref linkend="PrintImage" /> outputs the image containing all
+of the plots.
 </para>
 <para>
-This should be considered an advanced use of PHPlot and the results may
-not meet your expectations. Some plot elements are positioned relative
-to the image, rather than the plot (the overall title, and one coordinate
-of the X/Y titles, for example). You may also find you need to use
-<xref linkend="SetPlotAreaWorld" /> to remap World Coordinates before each
-plot.
+See <xref linkend="adv-multiplot" /> for more information.
 </para>
 <example id="example-twoplot1">
 <?dbfo keep-together="auto"?>
@@ -551,8 +546,8 @@ plot.
 </example>
 </sect1>
 
-<pagebreak/>
 <!-- =============================================== -->
+<pagebreak/>
 <sect1 id="ex-bars4">
 <title>Example - Bar Chart with Data Value Labels</title>
 <para>
@@ -578,8 +573,8 @@ charts.
 </example>
 </sect1>
 
-<pagebreak/>
 <!-- =============================================== -->
+<pagebreak/>
 <sect1 id="ex-stackedbars3">
 <title>Example - Stacked Bars with Y Data Value Labels</title>
 <para>
@@ -604,8 +599,8 @@ Note this feature was added in PHPlot-5.1.1.
 </example>
 </sect1>
 
-<pagebreak/>
 <!-- =============================================== -->
+<pagebreak/>
 <sect1 id="ex-stackedarea1">
 <title>Example - Stacked Area Plot</title>
 <para>
@@ -638,8 +633,8 @@ Note this plot type was added in PHPlot-5.1.1.
 </example>
 </sect1>
 
-<pagebreak/>
 <!-- =============================================== -->
+<pagebreak/>
 <sect1 id="ex-annotate">
 <title>Example - Annotating a Plot Using a Callback</title>
 <para>
@@ -665,13 +660,13 @@ where this example is described in detail.
 </example>
 </sect1>
 
-<pagebreak/>
 <!-- =============================================== -->
+<pagebreak/>
 <!-- This webform.xml is long enough to get its own file. -->
 &webform;
 
-<pagebreak/>
 <!-- =============================================== -->
+<pagebreak/>
 <sect1 id="ex-truecolor-histogram">
 <title>Example - Using Truecolor To Make a Histogram</title>
 <para>
@@ -748,8 +743,8 @@ example.
 </example>
 </sect1>
 
-<pagebreak/>
 <!-- =============================================== -->
+<pagebreak/>
 <sect1 id="ex-colorcallbackgradient">
 <title>Example - Creative Use of the Data Color Callback</title>
 <para>
@@ -790,8 +785,8 @@ More information on truecolor images can be found in
 </example>
 </sect1>
 
-<pagebreak/>
 <!-- =============================================== -->
+<pagebreak/>
 <sect1 id="ex-colorcallbackbars">
 <title>Example - Custom Bar Colors Using the Data Color Callback</title>
 <para>
@@ -830,8 +825,8 @@ More information on callbacks can be found in <xref linkend="callbacks" />.
 </example>
 </sect1>
 
-<pagebreak/>
 <!-- =============================================== -->
+<pagebreak/>
 <sect1 id="ex-horizbar">
 <title>Example - Horizontal Bar Chart</title>
 <para>
@@ -861,8 +856,8 @@ This example also has a tiled background image under the plot area.
 </example>
 </sect1>
 
-<pagebreak/>
 <!-- =============================================== -->
+<pagebreak/>
 <sect1 id="ex-horizstackedbar">
 <title>Example - Horizontal Stacked Bar Chart</title>
 <para>
@@ -889,8 +884,8 @@ horizontal plot.
 </example>
 </sect1>
 
-<pagebreak/>
 <!-- =============================================== -->
+<pagebreak/>
 <sect1 id="ex-horizthinbarline">
 <title>Example - Horizontal Thin Bar Line Plot</title>
 <para>
@@ -919,6 +914,7 @@ values need not be in order or sequential in the data array.
 </sect1>
 
 <!-- =============================================== -->
+<pagebreak/>
 <sect1 id="ex-ohlcbasic">
 <title>Example - Basic OHLC (Open, High, Low, Close) Financial Plot</title>
 <para>
@@ -975,6 +971,7 @@ This file is called <ulink url="ohlcdata.csv">ohlcdata.csv</ulink>.
 </sect1>
 
 <!-- =============================================== -->
+<pagebreak/>
 <sect1 id="ex-ohlccandlesticks">
 <title>Example - Candlesticks OHLC (Open, High, Low, Close) Financial Plot</title>
 <para>
@@ -1021,6 +1018,7 @@ density along the X axis.
 </sect1>
 
 <!-- =============================================== -->
+<pagebreak/>
 <sect1 id="ex-ohlccandlesticks2">
 <title>Example - Filled Candlesticks OHLC (Open, High, Low, Close) Financial Plot</title>
 <para>
@@ -1059,6 +1057,7 @@ converted to X values in the data array.
 </sect1>
 
 <!-- =============================================== -->
+<pagebreak/>
 <sect1 id="ex-linepoints2">
 <title>Example - Linepoints Plot with Data Value Labels</title>
 <para>
@@ -1088,6 +1087,36 @@ associate the point with the X axis label.
   </mediaobject>
 </informalfigure>
 &linepoints2;
+</example>
+</sect1>
+
+<!-- =============================================== -->
+<pagebreak/>
+<sect1 id="ex-outbreak">
+<title>Example - Overlaying Plots</title>
+<para>
+This example shows overlay plots, where multiple plots are drawn at the same
+position on the same image. In this case, one plot contains a stacked bar
+plot, and the second is a linepoints plot. The two plots also have
+different Y axis scales.
+</para>
+<para>
+See <xref linkend="adv-multiplot" /> for more information.
+</para>
+<example id="example-outbreak">
+<?dbfo keep-together="auto"?>
+<title>Overlaying Plots</title>
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="examples/outbreak.png" scale="58" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>Overlay Plot Example</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+&outbreak;
 </example>
 </sect1>
 
