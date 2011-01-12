@@ -31,7 +31,7 @@
   <xsl:attribute name="end-indent">0.5in</xsl:attribute>
 </xsl:attribute-set>
 
-<!-- Turn off hypenation because it doesn't work anyway and gets an SEVERE. -->
+<!-- Turn off hypenation because it doesn't work and reports a SEVERE error. -->
 <xsl:param name="hyphenate">false</xsl:param>
 
 <!-- Shade program listings. (HTML uses stylesheets, but PDF can't.) -->
