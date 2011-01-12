@@ -13,6 +13,15 @@ see the ChangeLog file inside the PHPlot distribution.)
 </abstract>
 
 <variablelist>
+  <varlistentry>
+    <term>2011-01-11</term>
+    <listitem>
+      <para>
+Added a new section in the Advanced chapter on placing multiple plots
+on an image, and added a new example of overlay plots.
+      </para>
+    </listitem>
+  </varlistentry>
 
   <varlistentry>
     <term>2011-01-05</term>

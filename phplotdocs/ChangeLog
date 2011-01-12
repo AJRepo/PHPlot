@@ -3,6 +3,23 @@ This is phplotdocs/ChangeLog, listing changes to the PHPlot Reference Manual
 Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
+2011-01-11
+   * advanced.xml: Added missing id attributes to some level 3 sections.
+
+   * pdf.xsl: Fixed comment typo.
+
+   * variables.list: Documented changes in internal variables (committed
+     2010-12-27) which track element drawing: Removed background_done
+     and title_done, and added new member array done[].
+
+   * advanced.xml: Added new section on multiple plots per image.
+
+   * examples.xml: Moved pagebreak tags and add missing ones (for PDF).
+     Updated description of example of two plots on an image.
+
+   * Makefile, examples.xml, examples/outbreak.php: Add new example of
+     multiple plot overlay.
+
 2011-01-05
     * advanced.xml: Added figure to Truecolor section showing file formats.
 
