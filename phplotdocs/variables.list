@@ -11,7 +11,6 @@
 #
 VARNAME	DEFAULT	REFERENCE	DESCRIPTION
 actual_bar_width		CalcBarWidths	Calculated width of bars for bar charts
-background_done	FALSE	SetInputFile DrawBackground	True if background has already been drawn, to avoid drawing a background fill over a background image.
 bar_adjust_gap		CalcBarWidths	Calculated bar gap
 bar_extra_space	0.5	CalcBarWidths	Extra space between groups of bars <link linkend="conc-tuning-bars">(See Tuning Parameters for more)</link>
 bar_width_adjust	1	CalcBarWidths	Width of bar relative to space for one bar <link linkend="conc-tuning-bars">(See Tuning Parameters for more)</link>
@@ -41,6 +40,7 @@ decimal_point		SetNumberFormat	Character to use for decimal point in formatted n
 default_colors	array(...)	SetDataColors SetErrorBarColors	The default color array, used to initialize data_colors and error_bar_colors. (Added in PHPlot-5.1.0)
 default_dashed_style		SetDefaultDashedStyle	Formatted PHP code to build a dashed line pattern
 default_ttfont		SetDefaultTTFont GetDefaultTTFont	Default TrueType font file. (Through PHPlot-5.1.2, there was a static default 'benjamingothic.ttf'. After PHPlot-5.1.2, the default is dynamic.)
+done		DrawBackground DrawImageBorder DrawTitle	Array of flags for elements that must be drawn at most once. Flag is set TRUE when drawn. Indexes are: background, border, title. (Replaced separate variables after PHPlot-5.3.0.)
 draw_broken_lines	FALSE	SetDrawBrokenLines	Flag: How to handle missing Y values
 draw_plot_area_background	FALSE	SetDrawPlotAreaBackground	Flag: Draw the background of the plot area
 draw_x_data_label_lines	FALSE	SetDrawXDataLabelLines	Flag: Draw X data label lines
@@ -138,7 +138,6 @@ text_color	'black'	SetTextColor	Color (R,G,B,A) for labels and legend text
 thousands_sep		SetNumberFormat	Character to use to group 1000s in formatted numbers
 tick_color	'black'	SetTickColor	Color (R,G,B,A) for tick marks
 title_color	'black'	SetTitleColor	Color (R,G,B,A) for main title (and default for X and Y titles)
-title_done		DrawTitle	Flag to prevent drawing main title more than once
 title_offset		CalcMargins	Y offset of main title position (Added in PHPlot-5.1.2)
 title_txt	''	SetTitle	Main title text
 total_records		SetDataValues	Total number of entries (rows times columns in each row) in the data array.
