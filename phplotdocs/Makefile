@@ -104,6 +104,7 @@ EXAMPLES_PHP=\
   examples/ohlcbasic.php \
   examples/ohlccandlesticks.php \
   examples/ohlccandlesticks2.php \
+  examples/outbreak.php \
   examples/pie1.php \
   examples/pie2.php \
   examples/pie3.php \
@@ -146,6 +147,7 @@ EXAMPLES_IMAGES=\
   examples/ohlcbasic.png \
   examples/ohlccandlesticks.png \
   examples/ohlccandlesticks2.png \
+  examples/outbreak.png \
   examples/pie1.png \
   examples/pie2.png \
   examples/pie3.png \
