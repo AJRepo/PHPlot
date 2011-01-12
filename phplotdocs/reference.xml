@@ -4941,10 +4941,8 @@ defer printing the image until PrintImage is explicitly called.
   <refsect1>
     <title>Notes</title>
     <para>
-To put multiple plots on an image, call SetPrintImage(False). Then for each
-plot activate the position for it with <xref linkend="SetPlotAreaPixels" />,
-produce the plot, and draw it with <xref linkend="DrawGraph" />.
-When all the plots are drawn, output the image with <xref linkend="PrintImage" />.
+See <xref linkend="adv-multiplot"/> for more information on putting
+multiple plots on an image.
     </para>
   </refsect1>
 </refentry>
