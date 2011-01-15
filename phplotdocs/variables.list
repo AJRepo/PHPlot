@@ -40,7 +40,7 @@ decimal_point		SetNumberFormat	Character to use for decimal point in formatted n
 default_colors	array(...)	SetDataColors SetErrorBarColors	The default color array, used to initialize data_colors and error_bar_colors. (Added in PHPlot-5.1.0)
 default_dashed_style		SetDefaultDashedStyle	Formatted PHP code to build a dashed line pattern
 default_ttfont		SetDefaultTTFont GetDefaultTTFont	Default TrueType font file. (Through PHPlot-5.1.2, there was a static default 'benjamingothic.ttf'. After PHPlot-5.1.2, the default is dynamic.)
-done		DrawBackground DrawImageBorder DrawTitle	Array of flags for elements that must be drawn at most once. Flag is set TRUE when drawn. Indexes are: background, border, title. (Replaced separate variables after PHPlot-5.3.0.)
+done		DrawBackground DrawImageBorder DrawTitle	Array of flags for elements that must be drawn at most once. Flag is set TRUE when drawn. Indexes are: background, border, title. (Replaced separate variables in PHPlot-5.3.1.)
 draw_broken_lines	FALSE	SetDrawBrokenLines	Flag: How to handle missing Y values
 draw_plot_area_background	FALSE	SetDrawPlotAreaBackground	Flag: Draw the background of the plot area
 draw_x_data_label_lines	FALSE	SetDrawXDataLabelLines	Flag: Draw X data label lines

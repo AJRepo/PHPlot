@@ -1202,7 +1202,7 @@ allocated. (This is used to limit the number of allocated data colors to the
 number of data sets in the plot, for example.)
 <xref linkend="GetColorIndex"/> is used to allocate each color.
 Returns an array of GD color indexes to be used in GD drawing functions.
-This was added after PHPlot-5.3.0.
+This was added in PHPlot-5.3.1.
     </para>
   </listitem>
 </varlistentry>
@@ -1237,7 +1237,7 @@ allocated dark-shade data colors to the number of data sets in the plot,
 for example.)
 <xref linkend="GetDarkColorIndex"/> is used to allocate each color.
 Returns an array of GD color indexes to be used in GD drawing functions.
-This was added after PHPlot-5.3.0.
+This was added in PHPlot-5.3.1.
     </para>
   </listitem>
 </varlistentry>
@@ -1721,7 +1721,7 @@ if an image file is selected for the plot area or overall background.
   <term><anchor id="truncate_array" xreflabel="truncate_array"/>truncate_array(&amp;$array, $size)</term>
   <listitem>
     <para>
-This was added in PHPlot-5.2.0 and removed after PHPlot-5.3.0,
+This was added in PHPlot-5.2.0 and removed in PHPlot-5.3.1,
 when data color processing was changed to not truncate the color arrays.
     </para>
   </listitem>

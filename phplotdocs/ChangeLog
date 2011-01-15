@@ -8,6 +8,9 @@ manual, which only contains summaries of changes.
      multiple plots. Fixed SetLegend confusion about multiple plots versus
      multiple data sets. Fixed SetPlotBorderType parameter name.
 
+   For release with PHPlot-5.3.1:
+   * Change references to release "after 5.3.0" to "5.3.1".
+
 2011-01-11
    * advanced.xml: Added missing id attributes to some level 3 sections.
 

@@ -2935,7 +2935,7 @@ pass an empty array or NULL as <varname>$leg</varname>.
   <refsect1>
     <title>History</title>
     <para>
-Accepting NULL as a valid argument value was added after PHPlot-5.3.0.
+Accepting NULL as a valid argument value was added in PHPlot-5.3.1.
 Through PHPlot-5.3.0, passing NULL would cause an error.
     </para>
   </refsect1>
@@ -2996,7 +2996,7 @@ See also <xref linkend="SetLegendWorld" />.
 Through PHPlot-5.3.0, the arguments were required.
 To restore the default behavior, it was necessary to use
 <literal>SetLegendPixels(NULL, NULL)</literal>.
-Starting after PHPlot-5.3.0, the arguments may be omitted to restore the
+Starting with PHPlot-5.3.1, the arguments may be omitted to restore the
 default behavior.
     </para>
   </refsect1>
@@ -3672,7 +3672,7 @@ is calculated as 1/10th of the X data range.
 Through PHPlot-5.3.0, the argument was required.
 To restore the default behavior, it was necessary to use
 <literal>SetNumXTicks('')</literal>.
-Starting after PHPlot-5.3.0, the argument may be omitted to restore the
+Starting with PHPlot-5.3.1, the argument may be omitted to restore the
 default behavior.
     </para>
   </refsect1>
@@ -3731,7 +3731,7 @@ is calculated as 1/10th of the Y data range.
 Through PHPlot-5.3.0, the argument was required.
 To restore the default behavior, it was necessary to use
 <literal>SetNumYTicks('')</literal>.
-Starting after PHPlot-5.3.0, the argument may be omitted to restore the
+Starting with PHPlot-5.3.1, the argument may be omitted to restore the
 default behavior.
     </para>
   </refsect1>
@@ -5767,7 +5767,7 @@ For horizontal plots, the X axis position defaults to the bottom of the plot.
 Through PHPlot-5.3.0, the argument was required, and there was no way to
 restore the default behavior (because the argument value was always converted
 to an integer).
-Starting after PHPlot-5.3.0, the argument may be given as an empty string,
+Starting with PHPlot-5.3.1, the argument may be given as an empty string,
 or omitted, to restore the default behavior.
     </para>
     <para>
@@ -7346,7 +7346,7 @@ Y axis position is X=1.)
 Through PHPlot-5.3.0, the argument was required, and there was no way to
 restore the default behavior (because the argument value was always converted
 to an integer).
-Starting after PHPlot-5.3.0, the argument may be given as an empty string,
+Starting with PHPlot-5.3.1, the argument may be given as an empty string,
 or omitted, to restore the default behavior.
     </para>
     <para>

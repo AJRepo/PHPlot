@@ -2054,7 +2054,7 @@ and cancel it for the second plot, or it will hide the plots.
 <sect2 id="adv-multiplot-history">
 <title>Multiple Plots - History</title>
 <para>
-A number of fixes were made after PHPlot-5.3.0 that affect multiple plots
+A number of fixes were made in PHPlot-5.3.1 that affect multiple plots
 per image. If you are creating multiple plot images using PHPlot-5.3.0 or
 earlier, you should upgrade to the latest release. If you are unable to
 upgrade, you may need to work around the following issues:
