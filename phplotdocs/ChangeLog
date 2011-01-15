@@ -3,6 +3,11 @@ This is phplotdocs/ChangeLog, listing changes to the PHPlot Reference Manual
 Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
+2011-01-14
+   * reference.xml: Redirected note in SetPlotAreaPixels to new section on
+     multiple plots. Fixed SetLegend confusion about multiple plots versus
+     multiple data sets. Fixed SetPlotBorderType parameter name.
+
 2011-01-11
    * advanced.xml: Added missing id attributes to some level 3 sections.
 
