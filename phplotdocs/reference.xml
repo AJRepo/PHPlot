@@ -2891,11 +2891,11 @@ for each slice, try putting it in the legend with <xref linkend="SetLegend" />.
     <title>Description</title>
     <para>
 <function>SetLegend</function> sets the text to be displayed in the legend.
-A legend is usually needed when a graph contains multiple plots (that is,
-more than one data set), to identify the purpose of the different data sets
-plotted.  The legend text consists of multiple lines, with each line
-identifying one plot (one data set) on the graph. PHPlot adds an
-identifying color box next to each line in the legend.
+A legend is often needed when a plot contains more than one data set,
+to identify the purpose of the different data sets being plotted.
+The legend text consists of multiple lines, with each line identifying one
+data set on the plot.
+PHPlot adds an identifying color box next to each line in the legend.
     </para>
   </refsect1>
 
@@ -3936,10 +3936,8 @@ function with different semantics. It makes no sense to use both - only the
 last one called will have an effect.
     </para>
     <para>
-One possible use for SetPlotAreaPixels is to place multiple plots on an image.
-See <xref linkend="example-twoplot1" /> for an example of multiple plots.
-SetPlotAreaPixels is used there to limit the plot area to only use part of
-the image for each plot.
+SetPlotAreaPixels is also used when placing multiple plots on an image.
+See <xref linkend="adv-multiplot" /> for more information.
     </para>
     <para>
 Trailing defaulted arguments can be omitted, but non-trailing defaulted
@@ -4163,7 +4161,7 @@ drawn around the plot. By default, left and right side borders are drawn.
     <title>Parameters</title>
     <variablelist>
       <varlistentry>
-        <term><replaceable>$bt</replaceable></term>
+        <term><replaceable>$pbt</replaceable></term>
         <listitem>
           <para>
 A string or array indicating where to draw the plot borders. If a string,
