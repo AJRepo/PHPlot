@@ -2,7 +2,7 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
-2011-01-015(lbayuk)     ===== Released as 5.3.1 =====
+2011-01-15 (lbayuk)     ===== Released as 5.3.1 =====
     * phplot.php: Updated version
     * README.txt: Updated for new release
     * NEWS.txt: Add text for new release
