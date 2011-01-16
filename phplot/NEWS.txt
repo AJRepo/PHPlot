@@ -4,6 +4,40 @@ The project home page is http://phplot.sourceforge.net/
 Refer the the ChangeLog file for detailed source changes.
 -----------------------------------------------------------------------------
 
+2011-01-15 Release 5.3.1
+
+Overview:
+
+This is the current stable release of PHPlot. This release focuses on
+providing better support and documentation for creating multiple plots on a
+single image.
+
+The PHPlot reference manual has been updated to match this release. Some
+new material has been added, including a new section on multiple plots per
+image, and a new example of overlay plots.
+
+
+Bugs Fixed in 5.3.1:
+
+#3143586 "Multiple plots per image - fixes & docs":
+  The reference manual now contains a section on multiple plots, and a
+  new example. A bug was fixed with SetLegendWorld and multiple plots.
+  Image border will now be drawn at most once. It is now possible to
+  restore the default 'automatic' behavior for axis positioning. Other
+  functions were changed to make arguments optional, so when called with
+  no arguments they reset to the default. The reference manual has been
+  updated with these changes too.
+
+#3147397 "Data colors missing with multiple plots":
+  The fix for bug #3049726 "Optimize color allocation" caused a problem
+  with multiple plots. This has been fixed. PHPlot will no longer truncate
+  the data color table at each plot. It will still only allocate data colors
+  as needed, but all of the pre-set or configured data colors will be
+  available for each plot.
+
+
+-----------------------------------------------------------------------------
+
 2010-12-04 Release 5.3.0
 
 Overview:
