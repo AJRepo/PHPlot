@@ -1,11 +1,11 @@
 This is phplotdocs/README, for the PHPlot Reference Manual source
-Last updated on 2010-09-08
+Last updated on 2011-02-15
 -----------------------------------------------------------------------------
 
-This directory contains the Docbook-XML source files for the PHPlot Reference
+This directory contains the DocBook-XML source files for the PHPlot Reference
 Manual. That is, it contains the files you need to build the manual.  You also
-need the appropriate tools.  The manual is written with Docbook, using the XSL
-style sheets, so you need the Docbook XSL style sheets and associated tools.
+need the appropriate tools.  The manual is written with DocBook, using the XSL
+style sheets, so you need the DocBook XSL style sheets and associated tools.
 
 This README is intended for authors, editors, and maintainers of the manual,
 or anyone who wants to know how the manual is created and built.
@@ -24,7 +24,7 @@ List of files:
   *.xml               Other source files for the manual
   phplotdoc.css       HTML style sheet for the manual
   variables.list      Internal class variables documentation source file
-  gen.vardoc          Script to turn variables.list into Docbook-XML
+  gen.vardoc          Script to turn variables.list into DocBook-XML
   pdf.xsl             XSL style sheet for producing PDF output
 
 Not included:
@@ -36,7 +36,7 @@ Tools:
 I use the following tools and versions to produce the XHTML version of the
 manual. Other versions may work too.
 
-   Docbook XSL Style Sheets docbook-xsl-1.75.2
+   DocBook XSL Style Sheets docbook-xsl-1.75.2
    xsltproc from libxsltproc-1.1.26 and libxml2-2.7.6
    Tcl shell (tclsh) is used to generate the table in the Variables chapter.
    PHP (CLI) and PHPlot are needed to produce the example figures.
@@ -73,7 +73,7 @@ The Makefile has the following targets:
     and the images and stylesheet to a directory named by the DESTDIR
     variable.
     This is used to create a working copy of the manual outside of the
-    CVS work area, and to stage the manual for uploaded (via rsync) to
+    CVS work area, and to stage the manual for uploading (via rsync) to
     Sourceforge where it can be viewed on-line (see "make sfhtml" below).
   "make clean" deletes some intermediate files, but leaves the manual output.
   "make allclean" deletes every generated file.
@@ -113,7 +113,7 @@ to the version of phplot.php which is to be used.
 
 Style Notes:
 
-Writing XML or SGML for Docbook can be a challenge and a chore. I've adopted a
+Writing XML or SGML for DocBook can be a challenge and a chore. I've adopted a
 compromise position on indenting text and markup. Generally, I indent markup
 blocks by 2 spaces at each level to help show the structure of the document.
 But to keep this from getting out of hand, I usually move the top 2 or 3
@@ -140,7 +140,7 @@ XML vs SGML:
 
 The first versions of this manual were written in DocBook SGML and
 converted with DSSSL stylesheet processing tools. The current version
-is in XML and is processing with XSLT tools.
+is in XML and is processed with XSLT tools.
 
 
 HTML vs XHTML:
@@ -155,7 +155,7 @@ Member Variables documentation:
 There is a table in the Member Variables chapter with information about
 all of the PHPlot class variables. The information about the variables is
 maintained in the tab-separated text file 'variables.list'. This is converted
-by the Makefile into a Docbook-XML file 'variablelist.xml', which is included
+by the Makefile into a DocBook-XML file 'variablelist.xml', which is included
 into the manual. The conversion is done using a short Tcl script 'gen.vardoc',
 so you will need the Tcl shell tclsh to build the manual.
 
