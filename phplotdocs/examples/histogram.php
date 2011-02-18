@@ -3,7 +3,7 @@
 # Display a photo image with its value histogram overlaid
 # Note: This requires PHPlot-5.1.1 or higher for Truecolor support.
 # Unlike the other examples, and contrary to the usual PHPlot recommendation,
-# this scripts creates JPEG not PNG, because most of the image is the original
+# this script creates JPEG not PNG, because most of the image is the original
 # photograph and PNG results in an overlarge file.
 require_once 'phplot.php';
 
