@@ -1,7 +1,7 @@
 <?php
 /* $Id$ */
 /*
- * PHPLOT Version 5.3.1
+ * PHPLOT Version 5.3.1 + CVS (This is an unreleased CVS version!)
  *
  * A PHP class for creating scientific and business charts
  * Visit http://sourceforge.net/projects/phplot/
@@ -121,12 +121,7 @@ class PHPlot
 
 // Legend
     public $legend = '';                       // An array with legend titles
-    // These variables are unset to take default values:
-    // public $legend_x_pos;                   // User-specified upper left coordinates of legend box
-    // public $legend_y_pos;
-    // public $legend_xy_world;                // If set, legend_x/y_pos are world coords, else pixel coords
-    // public $legend_text_align;              // left or right, Unset means right
-    // public $legend_colorbox_align;          // left, right, or none; Unset means same as text_align
+    // Other legend_* variables are set as needed, unset for default values.
 
 //Ticks
     public $x_tick_length = 5;                 // tick length in pixels for upper/lower axis
@@ -2070,72 +2065,6 @@ class PHPlot
     {
         $this->print_image = $which_pi;
         return TRUE;
-    }
-
-    /*
-     * Set text to display in the graph's legend.
-     *   $which_leg : Array of strings for the complete legend, or a single string
-     *                to be appended to the legend.
-     *                Or NULL (or an empty array) to cancel the legend.
-     */
-    function SetLegend($which_leg)
-    {
-        if (is_array($which_leg)) {           // use array (or cancel, if empty array)
-            $this->legend = $which_leg;
-        } elseif (!is_null($which_leg)) {     // append string
-            $this->legend[] = $which_leg;
-        } else {
-            $this->legend = '';  // Reinitialize to empty, meaning no legend.
-        }
-        return TRUE;
-    }
-
-    /*
-     * Specifies the position of the legend's upper/leftmost corner,
-     * in pixel (device) coordinates.
-     * Both X and Y must be provided, or both omitted (or use NULL) to restore auto-positioning.
-     */
-    function SetLegendPixels($which_x=NULL, $which_y=NULL)
-    {
-        $this->legend_x_pos = $which_x;
-        $this->legend_y_pos = $which_y;
-        // Make sure this is unset, meaning we have pixel coords:
-        unset($this->legend_xy_world);
-
-        return TRUE;
-    }
-
-    /*
-     * Specifies the position of the legend's upper/leftmost corner,
-     * in world (data space) coordinates.
-     */
-    function SetLegendWorld($which_x, $which_y)
-    {
-        // Since conversion from world to pixel coordinates is not yet available, just
-        // remember the coordinates and set a flag to indicate conversion is needed.
-        $this->legend_x_pos = $which_x;
-        $this->legend_y_pos = $which_y;
-        $this->legend_xy_world = TRUE;
-
-        return TRUE;
-    }
-
-    /*
-     * Set legend text alignment, color box alignment, and style options.
-     *   $text_align : Alignment of the text, 'left' or 'right'.
-     *   $colorbox_align : Alignment of the color boxes, 'left', 'right', 'none', or missing/empty.
-     *       If missing or empty, the same alignment as $text_align is used. Color box is positioned first.
-     *   $style : reserved for future use.
-     */
-    function SetLegendStyle($text_align, $colorbox_align = '', $style = '')
-    {
-        $this->legend_text_align = $this->CheckOption($text_align, 'left, right', __FUNCTION__);
-        if (empty($colorbox_align))
-            $this->legend_colorbox_align = $this->legend_text_align;
-        else
-            $this->legend_colorbox_align = $this->CheckOption($colorbox_align, 'left, right, none',
-                                                              __FUNCTION__);
-        return ((boolean)$this->legend_text_align && (boolean)$this->legend_colorbox_align);
     }
 
     /*
@@ -4651,6 +4580,74 @@ class PHPlot
             ImageLine($this->img, $xpos, $this->plot_area[1], $xpos, $ypos, $style);
         }
         return TRUE;
+    }
+
+/////////////////////////////////////////////
+///////////////                        LEGEND
+/////////////////////////////////////////////
+
+    /*
+     * Set text to display in the graph's legend.
+     *   $which_leg : Array of strings for the complete legend, or a single string
+     *                to be appended to the legend.
+     *                Or NULL (or an empty array) to cancel the legend.
+     */
+    function SetLegend($which_leg)
+    {
+        if (is_array($which_leg)) {           // use array (or cancel, if empty array)
+            $this->legend = $which_leg;
+        } elseif (!is_null($which_leg)) {     // append string
+            $this->legend[] = $which_leg;
+        } else {
+            $this->legend = '';  // Reinitialize to empty, meaning no legend.
+        }
+        return TRUE;
+    }
+
+    /*
+     * Specifies the position of the legend's upper/leftmost corner, in pixel (device) coordinates.
+     * Both X and Y must be provided, or both omitted (or use NULL) to restore auto-positioning.
+     */
+    function SetLegendPixels($which_x=NULL, $which_y=NULL)
+    {
+        $this->legend_x_pos = $which_x;
+        $this->legend_y_pos = $which_y;
+        // Make sure this is unset, meaning we have pixel coords:
+        unset($this->legend_xy_world);
+
+        return TRUE;
+    }
+
+    /*
+     * Specifies the position of the legend's upper/leftmost corner, in world (data space) coordinates.
+     */
+    function SetLegendWorld($which_x, $which_y)
+    {
+        // Since conversion from world to pixel coordinates is not yet available, just
+        // remember the coordinates and set a flag to indicate conversion is needed.
+        $this->legend_x_pos = $which_x;
+        $this->legend_y_pos = $which_y;
+        $this->legend_xy_world = TRUE;
+
+        return TRUE;
+    }
+
+    /*
+     * Set legend text alignment, color box alignment, and style options.
+     *   $text_align : Alignment of the text, 'left' or 'right'.
+     *   $colorbox_align : Alignment of the color boxes, 'left', 'right', 'none', or missing/empty.
+     *       If missing or empty, the same alignment as $text_align is used. Color box is positioned first.
+     *   $style : reserved for future use.
+     */
+    function SetLegendStyle($text_align, $colorbox_align = '', $style = '')
+    {
+        $this->legend_text_align = $this->CheckOption($text_align, 'left, right', __FUNCTION__);
+        if (empty($colorbox_align))
+            $this->legend_colorbox_align = $this->legend_text_align;
+        else
+            $this->legend_colorbox_align = $this->CheckOption($colorbox_align, 'left, right, none',
+                                                              __FUNCTION__);
+        return ((boolean)$this->legend_text_align && (boolean)$this->legend_colorbox_align);
     }
 
     /*
