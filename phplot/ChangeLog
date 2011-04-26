@@ -2,6 +2,16 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2011-04-26
+    * Moved legend functions together into one section, and removed
+      commented-out public variable declarations for legend variables.
+      No functionality changes are introduced.
+      (This is being done in anticipation of two upcoming changes to
+      legend code. I dislike moving functions around because it makes it
+      hard to use 'diff' to check changes, but it is helpful to have
+      functions that work together placed together in the script. As
+      a compromise, do the re-arrangement in its own change.)
+
 2011-01-15 (lbayuk)     ===== Released as 5.3.1 =====
     * phplot.php: Updated version
     * README.txt: Updated for new release
