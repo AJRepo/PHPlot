@@ -3,6 +3,12 @@ This is phplotdocs/ChangeLog, listing changes to the PHPlot Reference Manual
 Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
+
+2011-04-27
+   * advanced.xml, reference.xml: Mention that the legend uses the data
+     colors in the order from the data colors array, regardless of any
+     custom data color callback.
+
 2011-01-14
    * reference.xml: Redirected note in SetPlotAreaPixels to new section on
      multiple plots. Fixed SetLegend confusion about multiple plots versus
