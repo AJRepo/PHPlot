@@ -2917,7 +2917,10 @@ Or, if not an array, the one line to be appended to the legend. See notes.
   <refsect1>
     <title>Notes</title>
     <para>
-The legend text needs to contain one line of text for each data set plotted
+By default, no legend is displayed.
+    </para>
+    <para>
+The legend usually needs to contain one line of text for each data set plotted
 on the graph, in the same order as the data array.
 You can supply all the legend lines in a single call to SetLegend as an
 array, or you can build up the legend one line at a time with multiple
@@ -2925,11 +2928,21 @@ calls to SetLegend, supplying one line per call (in the same order as
 the data sets in the data array).
     </para>
     <para>
-By default, no legend is displayed.
+Legend text lines are displayed in order from top to bottom in the legend.
+Each line has a color box with the corresponding color from the data colors
+array.
+The colors used in the legend color boxes are independent of any custom
+data color callback (see <xref linkend="conc-colors-datacolor-callback"/>).
     </para>
     <para>
 To cancel a legend (perhaps as part of drawing multiple plots on an image),
 pass an empty array or NULL as <varname>$leg</varname>.
+    </para>
+    <para>
+To control the legend position on the plot,
+use <xref linkend="SetLegendPixels"/> or <xref linkend="SetLegendWorld"/>.
+You can control the text and colorbox alignment within the legend
+using <xref linkend="SetLegendStyle"/>.
     </para>
   </refsect1>
   <refsect1>

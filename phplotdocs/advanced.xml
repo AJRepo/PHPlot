@@ -1363,6 +1363,21 @@ your callback function each time it is called.
 </para>
 </sect2>
 
+<sect2 id="conc-colors-datacolor-callback-legend">
+<title>Custom Data Color Selection and Legend</title>
+<para>
+If your plot includes a <link linkend="conc-legend">legend</link>,
+the legend uses the colors in the order defined in the data colors array,
+without regard to any custom data color selection callback.
+When using a legend with a custom data color selection callback, you need
+to define your data colors array (with <xref linkend="SetDataColors"/>, if
+used) and set your legend lines (with <xref linkend="SetLegend"/>)
+knowing that each legend line will reference the corresponding color in the
+data array in order.
+The Custom Bar Colors example referenced below demonstrates this.
+</para>
+</sect2>
+
 <sect2 id="conc-colors-datacolor-callback-examples">
 <title>Custom Data Color Selection Examples</title>
 <para>
