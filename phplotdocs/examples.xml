@@ -1121,4 +1121,51 @@ See <xref linkend="adv-multiplot" /> for more information.
 </sect1>
 
 <!-- =============================================== -->
+<pagebreak/>
+<sect1 id="ex-legendshape">
+<title>Example - Legend with Point Shapes</title>
+<para>
+This example shows the standard legend appearance, followed by the same
+plot with point shapes in the legend instead of color boxes.
+Using point shapes in the legend was added in PHPlot-5.4.0.
+This feature is useful if you need to be able to interpret the legend
+without color, for example with monochrome printing, or for accessibility
+reasons. See <xref linkend="conc-legend"/> for more on the plot legend.
+</para>
+<example id="example-legendshape">
+<?dbfo keep-together="auto"?>
+<title>Legend with Color Boxes or Point Shapes</title>
+<para>
+First, here is the standard legend with color boxes.
+</para>
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="examples/legendshape.png" scale="58" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>Legend with Color Boxes</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+&legendshape;
+<para>
+Changing the call to <xref linkend="SetLegendUseShapes"/> results in a
+legend using point shapes instead of color boxes.
+</para>
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="examples/legendshape1.png" scale="58" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>Legend with Point Shapes</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+&legendshape1;
+</example>
+</sect1>
+
+<!-- =============================================== -->
 </chapter>
