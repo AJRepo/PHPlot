@@ -2895,7 +2895,8 @@ A legend is often needed when a plot contains more than one data set,
 to identify the purpose of the different data sets being plotted.
 The legend text consists of multiple lines, with each line identifying one
 data set on the plot.
-PHPlot adds an identifying color box next to each line in the legend.
+PHPlot adds an identifying color box or point shape next to each line in the
+legend.
     </para>
   </refsect1>
 
@@ -2929,10 +2930,11 @@ the data sets in the data array).
     </para>
     <para>
 Legend text lines are displayed in order from top to bottom in the legend.
-Each line has a color box with the corresponding color from the data colors
-array.
-The colors used in the legend color boxes are independent of any custom
-data color callback (see <xref linkend="conc-colors-datacolor-callback"/>).
+Each line has a color box or point shape with the corresponding color from
+the data colors array.
+The colors used in the legend color boxes or point shapes are independent of
+any custom data color callback
+(see <xref linkend="conc-colors-datacolor-callback"/>).
     </para>
     <para>
 To cancel a legend (perhaps as part of drawing multiple plots on an image),
@@ -2941,8 +2943,12 @@ pass an empty array or NULL as <varname>$leg</varname>.
     <para>
 To control the legend position on the plot,
 use <xref linkend="SetLegendPixels"/> or <xref linkend="SetLegendWorld"/>.
-You can control the text and colorbox alignment within the legend
-using <xref linkend="SetLegendStyle"/>.
+You can control the text and color box or point shape alignment within the
+legend using <xref linkend="SetLegendStyle"/>.
+    </para>
+    <para>
+Use <xref linkend="SetLegendUseShapes"/> to select color boxes or point
+shapes in the legend.
     </para>
   </refsect1>
   <refsect1>
@@ -3026,7 +3032,7 @@ default behavior.
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>$plot-&gt;SetLegendStyle(<parameter>$text_align</parameter>, <optional><parameter>$colorbox_align</parameter></optional>, <optional><parameter>$style</parameter></optional>)</synopsis>
+    <synopsis>$plot-&gt;SetLegendStyle(<parameter>$text_align</parameter>, <optional><parameter>$colorbox_align</parameter></optional>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -3034,11 +3040,12 @@ default behavior.
     <para>
 <function>SetLegendStyle</function> controls the appearance of the legend,
 which is drawn if <xref linkend="SetLegend" /> is used.  The legend
-contains of a series of text strings and color boxes, identifying the plot
-lines. SetLegendStyle sets the alignment of the text strings and color
-boxes. The color boxes are aligned within the legend box, left or right,
-and then the text strings are aligned within the remaining space, left or
-right. SetLegendStyle can also turn off the color boxes.
+contains of a series of text strings and either color boxes or point
+shapes, identifying the plot lines.  SetLegendStyle sets the alignment of
+the text strings and color boxes or point shapes.  First the color boxes or
+point shapes are aligned within the legend box, left or right, and then the
+text strings are aligned within the remaining space, left or right.
+SetLegendStyle can also turn off the color boxes or point shapes.
     </para>
   </refsect1>
 
@@ -3051,8 +3058,9 @@ right. SetLegendStyle can also turn off the color boxes.
           <para>
 A string indicating the alignment of the text strings: 'left' or 'right'.
 If 'left', the text strings are left-aligned between the legend box edge
-and the color boxes. If 'right', the text strings are right-aligned between
-the legend box edge and the color boxes.
+and the color boxes or point shapes.
+If 'right', the text strings are right-aligned between the legend box edge
+and the color boxes or point shapes.
           </para>
         </listitem>
       </varlistentry>
@@ -3060,20 +3068,12 @@ the legend box edge and the color boxes.
         <term><replaceable>$colorbox_align</replaceable></term>
         <listitem>
           <para>
-Optional string indicating the alignment of the color boxes: 'left', 'right',
-or 'none'.
-If 'left', the color boxes are drawn along the left side of the legend box.
-If 'right', the color boxes are drawn along the right side of the legend box.
-If 'none', no color boxes are drawn.
+Optional string indicating the alignment of the color boxes or point shapes:
+'left', 'right', or 'none'.
+If 'left', they are drawn along the left side of the legend box.
+If 'right', they are drawn along the right side of the legend box.
+If 'none', no color boxes or point shapes are drawn.
 If this parameter is omitted, the same alignment as $text_align is used.
-          </para>
-        </listitem>
-      </varlistentry>
-      <varlistentry>
-        <term><replaceable>$style</replaceable></term>
-        <listitem>
-          <para>
-Optional parameter, reserved for future use, and currently ignored.
           </para>
         </listitem>
       </varlistentry>
@@ -3083,8 +3083,9 @@ Optional parameter, reserved for future use, and currently ignored.
   <refsect1>
     <title>Notes</title>
     <para>
-By default, the color boxes are lined up along the right side of the legend
-box, and the text strings are right-aligned just left of the color boxes.
+By default, the color boxes or point shapes are lined up along the right side
+of the legend box, and the text strings are right-aligned just left of the
+color boxes or point shapes
 The following figure shows the four possible alignment choices.
       <informalfigure>
         <mediaobject>
@@ -3108,7 +3109,98 @@ identifying the plot lines.
   <refsect1>
     <title>History</title>
     <para>
+The option to use point shapes instead of color boxes in the legend
+was added in PHPlot-5.4.0.  See <xref linkend="SetLegendUseShapes"/>.
+In earlier releases, the <literal>$colorbox_align</literal> parameter to
+<function>SetLegendStyle</function> only applied to color boxes.
+    </para>
+    <para>
+Through PHPlot-5.3.1, there was an optional third parameter
+<literal>$style</literal>, which was intended for possible future use
+but was never used. It was removed at PHPlot-5.4.0.
+    </para>
+    <para>
 This function was added to PHPlot-5.0.4.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetLegendUseShapes">
+  <refmeta>
+    <refentrytitle>SetLegendUseShapes</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetLegendUseShapes</refname>
+    <refpurpose>Use color boxes or point shapes in the legend</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>$plot-&gt;SetLegendUseShapes(<parameter>$use_shapes</parameter>)</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetLegendUseShapes</function> sets the legend to use either color
+boxes or point shapes to show which legend line goes with which data set.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$use_shapes</replaceable></term>
+        <listitem>
+          <para>
+A boolean value: true to use point shapes, false to use color boxes.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+By default, the legend is drawn with color boxes.
+    </para>
+    <para>
+Use of point shapes in the legend is only available with plot types that use
+point markers: <link linkend="plottype-points">points</link> and
+<link linkend="plottype-linepoints">linepoints</link>.
+<function>SetLegendUseShapes</function> is ignored with other plot types.
+    </para>
+    <para>
+When point shape markers are enabled using
+<function>SetLegendUseShapes(True)</function>,
+PHPlot will first draw a solid box with the same color as the plot area
+background (if plot area background color is enabled with
+<xref linkend="SetPlotBgColor"/> and
+<xref linkend="SetDrawPlotAreaBackground"/>).
+Then it will draw the point shape which corresponds to the legend text line,
+overlaying the background box.
+The point shape will have the same color and size as the
+point shape used in the plot for the corresponding data set.
+Note that PHPlot will not adjust the legend box size or line spacing based on
+the point shape sizes set with <xref linkend="SetPointSizes"/>.
+If the point shapes are too big, they will overflow their allocated space
+and overlap.  You can control the legend text line height to account for large
+point shapes by adjusting the line spacing parameter (using
+<xref linkend="SetLineSpacing"/>, <xref linkend="SetFont"/>,
+or related font control functions.
+    </para>
+    <para>
+For examples of legends with color boxes and point shapes,
+see <xref linkend="ex-legendshape"/>.
+    </para>
+  </refsect1>
+  <refsect1>
+    <title>History</title>
+    <para>
+This function was added to PHPlot-5.4.0.
+Before that, only color boxes were available in legends.
     </para>
   </refsect1>
 </refentry>
