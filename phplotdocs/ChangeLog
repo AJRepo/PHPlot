@@ -3,6 +3,19 @@ This is phplotdocs/ChangeLog, listing changes to the PHPlot Reference Manual
 Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
+2011-05-01
+   For feature request #3292825 "Use point shape markers in legend box":
+   * examples.xml, examples/legendshape.php, examples/legendshape1.php,
+     Makefile: Add new example (with 2 pictures).
+   * advanced.xml: Update description of legend_colorbox_width.
+   * concepts.xml: Update "Plot Element Colors" table.
+   * developer.xml: Update legend layout description. Update internals
+     DrawDot(), new DrawShape().
+   * functions.xml: Link to new function SetLegendUseShapes().
+   * reference.xml: Drop 3rd argument to SetLegendStyle(). Document new
+     function SetLegendUseShapes(). In SetLegend() and SetLegendStyle(),
+     rewrite references to legend features to include point shapes option.
+   * variables.list: Update legend_colorbox_align; add legend_use_shapes.
 
 2011-04-27
    * advanced.xml, reference.xml: Mention that the legend uses the data

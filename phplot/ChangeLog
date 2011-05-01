@@ -2,6 +2,21 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2011-05-01
+    * Feature request #3292825 "Use point shape markers in legend box":
+      + Implement optional use of point shapes instead of color boxes in the
+        legend, for use with points and linepoints plots.
+      + Add new function SetLegendUseShapes() to enable use of point shapes
+        in the legend.
+      + New internal class variable legend_use_shapes.
+      + Removed optional never-used 3rd argument to SetLegendStyle().
+      + Add new internal function DrawShape() which now implements DrawDot()
+        but takes device coordinates, for use by DrawLegend().
+
+    * Fix bug #3294604 "Center vertical alignment for legend text":
+      + Legend text lines are now vertically centered on the middle of
+        the color box or marker shape, rather than using bottom alignment.
+
 2011-04-26
     * Moved legend functions together into one section, and removed
       commented-out public variable declarations for legend variables.
