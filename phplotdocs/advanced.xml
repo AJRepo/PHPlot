@@ -1543,6 +1543,15 @@ A value of 2.0 makes the color boxes twice as wide, and 0.5 makes them half
 the character width.
 (This was added in PHPlot-5.3.0.)
         </para>
+        <para>
+If point shapes are used in the legend instead of color boxes
+(see <xref linkend="SetLegendUseShapes"/>),
+then <literal>legend_colorbox_width</literal> still adjusts the horizontal
+space allocated for the point shape. The point shape itself is not scaled,
+but is always drawn at the same size as in the plot itself. If the plot
+area has a color background, the width adjustment will stretch the
+box in that color which is drawn behind the point shape.
+        </para>
       </listitem>
     </varlistentry>
   </variablelist>
