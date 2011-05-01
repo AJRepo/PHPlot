@@ -97,6 +97,8 @@ EXAMPLES_PHP=\
   examples/horizbar.php \
   examples/horizstackedbar.php \
   examples/horizthinbarline.php \
+  examples/legendshape.php \
+  examples/legendshape1.php \
   examples/linepoints1.php \
   examples/linepoints2.php \
   examples/lines1.php \
@@ -140,6 +142,8 @@ EXAMPLES_IMAGES=\
   examples/horizbar.png \
   examples/horizstackedbar.png \
   examples/horizthinbarline.png \
+  examples/legendshape.png \
+  examples/legendshape1.png \
   examples/linepoints1.png \
   examples/linepoints2.png \
   examples/lines1.png \
