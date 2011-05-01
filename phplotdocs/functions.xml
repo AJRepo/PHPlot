@@ -190,6 +190,7 @@ and <xref linkend="SetFont" /> to set the legend text font.
   <listitem><para><xref linkend="SetLegend" /></para></listitem>
   <listitem><para><xref linkend="SetLegendPixels" /></para></listitem>
   <listitem><para><xref linkend="SetLegendStyle" /></para></listitem>
+  <listitem><para><xref linkend="SetLegendUseShapes" /></para></listitem>
   <listitem><para><xref linkend="SetLegendWorld" /></para></listitem>
 </itemizedlist>
 </para>
