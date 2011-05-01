@@ -123,15 +123,24 @@ overlap the title or fall off the edge of the image.
 <title>PHPlot Legend Layout</title>
 <para>
 This figure illustrates the layout of the legend, as drawn by DrawLegend().
-Two of six possible arrangements of the colorboxes and text are shown.
+Two of six possible arrangements of the color boxes and text are shown.
 See <xref linkend="SetLegendStyle"/> for more information.
 </para>
 <para>
-Through PHPlot-5.2.0, the width of the colorboxes was always
+Through PHPlot-5.2.0, the width of the color boxes was always
 <varname>char_w</varname>, the width of one character (or the width of the
 upper case letter "E") in the legend text font.
 Starting with PHPlot-5.3.0, this can be adjusted using a class variable.
 See <xref linkend="conc-tuning-legend"/> for more.
+</para>
+<para>
+If point shapes are used in the legend instead of color boxes
+(see <xref linkend="SetLegendUseShapes"/>, added in PHPlot-5.4.0),
+the same amount of space is still allocated, including width adjustment.
+But the point shape itself is always drawn at the same size as in
+the plot, regardless of the width adjustment factor.  If the plot area has
+a color background, the width adjustment will stretch the box in that color
+which is drawn behind the point shape.
 </para>
 
 <para>
@@ -642,6 +651,9 @@ using the arrays set up with SetPointSizes() and SetPointShapes(); they are
 not passed as arguments themselves.
 Called by those plotting routines that include dots:
 <xref linkend="DrawDotsError"/> and <xref linkend="DrawDots"/>.
+Starting with PHPlot-5.4.0, DrawDot() simply converts the coordinates to device
+coordinates and then calls <xref linkend="DrawShape"/>. It has no knowledge of
+the available dot shapes.
     </para>
   </listitem>
 </varlistentry>
@@ -740,7 +752,8 @@ Called by <xref linkend="DrawGraph"/>.
   <term><anchor id="DrawLegend" xreflabel="DrawLegend"/>DrawLegend(x,y,type)</term>
   <listitem>
     <para>
-Draws the plot legend. This includes the box, text labels, and color boxes.
+Draws the plot legend. This includes the box, text labels, and color boxes
+or point shapes.
 Called by <xref linkend="DrawGraph"/>,
 but only if legend text has been set using <xref linkend="SetLegend"/>.
     </para>
@@ -853,6 +866,25 @@ This draws zero to four lines around the plot area (depending on
 <xref linkend="SetPlotBorderType"/>). It only draws the outline; other functions
 draw the tick marks and labels for the X axis and Y axis.
 Called by <xref linkend="DrawGraph"/>.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term><anchor id="DrawShape" xreflabel="DrawShape"/>DrawShape($x, $y, $record, $color)</term>
+  <listitem>
+    <para>
+Draws a single marker point ('dot' or 'shape') at the given X and Y device
+(pixel) coordinates, using the given color. The $record parameter selects the
+marker shape and size using the arrays set up with SetPointSizes() and
+SetPointShapes(); they are not passed as arguments themselves.
+Called by <xref linkend="DrawDot"/> and <xref linkend="DrawLegend"/>.
+This is the function that knows which shapes are available and how to draw
+them. (<xref linkend="SetPointShapes"/> also has a list of valid shapes.)
+This was added at PHPlot-5.4.0 by moving the shape drawing code out of
+DrawDot(), leaving behind only the conversion from world to device coordinates.
+This was necessary because DrawLegend() needs to specify marker positions
+in pixel coordinates when using point shapes instead of color boxes.
     </para>
   </listitem>
 </varlistentry>
