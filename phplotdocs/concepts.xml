@@ -1760,7 +1760,7 @@ element on a plot.
         <entry><xref linkend="SetBackgroundColor"/></entry>
       </row>
       <row>
-        <entry>Legend color box fill</entry>
+        <entry>Legend color box fill or point shape</entry>
         <entry><xref linkend="SetDataColors"/></entry>
       </row>
       <row>
@@ -2644,7 +2644,7 @@ You can also use PHP functions to encode your characters for including in
 PHPlot text strings. See the PHP documentation for the functions
 <function>html_entity_decode()</function>
 and <function>iconv()</function>.
-Here are some examples (sent in by Sourceforge user 'kalvaro'):
+Here are some examples (sent in by SourceForge user 'kalvaro'):
 <programlisting><![CDATA[# Encode the Euro symbol into UTF-8:
 $chars = html_entity_decode('&euro;', ENT_NOQUOTES, 'UTF-8');
 
