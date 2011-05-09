@@ -2,6 +2,11 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2011-05-08
+    * Merged 5.3.2 release changes. (The two entries below this, 2011-05-01
+      and 2011-04-26, came before 5.3.2, but 5.3.2 was a single patch applied
+      against 5.3.1 and not against current CVS.)
+
 2011-05-01
     * Feature request #3292825 "Use point shape markers in legend box":
       + Implement optional use of point shapes instead of color boxes in the
@@ -26,6 +31,21 @@ The project home page is http://sourceforge.net/projects/phplot/
       hard to use 'diff' to check changes, but it is helpful to have
       functions that work together placed together in the script. As
       a compromise, do the re-arrangement in its own change.)
+
+2011-05-06 (lbayuk)     ===== Released as 5.3.2 =====
+    * phplot.php: Updated version
+    * README.txt: Updated for new release
+    * NEWS.txt: Add text for new release
+   Note: This release was built off of the CVS branch tagged
+   rel5_3_1_patches, not HEAD.
+
+2011-05-06
+    * For bug 3296884 "Undefined variable with stackedbars":
+      A temporary fix was made against phplot-5.3.1 to avoid an undefined
+      variable error when the first stack in a stackedbars plot has all zero
+      values. The fix avoids the error message, and the plots are OK in most
+      cases. There are still issues with label position, and if the axis
+      is moved. These will be addressed in a future fix.
 
 2011-01-15 (lbayuk)     ===== Released as 5.3.1 =====
     * phplot.php: Updated version

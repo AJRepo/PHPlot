@@ -1,7 +1,7 @@
 <?php
 /* $Id$ */
 /*
- * PHPLOT Version 5.3.1 + CVS (This is an unreleased CVS version!)
+ * PHPLOT Version 5.3.2 + CVS (This is an unreleased CVS version!)
  *
  * A PHP class for creating scientific and business charts
  * Visit http://sourceforge.net/projects/phplot/
@@ -5912,6 +5912,7 @@ class PHPlot
             $wy1 = 0;                       // World coordinates Y1, current sum of values
             $wy2 = $this->x_axis_position;  // World coordinates Y2, last drawn value
             $first = TRUE;
+            $upward = TRUE; // Initialize this for the case of all segments = 0
 
             for ($idx = 0; $record < $this->num_recs[$row]; $record++, $idx++) {
 
@@ -6003,6 +6004,7 @@ class PHPlot
             $wx1 = 0;                       // World coordinates X1, current sum of values
             $wx2 = $this->y_axis_position;  // World coordinates X2, last drawn value
             $first = TRUE;
+            $rightward = TRUE; // Initialize this for the case of all segments = 0
 
             for ($idx = 0; $record < $this->num_recs[$row]; $record++, $idx++) {
 

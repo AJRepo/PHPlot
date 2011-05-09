@@ -1,5 +1,5 @@
 This is the README file for PHPlot
-Last updated for PHPlot-5.3.1 on 2011-01-15
+Last updated for PHPlot-5.3.2 on 2011-05-06
 The project web site is http://sourceforge.net/projects/phplot/
 The project home page is http://phplot.sourceforge.net/
 -----------------------------------------------------------------------------
@@ -31,8 +31,10 @@ CONTENTS:
 REQUIREMENTS:
 
 You need a recent version of PHP5, and you are advised to use the latest
-stable release.  This version of PHPlot has been tested with PHP-5.3.5 and
-PHP-5.2.17 on Linux, and with PHP-5.3.5 on Windows XP.
+stable release.  This version of PHPlot has been tested with PHP-5.3.6 and
+PHP-5.2.17 on Linux, and with PHP-5.3.6 on Windows XP. Note that the PHP
+Group has dropped support for PHP-5.2, and if you are still using PHP-5.2.x
+you should plan to upgrade as soon as you can.
 
 Use of PHP-5.3.2 or PHP-5.2.13 is not recommended, if you are using
 TrueType Font (TTF) text. A bug with TTF rendering in those versions
