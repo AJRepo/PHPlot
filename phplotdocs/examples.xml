@@ -43,7 +43,7 @@ $  display output.png
   <para>
 <application>ImageMagick</application> is available for several operating systems.
 There are many other image viewers for Linux and Linux-like systems,
-including <application>qiv</application> and <application>gqview</application>.
+including <application>qiv</application> and <application>geeqie</application>.
   </para>
 </note>
 
@@ -1164,6 +1164,142 @@ legend using point shapes instead of color boxes.
   </mediaobject>
 </informalfigure>
 &legendshape1;
+</example>
+</sect1>
+
+<!-- =============================================== -->
+<pagebreak/>
+<sect1 id="ex-legendpos">
+<title>Example - Legend Positioning</title>
+<para>
+Here are some examples showing the usage of <xref linkend="SetLegendPosition"/>
+to position the legend on the plot. The first two arguments ($x, $y)
+indicate a point on the legend box, relative to the legend box size, with
+(0,0) being the upper left corner, and (1,1) being the lower right corner.
+The third argument $relative_to indicates the positioning mode: image, plot, 
+world, or title. The next two arguments ($x_base, $y_base), along with the
+positioning mode, indicate where to place the legend point given in the
+first two arguments. The last two optional arguments ($x_offset, $y_offset)
+are an additional pixel offset.
+</para>
+<example id="example-legendpos">
+<?dbfo keep-together="auto"?>
+<title>Legend Positioning</title>
+
+<para><?dbfo keep-together="always"?>
+Case 1. Place upper left corner of legend at offset (5,5) from upper left corner of image:
+<programlisting><![CDATA[$plot->SetLegendPosition(0, 0, 'image', 0, 0, 5, 5);
+]]></programlisting>
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="images/legendpos1.png" scale="58" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>Legend Position Case 1</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+</para>
+
+<para><?dbfo keep-together="always"?>
+Case 2. Place bottom left corner of legend at offset (7,-7) from bottom
+left corner of image:
+<programlisting><![CDATA[$plot->SetLegendPosition(0, 1, 'image', 0, 1, 7, -7);
+]]></programlisting>
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="images/legendpos2.png" scale="58" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>Legend Position Case 2</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+</para>
+
+<para><?dbfo keep-together="always"?>
+Case 3. Place top right corner of legend at top center of plot area:
+<programlisting><![CDATA[$plot->SetLegendPosition(1, 0, 'plot', 0.5, 0);
+]]></programlisting>
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="images/legendpos3.png" scale="58" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>Legend Position Case 3</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+</para>
+
+<para><?dbfo keep-together="always"?>
+Case 4. Center the legend in the upper half of the plot area:
+<programlisting><![CDATA[$plot->SetLegendPosition(0.5, 0.5, 'plot', 0.5, 0.25);
+]]></programlisting>
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="images/legendpos4.png" scale="58" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>Legend Position Case 4</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+</para>
+
+<para><?dbfo keep-together="always"?>
+Case 5. Place center of legend at world coordinates (2,60):
+<programlisting><![CDATA[$plot->SetLegendPosition(0.5, 0.5, 'world', 2, 60);
+]]></programlisting>
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="images/legendpos5.png" scale="58" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>Legend Position Case 5</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+</para>
+
+<para><?dbfo keep-together="always"?>
+Case 6. Place top right corner of legend at offset (-5,5) from world
+coordinates (4,0):
+<programlisting><![CDATA[$plot->SetLegendPosition(1, 0, 'world', 4, 0, -5, 5);
+]]></programlisting>
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="images/legendpos6.png" scale="58" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>Legend Position Case 6</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+</para>
+
+<para><?dbfo keep-together="always"?>
+Case 7. Center the top of the legend below the bottom of the title:
+<programlisting><![CDATA[$plot->SetLegendPosition(0.5, 0, 'title', 0.5, 1);
+]]></programlisting>
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="images/legendpos7.png" scale="58" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>Legend Position Case 7</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+</para>
+
 </example>
 </sect1>
 
