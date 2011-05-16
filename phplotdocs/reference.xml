@@ -216,6 +216,65 @@ This function was added in PHPlot-5.1.0.
   </refsect1>
 </refentry>
 
+<refentry id="GetLegendSize">
+  <refmeta>
+    <refentrytitle>GetLegendSize</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>GetLegendSize</refname>
+    <refpurpose>Return the amount of space required for the legend box</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>list($width, $height) = $plot-&gt;GetLegendSize()</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>GetLegendSize</function> returns the size (in pixels) required
+for the legend box. This might be used to adjust the plot margins based on
+the legend size, for example. After calling <function>GetLegendSize</function>,
+you can use <xref linkend="SetPlotAreaWorld"/> or
+<xref linkend="SetMarginsPixels"/> to leave room for the legend.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <para>
+None
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Return Value</title>
+    <para>
+Returns an array of two values ($width, $height). These are the width and
+height required for the box containing the legend.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+This function will return valid numbers after the legend has been set up
+(including using <xref linkend="SetLegend"/> to set all the text lines,
+and optional calls to set the font, linespacing, and style).
+The results from this function do not depend on data values, plot type, or
+other plot elements.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>History</title>
+    <para>
+This function was added in PHPlot-5.4.0.
+    </para>
+  </refsect1>
+</refentry>
+
 <refentry id="PHPlot">
   <refmeta>
     <refentrytitle>PHPlot</refentrytitle>
@@ -2942,7 +3001,8 @@ pass an empty array or NULL as <varname>$leg</varname>.
     </para>
     <para>
 To control the legend position on the plot,
-use <xref linkend="SetLegendPixels"/> or <xref linkend="SetLegendWorld"/>.
+use <xref linkend="SetLegendPixels"/>, <xref linkend="SetLegendWorld"/>,
+or the more general <xref linkend="SetLegendPosition"/>.
 You can control the text and color box or point shape alignment within the
 legend using <xref linkend="SetLegendStyle"/>.
     </para>
@@ -3006,6 +3066,14 @@ The default behavior is for PHPlot to position the legend in the
 upper right corner of the plot area.
     </para>
     <para>
+See <xref linkend="SetLegendPosition"/> for more flexible legend
+positioning options.
+<literal>SetLegendPixels($x, $y)</literal> is equivalent to
+<literal>SetLegendPosition(0, 0, 'image', 0, 0, $x, $y)</literal>.
+This places the top left corner of the legend at the top left corner of the
+image, offset by ($x, $y) pixels.
+    </para>
+    <para>
 See also <xref linkend="SetLegendWorld" />.
     </para>
   </refsect1>
@@ -3017,6 +3085,188 @@ To restore the default behavior, it was necessary to use
 <literal>SetLegendPixels(NULL, NULL)</literal>.
 Starting with PHPlot-5.3.1, the arguments may be omitted to restore the
 default behavior.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetLegendPosition">
+  <refmeta>
+    <refentrytitle>SetLegendPosition</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetLegendPosition</refname>
+    <refpurpose>Position the legend</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+<!-- This is a verbatim environment, too long for 1 PDF line -->
+    <synopsis>$plot-&gt;SetLegendPosition(<parameter>$x</parameter>, <parameter>$y</parameter>, <parameter>$relative_to</parameter>, <parameter>$x_base</parameter>, <parameter>$y_base</parameter>,
+       <optional><parameter>$x_offset</parameter></optional>, <optional><parameter>$y_offset</parameter></optional>)</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetLegendPosition</function> lets you position the legend on the
+image, using <link linkend="def-relativecoor">relative coordinates</link>,
+world coordinates, or device (pixel) coordinates.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$x</replaceable></term>
+        <term><replaceable>$y</replaceable></term>
+        <listitem>
+          <para>
+Relative coordinates of a point on the legend box to use as a reference.
+The coordinates are relative to the size of the legend box, with the upper
+left corner as (0.0, 0.0) and the lower right corner as (1.0, 1.0).
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>$relative_to</replaceable></term>
+        <listitem>
+          <para>
+A string indicating how the next two parameters ($x_base, $y_base) are
+interpreted. Accepted values are: image, plot, world, or title. See the
+description of the next parameters for details.
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>$x_base</replaceable></term>
+        <term><replaceable>$y_base</replaceable></term>
+        <listitem>
+          <para>
+Reference point for positioning the legend. The interpretation depends on
+the previous parameter $relative_to as follows.
+            <informaltable>
+              <?dbfo table-width="100%"?> <!-- Table width hint for PDF only -->
+              <tgroup cols="2">
+                <?dbhtml table-summary="Legend position relative to choices"?>
+                <colspec colname="c1" colwidth="18*" />
+                <colspec colname="c2" colwidth="82*" />
+                <thead>
+                  <row>
+                    <entry>$relative_to</entry>
+                    <entry>$x_base, $y_base</entry>
+                  </row>
+                </thead>
+                <tbody>
+                  <row>
+                    <entry>image</entry>
+                    <entry>
+Relative coordinates of a point on the image.
+The point on the legend box indicated by ($x, $y) is placed at this point.
+These coordinates are relative to the size of the image, with (0.0, 0.0)
+being the upper left corner, and (1.0, 1.0) being the lower right corner.
+                    </entry>
+                  </row>
+                  <row>
+                    <entry>plot</entry>
+                    <entry>
+Relative coordinates of a point on the plot area. (The plot area is
+generally the area enclosed by the X and Y axis lines.)
+The point on the legend box indicated by ($x, $y) is placed at this point.
+These coordinates are relative to the size of the plot area, with (0.0, 0.0)
+being the upper left corner, and (1.0, 1.0) being the lower right corner.
+                    </entry>
+                  </row>
+                  <row>
+                    <entry>title</entry>
+                    <entry>
+Relative coordinates of a point in the main plot title.
+The point on the legend box indicated by ($x, $y) is placed at this point.
+These coordinates are relative to a bounding box which encloses the main
+plot title, with (0.0, 0.0) being the upper left corner of the title,
+and (1.0, 1.0) being the lower right corner.
+                    </entry>
+                  </row>
+                  <row>
+                    <entry>world</entry>
+                    <entry>
+World coordinates
+                    </entry>
+                  </row>
+                </tbody>
+              </tgroup>
+            </informaltable>
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><replaceable>$x_offset</replaceable></term>
+        <term><replaceable>$y_offset</replaceable></term>
+        <listitem>
+          <para>
+Optional arguments specifying an additional offset for the legend, in device
+(pixel) coordinates. After the legend position has been calculated using
+the preceding arguments, this offset is added to the position. It can be
+used to move the legend a little bit away from the edge of the image or
+plot, for example. If not specified, no offset is applied.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+For examples of using <function>SetLegendPosition</function>, see
+<xref linkend="ex-legendpos"/>.
+    </para>
+    <para>
+By default, PHPlot will position the legend in the upper right corner of
+the plot area, with a small offset. This is equivalent to:
+<programlisting><![CDATA[$plot->SetLegendPosition(1, 0, 'plot', 1, 0, -5, 5);
+]]></programlisting>
+The default behavior can be restored by using NULL for the $x and $y arguments
+(or the $x_offset and $y_offset arguments)
+in <function>SetLegendPosition</function>.
+That is, using NULL for any of those arguments undoes any previous call to
+SetLegendPosition, SetLegendPixels, and SetLegendWorld.
+    </para>
+    <para>
+See <xref linkend="SetLegendPixels"/> and <xref linkend="SetLegendWorld"/>
+for simpler forms of legend positioning.
+    </para>
+    <para>
+<literal>SetLegendWorld($x, $y)</literal> is equivalent to
+<literal>SetLegendPosition(0, 0, 'world', $x, $y)</literal>.
+    </para>
+    <para>
+<literal>SetLegendPixels($x, $y)</literal> is equivalent to
+<literal>SetLegendPosition(0, 0, 'image', 0, 0, $x, $y)</literal>.
+    </para>
+    <para>
+The value of each of X and Y used in relative coordinates are usually in the
+range (0.0 &lt;= x, y &lt;= 1.0), but this is not required by PHPlot.
+For the legend box reference point ($x, $y) or when using 'title' or
+'plot' mode ($base_x, $base_y), a value outside this range may be used to
+refer to a point outside the object. For example, using (-1, -1) for ($x, $y)
+indicates a point above and to the left of the upper left corner of the
+legend box at a distance equal to the width and height of the legend box.
+Relative coordinates outside this range for 'image' mode ($base_x, $base_y)
+will be outside the image and not visible.
+    </para>
+  </refsect1>
+  <refsect1>
+    <title>History</title>
+    <para>
+This function was added in PHPlot-5.4.0, and
+<xref linkend="SetLegendPixels"/> and <xref linkend="SetLegendWorld"/>
+were changed to be simple wrappers that call
+<function>SetLegendPosition</function>.
+No other legend positioning methods were available in earlier releases.
     </para>
   </refsect1>
 </refentry>
@@ -3249,6 +3499,14 @@ The units and origin are the same as the data you are plotting.
     <para>
 The default behavior is for PHPlot to position the legend in the
 upper right corner of the plot area.
+    </para>
+    <para>
+See <xref linkend="SetLegendPosition"/> for more flexible legend
+positioning options.
+<literal>SetLegendWorld($x, $y)</literal> is equivalent to
+<literal>SetLegendPosition(0, 0, 'world', $x, $y)</literal>.
+This places the top left corner of the legend at world coordinates $x, $y
+with no pixel offset.
     </para>
     <para>
 See also <xref linkend="SetLegendPixels" />.
