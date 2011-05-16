@@ -3,6 +3,21 @@ This is phplotdocs/ChangeLog, listing changes to the PHPlot Reference Manual
 Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
+2011-05-15
+   For feature request #3291155 "More flexible legend positioning":
+   * advanced.xml: Rewrite text on legend position with multiple plots.
+   * concepts.xml: Add definition of Relative Coordinates
+   * developer.xml: Document changes to internals for SetLegendPosition
+   * examples.xml: Add new example for SetLegendPosition
+   * functions.xml: Link to new legend functions
+   * main.xml: Reference future release PHPlot-5.4.0
+   * reference.xml: Document new GetLegendSize, SetLegendPosition
+   * variables.list: Document change to internal variables for legend position
+   * Makefile: List new files
+   * etc/legendpos.php: New script, generates images for new example.
+   * images/legendpos*.png: 7 new images for new legend position example.
+   * .ispell_words: Updated spelling list
+
 2011-05-01
    For feature request #3292825 "Use point shape markers in legend box":
    * examples.xml, examples/legendshape.php, examples/legendshape1.php,

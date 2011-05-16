@@ -2,6 +2,26 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2011-05-15
+    * Feature request #3291155 "More flexible legend positioning":
+      You can now position the legend by specifying that any point on the
+      legend box be placed at any point on the image, plot area, or relative
+      to the main title.  You can get the legend box size from PHPlot, and
+      use it (for example) to adjust the plot area margins.
+      + Added new public function SetLegendPosition() which provides
+        much move flexible control over the legend position.
+      + Re-implemented SetLegendPixels() and SetLegendWorld() by
+        just having them call SetLegendPosition().
+      + Added new public function GetLegendSize() which returns the
+        height and width of the legend box.
+      + New internal function GetLegendSizeParams() with code split
+        off from DrawLegend() and used by GetLegendSize() too.
+      + New internal function GetLegendPosition() calculates the legend
+        position. This implements all the new position modes.
+      + Removed internal class variables legend_x_pos, legend_y_pos,
+        and legend_xy_world. Replaced with an array: legend_pos, which
+        holds the legend position parameters set by SetLegendPosition().
+
 2011-05-08
     * Merged 5.3.2 release changes. (The two entries below this, 2011-05-01
       and 2011-04-26, came before 5.3.2, but 5.3.2 was a single patch applied
