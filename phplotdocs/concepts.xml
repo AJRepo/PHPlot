@@ -146,6 +146,20 @@ labels, legend, title, etc.
     </varlistentry>
 
     <varlistentry>
+      <term><anchor id="def-relativecoor" />Relative Coordinates</term>
+      <listitem>
+        <para>
+A coordinate space in which the X and Y coordinates represent a fraction of
+the size of an object. The point (0,0) is defined as the upper left corner
+of the object, and (1,1) is the lower right corner. (Relative coordinate values
+are not restricted to the range 0 to 1, however.) So a point specification
+in relative coordinates to an object is independent of the size of the object.
+This coordinate system is used by <xref linkend="SetLegendPosition"/>.
+        </para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
       <term><anchor id="def-truecolor" />Truecolor Image</term>
       <listitem>
         <para>
