@@ -46,6 +46,7 @@ DrawOHLC
 DrawPieChart
 DrawPlotAreaBackground
 DrawPlotBorder
+DrawShape
 DrawSquared
 DrawStackedBars
 DrawText
@@ -71,13 +72,18 @@ GD
 GetBarColors
 GetCallback
 GetColorIndex
+GetColorIndexArray
 GetDarkColorIndex
+GetDarkColorIndexArray
 GetDataColor
 GetDataErrorColors
 GetDefaultTTFont
 GetDeviceXY
 GetImage
 GetImageBorderWidth
+GetLegendPosition
+GetLegendSize
+GetLegendSizeParams
 GetLineSpacing
 Helvetica
 ImageMagick
@@ -151,7 +157,9 @@ SetLabelScalePosition
 SetLabelType
 SetLegend
 SetLegendPixels
+SetLegendPosition
 SetLegendStyle
+SetLegendUseShapes
 SetLegendWorld
 SetLightGridColor
 SetLineSpacing
