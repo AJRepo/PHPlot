@@ -4610,12 +4610,7 @@ class PHPlot
      */
     function SetLegendPixels($which_x=NULL, $which_y=NULL)
     {
-        $this->legend_x_pos = $which_x;
-        $this->legend_y_pos = $which_y;
-        // Make sure this is unset, meaning we have pixel coords:
-        unset($this->legend_xy_world);
-
-        return TRUE;
+        return $this->SetLegendPosition(0, 0, 'image', 0, 0, $which_x, $which_y);
     }
 
     /*
@@ -4623,12 +4618,36 @@ class PHPlot
      */
     function SetLegendWorld($which_x, $which_y)
     {
-        // Since conversion from world to pixel coordinates is not yet available, just
-        // remember the coordinates and set a flag to indicate conversion is needed.
-        $this->legend_x_pos = $which_x;
-        $this->legend_y_pos = $which_y;
-        $this->legend_xy_world = TRUE;
+        return $this->SetLegendPosition(0, 0, 'world', $which_x, $which_y);
+    }
 
+    /*
+     * Specifies the position of the legend. This includes SetLegendWorld(), SetLegendPixels(), and
+     * additional choices using relative coordinates, with optional pixel offset.
+     *   $x, $y : Relative coordinates of a point on the legend box. (See below)
+     *   $relative_to : What to position the legend relative to: 'image', 'plot', 'world', or 'title'.
+     *   $x_base, $y_base : Base point for positioning.
+     *      If $relative_to is 'world', then this is a world coordinate position.
+     *      Otherwise, this is a relative coordinate position on the $relative_to element.
+     *   $x_offset, $y_offset : Additional legend box offset in device coordinates (pixels).
+     *  The legend is positioned so that point ($x,$y) is at ($x_base, $y_base).
+     *  'Relative coordinates' means: (0,0) is the upper left corner, and (1,1) is the lower right corner
+     *  of the element (legend, image, plot, or title area), regardless of its size. These are floating
+     *  point values, each usually in the range [0,1], but they can be negative or greater than 1.
+     *  If any of x, y, x_offset, or y_offset are NULL, default legend positioning is restored.
+     */
+    function SetLegendPosition($x, $y, $relative_to, $x_base, $y_base, $x_offset = 0, $y_offset = 0)
+    {
+        // Special case: NULL means restore the default positioning.
+        if (!isset($x, $y, $x_offset, $y_offset)) {
+            unset($this->legend_pos);
+        } else {
+            $mode = $this->CheckOption($relative_to, 'image, plot, title, world', __FUNCTION__);
+            if (empty($mode))
+                return FALSE;
+            // Save all values for use by GetLegendPosition()
+            $this->legend_pos = compact('x', 'y', 'mode', 'x_base', 'y_base', 'x_offset', 'y_offset');
+        }
         return TRUE;
     }
 
@@ -4660,13 +4679,22 @@ class PHPlot
     }
 
     /*
-     * Draws the graph legend
-     * This is called by DrawGraph only if $this->legend is not empty.
-     * Original code submitted by Marlin Viss
+     * Get legend sizing parameters.
+     * This is used internally by DrawLegend(), and also by the public GetLegendSize().
+     * It returns information based on any SetLegend*() calls already made. It does not use
+     * legend position or data scaling, so it can be called before data scaling is set up.
+     * Returns an associative array with these entries describing legend sizing:
+     *    'width', 'height' : Overall legend box size in pixels.
+     *    'char_w', 'char_h' : Width and height of 'E' in legend text font. (Used to size color boxes)
+     *    'v_margin' : Inside margin for legend
+     *    'text_align', 'colorbox_align' : Same as the class variables, with default applied.
+     *    'draw_colorbox' : True if color boxes will be drawn.
+     *    'dot_height' : Height of color boxes (even if not drawn), for line spacing.
+     *    'colorbox_width' : Width of color boxes.
      */
-    protected function DrawLegend()
+    protected function GetLegendSizeParams()
     {
-        $font = &$this->fonts['legend'];
+        $font = &$this->fonts['legend']; // Shortcut to font info array
 
         // Find maximum legend label line width.
         $max_width = 0;
@@ -4675,49 +4703,107 @@ class PHPlot
             if ($width > $max_width) $max_width = $width;
         }
 
-        // Use the font parameters to size the color boxes:
+        // Font parameters are used to size the color boxes:
         $char_w = $font['width'];
         $char_h = $font['height'];
         $line_spacing = $this->GetLineSpacing($font);
 
-        // Normalize text alignment and colorbox alignment variables:
+        // Apply defaults to text alignment and colorbox alignment variables:
         $text_align = isset($this->legend_text_align) ? $this->legend_text_align : 'right';
         $colorbox_align = isset($this->legend_colorbox_align) ? $this->legend_colorbox_align : 'right';
+        $draw_colorbox = ($colorbox_align != 'none');
 
         // Sizing parameters:
-        $v_margin = $char_h/2;                   // Between vertical borders and labels
-        $dot_height = $char_h + $line_spacing;   // Height of the small colored boxes
-        // Color boxes are $char_w wide, but can be adjusted using legend_colorbox_width:
-        $colorbox_width = $char_w;
+        $v_margin = $char_h / 2;                 // Between vertical borders and labels
+        $dot_height = $char_h + $line_spacing;   // Height of the color boxes (even if not drawn)
+        $colorbox_width = $char_w;               // Base color box width
         if (isset($this->legend_colorbox_width))
-            $colorbox_width *= $this->legend_colorbox_width;
+            $colorbox_width *= $this->legend_colorbox_width; // Adjustment to color box width
 
-        // Overall legend box width e.g.: | space colorbox space text space |
-        // where each space adds $char_w, and colorbox adds $char_w * its width adjustment.
-        if (($draw_colorbox = ($colorbox_align != 'none'))) {
+        // Calculate overall legend box width and height.
+        // Width is e.g.: "| space colorbox space text space |" where each space adds $char_w,
+        // and colorbox (if drawn) adds $char_w * its width adjustment.
+        if ($draw_colorbox) {
             $width = $max_width + 3 * $char_w + $colorbox_width;
         } else {
             $width = $max_width + 2 * $char_w;
         }
+        $height = $dot_height * count($this->legend) + 2 * $v_margin;
 
-        //////// Calculate box position
-        // User-defined position specified?
-        if ( !isset($this->legend_x_pos) || !isset($this->legend_y_pos)) {
-            // No, use default
-            $box_start_x = $this->plot_area[2] - $width - $this->safe_margin;
-            $box_start_y = $this->plot_area[1] + $this->safe_margin;
-        } elseif (isset($this->legend_xy_world)) {
-            // User-defined position in world-coordinates (See SetLegendWorld).
-            $box_start_x = $this->xtr($this->legend_x_pos);
-            $box_start_y = $this->ytr($this->legend_y_pos);
-        } else {
-            // User-defined position in pixel coordinates.
-            $box_start_x = $this->legend_x_pos;
-            $box_start_y = $this->legend_y_pos;
+        return compact('width', 'height', 'char_w', 'char_h', 'v_margin',
+              'text_align', 'colorbox_align', 'draw_colorbox', 'dot_height', 'colorbox_width');
+    }
+
+    /*
+     * Get legend box size. This can be used to adjust the plot margins, for example.
+     * Returns: Array of ($width, $height) of the legend box in pixels.
+     */
+    function GetLegendSize()
+    {
+        $params = $this->GetLegendSizeParams();
+        return array($params['width'], $params['height']);
+    }
+
+    /*
+     * Get legend location in device coordinates. This is a helper for DrawLegend, and is only
+     * called if there is a legend. See SetLegendWorld(), SetLegendPixels(), SetLegendPosition().
+     *   $width, $height : Width and height of the legend box.
+     * Returns: coordinates of the upper left corner of the legend box as an array ($x, $y)
+     */
+    protected function GetLegendPosition($width, $height)
+    {
+        // Extract variables set by SetLegend*(): $mode, $x, $y, $x_base, $y_base, $x_offset, $y_offset
+        if (isset($this->legend_pos['mode']))
+            extract($this->legend_pos);
+        else
+            $mode = ''; // Default legend position mode.
+
+        switch ($mode) {
+
+        case 'plot': // SetLegendPosition with mode='plot', relative coordinates over plot area.
+            return array((int)($x_base * $this->plot_area_width - $x * $width)
+                          + $this->plot_area[0] + $x_offset,
+                         (int)($y_base * $this->plot_area_height - $y * $height)
+                          + $this->plot_area[1] + $y_offset);
+
+        case 'world': // User-defined position in world-coordinates (SetLegendWorld), using x_base, y_base
+            return array($this->xtr($x_base) + $x_offset - (int)($x * $width),
+                         $this->ytr($y_base) + $y_offset - (int)($y * $height));
+
+        case 'image': // SetLegendPosition with mode='image', relative coordinates over image area.
+                      // SetLegendPixels() uses this too, with x=y=0.
+            return array((int)($x_base * $this->image_width - $x * $width) + $x_offset,
+                         (int)($y_base * $this->image_height - $y * $height) + $y_offset);
+
+        case 'title': // SetLegendPosition with mode='title', relative to main title.
+            // Recalculate main title position/size, since CalcMargins does not save it. See DrawTitle()
+            list($title_width, $title_height) = $this->SizeText($this->fonts['title'], 0, $this->title_txt);
+            $title_x = (int)(($this->image_width - $title_width) / 2);
+            return array((int)($x_base * $title_width - $x * $width) + $title_x + $x_offset,
+                         (int)($y_base * $title_height - $y * $height) + $this->title_offset + $y_offset);
+
+        default: // If mode is unset (or invalid), use default position.
+            return array ($this->plot_area[2] - $width - $this->safe_margin,
+                          $this->plot_area[1] + $this->safe_margin);
         }
+    }
 
-        // Lower right corner
-        $box_end_y = $box_start_y + $dot_height*(count($this->legend)) + 2*$v_margin;
+    /*
+     * Draws the graph legend
+     * This is called by DrawGraph only if $this->legend is not empty.
+     * Base code submitted by Marlin Viss
+     */
+    protected function DrawLegend()
+    {
+        $font = &$this->fonts['legend']; // Shortcut to font info array
+
+        // Calculate legend box sizing parameters:
+        // See GetLegendSizeParams() to see what variables are set by this.
+        extract($this->GetLegendSizeParams());
+
+        // Get legend box position:
+        list($box_start_x, $box_start_y) = $this->GetLegendPosition($width, $height);
+        $box_end_y = $box_start_y + $height;
         $box_end_x = $box_start_x + $width;
 
         // Draw outer box
