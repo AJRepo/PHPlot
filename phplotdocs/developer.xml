@@ -1356,6 +1356,33 @@ This was added in PHPlot-5.1.2.
 </varlistentry>
 
 <varlistentry>
+  <term><anchor id="GetLegendPosition" xreflabel="GetLegendPosition"/>GetLegendPosition($width, $height)</term>
+  <listitem>
+    <para>
+This calculates and returns the device coordinates (as a 2 element array X,Y)
+of the upper left corner of the legend box. $width and $height are the size of
+the legend box.  It accounts for the positioning mode, reference point,
+base point, and pixel offset as set with <xref linkend="SetLegendPosition"/>.
+Called by <xref linkend="DrawLegend"/>.
+This was added in PHPlot-5.4.0.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term><anchor id="GetLegendSizeParams" xreflabel="GetLegendSizeParams"/>GetLegendSizeParams()</term>
+  <listitem>
+    <para>
+This calculates a number of parameters that determine how to draw the
+legend, and returns an array containing those variables and their values.
+Called by <xref linkend="GetLegendSize"/> (which only uses the 'width' and
+'height' elements), and by <xref linkend="DrawLegend"/>.
+This was added in PHPlot-5.4.0.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
   <term><anchor id="GetLineSpacing" xreflabel="GetLineSpacing"/>GetLineSpacing($font)</term>
   <listitem>
     <para>
@@ -2123,6 +2150,56 @@ The keys and values of the second-level arrays are:
             If both abs_vals and sum_vals are TRUE, this means the plot type
             sums up the absolute values from the data array.
             (The stackedarea plot type does this.)</entry>
+      </row>
+    </tbody>
+  </tgroup>
+</informaltable>
+</para>
+</sect2>
+
+<sect2 id="var-legendpos">
+<title>legend_pos[]</title>
+<para>
+The <varname>legend_pos[]</varname> array contains information about
+positioning of the legend. This is set by <xref linkend="SetLegendPosition"/>,
+and by the functions which use it (<xref linkend="SetLegendPixels"/> and
+<xref linkend="SetLegendWorld"/>).
+This was added in PHPlot-5.4.0, replacing scalar variables legend_x_pos,
+legend_y_pos, and legend_xy_world.
+</para>
+
+<para>
+<?dbfo keep-together="always"?> <!-- Prevent PDF break before table -->
+The array keys correspond to the arguments to
+<xref linkend="SetLegendPosition"/> and are shown in the following table.
+<informaltable>
+  <tgroup cols="2">
+    <?dbhtml table-summary="legend_pos[] array elements"?>
+    <colspec colname="c1" colwidth="40*" />
+    <colspec colname="c2" colwidth="60*" />
+    <thead>
+      <row>
+        <entry>Keys</entry>
+        <entry>Value</entry>
+      </row>
+    </thead>
+    <tbody>
+      <row>
+        <entry>x, y</entry>
+        <entry>Relative coordinates of a point on the legend box</entry>
+      </row>
+      <row>
+        <entry>mode</entry>
+        <entry>One of: image, plot, title, or world</entry>
+      </row>
+      <row>
+        <entry>x_base, y_base</entry>
+        <entry>Relative coordinates of a point on the image, plot, or
+           title, or world coordinates</entry>
+      </row>
+      <row>
+        <entry>x_offset, y_offset</entry>
+        <entry>Pixel offset to be applied last</entry>
       </row>
     </tbody>
   </tgroup>
