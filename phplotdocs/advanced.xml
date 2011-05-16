@@ -1895,27 +1895,27 @@ and <literal>SetDrawYGrid(False)</literal>.
 <title>Legend Positioning</title>
 <para>
 Legend position with multiple plots works differently depending on whether
-the position is defaulted, set with <xref linkend="SetPlotAreaPixels"/>,
-or set with <xref linkend="SetPlotAreaWorld"/>.
-
+the position is defaulted or set, and if set what method was used.
 <itemizedlist>
   <listitem>
     <para>
 If the legend position is defaulted, a legend will be drawn at the upper
 right corner of each plot.
 The same legend will be drawn in each position, unless the contents are
-changed with <function>SetLegend()</function>.
+changed with <xref linkend="SetLegend"/>.
     </para>
   </listitem>
   <listitem>
     <para>
 If the legend position is specified using device coordinates with
-<function>SetLegendPixels()</function>,
-the legend will be drawn at those coordinates as measured on the image,
+<xref linkend="SetLegendPixels"/>, or by using
+<xref linkend="SetLegendPosition"/> (PHPlot-5.4.0 or later) with mode 'image'
+or 'title', then the legend position is relative to the image.
+The legend will be drawn at the specified position on the image,
 once per plot, at the same location.
 This repeated over-drawing is usually harmless,
 but if you want to have it drawn only once,
-either use <function>SetLegend()</function> only before the last plot,
+either use <xref linkend="SetLegend"/> only before the last plot,
 or use either <literal>SetLegend(NULL)</literal>
 or <literal>SetLegend(array())</literal>
 to cancel the legend after the first plot.
@@ -1924,10 +1924,14 @@ to cancel the legend after the first plot.
   <listitem>
     <para>
 If the legend position is specified using world coordinates with
-<function>SetLegendWorld()</function>,
-the legend will be drawn at the specified world coordinates for each plot.
-This assumes the specified world coordinates are within the plot area for
-each plot.
+<xref linkend="SetLegendWorld"/>, or by using
+<xref linkend="SetLegendPosition"/> (PHPlot-5.4.0 or later) with mode 'world'
+or 'plot', then the legend position is relative to the plot or the data
+within the plot.
+The legend will be drawn at the calculated position on each plot.
+If using <xref linkend="SetLegendWorld"/>, or
+<xref linkend="SetLegendPosition"/> with mode 'world', this assumes the
+specified world coordinates are within the plot area for each plot.
 As with the default positioning case, the same legend will be drawn for
 each plot, unless the contents are changed with
 <function>SetLegend()</function>.
@@ -2007,9 +2011,15 @@ for each plot. Remember to leave room for axis labels and titles.
   </listitem>
   <listitem>
     <para>
-If you want a legend for each plot, use <xref linkend="SetLegendPixels"/>
-or <xref linkend="SetLegendWorld"/> to position it.
+If you want a legend for each plot, use <xref linkend="SetLegendPixels"/>,
+<xref linkend="SetLegendWorld"/>, or <xref linkend="SetLegendPosition"/>
+to position it.
 Or let the position default to the upper right corner of each plot.
+If instead you want a single legend, for example outside all the plot areas,
+either set it up for the last plot, or
+set it up for any plot and cancel it for the next plot.
+Position the single legend with <xref linkend="SetLegendPixels"/>,
+or with <xref linkend="SetLegendPosition"/> using any mode except 'world'.
     </para>
   </listitem>
   <listitem>
@@ -2061,8 +2071,8 @@ off for the second plot.
 If you want a single legend, either set it up for the last plot, or
 set it up for any plot and cancel it for the next plot.
 If you want multiple legends, one per overlay, position them
-manually with <xref linkend="SetLegendWorld"/> or
-<xref linkend="SetLegendPixels"/>.
+manually with <xref linkend="SetLegendWorld"/>,
+<xref linkend="SetLegendPixels"/>, or <xref linkend="SetLegendPosition"/>.
     </para>
   </listitem>
   <listitem>
