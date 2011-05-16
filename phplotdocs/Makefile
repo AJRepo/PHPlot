@@ -49,6 +49,13 @@ STATIC_IMAGES=\
   images/labels.png \
   images/layout.png \
   images/legend-layout.png \
+  images/legendpos1.png \
+  images/legendpos2.png \
+  images/legendpos3.png \
+  images/legendpos4.png \
+  images/legendpos5.png \
+  images/legendpos6.png \
+  images/legendpos7.png \
   images/legendstyle.png \
   images/shape-bowtie.png \
   images/shape-box.png \
