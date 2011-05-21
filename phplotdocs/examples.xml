@@ -1304,4 +1304,102 @@ Case 7. Center the top of the legend below the bottom of the title:
 </sect1>
 
 <!-- =============================================== -->
+<pagebreak/>
+<sect1 id="ex-ytickanchor">
+<title>Example - Setting a Y Tick Anchor</title>
+<para>
+This example shows the use of <xref linkend="SetYTickAnchor"/> to tell PHPlot
+that we want a tick mark and label at a specific value.
+</para>
+<example id="example-ytickanchor">
+<?dbfo keep-together="auto"?>
+<title>Setting a Y Tick Anchor</title>
+<para>
+First, here is the example without a Y tick anchor. Note that there is no Y
+tick mark or label at the X axis Y=0.
+</para>
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="examples/ytickanchor.png" scale="58" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>Setting a Y Tick Anchor - 1</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+&ytickanchor;
+<para>
+Using <xref linkend="SetYTickAnchor"/>(0) tells PHPlot to shift the Y tick
+marks and labels to place a tick mark at Y=0.
+</para>
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="examples/ytickanchor1.png" scale="58" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>Setting a Y Tick Anchor - 2</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+&ytickanchor1;
+</example>
+</sect1>
+
+<!-- =============================================== -->
+<pagebreak/>
+<sect1 id="ex-xtickanchor">
+<title>Example - Hourly Data Using X Tick Anchor</title>
+<para>
+This example uses an X tick anchor (see <xref linkend="SetXTickAnchor"/>) to
+offset the X tick marks and grid lines. Hourly data is being plotted, for
+one week, and the goal is to have the tick marks and grid lines separate
+the days of the week, regardless of the time during the day of the initial
+data point.
+</para>
+
+<para>
+In this example, both X axis data labels and X tick labels are turned on.
+The data labels display weekday names, and the tick labels display the dates.
+Having both labels on is usually something to avoid, because the labels will
+overlay.
+In this case, however, only 1 in 24 points has a data label (those points
+representing noon). Tick marks are also every 24 hours, but anchored at
+midnight. So the tick and data labels are separated.
+To avoid any overlap, the tick labels are drawn vertically (90 degrees)
+while the data labels are horizontal.
+</para>
+<para>
+(Note that <xref linkend="SetXLabelAngle"/> sets the angle for both tick
+and data labels, while <xref linkend="SetXDataLabelAngle"/> sets the angle
+for data labels only. PHPlot does this to maintain compatibility.
+As a result, since the example here wants to turn the tick labels only
+(from the default 0 degrees), we also need to turn the data labels back to 0.
+The order of the calls does not matter, however.
+The same is true for label formatting with
+<xref linkend="SetXLabelType"/> and <xref linkend="SetXDataLabelType"/>.
+To get non-default tick label formatting and default data label formatting
+requires two calls as shown in the example.)
+</para>
+
+<example id="example-xtickanchor">
+<?dbfo keep-together="auto"?>
+<title>Hourly Data Using X Tick Anchor</title>
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="examples/xtickanchor.png" scale="58" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>Hourly Data Using X Tick Anchor</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+&xtickanchor;
+</example>
+</sect1>
+
+<!-- =============================================== -->
+
 </chapter>
