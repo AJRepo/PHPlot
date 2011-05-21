@@ -130,6 +130,9 @@ EXAMPLES_PHP=\
   examples/thinbarline1.php \
   examples/thinbarline2.php \
   examples/twoplot1.php \
+  examples/xtickanchor.php \
+  examples/ytickanchor.php \
+  examples/ytickanchor1.php \
 
 
 # Example XML files, generated from PHP scripts:
@@ -175,6 +178,9 @@ EXAMPLES_IMAGES=\
   examples/thinbarline1.png \
   examples/thinbarline2.png \
   examples/twoplot1.png \
+  examples/xtickanchor.png \
+  examples/ytickanchor.png \
+  examples/ytickanchor1.png \
 
 
 # Entity list file for examples:
@@ -280,6 +286,10 @@ $(EXAMPLE_LIST): $(EXAMPLES_PHP) $(EXAMPLES_XML) $(EXAMPLES_IMAGES)
 	$(PHP) $< > $@
 %.jpg: %.php
 	$(PHP) $< > $@
+
+# Special cases: These examples call others so must be rebuilt if they change.
+examples/ytickanchor1.png: examples/ytickanchor.php examples/ytickanchor1.php
+examples/legendshape1.png: examples/legendshape.php examples/legendshape1.php
 
 # === For building the variable list documentation ===
 
