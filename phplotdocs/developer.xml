@@ -350,6 +350,7 @@ values: start, end, and interval.
 This was added to PHPlot-5.0.5, although it still uses the same method
 of just dividing the interval by 10 if there is no user-supplied interval
 or tick count.
+It also accounts for a tick anchor value (starting with PHPlot-5.4.0).
 Called by <xref linkend="CalcMaxTickLabelSize"/>,
 <xref linkend="DrawYTicks"/>, and <xref linkend="DrawXTicks"/>.
     </para>
