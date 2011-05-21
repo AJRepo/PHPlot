@@ -153,6 +153,7 @@ x_label_bot_offset		CalcMargins	Label offset relative to plot area
 x_label_top_offset		CalcMargins	Label offset relative to plot area
 x_left_margin		CalcMargins	Calculated plot area margin - left side
 x_right_margin		CalcMargins	Calculated plot area margin - right side
+x_tick_anchor		SetXTickAnchor	X tick anchor point (Added in PHPlot-5.4.0)
 x_tick_cross	3	SetXTickCrossing	Length of X tick marks (inside plot area)
 x_tick_inc	''	SetXTickIncrement	Step between X tick marks
 x_tick_label_pos		SetXTickLabelPos	Position of X tick labels. (Default was 'plotdown', but is now applied at graph drawing time.)
@@ -174,6 +175,7 @@ y_label_angle	0	SetYLabelAngle	Y tick label text angle
 y_label_axis_offset		CalcMargins	Label offset relative to plot area
 y_label_left_offset		CalcMargins	Label offset relative to plot area
 y_label_right_offset		CalcMargins	Label offset relative to plot area
+y_tick_anchor		SetYTickAnchor	Y tick anchor point (Added in PHPlot-5.4.0)
 y_tick_cross	3	SetYTickCrossing	Length of Y tick marks (inside plot area)
 y_tick_inc	''	SetYTickIncrement	Step between Y tick marks
 y_tick_label_pos		SetYTickLabelPos CheckLabels	Position of Y tick labels
