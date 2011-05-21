@@ -3544,6 +3544,7 @@ class PHPlot
             $data_min = $this->plot_min_x;
             $skip_lo = $this->skip_left_tick;
             $skip_hi = $this->skip_right_tick;
+            $anchor = &$this->x_tick_anchor; // Use reference because this might not be set
         } elseif ($which == 'y') {
             $num_ticks = $this->num_y_ticks;
             $tick_inc = $this->y_tick_inc;
@@ -3551,6 +3552,7 @@ class PHPlot
             $data_min = $this->plot_min_y;
             $skip_lo = $this->skip_bottom_tick;
             $skip_hi = $this->skip_top_tick;
+            $anchor = &$this->y_tick_anchor; // Use reference because this might not be set
         } else {
             return $this->PrintError("CalcTicks: Invalid usage ($which)");
         }
@@ -3569,9 +3571,15 @@ class PHPlot
         $tick_start = (double)$data_min;
         $tick_end = (double)$data_max + ($data_max - $data_min) / 10000.0;
 
+        // If a tick anchor was given, adjust the start of the range so the anchor falls
+        // at an exact tick mark (or would, if it was within range).
+        if (isset($anchor)) {
+            $tick_start = $anchor - $tick_step * floor(($anchor - $tick_start) / $tick_step);
+        }
+
+        // Lastly, adjust for option to skip left/bottom or right/top tick marks:
         if ($skip_lo)
             $tick_start += $tick_step;
-
         if ($skip_hi)
             $tick_end -= $tick_step;
 
@@ -3994,6 +4002,26 @@ class PHPlot
     function SetYTickCrossing($which_yc)
     {
         $this->y_tick_cross = $which_yc;
+        return TRUE;
+    }
+
+    /*
+     * Set an anchor point for X tick marks. There will be an X tick mark at
+     * this exact value (if the data range were extended to include it).
+     */
+    function SetXTickAnchor($xta = NULL)
+    {
+        $this->x_tick_anchor = $xta;
+        return TRUE;
+    }
+
+    /*
+     * Set an anchor point for Y tick marks. There will be a Y tick mark at
+     * this exact value (if the data range were extended to include it).
+     */
+    function SetYTickAnchor($yta = NULL)
+    {
+        $this->y_tick_anchor = $yta;
         return TRUE;
     }
 
