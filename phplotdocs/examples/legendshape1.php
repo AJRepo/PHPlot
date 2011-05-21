@@ -1,5 +1,5 @@
 <?php
 # PHPlot Example: Linepoints plot with legend using shape markers
-# See the script named below for details.
+# This sets a variable and calls the script directly above.
 $use_shapes = TRUE;
 require_once 'examples/legendshape.php';
