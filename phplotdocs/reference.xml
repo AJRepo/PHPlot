@@ -1745,6 +1745,9 @@ True to draw the X grid lines, False to not draw the X grid lines.
   <refsect1>
     <title>Notes</title>
     <para>
+Grid lines are drawn at tick mark positions.
+    </para>
+    <para>
 <xref linkend="SetLightGridColor" /> sets the color of the grid lines.
     </para>
   </refsect1>
@@ -1852,6 +1855,9 @@ True to draw the Y grid lines, False to not draw the Y grid lines.
 
   <refsect1>
     <title>Notes</title>
+    <para>
+Grid lines are drawn at tick mark positions.
+    </para>
     <para>
 <xref linkend="SetLightGridColor" /> sets the color of the grid lines.
     </para>
@@ -3999,7 +4005,7 @@ always used a period for decimal point, and comma for thousands separator.
   <refsect1>
     <title>Description</title>
     <para>
-<function>SetNumXTicks</function> sets the exact number of tick marks to
+<function>SetNumXTicks</function> sets the number of tick marks to
 draw on the X axis.
 You can use either this function or <xref linkend="SetXTickIncrement" />
 (but not both) to control the tick mark spacing.
@@ -4023,6 +4029,15 @@ If the value is omitted or an empty string, the default behavior is restored.
 
   <refsect1>
     <title>Notes</title>
+    <para>
+<function>SetNumXTicks</function> actually sets the number of intervals into
+which PHPlot divides the X data range.  If there are N intervals, there might
+be as many as N+1 tick marks (accounting for one at each end).
+Or, there might be N or N-1 tick marks, if a tick anchor is set with
+<xref linkend="SetXTickAnchor"/>, or if PHPlot is told to omit tick marks from
+either end with <xref linkend="SetSkipLeftTick"/>
+or <xref linkend="SetSkipRightTick"/>.
+    </para>
     <para>
 If neither <function>SetNumXTicks</function> nor 
 <xref linkend="SetXTickIncrement" /> is used, the tick mark interval
@@ -4058,7 +4073,7 @@ default behavior.
   <refsect1>
     <title>Description</title>
     <para>
-<function>SetNumYTicks</function> sets the exact number of tick marks to
+<function>SetNumYTicks</function> sets the number of tick marks to
 draw on the Y axis.
 You can use either this function or <xref linkend="SetYTickIncrement" />
 (but not both) to control the tick mark spacing.
@@ -4082,6 +4097,15 @@ If the value is omitted or an empty string, the default behavior is restored.
 
   <refsect1>
     <title>Notes</title>
+    <para>
+<function>SetNumYTicks</function> actually sets the number of intervals into
+which PHPlot divides the Y data range.  If there are N intervals, there might
+be as many as N+1 tick marks (accounting for one at each end).
+Or, there might be N or N-1 tick marks, if a tick anchor is set with
+<xref linkend="SetYTickAnchor"/>, or if PHPlot is told to omit tick marks from
+either end with <xref linkend="SetSkipBottomTick"/>
+or <xref linkend="SetSkipTopTick"/>.
+    </para>
     <para>
 If neither <function>SetNumYTicks</function> nor 
 <xref linkend="SetYTickIncrement" /> is used, the tick mark interval
@@ -7050,6 +7074,85 @@ The default X and Y scale types are linear.
   </refsect1>
 </refentry>
 
+<refentry id="SetXTickAnchor">
+  <refmeta>
+    <refentrytitle>SetXTickAnchor</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetXTickAnchor</refname>
+    <refpurpose>Set an anchor point for X tick marks</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>$plot-&gt;SetXTickAnchor(<optional><parameter>$xta</parameter></optional>)</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetXTickAnchor</function> sets an anchor point for X tick marks.
+This ensures that a tick mark will be placed at that value (if it is within
+the plotted data range).  The effect of this function is to slide the set
+of tick marks along the axis until one of them falls on the anchor.  This
+also affects the position of the tick labels and X grid lines. It does not
+change the plotted data values, nor the range of values along the X axis.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$xta</replaceable></term>
+        <listitem>
+          <para>
+The desired X anchor point, in world coordinates.
+If omitted or NULL, the default of not using an anchor is restored.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+By default, there is no anchor point for X tick marks. PHPlot will
+generally place the left-most tick mark at the left of the X axis range.
+For example, if the X range is -5 to 5, and the tick increment is 2, tick
+marks will be placed at X=-5, -3, -1, 1, 3, and 5.
+Note there is no tick mark at the Y axis position X=0.
+    </para>
+    <para>
+If an X tick anchor is set, and its value is within the plotted range,
+PHPlot will adjust the left-most tick mark so that there is a tick mark
+at the X tick anchor position.
+For example, if the X range is -5 to 5, the tick increment is 2, and the X
+tick anchor is set to 0, ticks marks will be placed at X=-4, -2, 0, 2, and 4.
+    </para>
+    <para>
+The X tick anchor need not be within the plotted range. If the tick anchor
+is outside the plotted range, the tick marks will still be adjusted so that
+a tick marked would be placed at the anchor if the data range was extended
+to include it.
+For example, if the X range is -5 to 5, the tick increment is 2, and the X
+tick anchor is set to 10, ticks marks will still be placed at X=-4, -2, 0, 2,
+and 4 as in the previous example.
+    </para>
+    <para>
+See <xref linkend="ex-xtickanchor"/> for an example of setting an X tick anchor.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>History</title>
+    <para>
+This function was added in PHPlot-5.4.0.
+    </para>
+  </refsect1>
+</refentry>
+
 <refentry id="SetXTickCrossing">
   <refmeta>
     <refentrytitle>SetXTickCrossing</refentrytitle>
@@ -8469,6 +8572,85 @@ for logarithmic scales where the data spans more than one magnitude.
     </para>
     <para>
 The default X and Y scale types are linear.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetYTickAnchor">
+  <refmeta>
+    <refentrytitle>SetYTickAnchor</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetYTickAnchor</refname>
+    <refpurpose>Set an anchor point for Y tick marks</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>$plot-&gt;SetYTickAnchor(<optional><parameter>$yta</parameter></optional>)</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetYTickAnchor</function> sets an anchor point for Y tick marks.
+This ensures that a tick mark will be placed at that value (if it is within
+the plotted data range).  The effect of this function is to slide the set
+of tick marks along the axis until one of them falls on the anchor.  This
+also affects the position of the tick labels and Y grid lines. It does not
+change the plotted data values, nor the range of values along the Y axis.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$yta</replaceable></term>
+        <listitem>
+          <para>
+The desired Y anchor point, in world coordinates.
+If omitted or NULL, the default of not using an anchor is restored.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+By default, there is no anchor point for Y tick marks. PHPlot will
+generally place the bottom-most tick mark at the bottom of the Y axis range.
+For example, if the Y range is -5 to 5, and the tick increment is 2, tick
+marks will be placed at Y=-5, -3, -1, 1, 3, and 5.
+Note there is no tick mark at the X axis position Y=0.
+    </para>
+    <para>
+If a Y tick anchor is set, and its value is within the plotted range,
+PHPlot will adjust the bottom-most tick mark so that there is a tick mark
+at the Y tick anchor position.
+For example, if the Y range is -5 to 5, the tick increment is 2, and the Y
+tick anchor is set to 0, ticks marks will be placed at Y=-4, -2, 0, 2, and 4.
+    </para>
+    <para>
+The Y tick anchor need not be within the plotted range. If the tick anchor
+is outside the plotted range, the tick marks will still be adjusted so that
+a tick marked would be placed at the anchor if the data range was extended
+to include it.
+For example, if the Y range is -5 to 5, the tick increment is 2, and the Y
+tick anchor is set to 10, ticks marks will still be placed at Y=-4, -2, 0, 2,
+and 4 as in the previous example.
+    </para>
+    <para>
+See <xref linkend="ex-ytickanchor"/> for an example of setting a Y tick anchor.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>History</title>
+    <para>
+This function was added in PHPlot-5.4.0.
     </para>
   </refsect1>
 </refentry>
