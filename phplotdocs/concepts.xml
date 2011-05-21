@@ -1988,30 +1988,17 @@ X data value labels, and X tick labels called out.
 <sect2 id="conc-labels-tick">
 <title>Tick Labels</title>
 <para>
-Tick labels are calculated from the X or Y values of the data. By default,
-PHPlot will figure out what to use for X and Y tick labels, but the results
-may not be what you want. You can change the calculated tick labels by
-using several PHPlot functions.
-You can use <xref linkend="SetXTickIncrement" /> and
-<xref linkend="SetYTickIncrement" />
-to set the spacing between tick marks (in World Coordinates),
-or you can use <xref linkend="SetNumXTicks" /> and <xref linkend="SetNumYTicks" />
-to set the number of tick marks.
-These don't affect the value of the first tick mark, only the interval.
-To set the value for the first tick mark, you define the World Coordinate
-mapping with <xref linkend="SetPlotAreaWorld" />. For example:
-<programlisting><![CDATA[$plot->SetPlotAreaWorld(-10, NULL, 10, NULL);
-$plot->SetXTickIncrement(1);
-]]></programlisting>
-This results in the X tick labels going from -10 to 10, with a tick mark
-every 1 data unit.
+Tick labels identify the X or Y values at tick positions (even if the tick
+marks themselves are not drawn).
+See <xref linkend="conc-ticks"/> for information about the tick positions.
 </para>
 
 <para>
 Note that even with data type 'data-data', where explicit independent
-variable values for the data are supplied, the tick labels along that
-axis are still calculated automatically (unless modified by the functions 
-named above). For example, for vertical plots, your supplied X values in the
+variable values for the data are supplied, the tick positions and labels
+along that axis are still calculated automatically (unless modified by the
+available functions).
+For example, for vertical plots, your supplied X values in the
 data array are not used for the X tick labels.
 </para>
 
@@ -2364,17 +2351,25 @@ marks) and the left side of the plot (Y tick marks).
 These usually, but not always, correspond to the X and Y axis lines.
 You can set the tick interval or control the number of ticks, suppress the
 first or last tick on an axis, and control the tick mark size.
+You can also anchor the tick marks at a specific X or Y value.
 For a list of functions used to control tick marks,
 see <xref linkend="ref-ticks"/>.
 </para>
 <para>
-Left to its own, PHPlot will determine tick values for X and Y axes, but it
-currently isn't too smart about choosing values and you may not be happy
-with the results. You can use PHPlot functions to set the desired tick
-interval or number of ticks, but you will most likely also
-have to call <xref linkend="SetPlotAreaWorld" /> to set the X and/or Y data
-range limits. Otherwise, you get the tick intervals you want, but the
-actual values will depend on a somewhat arbitrary base value.
+Left to its own, PHPlot will determine tick positions for X and Y axes, but it
+isn't too smart about choosing the values, and you might not be happy with the
+results.  You can improve the situation with some combination of: setting
+the desired tick interval, setting a tick anchor point, or using
+<xref linkend="SetPlotAreaWorld" /> to set the X or Y data range limits
+(since the automatic calculation of tick marks is based on the data range).
+</para>
+<para>
+ For example:
+<programlisting><![CDATA[$plot->SetPlotAreaWorld(-10, NULL, 10, NULL);
+$plot->SetXTickIncrement(1);
+]]></programlisting>
+This results in the X tick labels going from -10 to 10, with a tick mark
+every 1 data unit.
 </para>
 
 </sect2>
