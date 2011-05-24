@@ -6018,26 +6018,28 @@ class PHPlot
             if ($this->x_data_label_pos != 'none')          // Draw X Data labels?
                 $this->DrawXDataLabel($this->data[$row][0], $x_now_pixels);
 
-            // Lower left and lower right X of the bars in this stack:
-            $x1 = $x_now_pixels - $x_first_bar;
-            $x2 = $x1 + $this->actual_bar_width;
-
-            // Draw the bar segments in this stack.
-            $wy1 = 0;                       // World coordinates Y1, current sum of values
-            $wy2 = $this->x_axis_position;  // World coordinates Y2, last drawn value
-            $first = TRUE;
+            // Determine bar direction based on 1st non-zero value. Note the bar direction is
+            // based on zero, not the axis value.
+            $n_recs = $this->num_recs[$row];
             $upward = TRUE; // Initialize this for the case of all segments = 0
+            for ($i = $record; $i < $n_recs; $i++) {
+                if (is_numeric($this_y = $this->data[$row][$i]) && $this_y != 0) {
+                    $upward = ($this_y > 0);
+                    break;
+                }
+            }
 
-            for ($idx = 0; $record < $this->num_recs[$row]; $record++, $idx++) {
+            $x1 = $x_now_pixels - $x_first_bar;  // Left X of bars in this stack
+            $x2 = $x1 + $this->actual_bar_width; // Right X of bars in this stack
+            $wy1 = 0;                            // World coordinates Y1, current sum of values
+            $wy2 = $this->x_axis_position;       // World coordinates Y2, last drawn value
 
-                // Skip missing Y values, and ignore Y=0 values.
-                if (is_numeric($this->data[$row][$record])
-                    && ($this_y = $this->data[$row][$record]) != 0) {
+            // Draw bar segments and labels in this stack.
+            $first = TRUE;
+            for ($idx = 0; $record < $n_recs; $record++, $idx++) {
 
-                    // First non-zero value sets the direction, $upward. Note this compares to 0,
-                    // not the axis position. Segments are based at 0 but clip to the axis.
-                    if ($first)
-                        $upward = ($this_y > 0);
+                // Skip missing Y values. Process Y=0 values due to special case of moved axis.
+                if (is_numeric($this_y = $this->data[$row][$record])) {
 
                     $wy1 += $this_y;    // Keep the running total for this bar stack
 
@@ -6066,8 +6068,8 @@ class PHPlot
                         }
                         // Mark the new end of the bar, conditional on segment height > 0.
                         $wy2 = $wy1;
+                        $first = FALSE;
                     }
-                    $first = FALSE;
                 }
             }   // end for
 
@@ -6110,26 +6112,29 @@ class PHPlot
             if ($this->y_data_label_pos != 'none')          // Draw Y Data labels?
                 $this->DrawYDataLabel($this->data[$row][0], $y_now_pixels);
 
-            // Lower left and upper left Y of the bars in this stack:
-            $y1 = $y_now_pixels + $y_first_bar;
-            $y2 = $y1 - $this->actual_bar_width;
-
-            // Draw the bar segments in this stack:
-            $wx1 = 0;                       // World coordinates X1, current sum of values
-            $wx2 = $this->y_axis_position;  // World coordinates X2, last drawn value
-            $first = TRUE;
+            // Determine bar direction based on 1st non-zero value. Note the bar direction is
+            // based on zero, not the axis value.
+            $n_recs = $this->num_recs[$row];
             $rightward = TRUE; // Initialize this for the case of all segments = 0
+            for ($i = $record; $i < $n_recs; $i++) {
+                if (is_numeric($this_x = $this->data[$row][$i]) && $this_x != 0) {
+                    $rightward = ($this_x > 0);
+                    break;
+                }
+            }
 
+            // Lower left and upper left Y of the bars in this stack:
+            $y1 = $y_now_pixels + $y_first_bar;  // Lower Y of bars in this stack
+            $y2 = $y1 - $this->actual_bar_width; // Upper Y of bars in this stack
+            $wx1 = 0;                            // World coordinates X1, current sum of values
+            $wx2 = $this->y_axis_position;       // World coordinates X2, last drawn value
+
+            // Draw bar segments and labels in this stack.
+            $first = TRUE;
             for ($idx = 0; $record < $this->num_recs[$row]; $record++, $idx++) {
 
-                // Skip missing X values, and ignore X<0 values.
-                if (is_numeric($this->data[$row][$record])
-                    && ($this_x = $this->data[$row][$record]) != 0) {
-
-                    // First non-zero value sets the direction, $rightward. Note this compares to 0,
-                    // not the axis position. Segments are based at 0 but clip to the axis.
-                    if ($first)
-                        $rightward = ($this_x > 0);
+                // Skip missing X values. Process Y=0 values due to special case of moved axis.
+                if (is_numeric($this_x = $this->data[$row][$record])) {
 
                     $wx1 += $this_x;  // Keep the running total for this bar stack
 
@@ -6157,8 +6162,8 @@ class PHPlot
                         }
                         // Mark the new end of the bar, conditional on segment width > 0.
                         $wx2 = $wx1;
+                        $first = FALSE;
                     }
-                    $first = FALSE;
                 }
             }   // end for
 
