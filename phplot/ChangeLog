@@ -1,6 +1,19 @@
 This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
+2011-05-23
+    * Fix bug 3296884 "Undefined variable with stackedbars":
+      This is part 2 of the fix. (Part 1 fixed the undefined variable error
+      when the first stack was all zeros, but did not fix related problems.)
+
+      Changed DrawStackedBars() and DrawHorizStackedBars():
+      + Do not ignore zero values. A leading zero value is significant if the
+        axis is moved in the direction opposite to the stack direction.  Now
+        PHPlot will draw a bar segment from the axis to zero in this case.
+        Also a trailing zero value will produce a color cap on shaded bars.
+      + Determine each stack direction before drawing it.  This is necessary
+        to be able to draw the leading 0 segment case correctly.
+
 2011-05-21
     * Feature request #3303654 "Force tick mark at specific value":
       + New functions SetXTickAnchor and SetYTickAnchor.

@@ -3,6 +3,9 @@ This is phplotdocs/ChangeLog, listing changes to the PHPlot Reference Manual
 Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
+2011-05-23
+   * concepts.xml: Explain new stackedbars plot behavior regarding zeros.
+
 2011-05-21
    For feature request #3303654 "Force tick mark at specific value":
    * concepts.xml: Rewrite text on ticks and tick labels
