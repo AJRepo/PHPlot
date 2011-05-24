@@ -1191,6 +1191,15 @@ It also does not draw any segment on the wrong side of the axis
 (which is normally at 0).
 </para>
 <para>
+Segments of length zero in a bar stack are usually ignored, but they might
+be visible if the axis is moved in the direction opposite to the bar stack
+direction.  (For example, axis is at Y=2, stack contains segment values 0
+and -4; the 0 segment is drawn down from the axis at Y=2 to Y=0, followed
+by the second segment down to -4).  Also, a segment with value zero at the
+top of a stack in a shaded vertical stackedbars plot will be drawn as a
+'cap' on the bar in that data color.
+</para>
+<para>
 For vertical bars, use data type <xref linkend="text-data"/>.
 The data X values are assumed to be at 0.5+N for N=0,1,2...
 For horizontal bars, use data type <xref linkend="text-data-yx"/>.
@@ -1214,8 +1223,9 @@ Examples of this plot type can be seen in
 <xref linkend="ex-horizstackedbar" />.
 </para>
 <para>
-Horizontal stacked bar plots were added in PHPlot-5.1.3.
-Support for negative values in stacked bar plots was added in PHPlot-5.2.0.
+Horizontal stackedbars plots were added in PHPlot-5.1.3.
+Support for negative values in stackedbars plots was added in PHPlot-5.2.0.
+Before PHPlot-5.4.0, zero values were completely ignored in stackedbars plots.
 </para>
 </sect2>
 
