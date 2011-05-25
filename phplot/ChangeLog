@@ -1,6 +1,9 @@
 This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
+2011-05-25
+    * Added class constant PHPlot::version with the PHPlot release version.
+
 2011-05-23
     * Fix bug 3296884 "Undefined variable with stackedbars":
       This is part 2 of the fix. (Part 1 fixed the undefined variable error
