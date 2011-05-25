@@ -35,6 +35,8 @@
 
 class PHPlot
 {
+    const version = '5.3.2-CVS $Revision$';
+
     /* Declare class variables which are initialized to static values. Many more class variables
      * are used, defined as needed, but are unset by default.
      * All these are declared as public. While it is tempting to make them private or protected, this
