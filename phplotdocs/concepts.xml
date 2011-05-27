@@ -560,9 +560,9 @@ The <link linkend="plottype-lines">lines</link> and
 concept of missing points. A missing point is represented in your data
 array with an empty string instead of a Y value. For example:
 <programlisting><![CDATA[$data = array( array('1996', 45.5),
-                 array('1997', 53.8),
-                 array('1998', ''),   # No data available for 1998
-                 array('1999', 34.1));
+               array('1997', 53.8),
+               array('1998', ''),   # No data available for 1998
+               array('1999', 34.1));
 ]]></programlisting>
 </para>
 <para>
@@ -2026,8 +2026,8 @@ for vertical plots, and Y for horizontal plots.
 These data labels are supplied in your data array for each data point.
 For example, with data type text-data :
 <programlisting><![CDATA[$data = array( array('Peaches',100),
-                    array('Apples', 140),
-                    array('Pears', 90));
+               array('Apples', 140),
+               array('Pears', 90));
 ]]></programlisting>
 The three points have data labels 'Peaches', 'Apples', and 'Pears'.
 For vertical plots, these data labels will be drawn at the bottom of the plot
@@ -2470,9 +2470,9 @@ for more information on using special characters.
 <para>
 Here are some font selection examples for Windows:
 <programlisting><![CDATA[# For titles, use Arial Bold Italic at 14 points:
-   $plot->SetFontTTF('title', 'ARIALBI.TTF', 14)
-   # For X Title, use Verdana at 12 points:
-   $plot->SetFontTTF('x_title', 'VERDANA.TTF', 12)
+$plot->SetFontTTF('title', 'ARIALBI.TTF', 14)
+# For X Title, use Verdana at 12 points:
+$plot->SetFontTTF('x_title', 'VERDANA.TTF', 12)
 ]]></programlisting>
 </para>
 
@@ -2532,20 +2532,20 @@ See the next section for more information on using special characters.
 <para>
 Here are some font selection examples for Linux:
 <programlisting><![CDATA[# On systems with fonts in an expected place, like Slackware Linux,
-   # just use the font filename:
-   # For titles, use Liberation Sans Bold Italic at 14 points:
-   $plot->SetFontTTF('title', 'LiberationSans-BoldItalic.ttf', 14)
-   # For X Title, use DejaVuSans Bold at 12 points:
-   $plot->SetFontTTF('x_title', 'DejaVuSans-Bold.ttf', 12)
+# just use the font filename:
+# For titles, use Liberation Sans Bold Italic at 14 points:
+$plot->SetFontTTF('title', 'LiberationSans-BoldItalic.ttf', 14)
+# For X Title, use DejaVuSans Bold at 12 points:
+$plot->SetFontTTF('x_title', 'DejaVuSans-Bold.ttf', 12)
 
-   # Ubuntu and Debian use subdirectories under a searched path.
-   # You can use a partial path here.
-   $plot->SetFontTTF('x_title', 'ttf-liberation/LiberationSans-Regular.ttf', 12)
+# Ubuntu and Debian use subdirectories under a searched path.
+# You can use a partial path here.
+$plot->SetFontTTF('x_title', 'ttf-liberation/LiberationSans-Regular.ttf', 12)
 
-   # Fedora uses subdirectories which are not under a searched path.
-   # You must use full paths here.
-   $plot->SetTTFPath('/usr/share/fonts/liberation/');
-   $plot->SetFontTTF('x_title', 'LiberationSans-Regular.ttf', 12)
+# Fedora uses subdirectories which are not under a searched path.
+# You must use full paths here.
+$plot->SetTTFPath('/usr/share/fonts/liberation/');
+$plot->SetFontTTF('x_title', 'LiberationSans-Regular.ttf', 12)
 ]]></programlisting>
 </para>
 
@@ -2654,7 +2654,7 @@ of hex escapes. For example, the Euro symbol is: "\xe2\x82\xac".
 These are shown in the example below, both of which set the Y axis title to
 "Items per &euro;100".
 <programlisting><![CDATA[$plot->SetYTitle("Items per &#8364;100"); # Numeric character entity
-  $plot->SetYTitle("Items per \xe2\x82\xac100"); # UTF-8 encoding
+$plot->SetYTitle("Items per \xe2\x82\xac100"); # UTF-8 encoding
 ]]></programlisting>
 </para>
 
