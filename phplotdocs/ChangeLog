@@ -3,6 +3,9 @@ This is phplotdocs/ChangeLog, listing changes to the PHPlot Reference Manual
 Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
+2011-05-27
+   For release with PHPlot-5.4.0 (no changes)
+
 2011-05-26
    * concepts.xml: Fix bad indents in some programlisting blocks.
 
