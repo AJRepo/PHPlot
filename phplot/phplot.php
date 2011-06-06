@@ -1,7 +1,7 @@
 <?php
 /* $Id$ */
 /*
- * PHPLOT Version 5.4.0
+ * PHPLOT Version 5.4.0 + CVS (This is an unreleased CVS version!)
  *
  * A PHP class for creating scientific and business charts
  * Visit http://sourceforge.net/projects/phplot/
@@ -35,7 +35,7 @@
 
 class PHPlot
 {
-    const version = '5.4.0';
+    const version = '5.4.0-CVS $Revision$';
 
     /* Declare class variables which are initialized to static values. Many more class variables
      * are used, defined as needed, but are unset by default.
@@ -6237,13 +6237,15 @@ class PHPlot
             if ($this->x_data_label_pos != 'none')          // Draw X Data labels?
                 $this->DrawXDataLabel($this->data[$row][0], $x_now_pixels, $row);
 
-            // Require and use 4 numeric values in each row.
-            if ($this->num_recs[$row] - $record != 4
-                    || !is_numeric($yo = $this->data[$row][$record++])
-                    || !is_numeric($yh = $this->data[$row][$record++])
-                    || !is_numeric($yl = $this->data[$row][$record++])
-                    || !is_numeric($yc = $this->data[$row][$record++])) {
+            // Each row must have 4 values, but skip rows with non-numeric entries.
+            if ($this->num_recs[$row] - $record != 4) {
                 return $this->PrintError("DrawOHLC: row $row must have 4 values.");
+            }
+            if (!is_numeric($yo = $this->data[$row][$record++])
+             || !is_numeric($yh = $this->data[$row][$record++])
+             || !is_numeric($yl = $this->data[$row][$record++])
+             || !is_numeric($yc = $this->data[$row][$record++])) {
+                continue;
             }
 
             // Set device coordinates for each value and direction flag:
