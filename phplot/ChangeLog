@@ -1,6 +1,13 @@
 This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
+
+2011-06-05
+    * Fixed bug 3312134 "Allow missing points in OHLC plots":
+      You can now skip points in the 3 OHLC plot types by using empty strings
+      ('') for the 4 values in the row. All rows must still have 4 values, but
+      if any is non-numeric the row will be skipped.
+
 2011-05-27 (lbayuk)     ===== Released as 5.4.0 =====
     * phplot.php: Updated version comment and version constant
     * README.txt: Updated for new release
