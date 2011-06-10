@@ -3,6 +3,13 @@ This is phplotdocs/ChangeLog, listing changes to the PHPlot Reference Manual
 Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
+
+2011-06-09
+   * reference.xml: Remove 8 places where zero-based sequential integer
+     indexed arrays are described as "what the PHP manual calls 'the usual
+     integer indices (starting from zero, increasing by one)'." The PHP
+     manual no longer has this text.
+
 2011-05-27
    For release with PHPlot-5.4.0 (no changes)
 
