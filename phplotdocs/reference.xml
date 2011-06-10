@@ -896,8 +896,7 @@ See <xref linkend="conc-colors" /> for more on color values.
     <title>Notes</title>
     <para>
 If an array is used for <parameter>$border</parameter>, it
-must use zero based sequential integer indexes. This is what the PHP manual 
-calls 'the usual integer indices (starting from zero, increasing by one)'.
+must use zero-based sequential integer indexes.
     </para>
     <para>
 If this function is never called, and <xref linkend="SetShading" /> is called
@@ -1002,8 +1001,7 @@ See <xref linkend="conc-truecolor"/> for more information.
     <title>Notes</title>
     <para>
 If an array is used for <parameter>$data_colors</parameter>, it
-must use zero based sequential integer indexes. This is what the PHP manual 
-calls 'the usual integer indices (starting from zero, increasing by one)'.
+must use zero-based sequential integer indexes.
     </para>
     <para>
 Usually the <parameter>$data_colors</parameter> argument is an array of colors,
@@ -1264,9 +1262,8 @@ set by <xref linkend="SetDataType" />.
   <refsect1>
     <title>Notes</title>
     <para>
-The data array <parameter>$dv</parameter> must use zero based sequential
-integer indexes. This is what the PHP manual calls 'the usual integer
-indices (starting from zero, increasing by one)'. Each entry in the data
+The data array <parameter>$dv</parameter> must use zero-based sequential
+integer indexes.  Each entry in the data
 array is also an array, representing one 'record'. The record arrays need
 not use zero based sequential integer indexes; the entries are processed in
 the same order in which they were defined, regardless of the index values.
@@ -1908,8 +1905,7 @@ See <xref linkend="conc-colors" /> for more on color values.
     <title>Notes</title>
     <para>
 If an array is used for <parameter>$error_bar_colors</parameter>, it
-must use zero based sequential integer indexes. This is what the PHP manual 
-calls 'the usual integer indices (starting from zero, increasing by one)'.
+must use zero-based sequential integer indexes.
     </para>
     <para>
 If <parameter>$error_bar_colors</parameter> is not an array, but a single color
@@ -3706,8 +3702,7 @@ Or, a single value of 'solid' or 'dashed' to apply to all data sets.
     <title>Notes</title>
     <para>
 If an array is used for <parameter>$ls</parameter>, it
-must use zero based sequential integer indexes. This is what the PHP manual 
-calls 'the usual integer indices (starting from zero, increasing by one)'.
+must use zero-based sequential integer indexes.
     </para>
     <para>
 The line style for dashed lines can be set with
@@ -3770,8 +3765,7 @@ Or, a single value to be used for all data sets.
     <title>Notes</title>
     <para>
 If an array is used for <parameter>$lw</parameter>, it
-must use zero based sequential integer indexes. This is what the PHP manual 
-calls 'the usual integer indices (starting from zero, increasing by one)'.
+must use zero-based sequential integer indexes.
     </para>
     <para>
 By default, all data set plot lines are 1 pixel wide.
@@ -5021,8 +5015,7 @@ The following shapes are available:
     <title>Notes</title>
     <para>
 If an array is used for <parameter>$pt</parameter>, it
-must use zero based sequential integer indexes. This is what the PHP manual 
-calls 'the usual integer indices (starting from zero, increasing by one)'.
+must use zero-based sequential integer indexes.
     </para>
     <para>
 This applies only to 'points' and 'linepoints' plot types.
@@ -5114,8 +5107,7 @@ data set in a plot.
     <title>Notes</title>
     <para>
 If an array is used for <parameter>$ps</parameter>, it
-must use zero based sequential integer indexes. This is what the PHP manual 
-calls 'the usual integer indices (starting from zero, increasing by one)'.
+must use zero-based sequential integer indexes.
     </para>
     <para>
 This applies only to 'points' and 'linepoints' plot types.
