@@ -1268,6 +1268,9 @@ array is also an array, representing one 'record'. The record arrays need
 not use zero based sequential integer indexes; the entries are processed in
 the same order in which they were defined, regardless of the index values.
     </para>
+    <para>
+For more on data arrays and data types, see <xref linkend="conc-datatypes"/>.
+    </para>
   </refsect1>
 </refentry>
 
@@ -1436,7 +1439,7 @@ the missing datum in the usual way. Use SetDrawBrokenLines to leave a gap
 between the points before and after missing data instead.
     </para>
     <para>
-This only applies to 'lines' and 'squared' plot types.
+This only applies to 'lines', 'linepoints', and 'squared' plot types.
     </para>
   </refsect1>
 
