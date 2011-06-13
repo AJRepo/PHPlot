@@ -2037,14 +2037,29 @@ class PHPlot
         $this->DecodeDataType();
 
         // Calculate the maximum number of dependent values per independent value
-        // (e.g. Y for each X), or the number of pie slices.
-        if ($this->datatype_pie_single) {
-            $this->data_columns = $this->num_data_rows; // Special case for 1 type of pie chart.
+        // (e.g. Y for each X), or the number of pie slices. Also validate the rows.
+        $skip = $this->datatype_implied ? 1 : 2; // Skip factor for data label and independent variable
+        if ($this->datatype_error_bars) {
+            $this->data_columns = (int)(($this->records_per_group - $skip) / 3);
+            // Validate the data array for error plots: (label, X, then groups of Y, +err, -err):
+            for ($i = 0; $i < $this->num_data_rows; $i++) {
+                if ($this->num_recs[$i] < $skip || ($this->num_recs[$i] - $skip) % 3 != 0)
+                    return $this->PrintError("DrawGraph(): Invalid $this->data_type data array (row $i)");
+            }
+        } elseif ($this->datatype_pie_single) {
+            $this->data_columns = $this->num_data_rows; // Special case for this type of pie chart.
+            // Validate the data array for text-data-single pie charts. Requires 1 value per row.
+            for ($i = 0; $i < $this->num_data_rows; $i++) {
+                if ($this->num_recs[$i] != 2)
+                    return $this->PrintError("DrawGraph(): Invalid $this->data_type data array (row $i)");
+            }
         } else {
-            $skip = $this->datatype_implied ? 1 : 2; // Skip data label and independent variable if used
             $this->data_columns = $this->records_per_group - $skip;
-            if ($this->datatype_error_bars) // Each Y has +err and -err along with it
-                $this->data_columns = (int)($this->data_columns / 3);
+            // Validate the data array for non-error plots:
+            for ($i = 0; $i < $this->num_data_rows; $i++) {
+                if ($this->num_recs[$i] < $skip)
+                    return $this->PrintError("DrawGraph(): Invalid $this->data_type data array (row $i)");
+            }
         }
         return TRUE;
     }
@@ -2416,9 +2431,9 @@ class PHPlot
     }
 
     /*
-     * Copy the array passed as data values. We convert to numerical indexes, for its
-     * use for (or while) loops, which sometimes are faster. Performance improvements
-     * vary from 28% in DrawLines() to 49% in DrawArea() for plot drawing functions.
+     * Copy the array of data values, converting rows to numerical indexes.
+     * Also validates that the array uses 0-based sequential integer indexes, and that each
+     * array value (row) is another array. Other validation is deferred to CheckDataArray().
      */
     function SetDataValues($which_dv)
     {
@@ -2427,16 +2442,17 @@ class PHPlot
         $this->data = array();
         $this->num_recs = array();
         for ($i = 0; $i < $this->num_data_rows; $i++) {
+            if (!isset($which_dv[$i]) || !is_array($which_dv[$i])) {
+                return $this->PrintError("SetDataValues(): Invalid data array (row $i)");
+            }
             $this->data[$i] = array_values($which_dv[$i]);   // convert to numerical indices.
 
             // Count size of each row, and total for the array.
-            $recs = count($this->data[$i]);
-            $this->total_records += $recs;
-            $this->num_recs[$i] = $recs;
+            $this->total_records += $this->num_recs[$i] = count($this->data[$i]);
         }
         // This is the size of the widest row in the data array
         // Note records_per_group isn't used much anymore. See data_columns in CheckDataArray()
-        $this->records_per_group = max($this->num_recs);
+        $this->records_per_group = empty($this->num_recs) ? 0 : max($this->num_recs);
         return TRUE;
     }
 
@@ -2486,13 +2502,13 @@ class PHPlot
      */
     protected function number_format($number, $decimals=0)
     {
-        if (!isset($this->decimal_point) || !isset($this->thousands_sep)) {
+        if (!isset($this->decimal_point, $this->thousands_sep)) {
             // Load locale-specific values from environment, unless disabled:
             if (empty($this->locale_override))
                 @setlocale(LC_ALL, '');
             // Fetch locale settings:
             $locale = @localeconv();
-            if (isset($locale['decimal_point']) && isset($locale['thousands_sep'])) {
+            if (isset($locale['decimal_point'], $locale['thousands_sep'])) {
                 $this->decimal_point = $locale['decimal_point'];
                 $this->thousands_sep = $locale['thousands_sep'];
             } else {
@@ -5527,6 +5543,7 @@ class PHPlot
             return FALSE;
 
         $n = $this->num_data_rows;  // Number of X values
+        if ($n < 2) return TRUE;    // Require at least 2 rows, for imagefilledpolygon().
 
         // These arrays store the device X and Y coordinates for all lines:
         $xd = array();
@@ -5617,6 +5634,7 @@ class PHPlot
 
         // Flag array telling if the current point is valid, one element per plot line.
         // If start_lines[i] is true, then (lastx[i], lasty[i]) is the previous point.
+        if ($this->data_columns == 0) return TRUE; // No data to plot; prevent array_fill error.
         $start_lines = array_fill(0, $this->data_columns, FALSE);
 
         $gcvars = array(); // For GetDataColor, which initializes and uses this.
@@ -5690,6 +5708,7 @@ class PHPlot
      */
     protected function DrawLinesError($paired = FALSE)
     {
+        if ($this->data_columns == 0) return TRUE; // No data to plot; prevent array_fill error.
         $start_lines = array_fill(0, $this->data_columns, FALSE);
 
         $gcvars = array(); // For GetDataErrorColors, which initializes and uses this.
@@ -5783,6 +5802,7 @@ class PHPlot
         if (!$this->CheckDataType('text-data, data-data'))
             return FALSE;
 
+        if ($this->data_columns == 0) return TRUE; // No data to plot; prevent array_fill error.
         // Flag array telling if the current point is valid, one element per plot line.
         // If start_lines[i] is true, then (lastx[i], lasty[i]) is the previous point.
         $start_lines = array_fill(0, $this->data_columns, FALSE);
@@ -6184,7 +6204,7 @@ class PHPlot
      * Draw a financial "Open/High/Low/Close" (OHLC) plot, including candlestick plots.
      * Data format can be text-data (label, Yo, Yh, Yl, Yc) or data-data (label, X, Yo, Yh, Yl, Yc).
      * Yo="Opening price", Yc="Closing price", Yl="Low price", Yh="High price".
-     * Each row must have exactly 4 Y values. No multiple data sets, no missing values.
+     * Each row must have exactly 4 Y values. Indicate a missing point using empty strings for each Yx.
      * There are 3 subtypes, selected by $draw_candles and $always_fill.
      *   $draw_candles  $always_fill  Description:
      *    FALSE          N/A          A basic OHLC chart with a vertical line for price range, horizontal
@@ -6205,6 +6225,8 @@ class PHPlot
     {
         if (!$this->CheckDataType('text-data, data-data'))
             return FALSE;
+        if ($this->data_columns != 4) // early error check (more inside the loop)
+            return $this->PrintError("DrawOHLC(): rows must have 4 values.");
 
         // Assign name of GD function to draw candlestick bodies for stocks that close up.
         $draw_body_close_up = $always_fill ? 'imagefilledrectangle' : 'imagerectangle';
@@ -6239,7 +6261,7 @@ class PHPlot
 
             // Each row must have 4 values, but skip rows with non-numeric entries.
             if ($this->num_recs[$row] - $record != 4) {
-                return $this->PrintError("DrawOHLC: row $row must have 4 values.");
+                return $this->PrintError("DrawOHLC(): row $row must have 4 values.");
             }
             if (!is_numeric($yo = $this->data[$row][$record++])
              || !is_numeric($yh = $this->data[$row][$record++])
