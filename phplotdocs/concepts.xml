@@ -242,6 +242,12 @@ instead.
     </para>
   </listitem>
 </orderedlist>
+The order of operations you use between creating a PHPlot object and output
+of the plot does not matter. The PHPlot class sets internal class variables
+as you configure the plot, but doesn't do anything with the values until
+you are ready. For example, setting a font for the plot title, then setting
+the title text, is the same as setting the title text first, then the font.
+In both cases, the title will be drawn using the font you selected.
 </para>
 
 <note>
@@ -555,21 +561,48 @@ will convert the data array to use numeric indexes.
 <sect2 id="conc-datatypes-missing">
 <title>Missing Data in Data Arrays</title>
 <para>
-The <link linkend="plottype-lines">lines</link> and
-<link linkend="plottype-squared">squared</link> plot types support the
-concept of missing points. A missing point is represented in your data
-array with an empty string instead of a Y value. For example:
+Most plot types support the concept of missing points.
+A missing point is represented in your data array with an empty string
+instead of a Y value. (Actually, any non-numeric value works.) For example:
 <programlisting><![CDATA[$data = array( array('1996', 45.5),
                array('1997', 53.8),
                array('1998', ''),   # No data available for 1998
                array('1999', 34.1));
 ]]></programlisting>
+(For horizontal plots, the missing value is X not Y.)
 </para>
+
 <para>
+With the <link linkend="plottype-lines">lines</link>,
+<link linkend="plottype-linepoints">linepoints</link>, and
+<link linkend="plottype-squared">squared</link> plot types,
+there are two ways to handle missing points.
 By default, PHPlot will act as if the missing point does not exist,
 connecting the points before it and after it. You can use
 <xref linkend="SetDrawBrokenLines" /> to leave a gap at the missing point
 instead.
+</para>
+
+<para>
+The <link linkend="plottype-candlesticks">candlesticks</link>,
+<link linkend="plottype-candlesticks2">candlesticks2</link>,
+and <link linkend="plottype-ohlc">ohlc</link> plot types
+support missing points. Specify all four Y values at the missing point
+as empty strings. (This does not work with PHPlot-5.4.0 and earlier.)
+</para>
+
+<para>
+The <link linkend="plottype-area">area</link>,
+<link linkend="plottype-stackedarea">stackedarea</link>, and
+<link linkend="plottype-stackedbars">stackedbars</link> plot types
+do not support missing points. Non-numeric values are taken as zero for
+these plot types.
+</para>
+
+<para>
+All other plot types support missing points and simply ignore the point.
+That is, no bar, point shape, thinbar line, etc. will be plotted at that
+position.
 </para>
 
 </sect2>
@@ -605,6 +638,33 @@ order.
       </para>
     </listitem>
   </itemizedlist>
+</para>
+</sect2>
+
+<sect2 id="conc-datatypes-validation">
+<title>Data Array Validation</title>
+<para>
+PHPlot checks the validity of the data array in 3 stages.
+<xref linkend="SetDataValues"/> only checks that it really was given an
+array, that the array contains zero-based sequential integer keys, and
+that the values are also arrays.
+</para>
+<para>
+More extensive checking takes place when the graph is drawn with
+<xref linkend="DrawGraph"/>. At that time, PHPlot checks that the data array
+is not empty, and that the rows contain a correct number of entries depending
+on the data type. A third stage of checking takes place for specific plot types.
+For example, OHLC plots require 4 values, and area plots require the same
+number of values for each row. (These requirements are documented in
+<xref linkend="conc-plottypes"/>.) If any of these checks fails,
+PHPlot produces an error image instead of a plot.
+</para>
+<para>
+An empty plot will be produced if the data array is valid but contains no
+numeric Y values (X values for horizontal plots). The result has titles, X
+and Y axis with labels and tick marks (except for pie plots), and other
+applicable plot features, but no actual plotted data. There is no error or
+warning from PHPlot when an empty plot is produced.
 </para>
 </sect2>
 
@@ -720,6 +780,10 @@ and <xref linkend="data-data"/>.
 For 'text-data', the data X values are assumed to be at 0.5+N for N=0,1,2...
 </para>
 <para>
+A minimum of 2 rows (X values and corresponding Y value(s)) is required for
+this plot type.  If there are fewer than 2 rows, an empty plot will be produced.
+</para>
+<para>
 This plot type uses the absolute value of each supplied Y, because negative
 values do not make sense here. Missing values are taken as zero.
 All records in the data array must have the same number of Y values.
@@ -760,6 +824,11 @@ The border color (if shading is off) can be set with
 <xref linkend="SetDataBorderColors" />.
 </para>
 <para>
+An empty string (or any non-numeric value) for the dependent variable
+(Y, for vertical plots) indicates a missing point.
+No bar will be drawn at missing point positions.
+</para>
+<para>
 Examples of this plot type can be seen in
 <xref linkend="ex-bars1" />,
 <xref linkend="ex-bars2" />,
@@ -797,7 +866,10 @@ For 'text-data', the data X values are assumed to be at 0.5+N for N=0,1,2...
 <para>
 This plot type requires exactly 4 Y values for each X. These represent the
 Open, High, Low, and Close prices in that order.
-Multiple data sets are not supported. Missing Y values are not allowed.
+Multiple data sets are not supported.
+A missing point is indicated by using four empty strings
+(or any non-numeric value) for the 4 Y values.
+(Missing points were not allowed for this plot type in PHPlot-5.4.0 and earlier.)
 </para>
 <para>
 This plot type uses 4 colors from the data colors array.
@@ -846,6 +918,14 @@ As with candlesticks, this plot type requires exactly 4 Y values for each X:
 Open, High, Low, and Close prices.
 </para>
 <para>
+This plot type requires exactly 4 Y values for each X. These represent the
+Open, High, Low, and Close prices in that order.
+Multiple data sets are not supported.
+A missing point is indicated by using four empty strings
+(or any non-numeric value) for the 4 Y values.
+(Missing points were not allowed for this plot type in PHPlot-5.4.0 and earlier.)
+</para>
+<para>
 An example of this plot type can be seen in
 <xref linkend="ex-ohlccandlesticks2"/>.
 </para>
@@ -865,6 +945,12 @@ This plot type works with data types <xref linkend="text-data"/>
 and <xref linkend="data-data"/>.
 For 'text-data', the data X values are assumed to be at 0.5+N for N=0,1,2...
 It also works with <xref linkend="data-data-error"/> for error bars.
+</para>
+<para>
+An empty string (or any non-numeric value) for a Y value
+indicates a missing point.
+PHPlot can either skip the line segments around missing points, or connect
+the adjacent points. See <xref linkend="SetDrawBrokenLines"/> for details.
 </para>
 <para>
 Line and marker colors for each line are set with
@@ -908,6 +994,12 @@ For 'text-data', the data X values are assumed to be at 0.5+N for N=0,1,2...
 It also works with <xref linkend="data-data-error"/> for error bars.
 </para>
 <para>
+An empty string (or any non-numeric value) for a Y value
+indicates a missing point.
+PHPlot can either skip the line segments around missing points, or connect
+the adjacent points. See <xref linkend="SetDrawBrokenLines"/> for details.
+</para>
+<para>
 Line colors for each line are set with <xref linkend="SetDataColors" />.
 Line widths for each line are set with <xref linkend="SetLineWidths" />.
 Line styles (solid or dashed) for each line are set with
@@ -949,7 +1041,10 @@ For 'text-data', the data X values are assumed to be at 0.5+N for N=0,1,2...
 <para>
 This plot type requires exactly 4 Y values for each X. These represent the
 Open, High, Low, and Close prices in that order.
-Multiple data sets are not supported. Missing Y values are not allowed.
+Multiple data sets are not supported.
+A missing point is indicated by using four empty strings
+(or any non-numeric value) for the 4 Y values.
+(Missing points were not allowed for this plot type in PHPlot-5.4.0 and earlier.)
 </para>
 <para>
 This plot type uses 4 colors from the data colors array.
@@ -996,6 +1091,9 @@ If shading is on with <xref linkend="SetShading" /> (default is on with value
 rather than oval).
 The position of the segment percentage labels is set with
 <xref linkend="SetLabelScalePosition" />.
+</para>
+<para>
+Missing values (an empty string or any non-numeric value) are taken as zero.
 </para>
 <para>
 Examples of this plot type can be seen in
@@ -1097,6 +1195,11 @@ upper and lower 'tee' is set with <xref linkend="SetErrorBarSize" />.
 Error bar line width is set with <xref linkend="SetErrorBarLineWidth" />.
 </para>
 <para>
+An empty string (or any non-numeric value) for a Y value
+indicates a missing point.
+No point marker will be drawn at missing point positions.
+</para>
+<para>
 Examples of this plot type can be seen in
 <xref linkend="ex-points2" />, and
 <xref linkend="ex-points1" />.
@@ -1114,6 +1217,12 @@ the current Y.
 This plot type works with data types <xref linkend="text-data"/>
 and <xref linkend="data-data"/>.
 For 'text-data', the data X values are assumed to be at 0.5+N for N=0,1,2...
+</para>
+<para>
+An empty string (or any non-numeric value) for a Y value
+indicates a missing point.
+PHPlot can either skip the line segments around missing points, or connect
+the adjacent points. See <xref linkend="SetDrawBrokenLines"/> for details.
 </para>
 <para>
 Line colors per line are set with <xref linkend="SetDataColors" />.
@@ -1143,6 +1252,10 @@ which is the sum of all the Y values from each record.
 This plot type works with data types <xref linkend="text-data"/>
 and <xref linkend="data-data"/>.
 For 'text-data', the data X values are assumed to be at 0.5+N for N=0,1,2...
+</para>
+<para>
+A minimum of 2 rows (X values and corresponding Y value(s)) is required for
+this plot type.  If there are fewer than 2 rows, an empty plot will be produced.
 </para>
 <para>
 This plot type uses the absolute value of each supplied Y, because negative
@@ -1216,6 +1329,9 @@ The border color (if shading is off) can be set with
 <xref linkend="SetDataBorderColors" />.
 </para>
 <para>
+Missing values (an empty string or any non-numeric value) are taken as zero.
+</para>
+<para>
 Examples of this plot type can be seen in
 <xref linkend="ex-stackedbars1" />,
 <xref linkend="ex-stackedbars2" />,
@@ -1250,6 +1366,11 @@ For 'text-data-yx', the data Y values are assumed to be at 0.5+N for N=0,1,2...
 </para>
 <para>
 The width of the plot lines can be controlled with <xref linkend="SetLineWidths" />.
+</para>
+<para>
+An empty string (or any non-numeric value) for the dependent variable
+(Y, for vertical plots) indicates a missing point.
+No line will be drawn at missing point positions.
 </para>
 <para>
 Examples of this plot type can be seen in
