@@ -2212,4 +2212,29 @@ The array keys correspond to the arguments to
 
 </chapter>
 
+<chapter id="dev-const">
+<title>PHPlot Class Constants</title>
+<abstract><title></title>
+  <para>
+This chapter provides information about constants defined in the PHPlot class.
+As these are PHP constants, they are accessed without a leading $ and
+cannot be expanded inside string values.
+  </para>
+</abstract>
+
+<para>
+<variablelist>
+<varlistentry>
+  <term><anchor id="const_version" xreflabel="PHPlot::version"/>PHPlot::version</term>
+  <listitem>
+    <para>
+The <varname>version</varname> constant contains the PHPlot code version.
+(This was added in PHPlot-5.4.0.)
+    </para>
+  </listitem>
+</varlistentry>
+</variablelist>
+</para>
+</chapter>
+
 </part>
