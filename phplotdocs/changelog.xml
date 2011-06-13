@@ -14,6 +14,17 @@ see the ChangeLog file inside the PHPlot distribution.)
 
 <variablelist>
   <varlistentry>
+    <term>2011-06-09</term>
+    <listitem>
+      <para>
+Added a new chapter at the end of Part III, Developer's Guide to PHPlot
+with a list of PHPlot class constants. (Since there is only one constant,
+this is a very short chapter.)
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
     <term>2011-05-27</term>
     <listitem>
       <para>

@@ -2,6 +2,25 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2011-06-12
+    * Fixed bug 3312064 "PHP errors with invalid data arrays":
+      PHPlot now checks the data array more carefully, to reject invalid
+      arrays and prevent PHP warning or notice errors with bad data arrays.
+      + SetDataValues() checks the data array argument to make sure it uses
+        0-based, sequential integer indexes, and that each element is an array.
+      + CheckDataArray() (called early by DrawGraph()) uses the data type for
+        more specific checking.  It makes sure each row has the right number of
+        entries. (E.g. text-data >=1, data-data >=2, data-data-error =2+3N.)
+      + DrawArea() ('area' and 'stackedarea' plots) returns without drawing
+        anything if there are < 2 rows, to avoid a PHP warning from
+        ImageFilledPolygon(). The 2-row minimum requirement is now documented.
+      + DrawLines(), DrawLinesError(), and DrawSquared() return without
+        drawing anything if there are no data values at all, to avoid a PHP
+        warning from array_fill().
+      + DrawOHLC() ('ohlc', 'candlesticks', and 'candlesticks2' plots) now
+        checks early that there are 4 data columns, and fails if not.  This
+        is to avoid a PHP warning when assigning line thicknesses.
+
 2011-06-05
     * Fixed bug 3312134 "Allow missing points in OHLC plots":
       You can now skip points in the 3 OHLC plot types by using empty strings

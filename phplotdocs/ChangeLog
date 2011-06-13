@@ -3,6 +3,14 @@ This is phplotdocs/ChangeLog, listing changes to the PHPlot Reference Manual
 Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
+2011-06-12
+   For bug #3312064 "PHP errors with invalid data arrays":
+   * concepts.xml: New section: Data Array Validation.
+   * reference.xml: Add a link from SetDataValues() to the section on
+     Data Arrays. Fix text in SetDrawBrokenLines(): missing reference
+     to squared plot type.
+   Other changes:
+   * developer.xml: New chapter for class constants.
 
 2011-06-09
    * reference.xml: Remove 8 places where zero-based sequential integer
