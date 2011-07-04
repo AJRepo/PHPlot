@@ -2,6 +2,10 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2011-07-04
+    * Code cleanup: Removed extra loop variable $cnt from plot drawing
+      functions, where it was either unused or redundant.
+
 2011-06-12
     * Fixed bug 3312064 "PHP errors with invalid data arrays":
       PHPlot now checks the data array more carefully, to reject invalid
