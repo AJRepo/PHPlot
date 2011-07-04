@@ -5366,7 +5366,7 @@ class PHPlot
         // Special flag for data color callback to indicate the 'points' part of 'linepoints':
         $alt_flag = $paired ? 1 : 0;
 
-        for ($row = 0, $cnt = 0; $row < $this->num_data_rows; $row++) {
+        for ($row = 0; $row < $this->num_data_rows; $row++) {
             $record = 1;                                // Skip record #0 (title)
 
             $x_now = $this->data[$row][$record++];  // Read it, advance record index
@@ -5426,11 +5426,11 @@ class PHPlot
         $do_dvls = !$paired && $this->CheckDataValueLabels($this->y_data_label_pos,
                       $dvl_x_off, $dvl_y_off, $dvl_h_align, $dvl_v_align);
 
-        for ($row = 0, $cnt = 0; $row < $this->num_data_rows; $row++) {
+        for ($row = 0; $row < $this->num_data_rows; $row++) {
             $rec = 1;                    // Skip record #0 (data label)
 
             if ($this->datatype_implied)                    // Implied X values?
-                $x_now = 0.5 + $cnt++;                      // Place text-data at X = 0.5, 1.5, 2.5, etc...
+                $x_now = 0.5 + $row;                        // Place text-data at X = 0.5, 1.5, 2.5, etc...
             else
                 $x_now = $this->data[$row][$rec++];         // Read it, advance record index
 
@@ -5479,11 +5479,11 @@ class PHPlot
 
         $gcvars = array(); // For GetDataColor, which initializes and uses this.
 
-        for ($row = 0, $cnt = 0; $row < $this->num_data_rows; $row++) {
+        for ($row = 0; $row < $this->num_data_rows; $row++) {
             $rec = 1;                    // Skip record #0 (data label)
 
             if ($this->datatype_implied)                    // Implied independent variable values?
-                $iv_now = 0.5 + $cnt++;                     // Place text-data at 0.5, 1.5, 2.5, etc...
+                $iv_now = 0.5 + $row;                       // Place text-data at 0.5, 1.5, 2.5, etc...
             else
                 $iv_now = $this->data[$row][$rec++];        // Read it, advance record index
 
@@ -5643,11 +5643,11 @@ class PHPlot
         $do_dvls = $this->CheckDataValueLabels($this->y_data_label_pos,
                       $dvl_x_off, $dvl_y_off, $dvl_h_align, $dvl_v_align);
 
-        for ($row = 0, $cnt = 0; $row < $this->num_data_rows; $row++) {
+        for ($row = 0; $row < $this->num_data_rows; $row++) {
             $record = 1;                                    // Skip record #0 (data label)
 
             if ($this->datatype_implied)                    // Implied X values?
-                $x_now = 0.5 + $cnt++;                      // Place text-data at X = 0.5, 1.5, 2.5, etc...
+                $x_now = 0.5 + $row;                        // Place text-data at X = 0.5, 1.5, 2.5, etc...
             else
                 $x_now = $this->data[$row][$record++];      // Read it, advance record index
 
@@ -5713,7 +5713,7 @@ class PHPlot
 
         $gcvars = array(); // For GetDataErrorColors, which initializes and uses this.
 
-        for ($row = 0, $cnt = 0; $row < $this->num_data_rows; $row++) {
+        for ($row = 0; $row < $this->num_data_rows; $row++) {
             $record = 1;                                    // Skip record #0 (data label)
 
             $x_now = $this->data[$row][$record++];          // Read X value, advance record index
@@ -5813,11 +5813,11 @@ class PHPlot
         $do_dvls = $this->CheckDataValueLabels($this->y_data_label_pos,
                       $dvl_x_off, $dvl_y_off, $dvl_h_align, $dvl_v_align);
 
-        for ($row = 0, $cnt = 0; $row < $this->num_data_rows; $row++) {
+        for ($row = 0; $row < $this->num_data_rows; $row++) {
             $record = 1;                                    // Skip record #0 (data label)
 
             if ($this->datatype_implied)                    // Implied X values?
-                $x_now = 0.5 + $cnt++;                      // Place text-data at X = 0.5, 1.5, 2.5, etc...
+                $x_now = 0.5 + $row;                        // Place text-data at X = 0.5, 1.5, 2.5, etc...
             else
                 $x_now = $this->data[$row][$record++];      // Read it, advance record index
 
@@ -6244,11 +6244,11 @@ class PHPlot
 
         $gcvars = array(); // For GetDataColor, which initializes and uses this.
 
-        for ($row = 0, $cnt = 0; $row < $this->num_data_rows; $row++) {
+        for ($row = 0; $row < $this->num_data_rows; $row++) {
             $record = 1;                                    // Skip record #0 (data label)
 
             if ($this->datatype_implied)                    // Implied X values?
-                $x_now = 0.5 + $cnt++;                      // Place text-data at X = 0.5, 1.5, 2.5, etc...
+                $x_now = 0.5 + $row;                        // Place text-data at X = 0.5, 1.5, 2.5, etc...
             else
                 $x_now = $this->data[$row][$record++];      // Read it, advance record index
 
