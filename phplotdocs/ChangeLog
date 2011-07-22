@@ -3,6 +3,22 @@ This is phplotdocs/ChangeLog, listing changes to the PHPlot Reference Manual
 Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
+
+2011-07-21
+   * main.xml: Indicate next version PHPlot-5.5.0
+   * .ispell_words: Updated spelling list
+
+   For bug #3370548 "Reverse legend line order for stackedbars":
+   * reference.xml: Document new function SetLegendReverse()
+   * variables.list: Add new member variable legend_reverse_order
+   * functions.xml: Link to new function SetLegendReverse()
+   * concepts.xml: Expand section on legend, add links to functions
+   * examples.xml, examples/stackedarea1.php, examples/stackedbars2.php,
+     examples/stackedbars3.php: Use the new SetLegendReverse() to make the
+     legend line order match the display in 3 example plots, and add text to
+     2 of them to explain. (Left stackedbars1 example alone to show the
+     difference.)
+
 2011-06-12
    For bug #3312064 "PHP errors with invalid data arrays":
    * concepts.xml: New section: Data Array Validation.

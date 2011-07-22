@@ -1,6 +1,11 @@
 This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
+2011-07-21
+    * Fixed bug #3370548 "Reverse legend line order for stackedbars":
+      New function SetLegendReverse(True) to draw lines in the legend
+      in order from the bottom up, rather than top down. This is
+      mostly intended for stackedbars and stackedarea plots.
 
 2011-07-04
     * Code cleanup: Removed extra loop variable $cnt from plot drawing
