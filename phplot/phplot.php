@@ -1,7 +1,7 @@
 <?php
 /* $Id$ */
 /*
- * PHPLOT Version 5.4.0 + CVS (This is an unreleased CVS version!)
+ * PHPLOT Version 5.4.0 + unreleased changes
  *
  * A PHP class for creating scientific and business charts
  * Visit http://sourceforge.net/projects/phplot/
@@ -35,7 +35,7 @@
 
 class PHPlot
 {
-    const version = '5.4.0-CVS $Revision$';
+    const version = '5.4.0-Unreleased $Revision$';
 
     /* Declare class variables which are initialized to static values. Many more class variables
      * are used, defined as needed, but are unset by default.
