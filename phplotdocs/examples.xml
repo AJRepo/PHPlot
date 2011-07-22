@@ -445,6 +445,9 @@ plots), and 'text-data-yx' (for horizontal plots).
 <para>
 This is the same as <xref linkend="example-stackedbars1" /> except we have
 turned off shading and now get flat stacked bars with borders.
+Also in this example we changed the legend using
+<xref linkend="SetLegendReverse"/> so the lines of text and color boxes
+are in the same order as the stacked bar segments, bottom-to-top.
 </para>
 <example id="example-stackedbars2">
 <?dbfo keep-together="auto"?>
@@ -612,6 +615,11 @@ area between the resulting values. For example, in 1960, 30% of the candy
 sales were cherry, 10% were lime, and 6% were lemon. In the stacked area
 plot, this is represented simply as (30, 10, 6, ...), whereas in the area
 plot example we had to sum the values to get (100, 70, 60, 54, ...).
+</para>
+<para>
+Also in this example we changed the legend using
+<xref linkend="SetLegendReverse"/> so the lines of text and color boxes
+are in the same order as the area segments, bottom-to-top.
 </para>
 <para>
 Note this plot type was added in PHPlot-5.1.1.
