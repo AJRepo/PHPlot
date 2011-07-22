@@ -3276,6 +3276,77 @@ No other legend positioning methods were available in earlier releases.
   </refsect1>
 </refentry>
 
+<refentry id="SetLegendReverse">
+  <refmeta>
+    <refentrytitle>SetLegendReverse</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetLegendReverse</refname>
+    <refpurpose>Control the order of text lines in the legend</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>$plot-&gt;SetLegendReverse(<parameter>$reverse</parameter>)</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetLegendReverse</function> is used to change the order of entries
+in the legend.
+A legend is drawn if <xref linkend="SetLegend" /> is used.
+The legend contains of a series of text strings, and optionally color boxes
+or point shapes, identifying the data sets (for example, plot lines).
+The legend line identifying the first data set is normally drawn at the top
+of the legend, with the rest of the lines in order below it.
+<function>SetLegendReverse</function> can be used to reverse that order, so
+the line for the first data set is drawn at the bottom of the legend.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$reverse</replaceable></term>
+        <listitem>
+          <para>
+True to reverse the order of legend entries (bottom up), False to keep the
+default order (top down).
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The main use of this function is to set the legend line order for
+<link linkend="plottype-stackedbars">stackedbars</link> and
+<link linkend="plottype-stackedarea">stackedarea</link> plots.
+In these plot types, the first data set (bar segment or area section) is
+plotted along the the bottom of the plot, with subsequent data sets in
+order above it. By default, a legend for these plot types will correctly
+identify the data sets by color, but the entries in the legend will be in
+the opposite order compared to the data sets and colors on the plot.
+Use <literal>$plot->SetLegendReverse(True)</literal> with these plot types
+to keep the legend entries and plotted data sets in the same order.
+    </para>
+    <para>
+See <xref linkend="ex-stackedbars2"/> for an example showing the legend
+ordering reversal, compared to <xref linkend="ex-stackedbars1"/>.
+    </para>
+  </refsect1>
+  <refsect1>
+    <title>History</title>
+    <para>
+This function was added to PHPlot-5.5.0.
+    </para>
+  </refsect1>
+</refentry>
+
 <refentry id="SetLegendStyle">
   <refmeta>
     <refentrytitle>SetLegendStyle</refentrytitle>
