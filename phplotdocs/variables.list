@@ -68,6 +68,7 @@ label_scale_position	0.5	SetLabelScalePosition	Pie chart label position factor
 legend	''	SetLegend	Legend text array. Each index is a legend text line.
 legend_colorbox_align		SetLegendStyle	Alignment of color boxes or point shapes in the legend: left, right, or none
 legend_colorbox_width		DrawLegend	Adjusts width of color boxes in the legend <link linkend="conc-tuning-legend">(See Tuning Parameters for more)</link> (Added in PHPlot-5.3.0)
+legend_reverse_order		SetLegendReverse	Flag: reverse the order of lines in the legend box, bottom to top (Added in PHPlot-5.5.0)
 legend_text_align		SetLegendStyle	Legend style setting, left or right
 legend_use_shapes		SetLegendUseShapes	Draw color boxes (if false or unset) or point shapes (if true) in the legend (Added in PHPlot-5.4.0)
 legend_pos		SetLegendPosition	Array holding legend position information (Added in PHPlot-5.4.0) <link linkend="var-legendpos">(See notes for more)</link>
