@@ -1,4 +1,4 @@
-# Makefile for tag and release of PHPLot
+# Makefile for release of PHPLot
 # $Id$
 
 # Project name:
@@ -32,14 +32,8 @@ RDIR=$(PROJ)-$(VER)
 RDIRPATH=$(TMP)/$(RDIR)
 
 default:
-	@echo "Usage:  make TAG=v tag : Tag files in CVS with 'v'"
-	@echo "    Example:  make TAG=rel5_0rc3 tag"
 	@echo "Usage:  make VER=v release : Make release packages"
-	@echo "    Example:  make VER=5.0rc3 release"
-
-tag:
-	@if [[ x$(TAG) = x ]]; then echo "Error: must set TAG variable"; exit 1; fi
-	cvs tag $(TAG)
+	@echo "    Example:  make VER=5.0.1 release"
 
 release:
 	@if [[ x$(VER) = x ]]; then echo "Error: must set VER variable"; exit 1; fi
