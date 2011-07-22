@@ -4725,6 +4725,16 @@ class PHPlot
     }
 
     /*
+     * Reverse the order of legend lines. This is useful with stackedbars and stackedarea
+     * plots, so the legend entries are ordered the same way as the plot sections.
+     */
+    function SetLegendReverse($reversal = False)
+    {
+        $this->legend_reverse_order = (bool)$reversal;
+        return TRUE;
+    }
+
+    /*
      * Get legend sizing parameters.
      * This is used internally by DrawLegend(), and also by the public GetLegendSize().
      * It returns information based on any SetLegend*() calls already made. It does not use
@@ -4886,7 +4896,14 @@ class PHPlot
 
         // $y_pos is the bottom of each color box. $yc is the vertical center of the color box or
         // the point shape (if drawn). The text is centered vertically on $yc.
-        $y_pos = $box_start_y + $v_margin + $dot_height;
+        // For normal order (top-down), $y_pos starts at the top. For reversed order, at the bottom.
+        if (empty($this->legend_reverse_order)) {
+            $y_pos = $box_start_y + $v_margin + $dot_height;
+            $delta_y = $dot_height;
+        } else {
+            $y_pos = $box_end_y - $v_margin;
+            $delta_y = -$dot_height;
+        }
         $yc = (int)($y_pos - $dot_height / 2);
         $xc = (int)($dot_left_x + $colorbox_width / 2);   // Horizontal center for point shape if drawn
         $shape_index = 0;  // Shape number index, if drawing point shapes
@@ -4918,8 +4935,8 @@ class PHPlot
                    ImageRectangle($this->img, $dot_left_x, $y1, $dot_right_x, $y2, $this->ndx_text_color);
                 }
             }
-            $y_pos += $dot_height;
-            $yc += $dot_height;
+            $y_pos += $delta_y;
+            $yc += $delta_y;
             if (++$color_index > $max_color_index)
                 $color_index = 0;
         }
