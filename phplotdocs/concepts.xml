@@ -2433,6 +2433,31 @@ see <xref linkend="ref-legend"/>.
 </para>
 
 <para>
+  <itemizedlist>
+    <listitem>
+      <para>
+Use <xref linkend="SetLegend"/> to enable the legend and define the text lines
+to be displayed.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+You can let PHPlot position the legend, or position it yourself with
+<xref linkend="SetLegendPixels"/>, <xref linkend="SetLegendWorld"/>,
+or <xref linkend="SetLegendPosition"/>.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+You can use <xref linkend="SetLegendStyle"/>,
+<xref linkend="SetLegendUseShapes"/>, and
+<xref linkend="SetLegendReverse"/> to change the appearance of the legend.
+      </para>
+    </listitem>
+  </itemizedlist>
+</para>
+
+<para>
 <?dbfo keep-together="always"?>
 Here is a sample plot with the legend called out.
 <informalfigure>
