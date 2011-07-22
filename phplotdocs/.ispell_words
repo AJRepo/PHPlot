@@ -158,6 +158,7 @@ SetLabelType
 SetLegend
 SetLegendPixels
 SetLegendPosition
+SetLegendReverse
 SetLegendStyle
 SetLegendUseShapes
 SetLegendWorld
@@ -202,6 +203,7 @@ SetXDataLabelType
 SetXLabelAngle
 SetXLabelType
 SetXScaleType
+SetXTickAnchor
 SetXTickCrossing
 SetXTickIncrement
 SetXTickLabelPos
@@ -217,6 +219,7 @@ SetYDataLabelType
 SetYLabelAngle
 SetYLabelType
 SetYScaleType
+SetYTickAnchor
 SetYTickCrossing
 SetYTickIncrement
 SetYTickLabelPos
