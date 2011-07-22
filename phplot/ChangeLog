@@ -1,6 +1,11 @@
 This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
+2011-07-22
+    Preparing for move from CVS to Subversion.
+    * Makefile: Remove 'tag' target. This was unused (and CVS-specific).
+    * phplot.php: Remove reference to CVS in comment and version const.
+
 2011-07-21
     * Fixed bug #3370548 "Reverse legend line order for stackedbars":
       New function SetLegendReverse(True) to draw lines in the legend
