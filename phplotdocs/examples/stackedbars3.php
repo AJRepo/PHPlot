@@ -25,6 +25,8 @@ $plot->SetYTitle('Millions of Units');
 $plot->SetShading(0);
 
 $plot->SetLegend(array('Chocolates', 'Mints', 'Hard Candy', 'Sugar-Free'));
+# Make legend lines go bottom to top, like the bar segments (PHPlot > 5.4.0)
+$plot->SetLegendReverse(True);
 
 $plot->SetXTickLabelPos('none');
 $plot->SetXTickPos('none');

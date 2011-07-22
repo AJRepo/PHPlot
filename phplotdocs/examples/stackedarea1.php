@@ -29,6 +29,8 @@ $plot->SetXTitle('Year');
 # Colors are significant to this data:
 $plot->SetDataColors(array('red', 'green', 'blue', 'yellow', 'cyan', 'magenta'));
 $plot->SetLegend(array('Cherry', 'Lime', 'Lemon', 'Banana', 'Apple', 'Berry'));
+# Make legend lines go bottom to top, like the area segments (PHPlot > 5.4.0)
+$plot->SetLegendReverse(True);
 
 # Turn off X tick labels and ticks because they don't apply here:
 $plot->SetXTickLabelPos('none');
