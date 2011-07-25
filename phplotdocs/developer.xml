@@ -1357,6 +1357,20 @@ This was added in PHPlot-5.1.2.
 </varlistentry>
 
 <varlistentry>
+  <term><anchor id="GetImageType" xreflabel="GetImageType"/>GetImageType(&amp;$mime_type, &amp;$output_f)</term>
+  <listitem>
+    <para>
+Given the current file type (e.g. 'png'), this sets the MIME type for the
+image (e.g. 'image/png') and the name of the GD output function (e.g.
+'imagepng') corresponding to that type. The results are stored in the
+arguments, and TRUE is returned unless an error occurs.
+It is used by <xref linkend="PrintImage" /> and <xref linkend="EncodeImage"/>.
+This was added in PHPlot-5.5.0, from code moved out of PrintImage.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
   <term><anchor id="GetLegendPosition" xreflabel="GetLegendPosition"/>GetLegendPosition($width, $height)</term>
   <listitem>
     <para>
