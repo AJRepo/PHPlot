@@ -4,6 +4,20 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2011-07-24
+   For feature request #3374495 "Data URL encoding":
+   * Makefile: Add new example script and static image (this example
+     does not generate an image file, so Makefile can't build it).
+   * concepts.xml: Overview - add note on embedding image. Error
+     Handling - add information on disabling the error image.
+   * developer.xml: Add internal function GetImageType.
+   * examples.xml: Add new example for EncodeImage
+   * examples/encodeimage.php images/encodeimage.png : New example
+   * functions.xml: Add links to 2 new functions
+   * reference.xml: Document 2 new functions EncodeImage, SetFailureImage.
+       Update SetPrintImage re: new EncodeImage.
+   * variables.list: Add new member variable suppress_error_image
+
 2011-07-21
    * main.xml: Indicate next version PHPlot-5.5.0
    * .ispell_words: Updated spelling list
