@@ -52,6 +52,153 @@ None
   </refsect1>
 </refentry>
 
+<refentry id="EncodeImage">
+  <refmeta>
+    <refentrytitle>EncodeImage</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>EncodeImage</refname>
+    <refpurpose>Returns the plot image data</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>$plot-&gt;EncodeImage(<optional><parameter>$encoding</parameter></optional>)</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>EncodeImage</function> returns the plot image as a string, using
+one of three encodings. This function can be used when special processing
+of the plot image data is necessary, rather than the default behavior of
+sending the image via standard output (usually to a browser), or writing it
+to a file. In particular, <function>EncodeImage</function> can be used to
+embed a PHPlot image inside an HTML file without requiring a separate script.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$encoding</replaceable></term>
+        <listitem>
+          <para>
+Optional string indicating the encoding to use for the return value. If
+supplied, it must be one of the following values:
+            <informaltable>
+              <tgroup cols="2">
+                <?dbhtml table-summary="Available encoding types"?>
+                <colspec colname="c1" colwidth="20*" />
+                <colspec colname="c2" colwidth="80*" />
+                <thead>
+                  <row>
+                    <entry>Encoding</entry>
+                    <entry>Description</entry>
+                  </row>
+                </thead>
+                <tbody>
+                  <row>
+                    <entry>raw</entry>
+                    <entry>
+                       No encoding - the raw data representing the image
+                       is returned.
+                    </entry>
+                  </row>
+                  <row>
+                    <entry>base64</entry>
+                    <entry>
+                       Encodes the image data using base64 (RFC2045).
+                    </entry>
+                  </row>
+                  <row>
+                    <entry>dataurl</entry>
+                    <entry>
+                       Encodes the image data for a 'data:' URL scheme.
+                       This is the default. See notes below.
+                    </entry>
+                  </row>
+                </tbody>
+              </tgroup>
+            </informaltable>
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Return Value</title>
+    <para>
+Returns the image data, using the indicated encoding.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The default value for <parameter>$encoding</parameter> is
+<literal>dataurl</literal>.
+    </para>
+    <para>
+<literal>raw</literal> encoding returns the image data. If the image file
+format was set to the default PNG, the return result would be a valid PNG
+file if it was written to a file.
+    </para>
+    <para>
+<literal>base64</literal> encoding starts with the same data as
+<literal>raw</literal>, and encodes it as ASCII characters using the PHP
+function <function>base64_encode</function> and returns the result.
+Note that the result is not broken into lines, as required by some applications.
+Use the PHP function <function>chunk_split</function> if this is needed.
+    </para>
+    <para>
+<literal>dataurl</literal> encoding returns the image data suitable for use as
+the value of the 'src' attribute in an HTML 'img' tag using the data URL
+scheme.  This embeds the image into the HTML, and so it does not require
+an external image file.  The data URL scheme is defined by
+<ulink url="http://www.faqs.org/rfcs/rfc2397.html">RFC 2397</ulink>.
+      <warning>
+        <para>
+RFC 2397 makes it clear that the scheme is intended for embedding small images,
+and that there may be length limitations on the encoded data. However, there
+are other applications (for example LibreOffice) that use the data URL scheme
+for large images. While it has been found to work with large images in the
+major web browsers, testing in your own environment is recommended.
+        </para>
+      </warning>
+    </para>
+    <para>
+When using <function>EncodeImage</function> to get the plot image, rather
+than letting PHPlot output the image to standard output or a file, you must
+call <xref linkend="SetPrintImage"/><literal>(False)</literal> to prevent
+<xref linkend="DrawGraph"/> from sending the image data to standard output.
+You should also call <xref linkend="SetFailureImage"/><literal>(False)</literal>
+to prevent PHPlot from producing an unexpected image on standard output in
+case of a fatal error.
+    </para>
+    <para>
+An example of using the <literal>dataurl</literal> encoding is:
+<programlisting><![CDATA[$plot = new PHPlot(800, 600);
+$plot->SetPrintImage(False);  // Do not output the image
+... // Plot settings, data, etc.
+$plot->DrawGraph();  // Make the plot but do not output it
+echo "<img src=\"" . $plot->EncodeImage() . "\">\n";
+]]></programlisting>
+    </para>
+    <para>
+A more complete example can be found in <xref linkend="ex-encodeimage"/>.
+    </para>
+  </refsect1>
+  <refsect1>
+    <title>History</title>
+    <para>
+This function was added in PHPlot-5.5.0.
+    </para>
+  </refsect1>
+</refentry>
+
 <refentry id="GetCallback">
   <refmeta>
     <refentrytitle>GetCallback</refentrytitle>
@@ -2110,6 +2257,70 @@ and with error bar shape 'tee'.
     </para>
     <para>
 All lines in a plot use the same error bar size.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetFailureImage">
+  <refmeta>
+    <refentrytitle>SetFailureImage</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetFailureImage</refname>
+    <refpurpose>Enable or disable error image production on failure</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>$plot-&gt;SetFailureImage(<parameter>$error_image</parameter>)</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetFailureImage</function> can be used to disable the error image
+normally produced by PHPlot if a fatal error occurs.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$error_image</replaceable></term>
+        <listitem>
+          <para>
+True to enable the error image, False to disable the error image.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+See <xref linkend="conc-errors"/> for an overview of error handling in PHPlot.
+The error image is enabled by default.
+    </para>
+    <para>
+If failure occurs when error images are disabled, PHPlot will still trigger
+a user-level error condition, which will normally log the error to the
+server log and terminate the script. However, there will be no feedback to
+the user that the error occurred.
+    </para>
+    <para>
+<function>SetFailureImage(False)</function> should be called right after
+creating the PHPlot object if using <xref linkend="EncodeImage"/> to return
+the image as a string (rather than output the image).
+This will make sure that no unexpected error image is produced by a script
+that would not normally produce an image at all.
+    </para>
+  </refsect1>
+  <refsect1>
+    <title>History</title>
+    <para>
+This function was added in PHPlot-5.5.0.
     </para>
   </refsect1>
 </refentry>
@@ -5368,9 +5579,7 @@ when the plot is drawn</refpurpose>
     <para>
 <function>SetPrintImage</function> determines whether or not to automatically
 output the image (as if <xref linkend="PrintImage" /> was used) when a plot
-is drawn (with <xref linkend="DrawGraph" />). The default is True.
-When putting multiple plots on one image, is is necessary to defer PrintImage
-until after all the plots have been drawn.
+is drawn (with <xref linkend="DrawGraph" />).  The default is True.
     </para>
   </refsect1>
 
@@ -5381,8 +5590,8 @@ until after all the plots have been drawn.
         <term><replaceable>$pi</replaceable></term>
         <listitem>
           <para>
-True to automatically print the image when drawn with DrawGraph; False to
-defer printing the image until PrintImage is explicitly called.
+True to have DrawGraph automatically print (output) the image, False to
+prevent DrawGraph from outputting the image.
           </para>
         </listitem>
       </varlistentry>
@@ -5392,8 +5601,16 @@ defer printing the image until PrintImage is explicitly called.
   <refsect1>
     <title>Notes</title>
     <para>
+When putting multiple plots on one image, is is necessary to use
+<function>SetPrintImage(False)</function> to defer output of the image
+until after all the plots have been drawn.
 See <xref linkend="adv-multiplot"/> for more information on putting
 multiple plots on an image.
+    </para>
+    <para>
+Calling <function>SetPrintImage(False)</function> is also needed when using
+<xref linkend="EncodeImage"/> to return the image data (rather than sending
+it to standard output or to a file).
     </para>
   </refsect1>
 </refentry>
