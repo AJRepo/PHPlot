@@ -132,6 +132,7 @@ skip_bottom_tick	FALSE	SetSkipBottomTick	Skip bottom tick mark
 skip_left_tick	FALSE	SetSkipLeftTick	Skip left tick mark
 skip_right_tick	FALSE	SetSkipRightTick	Skip right tick mark
 skip_top_tick	FALSE	SetSkipTopTick	Skip top tick mark
+suppress_error_image		SetFailureImage	Flag: Don't produce an error image on fatal error. Unset is FALSE. (Note the flag value is the negation of the function argument). (Added in PHPlot-5.5.0)
 suppress_x_axis		SetDrawXAxis	Flag: Don't draw the X axis line. Unset (by default) means FALSE. (Added in PHPlot-5.3.0)
 suppress_y_axis		SetDrawYAxis	Flag: Don't draw the Y axis line. Unset (by default) means FALSE. (Added in PHPlot-5.3.0)
 text_color	'black'	SetTextColor	Color (R,G,B,A) for labels and legend text
