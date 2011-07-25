@@ -1409,5 +1409,45 @@ requires two calls as shown in the example.)
 </sect1>
 
 <!-- =============================================== -->
+<!-- Note: This example scripts makes a web page (HTML file), not an image.
+     A screen-shot of the page was created separately and is included in
+     the images/ directory with the manual. PHPlot is not used to generate
+     this example when building the manual.
+-->
+
+<pagebreak/>
+<sect1 id="ex-encodeimage">
+<title>Example - Embedding Image with EncodeImage</title>
+<para>
+This example shows how <xref linkend="EncodeImage"/> can be used to
+embed a PHPlot image inside an HTML file using the 'data:' URL scheme.
+Note: This feature was added in PHPlot-5.5.0.
+</para>
+
+<para>
+This is the same plot as <xref linkend="ex-lines2"/>, except instead of
+producing the image on standard output, this script embeds the image in an HTML
+page, which is produced on standard output. The screen shot below shows how the
+web page looks in Firefox.
+</para>
+
+<example id="example-encodeimage">
+<?dbfo keep-together="auto"?>
+<title>Embedding Image with EncodeImage</title>
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="images/encodeimage.png" scale="55" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>Web Page With Embedded Image</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+&encodeimage;
+</example>
+</sect1>
+
+<!-- =============================================== -->
 
 </chapter>
