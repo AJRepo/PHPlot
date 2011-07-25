@@ -18,7 +18,7 @@ Descriptions of the functions can be found in <xref linkend="reference" />.
 <title>Core</title>
 <para>
 The functions in this section form the core of PHPlot.
-You cannot produce plots without using these.
+You cannot produce plots without using some of these.
 If you want to produce plots with little or no customization, you need use
 no other functions.
 These functions are used to create a PHPlot object, select the type of
@@ -44,12 +44,14 @@ For more information, see <xref linkend="conc-overview"/>.
 <para>
 The functions in this section control the overall input and output of the
 plot. Use the functions in this section to select the graphics file format,
-direct the output, and control browser caching.
+direct the output, control browser caching, and control error handling.
 </para>
 
 <para>
 <itemizedlist>
+  <listitem><para><xref linkend="EncodeImage" /></para></listitem>
   <listitem><para><xref linkend="SetBrowserCache" /></para></listitem>
+  <listitem><para><xref linkend="SetFailureImage" /></para></listitem>
   <listitem><para><xref linkend="SetFileFormat" /></para></listitem>
   <listitem><para><xref linkend="SetIsInline" /></para></listitem>
   <listitem><para><xref linkend="SetOutputFile" /></para></listitem>
