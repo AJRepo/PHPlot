@@ -255,7 +255,7 @@ In both cases, the title will be drawn using the font you selected.
 It is important to remember that if you are writing a PHP script that uses
 PHPlot to create an image for a web page, that PHP script must output
 <emphasis>only</emphasis> the image data.
-If you want to embed the image into a web page with text and other images,
+If you want your plot image to appear on a web page with text and other images,
 you need at least two scripts.
 Your main script returns an HTML page which includes an IMG (Image) tag for
 the plot.
@@ -267,6 +267,13 @@ script to your image script. Two good ways to do this are using URL parameters,
 and with PHP session variables.
   </para>
 </note>
+
+<para>
+An alternative to using two scripts - one generating HTML, and one using PHPlot
+to create the plot image - is available starting with PHPlot-5.5.0. You can
+write a single script which generates HTML and also embeds the PHPlot-generated
+plot image.  See <xref linkend="ex-encodeimage"/>.
+</para>
 
 </sect2>
 
@@ -2840,7 +2847,7 @@ Therefore, error handling in PHPlot is aimed more at the developer
 than the application user.
 </para>
 <para>
-PHPlot does the following when an error is detected:
+PHPlot does the following by default when an error is detected:
 <itemizedlist>
   <listitem>
     <para>
@@ -2896,6 +2903,27 @@ The following figure shows an example of an error image resulting from
     </mediaobject>
   </informalfigure>
 </para>
+
+<para>
+You can disable the error image entirely using
+<xref linkend="SetFailureImage"/> (added in PHPlot-5.5.0).
+One case where this is recommended is when your script will use
+<xref linkend="EncodeImage"/> to get the plot image, rather than sending
+it to a file or back to the browser. Since your script is not intended to ever
+produce an image, it should not produce an error image either.
+</para>
+
+<para>
+If a failure occurs when error images are disabled with
+<xref linkend="SetFailureImage"/>, PHPlot will still trigger a user-level error 
+condition, which will normally record the error message in the server log,
+and terminate the script. However, there will be no feedback to the user that
+the error occurred. 
+If using <literal>SetFailureImage(False)</literal> to disable error images,
+you should place this call right after creating the PHPlot object, because
+an error which occurs before the call will produce an error image.
+</para>
+
 </sect2>
 
 <sect2 id="conc-errors-types">
