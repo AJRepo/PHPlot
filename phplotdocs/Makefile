@@ -40,6 +40,7 @@ STATIC_IMAGES=\
   images/alpha-blending.png \
   images/colors.png \
   images/drop.png \
+  images/encodeimage.png \
   images/error-image.png \
   images/fonts.png \
   images/gdinfo.png \
@@ -100,6 +101,7 @@ EXAMPLES_PHP=\
   examples/bars4.php \
   examples/colorcallbackbars.php \
   examples/colorcallbackgradient.php \
+  examples/encodeimage.php \
   examples/histogram.php \
   examples/horizbar.php \
   examples/horizstackedbar.php \
@@ -139,6 +141,8 @@ EXAMPLES_PHP=\
 EXAMPLES_XML=$(EXAMPLES_PHP:.php=.xml)
 
 # Example image files. Most generate PNG but there are exception(s).
+# Also some example scripts (in EXAMPLES_PHP) do not get run (because
+# they don't generate images, for example). These are not included here.
 EXAMPLES_IMAGES=\
   examples/annotate.png \
   examples/area1.png \
