@@ -1570,18 +1570,10 @@ class PHPlot
     }
 
     /*
-     * Performs the actual outputting of the generated graph.
+     * Get the MIME type and GD output function name for the current file type.
      */
-    function PrintImage()
+    protected function GetImageType(&$mime_type, &$output_f)
     {
-        // Browser cache stuff submitted by Thiemo Nagel
-        if ( (! $this->browser_cache) && (! $this->is_inline)) {
-            header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-            header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . 'GMT');
-            header('Cache-Control: no-cache, must-revalidate');
-            header('Pragma: no-cache');
-        }
-
         switch ($this->file_format) {
         case 'png':
             $mime_type = 'image/png';
@@ -1600,8 +1592,28 @@ class PHPlot
             $output_f = 'imagewbmp';
             break;
         default:
+            // Report the error on PrintImage, because that is where this code used to be.
             return $this->PrintError('PrintImage(): Please select an image type!');
         }
+        return TRUE;
+    }
+
+    /*
+     * Output the generated image to standard output or to a file.
+     */
+    function PrintImage()
+    {
+        // Browser cache stuff submitted by Thiemo Nagel
+        if ( (! $this->browser_cache) && (! $this->is_inline)) {
+            header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+            header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . 'GMT');
+            header('Cache-Control: no-cache, must-revalidate');
+            header('Pragma: no-cache');
+        }
+
+        // Get MIME type and GD output function name:
+        if (!$this->GetImageType($mime_type, $output_f)) return FALSE;
+
         if (!$this->is_inline) {
             Header("Content-type: $mime_type");
         }
@@ -1614,17 +1626,38 @@ class PHPlot
     }
 
     /*
+     * Return the image data, as raw data, base64 encoded, or data URL (see RFC2397).
+     */
+    function EncodeImage($encoding = 'dataurl')
+    {
+        $enc = $this->CheckOption($encoding, 'dataurl, raw, base64', __FUNCTION__);
+        if (!$enc || !$this->GetImageType($mime_type, $output_f)) return FALSE;
+        ob_start();
+        $output_f($this->img);
+        switch ($enc) {
+        case 'raw':
+            return ob_get_clean();
+        case 'base64':
+            return base64_encode(ob_get_clean());
+        default:  // 'dataurl', checked above.
+            return "data:$mime_type;base64,\n" . chunk_split(base64_encode(ob_get_clean()));
+        }
+    }
+
+    /*
      *  Error handling for 'fatal' errors:
      *   $error_message       Text of the error message
-     *  Standard output from PHPlot is expected to be an image file, such as
-     *  when handling an <img> tag browser request. So it is not permitted to
+     *  Output from PHPlot is expected to be an image file, such as when
+     *  handling an <img> tag browser request. So it is not permitted to
      *  output text to standard output. (You should have display_errors=off)
      *  Here is how PHPlot handles fatal errors:
-     *    + Write the error message into an image, and output the image.
-     *    + If no image can be output, write nothing and produce an HTTP
-     *      error header.
+     *    + Draw the error message into an image, and output the image (to
+     *      standard output, or a file, as directed).
+     *      The error image is suppressed if suppress_error_image is True.
+     *    + If there is no GD image in the PHPlot object (early failure),
+     *      output no image, and produce an HTTP error header instead.
      *    + Trigger a user-level error containing the error message.
-     *      If no error handler was set up, the script will log the
+     *      If no error handler was set up, the PHP will log the
      *      error and exit with non-zero status.
      *
      *  PrintError() and DrawError() are now equivalent. Both are provided for
@@ -1633,7 +1666,7 @@ class PHPlot
      *
      *  This function does not return, unless the calling script has set up
      *  an error handler which does not exit. In that case, PrintError will
-     *  return False. But not all of PHPlot will handle this correctly, so
+     *  return False. But not all of PHPlot may handle this correctly, so
      *  it is probably a bad idea for an error handler to return.
      */
     protected function PrintError($error_message)
@@ -1643,22 +1676,24 @@ class PHPlot
         $this->in_error = TRUE;
 
         // Output an image containing the error message:
-        if (!empty($this->img)) {
-            $ypos = $this->image_height/2;
-            $xpos = $this->image_width/2;
-            $bgcolor = ImageColorResolve($this->img, 255, 255, 255);
-            $fgcolor = ImageColorResolve($this->img, 0, 0, 0);
-            ImageFilledRectangle($this->img, 0, 0, $this->image_width, $this->image_height, $bgcolor);
+        if (empty($this->suppress_error_image)) {
+            if (!empty($this->img)) {
+                $ypos = $this->image_height/2;
+                $xpos = $this->image_width/2;
+                $bgcolor = ImageColorResolve($this->img, 255, 255, 255);
+                $fgcolor = ImageColorResolve($this->img, 0, 0, 0);
+                ImageFilledRectangle($this->img, 0, 0, $this->image_width, $this->image_height, $bgcolor);
 
-            // Switch to built-in fonts, in case of error with TrueType fonts:
-            $this->SetUseTTF(FALSE);
+                // Switch to built-in fonts, in case of error with TrueType fonts:
+                $this->SetUseTTF(FALSE);
 
-            $this->DrawText($this->fonts['generic'], 0, $xpos, $ypos, $fgcolor,
-                            wordwrap($error_message), 'center', 'center');
+                $this->DrawText($this->fonts['generic'], 0, $xpos, $ypos, $fgcolor,
+                                wordwrap($error_message), 'center', 'center');
 
-            $this->PrintImage();
-        } elseif (! $this->is_inline) {
-            Header('HTTP/1.0 500 Internal Server Error');
+                $this->PrintImage();
+            } elseif (!$this->is_inline) {
+                Header('HTTP/1.0 500 Internal Server Error');
+            }
         }
         trigger_error($error_message, E_USER_ERROR);
         unset($this->in_error);
@@ -1674,6 +1709,14 @@ class PHPlot
     protected function DrawError($error_message, $where_x = NULL, $where_y = NULL)
     {
         return $this->PrintError($error_message);
+    }
+
+    /*
+     * Set error behavior. On failure, PHPlot normally creates an error image.
+     */
+    function SetFailureImage($error_image)
+    {
+        $this->suppress_error_image = !$error_image;
     }
 
 /////////////////////////////////////////////
