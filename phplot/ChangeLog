@@ -1,6 +1,23 @@
 This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
+
+2011-07-25
+    * Feature request #3374495 "Data URL encoding":
+      + New function EncodeImage() returns the plot image as a string,
+        with 3 available encodings: raw, base64, and dataurl. The dataurl
+        encoding implements RFC2397 embedding of image data in a URL,
+        and allows a single PHP script to produce an HTML page with the
+        plot image embedded within.
+      + New internal function GetImageType() for code shared between
+        PrintImage() and EncodeImage().
+      + New function SetFailureImage() disables the normal behavior
+        where PHPlot produces an image containing an error message in
+        case of a fatal error. Suppressing this is necessary when using
+        the new EncodeImage(), to avoid unexpected image data on stdout.
+      + New member variable suppress_error_image, set by
+        SetFailureImage(), checked by PrintError() to not make an image.
+
 2011-07-22
     Preparing for move from CVS to Subversion.
     * Makefile: Remove 'tag' target. This was unused (and CVS-specific).
