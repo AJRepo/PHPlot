@@ -64,6 +64,7 @@ DrawYErrorBar
 DrawYTick
 DrawYTicks
 DrawYTitle
+EncodeImage
 FindDataLimits
 FormatLabel
 FreeBSD
@@ -81,6 +82,7 @@ GetDefaultTTFont
 GetDeviceXY
 GetImage
 GetImageBorderWidth
+GetImageType
 GetLegendPosition
 GetLegendSize
 GetLegendSizeParams
@@ -91,6 +93,7 @@ ImageSetStyle
 ImageString
 JPG
 LiberationSans
+LibreOffice
 MAXY
 MINY
 MySQL
@@ -140,6 +143,7 @@ SetErrorBarColors
 SetErrorBarLineWidth
 SetErrorBarShape
 SetErrorBarSize
+SetFailureImage
 SetFileFormat
 SetFont
 SetFontGD
