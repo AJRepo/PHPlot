@@ -871,6 +871,16 @@ of the overall background.
 If <varname>$input_file</varname> is <literal>NULL</literal>, no background
 image will be used.
     </para>
+    <para>
+If you are going to use a JPEG file for the image background, you should be
+using a truecolor PHPlot image.  Truecolor images do not have a
+limited-size color map like palette images (which PHPlot uses by default).
+If you use  palette image with a JPEG background, the background will
+likely overflow your image's color map and leave no free color slots for PHPlot
+to use for plot elements.  The same is true if using a 24-bit color
+(non-mapped) PNG file for a background if it has many colors.
+For more on truecolor PHPlot images, see <xref linkend="conc-truecolor"/>.
+    </para>
   </refsect1>
 </refentry>
 
@@ -4522,6 +4532,16 @@ of the overall background.
     <para>
 If <varname>$input_file</varname> is <literal>NULL</literal>, no background
 image will be used for the plot area.
+    </para>
+    <para>
+If you are going to use a JPEG file for the plot area background, you should be
+using a truecolor PHPlot image.  Truecolor images do not have a
+limited-size color map like palette images (which PHPlot uses by default).
+If you use  palette image with a JPEG background, the background will
+likely overflow your image's color map and leave no free color slots for PHPlot
+to use for plot elements.  The same is true if using a 24-bit color
+(non-mapped) PNG file for a background if it has many colors.
+For more on truecolor PHPlot images, see <xref linkend="conc-truecolor"/>.
     </para>
   </refsect1>
 </refentry>
