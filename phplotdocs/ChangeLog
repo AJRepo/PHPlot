@@ -4,6 +4,11 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2011-07-26
+   * reference.xml: In SetBgImage and SetPlotAreaBgImage, add a note advising
+     use of PHPlot truecolor images whenever using a JPEG (or high-color PNG)
+     background image, to avoid color map overflow.
+
 2011-07-24
    For feature request #3374495 "Data URL encoding":
    * Makefile: Add new example script and static image (this example
