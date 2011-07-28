@@ -2,6 +2,17 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2011-07-28
+    * Feature request #3352301 "Bubble plots":
+      + Added new data type 'data-data-xyz', which includes a Z value
+        for each Y.
+      + Extended CheckDataArray(), DecodeDataType() and
+        FindDataLimits() to understand new data type.
+      + Added new plot type 'bubbles' for bubble plots, using data
+        type 'data-data-xyz'. The Z value controls the bubble size.
+      + New internal function DrawBubbles() to draw bubble plot.
+      + New tunable parameters bubbles_min_size and bubbles_max_size.
+
 2011-07-25
     * Feature request #3374495 "Data URL encoding":
       + New function EncodeImage() returns the plot image as a string,
