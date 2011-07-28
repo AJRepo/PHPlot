@@ -99,6 +99,7 @@ EXAMPLES_PHP=\
   examples/bars2.php \
   examples/bars3.php \
   examples/bars4.php \
+  examples/bubbles1.php \
   examples/colorcallbackbars.php \
   examples/colorcallbackgradient.php \
   examples/encodeimage.php \
@@ -150,6 +151,7 @@ EXAMPLES_IMAGES=\
   examples/bars2.png \
   examples/bars3.png \
   examples/bars4.png \
+  examples/bubbles1.png \
   examples/colorcallbackbars.png \
   examples/colorcallbackgradient.png \
   examples/histogram.jpg \
