@@ -215,6 +215,9 @@ class PHPlot
         'bars' => array(
             'draw_method' => 'DrawBars',
         ),
+        'bubbles' => array(
+            'draw_method' => 'DrawBubbles',
+        ),
         'candlesticks' => array(
             'draw_method' => 'DrawOHLC',
             'draw_arg' => array(TRUE, FALSE), // Draw candlesticks, only fill if "closed down"
@@ -2039,6 +2042,7 @@ class PHPlot
      *   datatype_swapped_xy : Swapped X/Y (horizontal plot)
      *   datatype_error_bars : Data array has error bar data
      *   datatype_pie_single : Data array is for a pie chart with one row per slice
+     *   datatype_yz : Data array contains pairs of Y and Z for each X.
      */
     protected function DecodeDataType()
     {
@@ -2049,6 +2053,7 @@ class PHPlot
         $this->datatype_swapped_xy = ($dt == 'text-data-yx' || $dt == 'data-data-yx');
         $this->datatype_error_bars = ($dt == 'data-data-error');
         $this->datatype_pie_single = ($dt == 'text-data-single');
+        $this->datatype_yz = ($dt == 'data-data-xyz');
     }
 
     /*
@@ -2094,6 +2099,13 @@ class PHPlot
             // Validate the data array for text-data-single pie charts. Requires 1 value per row.
             for ($i = 0; $i < $this->num_data_rows; $i++) {
                 if ($this->num_recs[$i] != 2)
+                    return $this->PrintError("DrawGraph(): Invalid $this->data_type data array (row $i)");
+            }
+        } elseif ($this->datatype_yz) {
+            $this->data_columns = (int)(($this->records_per_group - $skip) / 2); //  (y, z) pairs
+            // Validate the data array for plots using X, Y, Z: (label, X, then pairs of Y, Z)
+            for ($i = 0; $i < $this->num_data_rows; $i++) {
+                if ($this->num_recs[$i] < $skip || ($this->num_recs[$i] - $skip) % 2 != 0)
                     return $this->PrintError("DrawGraph(): Invalid $this->data_type data array (row $i)");
             }
         } else {
@@ -2457,6 +2469,7 @@ class PHPlot
      *  data-data-error: ('label', x1, y1, e1+, e2-, y2, e2+, e2-, y3, e3+, e3-, ...)
      *  data-data-yx: ('label', y, x1, x2, x3, ..)
      *  text-data-yx: ('label', x1, x2, x3, ...)
+     *  data-data-xyz: ('label', x, y1, z1, ...)
      */
     function SetDataType($which_dt)
     {
@@ -2468,7 +2481,7 @@ class PHPlot
 
         $this->data_type = $this->CheckOption($which_dt, 'text-data, text-data-single, '.
                                                          'data-data, data-data-error, '.
-                                                         'data-data-yx, text-data-yx',
+                                                         'data-data-yx, text-data-yx, data-data-xyz',
                                                          __FUNCTION__);
         return (boolean)$this->data_type;
     }
@@ -2773,6 +2786,7 @@ class PHPlot
      * data_min[] and data_max[] with per-row min and max values. These are used for
      * data label lines. For normal (unswapped) data, these are the Y range for each X.
      * For swapped X/Y data, they are the X range for each Y.
+     * For X/Y/Z plots, it also calculates min_z and max_z.
      */
     protected function FindDataLimits()
     {
@@ -2789,6 +2803,11 @@ class PHPlot
             $all_iv = array(0, $this->num_data_rows - 1);
         } else {
             $all_iv = array();
+        }
+        // For X/Y/Z plots, make sure these are not left over from a previous plot.
+        if ($this->datatype_yz) {
+            unset($this->min_z);
+            unset($this->max_z);
         }
 
         // Process all rows of data:
@@ -2821,10 +2840,16 @@ class PHPlot
                         } else {
                             $all_dv[] = $val; // List of all values
                         }
+                        if ($this->datatype_yz) {
+                            $z = $this->data[$i][$j++]; // Note Z is required if Y is present.
+                            if (!isset($this->min_z) || $z < $this->min_z) $this->min_z = $z;
+                            if (!isset($this->max_z) || $z > $this->max_z) $this->max_z = $z;
+                        }
                     }
                 } else {    // Missing DV value
                   $j++;
                   if ($this->datatype_error_bars) $j += 2;
+                  elseif ($this->datatype_yz) $j++;
                 }
             }
             if (!empty($all_dv)) {
@@ -2860,7 +2885,9 @@ class PHPlot
         if ($this->GetCallback('debug_scale')) {
             $this->DoCallback('debug_scale', __FUNCTION__, array(
                 'min_x' => $this->min_x, 'min_y' => $this->min_y,
-                'max_x' => $this->max_x, 'max_y' => $this->max_y));
+                'max_x' => $this->max_x, 'max_y' => $this->max_y, 
+                'min_z' => isset($this->min_z) ? $this->min_z : '',
+                'max_z' => isset($this->max_z) ? $this->max_z : ''));
         }
         return TRUE;
     }
@@ -6382,6 +6409,62 @@ class PHPlot
                 imageline($this->img, $x_right, $yc_pixels, $x_now_pixels, $yc_pixels, $ext_color);
             }
             imagesetthickness($this->img, 1);
+        }
+        return TRUE;
+    }
+
+    /*
+     * Draw a bubble chart, which is a scatter plot with bubble size showing the Z value.
+     * Supported data type is data-data-xyz with rows of (label, X, Y1, Z1, ...)
+     * with multiple data sets (Y, Z pairs) supported.
+     * Bubble sizes are scaled per the min_z and max_z calculated in FindDataLimits.
+     */
+    protected function DrawBubbles()
+    {
+        if (!$this->CheckDataType('data-data-xyz'))
+            return FALSE;
+
+        $gcvars = array(); // For GetDataColor, which initializes and uses this.
+
+        // Bubble size limits can be set with class variables or calculated.
+        $min_bubble_size = isset($this->bubbles_min_size) ? $this->bubbles_min_size : 6;
+        if (isset($this->bubbles_max_size)) {
+            $max_bubble_size = $this->bubbles_max_size;
+        } else {
+            $max_bubble_size = min($this->plot_area_width, $this->plot_area_height) / 12;
+        }
+
+        // Calculate bubble scale parameters. Bubble_size(z) = $f_size * $z + $b_size
+        if ($this->max_z <= $this->min_z) {   // Regressive case, no Z range.
+            $f_size = 0;
+            $b_size = ($max_bubble_size + $min_bubble_size) / 2; // Use average size of all bubbles
+        } else {
+            $f_size = ($max_bubble_size - $min_bubble_size) / ($this->max_z - $this->min_z);
+            $b_size = $max_bubble_size - $f_size * $this->max_z;
+        }
+
+        for ($row = 0; $row < $this->num_data_rows; $row++) {
+            $rec = 1;                    // Skip record #0 (data label)
+            $x = $this->xtr($this->data[$row][$rec++]); // Get X value from data array.
+
+            // Draw X Data labels?
+            if ($this->x_data_label_pos != 'none')
+                $this->DrawXDataLabel($this->data[$row][0], $x, $row);
+
+            // Proceed with Y,Z values
+            for ($idx = 0; $rec < $this->num_recs[$row]; $rec += 2, $idx++) {
+                if (is_numeric($this->data[$row][$rec])) {              // Allow for missing Y data
+                    $y = $this->ytr((double)$this->data[$row][$rec]);
+                    $z = (double)$this->data[$row][$rec+1]; // Z is required if Y is present.
+                    $size = (int)($f_size * $z + $b_size);  // Calculate bubble size
+
+                    // Select the color:
+                    $this->GetDataColor($row, $idx, $gcvars, $data_color);
+
+                    // Draw the bubble:
+                    ImageFilledEllipse($this->img, $x, $y, $size, $size, $data_color);
+                }
+            }
         }
         return TRUE;
     }
