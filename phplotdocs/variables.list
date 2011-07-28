@@ -18,6 +18,8 @@ bg_color	'white'	SetBackgroundColor	Color (R,G,B,A) for image background
 bgimg		SetBgImage	Background image filename
 bgmode		SetBgImage	Background image tiling mode
 browser_cache	FALSE	SetBrowserCache	Flag: Don't send cache suppression headers
+bubbles_max_size		DrawBubbles	Max bubble size for bubbles plots <link linkend="conc-tuning-bubbles">(See Tuning Parameters for more)</link> (Added in PHPlot-5.4.0)
+bubbles_min_size		DrawBubbles	Min bubbles size for bubble plots <link linkend="conc-tuning-bubbles">(See Tuning Parameters for more)</link> (Added in PHPlot-5.4.0)
 callbacks	array(...)	SetCallback	Callback (hook) function information. Indexed by callback reason; value is an array of function name and pass-through argument if the callback is in use, else NULL.
 color_array	'small'	PHPlot	Name of the initial color map
 dashed_grid	TRUE	SetDrawDashedGrid	Flag: Draw dashed or solid grid lines?
@@ -33,6 +35,7 @@ datatype_error_bars		DecodeDataType	Flag: data type has error bars. (Added in PH
 datatype_implied		DecodeDataType	Flag: data type has implied X or Y. (Added in PHPlot-5.1.3)
 datatype_pie_single		DecodeDataType	Flag: data type is one-column data for pie chart with one slice per row. (Added in PHPlot-5.1.3)
 datatype_swapped_xy		DecodeDataType	Flag: data type has swapped X and Y values. (Added in PHPlot-5.1.3)
+datatype_yz		DecodeDataType	Flag: data type includes Y and Z value pairs (Added in PHPlot-5.5.0)
 data_units_text	''	FormatLabel	Obsolete - suffix for 'data'-formatted labels
 data_value_label_angle		CheckDataValueLabels	Angle (in degrees) for data value labels <link linkend="conc-tuning-labels">(See Tuning Parameters for more)</link>
 data_value_label_distance		CheckDataValueLabels	Distance (in pixels) for data value labels <link linkend="conc-tuning-labels">(See Tuning Parameters for more)</link>
@@ -81,6 +84,8 @@ max_x		FindDataLimits	Overall max X value in the data array
 max_y		FindDataLimits	Overall max Y value in the data array
 min_x		FindDataLimits	Overall min X value in the data array
 min_y		FindDataLimits	Overall min Y value in the data array
+max_z		FindDataLimits	Overall max Z value in the data array (for X/Y/Z data type only) (Added in PHPlot-5.5.0)
+min_z		FindDataLimits	Overall min Z value in the data array (for X/Y/Z data type only) (Added in PHPlot-5.5.0)
 ndx_bg_color		SetColorIndexes	Color index of image background
 ndx_data_border_colors		SetColorIndexes	Color index array for bar chart data borders
 ndx_data_colors		SetColorIndexes	Color index array for plot data lines/marks/bars/etc.
