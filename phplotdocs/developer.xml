@@ -602,6 +602,18 @@ calls <xref linkend="DrawHorizBars"/> instead.
 </varlistentry>
 
 <varlistentry>
+  <term><anchor id="DrawBubbles" xreflabel="DrawBubbles"/>DrawBubbles()</term>
+  <listitem>
+    <para>
+Draws a bubbles plot.
+Called by <xref linkend="DrawGraph"/> when the plot type is
+<literal>bubbles</literal>.
+This was added in PHPlot-5.5.0.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
   <term><anchor id="DrawDataLabel" xreflabel="DrawDataLabel"/>DrawDataLabel($which_font, $which_angle, $x_world, $y_world, $which_color, $which_text, $which_halign = 'center', $which_valign = 'top', $x_adjustment=0, $y_adjustment=0)</term>
   <listitem>
     <para>
@@ -736,7 +748,6 @@ This was added in PHPlot-5.1.3.
     </para>
   </listitem>
 </varlistentry>
-
 
 <varlistentry>
   <term><anchor id="DrawImageBorder" xreflabel="DrawImageBorder"/>DrawImageBorder()</term>
