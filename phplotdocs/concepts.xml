@@ -463,6 +463,23 @@ plot type.
       </para>
     </listitem>
   </varlistentry>
+
+  <varlistentry>
+    <term><anchor id="data-data-xyz" xreflabel="data-data-xyz"/>data-data-xyz</term>
+    <listitem>
+      <para>
+Each record contains a label, an X value, and then one or more pairs of Y
+and Z values:
+<literal>array('label', x, y1, z1, y2, z2, ...)</literal>.
+A single data set in an array using this data type contains (x, y, z)
+triplets. Multiple data sets can also be represented, with each row in the
+array containing an X value and the corresponding Y and Z values.
+An array with this data type can have duplicate X values, and X values need
+not be in order.
+This data type only works with the 'bubbles' plot type.
+      </para>
+    </listitem>
+  </varlistentry>
 </variablelist>
 </para>
 </sect2>
@@ -612,6 +629,13 @@ That is, no bar, point shape, thinbar line, etc. will be plotted at that
 position.
 </para>
 
+<para>
+With data type <link linkend="data-data-xyz">data-data-xyz</link>, missing
+points are represented by an empty string for the Y value.  There still must
+be a Z value entry in the array for each missing Y, although the Z value is
+ignored.
+</para>
+
 </sect2>
 
 <sect2 id="conc-datatypes-indexes">
@@ -711,6 +735,12 @@ The following plot types are available:
       <row>
         <entry><link linkend="plottype-bars">bars</link></entry>
         <entry>Filled bars with optional 3-D look. Multiple datasets are offset.</entry>
+      </row>
+      <row>
+        <entry><link linkend="plottype-bubbles">bubbles</link></entry>
+        <entry>A scatter-point plot using bubbles (filled circles), with the
+            bubble size proportional to a Z value.
+            </entry>
       </row>
       <row>
         <entry><link linkend="plottype-candlesticks">candlesticks</link></entry>
@@ -845,6 +875,49 @@ Examples of this plot type can be seen in
 </para>
 <para>
 Horizontal bar plots were added in PHPlot-5.1.2.
+</para>
+</sect2>
+
+<sect2 id="plottype-bubbles">
+<title>Plot Type: Bubbles</title>
+<para>
+This plot type produces a scatter-plot using filled circles, with the diameter
+of each circle representing a Z value for the point.
+The range of Z values in the plot is linearly mapped into a range of bubble
+sizes, with the lowest plotted Z value producing a bubble with the minimum size,
+and the largest Z value producing the largest bubble.
+The smallest and largest bubble sizes are automatically calculated
+based on the plot area size, but see also <xref linkend="conc-tuning-bubbles"/>.
+Note: There is no way to display the actual numeric Z values on the plot.
+</para>
+
+<para>
+Multiple data sets work, with more than one (Y,Z) pair for each X. The
+bubbles will be drawn using the corresponding colors in the data colors
+array, as set with <xref linkend="SetDataColors"/>.
+With multiple data sets (or even a single data set), you may find
+the plot easier to read when using semi-transparent data colors as
+described in <xref linkend="conc-truecolor-using-alpha"/>.
+</para>
+
+<para>
+This plot type only works with data type <xref linkend="data-data-xyz"/>.
+Each (X,Y,Z) triplet from the data array produces a bubble on the plot.
+</para>
+
+<para>
+An empty string (or any non-numeric value) for Y indicates a missing point
+and will not be plotted. A corresponding Z entry must be provided in the
+data array, but the value is ignored.
+</para>
+
+<para>
+An example of this plot type can be seen in
+<xref linkend="ex-bubbles1"/>.
+</para>
+
+<para>
+Bubble plots were added in PHPlot-5.5.0.
 </para>
 </sect2>
 
@@ -1396,20 +1469,21 @@ Refer to <xref linkend="conc-datatypes"/> for more information on data
 types.
 <informaltable>
   <?dbfo keep-together="always"?>
-  <tgroup cols="7">
+  <tgroup cols="8">
     <?dbhtml table-summary="Supported plot type/data type combinations."?>
     <?dbhtml cellpadding="4"?>
     <colspec colname="pt" align="left" colwidth="16*" />
-    <colspec colname="dt1" align="center" colwidth="14*" />
-    <colspec colname="dt2" align="center" colwidth="14*" />
-    <colspec colname="dt3" align="center" colwidth="14*" />
-    <colspec colname="dt4" align="center" colwidth="14*" />
-    <colspec colname="dt5" align="center" colwidth="14*" />
-    <colspec colname="dt6" align="center" colwidth="14*" />
+    <colspec colname="dt1" align="center" colwidth="12*" />
+    <colspec colname="dt2" align="center" colwidth="12*" />
+    <colspec colname="dt3" align="center" colwidth="12*" />
+    <colspec colname="dt4" align="center" colwidth="12*" />
+    <colspec colname="dt5" align="center" colwidth="12*" />
+    <colspec colname="dt6" align="center" colwidth="12*" />
+    <colspec colname="dt7" align="center" colwidth="12*" />
     <thead>
       <row>
         <entry morerows="1" valign="bottom">Plot Type:</entry>
-        <entry namest="dt1" nameend="dt6">Data Type:</entry>
+        <entry namest="dt1" nameend="dt7">Data Type:</entry>
       </row>
       <row>
         <entry><xref linkend="text-data" /></entry>
@@ -1418,6 +1492,7 @@ types.
         <entry><xref linkend="text-data-single" /></entry>
         <entry><xref linkend="text-data-yx" /></entry>
         <entry><xref linkend="data-data-yx" /></entry>
+        <entry><xref linkend="data-data-xyz" /></entry>
       </row>
     </thead>
     <tbody>
@@ -1425,6 +1500,7 @@ types.
         <entry><link linkend="plottype-area">area</link></entry>
         <entry>Yes</entry>
         <entry>Yes</entry>
+        <entry> </entry>
         <entry> </entry>
         <entry> </entry>
         <entry> </entry>
@@ -1438,11 +1514,23 @@ types.
         <entry> </entry>
         <entry>Yes</entry>
         <entry> </entry>
+        <entry> </entry>
+      </row>
+      <row>
+        <entry><link linkend="plottype-bubbles">bubbles</link></entry>
+        <entry> </entry>
+        <entry> </entry>
+        <entry> </entry>
+        <entry> </entry>
+        <entry> </entry>
+        <entry> </entry>
+        <entry>Yes</entry>
       </row>
       <row>
         <entry><link linkend="plottype-candlesticks">candlesticks</link></entry>
         <entry>Yes</entry>
         <entry>Yes</entry>
+        <entry> </entry>
         <entry> </entry>
         <entry> </entry>
         <entry> </entry>
@@ -1456,12 +1544,14 @@ types.
         <entry> </entry>
         <entry> </entry>
         <entry> </entry>
+        <entry> </entry>
       </row>
       <row>
         <entry><link linkend="plottype-linepoints">linepoints</link></entry>
         <entry>Yes</entry>
         <entry>Yes</entry>
         <entry>Yes</entry>
+        <entry> </entry>
         <entry> </entry>
         <entry> </entry>
         <entry> </entry>
@@ -1474,6 +1564,7 @@ types.
         <entry> </entry>
         <entry> </entry>
         <entry> </entry>
+        <entry> </entry>
       </row>
       <row>
         <entry><link linkend="plottype-pie">pie</link></entry>
@@ -1483,11 +1574,13 @@ types.
         <entry>Yes</entry>
         <entry> </entry>
         <entry> </entry>
+        <entry> </entry>
       </row>
       <row>
         <entry><link linkend="plottype-ohlc">ohlc</link></entry>
         <entry>Yes</entry>
         <entry>Yes</entry>
+        <entry> </entry>
         <entry> </entry>
         <entry> </entry>
         <entry> </entry>
@@ -1501,11 +1594,13 @@ types.
         <entry> </entry>
         <entry> </entry>
         <entry> </entry>
+        <entry> </entry>
       </row>
       <row>
         <entry><link linkend="plottype-squared">squared</link></entry>
         <entry>Yes</entry>
         <entry>Yes</entry>
+        <entry> </entry>
         <entry> </entry>
         <entry> </entry>
         <entry> </entry>
@@ -1519,6 +1614,7 @@ types.
         <entry> </entry>
         <entry> </entry>
         <entry> </entry>
+        <entry> </entry>
       </row>
       <row>
         <entry><link linkend="plottype-stackedbars">stackedbars</link></entry>
@@ -1527,6 +1623,7 @@ types.
         <entry> </entry>
         <entry> </entry>
         <entry>Yes</entry>
+        <entry> </entry>
         <entry> </entry>
       </row>
       <row>
@@ -1537,6 +1634,7 @@ types.
         <entry> </entry>
         <entry>Yes</entry>
         <entry>Yes</entry>
+        <entry> </entry>
       </row>
     </tbody>
   </tgroup>
