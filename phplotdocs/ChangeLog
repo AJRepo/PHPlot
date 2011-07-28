@@ -4,6 +4,16 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2011-07-28
+   For feature request #3352301 "Bubble plots":
+   * Makefile: Add files for new example.
+   * advanced.xml: Add new tuning parameters for bubble plots.
+   * concepts.xml: New data type and plot type for bubble plots.
+   * developer.xml: New internal function DrawBubbles.
+   * examples.xml: New example of bubbles plot.
+   * examples/bubbles1.php: New example
+   * variables.list: New class variables for X/Y/Z data and bubble plots.
+
 2011-07-26
    * reference.xml: In SetBgImage and SetPlotAreaBgImage, add a note advising
      use of PHPlot truecolor images whenever using a JPEG (or high-color PNG)
