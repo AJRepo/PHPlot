@@ -1470,6 +1470,50 @@ then all the bars touch (within each group, and adjacent groups).
 
 </sect2>
 
+<sect2 id="conc-tuning-bubbles">
+<title>Tuning Bubble Plots</title>
+<para>
+These two variables set the range of bubble size in
+<link linkend="plottype-bubbles">bubbles</link> plots.
+</para>
+
+<para>
+  <variablelist>
+    <varlistentry>
+      <term><varname>bubbles_min_size</varname></term>
+      <listitem>
+        <para>
+Minimum bubble diameter in pixels.
+        </para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term><varname>bubbles_max_size</varname></term>
+      <listitem>
+        <para>
+Maximum bubble diameter in pixels.
+        </para>
+      </listitem>
+    </varlistentry>
+  </variablelist>
+</para>
+
+<para>
+The point with the smallest Z value will be drawn as a bubble with a diameter
+of bubbles_min_size, and the point with the largest Z value will be drawn as
+a bubble with a diameter of bubbles_max_size. That is, PHPlot linearly maps
+the range of Z values in the plot to the range of bubble sizes.
+</para>
+
+<para>
+By default, the minimum bubble size is 6 pixels, and the maximum bubble
+size is 1/12 times the smaller of the plot area width and plot area height.
+For example, if the plot area is 800x600, the default maximum bubble size
+will be 50 pixels (600 / 12).
+</para>
+
+</sect2>
+
 <sect2 id="conc-tuning-ohlc">
 <title>Tuning OHLC Charts</title>
 <para>
