@@ -1450,4 +1450,54 @@ web page looks in Firefox.
 
 <!-- =============================================== -->
 
+<pagebreak/>
+<sect1 id="ex-bubbles1">
+<title>Example - Bubbles Plot</title>
+<para>
+This example shows a <link linkend="plottype-bubbles">bubbles plot</link>.
+A data array for a bubbles plot uses the
+<link linkend="data-data-xyz">data-data-xyz</link> data type, in which three
+coordinate values specify each point: X and Y are the position on the plot,
+and Z maps to the bubble diameter.
+</para>
+<para>
+In this example, X is the flavor, Y is the age group, and Z represents the
+percentage of participants who liked that flavor.
+Note that there are two missing points in the Y=1 row.  No bubbles are
+drawn at X=3,Y=1 or X=5,Y=1.
+Presumably, no-one under 12 would try the pear or kiwi flavors, so there are
+no valid data points there. This is different from a value Z=0, which
+would be plotted with a bubble of the smallest size.
+</para>
+<para>
+This plot type was added in PHPlot-5.5.0.
+</para>
+
+<para>
+This example also shows the use of custom Y labels. A function
+<function>get_label()</function> is defined to map the Y tick value
+into a string from an array of strings. This method allows the display
+of arbitrary labels along the Y axis.
+See <xref linkend="SetYLabelType"/> for details.
+</para>
+
+<example id="example-bubbles1">
+<?dbfo keep-together="auto"?>
+<title>Bubbles Plot</title>
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="examples/bubbles1.png" scale="58" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>Bubbles Plot Example</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+&bubbles1;
+</example>
+</sect1>
+
+<!-- =============================================== -->
+
 </chapter>
