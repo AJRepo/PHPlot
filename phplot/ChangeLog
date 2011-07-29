@@ -3,6 +3,9 @@ The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
 2011-07-28
+    * Fixed problem found in testing with bubbles plot: data array
+      with no Y,Z values at all got undefined property warnings.
+
     * Feature request #3352301 "Bubble plots":
       + Added new data type 'data-data-xyz', which includes a Z value
         for each Y.
