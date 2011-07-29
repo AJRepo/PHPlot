@@ -2881,6 +2881,11 @@ class PHPlot
                 $this->max_y = max($this->data_max);
             }
         }
+        // For X/Y/Z plots, make sure these are set. If there are no valid data values,
+        // they will be unset, so set them here to prevent undefined property warnings.
+        if ($this->datatype_yz && !isset($this->min_z)) {   // Means max_z is also unset
+            $this->max_z = $this->min_z = 0; // Actual values do not matter.
+        }
 
         if ($this->GetCallback('debug_scale')) {
             $this->DoCallback('debug_scale', __FUNCTION__, array(
@@ -6423,6 +6428,7 @@ class PHPlot
     {
         if (!$this->CheckDataType('data-data-xyz'))
             return FALSE;
+        if ($this->data_columns == 0) return TRUE; // No data to plot; prevents error on min_z/max_z.
 
         $gcvars = array(); // For GetDataColor, which initializes and uses this.
 
