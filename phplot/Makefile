@@ -18,9 +18,14 @@ REL_CONTRIB=$(REL_CONTRIB_TXTFILES) \
   contrib/color_range.php \
   contrib/color_range.test1.php \
   contrib/color_range.test2.php \
+  contrib/data_table.example1.php \
+  contrib/data_table.example2.php \
+  contrib/data_table.example3.php \
+  contrib/data_table.php \
   contrib/prune_labels.example.php \
   contrib/prune_labels.php \
-  contrib/prune_labels.test.php
+  contrib/prune_labels.test.php \
+
 
 # Temporary directory for building releases. Can be relative.
 # Release packages will be left here too.
