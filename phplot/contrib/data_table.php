@@ -79,7 +79,8 @@ The following keys are optional in the settings array:
 
     'column_alignments' => Array of L C or R for horizontal alignment, meaning
        left align, center, or right align.
-       If missing, numeric columns are R and non-numeric columns are L.
+       An empty string means automatic: align right if numeric, else left.
+       Default if missing is automatic for all columns.
 
     'font' => GD font number 1-5. 1 is smallest, 5 is largest. Default is 2.
 
@@ -112,7 +113,7 @@ function draw_data_table($img, $settings)
     // Check for mandatory settings:
     if (!isset($o_data, $o_headers)) {
         trigger_error("draw_data_table error: 'headers' and 'data' are required");
-        return FALSE; // In case error handle returns
+        return FALSE; // In case error handler returns
     }
 
     // Font and color setup:
@@ -146,7 +147,7 @@ function draw_data_table($img, $settings)
      || count($o_column_formats) != $n_cols
      || count($o_column_alignments) != $n_cols) {
         trigger_error("draw_data_table error: Mismatch in size of column spec arrays");
-        return FALSE; // In case error handle returns
+        return FALSE; // In case error handler returns
     }
 
     // If the table height is not supplied, calculate the space needed.
