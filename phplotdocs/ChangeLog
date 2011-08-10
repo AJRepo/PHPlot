@@ -4,6 +4,10 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2011-08-09
+   * concepts.xml: Add note on pie chart with text-data-single data type that
+     the label strings can be used to build a legend.
+
 2011-07-30
    For release with PHPlot-5.5.0 (no changes)
 

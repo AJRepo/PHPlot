@@ -1199,6 +1199,25 @@ For example:
 ]]></programlisting>
 This makes a pie chart with 3 segments, with sizes 10%, 40%, and 50%.
 </para>
+
+<para>
+Although the labels in the data array are ignored when drawing the pie chart,
+you can assign strings to the label positions in the array, then use them to
+build a plot legend.  For example, this will produce a pie chart with 3
+slices, and a legend with 3 entries using the labels from the data array:
+<programlisting><![CDATA[$data = array(array('Gold', 100), array('Silver',35), array('Copper',12));
+$plot = new PHPlot();
+$plot->SetPlotType('pie');
+$plot->SetDataType('text-data-single');
+$plot->SetDataValues($data);
+foreach ($data as $row) $plot->SetLegend($row[0]); // Copy labels to legend
+$plot->DrawGraph();
+]]></programlisting>
+A slighly more complex example of this can be seen in <xref linkend="ex-pie1"/>.
+This only works for the 'text-data-single' data type, where each row or record
+in the data array is used to build one pie slice.
+</para>
+
 </sect3>
 
 <sect3 id="plottype-pie-td">
