@@ -61,7 +61,7 @@ END;
 # Save resulting HTML for later viewing:
 if (!empty($save_html) && ($f = fopen($save_html, "w"))) {
     fwrite($f, $html);
-    fwrite(STDOUT, "Note: Wrote HTML results to $save_html\n");
+    fwrite(STDOUT, "Note: Wrote HTML to $save_html_file in results directory\n");
     fclose($f);
 }
 
