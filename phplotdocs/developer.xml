@@ -1424,6 +1424,22 @@ fonts.
 </varlistentry>
 
 <varlistentry>
+  <term><anchor id="initialize" xreflabel="initialize"/>initialize($imagecreate_function, $width, $height, $output_file, $input_file)</term>
+  <listitem>
+    <para>
+Initialize a newly created object. This is called from the two class
+constructors, <xref linkend="PHPlot"/> and <xref linkend="PHPlot-truecolor"/>.
+$imagecreate_function is the name of the GD function used to create an image
+(<function>imagecreate</function> or <function>imagecreatetruecolor</function>).
+The other arguments are the same as in the class constructors, except the
+defaults are already applied.
+This was added after PHPlot-5.5.0 by moving duplicated code from the two
+constructors into a shared function.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
   <term><anchor id="NeedDataDarkColors" xreflabel="NeedDataDarkColors"/>NeedDataDarkColors()</term>
   <listitem>
     <para>
@@ -1650,8 +1666,8 @@ such as <xref linkend="DrawLines"/> if dashed lines are used.
   <listitem>
     <para>
 Selects all the default font values and sizes. See <xref linkend="SetFont"/>
-for details of the font element names and default values.
-Called by <xref linkend="PHPlot"/>, the class constructor, to initialize
+for details of the font element names and default values.  Called by the class
+constructor initialization function <xref linkend="initialize"/> to initialize
 fonts in the plot object, and by <xref linkend="SetUseTTF"/> to restore the
 defaults when changing from or to TrueType font usage.
     </para>
@@ -1666,8 +1682,8 @@ Initializes default colors and styles for PHPlot objects. Mostly this calls
 the public member functions such as <xref linkend="SetDataColors"/> but
 without specifying an array of colors, which causes the member functions
 to select default values.
-Called by <xref linkend="PHPlot"/>, the class constructor, to initialize
-the plot object.
+Called by the class constructor initialization function
+<xref linkend="initialize"/>.
     </para>
   </listitem>
 </varlistentry>
@@ -1705,14 +1721,15 @@ at graph drawing time.
     <para>
 Sets an image file $which_input_file to be used as the background image for
 the graph. Also resets the graph size to the size of the image file.
-This is used by the constructor, <xref linkend="PHPlot"/>.
+Called by the class constructor initialization function
+<xref linkend="initialize"/>.
 Note: In earlier releases, this was considered an externally available
 function. After a PHPlot object was created with the constructor,
 SetInputFile could be used to resize it and set the background image.
 Although this still works, it is deprecated. SetInputFile should be
 considered an internal-use-only function. Users should set the background
-image file using the 4th argument of <xref linkend="PHPlot"/> when
-creating an instance of the object.
+image file using the 4th argument of <xref linkend="PHPlot"/> or
+<xref linkend="PHPlot-truecolor"/>  when creating an instance of the object.
     </para>
   </listitem>
 </varlistentry>
