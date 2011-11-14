@@ -4,6 +4,15 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2011-11-13
+   * developer.xml: Document new internal function initialize().
+     Fix 'called by PHPlot constructor' references to indicate these are now
+     called by initialize() (they incorrectly omitted mentioning the other
+     constructor too.)
+   * reference.xml: Link SetFont(), SetFontGD(), and SetFontTTF() to the
+     section in the Concepts chapter on text fonts.
+   * concepts.xml: Add a section and table with font element names and uses.
+
 2011-08-09
    * concepts.xml: Add note on pie chart with text-data-single data type that
      the label strings can be used to build a legend.
