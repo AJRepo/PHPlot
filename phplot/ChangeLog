@@ -2,6 +2,9 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2011-11-13
+    * Moved duplicated code from the 2 constructors into a new function.
+
 2011-07-30 (lbayuk)     ===== Released as 5.5.0 =====
     * phplot.php: Updated version comment and version constant
     * README.txt: Updated for new release
