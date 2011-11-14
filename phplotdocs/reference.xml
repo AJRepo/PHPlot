@@ -2478,6 +2478,9 @@ If not specified, the value set by <xref linkend="SetLineSpacing"/> is used.
   <refsect1>
     <title>Notes</title>
     <para>
+See also <xref linkend="conc-text"/>.
+    </para>
+    <para>
 When using built-in GD fonts, the default fonts are shown in the following
 table, where font 1 is the smallest font and font 5 is the biggest font.
       <informaltable>
@@ -2664,8 +2667,9 @@ If not specified, the value set by <xref linkend="SetLineSpacing"/> is used.
   <refsect1>
     <title>Notes</title>
     <para>
-See <xref linkend="SetFont"/> for more information about fonts.
-See <xref linkend="SetLineSpacing"/> for more information about line spacing.
+See <xref linkend="conc-text"/>,
+<xref linkend="SetFont"/> for more information about fonts, and
+<xref linkend="SetLineSpacing"/> for more information about line spacing.
     </para>
 
     <para>
@@ -2772,8 +2776,9 @@ See <xref linkend="SetLineSpacing"/> for details.
   <refsect1>
     <title>Notes</title>
     <para>
-See <xref linkend="SetFont"/> for more information about fonts.
-See <xref linkend="SetLineSpacing"/> for more information about line spacing.
+See <xref linkend="conc-text"/>,
+<xref linkend="SetFont"/> for more information about fonts, and
+<xref linkend="SetLineSpacing"/> for more information about line spacing.
     </para>
 
     <para>
