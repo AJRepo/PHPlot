@@ -1213,7 +1213,7 @@ $plot->SetDataValues($data);
 foreach ($data as $row) $plot->SetLegend($row[0]); // Copy labels to legend
 $plot->DrawGraph();
 ]]></programlisting>
-A slighly more complex example of this can be seen in <xref linkend="ex-pie1"/>.
+A slightly more complex example of this can be seen in <xref linkend="ex-pie1"/>.
 This only works for the 'text-data-single' data type, where each row or record
 in the data array is used to build one pie slice.
 </para>
@@ -2698,6 +2698,63 @@ image. For more on font sizes, see the notes with <xref linkend="SetFont" />.)
     </textobject>
   </mediaobject>
 </informalfigure>
+</para>
+</sect2>
+
+<sect2 id="conc-text-elements">
+<title>Text Element Names</title>
+<para>
+Each type of text available in PHPlot has an <emphasis>element
+name</emphasis>.  When selecting text fonts with <xref linkend="SetFont"/> and
+related functions, you use the element name to indicate what type of text
+you are configuring. The following table lists the PHPlot text element names.
+  <informaltable>
+    <?dbfo table-width="80%"?> <!-- Table width hint for PDF only -->
+    <tgroup cols="2">
+      <?dbhtml table-summary="Text element names"?>
+      <colspec colname="c1" colwidth="30*" />
+      <colspec colname="c2" colwidth="70*" />
+      <thead>
+        <row>
+          <entry>Element Name</entry>
+          <entry>Used for</entry>
+        </row>
+      </thead>
+      <tbody>
+        <row>
+          <entry>generic</entry>
+          <entry>Pie chart labels, error image text</entry>
+        </row>
+        <row>
+          <entry>legend</entry>
+          <entry>Text in the legend (<xref linkend="SetLegend"/>)</entry>
+        </row>
+        <row>
+          <entry>title</entry>
+          <entry>Main plot title (<xref linkend="SetTitle"/>)</entry>
+        </row>
+        <row>
+          <entry>x_label</entry>
+          <entry>X tick labels and X data labels</entry>
+        </row>
+        <row>
+          <entry>y_label</entry>
+          <entry>Y tick labels and Y data labels</entry>
+        </row>
+        <row>
+          <entry>x_title</entry>
+          <entry>X axis title (<xref linkend="SetXTitle"/>)</entry>
+        </row>
+        <row>
+          <entry>y_title</entry>
+          <entry>Y axis title (<xref linkend="SetYTitle"/>)</entry>
+        </row>
+      </tbody>
+    </tgroup>
+  </informaltable>
+Note: <literal>generic</literal> is also used for text drawn from a callback
+when no font is specified. See <xref linkend="callbacks-drawing"/>
+and <xref linkend="DrawText"/>.
 </para>
 </sect2>
 
