@@ -1,7 +1,7 @@
 <?php
 /* $Id$ */
 /*
- * PHPLOT Version 5.5.0
+ * PHPLOT Version 5.5.0 + unreleased changes
  *
  * A PHP class for creating scientific and business charts
  * Visit http://sourceforge.net/projects/phplot/
@@ -35,7 +35,7 @@
 
 class PHPlot
 {
-    const version = '5.5.0';
+    const version = '5.5.0-Unreleased $Revision$';
 
     /* Declare class variables which are initialized to static values. Many more class variables
      * are used, defined as needed, but are unset by default.
@@ -268,30 +268,35 @@ class PHPlot
 
     /*
      * Constructor: Setup img resource, colors and size of the image, and font sizes.
-     *
-     *   $which_width : Image width in pixels.
-     *   $which_height : Image height in pixels.
-     *   $which_output_file : Filename for output.
-     *   $which_input_file : Path to a file to be used as background.
+     *   $width : Image width in pixels.
+     *   $height : Image height in pixels.
+     *   $output_file : Filename for output.
+     *   $input_file : Path to a file to be used as background.
      */
-    function PHPlot($which_width=600, $which_height=400, $which_output_file=NULL, $which_input_file=NULL)
+    function PHPlot($width=600, $height=400, $output_file=NULL, $input_file=NULL)
+    {
+        $this->initialize('imagecreate', $width, $height, $output_file, $input_file);
+    }
+
+    /*
+     * Initialize a PHPlot object. This is used by both PHPlot and PHPlot_truecolor constructors.
+     */
+    protected function initialize($imagecreate_function, $width, $height, $output_file, $input_file)
     {
         $this->SetRGBArray($this->color_array);
 
-        if ($which_output_file)
-            $this->SetOutputFile($which_output_file);
+        if (!empty($output_file))
+            $this->SetOutputFile($output_file);
 
-        if ($which_input_file) {
-            $this->SetInputFile($which_input_file);
+        if (!empty($input_file)) {
+            $this->SetInputFile($input_file);
         } else {
-            $this->image_width = $which_width;
-            $this->image_height = $which_height;
-
-            $this->img = ImageCreate($this->image_width, $this->image_height);
-            if (! $this->img)
-                return $this->PrintError('PHPlot(): Could not create image resource.');
+            $this->image_width = $width;
+            $this->image_height = $height;
+            $this->img = call_user_func($imagecreate_function, $width, $height);
+            if (!$this->img)
+                return $this->PrintError(get_class($this) . '(): Could not create image resource.');
         }
-
         $this->SetDefaultStyles();
         $this->SetDefaultFonts();
     }
@@ -6828,34 +6833,15 @@ class PHPlot_truecolor extends PHPlot
 {
     /*
      * PHPlot Truecolor variation constructor: Create a PHPlot_truecolor object and initialize it.
-     * Note this does NOT call the parent (PHPlot) constructor. It duplicates the code here.
-     * Everything is the same as the PHPlot constructor except for imagecreatetruecolor.
      *
      * Parameters are the same as PHPlot:
-     *   $which_width : Image width in pixels.
-     *   $which_height : Image height in pixels.
-     *   $which_output_file : Filename for output.
-     *   $which_input_file : Path to a file to be used as background.
+     *   $width : Image width in pixels.
+     *   $height : Image height in pixels.
+     *   $output_file : Filename for output.
+     *   $input_file : Path to a file to be used as background.
      */
-    function __construct($which_width=600, $which_height=400, $which_output_file=NULL, $which_input_file=NULL)
+    function __construct($width=600, $height=400, $output_file=NULL, $input_file=NULL)
     {
-        $this->SetRGBArray($this->color_array);
-
-        if ($which_output_file)
-            $this->SetOutputFile($which_output_file);
-
-        if ($which_input_file) {
-            $this->SetInputFile($which_input_file);
-        } else {
-            $this->image_width = $which_width;
-            $this->image_height = $which_height;
-
-            $this->img = imagecreatetruecolor($this->image_width, $this->image_height);
-            if (! $this->img)
-                return $this->PrintError('PHPlot_truecolor(): Could not create image resource.');
-        }
-
-        $this->SetDefaultStyles();
-        $this->SetDefaultFonts();
+        $this->initialize('imagecreatetruecolor', $width, $height, $output_file, $input_file);
     }
 }
