@@ -2,6 +2,9 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2011-12-10
+    * Comment typo fixes (found during work on upcoming change).
+
 2011-11-13
     * Moved duplicated code from the 2 constructors into a new function.
 
