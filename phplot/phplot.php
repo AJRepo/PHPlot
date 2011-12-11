@@ -100,7 +100,6 @@ class PHPlot
     //                 Are drawn at graph plotting time, by Draw*DataLabel(), called by DrawLines(), etc.
     //                 DrawXDataLabel() also draws vertical lines to data points, depending on
     //                 draw_x_data_label_lines.
-    // Tick Labels
     // Tick and Data label positions are not initialized, because PHPlot needs to tell if they
     // defaulted or are set by the user. See CheckLabels() for details. The variables and
     // effective defaults are shown here in comments (but CheckLabels adjusts the defaults).
@@ -2005,7 +2004,7 @@ class PHPlot
      *   $acc  String of accepted choices. Must be lower-case, and separated
      *               by exactly ', ' (comma, space).
      *   $func Name of the calling function, for error messages.
-     * Returns a array option value(s), downcased and trimmed, if all entries in $opt are valid.
+     * Returns an array of option value(s), downcased and trimmed, if all entries in $opt are valid.
      * Reports an error if any supplied option is not valid. Returns NULL if the error handler returns.
      */
     protected function CheckOptionArray($opt, $acc, $func)
@@ -3691,7 +3690,7 @@ class PHPlot
      * That is what we need to calculate the needed margin space.
      * (Previous versions of PHPlot estimated this, using the maximum X or Y value,
      * or maybe the longest string. That doesn't work. -10 is longer than 9, etc.
-     * So this gets the actual size of each label, slow as that may be.
+     * So this gets the actual size of each label, slow as that may be.)
      */
     protected function CalcMaxTickLabelSize($which)
     {
