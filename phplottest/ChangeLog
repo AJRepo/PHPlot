@@ -1,0 +1,18 @@
+This is the Change Log for phplottest, the PHPlot Test Suite
+The project home page is http://sourceforge.net/projects/phplot/
+-----------------------------------------------------------------------------
+
+2011-12-10
+    * LICENSES: Fix typo, no change to licenses.
+
+2011-08-24
+    * tests.ini: Fix validation pattern for encodeimg1 per previous change.
+
+2011-08-19
+    * encodeimg1.php: Fix message from test so it does not contain the path
+      to the results directory, to avoid spurious result compare errors.
+
+2011-08-08
+    * The PHPlot Test Suite is imported into SubVersion. No prior change
+      history is available here (although the test suite development goes
+      back to 2006).
