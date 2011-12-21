@@ -16,7 +16,7 @@ if (!isset($n_across)) $n_across = 2;
 if (!isset($n_down)) $n_down = 2;
 #    Plot type (bars, stackedbars, lines, ...)
 if (!isset($plot_type)) $plot_type = 'bars';
-#    Legend positioning: 'default', 'world', 'pixels'.
+#    Legend positioning: 'default', 'world', 'pixels', 'plotrelative'.
 if (!isset($legend_positioning)) $legend_positioning = 'world';
 
 $title = "Multiple ($n_across x $n_down) Identical '$plot_type' plots"
@@ -62,8 +62,20 @@ $p->SetImageBorderWidth(3);
 $p->SetPlotBorderType('full');
 $p->SetLegend(array('Path A', 'Path B', 'Path C', 'Path D'));
 
-if ($legend_positioning == 'world') $p->SetLegendWorld(0.1, 35);
-elseif ($legend_positioning == 'pixels') $p->SetLegendPixels(50, 50);
+switch ($legend_positioning) {
+case 'world':
+    $p->SetLegendWorld(0.1, 35);
+    break;
+case 'pixels':
+    $p->SetLegendPixels(50, 50);
+    break;
+case 'plotrelative':
+    # This places the upper left corner of the legend box at an offset of
+    # (5,5) from the upper left corner of the plot area.
+    $p->SetLegendPosition(0, 0, 'plot', 0, 0, 5, 5);
+    break;
+# No default: Default is to not position the legend and let it default.
+}
 
 # Draw n_across * n_down plots:
 $plot_area_y1 = $plot_area_margin;
