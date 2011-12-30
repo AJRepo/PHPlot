@@ -110,11 +110,10 @@ class PHPlot
 
     public $draw_x_data_label_lines = FALSE;   // Draw a line from the data point to the axis?
 
-    // Label format controls: (for tick, data and plot labels)
-    // Unset by default, these array members are used as needed for 'x' (x tick labels), 'xd' (x data
-    // labels), 'y' (y tick labels), and 'yd' (y data labels).
+    // Label format controls: See SetLabelType() and FormatLabel()
+    // Outer index is the type of label: x, y (tick labels); xd, yd (data labels); p (pie labels).
+    // Inner indexes are:
     //    type, precision, prefix, suffix, time_format, printf_format, custom_callback, custom_arg.
-    // These replace the former: x_label_type, x_time_format, x_precision (similar for y), data_units_text.
     public $label_format = array('x' => array(), 'xd' => array(), 'y' => array(), 'yd' => array());
     // data_units_text is retained for backward compatibility, because there was never a function
     // to set it. Use the 'suffix' argument to Set[XY]LabelType instead.
@@ -174,9 +173,7 @@ class PHPlot
     public $error_bar_shape = 'tee';           // 'tee' or 'line'
     public $error_bar_line_width = 1;          // single value (or array TODO)
 
-    public $plot_border_type = 'sides';        // left, right, top, bottom, sides, none, full; or array
     public $image_border_type = 'none';        // 'raised', 'plain', 'none'
-    // public $image_border_width;             // NULL, 0, or unset for default. Default depends on type.
 
     public $shading = 5;                       // 0 for no shading, > 0 is size of shadows in pixels
 
@@ -1791,13 +1788,15 @@ class PHPlot
     }
 
     /*
-     * Set formatting type for tick and data labels on X or Y axis.
-     * This implements the 4 functions Set[XY]LabelType() and Set[XY]DataLabelType().
-     *    $mode  : 'x', 'y', 'xd', or 'yd' - which type of label to configure.
+     * Set formatting type for tick and data labels on X or Y axis, or pie labels.
+     * This implements Set[XY]LabelType(), Set[XY]DataLabelType(), and part of SetPieLabelType().
+     *    $mode  : 'x', 'y', 'xd', 'yd', or 'p' - which type of label to configure.
      *        'x' and 'y' set the type for tick labels, and the default type for data labels
      *        if they are not separately configured. 'xd' and 'yd' set the type for data labels.
+     *        'p' sets the type for pie chart labels.
      *    $args  : Variable arguments, passed as an array.
-     *       [0] = $type (required) : Label type. 'data', 'time', 'printf', or 'custom'.
+     *       [0] = $type : Label format type: 'data', 'time', 'printf', 'custom', or empty.
+     *             If this is missing or empty, the default formatting for $mode is restored.
      *     For type 'data':
      *       [1] = $precision (optional). Numeric precision. Can also be set by SetPrecision[XY]().
      *       [2] = $prefix (optional) - prefix string for labels.
@@ -1812,7 +1811,7 @@ class PHPlot
      */
     protected function SetLabelType($mode, $args)
     {
-        if (!$this->CheckOption($mode, 'x, y, xd, yd', __FUNCTION__))
+        if (!$this->CheckOption($mode, 'x, y, xd, yd, p', __FUNCTION__))
             return FALSE;
 
         $type = isset($args[0]) ? $args[0] : '';
@@ -1900,6 +1899,27 @@ class PHPlot
     {
         $args = func_get_args();
         return $this->SetLabelType('yd', $args);
+    }
+
+    /*
+     * Select label source and formating for pie chart labels.
+     *   $source - What to use for labels (string or array): percent, value, label, index, or empty string.
+     *             Empty string (or NULL, False, or 0) means to restore the default.
+     *   ... - Additional arguments telling how to format the label. See SetLabelType() for details.
+     */
+    function SetPieLabelType()  // Variable arguments: $source, $type, ....
+    {
+        $args = func_get_args();
+        $source = array_shift($args);
+        if (empty($source)) {
+            unset($this->pie_label_source); // Restore defaults - see CheckPieLabels()
+            $args = array(''); // See below - tells SetLabelType to do no formatting or default.
+        } else {
+            $this->pie_label_source = $this->CheckOptionArray($source, 'percent, value, label, index',
+                                                              __FUNCTION__);
+            if (empty($this->pie_label_source)) return FALSE;
+        }
+        return $this->SetLabelType('p', $args);
     }
 
     /*
@@ -2370,6 +2390,7 @@ class PHPlot
      * Set the position for pie chart percentage labels.
      *   $which_blb : Real number between 0 and 1.
      *      Smaller values move the labels in towards the center.
+     *      Using 0 or FALSE results in no labels.
      */
     function SetLabelScalePosition($which_blp)
     {
@@ -2742,6 +2763,32 @@ class PHPlot
     }
 
     /*
+     * Select the best alignment for text, based on its vector angle from a point.
+     *   $sin_t, $cost_t : sin() and cos() of the angle of the text offset from a reference point.
+     *   $h_align, $v_align : Returned values, to be passed to DrawText(). E.g. 'left', 'bottom'.
+     *     There are 8 possibilities, since 'center','center' is never returned.
+     *   $reverse : Optional argument. If TRUE, reverse the usual returns. For text inside a circle.
+     * How it works: Picture a unit circle with 16 slices of 22.5 degrees each.
+     *    Draw horizontal lines at the 22.5 degree and -22.5 degree positions on the circle.
+     *    Text above the upper line will have 'bottom' vertical alignment; below the lower line will
+     *    have 'top' vertical alignment, and between the lines will have 'center' vertical alignment.
+     *    Horizontal alignment is similar, using +/- 22.5 degrees from vertical.
+     */
+    protected function GetTextAlignment($sin_t, $cos_t, &$h_align, &$v_align, $reverse = FALSE)
+    {
+        if ($reverse) {   // Return the opposite alignment, align(T-180) vs align(T)
+            $sin_t = -$sin_t;   // sin(T-180) = -sin(T)
+            $cos_t = -$cos_t;   // cos(T-180) = -cos(T)
+        }
+        if ($sin_t >= 0.383) $v_align = 'bottom';       // 0.383 = sin(22.5 degrees)
+        elseif ($sin_t >= -0.383) $v_align = 'center';
+        else $v_align = 'top';
+        if ($cos_t >= 0.383) $h_align = 'left';         // 0.383 = cos(90 - 22.5 degrees)
+        elseif ($cos_t >= -0.383) $h_align = 'center';
+        else $h_align = 'right';
+    }
+
+    /*
      * Determine if, and where, to draw Data Value Labels.
      *   $label_control : Label position control. Either x_data_label_pos or y_data_label_pos.
      *   &$x_adj, &$y_adj : Returns X,Y adjustments (offset in pixels) to the text position.
@@ -2763,13 +2810,19 @@ class PHPlot
         $x_adj = (int)($radius * $cos);
         $y_adj = -(int)($radius * $sin); // Y is reversed in device coordinates
 
-        // Choose from 8 (not 9, center/center can't happen) text alignments based on angle:
-        if ($sin >= 0.383) $v_align = 'bottom'; // 0.383 = sin(360deg / 16)
-        elseif ($sin >= -0.383) $v_align = 'center';
-        else $v_align = 'top';
-        if ($cos >= 0.383) $h_align = 'left';
-        elseif ($cos >= -0.383) $h_align = 'center';
-        else $h_align = 'right';
+        // Choose text alignment based on angle:
+        $this->GetTextAlignment($sin, $cos, $h_align, $v_align);
+        return TRUE;
+    }
+
+    /*
+     * Enable or disable automatic pie size calculations.
+     * If disabled, PHPlot uses the full plot area (like PHPlot-5.5.0 and earlier always did).
+     * Note the flag pie_full_size is unset by default, and stores the complement of $enable.
+     */
+    function SetPieAutoSize($enable)
+    {
+        $this->pie_full_size = !$enable;
         return TRUE;
     }
 
@@ -2952,10 +3005,8 @@ class PHPlot
         // if there are no titles on that side.
         $min_margin = 2 * $gap + $base_margin;
 
-        // Calculate the title sizes:
+        // Calculate the title sizes (main here, axis titles below):
         list($unused, $title_height) = $this->SizeText($this->fonts['title'], 0, $this->title_txt);
-        list($unused, $x_title_height) = $this->SizeText($this->fonts['x_title'], 0, $this->x_title_txt);
-        list($y_title_width, $unused) = $this->SizeText($this->fonts['y_title'], 90, $this->y_title_txt);
 
         // Special case for maximum area usage with no X/Y titles or labels, only main title:
         if ($maximize) {
@@ -2973,6 +3024,9 @@ class PHPlot
 
             return TRUE;
         }
+
+        list($unused, $x_title_height) = $this->SizeText($this->fonts['x_title'], 0, $this->x_title_txt);
+        list($y_title_width, $unused) = $this->SizeText($this->fonts['y_title'], 90, $this->y_title_txt);
 
         // Make local variables for these. (They get used a lot and I'm tired of this, this, this.)
         $x_tick_label_pos = $this->x_tick_label_pos;
@@ -3903,9 +3957,9 @@ class PHPlot
     }
 
     /*
-     * Formats a tick or data label.
-     *    which_pos - 'x', 'xd', 'y', or 'yd', selects formatting controls.
-     *        x, y are for tick labels; xd, yd are for data labels.
+     * Formats a tick, data, or pie chart label.
+     *    which_pos - 'x', 'xd', 'y', 'yd', or 'p' selects formatting controls.
+     *        x, y are for tick labels; xd, yd are for data labels. p is for pie chart labels.
      *    which_lab - String to format as a label.
      * Credits: Time formatting suggested by Marlin Viss
      *          Custom formatting suggested by zer0x333
@@ -4551,12 +4605,17 @@ class PHPlot
 
     /*
      *  Draw a border around the plot area. See SetPlotBorderType.
-     *  Note: SetPlotBorderType sets plot_border_type to an array, but
-     *  it won't be an array if it defaults or is set directly (backward compatibility).
+     *  plot_border_type can be unset/NULL, a scaler, or an array. If unset or null, the
+     *  default is used ('sides' if the plot includes axes, 'none' if not).
      */
-    protected function DrawPlotBorder()
+    protected function DrawPlotBorder($draw_axes = TRUE)
     {
-        $pbt = (array)$this->plot_border_type;
+        // Force plot_border_type to array and apply defaults.
+        if (isset($this->plot_border_type)) {
+            $pbt = (array)$this->plot_border_type;
+        } elseif ($draw_axes) $pbt = array('sides');
+        else return TRUE; // Default to no border for plots without axes (e.g. pie charts)
+
         $sides = 0;  // Bitmap: 1=left 2=top 4=right 8=bottom
         $map = array('left' => 1, 'plotleft' => 1, 'right' => 4, 'plotright' => 4, 'top' => 2,
                       'bottom' => 8, 'both' => 5, 'sides' => 5, 'full' => 15, 'none' => 0);
@@ -4705,6 +4764,68 @@ class PHPlot
             ImageLine($this->img, $xpos, $this->plot_area[1], $xpos, $ypos, $style);
         }
         return TRUE;
+    }
+
+    /*
+     * Format a pie chart label.
+     *   $index : Slice number, starting with 0.
+     *   $pie_label_source : Label mode. See CheckPieLabels() and SetPieLabelType().
+     *   $arc_angle : Delta angle for this slice, in degrees.
+     *   $slice_weight : Numeric value, or relative weight, of this slice.
+     *  Returns the formatted label text for slice $index.
+     */
+    protected function FormatPieLabel($index, $pie_label_source, $arc_angle, $slice_weight)
+    {
+        $values = array(); // Builds up label value, one field at a time.
+        foreach ($pie_label_source as $word) {
+            switch ($word) {
+            case 'label':    // Use label from data array, but only if data type is compatible
+                $values[] = $this->datatype_pie_single ? $this->data[$index][0] : '';
+                break;
+            case 'value': // Use actual numeric value of the slice
+                $values[] = $slice_weight;
+                break;
+            case 'index': // Use slice index: 0, 1, 2...
+                $values[] = $index;
+                break;
+            default:        // Use percentage: 100% x arc_angle / (360 degrees) = arc_angle / 3.6
+                $values[] = $arc_angle / 3.6;
+            }
+        }
+        return $this->FormatLabel('p', implode(' ', $values)); // Format it
+    }
+
+    /*
+     * Draw a pie chart label.
+     *   $label_txt : Pre-formatted label, from FormatPieLabel()
+     *   $xc, $yc : Center of pie chart
+     *   $start_angle, $arc_angle : Slice starting angle and angular width, in degrees
+     *   $r : Array of ('x', 'y', 'reverse') elements, calculated in DrawPieChart.
+     *        (x, y) are the parameters of the ellipse:  x^2 / r[x]^2 + y^2 / r[y]^2 = 1
+     *           Also:  x = r[x] * cos(angle); y = r[y] * sin(angle); (then offset to center).
+     *        reverse is a flag for text alignment (see GetTextAlignment()).
+     */
+    protected function DrawPieLabel($label_txt, $xc, $yc, $start_angle, $arc_angle, $r)
+    {
+        $mid_angle = deg2rad($start_angle + $arc_angle / 2);
+        $sin_mid = sin($mid_angle);
+        $cos_mid = cos($mid_angle);
+        // Calculate label reference point.
+        $label_x = $xc + $cos_mid * $r['x'];
+        $label_y = $yc - $sin_mid * $r['y'];
+        // For labels in the lower half, outside the pie, offset it to account for shading.
+        // But don't shift labels just below the horizontal, because the shading is too thin there,
+        // and the label ends up too far from the slice. Make a smooth transition between label offsets on
+        // shaded area and above. (This isn't perfect at all, but works for reasonably low shading.)
+        if ($this->label_scale_position >= 0.5 && $this->shading > 0 && $sin_mid < 0) {
+            $yoff = min($this->shading, -$sin_mid * $r['y']);
+        } else $yoff = 0;
+
+        // Calculate text alignment (h_align, v_align) based on angle:
+        $this->GetTextAlignment($sin_mid, $cos_mid, $h_align, $v_align, $r['reverse']);
+        // Draw the label:
+        $this->DrawText($this->fonts['generic'], 0, $label_x, $label_y + $yoff, $this->ndx_grid_color,
+                        $label_txt, $h_align, $v_align);
     }
 
 /////////////////////////////////////////////
@@ -5299,53 +5420,83 @@ class PHPlot
         return TRUE;
     }
 
+    /*
+     * Apply defaults for pie chart labels, if not set with SetPieLabelType(). Default type is percent,
+     * data format with 1 digit precision and % suffix. However, if Y label data precision is set, use
+     * that instead, for compatibility with PHPlot <= 5.5.0.
+     * Returns: $pie_label_source : copy of $this->pie_label_source if set, else default.
+     */
+    protected function CheckPieLabels()
+    {
+        if (empty($this->pie_label_source)) { // SetPieLabelType() was not called, or was reset to default
+            $prec = isset($this->label_format['y']['precision']) ?  $this->label_format['y']['precision'] : 1;
+            $this->SetLabelType('p', array('data', $prec, '', '%'));
+            return array('percent'); // Default to 'percent' labels (leaving this->pie_label_source unset)
+        }
+        return $this->pie_label_source; // Use label type set set with SetPieLabelType()
+    }
+
+
 /////////////////////////////////////////////
 ////////////////////             PLOT DRAWING
 /////////////////////////////////////////////
 
     /*
-     * Draws a pie chart. Data is 'text-data', 'data-data', or 'text-data-single'.
+     * Draws a pie chart. Data type is 'text-data', 'data-data', or 'text-data-single'.
      *
-     *  For text-data-single, the data array contains records with an ignored label,
-     *  and one Y value. Each record defines a sector of the pie, as a portion of
-     *  the sum of all Y values.
+     *  For text-data-single, the data array contains records with a label and one Y value.
+     *  Each record defines a sector of the pie, as a portion of the sum of all Y values.
+     *  Data labels are ignored by default, but can be selected for display with SetPieLabelType().
      *
      *  For text-data and data-data, the data array contains records with an ignored label,
-     *  an ignored X value (for data-data only), and N (N>=1) Y values per record.
+     *  an ignored X value for data-data only, and N (N>=1) Y values per record.
      *  The pie chart will be produced with N segments. The relative size of the first
      *  sector of the pie is the sum of the first Y data value in each record, etc.
+     *  The data labels cannot be used, since they don't map to specific pie sectors.
      *
-     *  Note: With text-data-single, the data labels could be used, but are not currently.
-     *
-     *  If there are no valid data points > 0 at all, just draw nothing. It may seem more correct to
-     *  raise an error, but all of the other plot types handle it this way implicitly. DrawGraph
-     *  checks for an empty data array, but this is different: a non-empty data array with no Y values,
-     *  or all Y=0.
+     *  If there are no valid positive data points at all, just draw nothing. It may seem more correct to
+     *  raise an error, but all of the other plot types handle it this way implicitly. DrawGraph() checks
+     *  for an empty data array, but this handles a non-empty data array with no Y values, or all Y=0.
      */
     protected function DrawPieChart()
     {
+        // Early checks and initialization:
         if (!$this->CheckDataType('text-data, text-data-single, data-data'))
             return FALSE;
 
-        // Allocate dark colors only if they will be used for shading.
-        if ($this->shading > 0)
-            $this->NeedDataDarkColors();
+        // SetLabelScalePosition(0 or FALSE) means no labels.
+        $do_labels = !empty($this->label_scale_position);
+        if ($do_labels) {
+            // Validate and get default for pie chart label source and format:
+            $pie_label_source = $this->CheckPieLabels();
+            // Labels outside (vs inside) the pie? If so, pie size will need adjusting.
+            $labels_outside = $this->label_scale_position >= 0.5;  // Only defined if ($do_labels)
+        }
 
+        $max_data_colors = count($this->ndx_data_colors); // Number of colors available
+
+        // Check shading. Diameter factor $diam_factor is (height / width)
+        if ($this->shading > 0) {
+            $diam_factor = isset($this->pie_diam_factor) ? $this->pie_diam_factor : 0.5;
+            $this->NeedDataDarkColors(); // Dark colors are needed for shading
+        } else {
+            $diam_factor = 1.0; // Unshaded pies are always round, width == height
+        }
+
+        // Pie center point is always the center of the plot area, regardless of label sizes.
         $xpos = $this->plot_area[0] + $this->plot_area_width/2;
         $ypos = $this->plot_area[1] + $this->plot_area_height/2;
-        $diameter = min($this->plot_area_width, $this->plot_area_height);
-        $radius = $diameter/2;
 
+        // Reduce the data array into sumarr[], accounting for the data type:
         $num_slices = $this->data_columns;  // See CheckDataArray which calculates this for us.
         if ($num_slices < 1) return TRUE;   // Give up early if there is no data at all.
-        $sumarr = array_fill(0, $num_slices, 0);
+        $sumarr = array_fill(0, $num_slices, 0); // Initialize array of per-sector sums.
 
         if ($this->datatype_pie_single) {
             // text-data-single: One data column per row, one pie slice per row.
             for ($i = 0; $i < $num_slices; $i++) {
-                // $legend[$i] = $this->data[$i][0];                // Note: Labels are not used yet
-                if (is_numeric($this->data[$i][1]))
-                    $sumarr[$i] = abs($this->data[$i][1]);
+                if (is_numeric($val = $this->data[$i][1]))
+                    $sumarr[$i] = abs($val);
             }
         } else {
             // text-data: Sum each column (skipping label), one pie slice per column.
@@ -5353,39 +5504,118 @@ class PHPlot
             $skip = ($this->datatype_implied) ? 1 : 2; // Leading values to skip in each row.
             for ($i = 0; $i < $this->num_data_rows; $i++) {
                 for ($j = $skip; $j < $this->num_recs[$i]; $j++) {
-                    if (is_numeric($this->data[$i][$j]))
-                        $sumarr[$j-$skip] += abs($this->data[$i][$j]);
+                    if (is_numeric($val = $this->data[$i][$j]))
+                        $sumarr[$j-$skip] += abs($val);
                 }
             }
         }
 
         $total = array_sum($sumarr);
-
         if ($total == 0) {
             // There are either no valid data points, or all are 0.
             // See top comment about why not to make this an error.
             return TRUE;
         }
 
-        if ($this->shading) {
-            $diam2 = $diameter / 2;
-        } else {
-            $diam2 = $diameter;
-        }
-        $max_data_colors = count($this->ndx_data_colors);
+        // Pre-calculate the label strings, if labels are on. Also get the maximum height and width
+        // of the labels, to use in sizing the pie chart (if the labels are outside the pie).
+        // This is an overly pessimistic approach - assumes the widest label is at 0 or 180 degrees - but
+        // is much easier than calculating the exact space needed for all labels around the pie.
+        // For more detailed comments on the in-loop calculations, see the second loop below where
+        // the features are actually drawn.
+        // Note this is going around the pie, with angles specified, but we do not yet know the pie size.
 
-        // Use the Y label format precision, with default value:
-        if (isset($this->label_format['y']['precision']))
-            $precision = $this->label_format['y']['precision'];
-        else
-            $precision = 1;
-
-        for ($h = $this->shading; $h >= 0; $h--) {
-            $color_index = 0;
-            $start_angle = 0;
+        $label_max_width = 0;  // Widest label width, in pixels
+        $label_max_height = 0; // Tallest label height, in pixels
+        if ($do_labels) {
+            $labels = array(); // Store the formatted label strings
             $end_angle = 0;
             for ($j = 0; $j < $num_slices; $j++) {
-                $val = $sumarr[$j];
+                $slice_weight = $sumarr[$j];
+                $arc_angle = 360 * $slice_weight / $total;
+                $start_angle = $end_angle;
+                $end_angle += $arc_angle;
+                $arc_start_angle = (int)(360 - $start_angle);
+                $arc_end_angle = (int)(360 - $end_angle);
+                if ($arc_start_angle > $arc_end_angle) { // Skip segments with angle < 1 degree
+                    $labels[$j] = $this->FormatPieLabel($j, $pie_label_source, $arc_angle, $slice_weight);
+                    if ($labels_outside) {   // Labels are outside the pie chart
+                        list($width, $height) = $this->SizeText($this->fonts['generic'], 0, $labels[$j]);
+                        if ($width > $label_max_width) $label_max_width = $width;
+                        if ($height > $label_max_height) $label_max_height = $height;
+                    }
+                }
+            }
+        }
+
+        // Calculate the maximum available area for the pie, leaving room for labels (if outside the pie):
+        // This can be overridden by using SetPieAutoSize(FALSE), which sets the flag: pie_full_size=TRUE.
+        if ($do_labels && $labels_outside && empty($this->pie_full_size)) {
+            // There needs to be safe_margin between the labels and the plot area margins, and at least
+            // safe_margin between the labels and the pie edge (this is LR_marg and TB_marg below).
+            //    plot_area_width = avail_width + 2 * (LR_marg + label_width + safe_margin)
+            //        Where LR_marg = max(safe_margin, avail_width * label_scale_position - avail_width/2)
+            //    plot_area_height = avail_height + 2 * (TB_marg + label_height + safe_margin + shading)
+            //        Where TB_marg = max(safe_margin, avail_height * label_scale_position - avail_height/2)
+            //        Note shading is on bottom only, but since center is fixed, it is counted on top too.
+            // Note (avail_width * label_scale_position) is the distance from the pie center to the label
+            // text base point. Subtract avail_width/2 to get the inner margin (unless it is too small).
+            // Similar for Y: avail_height * label_scale_position - avail_height/2 is the distance from
+            // the pie center up to the label text base point.
+
+            // Calculate available space for both values of LR_marg, TB_marg and take the smaller ones.
+            $avail_width = min(
+                ($this->plot_area_width / 2 - $label_max_width - $this->safe_margin) /
+                    $this->label_scale_position,
+                 $this->plot_area_width - 4 * $this->safe_margin - 2 * $label_max_width);
+
+            $avail_height = min(
+                 ($this->plot_area_height / 2 - $label_max_height - $this->safe_margin - $this->shading) /
+                     $this->label_scale_position,
+                  $this->plot_area_height - 4*$this->safe_margin - 2*($label_max_height + $this->shading));
+
+            // Sanity check - don't let large labels shrink the pie too much.
+            $min_size_factor = isset($this->pie_min_size_factor) ? $this->pie_min_size_factor : 0.5;
+            $avail_width = max($avail_width, $min_size_factor * $this->plot_area_width);
+            $avail_height = max($avail_height, $min_size_factor * $this->plot_area_height);
+        } else {     // No adjustment needed for labels
+            $avail_width = $this->plot_area_width - 2 * $this->safe_margin;
+            // Note shading is only on bottom, but need to subtract 2x because center does not move.
+            $avail_height = $this->plot_area_height - 2 * ($this->safe_margin + $this->shading);
+        }
+
+        // Calculate the pie width and height for the best fit, given diam_factor and available space:
+        if ($avail_height / $avail_width > $diam_factor) {
+            $pie_width = $avail_width;
+            $pie_height = $pie_width * $diam_factor;
+        } else {
+            $pie_height = $avail_height;
+            $pie_width = $pie_height / $diam_factor;
+        }
+
+        // Factors used to calculate label positions by DrawPieLabel(). See there for explanation.
+        if ($do_labels) {
+            $r['reverse'] =  0.25 < $this->label_scale_position && $this->label_scale_position < 0.5;
+            $r['x'] = $pie_width * $this->label_scale_position;
+            $r['y'] = $pie_height * $this->label_scale_position;
+            if ($labels_outside) {
+                // Don't let outside labels touch the pie edge - move them out a bit:
+                $r['x'] = max($r['x'], $pie_width / 2 + $this->safe_margin);
+                $r['y'] = max($r['y'], $pie_height / 2 + $this->safe_margin);
+            } else {
+                // Don't let inside labels touch the pie edge - move them in a bit:
+                $r['x'] = min($r['x'], $pie_width / 2 - $this->safe_margin);
+                $r['y'] = min($r['y'], $pie_height / 2 - $this->safe_margin);
+            }
+        }
+
+        // Draw the pie. For shaded pies, draw one set for each shading level ($h).
+        for ($h = $this->shading; $h >= 0; $h--) {
+            $color_index = 0;
+            $end_angle = 0;
+            for ($j = 0; $j < $num_slices; $j++) {
+                $slice_weight = $sumarr[$j];
+                $arc_angle = 360 * $slice_weight / $total;
 
                 // For shaded pies: the last one (at the top of the "stack") has a brighter color:
                 if ($h == 0)
@@ -5393,54 +5623,36 @@ class PHPlot
                 else
                     $slicecol = $this->ndx_data_dark_colors[$color_index];
 
-                $label_txt = $this->number_format(($val / $total * 100), $precision) . '%';
-                $val = 360 * ($val / $total);
-
-                // NOTE that imagefilledarc measures angles CLOCKWISE (go figure why),
-                // so the pie chart would start clockwise from 3 o'clock, would it not be
-                // for the reversal of start and end angles in imagefilledarc()
-                // Also note ImageFilledArc only takes angles in integer degrees, and if the
-                // the start and end angles match then you get a full circle not a zero-width
-                // pie. This is bad. So skip any zero-size wedge. On the other hand, we cannot
-                // let cumulative error from rounding to integer result in missing wedges. So
-                // keep the running total as a float, and round the angles. It should not
-                // be necessary to check that the last wedge ends at 360 degrees.
+                // Note that imagefilledarc() fills clockwise from start to end angles.
+                // Also note imagefilledarc() only takes angles in integer degrees. If the start and
+                // end angles match, you would get a full circle. So skip any wedge with integer angle = 0.
+                // To avoid cumulative error, keep the running total as a float, and round the angles.
                 $start_angle = $end_angle;
-                $end_angle += $val;
+                $end_angle += $arc_angle;
                 // This method of conversion to integer - truncate after reversing it - was
-                // chosen to match the implicit method of PHPlot<=5.0.4 to get the same slices.
+                // chosen to match the implicit method of PHPlot<=5.0.4, to get the exact same slices.
                 $arc_start_angle = (int)(360 - $start_angle);
                 $arc_end_angle = (int)(360 - $end_angle);
 
                 if ($arc_start_angle > $arc_end_angle) {
-                    $mid_angle = deg2rad($end_angle - ($val / 2));
-
                     // Draw the slice
-                    ImageFilledArc($this->img, $xpos, $ypos+$h, $diameter, $diam2,
-                                   $arc_end_angle, $arc_start_angle,
-                                   $slicecol, IMG_ARC_PIE);
+                    ImageFilledArc($this->img, $xpos, $ypos+$h, $pie_width, $pie_height,
+                                   $arc_end_angle, $arc_start_angle, $slicecol, IMG_ARC_PIE);
 
-                    // Draw the labels only once
-                    if ($h == 0) {
-                        // Draw the outline
-                        if (! $this->shading)
-                            ImageFilledArc($this->img, $xpos, $ypos+$h, $diameter, $diam2,
-                                           $arc_end_angle, $arc_start_angle, $this->ndx_grid_color,
-                                           IMG_ARC_PIE | IMG_ARC_EDGED |IMG_ARC_NOFILL);
+                    // For unshaded pie charts (shading==0 and only 1 loop with h==0), draw the outline:
+                    if ($this->shading == 0)
+                        ImageFilledArc($this->img, $xpos, $ypos, $pie_width, $pie_height,
+                                       $arc_end_angle, $arc_start_angle, $this->ndx_grid_color,
+                                       IMG_ARC_PIE | IMG_ARC_EDGED |IMG_ARC_NOFILL);
 
-                        // The '* 1.2' trick is to get labels out of the pie chart so there are more
-                        // chances they can be seen in small sectors.
-                        $label_x = $xpos + ($diameter * 1.2 * cos($mid_angle)) * $this->label_scale_position;
-                        $label_y = $ypos+$h - ($diam2 * 1.2 * sin($mid_angle)) * $this->label_scale_position;
-
-                        $this->DrawText($this->fonts['generic'], 0, $label_x, $label_y, $this->ndx_grid_color,
-                                        $label_txt, 'center', 'center');
-                    }
+                    // Draw the label. For shaded plots, only do this on the last loop.
+                    if ($h == 0 && $do_labels)
+                        $this->DrawPieLabel($labels[$j], $xpos, $ypos, $start_angle, $arc_angle, $r);
                 }
                 if (++$color_index >= $max_data_colors)
                     $color_index = 0;
-            }   // end for
-        }   // end for
+            }   // end loop for each slice
+        }   // end loop for each level of shading
         return TRUE;
     }
 
@@ -6500,22 +6712,26 @@ class PHPlot
         // Allocate colors for the plot:
         $this->SetColorIndexes();
 
-        // Get maxima and minima for scaling:
-        if (!$this->FindDataLimits())
-            return FALSE;
+        // Calculate scaling, but only for plots with axes (excludes pie charts).
+        if ($draw_axes) {
 
-        // Set plot area world values (plot_max_x, etc.):
-        if (!$this->CalcPlotAreaWorld())
-            return FALSE;
+            // Get maxima and minima for scaling:
+            if (!$this->FindDataLimits())
+                return FALSE;
 
-        // Calculate X and Y axis positions in World Coordinates:
-        $this->CalcAxisPositions();
+            // Set plot area world values (plot_max_x, etc.):
+            if (!$this->CalcPlotAreaWorld())
+                return FALSE;
 
-        // Process label-related parameters:
-        $this->CheckLabels();
+            // Calculate X and Y axis positions in World Coordinates:
+            $this->CalcAxisPositions();
 
-        // Apply grid defaults:
-        $this->CalcGridSettings();
+            // Process label-related parameters:
+            $this->CheckLabels();
+
+            // Apply grid defaults:
+            $this->CalcGridSettings();
+        }
 
         // Calculate the plot margins, if needed.
         // For pie charts, set the $maximize argument to maximize space usage.
@@ -6525,7 +6741,7 @@ class PHPlot
         $this->CalcPlotAreaPixels();
 
         // Calculate the mapping between world and device coordinates:
-        $this->CalcTranslation();
+        if ($draw_axes) $this->CalcTranslation();
 
         // Pad color and style arrays to fit records per group:
         $this->PadArrays();
@@ -6561,10 +6777,8 @@ class PHPlot
             $this->DoCallback('draw_axes');
         }
 
-        if ($draw_axes) {
-            $this->DrawPlotBorder();
-            $this->DoCallback('draw_border');
-        }
+        $this->DrawPlotBorder($draw_axes); // Flag controls default for plot area borders
+        $this->DoCallback('draw_border');
 
         if ($this->legend) {
             $this->DrawLegend();
