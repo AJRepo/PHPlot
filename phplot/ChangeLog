@@ -2,6 +2,39 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2011-12-30
+    * Fixed bug #3403297 "Pie chart sizing and label issues":
+      Most of the pie chart label and sizing code has been rewritten.
+      (Note: This documents changes in the code.  See other documentation
+      for a higher-level view and user-visible changes.)
+
+      Compatibility warning: This changes the appearance of pie charts.
+      See the NEWS file with the release for more information.
+
+    + $label_format['p'] is now used for pie label formatting
+    + Removed $plot_border_type static initialization
+    + New public SetPieLabelType() controls pie label source and formatting
+    + $label_scale_position = 0 or False now means no pie labels
+    + New internal GetTextAlignment() moves code from CheckDataValueLabels()
+    + New public SetPieAutoSize() to control use of labels in sizing pies
+    + CalcMargins() changed to not calculate unused title sizes for pies
+    + Added arg to  internal DrawPlotBorder(), now handles pie charts too
+    + New internal FormatPieLabel() to format pie chart labels
+    + New internal DrawPieLabel() to draw each pie chart label
+    + New internal CheckPieLabels() to apply dynamic default values
+    + Rewrote much of internal DrawPieChart() to:
+    ++ Can suppress labels using SetLabelScalePosition
+    ++ Fix use of label_scale_position, remove 1.2x factor
+    ++ Use new $pie_diam_factor controls aspect ratio of shaded pies
+    ++ Fix pie size calculation, use actual aspect ratio
+    ++ Pre-calculate label strings to get their sizes, if needed
+    ++ Use new $pie_full_size from SetPieAutoSize() to control autosizing
+    ++ Pie size accounts for largest label (if labels are outside the pie) 
+    ++ Leave safe_margin between labels and pie/plot area edges
+    + Changed DrawGraph() to:
+    ++ Skip irrelevant data and scale calculations for pie charts
+    ++ Call DrawPlotBorder() even for pie charts
+
 2011-12-10
     * Comment typo fixes (found during work on upcoming change).
 
