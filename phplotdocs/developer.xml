@@ -493,6 +493,20 @@ This was added in PHPlot-5.1.2.
   </listitem>
 </varlistentry>
 
+<varlistentry>
+  <term><anchor id="CheckPieLabels" xreflabel="CheckPieLabels"/>CheckPieLabels()</term>
+  <listitem>
+    <para>
+Sets up the default pie chart label type and format. The default is percentage
+labels formatted as 'data' (fixed-point). The default cannot be statically
+defined, for compatibility with previous releases which used the Y label
+precision (if set), else 1 digit if <xref linkend="SetPrecisionY"/>
+was never called.
+Called by <xref linkend="DrawPieChart"/>.
+This was added in PHPlot-5.6.0.
+    </para>
+  </listitem>
+</varlistentry>
 
 <varlistentry>
   <term><anchor id="CheckPointParams" xreflabel="CheckPointParams"/>CheckPointParams()</term>
@@ -856,6 +870,23 @@ Called by <xref linkend="DrawGraph"/> with the plot type is
 </varlistentry>
 
 <varlistentry>
+  <term><anchor id="DrawPieLabel" xreflabel="DrawPieLabel"/>DrawPieLabel($label_txt, $xc, $yc, $start_angle, $arc_angle, $r)</term>
+  <listitem>
+    <para>
+Draws a pie chart label. $label_txt is the already-formatted label text
+string. ($xc, $yc) is the center of the pie (not the text basepoint).
+$start_angle is the starting angle in degrees for the segment being
+labeled, which extends for $arc_angle degrees. $r is an array of static
+values (constant for each pie chart): ellipse parameters and a flag to
+indicate the text alignment should be reversed.
+Called by <xref linkend="DrawPieChart"/>.
+This was added in PHPlot-5.6.0.
+    </para>
+  </listitem>
+</varlistentry>
+
+
+<varlistentry>
   <term><anchor id="DrawPlotAreaBackground" xreflabel="DrawPlotAreaBackground"/>DrawPlotAreaBackground()</term>
   <listitem>
     <para>
@@ -870,13 +901,15 @@ Called by <xref linkend="DrawGraph"/>.
 </varlistentry>
 
 <varlistentry>
-  <term><anchor id="DrawPlotBorder" xreflabel="DrawPlotBorder"/>DrawPlotBorder()</term>
+  <term><anchor id="DrawPlotBorder" xreflabel="DrawPlotBorder"/>DrawPlotBorder($draw_axes=TRUE)</term>
   <listitem>
     <para>
 Draws the border around the plot area.
 This draws zero to four lines around the plot area (depending on
-<xref linkend="SetPlotBorderType"/>). It only draws the outline; other functions
-draw the tick marks and labels for the X axis and Y axis.
+<xref linkend="SetPlotBorderType"/>).
+The $draw_axes argument (added in PHPlot-5.6.0) is true for all plot types
+except pie charts, and controls the default value if SetPlotBorderType() was
+not called.
 Called by <xref linkend="DrawGraph"/>.
     </para>
   </listitem>
@@ -1186,15 +1219,35 @@ from various places, with a flag data_limits_done to indicate it was called.)
   <term><anchor id="FormatLabel" xreflabel="FormatLabel"/>FormatLabel($which_pos, $which_lab)</term>
   <listitem>
     <para>
-Formats a value for use as a tick or data label. This implements the format
-type selected with
-<xref linkend="SetXLabelType"/> ,<xref linkend="SetYLabelType"/>,
-<xref linkend="SetXDataLabelType"/> ,and <xref linkend="SetYDataLabelType"/>.
-By default it returns the value as-is, or it can format it as a floating
-point number or date/time value.
+Formats a value for use as a tick, data, or pie chart label.
+This implements the format type selected with
+<xref linkend="SetXLabelType"/>, <xref linkend="SetYLabelType"/>,
+<xref linkend="SetXDataLabelType"/> ,<xref linkend="SetYDataLabelType"/>,
+and <xref linkend="SetPieLabelType"/>.
+If no formatting is in effect for that label type ($which_pos), it returns the 
+label string $which_lab as-is. Otherwise, it formats it as directed. This
+can be a floating point number (formatted with <xref linkend="number_format"/>),
+a date/time value, or it can be formatted with <function>sprintf</function>
+or a user-defined function.
 Called by several functions that need to format label values.
 Separation of data and tick label formatting was available starting with
-PHPlot-5.1.0.
+PHPlot-5.1.0. Use with pie chart labels was added in PHPlot-5.6.0.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term><anchor id="FormatPieLabel"
+xreflabel="FormatPieLabel"/>FormatPieLabel($index, $pie_label_source, $arc_angle, $slice_weight)</term>
+  <listitem>
+    <para>
+Formats a pie chart label. This first gets the initial value, based on
+the $source argument to <xref linkend="SetPieLabelType"/>, which is passed
+in as $pie_label_source. It may use $index, $arc_angle, or $slice_weight,
+or a combination of those. Then it formats that value using
+<xref linkend="FormatLabel"/> and returns the result.
+Called by <xref linkend="DrawPieChart"/>.
+This was added in PHPlot-5.6.0.
     </para>
   </listitem>
 </varlistentry>
@@ -1422,6 +1475,30 @@ fonts.
     </para>
   </listitem>
 </varlistentry>
+
+<varlistentry>
+  <term><anchor id="GetTextAlignment" xreflabel="GetTextAlignment"/>GetTextAlignment($sin_t, $cos_t, &amp;$h_align, &amp;$v_align, $reverse = FALSE))</term>
+  <listitem>
+    <para>
+Selects the best alignment for text which is at a specific angle ($sin_t,
+$cos_t) from a point. The result is returned in $h_align and $v_align,
+suitable for use with <xref linkend="DrawText"/>.
+The alignment is chosen from 8 possible values (left/center, center/bottom,
+etc.) to keep the closest edge or corner of the text box at a fixed
+distance from the reference point (typically the center of a pie chart, or
+a plotted point), regardless of the text string size.
+For example, text at 0 degrees is left/center aligned, and text at 90 degrees
+is center/bottom aligned.
+If $reverse is true, the alignment is reversed; this is used for text inside
+an ellipse but close to the circumference.
+Used by <xref linkend="CheckDataValueLabels"/>
+and <xref linkend="DrawPieLabel"/>.
+Note: This was added at PHPlot-5.6.0 by moving code out of
+<xref linkend="CheckDataValueLabels"/>.
+    </para>
+  </listitem>
+</varlistentry>
+
 
 <varlistentry>
   <term><anchor id="initialize" xreflabel="initialize"/>initialize($imagecreate_function, $width, $height, $output_file, $input_file)</term>
@@ -1738,11 +1815,13 @@ image file using the 4th argument of <xref linkend="PHPlot"/> or
   <term><anchor id="SetLabelType" xreflabel="SetLabelType"/>SetLabelType($mode, $args)</term>
   <listitem>
     <para>
-Sets the formatting used for tick and data labels. This implements
-<xref linkend="SetXLabelType"/>, <xref linkend="SetYLabelType"/>,
-<xref linkend="SetXDataLabelType"/> ,and <xref linkend="SetYDataLabelType"/>.
-$mode is either 'x', 'xd', 'y', or 'yd' and selects the axis to configure
-and type of label being drawn (x, y for tick labels; xd, yd for data labels).
+Sets the formatting used for tick, data, and pie chart labels.
+This implements <xref linkend="SetXLabelType"/>,
+<xref linkend="SetYLabelType"/>, <xref linkend="SetXDataLabelType"/>,
+<xref linkend="SetYDataLabelType"/>, and part of
+<xref linkend="SetPieLabelType"/>.
+$mode is either 'x', 'xd', 'y', 'yd', or 'p' to select the type of label
+(x, y for tick labels; xd, yd for data labels; p for pie chart labels).
 $args is an array of arguments, with $args[0] selecting the type of
 formatting (for example, <literal>data</literal>).
 Additional array elements depend on the formatting type.
@@ -1750,7 +1829,7 @@ For more details, see the above-referenced functions.
 All arguments to those functions are combined into an array and passed to
 <function>SetLabelType</function> as $args.
 Separation of data and tick label formatting was available starting with
-PHPlot-5.1.0.
+PHPlot-5.1.0. Support for pie chart label formatting was added in PHPlot-5.6.0.
     </para>
   </listitem>
 </varlistentry>
@@ -2033,12 +2112,14 @@ Here is an example of part of a fonts array, for the title element:
 <title>label_format[]</title>
 <para>
 The <varname>label_format[]</varname> array contains information about how
-text labels should be formatted. This array has 4 entries, with keys 'x',
-'y', 'xd', and 'yd'. The 'x' and 'y' entries are for tick labels, and the
+text labels should be formatted. This array has 5 entries, with keys 'x',
+'y', 'xd', 'yd', and 'p'. The 'x' and 'y' entries are for tick labels, and the
 'xd' and 'yd' entries are for data labels. (Note that PHPlot defaults data
 label formatting to match tick label formatting, but this is handled in
 <xref linkend="CheckLabels"/>, with the tick label format information copied
-to the data label format information if necessary.)
+to the data label format information if necessary.) The 'p' entry is for
+pie chart labels, and will only exist for pie charts. (The 'p' entry was
+added in PHPlot-5.6.0.)
 </para>
 
 <para>
