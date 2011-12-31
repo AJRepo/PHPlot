@@ -353,10 +353,19 @@ outside the image area.
 To see how this can be used in callbacks,
 see <xref linkend="callbacks-drawing"/>.
     </para>
+    <para>
+Because there are no valid world coordinates for pie charts,
+<function>GetDeviceXY()</function> does not work with pie charts.
+    </para>
   </refsect1>
 
   <refsect1>
     <title>History</title>
+    <para>
+Starting with PHPlot-5.6.0, this function will fail with pie charts, because
+they do not have valid world coordinates. Through PHPlot-5.5.0, this
+function returned somewhat meaningless values when used with pie charts.
+    </para>
     <para>
 This function was added in PHPlot-5.1.0.
     </para>
@@ -1365,7 +1374,7 @@ used only for pie charts, is:
                 array('', 50) );
 ]]></programlisting>
 Here the labels are empty (they aren't used with a pie chart anyway),
-and 3 slices with relative weights of 10, 40, and 50 are defined.
+and 3 segments with relative weights of 10, 40, and 50 are defined.
     </para>
   </refsect1>
   <refsect1>
@@ -2425,7 +2434,7 @@ before calling SetFont.
 The name of the element to change the font for. Use one of the following
 strings: 'title', 'legend', 'generic', 'x_label', 'y_label', 'x_title',
 or 'y_title'. (The 'generic' font is currently used for pie chart
-percentage labels and error message images.)
+segment labels and error message images.)
           </para>
         </listitem>
       </varlistentry>
@@ -2634,7 +2643,7 @@ a GD font, even if TrueType fonts are in use.
 The name of the element to change the font for. Use one of the following
 strings: 'title', 'legend', 'generic', 'x_label', 'y_label', 'x_title',
 or 'y_title'. (The 'generic' font is currently used for pie chart
-percentage labels and error message images.)
+segment labels and error message images.)
           </para>
         </listitem>
       </varlistentry>
@@ -2728,7 +2737,7 @@ a TrueType font, even if TrueType fonts are not the default font type.
 The name of the element to change the font for. Use one of the following
 strings: 'title', 'legend', 'generic', 'x_label', 'y_label', 'x_title',
 or 'y_title'. (The 'generic' font is currently used for pie chart
-percentage labels and error message images.)
+segment labels and error message images.)
           </para>
         </listitem>
       </varlistentry>
@@ -2826,7 +2835,7 @@ in the same graph.
     <title>Description</title>
     <para>
 <function>SetGridColor</function> sets the color used for the X and Y
-axes, the plot border, the legend border, and pie chart percentage labels
+axes, the plot border, the legend border, and pie chart segment labels
 (but not the grid).
     </para>
   </refsect1>
@@ -2857,7 +2866,7 @@ This doesn't actually set the color used by the grid; for that see
     </para>
     <para>
 For pie charts drawn with no shading, this also sets the color of the pie
-slice borders.
+segment borders.
     </para>
   </refsect1>
 </refentry>
@@ -3116,7 +3125,7 @@ the <xref linkend="PHPlot" /> constructor.
 
   <refnamediv>
     <refname>SetLabelScalePosition</refname>
-    <refpurpose>Position pie-chart percentage labels</refpurpose>
+    <refpurpose>Position pie-chart labels</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
@@ -3127,7 +3136,7 @@ the <xref linkend="PHPlot" /> constructor.
     <title>Description</title>
     <para>
 <function>SetLabelScalePosition</function> adjusts the position of the pie
-chart data labels which show the percentage values of the slices.
+chart data labels which identify the pie segments.
     </para>
   </refsect1>
 
@@ -3138,11 +3147,9 @@ chart data labels which show the percentage values of the slices.
         <term><replaceable>$blp</replaceable></term>
         <listitem>
           <para>
-Position factor for pie chart labels. This is a floating point number
-between 0 and 1.0. The initial value is 0.5, which places the labels
-outside the circumference of the pie.
-Smaller values move the labels in to the center,
-and larger values move them out from the center.
+Position factor for the pie chart labels. This is a floating point number.
+The default value is 0.5, which places the labels just outside the pie
+circumference. See notes below.
           </para>
         </listitem>
       </varlistentry>
@@ -3152,13 +3159,55 @@ and larger values move them out from the center.
   <refsect1>
     <title>Notes</title>
     <para>
-This affects pie charts only. The maximum value is 1.0 but as that value is
-approached the labels will move off the page. The minimum value is 0 which
-makes the labels pile up in the center of the pie.
+This affects pie charts only.
     </para>
     <para>
-The labels always display percentages. If you want to display numeric data
-for each slice, try putting it in the legend with <xref linkend="SetLegend" />.
+Values greater than or equal to 0.5 place the labels outside the pie. The
+default value 0.5 places the labels outside and close to the pie circumference.
+Larger values move the labels away from the pie. A value of 1.0 would place the labels about twice as far from the pie center as the pie radius.
+    </para>
+    <para>
+Values less than 0.5 place the labels inside the pie circumference, with
+smaller values moving the labels in towards the center. To place the labels
+just inside the pie circumference, use 0.49 (for example). Using 0 (or
+<literal>False</literal>) results in no labels at all.
+    </para>
+    <para>
+A more detailed definition of the label scale position parameter is that it
+is a scale factor applied to the diameter of the pie (at the angle where the
+label will be drawn), which determines the text basepoint for the label.
+However, PHPlot adjusts the result when it is close to the pie circumference.
+    </para>
+    <para>
+Note that PHPlot sizes the pie chart so the labels fit inside the plot area,
+if possible.
+This means the label scale position will affect the pie size, if greater
+than or equal to 0.5.
+    </para>
+    <para>
+To control the pie chart label contents, see <xref linkend="SetPieLabelType"/>.
+    </para>
+  </refsect1>
+  <refsect1>
+    <title>History</title>
+    <para>
+Starting with PHPlot-5.6.0, the label scale position argument was interpreted
+as above, with values greater than or equal to 0.5 meaning outside the pie,
+values less than 0.5 meaning inside, and 0 meaning no labels.
+Through PHPlot-5.5.0, the label scale position was used with less
+precision, and included an additional 1.2 scale factor to try to move the
+labels further out in the hope that they would be clear of the pie.
+    </para>
+    <para>
+Accepting 0 or <literal>False</literal> as a valid argument value to disable
+the labels was added in PHPlot-5.6.0.
+Before that, the labels were always plotted.
+    </para>
+    <para>
+The ability to control pie label contents, and the automatic sizing
+of the pie to leave room for labels, were added PHPlot-5.6.0. Through
+PHPlot-5.5.0, pie chart labels always displayed segment percentages, and the
+pie size was calculated without regard to the labels.
     </para>
   </refsect1>
 </refentry>
@@ -3489,6 +3538,10 @@ legend box at a distance equal to the width and height of the legend box.
 Relative coordinates outside this range for 'image' mode ($base_x, $base_y)
 will be outside the image and not visible.
     </para>
+    <para>
+Positioning relative to 'world' will not work with pie charts, because they
+have no valid world coordinates.
+    </para>
   </refsect1>
   <refsect1>
     <title>History</title>
@@ -3813,9 +3866,18 @@ with no pixel offset.
     <para>
 See also <xref linkend="SetLegendPixels" />.
     </para>
+    <para>
+This function will not work with pie charts, because they have no valid
+world coordinates.
+    </para>
   </refsect1>
   <refsect1>
     <title>History</title>
+    <para>
+This function did actually work with pie charts through PHPlot-5.5.0,
+although we are not sure what it did, since pie charts do not have valid
+world coordinates.
+    </para>
     <para>
 Through PHPlot-5.0rc3, it was required that the
 data array, axis types, and any other setting which affects the scale of
@@ -4143,8 +4205,13 @@ If omitted or NULL, the value is automatically calculated.
   <refsect1>
     <title>Notes</title>
     <para>
-By default, the margin sizes are automatically calculated based on the
-space needed (for the axis labels, tick labels, and tick marks).
+The plot area is equal to the image area minus the margins. By default, the
+margins are automatically calculated based on
+the space needed for items <emphasis>outside</emphasis> the plot area. The
+plot area is then whatever space remains. Calculation for most plot types
+takes into account the main title, axis titles, tick or data labels, and tick
+marks (but not the legend, if drawn). For pie charts, only the main title
+size is used when calculating the needed margins.
 Use SetMarginsPixels to override these automatic calculations and
 control the margins.
     </para>
@@ -4469,6 +4536,467 @@ or standard output.
   </refsect1>
 </refentry>
 
+<refentry id="SetPieAutoSize">
+  <refmeta>
+    <refentrytitle>SetPieAutoSize</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetPieAutoSize</refname>
+    <refpurpose>Enable or disable automatic pie chart size calculation</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>$plot-&gt;SetPieAutoSize(<parameter>$enable</parameter>)</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetPieAutoSize</function> controls the automatic pie chart size
+calculation. When this is enabled, PHPlot calculates the size of the pie
+by taking the label sizes into account.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$enable</replaceable></term>
+        <listitem>
+          <para>
+<literal>True</literal> to enable automatic size calculation,
+or <literal>False</literal> to use the maximum area.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+By default, automatic pie chart sizing is enabled.
+    </para>
+    <para>
+If automatic pie chart sizing is disabled, PHPlot will make the pie as
+large as possible to fit within the plot area (see
+<xref linkend="SetPlotAreaPixels"/>), minus a small 5-pixel margin on each
+side. The center of the pie is always at the center of the plot area.
+    </para>
+    <para>
+If automatic pie chart sizing is enabled, PHPlot will leave additional room
+within the plot area for the pie chart labels. It will calculate the maximum
+width and height of the labels, and use these to increase the margins. Note
+that it does not take into account where each label is displayed. For
+example, if there is a very wide label displayed only at the top of the pie,
+this will still result in a decrease in overall pie width.
+    </para>
+    <para>
+If pie labels are either disabled or positioned inside the pie
+(using <xref linkend="SetLabelScalePosition"/>),
+then <function>SetPieAutoSize()</function> has no effect.
+Whether automatic sizing is on or off, the pie chart will use the maximum
+size in this case, since no additional space is needed for labels.
+    </para>
+  </refsect1>
+  <refsect1>
+    <title>History</title>
+    <para>
+This function was added in PHPlot-5.6.0. In earlier releases, PHPlot never
+took label sizes into account when calculating the pie size. Note that the
+default <literal>True</literal> is not backward compatible.
+However, there were additional changes made to pie chart sizing and label
+positioning in PHPlot-5.6.0, such that neither enabling nor disabling
+automatic sizing will produce identical results compared to previous releases.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetPieLabelType">
+  <refmeta>
+    <refentrytitle>SetPieLabelType</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetPieLabelType</refname>
+    <refpurpose>Set type and format for pie chart labels</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>$plot-&gt;SetPieLabelType(<parameter>$source</parameter>, <optional><parameter>$type</parameter></optional>, <optional><parameter>...</parameter></optional>)</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetPieLabelType</function> sets the type and format of labels which
+will be displayed on a <link linkend="plottype-pie">pie chart</link>.
+The labels identify the segments of the pie. They can show the segment
+percentage, a numeric value, or a text string.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <para>
+There is one required argument, $source, following by an optional argument
+$type. If $type is present and not empty, additional arguments are required.
+      <variablelist>
+        <varlistentry>
+          <term><replaceable>$source</replaceable></term>
+          <listitem>
+            <para>
+A string or array indicating the source of the label. If a string, it must be
+one of the following values (see notes for more details):
+              <informaltable>
+                <?dbfo table-width="75%"?> <!-- Table width hint for PDF only -->
+                <tgroup cols="2">
+                  <?dbhtml table-summary="SetPieLabelType source choices"?>
+                  <colspec colname="c1" colwidth="14*" />
+                  <colspec colname="c2" colwidth="86*" />
+                  <thead>
+                    <row>
+                      <entry>Source</entry>
+                      <entry>Description</entry>
+                    </row>
+                  </thead>
+                  <tbody>
+                    <row>
+                      <entry>index</entry>
+                      <entry>Use the ordinal number of the segment (starting at 0)</entry>
+                    </row>
+                    <row>
+                      <entry>label</entry>
+                      <entry>Use the label string from the data array</entry>
+                    </row>
+                    <row>
+                      <entry>percent</entry>
+                      <entry>Use the segment's percentage of the whole pie</entry>
+                    </row>
+                    <row>
+                      <entry>value</entry>
+                      <entry>Use the numeric value of the segment</entry>
+                    </row>
+                  </tbody>
+                </tgroup>
+              </informaltable>
+An empty string (or NULL) restores the default pie chart label source and
+format type.
+            </para>
+            <para>
+An array of strings can be used. Each element in the array must be one of
+the string values above. PHPlot will join the multiple sources for the label,
+separating each pair with a space. This can be used with custom formatting
+types to have pie chart labels with multiple fields (such as percentage and
+label, or label and value). See notes below for more.
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term><replaceable>$type</replaceable></term>
+          <listitem>
+            <para>
+Optional argument indicating how to format the label string. If supplied,
+it can be one of the following:
+<literal>data</literal>,
+<literal>printf</literal>, or
+<literal>custom</literal>.
+If the argument is missing or an empty string, this indicates that the
+default of no formatting should be used.
+If the argument is provided and not empty, additional arguments are
+required or optional as shown below.
+            </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </para>
+    <para>
+If the $type argument is <literal>data</literal>,
+there are three optional arguments:
+      <variablelist>
+        <varlistentry>
+          <term><replaceable>$precision</replaceable></term>
+          <listitem>
+            <para>
+The formatting precision, or number of decimal places (optional).
+If omitted, the default is 1.
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term><replaceable>$prefix</replaceable></term>
+          <listitem>
+            <para>
+A prefix string to be placed before the formatted label values.
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term><replaceable>$suffix</replaceable></term>
+          <listitem>
+            <para>
+A suffix string to be placed after the formatted label values.
+When $source is <literal>percent</literal>, a percent sign '%' should be
+specified as the suffix.
+            </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </para>
+    <para>
+If the $type argument is <literal>printf</literal>,
+there is one optional argument:
+      <variablelist>
+        <varlistentry>
+          <term><replaceable>$format</replaceable></term>
+          <listitem>
+            <para>
+Formatting string, used with <function>sprintf()</function>.
+If omitted, the default value of '%e' uses scientific notation with default
+field sizes.
+            </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </para>
+
+    <para>
+If the $type argument is <literal>custom</literal>,
+there is one required argument and one optional argument:
+      <variablelist>
+        <varlistentry>
+          <term><replaceable>$callback</replaceable></term>
+          <listitem>
+            <para>
+A callback function to format the label. This is either the name of a
+function (as a string), or a two-element array with an object instance and
+method name. (Refer to the PHP documentation for more information on the
+callback type.) The callback will be called with two arguments: the value
+of the label to be formatted, and the pass-through argument (see next).
+            </para>
+          </listitem>
+        </varlistentry>
+        <varlistentry>
+          <term><replaceable>$callback_arg</replaceable></term>
+          <listitem>
+            <para>
+A pass-through argument for the callback function.
+If omitted, NULL is used.
+            </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+    </para>
+
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The default formatting if this function is not called is to show the
+percentage of each segment, formatted with one decimal point and a percent
+sign suffix. This is the same as:
+<programlisting><![CDATA[$plot->SetPieLabelType('percent', 'data', 1, '', '%');
+]]></programlisting>
+The default formatting can be restored by passing an empty string or NULL
+as the $source argument.
+(Note: The default precision can be changed; see History below.)
+    </para>
+
+    <para>
+The formatting arguments starting with $type work exactly the same way as when
+formatting X tick labels (for example) using <xref linkend="SetXLabelType"/>.
+See there for formatting examples. Date/time formatted labels would also work
+here, but are not documented for pie chart labels because they are unlikely to
+be useful.
+    </para>
+
+    <para>
+If $source is <literal>index</literal>, the label source is an integer
+starting with 0 for the first pie segment (the one drawn from 0 degrees
+counter-clockwise), 1 for the second pie segment, etc.
+This can be useful with <literal>custom</literal> type formatting, by
+providing a formatting function to get the label text from an external
+array (for example).
+    </para>
+
+    <para>
+If $source is <literal>label</literal>, the label source is taken from the
+data array as set with <xref linkend="SetDataValues"/>.
+This can only be used with data type
+<link linkend="text-data-single">text-data-single</link>,
+because that is the only data type where each data array row (and its
+label, in the first array position) corresponds to a single pie segment.
+    </para>
+
+    <para>
+If $source is <literal>percent</literal>, the label source is the
+percentage of the pie represented by the segment being labeled.
+This normally needs to used with $type = <literal>data</literal>,
+<literal>printf</literal>, or <literal>custom</literal> formatting, in
+order to get a fixed number of decimal places and a percent sign suffix.
+Note that the following is probably not useful:
+<programlisting><![CDATA[$plot->SetPieLabelType('percent'); // Do not use
+]]></programlisting>
+The resulting labels would display segment percentages, but as unformatted
+floating point numbers with no suffix. For example, instead of "48.5%", the
+label might display: "48.4865312". This is usually not the desired result.
+    </para>
+
+    <para>
+If $source is <literal>value</literal>, the label source is the numeric
+value of the pie segment.  Depending on the data type used, this is a value
+or sum of values from the data array.
+    </para>
+
+    <para>
+If $source is an array, the result is a string containing multiple
+space-separated fields. This is most likely to be useful with custom formatting.
+A custom label formatting function can split up the fields using
+<function>explode(' ', $str)</function>.
+Note: If one of the fields is a label which might contain spaces, always place
+that field last when specifying the $source array, and use the 3rd parameter
+to explode() to limit the number of fields returned. This will ensure that
+the complete label is extracted as a single field.  See the last example below.
+    </para>
+
+  </refsect1>
+
+  <refsect1>
+    <title>Examples</title>
+    <para>
+Assume plot type <literal>pie</literal>, data type
+<literal>text-data-single</literal>, and the follow data array:
+<programlisting><![CDATA[
+$data = array(
+    array('Gold',        20),
+    array('Silver',      13),
+    array('Copper',       7),
+    array('Tin',         18),
+    array('Bronze',      10),
+    array('Iron',         4),
+    array('Platinum',     2),
+    array('Nickel',       5),
+);
+]]></programlisting>
+    </para>
+
+    <variablelist>
+      <varlistentry>
+        <term>
+For the default behavior of percentage labels with numeric formatting,
+do not call <function>SetPieLabelType</function>.
+Result: <literal>25.3%, 16.5%, 8.9%</literal> etc.
+        </term>
+        <listitem><!-- empty section is needed or it flows to next -->
+<programlisting><![CDATA[...]]></programlisting>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>
+Show segment indexes (ordinal segment number from 0).
+Result: <literal>0, 1, 2</literal> etc.
+        </term>
+        <listitem>
+<programlisting><![CDATA[$plot->SetPieLabelType('index');
+]]></programlisting>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>
+Show label strings from the data array.
+Result: <literal>Gold, Silver, Copper</literal> etc.
+        </term>
+        <listitem>
+<programlisting><![CDATA[$plot->SetPieLabelType('label');
+]]></programlisting>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>
+Show label strings from the data array, with quote marks added.
+Result: <literal>"Gold", "Silver", "Copper"</literal> etc.
+        </term>
+        <listitem>
+<programlisting><![CDATA[$plot->SetPieLabelType('label', 'printf', '"%s"');
+]]></programlisting>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>
+Show the numeric value of each segment, unformatted.
+Result: <literal>20, 13, 7</literal> etc.
+        </term>
+        <listitem>
+<programlisting><![CDATA[$plot->SetPieLabelType('value');
+]]></programlisting>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>
+Show the numeric value of each segment, formatted with 3 decimal places.
+Result: <literal>20.000, 13.000, 7.000</literal> etc.
+        </term>
+        <listitem>
+<programlisting><![CDATA[$plot->SetPieLabelType('value', 'data', 3);
+]]></programlisting>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>
+Use a custom formatting function to convert the data array labels to
+upper case.
+Result: <literal>GOLD, SILVER, COPPER</literal> etc.
+        </term>
+        <listitem>
+<programlisting><![CDATA[function mylabels($str)
+{
+    return strtoupper($str);
+}
+$plot->SetPieLabelType('label', 'custom', 'mylabels');
+]]></programlisting>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>
+Combine multiple label sources: data array label and percentage.
+Result: <literal>Gold (25.3%), Silver (16.5%), Copper (8.9%)</literal> etc.
+        </term>
+        <listitem>
+<programlisting><![CDATA[function mylabels($str)
+{
+    list($percent, $label) = explode(' ', $str, 2);
+    return sprintf("%s (%.1f%%)", $label, $percent);
+}
+$plot->SetPieLabelType(array('percent', 'label'), 'custom', 'mylabels');
+]]></programlisting>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>History</title>
+    <para>
+This function was added in PHPlot-5.6.0. In earlier releases, only 'percent'
+label type was available, and the labels were always formatted as fixed-point
+values (format type 'data').
+    </para>
+    <para>
+Versions before PHPlot-5.6.0 used a numeric precision set with
+<xref linkend="SetPrecisionY"/> or <xref linkend="SetYLabelType"/>
+for pie chart percentage labels, with a default of 1 decimal place.
+(This was not documented.)
+PHPlot-5.6.0 still does that, but only if <function>SetPieLabelType</function>
+was never called (or reset to all defaults). That is, if
+<function>SetPieLabelType</function> was not called to set up a label source
+and formatting type, the Y label precision will be used if set, else 1 digit.
+    </para>
+  </refsect1>
+</refentry>
+
 <refentry id="SetPlotAreaBgImage">
   <refmeta>
     <refentrytitle>SetPlotAreaBgImage</refentrytitle>
@@ -4617,7 +5145,11 @@ value is used.
     <para>
 The plot area is equal to the image area minus the margins. By default, the
 margins (and therefore the plot area) are automatically calculated based on
-the space needed (for the axis labels, tick labels, and tick marks).
+the space needed for items <emphasis>outside</emphasis> the plot area. The
+plot area is then whatever space remains. Calculation for most plot types
+takes into account the main title, axis titles, tick or data labels, and tick
+marks (but not the legend, if drawn). For pie charts, only the main title
+size is used when calculating the needed margins.
 Use SetPlotAreaPixels to override these automatic calculations and
 control the plot area.
     </para>
@@ -4746,6 +5278,10 @@ use:
       <programlisting><![CDATA[$plot->SetPlotAreaWorld(10, NULL, 100);
 ]]></programlisting>
     </para>
+    <para>
+This function has no effect with pie charts, because they do not use world
+coordinates.
+    </para>
   </refsect1>
   <refsect1>
     <title>History</title>
@@ -4844,7 +5380,7 @@ background color (or image) will be seen in the plot area.
     <title>Description</title>
     <para>
 <function>SetPlotBorderType</function> controls how much of a border is
-drawn around the plot. By default, left and right side borders are drawn.
+drawn around the plot.
     </para>
   </refsect1>
 
@@ -4915,6 +5451,10 @@ to get a plot border on the sides and bottom but not the top.
   <refsect1>
     <title>Notes</title>
     <para>
+By default, left and right side borders are drawn for all plot types except
+pie charts. For pie charts, no borders are drawn by default.
+    </para>
+    <para>
 Plot border color is set by <xref linkend="SetGridColor" /> (this color
 also applies to the axes and other elements).
 The default color is black.
@@ -4928,10 +5468,20 @@ for more information on the axis positions.)
 Enabling or disabling a plot border edge that corresponds to an axis line will
 have no visible effect because the axis line will be drawn there.
     </para>
+    <para>
+The preceding paragraph does not apply to pie charts, which do not have
+axis lines.
+    </para>
   </refsect1>
 
   <refsect1>
     <title>History</title>
+    <para>
+Through PHPlot-5.5.0, plot area borders were not available for pie charts,
+and the default border type was always 'sides'. Starting with PHPlot-5.6.0,
+pie charts can also have plot area borders. The default plot area border
+type is 'none' for pie charts, and 'sides' for all other plot types.
+    </para>
     <para>
 Through PHPlot-5.1.1, the available choices were 'left', 'sides', 'full', or
 'none', and only a single string option was supported.
