@@ -120,6 +120,12 @@ EXAMPLES_PHP=\
   examples/pie1.php \
   examples/pie2.php \
   examples/pie3.php \
+  examples/pielabeltype1.php \
+  examples/pielabeltype2.php \
+  examples/pielabeltype3.php \
+  examples/pielabeltype4.php \
+  examples/pielabeltype5.php \
+  examples/pielabeltypedata.php \
   examples/points1.php \
   examples/points2.php \
   examples/qs1.php \
@@ -171,6 +177,11 @@ EXAMPLES_IMAGES=\
   examples/pie1.png \
   examples/pie2.png \
   examples/pie3.png \
+  examples/pielabeltype1.png \
+  examples/pielabeltype2.png \
+  examples/pielabeltype3.png \
+  examples/pielabeltype4.png \
+  examples/pielabeltype5.png \
   examples/points1.png \
   examples/points2.png \
   examples/qs1.png \
@@ -296,6 +307,11 @@ $(EXAMPLE_LIST): $(EXAMPLES_PHP) $(EXAMPLES_XML) $(EXAMPLES_IMAGES)
 # Special cases: These examples call others so must be rebuilt if they change.
 examples/ytickanchor1.png: examples/ytickanchor.php examples/ytickanchor1.php
 examples/legendshape1.png: examples/legendshape.php examples/legendshape1.php
+examples/pielabeltype1.png: examples/pielabeltype1.php examples/pielabeltypedata.php
+examples/pielabeltype2.png: examples/pielabeltype2.php examples/pielabeltypedata.php
+examples/pielabeltype3.png: examples/pielabeltype3.php examples/pielabeltypedata.php
+examples/pielabeltype4.png: examples/pielabeltype4.php examples/pielabeltypedata.php
+examples/pielabeltype5.png: examples/pielabeltype5.php examples/pielabeltypedata.php
 
 # === For building the variable list documentation ===
 
