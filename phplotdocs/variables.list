@@ -27,13 +27,13 @@ dashed_style	'2-4'	SetDefaultStyles	Initial dashed pattern code
 data		SetDataValues	The data array
 data_border_colors	'black'	SetDataBorderColors	Array of colors (R,G,B,A) for bar chart data borders.
 data_colors		SetDataColors	Array of colors (R,G,B,A) for data lines/marks/bars/etc. See default_colors for initial value.
-data_columns		CheckDataArray	Maximum number of dependent variable values (usually Y values, or pie slices) in the data array rows. (Added in PHPlot-5.1.3)
+data_columns		CheckDataArray	Maximum number of dependent variable values (usually Y values, or pie segments) in the data array rows. (Added in PHPlot-5.1.3)
 data_max		FindDataLimits	Array: Per row maximum Y value. (Before PHPlot-5.1.2 this was named data_maxy.)
 data_min		FindDataLimits	Array: Per row minimum Y value. (Before PHPlot-5.1.2 this was named data_miny.)
 data_type	'text-data'	SetDataType	Format of the data array
 datatype_error_bars		DecodeDataType	Flag: data type has error bars. (Added in PHPlot-5.1.3)
 datatype_implied		DecodeDataType	Flag: data type has implied X or Y. (Added in PHPlot-5.1.3)
-datatype_pie_single		DecodeDataType	Flag: data type is one-column data for pie chart with one slice per row. (Added in PHPlot-5.1.3)
+datatype_pie_single		DecodeDataType	Flag: data type is one-column data for pie chart with one segments per row. (Added in PHPlot-5.1.3)
 datatype_swapped_xy		DecodeDataType	Flag: data type has swapped X and Y values. (Added in PHPlot-5.1.3)
 datatype_yz		DecodeDataType	Flag: data type includes Y and Z value pairs (Added in PHPlot-5.5.0)
 data_units_text	''	FormatLabel	Obsolete - suffix for 'data'-formatted labels
@@ -66,7 +66,7 @@ image_width		PHPlot	Image width
 img		PHPlot	Image resource
 in_error		PrintError	Prevent recursion in error message image production
 is_inline	FALSE	SetIsInline	Don't sent headers
-label_format	array(...)	SetXLabelType SetYLabelType SetXDataLabelType SetYDataLabelType SetXTimeFormat SetYTimeFormat SetPrecisionX SetPrecisionY	Label format info. <link linkend="var-label-format">(See notes for more)</link>
+label_format	array(...)	SetPieLabelType SetPrecisionX SetPrecisionY SetXDataLabelType SetXLabelType SetXTimeFormat SetYDataLabelType SetYLabelType SetYTimeFormat	Label format info. <link linkend="var-label-format">(See notes for more)</link>
 label_scale_position	0.5	SetLabelScalePosition	Pie chart label position factor
 legend	''	SetLegend	Legend text array. Each index is a legend text line.
 legend_colorbox_align		SetLegendStyle	Alignment of color boxes or point shapes in the legend: left, right, or none
@@ -109,11 +109,14 @@ ohlc_min_width		DrawOHLC	Minimum half-width for elements in OHLC plots (candlest
 ohlc_max_width		DrawOHLC	Maximum half-width for elements in OHLC plots (candlestick bodies or tick pairs). Default is 8 pixels. <link linkend="conc-tuning-ohlc">(See Tuning Parameters for more)</link> (Added in PHPlot-5.3.0)
 ohlc_frac_width		DrawOHLC	Scale factor for element widths in OHLC plots. Default is 0.3, meaning within min and max limits the elements will use 30% of the available space for half their width. <link linkend="conc-tuning-ohlc">(See Tuning Parameters for more)</link> (Added in PHPlot-5.3.0)
 output_file	''	SetOutputFile	Redirect to output file
+pie_diam_factor		DrawPieChart	Aspect ratio for shaded pie charts. <link linkend="conc-tuning-pie">(See Tuning Parameters for more)</link> (Added in PHPlot-5.6.0)
+pie_min_size_factor		DrawPieChart	Minimum amount of the plot area that will be reserved for the pie <link linkend="conc-tuning-pie">(See Tuning Parameters for more)</link> (Added in PHPlot-5.6.0)
+pie_full_size		SetPieAutoSize	Flag: If true, do not include label sizes when calculating pie size. (Added in PHPlot-5.6.0)
 plot_area		CalcPlotAreaPixels	Array defining the calculated plot area. ([0],[1]) is the top left corner, ([2],[3]) is the bottom right corner.
 plot_area_height		CalcPlotAreaPixels	Height of the plot area
 plot_area_width		CalcPlotAreaPixels	Width of the plot area
 plot_bg_color	'white'	SetPlotBgColor	Color (R,G,B,A) for plot area background
-plot_border_type	'sides'	SetPlotBorderType	Where to draw plot borders. Can be scalar or array of choices.
+plot_border_type		SetPlotBorderType	Where to draw plot borders. Can be scalar or array of choices.
 plot_max_x		SetPlotAreaWorld CalcPlotAreaWorld	Max X of the plot area in world coordinates
 plot_max_y		SetPlotAreaWorld CalcPlotAreaWorld	Max Y of the plot area in world coordinates
 plot_min_x		SetPlotAreaWorld CalcPlotAreaWorld	Min X of the plot area in world coordinates
