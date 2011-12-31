@@ -4,6 +4,40 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2011-12-30
+   For bug report #3403297 "Pie chart sizing and label issues":
+   * Makefile: Add files for new pielabeltype example.
+   * advanced.xml: Note pie charts have no world coordinates.  New section on
+     tuning pie charts with 2 new variables.
+   * concepts.xml: Note pie charts have no world coordinates.  Fix 'pie
+     percentage labels', since labels need not show percentage now.  In
+     "Plot Type: pie", link to new function SetPieLabelType(). Add note that
+     segments less than 1 degree are not plotted. New subsection on pie labels.
+   * developer.xml: Document new internals CheckPieLabels(), DrawPieLabel(),
+     FormatPieLabel(), GetTextAlignment().
+     Document new argument to DrawPlotBorder().
+     Update SetLabelType() FormatLabel(), label_format[] to include pie labels.
+   * examples.xml: In ex-pie1, ex-pie2: update note on labels.
+     New example ex-pielabeltype with 5 code blocks and images.
+   * functions.xml: Link to new SetPieLabelType(), SetPieAutoSize().
+   * reference.xml: Use 'segments' not 'slices' consistently for pie charts.
+     Add notes that World Coordinates don't work with pie charts.
+     Add notes clarifying SetLabelScalePosition() - meaning of argument, use
+     to suppress labels.
+     Add note to SetMarginsPixels() and SetPlotAreaPixels about pie sizing.
+     Document new SetPieAutoSize()
+     Update description of SetPlotBorderType() which now handles pie charts and
+     has different defaults for pie charts.
+   * variables.list: Use 'segments' not 'slices' consistently for pie charts.
+     Update $label_format to include pie labels.
+     Document 3 new variables: $pie_diam_factor $pie_size_factor $pie_full_size
+     Remove default from $plot_border_type, since it is dynamic now.
+   * examples/pielabeltype?.php: New examples for SetPieLabelType()
+   * examples/pielabeltypedata.php: Data file for pielabetype?.php
+   * examples/legendshape1.php, examples/ytickanchor1.php: Remove unneeded
+     include file path prefix.
+   * examples/pie1.php: Move legend to upper left corner.
+
 2011-11-13
    * developer.xml: Document new internal function initialize().
      Fix 'called by PHPlot constructor' references to indicate these are now
