@@ -18,6 +18,7 @@ CheckLabels
 CheckLabelsAllEmpty
 CheckOption
 CheckOptionArray
+CheckPieLabels
 CheckPointParams
 DarkGreen
 Debian
@@ -28,6 +29,7 @@ DrawArea
 DrawBackground
 DrawBar
 DrawBars
+DrawBubbles
 DrawDataLabel
 DrawDataValueLabel
 DrawDot
@@ -44,6 +46,7 @@ DrawLines
 DrawLinesError
 DrawOHLC
 DrawPieChart
+DrawPieLabel
 DrawPlotAreaBackground
 DrawPlotBorder
 DrawShape
@@ -67,6 +70,7 @@ DrawYTitle
 EncodeImage
 FindDataLimits
 FormatLabel
+FormatPieLabel
 FreeBSD
 FreeType
 GD
@@ -87,6 +91,7 @@ GetLegendPosition
 GetLegendSize
 GetLegendSizeParams
 GetLineSpacing
+GetTextAlignment
 Helvetica
 ImageMagick
 ImageSetStyle
@@ -175,6 +180,8 @@ SetNumXTicks
 SetNumYTicks
 SetNumberFormat
 SetOutputFile
+SetPieAutoSize
+SetPieLabelType
 SetPlotAreaBgImage
 SetPlotAreaPixels
 SetPlotAreaWorld
@@ -255,9 +262,12 @@ halign
 imagealphablending
 imageantialias
 imagecolorresolve
+imagecreate
 imagecreatetruecolor
+imagefilledarc
 imagegammacorrect
 imagelayereffect
+imagepng
 imagesavealpha
 imagestring
 imagettftext
