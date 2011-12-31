@@ -1025,6 +1025,11 @@ to perform this translation.
 You will need access to your PHPlot object from inside your callback function
 in order to use this (or any other PHPlot method function). You can make it
 global, or designate it as the passthrough argument to SetCallback.
+  <note>
+    <para>
+This does not apply to pie charts, which have do not use world coordinates.
+    </para>
+  </note>
 </para>
 <para>
 If your annotations will fall outside the plot area (for example, in an
@@ -1569,6 +1574,58 @@ Where avail_area = plot_area_width / number_data_points
 </para>
 </sect2>
 
+<sect2 id="conc-tuning-pie">
+<title>Tuning Pie Charts</title>
+<para>
+These variables adjusts the appearance of
+<link linkend="plottype-pie">pie charts</link>.
+</para>
+
+<para>
+  <variablelist>
+    <varlistentry>
+      <term><varname>pie_diam_factor</varname></term>
+      <listitem>
+        <para>
+Diameter factor for shaded pie charts. This is the ratio of the height to
+the width of the pie. The default value is 0.5, meaning the pie chart will be
+drawn as an ellipse with height equal to half of its width.
+This variable is ignored for unshaded plots (see <xref linkend="SetShading"/>),
+which are always circular (diameter factor of 1.0).
+        </para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term><varname>pie_min_size_factor</varname></term>
+      <listitem>
+        <para>
+The minimum size of the pie in a pie chart, relative to the plot area size.
+When pie chart autosize is on (see <xref linkend="SetPieAutoSize"/>),
+and pie labels are located outside the pie chart (as they are by default),
+PHPlot will shrink the pie so the labels will fit inside the plot area.
+To prevent an overly long label from making the pie too small,
+PHPlot uses <varname>pie_min_size_factor</varname> to limit
+how small the pie will become.
+The default value is 0.5, meaning the pie chart will be no smaller than
+half the width or height of the plot area, even if that makes the labels
+fall partly off the image.
+        </para>
+        <para>
+Setting this smaller allows the pie to be a smaller portion of the plot
+area, if long labels require the space. Setting this larger prevents the
+pie from becoming smaller in that case.
+Setting this to 1.0 is approximately equivalent to using
+<literal>SetPieAutoSize(False)</literal>. (The difference is that the
+later still leaves a small gap between the pie and the plot area boundary.)
+        </para>
+      </listitem>
+    </varlistentry>
+  </variablelist>
+</para>
+
+</sect2>
+
 <sect2 id="conc-tuning-legend">
 <title>Tuning the Legend</title>
 <para>
@@ -1830,6 +1887,12 @@ Even if you set a new data array, the calculated or pre-set data range from
 the previous plot applies. Without being told otherwise, PHPlot will not
 re-examine the data array to recalculate the data range.
 This allows you to re-use an automatically calculated date range, if you want.
+  <note>
+    <para>
+Nothing related to world coordinates and data scaling applies to pie charts,
+which have do not use world coordinates.
+    </para>
+  </note>
 </para>
 <para>
 If instead you want PHPlot to automatically calculate the data range for

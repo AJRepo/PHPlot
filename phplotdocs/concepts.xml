@@ -194,6 +194,8 @@ axes.
 The X coordinate increases to the right, and the Y coordinate increases upwards.
 Note that the Y direction of world coordinates is opposite that of device
 coordinates.
+(World coordinates are only defined for plots in an orthogonal X/Y
+coordinate space, so there are no world coordinates for pie charts.)
         </para>
       </listitem>
     </varlistentry>
@@ -1156,7 +1158,8 @@ This plot type draws pie charts. The pie chart can have a 3-D look or be
 drawn flat.
 The first pie segment starts at 0 degrees (East, or 3:00PM) and they go around
 the pie in a counter-clockwise direction.
-Each segment is labeled with its percentage.
+Each segment can be labeled. By default, the labels show the percentage of
+each segment.
 </para>
 <para>
 This plot type works with data types <xref linkend="text-data"/>,
@@ -1169,11 +1172,16 @@ If shading is on with <xref linkend="SetShading" /> (default is on with value
 5 pixels), then the pie chart has a 3-D look. If shading is off
 (<function>SetShading(0)</function>), the pie chart is drawn flat (circular
 rather than oval).
-The position of the segment percentage labels is set with
+The position of the segment labels is set with
 <xref linkend="SetLabelScalePosition" />.
+The content and formatting of the segment labels is controlled with
+<xref linkend="SetPieLabelType" />.
 </para>
 <para>
 Missing values (an empty string or any non-numeric value) are taken as zero.
+Any segment with arc angle less than 1 degree will not be drawn. (This is
+due to the PHP GD implementation of <function>imagefilledarc</function>,
+which uses integer degrees.)
 </para>
 <para>
 Examples of this plot type can be seen in
@@ -1188,9 +1196,10 @@ Examples of this plot type can be seen in
 The data array for pie charts with 'text-data-single' data type is
 structured as follows.
 Each record in the data array represents a pie segment.
-The record is an array of 2 elements: label and value,
-but the label is ignored.
-The value sets the relative size of a pie segment.
+The record is an array of 2 elements: label and value.
+By default, the labels from the data array are ignored, but these can be
+used to label the pie segments with <xref linkend="SetPieLabelType" />.
+The values in the data array set the size of each pie segment.
 PHPlot totals up the values and computes the relative size of each segment.
 </para>
 <para>
@@ -1201,10 +1210,9 @@ This makes a pie chart with 3 segments, with sizes 10%, 40%, and 50%.
 </para>
 
 <para>
-Although the labels in the data array are ignored when drawing the pie chart,
-you can assign strings to the label positions in the array, then use them to
-build a plot legend.  For example, this will produce a pie chart with 3
-slices, and a legend with 3 entries using the labels from the data array:
+The data array labels can also be used to build a plot legend.
+For example, this will produce a pie chart with 3
+segments, and a legend with 3 entries using the labels from the data array:
 <programlisting><![CDATA[$data = array(array('Gold', 100), array('Silver',35), array('Copper',12));
 $plot = new PHPlot();
 $plot->SetPlotType('pie');
@@ -1215,7 +1223,7 @@ $plot->DrawGraph();
 ]]></programlisting>
 A slightly more complex example of this can be seen in <xref linkend="ex-pie1"/>.
 This only works for the 'text-data-single' data type, where each row or record
-in the data array is used to build one pie slice.
+in the data array is used to build one pie segment.
 </para>
 
 </sect3>
@@ -2053,11 +2061,11 @@ element on a plot.
         <entry><xref linkend="SetGridColor"/></entry>
       </row>
       <row>
-        <entry>Pie slice fill</entry>
+        <entry>Pie segment fill</entry>
         <entry><xref linkend="SetDataColors"/></entry>
       </row>
       <row>
-        <entry>Pie slice outlines</entry>
+        <entry>Pie segment outlines</entry>
         <entry><xref linkend="SetGridColor"/></entry>
       </row>
       <row>
@@ -2165,7 +2173,8 @@ X data value labels are available for horizontal plots.
     </listitem>
     <listitem>
       <para>
-Pie chart data labels show the percentage of each pie slice.
+Pie chart data labels identify the pie segments. By default, they show the
+percentage of each pie segment.
       </para>
     </listitem>
   </itemizedlist>
@@ -2386,11 +2395,29 @@ with X data value labels.
 
 </sect2>
 
+<sect2 id="conc-labels-pie">
+<title>Pie Chart Labels</title>
+<para>
+Pie chart labels identify segments on a pie chart. By default, these
+show the percentage of each segment, relative to the whole pie. Starting
+with PHPlot-5.6.0, pie chart labels can display other information, and can
+be flexibly formatted.
+</para>
+<para>
+Use <xref linkend="SetPieLabelType"/> to select the source for pie labels
+as well as how to format them.
+<xref linkend="example-pielabeltype" /> shows a pie chart with different
+labeling options.
+</para>
+
+</sect2>
+
 <sect2 id="conc-labels-format">
 <title>Formatting Labels</title>
 <para>
-Both tick and data labels are subject to format controls. There are several
-choices in formatting.  By default, the label value itself is simply displayed.
+Tick labels, data labels, and pie chart labels are subject to format controls.
+There are several choices in formatting.  By default, the label value itself
+is simply displayed.
 Use <xref linkend="SetXLabelType" /> and <xref linkend="SetYLabelType" /> to
 select one of the other format types for tick labels.
 Use <xref linkend="SetXDataLabelType" /> and
@@ -2400,15 +2427,18 @@ types for data labels (both axis data labels and data value labels).
 for use if SetXDataLabelType is not called.
 Also SetYLabelType sets the default for Y data labels, for use if
 SetYDataLabelType is not called.)
+Use <xref linkend="SetPieLabelType"/> to select a format type for pie chart
+labels.
 </para>
 
 <para>
-Label format type 'data' expects the tick or data label values to be numbers,
-and formats the values as floating point numbers with a separator between every
-group of thousands and a fixed number of decimal places.
-You can set the number of digits of precision, with the default being 1 digit.
-PHPlot will try to set the thousands grouping separator and decimal separator
-according to your locale, but this can be overridden if necessary.
+Label format type 'data' expects the tick label, data label, or pie label
+values to be numbers, and formats the values as floating point numbers with
+a separator between every group of thousands and a fixed number of decimal
+places.  You can set the number of digits of precision, with the default
+being 1 digit.  PHPlot will try to set the thousands grouping separator and
+decimal separator according to your locale, but this can be overridden if
+necessary.
 </para>
 
 <para>
@@ -2451,6 +2481,7 @@ details on the format string, but here are some examples for 31 December
     </tbody>
   </tgroup>
 </informaltable>
+(This formatting type is generally not applicable to pie chart labels.)
 </para>
 
 <note>
