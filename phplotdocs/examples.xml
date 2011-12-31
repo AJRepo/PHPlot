@@ -244,11 +244,12 @@ to make them easier to identify.
 <para>
 This is a pie chart with the data array type 'text-data-single'.
 This data type is only used with pie charts. Each record in the data array
-simply contains a label (which is not used by PHPlot) and a slice size.
+simply contains a label (which is not used by PHPlot) and a segment size.
 In this example, we use the label to identify the data for our own
 reference, and then build a legend from those data labels along with the
-data values. This is useful because PHPlot only labels the slices with
-percentage values.
+data values. This is useful because by default PHPlot labels the segments with
+only the percentage values. (Starting with PHPlot-5.6.0, there are new
+options for labels. See <xref linkend="ex-pielabeltype"/>.)
 </para>
 <example id="example-pie1">
 <?dbfo keep-together="auto"?>
@@ -275,8 +276,8 @@ percentage values.
 This is a simple pie chart showing the data type 'text-data'.
 When you use this data type with pie charts, the first entry in each record
 (a label) is ignored; the sum of all the second entries equals the relative
-size of the first slice, the sum of the third entries is the second slice,
-etc. So this pie has 4 slices, of relative size 250, 200, 350, and 200.
+size of the first segment, the sum of the third entries is the second segment,
+etc. So this pie has 4 segments, of relative size 250, 200, 350, and 200.
 </para>
 <para>
 Data type 'data-data' is similar, except the first two entries in each
@@ -1500,4 +1501,121 @@ See <xref linkend="SetYLabelType"/> for details.
 
 <!-- =============================================== -->
 
+<pagebreak/>
+<sect1 id="ex-pielabeltype">
+<title>Example - Pie Chart Label Types</title>
+<para>
+By default, PHPlot labels pie chart segments with their percentage. That
+is, a pie segment that spans 90 degrees will be labeled "25.0%".
+Using <xref linkend="SetPieLabelType"/>, you can choose the source of the
+labels (percentage, data array labels, segment index, or value) and how the
+result should be formatted.
+</para>
+
+<para>
+Notes: Pie label type options were added in PHPlot-5.6.0.
+</para>
+
+<para>
+All of the examples in this section include the following script which
+contains the data array and plot title. The script is called
+<filename>pielabeltypedata.php</filename>.
+&pielabeltypedata;
+</para>
+
+<example id="example-pielabeltype">
+<?dbfo keep-together="auto"?>
+<title>Pie Chart Label Types</title>
+<para>
+This first script shows the default behavior - percentage labels.
+</para>
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="examples/pielabeltype1.png" scale="58" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>Pie Chart Label Types Example - 1) Defaults</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+&pielabeltype1;
+
+<para>
+The example below uses the label strings from the data array to label
+the pie segments. Note that this only works when the data array data type
+is <literal>text-data-single</literal>.
+</para>
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="examples/pielabeltype2.png" scale="58" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>Pie Chart Label Types Example - 2) Data Array Labels</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+&pielabeltype2;
+
+<para>
+The next example uses the numeric value of each segment to label the segment.
+In addition, 'data' formatting is used with 2 digits of precision.
+</para>
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="examples/pielabeltype3.png" scale="58" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>Pie Chart Label Types Example - 3) Segment Value Labels</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+&pielabeltype3;
+
+<para>
+In this example, we want to use strings from an external array to label
+the pie segments. To do that, set the label source to 'index' to get a
+segment number starting with zero, and define a custom formatting callback
+function to get the value for each label.
+</para>
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="examples/pielabeltype4.png" scale="58" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>Pie Chart Label Types Example - 4) Index and custom callback</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+&pielabeltype4;
+
+<para>
+The last example of pie chart labels shows how to use multiple label sources
+to make complex labels. In this case, we want the pie segment labels to show
+the label string from the data array and the percentage. When multiple
+label sources are selected, PHPlot separates the fields with a space, then
+passes them to your custom formatting callback function as a single string.
+In order to separate them, use the <function>explode()</function>. Since
+the data array labels might contain spaces, be sure to put this field last,
+and limit how many fields <function>explode</function> will return.
+</para>
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="examples/pielabeltype5.png" scale="58" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>Pie Chart Label Types Example - 5) Multipart Labels</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+&pielabeltype5;
+
+</example>
+</sect1>
+
+<!-- =============================================== -->
 </chapter>
