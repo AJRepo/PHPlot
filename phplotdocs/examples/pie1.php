@@ -37,5 +37,7 @@ $plot->SetTitle("World Gold Production, 1990\n(1000s of Troy Ounces)");
 # Each call to SetLegend makes one line as "label: value".
 foreach ($data as $row)
   $plot->SetLegend(implode(': ', $row));
+# Place the legend in the upper left corner:
+$plot->SetLegendPixels(5, 5);
 
 $plot->DrawGraph();
