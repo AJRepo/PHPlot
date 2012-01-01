@@ -256,8 +256,15 @@ evaluates to false when directly tested, it is not necessary to check
 using the identical-to (===) operator.
     </para>
     <para>
-Callbacks are an experimental feature added to PHPlot-5.0.4.
-Refer to <xref linkend="callbacks"/> for more information.
+Refer to <xref linkend="callbacks"/> for more information on callbacks.
+    </para>
+  </refsect1>
+  <refsect1>
+    <title>History</title>
+    <para>
+This function and the callbacks implementation were added in PHPlot-5.0.4
+as an experimental feature. Callbacks were first documented in this manual
+as of PHPlot-5.0.5 and are no longer considered experimental.
     </para>
   </refsect1>
 </refentry>
@@ -755,8 +762,15 @@ Returns False if reason is not a valid callback reason.
   <refsect1>
     <title>Notes</title>
     <para>
-Callbacks are an experimental feature added to PHPlot-5.0.4.
-Refer to <xref linkend="callbacks"/> for more information.
+Refer to <xref linkend="callbacks"/> for more information on callbacks.
+    </para>
+  </refsect1>
+  <refsect1>
+    <title>History</title>
+    <para>
+This function and the callbacks implementation were added in PHPlot-5.0.4
+as an experimental feature. Callbacks were first documented in this manual
+as of PHPlot-5.0.5 and are no longer considered experimental.
     </para>
   </refsect1>
 </refentry>
@@ -1010,8 +1024,15 @@ If a callback is already registered for the given reason, the new callback
 replaces the old one.
     </para>
     <para>
-Callbacks are an experimental feature added to PHPlot-5.0.4.
-Refer to <xref linkend="callbacks"/> for more information.
+Refer to <xref linkend="callbacks"/> for more information on callbacks.
+    </para>
+  </refsect1>
+  <refsect1>
+    <title>History</title>
+    <para>
+This function and the callbacks implementation were added in PHPlot-5.0.4
+as an experimental feature. Callbacks were first documented in this manual
+as of PHPlot-5.0.5 and are no longer considered experimental.
     </para>
   </refsect1>
 </refentry>
@@ -3205,7 +3226,7 @@ Before that, the labels were always plotted.
     </para>
     <para>
 The ability to control pie label contents, and the automatic sizing
-of the pie to leave room for labels, were added PHPlot-5.6.0. Through
+of the pie to leave room for labels, were added in PHPlot-5.6.0. Through
 PHPlot-5.5.0, pie chart labels always displayed segment percentages, and the
 pie size was calculated without regard to the labels.
     </para>
