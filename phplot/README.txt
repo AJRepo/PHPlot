@@ -166,7 +166,7 @@ graph, check your web server error log for more information.
 
 COPYRIGHT and LICENSE:
 
-PHPlot is Copyright (C) 1998-2011 Afan Ottenheimer
+PHPlot is Copyright (C) 1998-2012 Afan Ottenheimer
 
 This is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
