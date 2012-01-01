@@ -4,6 +4,20 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2011-12-31
+   * examples/pielabeltypedata.php: Changed the data file used by the pie
+     label type examples to remove the 2 smallest data values. This avoids
+     the round-off problem in bug #3467793 with tiny sectors. (The smaller
+     of the two was displayed, and the larger was not, due to the way the
+     values are rounded off.) The bug will be addressed, but in the meantime
+     the manual will have clean examples.
+
+   * reference.xml: GetCallback(), RemoveCallback(), SetCallback() - rewrite
+     note and add History so it doesn't sound like callbacks are still an
+     experimental feature.
+
+   * advanced.xml: Fix note, draw_border callback is now called for pie charts.
+
 2011-12-30
    For bug report #3403297 "Pie chart sizing and label issues":
    * Makefile: Add files for new pielabeltype example.
