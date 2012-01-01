@@ -1,6 +1,6 @@
 <?php
 # PHPlot Example: Pie Chart Label Types - Data array
-# This is used by several examples
+# This is used by several examples. The data is 'altered' for appearance.
 $title = 'Energy Production By Source, 2005';
 $data = array(
     array('Biomass',        3120.43),
@@ -11,6 +11,4 @@ $data = array(
     array('Nat. Gas',      18574.55), 
     array('Nuclear',        8160.49),
     array('Oil',           10963.63),
-    array('Solar',            66.17),
-    array('Wind',            178.81),
 );
