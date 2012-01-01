@@ -850,7 +850,7 @@ The following table lists the available callback reasons.
           <entry>draw_border</entry>
           <entry>After drawing the plot area border.</entry>
           <entry>(None)</entry>
-          <entry>Not called for pie charts.</entry>
+          <entry>Not called for pie charts before PHPlot-5.6.0</entry>
         </row>
         <row>
           <entry>draw_legend</entry>
