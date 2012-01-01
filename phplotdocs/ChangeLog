@@ -3,6 +3,8 @@ This is phplotdocs/ChangeLog, listing changes to the PHPlot Reference Manual
 Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
+2012-01-01
+   * main.xml: Updated copyright year to 2012.
 
 2011-12-31
    * examples/pielabeltypedata.php: Changed the data file used by the pie

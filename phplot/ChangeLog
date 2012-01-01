@@ -2,6 +2,9 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2012-01-01
+    * Extend copyright years to 2012.
+
 2011-12-30
     * Fixed bug #3403297 "Pie chart sizing and label issues":
       Most of the pie chart label and sizing code has been rewritten.
