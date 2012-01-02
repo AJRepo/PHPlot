@@ -3,6 +3,11 @@ This is phplotdocs/ChangeLog, listing changes to the PHPlot Reference Manual
 Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
+2012-01-02
+   * advanced.xml: Clarify OHLC tuning parameters. Fix typo in pie tuning.
+   * reference.xml: In SetPieAutoSize(), add note and link on minimum size.
+     In SetPieLabelType(), add link to example of pie label types.
+
 2012-01-01
    * main.xml: Updated copyright year to 2012.
 
