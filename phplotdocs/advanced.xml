@@ -1537,8 +1537,8 @@ marks which represent opening and closing prices.
       <term><varname>ohlc_max_width</varname></term>
       <listitem>
         <para>
-This is one half the maximum width in pixels of the candlestick body or
-OHLC tick mark. The default is 8.
+This is one half the maximum width of the candlestick body, or
+the maximum length of an OHLC tick mark. The default is 8 pixels.
         </para>
       </listitem>
     </varlistentry>
@@ -1546,8 +1546,8 @@ OHLC tick mark. The default is 8.
       <term><varname>ohlc_min_width</varname></term>
       <listitem>
         <para>
-This is one half the minimum width in pixels of the candlestick body or
-OHLC tick mark. The default is 2.
+This is one half the minimum width of the candlestick body, or
+the minimum length of an OHLC tick mark. The default is 2 pixels.
         </para>
       </listitem>
     </varlistentry>
@@ -1601,7 +1601,7 @@ which are always circular (diameter factor of 1.0).
       <listitem>
         <para>
 The minimum size of the pie in a pie chart, relative to the plot area size.
-When pie chart autosize is on (see <xref linkend="SetPieAutoSize"/>),
+When pie chart autosizing is on (see <xref linkend="SetPieAutoSize"/>),
 and pie labels are located outside the pie chart (as they are by default),
 PHPlot will shrink the pie so the labels will fit inside the plot area.
 To prevent an overly long label from making the pie too small,
