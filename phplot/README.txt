@@ -116,7 +116,7 @@ differences in images, and some unsupported features (such as advanced
 truecolor image operations). Also, although this Ubuntu GD library was
 built with fontconfig support, PHP does not use it, so you still need to
 specify TrueType fonts with their actual file names. These also affect
-Ubunutu-derived distributions such as Linux Mint.
+Ubuntu-derived distributions such as Linux Mint.
 
   + Some PHP installations may have a memory limit set too low to support
 large images, especially truecolor images.
