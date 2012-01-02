@@ -9,9 +9,9 @@ See NEWS_part1.txt for older release documentation.
 
 === Overview:
 
-This is the current stable release of PHPlot. This release includes major
-changes to pie charts. There are new ways to label pie charts, and PHPlot
-does a better job calculating the size and positioning the labels.
+This is the current stable release of PHPlot. This release includes
+significant changes to pie charts. There are new ways to label pie charts,
+and PHPlot does a better job calculating the size and positioning the labels.
 
 The PHPlot reference manual has been updated to match this release.
 
@@ -73,7 +73,7 @@ of this bug fix (see New features below).
   away from the pie chart (if outside the pie). (Don't just use center/center
   alignment for all labels.)
 
-+ Do not scale the label scale position by 1.2 in the hope that this will
++ Do not multiply the label scale position by 1.2 in the hope that this will
   prevent labels from overlapping the pie. Use the label scale position
   as intended, and take other measures to prevent label overlap (such as
   fixing the text alignment).

@@ -1,5 +1,5 @@
 This is the README file for PHPlot
-Last updated for PHPlot-5.5.0 on 2011-07-30
+Last updated for PHPlot-5.6.0 on 2012-01-02
 The project web site is http://sourceforge.net/projects/phplot/
 The project home page is http://phplot.sourceforge.net/
 -----------------------------------------------------------------------------
@@ -22,6 +22,7 @@ CONTENTS:
    COPYING  . . . . . . . . . . . . LGPL 2.1 License file
    ChangeLog  . . . . . . . . . . . Lists changes to the sources
    NEWS.txt . . . . . . . . . . . . Highlights changes in releases
+   NEWS_*.txt . . . . . . . . . . . Older NEWS files
    README.txt   . . . . . . . . . . This file
    contrib  . . . . . . . . . . . . "Contributed" directory, add-ons
    phplot.php   . . . . . . . . . . The main PHPlot source file
@@ -31,11 +32,10 @@ CONTENTS:
 REQUIREMENTS:
 
 You need a recent version of PHP5, and you are advised to use the latest
-stable release.  This version of PHPlot has been tested with PHP-5.3.6 and
-PHP-5.2.17 on Linux, and with PHP-5.3.6 on Windows XP. Note that the PHP
-Group has dropped support for PHP-5.2.x. If you are still using PHP-5.2.x,
-you should plan to upgrade as soon as you can. PHPlot testing with PHP-5.2.x
-might not continue past this release.
+stable release.  This version of PHPlot has been tested with PHP-5.3.8,
+PHP-5.3.6(ubuntu), and PHP-5.2.17 on Linux, and with PHP-5.3.8 on Windows XP.
+Note that this is probably the last release to be tested with PHP-5.2.
+(There is no longer any support for PHP-5.2, and PHP-5.4 is expected soon.)
 
 You need the GD extension to PHP either built in to PHP or loaded as a
 module. Refer to the PHP documentation for more information - see the
@@ -80,6 +80,10 @@ KNOWN ISSUES:
 Here are some of the problems we know about in PHPlot. See the bug tracker
 on the PHPlot project web site for more information.
 
+#3467793 Pie charts with very small segments
+  Unexpected behavior was found during testing of PHPlot-5.6.0 when pie
+  charts have small segments. This is not a new issue, though.
+
 #3142124 Clip plot elements to plot area
   Plot elements are not currently clipped to the plot area, and may extend
   beyond. PHP does not currently support the GD clipping control.
@@ -111,7 +115,8 @@ shared GD library, not the one bundled with PHP. This can result in small
 differences in images, and some unsupported features (such as advanced
 truecolor image operations). Also, although this Ubuntu GD library was
 built with fontconfig support, PHP does not use it, so you still need to
-specify TrueType fonts with their actual file names.
+specify TrueType fonts with their actual file names. These also affect
+Ubunutu-derived distributions such as Linux Mint.
 
   + Some PHP installations may have a memory limit set too low to support
 large images, especially truecolor images.
