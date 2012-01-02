@@ -4,6 +4,7 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 2012-01-02
+   For release with PHPlot-5.5.0
    * advanced.xml: Clarify OHLC tuning parameters. Fix typo in pie tuning.
    * reference.xml: In SetPieAutoSize(), add note and link on minimum size.
      In SetPieLabelType(), add link to example of pie label types.

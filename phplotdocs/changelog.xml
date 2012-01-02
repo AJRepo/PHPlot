@@ -17,6 +17,16 @@ see the ChangeLog file inside the PHPlot distribution.)
     <term>2011-07-30</term>
     <listitem>
       <para>
+Released updated version of the manual to correspond to PHPlot-5.6.0.
+This includes new material and examples for pie chart label types and formats.
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
+    <term>2011-07-30</term>
+    <listitem>
+      <para>
 Released updated version of the manual to correspond to PHPlot-5.5.0.
       </para>
     </listitem>
