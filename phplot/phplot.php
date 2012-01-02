@@ -1,7 +1,7 @@
 <?php
 /* $Id$ */
 /*
- * PHPLOT Version 5.5.0 + unreleased changes
+ * PHPLOT Version 5.6.0
  *
  * A PHP class for creating scientific and business charts
  * Visit http://sourceforge.net/projects/phplot/
@@ -35,7 +35,7 @@
 
 class PHPlot
 {
-    const version = '5.5.0-Unreleased $Revision$';
+    const version = '5.6.0';
 
     /* Declare class variables which are initialized to static values. Many more class variables
      * are used, defined as needed, but are unset by default.
