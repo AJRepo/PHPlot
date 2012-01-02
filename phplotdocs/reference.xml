@@ -4621,6 +4621,13 @@ then <function>SetPieAutoSize()</function> has no effect.
 Whether automatic sizing is on or off, the pie chart will use the maximum
 size in this case, since no additional space is needed for labels.
     </para>
+    <para>
+With automatic pie chart sizing enabled, PHPlot prevents overly long labels
+from resulting in a pie chart which is too small.  It does this by limiting
+the minimum pie size to one half of the plot width or height, even if this
+causes labels to run off the edge.
+This behavior can be adjusted - see <xref linkend="conc-tuning-pie"/> for more.
+    </para>
   </refsect1>
   <refsect1>
     <title>History</title>
@@ -4887,6 +4894,10 @@ the complete label is extracted as a single field.  See the last example below.
 
   <refsect1>
     <title>Examples</title>
+    <para>
+In addition to the examples in this section,
+see <xref linkend="ex-pielabeltype"/>.
+    </para>
     <para>
 Assume plot type <literal>pie</literal>, data type
 <literal>text-data-single</literal>, and the follow data array:
