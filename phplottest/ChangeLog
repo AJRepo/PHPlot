@@ -2,6 +2,12 @@ This is the Change Log for phplottest, the PHPlot Test Suite
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2012-01-09
+    * backgroundreset*.php: Added 4 new tests. These are actually old tests,
+      from 2010-12-26 work on resetting the background with multiple plots
+      on an image, but they never got added to the test suite.
+    * tests.ini: List 4 new tests
+
 2012-01-02
     * ex-pielabeltype: Resync to example from the manual. This removes two
       data rows which were too small to display.
