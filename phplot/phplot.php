@@ -6364,9 +6364,8 @@ class PHPlot
 
                     $wy1 += $this_y;    // Keep the running total for this bar stack
 
-                    // Draw nothing if this segment would not increase the bar height.
-                    // Upward bars: draw if wy1>wy2.  Downward bars: Draw if wy1<wy2.
-                    if (($wy1 < $wy2) XOR $upward) {
+                    // Draw the segment only if it will increase the stack height (ignore if wrong direction):
+                    if (($upward && $wy1 > $wy2) || (!$upward && $wy2 > $wy1)) {
 
                         $y1 = $this->ytr($wy1); // Convert to device coordinates. $y1 is outermost value.
                         $y2 = $this->ytr($wy2); // $y2 is innermost (closest to axis).
@@ -6454,14 +6453,13 @@ class PHPlot
             $first = TRUE;
             for ($idx = 0; $record < $this->num_recs[$row]; $record++, $idx++) {
 
-                // Skip missing X values. Process Y=0 values due to special case of moved axis.
+                // Skip missing X values. Process X=0 values due to special case of moved axis.
                 if (is_numeric($this_x = $this->data[$row][$record])) {
 
                     $wx1 += $this_x;  // Keep the running total for this bar stack
 
-                    // Draw nothing if this segment would not increase the bar length.
-                    // Rightward bars: draw if wx1>wx2. Leftward bars: Draw if wx1<wx2.
-                    if (($wx1 < $wx2) XOR $rightward) {
+                    // Draw the segment only if it will increase the stack length (ignore if wrong direction):
+                    if (($rightward && $wx1 > $wx2) || (!$rightward && $wx2 > $wx1)) {
 
                         $x1 = $this->xtr($wx1); // Convert to device coordinates. $x1 is outermost value.
                         $x2 = $this->xtr($wx2); // $x2 is innermost (closest to axis).
