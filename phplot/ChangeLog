@@ -6,6 +6,29 @@ The project home page is http://sourceforge.net/projects/phplot/
     * Added missing 'return TRUE' in SetFailureImage() and 2 internal
       functions. Return values are unused, but fixed to be more consistent.
 
+    * Fixed bug #3396931 "Top dropshadow of stacked bars is always the
+      same color":
+      This is a follow-on to the fix for bug #3296884, which resulted in
+      drawing (not skipping) segments of size 0 in stacked bar plots. A
+      side-effect of the change was that a color 'cap' was drawn at the top of
+      a stack if the last value in the row was 0.  This was considered to be
+      the correct behavior at the time. But based on this new bug report, and
+      looking at how LibreOffice handles this case, it was decided to change
+      the way PHPlot handles this.
+
+      + Changed DrawStackedBars() and DrawHorizStackedBars() to ignore
+        segments that do not increase the stack's current size. (This is
+        not the same as ignoring segments of size 0, because a row can have
+        both positive and negative values. Also, if the axis was moved, an
+        initial 0 value will be drawn from the axis to 0.)
+
+        Resulting changes:
+        + A trailing zero value in a row will no longer result in a color cap
+          on shaded bar charts (that is, the top color of the stack would
+          differ from the last segment color).
+        + A row with all zero values will not be drawn at all (if the axis
+          remains at 0).
+
 2012-01-15
     * Mark as unreleased version.
     * Code cleanup: combine an assign and a test when processing data array
