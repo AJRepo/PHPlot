@@ -3,6 +3,12 @@ This is phplotdocs/ChangeLog, listing changes to the PHPlot Reference Manual
 Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
+2012-01-16
+   * concepts.xml: Changes due to fix for bug #3396931 on stacked bar
+     top cap color. In 'Plot Type: stackedbars', removed text about top cap
+     when a row ends with 0, clarify missing points behavior, and add to
+     history.
+
 2012-01-02
    For release with PHPlot-5.5.0
    * advanced.xml: Clarify OHLC tuning parameters. Fix typo in pie tuning.
