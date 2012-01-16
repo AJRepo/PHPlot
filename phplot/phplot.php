@@ -1721,6 +1721,7 @@ class PHPlot
     function SetFailureImage($error_image)
     {
         $this->suppress_error_image = !$error_image;
+        return TRUE;
     }
 
 /////////////////////////////////////////////
@@ -4824,6 +4825,7 @@ class PHPlot
         // Draw the label:
         $this->DrawText($this->fonts['generic'], 0, $label_x, $label_y + $yoff, $this->ndx_grid_color,
                         $label_txt, $h_align, $v_align);
+        return TRUE;
     }
 
 /////////////////////////////////////////////
@@ -5398,6 +5400,7 @@ class PHPlot
         } else {
             ImageRectangle($this->img, $x1, $y1, $x2,$y2, $alt_color);
         }
+        return TRUE;
     }
 
     /*
