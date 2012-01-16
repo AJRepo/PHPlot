@@ -2,6 +2,16 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2012-01-15
+    * Mark as unreleased version.
+    * Code cleanup: combine an assign and a test when processing data array
+      (11 cases), and remove 5 cases of casting the data value to double.
+      (The cast was in 4 of the plot drawing functions and FindDataLimits.
+      The other plot drawing functions did not do this, so it was removed for
+      consistency. Removal should have no impact, although there is an odd
+      case (hex value in a string) where the explicit cast would not work,
+      but the new code without casting will work.)
+
 2012-01-02       ===== Released as 5.6.0 =====
     * phplot.php: Updated version comment and version constant
     * README.txt: Updated for new release
