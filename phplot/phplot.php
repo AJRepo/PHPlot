@@ -1,7 +1,7 @@
 <?php
 /* $Id$ */
 /*
- * PHPLOT Version 5.6.0
+ * PHPLOT Version 5.6.0 + unreleased changes
  *
  * A PHP class for creating scientific and business charts
  * Visit http://sourceforge.net/projects/phplot/
@@ -35,7 +35,7 @@
 
 class PHPlot
 {
-    const version = '5.6.0';
+    const version = '5.6.0-Unreleased $Revision$';
 
     /* Declare class variables which are initialized to static values. Many more class variables
      * are used, defined as needed, but are unset by default.
@@ -2882,8 +2882,7 @@ class PHPlot
                 $all_dv = array();
             }
             while ($j < $n_vals) {
-                if (is_numeric($this->data[$i][$j])) {
-                    $val = (double)$this->data[$i][$j++];
+                if (is_numeric($val = $this->data[$i][$j++])) {
 
                     if ($this->datatype_error_bars) {
                         $all_dv[] = $val + (double)$this->data[$i][$j++];
@@ -2904,7 +2903,6 @@ class PHPlot
                         }
                     }
                 } else {    // Missing DV value
-                  $j++;
                   if ($this->datatype_error_bars) $j += 2;
                   elseif ($this->datatype_yz) $j++;
                 }
@@ -5687,13 +5685,12 @@ class PHPlot
 
             // Now go for Y, E+, E-
             for ($idx = 0; $record < $this->num_recs[$row]; $idx++) {
-                if (is_numeric($this->data[$row][$record])) {         // Allow for missing Y data
+                if (is_numeric($y_now = $this->data[$row][$record++])) {       // Allow for missing Y data
 
                     // Select the colors:
                     $this->GetDataErrorColors($row, $idx, $gcvars, $data_color, $error_color, $alt_flag);
 
-                    // Y:
-                    $y_now = $this->data[$row][$record++];
+                    // Draw the shape:
                     $this->DrawDot($x_now, $y_now, $idx, $data_color);
 
                     // Error +
@@ -5703,7 +5700,7 @@ class PHPlot
                     $val = $this->data[$row][$record++];
                     $this->DrawYErrorBar($x_now, $y_now, -$val, $this->error_bar_shape, $error_color);
                 } else {
-                    $record += 3;  // Skip over missing Y and its error values
+                    $record += 2;  // Skip over error value positions for missing Y
                 }
             }
         }
@@ -5750,8 +5747,7 @@ class PHPlot
 
             // Proceed with Y values
             for ($idx = 0;$rec < $this->num_recs[$row]; $rec++, $idx++) {
-                if (is_numeric($this->data[$row][$rec])) {              // Allow for missing Y data
-                    $y_now = (double)$this->data[$row][$rec];
+                if (is_numeric($y_now = $this->data[$row][$rec])) {         // Allow for missing Y data
 
                     // Select the color:
                     $this->GetDataColor($row, $idx, $gcvars, $data_color, $alt_flag);
@@ -5809,8 +5805,7 @@ class PHPlot
 
             // Proceed with dependent values
             for ($idx = 0; $rec < $this->num_recs[$row]; $rec++, $idx++) {
-                if (is_numeric($this->data[$row][$rec])) {              // Allow for missing data
-                    $dv = $this->data[$row][$rec];
+                if (is_numeric($dv = $this->data[$row][$rec])) {          // Allow for missing data
                     ImageSetThickness($this->img, $this->line_widths[$idx]);
 
                     // Select the color:
@@ -5891,12 +5886,10 @@ class PHPlot
             // All Y values are clipped to the x axis which should be zero but can be moved.
             $y = 0;
             while ($rec < $this->records_per_group) {
-                if (is_numeric($this->data[$row][$rec])) {  // Treat missing values as 0.
-                    $y += abs($this->data[$row][$rec]);
-                }
+                if (is_numeric($y_now = $this->data[$row][$rec++])) // Treat missing values as 0.
+                    $y += abs($y_now);
                 $yd[$row][] = $this->ytr(max($this->x_axis_position, $y));
                 if (!$do_stacked) $y = 0;
-                $rec++;
             }
 
             if (!$do_stacked)
@@ -5967,8 +5960,7 @@ class PHPlot
             for ($idx = 0; $record < $this->num_recs[$row]; $record++, $idx++) {
                 if (($line_style = $this->line_styles[$idx]) == 'none')
                     continue; //Allow suppressing entire line, useful with linepoints
-                if (is_numeric($this->data[$row][$record])) {           //Allow for missing Y data
-                    $y_now = (double)$this->data[$row][$record];
+                if (is_numeric($y_now = $this->data[$row][$record])) {      //Allow for missing Y data
                     $y_now_pixels = $this->ytr($y_now);
 
                     if ($start_lines[$idx]) {
@@ -6035,13 +6027,12 @@ class PHPlot
             for ($idx = 0; $record < $this->num_recs[$row]; $idx++) {
                 if (($line_style = $this->line_styles[$idx]) == 'none')
                     continue; //Allow suppressing entire line, useful with linepoints
-                if (is_numeric($this->data[$row][$record])) {    // Allow for missing Y data
+                if (is_numeric($y_now = $this->data[$row][$record++])) {       // Allow for missing Y data
 
                     // Select the colors:
                     $this->GetDataErrorColors($row, $idx, $gcvars, $data_color, $error_color);
 
                     // Y
-                    $y_now = $this->data[$row][$record++];
                     $y_now_pixels = $this->ytr($y_now);
 
                     if ($start_lines[$idx]) {
@@ -6074,7 +6065,7 @@ class PHPlot
                     $lasty[$idx] = $y_now_pixels;
 
                 } else {
-                    $record += 3;  // Skip over missing Y and its error values
+                    $record += 2;  // Skip over error value positions for missing Y
                     if ($this->draw_broken_lines) {
                         $start_lines[$idx] = FALSE;
                     }
@@ -6136,8 +6127,7 @@ class PHPlot
 
             // Draw Lines
             for ($idx = 0; $record < $this->num_recs[$row]; $record++, $idx++) {
-                if (is_numeric($this->data[$row][$record])) {               // Allow for missing Y data
-                    $y_now = (double)$this->data[$row][$record];
+                if (is_numeric($y_now = $this->data[$row][$record])) {         // Allow for missing Y data
                     $y_now_pixels = $this->ytr($y_now);
 
                     if ($start_lines[$idx]) {
@@ -6208,8 +6198,7 @@ class PHPlot
 
             // Draw the bars in the group:
             for ($idx = 0; $record < $this->num_recs[$row]; $record++, $idx++) {
-                if (is_numeric($this->data[$row][$record])) {       // Allow for missing Y data
-                    $y = $this->data[$row][$record];
+                if (is_numeric($y = $this->data[$row][$record])) {    // Allow for missing Y data
                     $x2 = $x1 + $this->actual_bar_width;
 
                     if (($upgoing_bar = $y >= $this->x_axis_position)) {
@@ -6275,8 +6264,7 @@ class PHPlot
 
             // Draw the bars in the group:
             for ($idx = 0; $record < $this->num_recs[$row]; $record++, $idx++) {
-                if (is_numeric($this->data[$row][$record])) {       // Allow for missing X data
-                    $x = $this->data[$row][$record];
+                if (is_numeric($x = $this->data[$row][$record])) {    // Allow for missing X data
                     $y2 = $y1 - $this->actual_bar_width;
 
                     if (($rightwards_bar = $x >= $this->y_axis_position)) {
@@ -6675,8 +6663,9 @@ class PHPlot
 
             // Proceed with Y,Z values
             for ($idx = 0; $rec < $this->num_recs[$row]; $rec += 2, $idx++) {
-                if (is_numeric($this->data[$row][$rec])) {              // Allow for missing Y data
-                    $y = $this->ytr((double)$this->data[$row][$rec]);
+
+                if (is_numeric($y_now = $this->data[$row][$rec])) {      //Allow for missing Y data
+                    $y = $this->ytr($y_now);
                     $z = (double)$this->data[$row][$rec+1]; // Z is required if Y is present.
                     $size = (int)($f_size * $z + $b_size);  // Calculate bubble size
 
