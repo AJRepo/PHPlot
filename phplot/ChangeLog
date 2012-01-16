@@ -2,6 +2,10 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2012-01-16
+    * Added missing 'return TRUE' in SetFailureImage() and 2 internal
+      functions. Return values are unused, but fixed to be more consistent.
+
 2012-01-15
     * Mark as unreleased version.
     * Code cleanup: combine an assign and a test when processing data array
