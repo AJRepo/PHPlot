@@ -2757,7 +2757,7 @@ you are configuring. The following table lists the PHPlot text element names.
       <tbody>
         <row>
           <entry>generic</entry>
-          <entry>Pie chart labels, error image text</entry>
+          <entry>Pie chart labels, error image text, message image text</entry>
         </row>
         <row>
           <entry>legend</entry>
@@ -2786,9 +2786,12 @@ you are configuring. The following table lists the PHPlot text element names.
       </tbody>
     </tgroup>
   </informaltable>
-Note: <literal>generic</literal> is also used for text drawn from a callback
+Notes: <literal>generic</literal> is also used for text drawn from a callback
 when no font is specified. See <xref linkend="callbacks-drawing"/>
-and <xref linkend="DrawText"/>.
+and <xref linkend="DrawText"/>. Although <literal>generic</literal> is
+used for error image text, changing the font or size has no effect because
+the error handler resets the font to the default before displaying the error.
+Message image text refers to <xref linkend="DrawMessage"/>.
 </para>
 </sect2>
 
@@ -3176,6 +3179,7 @@ Furthermore, if the reason was memory exhaustion, there is no way to catch
 the error and PHP will cause the script to immediately exit.
 </para>
 </sect2>
+
 <sect2 id="conc-errors-handle">
 <title>Error Handlers</title>
 <para>
@@ -3196,6 +3200,17 @@ Note that an error image will be created and output, as described above,
 even if you have established an error handler.
 </para>
 
+</sect2>
+
+<sect2 id="conc-errors-app">
+<title>Application-level Errors</title>
+<para>
+If you would like your application to handle some errors in a similar
+manner to PHPlot, you can use <xref linkend="DrawMessage"/> to create
+and output an image contain a message from your application.
+See also <xref linkend="ex-drawmessage"/>.
+(<function>DrawMessage</function> was added in PHPlot-5.6.1.)
+</para>
 </sect2>
 
 </sect1>
