@@ -1618,4 +1618,76 @@ and limit how many fields <function>explode</function> will return.
 </sect1>
 
 <!-- =============================================== -->
+
+<pagebreak/>
+<sect1 id="ex-drawmessage">
+<title>Example - DrawMessage</title>
+<para>
+This example uses <xref linkend="DrawMessage"/> to produce a warning message
+image instead of a plot image. In a real application, a PHPlot object would
+be created and set up for plotting, then some condition in the application
+code would determine that a plot could not be produced. Instead of
+producing a plot image, DrawMessage could be used to provide an image (as
+expected by the containing HTML page) with a message for the user.
+</para>
+<para>
+The options supplied to DrawMessage in this example indicate that:
+  <itemizedlist>
+    <listitem>
+      <para>
+        The image background should be drawn, rather than using a plain
+        white background.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+        The image border should be drawn too.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+        Fonts should not be reset, allowing the custom setting for the
+        <literal>generic</literal> font to be used.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+        The text should be word-wrapped at 50 columns. The narrower wrap
+        point is needed due to the larger font. Note that newlines in the
+        text are preserved, and long lines are wrapped.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+        The specified color (navy) should be used for the message text.
+      </para>
+    </listitem>
+  </itemizedlist>
+</para>
+<para>
+Note: This example uses a system-dependent TrueType font, and will need to
+be modified for other systems.
+</para>
+<para>
+The DrawMessage function was added in PHPlot-5.6.1.
+</para>
+
+<example id="example-drawmessage">
+<?dbfo keep-together="auto"?>
+<title>DrawMessage</title>
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="examples/drawmessage.png" scale="58" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>DrawMessage Example</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+&drawmessage;
+</example>
+</sect1>
+
+<!-- =============================================== -->
 </chapter>
