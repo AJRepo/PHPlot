@@ -1,9 +1,9 @@
-This directory contains the example sources.
+This directory contains the Reference Manual example sources.
 These are used in the top-level Makefile to generate both
 the source code examples and the images.
 
-Each file must listed in the Makfile. (They used to be wildcarded, but that
-only worked when each created a PNG, and was unable to handle JPG.)
+Each file must listed in the Makefile. (They used to be wildcarded, but that
+only worked when each created a PNG, and was unable to handle other types.)
 
 The Makefile has to be able to find the PHP CLI interpreter, and the
 scripts need to be able to find phplot.php. It is suggested that you
