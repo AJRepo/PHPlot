@@ -3,6 +3,21 @@ This is phplotdocs/ChangeLog, listing changes to the PHPlot Reference Manual
 Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
+2012-02-05
+   For feature request #3481195 "Custom message image":
+   * Makefile: Add files for new DrawMessage() example.
+   * concepts.xml: Add notes on use of generic font; new subsection on using
+     DrawMessage() for application-level errors.
+   * developer.xml: Changes to internal functions for DrawMessage(): new
+     argument to DrawBackground() and DrawImageBorder(); deprecate
+     DrawError(); add SetBgColorIndexes().
+   * examples.xml: Add new example, showing DrawMessage().
+   * functions.xml: Add link to new function.
+   * reference.xml: Note after DrawGraph, object should not be reused;
+     document new function DrawMessage(); clarify use of generic font.
+   * examples/drawmessage.php: New example
+   * examples/README: Minor edit/fix typos
+
 2012-01-16
    * concepts.xml: Changes due to fix for bug #3396931 on stacked bar
      top cap color. In 'Plot Type: stackedbars', removed text about top cap
