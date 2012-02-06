@@ -50,7 +50,222 @@ unless <xref linkend="SetPrintImage" /> was used.
 None
     </para>
   </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+After using <function>DrawGraph</function> and automatic or subsequent
+output of the image, the PHPlot object should not be reused.
+    </para>
+  </refsect1>
+
 </refentry>
+
+<refentry id="DrawMessage">
+  <refmeta>
+    <refentrytitle>DrawMessage</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>DrawMessage</refname>
+    <refpurpose>Draw a text message on the image, discarding the plot</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>$plot-&gt;DrawMessage(<parameter>$text</parameter>, <optional><parameter>$options</parameter></optional>)</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>DrawMessage</function> draws a text message on the image,
+effectively replacing the plot with a message. It can be used instead of
+<xref linkend="DrawGraph"/> to handle an application-level error condition,
+for example.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$text</replaceable></term>
+        <listitem>
+          <para>
+The text message to display. This can include newlines, which will result
+in line breaks.
+          </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><replaceable>$options</replaceable></term>
+        <listitem>
+          <para>
+Optional associative array of settings to control the appearance of the
+message image.  If missing or empty, the defaults result in small black
+text on a white background, with word wrapping.  If provided, the options
+array may contain the following keys and values:
+            <informaltable>
+              <tgroup cols="3">
+                <?dbhtml table-summary="DrawMessage options"?>
+                <colspec colname="c1" colwidth="30*" />
+                <colspec colname="c2" colwidth="30*" />
+                <colspec colname="c3" colwidth="40*" />
+                <thead>
+                  <row>
+                    <entry>Option name (array key)</entry>
+                    <entry>Default value</entry>
+                    <entry>Description</entry>
+                  </row>
+                </thead>
+                <tbody>
+                  <row>
+                    <entry>draw_background</entry>
+                    <entry>False</entry>
+                    <entry>If true, draw the image background</entry>
+                  </row>
+                  <row>
+                    <entry>draw_border</entry>
+                    <entry>False</entry>
+                    <entry>If true, draw the image border</entry>
+                  </row>
+                  <row>
+                    <entry>force_print</entry>
+                    <entry>True</entry>
+                    <entry>If true, ignore SetPrintImage(False) and always
+                         output</entry>
+                  </row>
+                  <row>
+                    <entry>reset_font</entry>
+                    <entry>True</entry>
+                    <entry>If true, reset fonts to standard sizes and type</entry>
+                  </row>
+                  <row>
+                    <entry>text_color</entry>
+                    <entry>''</entry>
+                    <entry>If not empty, color to use for the text</entry>
+                  </row>
+                  <row>
+                    <entry>text_wrap</entry>
+                    <entry>True</entry>
+                    <entry>If true, word-wrap the text</entry>
+                  </row>
+                  <row>
+                    <entry>wrap_width</entry>
+                    <entry>75</entry>
+                    <entry>Width in characters for word-wrapping the text</entry>
+                  </row>
+                </tbody>
+              </tgroup>
+            </informaltable>
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The default option values are chosen to be appropriate for error messages,
+and are designed to be 'fail-safe'. (For example, resetting fonts to use
+the built-on GD fonts ensures that there will be no error with TrueType
+font files while displaying an error message.)
+    </para>
+
+    <para>
+If the <literal>draw_background</literal> option is <literal>False</literal>
+or defaulted, the image will have a white background.
+If <literal>draw_background</literal> is <literal>True</literal>,
+then the image will have a background as specified by prior calls to
+<xref linkend="SetBackgroundColor"/> or <xref linkend="SetBgImage"/>.
+If neither of those has been called before <function>DrawMessage</function>,
+then the background will be white regardless of the
+<literal>draw_background</literal> option value.
+Note that if an input file was given to the PHPlot constructor to set a
+background, that will not be used with a message image, regardless of the
+options.
+    </para>
+
+    <para>
+If the <literal>draw_border</literal> option is <literal>False</literal>
+or defaulted, no border will be drawn.
+If <literal>draw_border</literal> is <literal>True</literal>,
+then the the image will have a border as specified by prior calls to
+<xref linkend="SetImageBorderType"/>, <xref linkend="SetImageBorderWidth"/>,
+and <xref linkend="SetImageBorderColor"/>.
+Note that if <function>SetImageBorderType</function> was not used to enable
+a border before <function>DrawMessage</function>, then there will be no border,
+regardless of the <literal>draw_border</literal> option value.
+    </para>
+
+    <para>
+The message text will be drawn using the PHPlot <literal>generic</literal>
+font settings.
+But if the <literal>reset_font</literal> option is <literal>True</literal>
+or defaulted, all fonts will be reset to defaults first,
+resulting in the use of GD font #2 (a small monospaced font).
+If <literal>reset_font</literal> is <literal>False</literal>,
+the <literal>generic</literal> font settings will be used without reset.
+Use <xref linkend="SetFont"/>, <xref linkend="SetFontGD"/>, or
+<xref linkend="SetFontTTF"/> in this case to select the font.
+For example, to use a TrueType font for your message, call
+<literal>$plot-&gt;SetFontTTF('generic', $font_name, $font_size)</literal>,
+then set the <literal>reset_font</literal> option to <literal>False</literal>
+when calling <function>DrawMessage()</function>.
+    </para>
+
+    <para>
+If the <literal>text_color</literal> option is empty or defaulted,
+the text will be black. To use a different color for the message text,
+set <literal>text_color</literal> to any valid PHPlot color specification,
+such as a color name or "#rrggbb" form
+(see <xref linkend="conc-colors-forms"/>).
+    </para>
+
+    <para>
+If the <literal>force_print</literal> option is <literal>True</literal> or
+defaulted, the message image will be output after creating it - ignoring
+any setting made with <xref linkend="SetPrintImage"/>.
+If <literal>force_print</literal> is <literal>False</literal>,
+and <function>SetPrintImage(False)</function> was previously called,
+the message image will created but not output.
+This would be appropriate when using <xref linkend="PrintImage"/> or
+<xref linkend="EncodeImage"/> to output the image.
+Note that if <function>SetPrintImage(False)</function> was not called,
+the image will be output regardless of the <literal>force_print</literal>
+option value.
+    </para>
+
+    <para>
+The text may contain newlines, which will produce separate lines of text
+in the message image.
+The text will be word-wrapped (unless the <literal>text_wrap</literal>
+option is set to <literal>False</literal>).
+Each line of text will be left aligned, and the bounding box
+of the text will be centered in the image. PHPlot makes no attempt to make
+sure the text will fit, but the upper left corner will always be visible.
+    </para>
+
+    <para>
+After using <function>DrawMessage</function> and automatic or subsequent
+output of the image, the PHPlot object should not be reused.
+    </para>
+
+    <para>
+See <xref linkend="ex-drawmessage"/> for an example of this function.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>History</title>
+    <para>
+This function was added in PHPlot-5.6.1.
+    </para>
+  </refsect1>
+
+</refentry>
+
 
 <refentry id="EncodeImage">
   <refmeta>
@@ -2454,8 +2669,7 @@ before calling SetFont.
           <para>
 The name of the element to change the font for. Use one of the following
 strings: 'title', 'legend', 'generic', 'x_label', 'y_label', 'x_title',
-or 'y_title'. (The 'generic' font is currently used for pie chart
-segment labels and error message images.)
+or 'y_title'.
           </para>
         </listitem>
       </varlistentry>
@@ -2509,6 +2723,13 @@ If not specified, the value set by <xref linkend="SetLineSpacing"/> is used.
     <title>Notes</title>
     <para>
 See also <xref linkend="conc-text"/>.
+    </para>
+    <para>
+The <literal>generic</literal> font is used for pie chart segment labels,
+message image text (see <xref linkend="DrawMessage"/>), error image text,
+and can be used from callbacks (see <xref linkend="callbacks-drawing"/>).
+However, changing this font has no effect on error image text, because the
+PHPlot error handler resets the font to the default before displaying the error.
     </para>
     <para>
 When using built-in GD fonts, the default fonts are shown in the following
@@ -2663,8 +2884,7 @@ a GD font, even if TrueType fonts are in use.
           <para>
 The name of the element to change the font for. Use one of the following
 strings: 'title', 'legend', 'generic', 'x_label', 'y_label', 'x_title',
-or 'y_title'. (The 'generic' font is currently used for pie chart
-segment labels and error message images.)
+or 'y_title'.
           </para>
         </listitem>
       </varlistentry>
@@ -2700,6 +2920,14 @@ If not specified, the value set by <xref linkend="SetLineSpacing"/> is used.
 See <xref linkend="conc-text"/>,
 <xref linkend="SetFont"/> for more information about fonts, and
 <xref linkend="SetLineSpacing"/> for more information about line spacing.
+    </para>
+
+    <para>
+The <literal>generic</literal> font is used for pie chart segment labels,
+message image text (see <xref linkend="DrawMessage"/>), error image text,
+and can be used from callbacks (see <xref linkend="callbacks-drawing"/>).
+However, changing this font has no effect on error image text, because the
+PHPlot error handler resets the font to the default before displaying the error.
     </para>
 
     <para>
@@ -2757,8 +2985,7 @@ a TrueType font, even if TrueType fonts are not the default font type.
           <para>
 The name of the element to change the font for. Use one of the following
 strings: 'title', 'legend', 'generic', 'x_label', 'y_label', 'x_title',
-or 'y_title'. (The 'generic' font is currently used for pie chart
-segment labels and error message images.)
+or 'y_title'.
           </para>
         </listitem>
       </varlistentry>
@@ -2809,6 +3036,14 @@ See <xref linkend="SetLineSpacing"/> for details.
 See <xref linkend="conc-text"/>,
 <xref linkend="SetFont"/> for more information about fonts, and
 <xref linkend="SetLineSpacing"/> for more information about line spacing.
+    </para>
+
+    <para>
+The <literal>generic</literal> font is used for pie chart segment labels,
+message image text (see <xref linkend="DrawMessage"/>), error image text,
+and can be used from callbacks (see <xref linkend="callbacks-drawing"/>).
+However, changing this font has no effect on error image text, because the
+PHPlot error handler resets the font to the default before displaying the error.
     </para>
 
     <para>
