@@ -1649,29 +1649,59 @@ class PHPlot
     }
 
     /*
+     * Replace the image with a message. This is used for error handling, and is also available
+     * as a public function for special purposes.
+     *   $text : Text of the message to display in the image
+     *   $options : Optional associative array of control options. See defaults below.
+     * Default options are chosen for the error-handling case, which should be as fail-safe as possible.
+     */
+    function DrawMessage($text, $options = NULL)
+    {
+        // Merge options with defaults, and set as local variables:
+        extract( array_merge( array(
+            'draw_background' => FALSE,  // Draw image background per SetBgImage(), SetBackgroundColor()
+            'draw_border' => FALSE,      // Draw image border as set with SetBorder*()
+            'force_print' => TRUE,       // Ignore SetPrintImage() setting and always output
+            'reset_font' => TRUE,        // Reset fonts (to avoid possible TTF error)
+            'text_color' => '',          // If not empty, text color specification
+            'text_wrap' => TRUE,         // Wrap the message text with wordwrap()
+            'wrap_width' => 75,          // Width in characters for wordwrap()
+                ), (array)$options));
+
+        // Do colors, background, and border:
+        if ($draw_border && empty($this->ndx_i_border) || $draw_background && empty($this->ndx_bg_color))
+            $this->SetBgColorIndexes();
+        if ($draw_background) {  // User-specified background
+            $this->DrawBackground(TRUE);  // TRUE means force overwriting of background
+        } else {  // Default to plain white background
+            $bgcolor = imagecolorresolve($this->img, 255, 255, 255);
+            ImageFilledRectangle($this->img, 0, 0, $this->image_width, $this->image_height, $bgcolor);
+        }
+        if ($draw_border) $this->DrawImageBorder(TRUE);
+        if (empty($text_color)) $rgb = array(0, 0, 0);
+        else $rgb = $this->SetRGBColor($text_color);
+        $ndx_text_color = imagecolorresolve($this->img, $rgb[0], $rgb[1], $rgb[2]);
+
+        // Error images should reset fonts, to avoid chance of a TTF error when displaying an error.
+        if ($reset_font) $this->SetUseTTF(FALSE);
+
+        // Determine the space needed for the text, and center the text box within the image:
+        if ($text_wrap) $text = wordwrap($text, $wrap_width);
+        list($text_width, $text_height) = $this->SizeText($this->fonts['generic'], 0, $text);
+        $x = max($this->safe_margin, ($this->image_width - $text_width) / 2);
+        $y = max($this->safe_margin, ($this->image_height - $text_height) / 2);
+        $this->DrawText($this->fonts['generic'], 0, $x, $y, $ndx_text_color, $text, 'left', 'top');
+        if ($force_print || $this->print_image) $this->PrintImage();
+        return TRUE;
+    }
+
+    /*
      *  Error handling for 'fatal' errors:
-     *   $error_message       Text of the error message
-     *  Output from PHPlot is expected to be an image file, such as when
-     *  handling an <img> tag browser request. So it is not permitted to
-     *  output text to standard output. (You should have display_errors=off)
-     *  Here is how PHPlot handles fatal errors:
-     *    + Draw the error message into an image, and output the image (to
-     *      standard output, or a file, as directed).
-     *      The error image is suppressed if suppress_error_image is True.
-     *    + If there is no GD image in the PHPlot object (early failure),
-     *      output no image, and produce an HTTP error header instead.
-     *    + Trigger a user-level error containing the error message.
-     *      If no error handler was set up, the PHP will log the
-     *      error and exit with non-zero status.
-     *
-     *  PrintError() and DrawError() are now equivalent. Both are provided for
-     *  compatibility. (In earlier releases, PrintError sent the message to
-     *  stdout only, and DrawError sent it in an image only.)
-     *
-     *  This function does not return, unless the calling script has set up
-     *  an error handler which does not exit. In that case, PrintError will
-     *  return False. But not all of PHPlot may handle this correctly, so
-     *  it is probably a bad idea for an error handler to return.
+     *   $error_message : Text of the error message
+     *  Produce an image containing the error message, output the image, and then trigger
+     *  a user-level error with the message. If no error handler is set up, PHP will log
+     *  the message and exit. If there is an error handler, and it returns, PrintError
+     *  returns FALSE.
      */
     protected function PrintError($error_message)
     {
@@ -1681,20 +1711,9 @@ class PHPlot
 
         // Output an image containing the error message:
         if (empty($this->suppress_error_image)) {
+            // img will be empty if the error occurs very early - e.g. when allocating the image.
             if (!empty($this->img)) {
-                $ypos = $this->image_height/2;
-                $xpos = $this->image_width/2;
-                $bgcolor = ImageColorResolve($this->img, 255, 255, 255);
-                $fgcolor = ImageColorResolve($this->img, 0, 0, 0);
-                ImageFilledRectangle($this->img, 0, 0, $this->image_width, $this->image_height, $bgcolor);
-
-                // Switch to built-in fonts, in case of error with TrueType fonts:
-                $this->SetUseTTF(FALSE);
-
-                $this->DrawText($this->fonts['generic'], 0, $xpos, $ypos, $fgcolor,
-                                wordwrap($error_message), 'center', 'center');
-
-                $this->PrintImage();
+                $this->DrawMessage($error_message);
             } elseif (!$this->is_inline) {
                 Header('HTTP/1.0 500 Internal Server Error');
             }
@@ -1702,17 +1721,6 @@ class PHPlot
         trigger_error($error_message, E_USER_ERROR);
         unset($this->in_error);
         return FALSE;  // In case error handler returns, rather than doing exit().
-    }
-
-    /*
-     * Display an error message and exit.
-     * This is provided for backward compatibility only. Use PrintError() instead.
-     *   $error_message       Text of the error message
-     *   $where_x, $where_y   Ignored, provided for compatibility.
-     */
-    protected function DrawError($error_message, $where_x = NULL, $where_y = NULL)
-    {
-        return $this->PrintError($error_message);
     }
 
     /*
@@ -2671,6 +2679,20 @@ class PHPlot
     }
 
     /*
+     * Allocate background and border colors for the plot.
+     * This is split off from SetColorIndexes() [see below] for use by DrawMessage().
+     */
+    protected function SetBgColorIndexes()
+    {
+        $this->ndx_bg_color = $this->GetColorIndex($this->bg_color); // Background first
+        $this->ndx_plot_bg_color = $this->GetColorIndex($this->plot_bg_color);
+        if ($this->image_border_type != 'none') {
+            $this->ndx_i_border = $this->GetColorIndex($this->i_border);
+            $this->ndx_i_border_dark = $this->GetDarkColorIndex($this->i_border);
+        }
+    }
+
+    /*
      * Allocate colors for the plot.
      * This is called by DrawGraph to allocate the colors needed for the plot.  Each selectable
      * color has already been validated, parsed into an array (r,g,b,a), and stored into a member
@@ -2689,12 +2711,7 @@ class PHPlot
      */
     protected function SetColorIndexes()
     {
-        $this->ndx_bg_color         = $this->GetColorIndex($this->bg_color); // Background first
-        $this->ndx_plot_bg_color    = $this->GetColorIndex($this->plot_bg_color);
-        if ($this->image_border_type != 'none') {
-            $this->ndx_i_border         = $this->GetColorIndex($this->i_border);
-            $this->ndx_i_border_dark    = $this->GetDarkColorIndex($this->i_border);
-        }
+        $this->SetBgColorIndexes(); // Background and border colors
 
         // Handle defaults for X and Y title colors.
         $this->ndx_title_color      = $this->GetColorIndex($this->title_color);
@@ -4181,11 +4198,12 @@ class PHPlot
 
     /*
      * Fill the image background, with a tiled image file or solid color.
+     *   $overwrite : Optional flag. If True, allow overwriting the background.
      */
-    protected function DrawBackground()
+    protected function DrawBackground($overwrite=FALSE)
     {
-        // Don't draw this twice if drawing two plots on one image
-        if (empty($this->done['background'])) {
+        // Check if background should be drawn:
+        if (empty($this->done['background']) || $overwrite) {
             if (isset($this->bgimg)) {    // If bgimg is defined, use it
                 $this->tile_img($this->bgimg, 0, 0, $this->image_width, $this->image_height, $this->bgmode);
             } else {                        // Else use solid color
@@ -4281,11 +4299,12 @@ class PHPlot
      * This probably should have been written to use the actual border color, but
      * it is too late to fix it without changing plot appearances. Therefore a
      * new type 'solid' was added to use the SetImageBorderColor color.
+     *   $overwrite : Optional flag. If True, allow overwriting the border.
      */
-    protected function DrawImageBorder()
+    protected function DrawImageBorder($overwrite=FALSE)
     {
-        // Do nothing if already drawn, or if no border has been set.
-        if ($this->image_border_type == 'none' || !empty($this->done['border']))
+        // Check if border should be drawn:
+        if ($this->image_border_type == 'none' || !(empty($this->done['border']) || $overwrite))
             return TRUE;
         $width = $this->GetImageBorderWidth();
         $color1 = $this->ndx_i_border;
@@ -7026,6 +7045,15 @@ class PHPlot
         $this->SetPointSizes($which_ps);
         return TRUE;
     }
+
+    /*
+     * Deprecated - use PrintError(). $where_x, $where_y are ignored.
+     */
+    protected function DrawError($error_message, $where_x = NULL, $where_y = NULL)
+    {
+        return $this->PrintError($error_message);
+    }
+
 }
 
 /*
