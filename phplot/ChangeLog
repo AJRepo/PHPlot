@@ -2,6 +2,18 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2012-02-05
+    * Feature request #3481195 "Custom message image":
+      + New public function DrawMessage() to create an image with a message.
+      + Changed protected function PrintError() to now use DrawMessage().
+      + New protected function SetBgColorIndexes(), split off from
+        SetColorIndexes() so that DrawMessage() can set just the colors it
+        needs.
+      + Added optional argument $overwrite to protected functions
+        DrawBackground() and DrawImageBorder(), to force drawing even if it
+        seems it was already done. This is needed for DrawMessage().
+      + Moved protected function DrawError() to deprecated section.
+
 2012-01-16
     * Added missing 'return TRUE' in SetFailureImage() and 2 internal
       functions. Return values are unused, but fixed to be more consistent.
