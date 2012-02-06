@@ -49,6 +49,7 @@ direct the output, control browser caching, and control error handling.
 
 <para>
 <itemizedlist>
+  <listitem><para><xref linkend="DrawMessage" /></para></listitem>
   <listitem><para><xref linkend="EncodeImage" /></para></listitem>
   <listitem><para><xref linkend="SetBrowserCache" /></para></listitem>
   <listitem><para><xref linkend="SetFailureImage" /></para></listitem>
