@@ -901,7 +901,7 @@ class PHPlot
             $fonts = array('LiberationSans-Regular.ttf',  // For Linux with a correct GD font search path
                            'Verdana.ttf', 'Arial.ttf', 'Helvetica.ttf', // For Windows, maybe others
                            'ttf-liberation/LiberationSans-Regular.ttf', // For Debian, Ubuntu, and friends
-                           'benjamingothic.ttf',  // Original PHPlot default 
+                           'benjamingothic.ttf',  // Original PHPlot default
                           );
             foreach ($fonts as $font) {
                 // First try the font name alone, to see if GD can find and load it.
@@ -2634,7 +2634,8 @@ class PHPlot
      *   Returns the current callback function (name or array) for the given reason,
      *   or False if there was no active callback or the reason is not valid.
      * Note you can safely test the return value with a simple 'if', as
-     * no valid function name evaluates to false.
+     * no valid function name evaluates to false. Testing the return value, without saving
+     * it, is used within PHPlot to avoid preparing arguments to an unused callback.
      */
     function GetCallback($reason)
     {
@@ -2963,7 +2964,7 @@ class PHPlot
         if ($this->GetCallback('debug_scale')) {
             $this->DoCallback('debug_scale', __FUNCTION__, array(
                 'min_x' => $this->min_x, 'min_y' => $this->min_y,
-                'max_x' => $this->max_x, 'max_y' => $this->max_y, 
+                'max_x' => $this->max_x, 'max_y' => $this->max_y,
                 'min_z' => isset($this->min_z) ? $this->min_z : '',
                 'max_z' => isset($this->max_z) ? $this->max_z : ''));
         }
@@ -5267,9 +5268,9 @@ class PHPlot
      * Draw a shape (dot, point). This is the bottom half of DrawDot, and is also
      * used by legend drawing. Unlike DrawDot this takes device coordinates.
      * The list of supported shapes can also be found in SetPointShapes().
-     *   $x, $y - Device coordinates of the center of the shape
-     *   $record - Index into point_shapes[] and point_sizes[]. This is taken modulo the array sizes.
-     *   $color - Shape color to use.
+     *   $x, $y : Device coordinates of the center of the shape
+     *   $record : Index into point_shapes[] and point_sizes[]. This is taken modulo the array sizes.
+     *   $color : Color to use for the point shape
      */
     protected function DrawShape($x, $y, $record, $color)
     {
