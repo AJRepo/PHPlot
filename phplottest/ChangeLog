@@ -2,6 +2,12 @@ This is the Change Log for phplottest, the PHPlot Test Suite
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2012-02-06
+    * drawmessage*.php: Added 8 new tests for DrawMessage()
+    * ex-drawmessage.php: Added 1 new test from Reference Manual example
+      of DrawMessage().
+    * tests.ini: List 9 new tests
+
 2012-01-09
     * backgroundreset*.php: Added 4 new tests. These are actually old tests,
       from 2010-12-26 work on resetting the background with multiple plots
