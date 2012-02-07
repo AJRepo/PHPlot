@@ -5,6 +5,9 @@ manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
 2012-02-06
+   * concepts.xml, developer.xml: Fix 2 missed references to PHPlot versons
+     using "after PHPlot-x.y.z", special actual version instead.
+
    * advanced.xml: Added note that you can't have multiple callbacks for
      the same name (same 'reason'). Based on a forum help request.  The
      reference for SetCallback() already stated this.
