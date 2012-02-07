@@ -765,6 +765,13 @@ internals is risky and subject to break with any new update to PHPlot.
 <para>
 This section defines the currently available callback names. A callback
 name is also called a <emphasis>reason</emphasis>.
+  <note>
+    <para>
+At most one callback can be active for any given callback name, for each
+PHPlot object. Setting a second callback on the same name will result in
+the new callback replacing the old one.
+    </para>
+  </note>
 </para>
 
 <para>
