@@ -3,6 +3,12 @@ This is phplotdocs/ChangeLog, listing changes to the PHPlot Reference Manual
 Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
+
+2012-02-06
+   * advanced.xml: Added note that you can't have multiple callbacks for
+     the same name (same 'reason'). Based on a forum help request.  The
+     reference for SetCallback() already stated this.
+
 2012-02-05
    For feature request #3481195 "Custom message image":
    * Makefile: Add files for new DrawMessage() example.
