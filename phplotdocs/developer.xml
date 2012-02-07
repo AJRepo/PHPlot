@@ -1511,7 +1511,7 @@ $imagecreate_function is the name of the GD function used to create an image
 (<function>imagecreate</function> or <function>imagecreatetruecolor</function>).
 The other arguments are the same as in the class constructors, except the
 defaults are already applied.
-This was added after PHPlot-5.5.0 by moving duplicated code from the two
+This was added in PHPlot-5.6.0 by moving duplicated code from the two
 constructors into a shared function.
     </para>
   </listitem>

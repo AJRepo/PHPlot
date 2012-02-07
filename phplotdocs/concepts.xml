@@ -1451,7 +1451,7 @@ Support for negative values in stackedbars plots was added in PHPlot-5.2.0.
 Before PHPlot-5.4.0, zero values were completely ignored in stackedbars plots.
 From PHPlot-5.4.0 through PHPlot-5.6.0, a zero value at the end of a data
 row (or an all zero row) would result in a color 'cap' on the top of the bar
-stack, but this was changed after PHPlot-5.6.0.
+stack, but this was changed in PHPlot-5.6.1.
 </para>
 </sect2>
 
