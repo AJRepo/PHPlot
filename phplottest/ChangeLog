@@ -6,6 +6,9 @@ The project home page is http://sourceforge.net/projects/phplot/
     * ex-drawmessage.php: Test fails on Windows due to font file not found.
       Fixed to use the config.php file and font name variables for more
       system independence.
+    * localepielabel.php: New test for pie label format bug with locale
+      using , for decimal point.
+    * tests.ini: List new test
 
 2012-02-06
     * drawmessage*.php: Added 8 new tests for DrawMessage()
