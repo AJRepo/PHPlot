@@ -2,6 +2,11 @@ This is the Change Log for phplottest, the PHPlot Test Suite
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2012-02-17
+    * ex-drawmessage.php: Test fails on Windows due to font file not found.
+      Fixed to use the config.php file and font name variables for more
+      system independence.
+
 2012-02-06
     * drawmessage*.php: Added 8 new tests for DrawMessage()
     * ex-drawmessage.php: Added 1 new test from Reference Manual example
