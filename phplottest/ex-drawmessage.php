@@ -2,10 +2,11 @@
 # $Id$
 # PHPlot Example: Use DrawMessage() to display a message
 require_once 'phplot.php';
+require_once 'config.php'; // Font info
 
 $plot = new PHPlot(600, 400);
-# Note: This font name is system dependent:
-$plot->SetFontTTF('generic', 'LiberationSans-Italic.ttf', 14);
+$plot->SetTTFPath($phplot_test_ttfdir);
+$plot->SetFontTTF('generic', $phplot_test_ttfonts['sansitalic'], 14);
 $plot->SetBackgroundColor('#ffcc99');
 $plot->SetImageBorderWidth(8);
 $plot->SetImageBorderColor('blue');
