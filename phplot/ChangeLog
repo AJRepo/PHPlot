@@ -2,6 +2,19 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2012-02-17
+    * Fixed bug #3488064 "Pie label failures in locales with comma decimal":
+      This contains 2 work-arounds which together should avoid the problem.
+      + Changed internal method number_format() to restore the previous
+        locale settings that were in place after it gets the decimal and
+        thousands separators. Also, use LC_NUMERIC rather than LC_ALL to
+        limit the scope of locale loading.
+      + Changed internal method FormatPieLabel() to avoid a number-to-string
+        conversion if there is a single label source (the most common case).
+        This conversion was resulting in use of a locale-specific decimal
+        point, which PHP then fails to convert back to a number when it
+        tries to format it.
+
 2012-02-05
     * Feature request #3481195 "Custom message image":
       + New public function DrawMessage() to create an image with a message.
