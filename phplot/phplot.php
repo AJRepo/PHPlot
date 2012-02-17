@@ -2589,15 +2589,24 @@ class PHPlot
      *   Returns the formatted result.
      * This is like PHP's number_format, but uses class variables for separators.
      * The separators will default to locale-specific values, if available.
+     * Note: The locale is saved and reset after getting the values. This is needed due to an issue with
+     * PHP (see PHP bug 45365 and others): It uses a locale-specific decimal separator when converting
+     * numbers to strings, but fails to convert back if the separator is other than dot. This causes pie
+     * chart labels to fail with "A non well formed numeric value encountered".
      */
     protected function number_format($number, $decimals=0)
     {
+        // Try to get the proper decimal and thousands separators if they are not already set.
         if (!isset($this->decimal_point, $this->thousands_sep)) {
-            // Load locale-specific values from environment, unless disabled:
-            if (empty($this->locale_override))
-                @setlocale(LC_ALL, '');
+            // Load locale-specific values from environment, unless disabled (for testing):
+            if (empty($this->locale_override)) {
+                $save_locale = @setlocale(LC_NUMERIC, '0');
+                @setlocale(LC_NUMERIC, '');
+            }
             // Fetch locale settings:
             $locale = @localeconv();
+            // Restore locale. (See note above.)
+            if (!empty($save_locale)) @setlocale(LC_NUMERIC, $save_locale);
             if (isset($locale['decimal_point'], $locale['thousands_sep'])) {
                 $this->decimal_point = $locale['decimal_point'];
                 $this->thousands_sep = $locale['thousands_sep'];
@@ -4811,7 +4820,9 @@ class PHPlot
                 $values[] = $arc_angle / 3.6;
             }
         }
-        return $this->FormatLabel('p', implode(' ', $values)); // Format it
+        // Format the label and return the result. Note: The conditional avoids a number-to-string
+        // conversion for the single-source case. This avoids a PHP issue with locale-based conversion.
+        return $this->FormatLabel('p', count($values) == 1 ? $values[0] : implode(' ', $values));
     }
 
     /*
