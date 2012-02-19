@@ -2,6 +2,29 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2012-02-18
+    * Fixed bug #3486834 "Wrong color for data value labels":
+      Use 'text' color, not 'title' color, for data value labels.
+      Compatibility warning: This will change the appearance of plots that
+      use SetTitleColor or SetTextColor and data value labels.
+
+      Also includes changes for feature request #3077554 "Finer control
+      over plot element colors":
+      Add new controls to independently set label color types.
+
+      + New public function: SetDataLabelColor()
+      + New public function: SetDataValueLabelColor()
+      + New public function: SetTickLabelColor()
+      + New public function: SetPieLabelColor()
+      + Add default_color_index argument to internal GetColorIndex()
+      + Add code to SetColorIndexes() to default the tick label color
+        and data label color to the text color, default the data value
+        label color to the data label color, and default the pie label
+        color to the grid color. This is backwards-compatible, except that
+        the data value labels used to use the title color.
+      + Use separate color index values for ticks, axis data labels, 
+        data value labels, and pie labels. Use title color only for titles.
+
 2012-02-17
     * Fixed bug #3488064 "Pie label failures in locales with comma decimal":
       This contains 2 work-arounds which together should avoid the problem.
