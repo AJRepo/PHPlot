@@ -72,7 +72,7 @@ for ($narg = 1; $narg < $argc; $narg++) {
             case 'n': $view_new = True; break;
             case 'd': $view_dif = True; break;
             case 'a': $view_all = True; break;
-            default: usage;
+            default: usage();
         }
     }
 }
