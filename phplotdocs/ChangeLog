@@ -4,6 +4,20 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2012-02-17
+   For bug report #3486834 "Wrong color for data value labels", and
+   feature request #3077554 "Finer control over plot element colors":
+   * concepts.xml: Show additional functions, and default colors, in table
+     of per-element colors. Add note on new functions.
+   * functions.xml: Add links to 4 new functions.
+   * reference.xml: Document new functions SetDataLabelColor(),
+     SetDataValueLabelColor(), SetPieLabelColor(), and SetTickLabelColor().
+     Add notes to SetGridColor() and SetTextColor() that these now only
+     supply default colors for labels.  Fixed some word-wrapped xref tags.
+   * developer.xml: Document changes to internal GetColorIndex() args.
+     Fixed some word-wrapped xref tags.
+   * variables.list: Fix sorting of variable names. Add 8 new class variables.
+
 2012-02-06
    * concepts.xml, developer.xml: Fix 2 missed references to PHPlot versons
      using "after PHPlot-x.y.z", special actual version instead.
