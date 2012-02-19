@@ -368,11 +368,14 @@ class PHPlot
      * Allocate a GD color index for a color specified by a 4 component array.
      * When a color is requested, it is parsed and checked by SetRGBColor, and then saved as an array
      * of (R,G,B,A) components. At graph drawing time, this function is used to allocate the color.
-     *   $color : The color specification as a 4 component array: R, G, B, A.
+     *   $color : The color specification as a 4 component array: R, G, B, A. This is passed as
+     *            a reference argument because it might be unset (see next argument).
+     *   $default_color_index : An already-allocated GD color index to use as default, if $color is unset.
      * Returns: A GD color index that can be used when drawing.
      */
-    protected function GetColorIndex($color)
+    protected function GetColorIndex(&$color, $default_color_index = 0)
     {
+        if (empty($color)) return $default_color_index;
         list($r, $g, $b, $a) = $color;
         return imagecolorresolvealpha($this->img, $r, $g, $b, $a);
     }
@@ -505,11 +508,44 @@ class PHPlot
     }
 
     /*
-     * Set the general text color (tick and data labels, legend, etc) to $which_color.
+     * Set the general text color (legend, and default for tick and data labels) to $which_color.
      */
     function SetTextColor($which_color)
     {
         return (bool)($this->text_color = $this->SetRGBColor($which_color));
+    }
+
+    /*
+     * Set the color for data labels, overriding the default set with SetTextColor.
+     */
+    function SetDataLabelColor($which_color)
+    {
+        return (bool)($this->datalabel_color = $this->SetRGBColor($which_color));
+    }
+
+    /*
+     * Set the color for data value labels, overriding defaults from SetTextColor and SetDataLabelColor.
+     * Note: These are the labels on and in bars, and above points - within the plot area.
+     */
+    function SetDataValueLabelColor($which_color)
+    {
+        return (bool)($this->dvlabel_color = $this->SetRGBColor($which_color));
+    }
+
+    /*
+     * Set the color for pie chart data labels. Historically, these used the GridColor.
+     */
+    function SetPieLabelColor($which_color)
+    {
+        return (bool)($this->pielabel_color = $this->SetRGBColor($which_color));
+    }
+
+    /*
+     * Set the color for tick labels, overriding the default set with SetTextColor.
+     */
+    function SetTickLabelColor($which_color)
+    {
+        return (bool)($this->ticklabel_color = $this->SetRGBColor($which_color));
     }
 
     /*
@@ -2724,22 +2760,21 @@ class PHPlot
         $this->SetBgColorIndexes(); // Background and border colors
 
         // Handle defaults for X and Y title colors.
-        $this->ndx_title_color      = $this->GetColorIndex($this->title_color);
-        if (empty($this->x_title_color)) {
-            $this->ndx_x_title_color = $this->ndx_title_color;
-        } else {
-            $this->ndx_x_title_color = $this->GetColorIndex($this->x_title_color);
-        }
-        if (empty($this->y_title_color)) {
-            $this->ndx_y_title_color = $this->ndx_title_color;
-        } else {
-            $this->ndx_y_title_color = $this->GetColorIndex($this->y_title_color);
-        }
+        $this->ndx_title_color   = $this->GetColorIndex($this->title_color);
+        $this->ndx_x_title_color = $this->GetColorIndex($this->x_title_color, $this->ndx_title_color);
+        $this->ndx_y_title_color = $this->GetColorIndex($this->y_title_color, $this->ndx_title_color);
 
-        $this->ndx_text_color       = $this->GetColorIndex($this->text_color);
+        // General text color, which is the default color for tick and data labels unless overridden.
+        $this->ndx_text_color      = $this->GetColorIndex($this->text_color);
+        $this->ndx_ticklabel_color = $this->GetColorIndex($this->ticklabel_color, $this->ndx_text_color);
+        $this->ndx_datalabel_color = $this->GetColorIndex($this->datalabel_color, $this->ndx_text_color);
+        $this->ndx_dvlabel_color   = $this->GetColorIndex($this->dvlabel_color, $this->ndx_datalabel_color);
+
         $this->ndx_grid_color       = $this->GetColorIndex($this->grid_color);
         $this->ndx_light_grid_color = $this->GetColorIndex($this->light_grid_color);
         $this->ndx_tick_color       = $this->GetColorIndex($this->tick_color);
+        // Pie label color defaults to grid color, for historical reasons (PHPlot <= 5.6.1)
+        $this->ndx_pielabel_color   = $this->GetColorIndex($this->pielabel_color, $this->ndx_grid_color);
 
         // Maximum number of data & border colors to allocate:
         if ($this->GetCallback('data_color')) {
@@ -4484,21 +4519,21 @@ class PHPlot
         if ($this->x_tick_label_pos == 'xaxis') {
             $this->DrawText($this->fonts['x_label'], $this->x_label_angle,
                             $which_xpix, $this->x_axis_y_pixels + $this->x_label_axis_offset,
-                            $this->ndx_text_color, $which_xlab, 'center', 'top');
+                            $this->ndx_ticklabel_color, $which_xlab, 'center', 'top');
         }
 
         // Label on top of the Plot Area
         if ($this->x_tick_label_pos == 'plotup' || $this->x_tick_label_pos == 'both') {
             $this->DrawText($this->fonts['x_label'], $this->x_label_angle,
                             $which_xpix, $this->plot_area[1] - $this->x_label_top_offset,
-                            $this->ndx_text_color, $which_xlab, 'center', 'bottom');
+                            $this->ndx_ticklabel_color, $which_xlab, 'center', 'bottom');
         }
 
         // Label on bottom of the Plot Area
         if ($this->x_tick_label_pos == 'plotdown' || $this->x_tick_label_pos == 'both') {
             $this->DrawText($this->fonts['x_label'], $this->x_label_angle,
                             $which_xpix, $this->plot_area[3] + $this->x_label_bot_offset,
-                            $this->ndx_text_color, $which_xlab, 'center', 'top');
+                            $this->ndx_ticklabel_color, $which_xlab, 'center', 'top');
         }
         return TRUE;
     }
@@ -4532,20 +4567,20 @@ class PHPlot
         if ($this->y_tick_label_pos == 'yaxis') {
             $this->DrawText($this->fonts['y_label'], $this->y_label_angle,
                             $this->y_axis_x_pixels - $this->y_label_axis_offset, $which_ypix,
-                            $this->ndx_text_color, $which_ylab, 'right', 'center');
+                            $this->ndx_ticklabel_color, $which_ylab, 'right', 'center');
         }
 
         // Labels to the left of the plot area
         if ($this->y_tick_label_pos == 'plotleft' || $this->y_tick_label_pos == 'both') {
             $this->DrawText($this->fonts['y_label'], $this->y_label_angle,
                             $this->plot_area[0] - $this->y_label_left_offset, $which_ypix,
-                            $this->ndx_text_color, $which_ylab, 'right', 'center');
+                            $this->ndx_ticklabel_color, $which_ylab, 'right', 'center');
         }
         // Labels to the right of the plot area
         if ($this->y_tick_label_pos == 'plotright' || $this->y_tick_label_pos == 'both') {
             $this->DrawText($this->fonts['y_label'], $this->y_label_angle,
                             $this->plot_area[2] + $this->y_label_right_offset, $which_ypix,
-                            $this->ndx_text_color, $which_ylab, 'left', 'center');
+                            $this->ndx_ticklabel_color, $which_ylab, 'left', 'center');
         }
         return TRUE;
     }
@@ -4693,7 +4728,6 @@ class PHPlot
             $font = $this->fonts['y_label'];
             $formatted_text = $this->FormatLabel('yd', $text);
         }
-        $color = $this->ndx_title_color; // Currently this is the same for X and Y labels
 
         // Check to see if the text fits in the available space, if requested.
         if (isset($min_width) || isset($min_height)) {
@@ -4705,7 +4739,7 @@ class PHPlot
 
         $this->DrawText($font, $angle, $this->xtr($x_world) + $x_adjustment,
                         $this->ytr($y_world) + $y_adjustment,
-                        $color, $formatted_text, $halign, $valign);
+                        $this->ndx_dvlabel_color, $formatted_text, $halign, $valign);
         return TRUE;
     }
 
@@ -4725,13 +4759,13 @@ class PHPlot
         if ($this->x_data_label_pos == 'plotdown' || $this->x_data_label_pos == 'both')
             $this->DrawText($this->fonts['x_label'], $this->x_data_label_angle,
                             $xpos, $this->plot_area[3] + $this->x_label_bot_offset,
-                            $this->ndx_text_color, $xlab, 'center', 'top');
+                            $this->ndx_datalabel_color, $xlab, 'center', 'top');
 
         // Labels above the plot area
         if ($this->x_data_label_pos == 'plotup' || $this->x_data_label_pos == 'both')
             $this->DrawText($this->fonts['x_label'], $this->x_data_label_angle,
                             $xpos, $this->plot_area[1] - $this->x_label_top_offset,
-                            $this->ndx_text_color, $xlab, 'center', 'bottom');
+                            $this->ndx_datalabel_color, $xlab, 'center', 'bottom');
 
         // $row=0 means this is the first row. $row=FALSE means don't do any rows.
         if ($row !== FALSE && $this->draw_x_data_label_lines)
@@ -4751,13 +4785,13 @@ class PHPlot
         if ($this->y_data_label_pos == 'plotleft' || $this->y_data_label_pos == 'both')
             $this->DrawText($this->fonts['y_label'], $this->y_data_label_angle,
                             $this->plot_area[0] - $this->y_label_left_offset, $ypos,
-                            $this->ndx_text_color, $ylab, 'right', 'center');
+                            $this->ndx_datalabel_color, $ylab, 'right', 'center');
 
         // Labels right of the plot area
         if ($this->y_data_label_pos == 'plotright' || $this->y_data_label_pos == 'both')
             $this->DrawText($this->fonts['y_label'], $this->y_data_label_angle,
                             $this->plot_area[2] + $this->y_label_right_offset, $ypos,
-                            $this->ndx_text_color, $ylab, 'left', 'center');
+                            $this->ndx_datalabel_color, $ylab, 'left', 'center');
         return TRUE;
     }
 
@@ -4854,7 +4888,7 @@ class PHPlot
         // Calculate text alignment (h_align, v_align) based on angle:
         $this->GetTextAlignment($sin_mid, $cos_mid, $h_align, $v_align, $r['reverse']);
         // Draw the label:
-        $this->DrawText($this->fonts['generic'], 0, $label_x, $label_y + $yoff, $this->ndx_grid_color,
+        $this->DrawText($this->fonts['generic'], 0, $label_x, $label_y + $yoff, $this->ndx_pielabel_color,
                         $label_txt, $h_align, $v_align);
         return TRUE;
     }
