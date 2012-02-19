@@ -365,9 +365,8 @@ Calculates the parameters for transforming world to pixel coordinates.
 This function calculates the scale (xscale, yscale) and origin
 (plot_origin_x, plot_origin_y) for X and Y translations, which
 are used by the xtr() and ytr() functions.
-Starting with PHPlot-5.0.5, this is only called by <xref
-linkend="DrawGraph"/>, as nothing else uses the parameters until
-the graph is ready to be drawn.
+Starting with PHPlot-5.0.5, this is only called by <xref linkend="DrawGraph"/>,
+as nothing else uses the parameters until the graph is ready to be drawn.
     </para>
   </listitem>
 </varlistentry>
@@ -1273,19 +1272,24 @@ This was added in PHPlot-5.2.0, moving common code into a function.
 </varlistentry>
 
 <varlistentry>
-  <term><anchor id="GetColorIndex" xreflabel="GetColorIndex"/>GetColorIndex($color)</term>
+  <term><anchor id="GetColorIndex" xreflabel="GetColorIndex"/>GetColorIndex(&amp;$color, $default_color_index=0)</term>
   <listitem>
     <para>
-Allocate a GD color index for a color given as a 4 component array (R,G,B,A).
-Returns a color index to be used in GD drawing functions.
+Allocate a GD color index for a color given as a 4 component array (R,G,B,A)
+$color.  Returns a color index to be used in GD drawing functions.
 The color returned is the exact color requested if it already exists in the
 image, or if can be allocated.
 For palette images, if the color map is full, no new colors can be allocated,
 and this function will return an index to the closest existing color.
 For truecolor images, this function always returns an index for the exact
 requested color.
+If $color is empty or unset, returns $default_color_index instead, without
+allocating a new color.
 This was added in PHPlot-5.2.0, replacing the second half of
 <xref linkend="SetIndexColor"/>.
+The $default_color_index argument was added in PHPlot-5.6.1, and the $color
+argument was changed to a reference (so an unset variable can be passed 
+without an error).
     </para>
   </listitem>
 </varlistentry>
@@ -1859,8 +1863,8 @@ Converts a general color specification into a standard form as an array of
 4 components: red, green, blue, and alpha, and returns the array.  The 3
 color components are integers in the range 0-255, and the alpha component
 is an integer in the range 0-127 (where 0 means opaque).  The acceptable
-color specification forms are documented in <xref
-linkend="conc-colors-forms"/> and <xref linkend="conc-truecolor-forms"/>,
+color specification forms are documented in <xref linkend="conc-colors-forms"/>
+and <xref linkend="conc-truecolor-forms"/>,
 and include color names, component arrays, and strings of the form #RRGGBB
 and #RRGGBBAA.  The alpha argument provides a default value if the color
 specification does not include alpha; the default 0 makes the color
