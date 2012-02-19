@@ -1997,143 +1997,219 @@ transparency.
 <sect2 id="conc-colors-elements">
 <title>Plot Element Colors</title>
 <para>
-The following table shows the function used to set the color of each
-element on a plot.
+The following table shows the function(s) used to set the color of each
+element on a plot, and the default color if no functions are used to change it.
+Where multiple function names are shown, they are listed from highest to
+lowest priority.
 <informaltable>
-  <tgroup cols="2">
+  <tgroup cols="3">
     <?dbhtml table-summary="Functions to set color of plot elements"?>
-    <colspec colname="c1" colwidth="40*"/>
-    <colspec colname="c2" colwidth="60*"/>
+    <colspec colname="c1" colwidth="30*"/>
+    <colspec colname="c2" colwidth="40*"/>
+    <colspec colname="c3" colwidth="30*"/>
     <thead>
       <row>
         <entry>Plot element:</entry>
-        <entry>Function used to set color:</entry>
+        <entry>Function(s) used to set color:</entry>
+        <entry>Default color:</entry>
       </row>
     </thead>
     <tbody>
       <row>
         <entry>Bar chart bar outlines</entry>
         <entry><xref linkend="SetDataBorderColors"/></entry>
+        <entry>black</entry>
       </row>
       <row>
         <entry>Data elements (points, lines, bar fill, etc.)</entry>
         <entry><xref linkend="SetDataColors"/></entry>
+        <entry>See <xref linkend="conc-colors-datacolors"/></entry>
       </row>
       <row>
         <entry>Data value labels</entry>
-        <entry><xref linkend="SetTextColor"/></entry>
+        <entry><xref linkend="SetDataValueLabelColor"/>,
+               <xref linkend="SetDataLabelColor"/>,
+               <xref linkend="SetTextColor"/></entry>
+        <entry>black</entry>
       </row>
       <row>
         <entry>Error bars</entry>
         <entry><xref linkend="SetErrorBarColors"/></entry>
+        <entry>Same as data colors. See <xref linkend="conc-colors-datacolors"/></entry>
       </row>
       <row>
         <entry>Image background</entry>
         <entry><xref linkend="SetBackgroundColor"/></entry>
+        <entry>white</entry>
       </row>
       <row>
         <entry>Image border</entry>
         <entry><xref linkend="SetImageBorderColor"/></entry>
+        <entry>#c2c2c2 gray</entry>
       </row>
       <row>
         <entry>Legend background</entry>
         <entry><xref linkend="SetBackgroundColor"/></entry>
+        <entry>white</entry>
       </row>
       <row>
         <entry>Legend color box fill or point shape</entry>
         <entry><xref linkend="SetDataColors"/></entry>
+        <entry>N/A</entry>
       </row>
       <row>
         <entry>Legend color box outline</entry>
         <entry><xref linkend="SetTextColor"/></entry>
+        <entry>black</entry>
       </row>
       <row>
         <entry>Legend outline</entry>
         <entry><xref linkend="SetGridColor"/></entry>
+        <entry>black</entry>
       </row>
       <row>
         <entry>Legend text</entry>
         <entry><xref linkend="SetTextColor"/></entry>
+        <entry>black</entry>
       </row>
       <row>
         <entry>Main title</entry>
         <entry><xref linkend="SetTitleColor"/></entry>
+        <entry>black</entry>
       </row>
       <row>
         <entry>Pie chart data labels</entry>
-        <entry><xref linkend="SetGridColor"/></entry>
+        <entry><xref linkend="SetPieLabelColor"/>,
+               <xref linkend="SetGridColor"/></entry>
+        <entry>black</entry>
       </row>
       <row>
         <entry>Pie segment fill</entry>
         <entry><xref linkend="SetDataColors"/></entry>
+        <entry>N/A</entry>
       </row>
       <row>
         <entry>Pie segment outlines</entry>
         <entry><xref linkend="SetGridColor"/></entry>
+        <entry>black</entry>
       </row>
       <row>
         <entry>Plot area background</entry>
         <entry><xref linkend="SetPlotBgColor"/></entry>
+        <entry>white, but disabled by default</entry>
       </row>
       <row>
         <entry>Plot border</entry>
         <entry><xref linkend="SetGridColor"/></entry>
+        <entry>black</entry>
       </row>
       <row>
         <entry>X axis line</entry>
         <entry><xref linkend="SetGridColor"/></entry>
+        <entry>black</entry>
       </row>
       <row>
         <entry>X axis data labels</entry>
-        <entry><xref linkend="SetTextColor"/></entry>
+        <entry><xref linkend="SetDataLabelColor"/>,
+               <xref linkend="SetTextColor"/></entry>
+        <entry>black</entry>
       </row>
       <row>
         <entry>X data lines</entry>
         <entry><xref linkend="SetLightGridColor"/></entry>
+        <entry>gray</entry>
       </row>
       <row>
         <entry>X grid lines</entry>
         <entry><xref linkend="SetLightGridColor"/></entry>
+        <entry>gray</entry>
       </row>
       <row>
         <entry>X tick labels</entry>
-        <entry><xref linkend="SetTextColor"/></entry>
+        <entry><xref linkend="SetTickLabelColor"/>,
+               <xref linkend="SetTextColor"/></entry>
+        <entry>black</entry>
       </row>
       <row>
         <entry>X tick marks</entry>
         <entry><xref linkend="SetTickColor"/></entry>
+        <entry>black</entry>
       </row>
       <row>
         <entry>X title</entry>
-        <entry><xref linkend="SetXTitleColor"/>, <xref linkend="SetTitleColor"/></entry>
+        <entry><xref linkend="SetXTitleColor"/>,
+               <xref linkend="SetTitleColor"/></entry>
+        <entry>black</entry>
       </row>
       <row>
         <entry>Y axis lines</entry>
         <entry><xref linkend="SetGridColor"/></entry>
+        <entry>black</entry>
       </row>
       <row>
         <entry>Y axis data labels</entry>
-        <entry><xref linkend="SetTextColor"/></entry>
+        <entry><xref linkend="SetDataLabelColor"/>,
+               <xref linkend="SetTextColor"/></entry>
+        <entry>black</entry>
       </row>
       <row>
         <entry>Y grid lines</entry>
         <entry><xref linkend="SetLightGridColor"/></entry>
+        <entry>gray</entry>
       </row>
       <row>
         <entry>Y tick labels</entry>
-        <entry><xref linkend="SetTextColor"/></entry>
+        <entry><xref linkend="SetTickLabelColor"/>,
+               <xref linkend="SetTextColor"/></entry>
+        <entry>black</entry>
       </row>
       <row>
         <entry>Y tick marks</entry>
         <entry><xref linkend="SetTickColor"/></entry>
+        <entry>black</entry>
       </row>
       <row>
         <entry>Y title</entry>
-        <entry><xref linkend="SetYTitleColor"/>, <xref linkend="SetTitleColor"/></entry>
+        <entry><xref linkend="SetYTitleColor"/>,
+               <xref linkend="SetTitleColor"/></entry>
+        <entry>black</entry>
       </row>
     </tbody>
   </tgroup>
 </informaltable>
+</para>
+<para>
+  <note>
+<xref linkend="SetDataLabelColor"/>,
+<xref linkend="SetDataValueLabelColor"/>,
+<xref linkend="SetPieLabelColor"/>, and
+<xref linkend="SetTickLabelColor"/> were added in PHPlot-5.6.1.
+Through PHPlot-5.6.0:
+    <itemizedlist>
+      <listitem>
+        <para>
+          Tick labels and axis data labels all used the color set with
+          <xref linkend="SetTextColor"/>.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          Data value labels (incorrectly) used the title color set with
+          <xref linkend="SetTitleColor"/>.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          Pie chart labels used the grid color set with
+          <xref linkend="SetGridColor"/>.
+        </para>
+      </listitem>
+    </itemizedlist>
+Except for data value labels, the defaults are backwards compatible. That
+is, if you use <function>SetGridColor()</function> and do not use the new
+<function>SetPieLabelColor()</function>, your pie chart labels will display
+in the same color with all releases.
+  </note>
 </para>
 
 </sect2>
