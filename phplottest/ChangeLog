@@ -2,6 +2,13 @@ This is the Change Log for phplottest, the PHPlot Test Suite
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2012-02-18
+    * labelcolor*.php, pielabelcolor*.php: New tests for new functions to
+      set label colors.
+    * tests.ini: List 9 new tests
+
+    * compare_tests.php: Fix typo in script, error with bad command option.
+
 2012-02-17
     * ex-drawmessage.php: Test fails on Windows due to font file not found.
       Fixed to use the config.php file and font name variables for more
