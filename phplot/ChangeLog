@@ -2,6 +2,36 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2012-02-19
+    * Feature request #3442041 "Provide data for generating image maps":
+      Note: This is being added as an experimental feature, subject to change
+      or removal. It will not be documented in the PHPlot Reference Manual
+      unless and until this becomes an accepted part of PHPlot.
+
+      + Added a new callback 'data_points', called after each data point is
+        plotted (for supported plot types). It passes information to a handler
+        which can generate an <area> tag in an HTML image map.
+
+      + Changed usage of internal function DrawDot(). Added 2 arguments, $row
+        and $column, to support the data_points callback. However, the
+        existing $record arg was the same as $column, so it was removed.
+            Old usage: DrawDot($x_word, $y_world, $record, $color)
+            Now usage: DrawDot($row, $col, $x_world, $y_world, $color)
+
+      + Change usage of internal function DrawBar(). Added 2 arguments, $row
+        and $column, to support the data_points callback.
+            Old usage: DrawBar($x1, $y1, $x2, $y2, ...)
+            New usage: DrawBar($row, $col, $x1, $y1, $x2, $y2, ...)
+
+      + Changed the logic in DrawPieChart() to accommodate the data_points
+        callback, which needs to happen on the last (or only) pass.
+
+      + Changed internal functions DrawDot(), DrawBar(), DrawPieChart(),
+        DrawBubbles(), and DrawOHLC() to call the data_points callback,
+        sending it the coordinates it needs for each plotted point or shape.
+
+    * New file: Imagemaps.txt - documentation for new feature
+
 2012-02-18
     * Fixed bug #3486834 "Wrong color for data value labels":
       Use 'text' color, not 'title' color, for data value labels.
