@@ -182,6 +182,7 @@ class PHPlot
 
 //Miscellaneous
     public $callbacks = array(                  // Valid callback reasons (see SetCallBack)
+        'data_points' => NULL,
         'draw_setup' => NULL,
         'draw_image_background' => NULL,
         'draw_plotarea_background' => NULL,
@@ -5411,17 +5412,25 @@ class PHPlot
     }
 
     /*
-     * Draws a styled dot. Uses world coordinates.
-     * Note: DrawShape() does all the work.
+     * Draws a styled dot, or shape. Uses world coordinates.
+     *   $row, $column : Which data point is being drawn. $column is also used to pick point shape and size.
+     *   $x_world, $y_world : Data point, in world coordinates
+     *   $color : Color to use for the point shape
+     * Note: DrawShape() does all the work. Plot drawing uses this; legend drawing uses DrawShape directly.
      */
-    protected function DrawDot($x_world, $y_world, $record, $color)
+    protected function DrawDot($row, $column, $x_world, $y_world, $color)
     {
-        return $this->DrawShape($this->xtr($x_world), $this->ytr($y_world), $record, $color);
+        $x = $this->xtr($x_world);
+        $y = $this->ytr($y_world);
+        $result = $this->DrawShape($x, $y, $column, $color);
+        $this->DoCallback('data_points', 'dot', $row, $column, $x, $y);
+        return $result;
     }
 
     /*
      * Draw a bar (or segment of a bar), with optional shading or border.
      * This is used by the bar and stackedbar plots, vertical and horizontal.
+     *   $row, $column : Which data point is being drawn, for data_points callback.
      *   $x1, $y1 : One corner of the bar.
      *   $x2, $y2 : Other corner of the bar.
      *   $data_color : Color index to use for the bar fill.
@@ -5432,7 +5441,7 @@ class PHPlot
      *   $shade_side : Shade the right side? (Suppressed for leftward stack segments except first.)
      *      Only one of $shade_top or $shade_side can be FALSE. Both default to TRUE.
      */
-    protected function DrawBar($x1, $y1, $x2, $y2, $data_color, $alt_color,
+    protected function DrawBar($row, $column, $x1, $y1, $x2, $y2, $data_color, $alt_color,
             $shade_top = TRUE, $shade_side = TRUE)
     {
         // Sort the points so x1,y1 is upper left and x2,y2 is lower right. This
@@ -5465,6 +5474,7 @@ class PHPlot
         } else {
             ImageRectangle($this->img, $x1, $y1, $x2,$y2, $alt_color);
         }
+        $this->DoCallback('data_points', 'rect', $row, $column, $x1, $y1, $x2, $y2);
         return TRUE;
     }
 
@@ -5705,15 +5715,20 @@ class PHPlot
                     ImageFilledArc($this->img, $xpos, $ypos+$h, $pie_width, $pie_height,
                                    $arc_end_angle, $arc_start_angle, $slicecol, IMG_ARC_PIE);
 
-                    // For unshaded pie charts (shading==0 and only 1 loop with h==0), draw the outline:
-                    if ($this->shading == 0)
-                        ImageFilledArc($this->img, $xpos, $ypos, $pie_width, $pie_height,
-                                       $arc_end_angle, $arc_start_angle, $this->ndx_grid_color,
-                                       IMG_ARC_PIE | IMG_ARC_EDGED |IMG_ARC_NOFILL);
-
-                    // Draw the label. For shaded plots, only do this on the last loop.
-                    if ($h == 0 && $do_labels)
-                        $this->DrawPieLabel($labels[$j], $xpos, $ypos, $start_angle, $arc_angle, $r);
+                    // Processing to do only for the last (if shaded) or only (if unshaded) loop:
+                    if ($h == 0) {
+                        // For unshaded pie charts, draw the outline:
+                        if ($this->shading == 0)
+                            ImageFilledArc($this->img, $xpos, $ypos, $pie_width, $pie_height,
+                                           $arc_end_angle, $arc_start_angle, $this->ndx_grid_color,
+                                           IMG_ARC_PIE | IMG_ARC_EDGED |IMG_ARC_NOFILL);
+                        // Draw the label:
+                        if ($do_labels)
+                            $this->DrawPieLabel($labels[$j], $xpos, $ypos, $start_angle, $arc_angle, $r);
+                        // Trigger a data points callback; note it gets the 'modified' angles:
+                        $this->DoCallback('data_points', 'pie', $j, 0, $xpos, $ypos, $pie_width,
+                                          $pie_height, $arc_start_angle, $arc_end_angle);
+                    }
                 }
                 if (++$color_index >= $max_data_colors)
                     $color_index = 0;
@@ -5759,7 +5774,7 @@ class PHPlot
                     $this->GetDataErrorColors($row, $idx, $gcvars, $data_color, $error_color, $alt_flag);
 
                     // Draw the shape:
-                    $this->DrawDot($x_now, $y_now, $idx, $data_color);
+                    $this->DrawDot($row, $idx, $x_now, $y_now, $data_color);
 
                     // Error +
                     $val = $this->data[$row][$record++];
@@ -5820,7 +5835,7 @@ class PHPlot
                     // Select the color:
                     $this->GetDataColor($row, $idx, $gcvars, $data_color, $alt_flag);
                     // Draw the marker:
-                    $this->DrawDot($x_now, $y_now, $idx, $data_color);
+                    $this->DrawDot($row, $idx, $x_now, $y_now, $data_color);
 
                     // Draw data value labels?
                     if ($do_dvls) {
@@ -6281,7 +6296,7 @@ class PHPlot
                     $this->GetBarColors($row, $idx, $gcvars, $data_color, $alt_color);
 
                     // Draw the bar, and the shade or border:
-                    $this->DrawBar($x1, $y1, $x2, $y2, $data_color, $alt_color);
+                    $this->DrawBar($row, $idx, $x1, $y1, $x2, $y2, $data_color, $alt_color);
 
                     // Draw optional data labels above the bars (or below, for negative values).
                     if ( $this->y_data_label_pos == 'plotin') {
@@ -6347,7 +6362,7 @@ class PHPlot
                     $this->GetBarColors($row, $idx, $gcvars, $data_color, $alt_color);
 
                     // Draw the bar, and the shade or border:
-                    $this->DrawBar($x1, $y1, $x2, $y2, $data_color, $alt_color);
+                    $this->DrawBar($row, $idx, $x1, $y1, $x2, $y2, $data_color, $alt_color);
 
                     // Draw optional data labels to the right of the bars (or left, if the bar
                     // goes left of the Y axis line).
@@ -6439,7 +6454,7 @@ class PHPlot
                         $this->GetBarColors($row, $idx, $gcvars, $data_color, $alt_color);
 
                         // Draw the bar, and the shade or border:
-                        $this->DrawBar($x1, $y1, $x2, $y2, $data_color, $alt_color,
+                        $this->DrawBar($row, $idx, $x1, $y1, $x2, $y2, $data_color, $alt_color,
                             // Only shade the top for upward bars, or the first segment of downward bars:
                             $upward || $first, TRUE);
 
@@ -6533,7 +6548,7 @@ class PHPlot
                         $this->GetBarColors($row, $idx, $gcvars, $data_color, $alt_color);
 
                         // Draw the bar, and the shade or border:
-                        $this->DrawBar($x1, $y1, $x2, $y2, $data_color, $alt_color,
+                        $this->DrawBar($row, $idx, $x1, $y1, $x2, $y2, $data_color, $alt_color,
                             // Only shade the side for rightward bars, or the first segment of leftward bars:
                             TRUE, $rightward || $first);
                         // Draw optional data label for this bar segment just inside the end.
@@ -6684,6 +6699,7 @@ class PHPlot
                 imageline($this->img, $x_right, $yc_pixels, $x_now_pixels, $yc_pixels, $ext_color);
             }
             imagesetthickness($this->img, 1);
+            $this->DoCallback('data_points', 'rect', $row, 0, $x_left, $yh_pixels, $x_right, $yl_pixels);
         }
         return TRUE;
     }
@@ -6740,6 +6756,7 @@ class PHPlot
 
                     // Draw the bubble:
                     ImageFilledEllipse($this->img, $x, $y, $size, $size, $data_color);
+                    $this->DoCallback('data_points', 'circle', $row, $idx, $x, $y, $size);
                 }
             }
         }
