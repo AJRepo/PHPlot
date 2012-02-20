@@ -1,5 +1,5 @@
 phplot/ImageMaps.txt - Documentation for an experimental feature
-Last updated for PHPlot-5.7.0 on 2012-02-19
+Last updated for PHPlot-5.7.0 on 2012-02-20
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 Overview:
@@ -191,6 +191,12 @@ area of each pie segment. However, PHPlot only supplies the values which
 identify the outline of the pie segment, and HTML maps do not support areas
 of this shape.  Therefore, the callback handler function needs to generate
 one or more polygons which approximate the pie segment area.
+
+Note: PHPlot does not attempt to draw pie segments that are too small (due to
+the implementation of the PHP/GD drawing function). If a segment's calculated
+start angle and end angle are equal (after converting to integers), the
+segment will not be drawn, and the data_points callback will not be called for
+that segment.
 
 
 Arguments to the 'data_points' callback for pie charts:
