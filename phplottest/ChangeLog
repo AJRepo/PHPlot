@@ -2,6 +2,12 @@ This is the Change Log for phplottest, the PHPlot Test Suite
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2012-02-21
+    * imagemap_html-*.php: 12 new tests for imagemaps. These produce HTML.
+    * imagemap_trace-*.php: 10 new tests for imagemaps. These produce images.
+    * imagemap_unit-*.php: 4 new tests for imagemaps. These are unit tests.
+    * tests.ini: List 26 new tests for imagemaps
+
 2012-02-18
     * labelcolor*.php, pielabelcolor*.php: New tests for new functions to
       set label colors.
