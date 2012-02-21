@@ -584,10 +584,11 @@ forces the background to be drawn, even if it was already drawn.
 </varlistentry>
 
 <varlistentry>
-  <term><anchor id="DrawBar" xreflabel="DrawBar"/>DrawBar($x1, $y1, $x2, $y2, $data_color, $alt_color, $shade_top = TRUE, $shade_side = TRUE)</term>
+  <term><anchor id="DrawBar" xreflabel="DrawBar"/>DrawBar($row, $column, $x1, $y1, $x2, $y2, $data_color, $alt_color, $shade_top = TRUE, $shade_side = TRUE)</term>
   <listitem>
     <para>
 Draws a single bar (or bar segment), with either shading or border.
+The $row and $column indicate which data point is being plotted.
 Four corner coordinates and 2 color indexes are provided.
 The first color $data_color is the bar fill color.
 The second color $alt_color is either the shading color or the border color,
@@ -599,6 +600,13 @@ to draw each bar.
 Called by <xref linkend="DrawStackedBars"/> and
 <xref linkend="DrawHorizStackedBars"/> to draw each bar segment.
 This was added in PHPlot-5.2.0, moving common code from those 4 functions.
+    </para>
+    <para>
+Starting with PHPlot-5.6.1, the arguments were changed as shown to accommodate 
+a new callback which provides access to drawing coordinates.
+In previous releases, the usage was
+<function>DrawBar($x1, $y1, $x2, $y2, $data_color, $alt_color,
+$shade_top = TRUE, $shade_side = TRUE)</function>.
     </para>
   </listitem>
 </varlistentry>
@@ -670,18 +678,26 @@ if these labels are enabled.
 </varlistentry>
 
 <varlistentry>
-  <term><anchor id="DrawDot" xreflabel="DrawDot"/>DrawDot($x_world, $y_world, $record, $color)</term>
+  <term><anchor id="DrawDot" xreflabel="DrawDot"/>DrawDot($row, $column, $x_world, $y_world, $color)</term>
   <listitem>
     <para>
 Draws a single marker point ('dot') at the given X and Y world coordinates,
-using the given color. The $record parameter selects the marker shape and size
-using the arrays set up with SetPointSizes() and SetPointShapes(); they are
-not passed as arguments themselves.
+using the given color.
+The $row and $column indicate which data point is being plotted.
+The $column parameter also selects the marker shape and size,
+using the arrays set up with SetPointSizes() and SetPointShapes().
 Called by those plotting routines that include dots:
 <xref linkend="DrawDotsError"/> and <xref linkend="DrawDots"/>.
 Starting with PHPlot-5.4.0, DrawDot() simply converts the coordinates to device
 coordinates and then calls <xref linkend="DrawShape"/>. It has no knowledge of
 the available dot shapes.
+    </para>
+    <para>
+Starting with PHPlot-5.6.1, the arguments were changed as shown to accommodate 
+a new callback which provides access to drawing coordinates.
+In previous releases, the usage was
+<function>DrawDot($x_world, $y_world, $record, $color)</function>.
+The old $record argument is equivalent to the new $column argument.
     </para>
   </listitem>
 </varlistentry>
