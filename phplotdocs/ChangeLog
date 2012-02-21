@@ -4,6 +4,15 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2012-02-21
+   For feature request #3442041 "Provide data for generating image maps":
+   Note this has been implemented as an experimental feature, meaning it will
+   note be documented in the PHPlot Reference Manual until it is completed and
+   accepted. However, changes were made to internal functions, and these
+   changes are included in the manual for accuracy.
+   * developer.xml: Document changes in the argument lists of internal
+     functions DrawDot() and DrawBar().
+
 2012-02-17
    For bug report #3486834 "Wrong color for data value labels", and
    feature request #3077554 "Finer control over plot element colors":
@@ -19,7 +28,7 @@ manual, which only contains summaries of changes.
    * variables.list: Fix sorting of variable names. Add 8 new class variables.
 
 2012-02-06
-   * concepts.xml, developer.xml: Fix 2 missed references to PHPlot versons
+   * concepts.xml, developer.xml: Fix 2 missed references to PHPlot versions
      using "after PHPlot-x.y.z", special actual version instead.
 
    * advanced.xml: Added note that you can't have multiple callbacks for
