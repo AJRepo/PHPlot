@@ -552,8 +552,15 @@ that are zero or more arguments to pass to the callback, after the image
 resource and passthrough arguments. DoCallback does nothing if there is no
 callback registered for the given reason, otherwise it calls the callback
 function. See <xref linkend="callbacks"/> for more information on callbacks.
-Starting with PHPlot-5.1.3, DoCallback returns the value returned by the
-callback function, if any.
+    </para>
+    <para>
+Starting with PHPlot-5.1.3, <function>oCallback</function> returns the value
+returned by the callback function, if any. If there is no callback defined for
+the given reason,  <literal>NULL</literal> is returned. So it is possible to
+define a callback that returns a meaningful value (such as True/False), and
+still distinguish the case of where no callback has been set.  However, it is
+often simpler to test first to see if a callback has been set, using
+<xref linkend="GetCallback"/>, before using <function>DoCallback</function>.
     </para>
   </listitem>
 </varlistentry>
