@@ -5234,6 +5234,8 @@ there is one optional argument:
           <listitem>
             <para>
 Formatting string, used with <function>sprintf()</function>.
+The formatting string must contain exactly one conversion specification
+(%-code) which consumes a single argument.
 If omitted, the default value of '%e' uses scientific notation with default
 field sizes.
             </para>
@@ -7942,6 +7944,8 @@ For type 'printf', there is one optional argument:
           <listitem>
             <para>
 Formatting string, used with <function>sprintf()</function>.
+The formatting string must contain exactly one conversion specification
+(%-code) which consumes a single argument.
 If omitted, the default value of '%e' uses scientific notation with default
 field sizes.
             </para>
@@ -8204,6 +8208,8 @@ For type 'printf', there is one optional argument:
           <listitem>
             <para>
 Formatting string, used with <function>sprintf()</function>.
+The formatting string must contain exactly one conversion specification
+(%-code) which consumes a single argument.
 If omitted, the default value of '%e' uses scientific notation with default
 field sizes.
             </para>
@@ -9599,6 +9605,8 @@ For type 'printf', there is one optional argument:
           <listitem>
             <para>
 Formatting string, used with <function>sprintf()</function>.
+The formatting string must contain exactly one conversion specification
+(%-code) which consumes a single argument.
 If omitted, the default value of '%e' uses scientific notation with default
 field sizes.
             </para>
@@ -9851,6 +9859,8 @@ For type 'printf', there is one optional argument:
           <listitem>
             <para>
 Formatting string, used with <function>sprintf()</function>.
+The formatting string must contain exactly one conversion specification
+(%-code) which consumes a single argument.
 If omitted, the default value of '%e' uses scientific notation with default
 field sizes.
             </para>
