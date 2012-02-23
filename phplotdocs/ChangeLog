@@ -4,6 +4,12 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2012-02-22
+   * developer.xml: Clarify that internal DoCallback() returns NULL if no
+     callback has been set.
+   * reference.xml: State that printf format string must have a single
+     %-code (uses exactly 1 argument) - fixed in 5 places.
+
 2012-02-21
    For feature request #3442041 "Provide data for generating image maps":
    Note this has been implemented as an experimental feature, meaning it will
