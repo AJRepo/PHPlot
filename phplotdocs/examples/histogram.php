@@ -91,6 +91,8 @@ function plot_histogram($image_filename, $param)
     if ($draw_border) {
         $p->SetGridColor($border_color);
         $p->SetPlotBorderType('full');
+    } else {
+        $p->SetPlotBorderType('none');
     }
     # Compute the position of the histogram plot within the image.
     $hx0 = (int)($hx * $plot_image_width);
