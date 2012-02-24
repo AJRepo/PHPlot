@@ -4,6 +4,16 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2012-02-24
+   * main.xml: Indicate version of next release PHPlot-5.7.0.
+   * concepts.xml, developer.xml, examples.xml, reference.xml,
+     variables.list: Fix version of next release. It will be 5.7.0, not
+     5.6.1, since new features have been included.
+
+    * examples/histogram.php: Fix for no border if draw_border is off.
+      (This does not change the example image in the manual, because it has
+      draw_border on.)
+
 2012-02-22
    * developer.xml: Clarify that internal DoCallback() returns NULL if no
      callback has been set.
@@ -35,7 +45,7 @@ manual, which only contains summaries of changes.
 
 2012-02-06
    * concepts.xml, developer.xml: Fix 2 missed references to PHPlot versions
-     using "after PHPlot-x.y.z", special actual version instead.
+     using "after PHPlot-x.y.z", specify actual version instead.
 
    * advanced.xml: Added note that you can't have multiple callbacks for
      the same name (same 'reason'). Based on a forum help request.  The
