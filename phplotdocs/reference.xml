@@ -260,7 +260,7 @@ See <xref linkend="ex-drawmessage"/> for an example of this function.
   <refsect1>
     <title>History</title>
     <para>
-This function was added in PHPlot-5.6.1.
+This function was added in PHPlot-5.7.0.
     </para>
   </refsect1>
 
@@ -1535,7 +1535,7 @@ Do not use this function. It does not set the color used for labels.
   <refsect1>
     <title>History</title>
     <para>
-This function was added in PHPlot-5.6.1. In earlier releases, the data
+This function was added in PHPlot-5.7.0. In earlier releases, the data
 label colors could only be set using <xref linkend="SetTextColor"/>, which
 also changed the color of other elements.
     </para>
@@ -1606,12 +1606,12 @@ Do not use this function. It does not set the color used for labels.
   <refsect1>
     <title>History</title>
     <para>
-This function was added in PHPlot-5.6.1, and the defaults were changed as
+This function was added in PHPlot-5.7.0, and the defaults were changed as
 described above. Through PHPlot-5.6.0, the data value labels were drawn using
 the title color, as set with <xref linkend="SetTitleColor"/>.
 Since data value labels are not titles, this was incorrect, and they should
 have been using the general text color like other data labels. There were
-two parts to the fix in PHPlot-5.6.1: data value label color now defaults to
+two parts to the fix in PHPlot-5.7.0: data value label color now defaults to
 the general text color rather than the title color, and new functions
 <function>SetDataValueLabelColor</function> and
 <xref linkend="SetDataLabelColor"/> were added to allow separate control of
@@ -3270,7 +3270,7 @@ segment borders.
     </para>
     <para>
 The color used for pie chart data labels is set with
-<xref linkend="SetPieLabelColor"/> (starting with PHPlot-5.6.1), with
+<xref linkend="SetPieLabelColor"/> (starting with PHPlot-5.7.0), with
 <function>SetGridColor</function> providing a default color.
     </para>
   </refsect1>
@@ -5084,7 +5084,7 @@ Do not use this function. It does not set the color used for labels.
   <refsect1>
     <title>History</title>
     <para>
-This function was added in PHPlot-5.6.1. In earlier releases, the pie chart
+This function was added in PHPlot-5.7.0. In earlier releases, the pie chart
 data labels used the color set with <xref linkend="SetGridColor"/>, which
 also sets the color of other elements. Although it would have made more sense
 to use <xref linkend="SetDataLabelColor"/> to set the color for pie chart data
@@ -7058,7 +7058,7 @@ See <xref linkend="conc-colors" /> for more on color values.
 The default text color is black.
     </para>
     <para>
-Starting with PHPlot-5.6.1, there are more specific functions to set
+Starting with PHPlot-5.7.0, there are more specific functions to set
 the color for labels: <xref linkend="SetDataLabelColor"/>,
 <xref linkend="SetDataValueLabelColor"/>, and
 <xref linkend="SetTickLabelColor"/>.
@@ -7181,7 +7181,7 @@ Do not use this function. It does not set the color used for labels.
   <refsect1>
     <title>History</title>
     <para>
-This function was added in PHPlot-5.6.1. In earlier releases, the tick
+This function was added in PHPlot-5.7.0. In earlier releases, the tick
 label colors could only be set using <xref linkend="SetTextColor"/>, which
 also changed the color of other elements.
     </para>

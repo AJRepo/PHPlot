@@ -1669,7 +1669,7 @@ Note: This example uses a system-dependent TrueType font, and will need to
 be modified for other systems.
 </para>
 <para>
-The DrawMessage function was added in PHPlot-5.6.1.
+The DrawMessage function was added in PHPlot-5.7.0.
 </para>
 
 <example id="example-drawmessage">

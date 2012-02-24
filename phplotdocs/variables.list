@@ -34,7 +34,7 @@ data_type	'text-data'	SetDataType	Format of the data array
 data_units_text	''	FormatLabel	Obsolete - suffix for 'data'-formatted labels
 data_value_label_angle		CheckDataValueLabels	Angle (in degrees) for data value labels <link linkend="conc-tuning-labels">(See Tuning Parameters for more)</link>
 data_value_label_distance		CheckDataValueLabels	Distance (in pixels) for data value labels <link linkend="conc-tuning-labels">(See Tuning Parameters for more)</link>
-datalabel_color		SetDataLabelColor	Color (R,G,B,A) to use for axis data labels (Added in PHPlot-5.6.1)
+datalabel_color		SetDataLabelColor	Color (R,G,B,A) to use for axis data labels (Added in PHPlot-5.7.0)
 datatype_error_bars		DecodeDataType	Flag: data type has error bars. (Added in PHPlot-5.1.3)
 datatype_implied		DecodeDataType	Flag: data type has implied X or Y. (Added in PHPlot-5.1.3)
 datatype_pie_single		DecodeDataType	Flag: data type is one-column data for pie chart with one segments per row. (Added in PHPlot-5.1.3)
@@ -50,7 +50,7 @@ draw_plot_area_background	FALSE	SetDrawPlotAreaBackground	Flag: Draw the backgro
 draw_x_data_label_lines	FALSE	SetDrawXDataLabelLines	Flag: Draw X data label lines
 draw_x_grid		SetDrawXGrid CalcGridSettings	Flag: Draw X grid lines?
 draw_y_grid		SetDrawYGrid CalcGridSettings	Flag: Draw Y grid lines?
-dvlabel_color		SetDataValueLabelColor	Color (R,G,B,A) to use for data value labels (Added in PHPlot-5.6.1)
+dvlabel_color		SetDataValueLabelColor	Color (R,G,B,A) to use for data value labels (Added in PHPlot-5.7.0)
 error_bar_colors		SetErrorBarColors	Array of colors (R,G,B,A) for error bars. See default_colors for initial value.
 error_bar_line_width	1	SetErrorBarLineWidth	Thickness of error bar lines
 error_bar_shape	'tee'	SetErrorBarShape	Shape (style) of error bars: line or tee
@@ -92,18 +92,18 @@ ndx_bg_color		SetColorIndexes	Color index of image background
 ndx_data_border_colors		SetColorIndexes	Color index array for bar chart data borders
 ndx_data_colors		SetColorIndexes	Color index array for plot data lines/marks/bars/etc.
 ndx_data_dark_colors		NeedDataDarkColors	Color index array for plot data, darker shade
-ndx_datalabel_color		SetColorIndexes	Color index for axis data labels (Added in PHPlot-5.6.1)
-ndx_dvlabel_color		SetColorIndexes	Color index for data value labels (Added in PHPlot-5.6.1)
+ndx_datalabel_color		SetColorIndexes	Color index for axis data labels (Added in PHPlot-5.7.0)
+ndx_dvlabel_color		SetColorIndexes	Color index for data value labels (Added in PHPlot-5.7.0)
 ndx_error_bar_colors		NeedErrorBarColors	Color index array for error bars
 ndx_grid_color		SetColorIndexes	Color index for axes, plot area border, legend border, pie chart lines and text
 ndx_i_border		SetColorIndexes	Color index for image border lines
 ndx_i_border_dark		SetColorIndexes	Color index for image border lines, darker shade
 ndx_light_grid_color		SetColorIndexes	Color index for grid lines and X data lines
-ndx_pielabel_color		SetColorIndexes	Color index for pie chart data labels (Added in PHPlot-5.6.1)
+ndx_pielabel_color		SetColorIndexes	Color index for pie chart data labels (Added in PHPlot-5.7.0)
 ndx_plot_bg_color		SetColorIndexes	Color index of plot area background
 ndx_text_color		SetColorIndexes	Color index for labels and legend text
 ndx_tick_color		SetColorIndexes	Color index for tick marks
-ndx_ticklabel_color		SetColorIndexes	Color index for tick labels (Added in PHPlot-5.6.1)
+ndx_ticklabel_color		SetColorIndexes	Color index for tick labels (Added in PHPlot-5.7.0)
 ndx_title_color		SetColorIndexes	Color index for main title
 ndx_x_title_color		SetColorIndexes	Color index for X title (Added in PHPlot-5.2.0)
 ndx_y_title_color		SetColorIndexes	Color index for Y title (Added in PHPlot-5.2.0)
@@ -118,7 +118,7 @@ output_file	''	SetOutputFile	Redirect to output file
 pie_diam_factor		DrawPieChart	Aspect ratio for shaded pie charts. <link linkend="conc-tuning-pie">(See Tuning Parameters for more)</link> (Added in PHPlot-5.6.0)
 pie_full_size		SetPieAutoSize	Flag: If true, do not include label sizes when calculating pie size. (Added in PHPlot-5.6.0)
 pie_min_size_factor		DrawPieChart	Minimum amount of the plot area that will be reserved for the pie <link linkend="conc-tuning-pie">(See Tuning Parameters for more)</link> (Added in PHPlot-5.6.0)
-pielabel_color		SetPieLabelColor	Color (R,G,B,A) to use for pie chart data labels (Added in PHPlot-5.6.1)
+pielabel_color		SetPieLabelColor	Color (R,G,B,A) to use for pie chart data labels (Added in PHPlot-5.7.0)
 plot_area		CalcPlotAreaPixels	Array defining the calculated plot area. ([0],[1]) is the top left corner, ([2],[3]) is the bottom right corner.
 plot_area_height		CalcPlotAreaPixels	Height of the plot area
 plot_area_width		CalcPlotAreaPixels	Width of the plot area
@@ -153,7 +153,7 @@ suppress_y_axis		SetDrawYAxis	Flag: Don't draw the Y axis line. Unset (by defaul
 text_color	'black'	SetTextColor	Color (R,G,B,A) for labels and legend text
 thousands_sep		SetNumberFormat	Character to use to group 1000s in formatted numbers
 tick_color	'black'	SetTickColor	Color (R,G,B,A) for tick marks
-ticklabel_color		SetTickLabelColor	Color (R,G,B,A) to use for tick labels (Added in PHPlot-5.6.1)
+ticklabel_color		SetTickLabelColor	Color (R,G,B,A) to use for tick labels (Added in PHPlot-5.7.0)
 title_color	'black'	SetTitleColor	Color (R,G,B,A) for main title (and default for X and Y titles)
 title_offset		CalcMargins	Y offset of main title position (Added in PHPlot-5.1.2)
 title_txt	''	SetTitle	Main title text

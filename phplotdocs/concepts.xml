@@ -1451,7 +1451,7 @@ Support for negative values in stackedbars plots was added in PHPlot-5.2.0.
 Before PHPlot-5.4.0, zero values were completely ignored in stackedbars plots.
 From PHPlot-5.4.0 through PHPlot-5.6.0, a zero value at the end of a data
 row (or an all zero row) would result in a color 'cap' on the top of the bar
-stack, but this was changed in PHPlot-5.6.1.
+stack, but this was changed in PHPlot-5.7.0.
 </para>
 </sect2>
 
@@ -2183,7 +2183,7 @@ lowest priority.
 <xref linkend="SetDataLabelColor"/>,
 <xref linkend="SetDataValueLabelColor"/>,
 <xref linkend="SetPieLabelColor"/>, and
-<xref linkend="SetTickLabelColor"/> were added in PHPlot-5.6.1.
+<xref linkend="SetTickLabelColor"/> were added in PHPlot-5.7.0.
 Through PHPlot-5.6.0:
     <itemizedlist>
       <listitem>
@@ -3285,7 +3285,7 @@ If you would like your application to handle some errors in a similar
 manner to PHPlot, you can use <xref linkend="DrawMessage"/> to create
 and output an image contain a message from your application.
 See also <xref linkend="ex-drawmessage"/>.
-(<function>DrawMessage</function> was added in PHPlot-5.6.1.)
+(<function>DrawMessage</function> was added in PHPlot-5.7.0.)
 </para>
 </sect2>
 

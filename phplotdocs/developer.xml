@@ -584,7 +584,7 @@ function did not have a parameter and was used only for area plots.
     <para>
 Draws the image background, either an image file or solid fill or nothing.
 Called by <xref linkend="DrawGraph"/> and <xref linkend="DrawMessage"/>.
-The optional argument $overwrite (added in PHPlot-5.6.1 for DrawMessage)
+The optional argument $overwrite (added in PHPlot-5.7.0 for DrawMessage)
 forces the background to be drawn, even if it was already drawn.
     </para>
   </listitem>
@@ -609,7 +609,7 @@ Called by <xref linkend="DrawStackedBars"/> and
 This was added in PHPlot-5.2.0, moving common code from those 4 functions.
     </para>
     <para>
-Starting with PHPlot-5.6.1, the arguments were changed as shown to accommodate 
+Starting with PHPlot-5.7.0, the arguments were changed as shown to accommodate 
 a new callback which provides access to drawing coordinates.
 In previous releases, the usage was
 <function>DrawBar($x1, $y1, $x2, $y2, $data_color, $alt_color,
@@ -700,7 +700,7 @@ coordinates and then calls <xref linkend="DrawShape"/>. It has no knowledge of
 the available dot shapes.
     </para>
     <para>
-Starting with PHPlot-5.6.1, the arguments were changed as shown to accommodate 
+Starting with PHPlot-5.7.0, the arguments were changed as shown to accommodate 
 a new callback which provides access to drawing coordinates.
 In previous releases, the usage was
 <function>DrawDot($x_world, $y_world, $record, $color)</function>.
@@ -754,7 +754,7 @@ Starting with PHPlot-5.0.5, this function is an alias for
 <xref linkend="PrintError"/> and is retained for compatibility.
 The $where_x and $where_arguments are now ignored. (Previously they
 positioned the error message on the image, but were never used.)
-Starting with PHPlot-5.6.1, this function is considered deprecated.
+Starting with PHPlot-5.7.0, this function is considered deprecated.
     </para>
   </listitem>
 </varlistentry>
@@ -791,7 +791,7 @@ This was added in PHPlot-5.1.3.
 Draws a border around the image, if enabled by
 <xref linkend="SetImageBorderType"/>.
 Called by <xref linkend="DrawGraph"/> and <xref linkend="DrawMessage"/>.
-The optional argument $overwrite (added in PHPlot-5.6.1 for DrawMessage)
+The optional argument $overwrite (added in PHPlot-5.7.0 for DrawMessage)
 forces the border to be drawn, even if it was already drawn.
     </para>
   </listitem>
@@ -1310,7 +1310,7 @@ If $color is empty or unset, returns $default_color_index instead, without
 allocating a new color.
 This was added in PHPlot-5.2.0, replacing the second half of
 <xref linkend="SetIndexColor"/>.
-The $default_color_index argument was added in PHPlot-5.6.1, and the $color
+The $default_color_index argument was added in PHPlot-5.7.0, and the $color
 argument was changed to a reference (so an unset variable can be passed 
 without an error).
     </para>
@@ -1740,7 +1740,7 @@ font filename and size.
 Allocates the colors for the image background and image border.
 Called by <xref linkend="SetColorIndexes"/> before drawing anything, and
 by <xref linkend="DrawMessage"/> if needed.
-This was added in PHPlot-5.6.1 by moving code from SetColorIndexes, so that
+This was added in PHPlot-5.7.0 by moving code from SetColorIndexes, so that
 DrawMessage can set up only the color indexes it needs.
     </para>
   </listitem>
@@ -1752,7 +1752,7 @@ DrawMessage can set up only the color indexes it needs.
     <para>
 Allocates all the colors needed for a plot.
 Called by <xref linkend="DrawGraph"/> before drawing anything.
-Calls <xref linkend="SetBgColorIndexes"/> (starting at PHPlot-5.6.1) to set
+Calls <xref linkend="SetBgColorIndexes"/> (starting at PHPlot-5.7.0) to set
 the background and border color indexes.
 This was added in PHPlot-5.2.0.
     </para>
