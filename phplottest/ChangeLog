@@ -2,6 +2,13 @@ This is the Change Log for phplottest, the PHPlot Test Suite
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2012-02-24
+    * histogram.php: Resync to example in manual: 1 comment typo fixed, use
+      SetDraw[XY]Axis to disable axis lines rather than changing them to
+      transparent (which was the only way to do this at the time), and fix
+      for no border if draw_border is off. These changes have no effect
+      on the test output files.
+
 2012-02-21
     * imagemap_html-*.php: 12 new tests for imagemaps. These produce HTML.
     * imagemap_trace-*.php: 10 new tests for imagemaps. These produce images.
