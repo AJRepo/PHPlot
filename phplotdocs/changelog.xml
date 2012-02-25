@@ -14,6 +14,19 @@ see the ChangeLog file inside the PHPlot distribution.)
 
 <variablelist>
   <varlistentry>
+    <term>2012-02-25</term>
+    <listitem>
+      <para>
+Released updated version of the manual to correspond to PHPlot-5.7.0.
+This includes documentation for new function DrawMessage() (with example),
+and new label color controls SetDataLabelColor(), SetDataValueLabelColor(),
+SetPieLabelColor(), and SetTickLabelColor(). The table in Plot Element
+Colors has been expanded to include default colors.
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
     <term>2012-01-02</term>
     <listitem>
       <para>
