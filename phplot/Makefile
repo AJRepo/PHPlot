@@ -6,7 +6,7 @@ PROJ=phplot
 
 # List of text files to release, and do CRLF line ending
 # conversions in the ZIP release only:
-REL_TXTFILES=COPYING ChangeLog NEWS.txt README.txt NEWS_part1.txt
+REL_TXTFILES=COPYING ChangeLog NEWS.txt README.txt NEWS_part1.txt Imagemaps.txt
 # List of all top-level files to release:
 REL=$(REL_TXTFILES) phplot.php rgb.inc.php
 
