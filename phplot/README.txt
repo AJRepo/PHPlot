@@ -1,5 +1,5 @@
 This is the README file for PHPlot
-Last updated for PHPlot-5.6.0 on 2012-01-02
+Last updated for PHPlot-5.7.0 on 2012-02-25
 The project web site is http://sourceforge.net/projects/phplot/
 The project home page is http://phplot.sourceforge.net/
 -----------------------------------------------------------------------------
@@ -27,14 +27,15 @@ CONTENTS:
    contrib  . . . . . . . . . . . . "Contributed" directory, add-ons
    phplot.php   . . . . . . . . . . The main PHPlot source file
    rgb.inc.php  . . . . . . . . . . Optional extended color table
+   Imagemaps.txt  . . . . . . . . . Documentation for new experimental feature
 
 
 REQUIREMENTS:
 
 You need a recent version of PHP5, and you are advised to use the latest
-stable release.  This version of PHPlot has been tested with PHP-5.3.8,
-PHP-5.3.6(ubuntu), and PHP-5.2.17 on Linux, and with PHP-5.3.8 on Windows XP.
-Note that this is probably the last release to be tested with PHP-5.2.
+stable release.  This version of PHPlot has been tested with PHP-5.3.10,
+PHP-5.3.6(ubuntu), and PHP-5.2.17 on Linux, and with PHP-5.3.10 on Windows XP.
+Note that this might be the last release to be tested with PHP-5.2.
 (There is no longer any support for PHP-5.2, and PHP-5.4 is expected soon.)
 
 You need the GD extension to PHP either built in to PHP or loaded as a
@@ -79,10 +80,6 @@ KNOWN ISSUES:
 
 Here are some of the problems we know about in PHPlot. See the bug tracker
 on the PHPlot project web site for more information.
-
-#3467793 Pie charts with very small segments
-  Unexpected behavior was found during testing of PHPlot-5.6.0 when pie
-  charts have small segments. This is not a new issue, though.
 
 #3142124 Clip plot elements to plot area
   Plot elements are not currently clipped to the plot area, and may extend

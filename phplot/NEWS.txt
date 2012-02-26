@@ -5,6 +5,89 @@ Refer the the ChangeLog file for detailed source changes.
 See NEWS_part1.txt for older release documentation.
 -----------------------------------------------------------------------------
 
+2012-02-25 Release 5.7.0
+
+=== Overview:
+
+This is the current stable release of PHPlot. This release includes several
+bug fixes, new color controls for labels, a new feature for application-level
+error handling, and an experimental feature for creating plot image maps.
+
+The PHPlot reference manual has been updated to match this release.
+
+
+=== Cautions, Important Notes, and Compatibility Issues:
+
+This release includes a change in how the color is set for data value
+labels. (These are the labels inside the plot area that identify the tops
+of bars, for example.) This can change the color of some labels. See the
+bug report "Wrong color for data value labels" below.
+
+This release reverts a change from PHPlot-5.4.0 to stackedbars plots. It
+affects plots with stacked bar segments of size 0 that are at the top or
+end of a stack. Starting in PHPlot-5.4.0, a zero-size segment at the top or
+end would result in a color 'cap' on the bar stack, using the data color of
+the zero-size segment. In PHPlot-5.7.0 this has been fixed. This will
+change the appearance of some stackedbars plots.  See the bug report "Top
+dropshadow [sic] of stacked bars..."
+
+
+=== Bugs Fixed in 5.7.0:
+
+
+#3396931 "Top dropshadow of stacked bars is always the same color":
+  PHPlot will no longer draw a color 'cap' at the top or end of a bar stack
+  if the last segment has a 0 value. (The term 'dropshadow' isn't correct.)
+  Drawing the color for zero-size segments started in PHPlot-5.4.0 as part of
+  the fix for bug #3296884, but the behavior was unexpected, so it was reverted.
+  In general, PHPlot will now ignore segments with size 0, and if a stack
+  contains all 0 values it will not be drawn. (The exception is if the axis is
+  moved.)
+
+#3488064 "Pie label failures in locales with comma decimal":
+  Two work-arounds are implemented for what is essentially a PHP problem with
+  locales that use something other than a period (typically comma) for the
+  decimal separator.  When formatting labels as type 'data', PHPlot loads the
+  locale settings to get the separator characters, but now it resets ('unloads')
+  the settings afterwards. This helps avoid an error seen in PHPlot-5.6.0 with
+  pie chart labels, where an incidental conversion of the label to a string
+  resulted in use of the comma separator, followed by PHP failing to convert
+  the number back to floating point because of the comma.  The second
+  work-around is to avoid the conversion to string, in the case where the pie
+  label has a single value. Together, these work-arounds should prevent the
+  problem, but this is an imperfect fix.
+
+#3486834 "Wrong color for data value labels":
+  PHPlot was using the 'title' color (SetTitleColor()) for data value labels,
+  which was wrong, as the title color is for the 3 plot title strings. PHPlot
+  will now use the general text color (SetTextColor()) for data value labels,
+  same as tick labels and axis data labels. This will change the appearance
+  of some plots. In order to help with the compatibility issue, 4 new
+  functions are introduced to control the colors of individual label types:
+  SetTickLabelColor(), SetPieLabelColor(), SetDataLabelColor(), and
+  SetDataValueLabelColor(). The defaults have been set up to be compatible
+  (except for data value labels). Details are in the PHPlot Reference Manual.
+
+=== New features in 5.7.0:
+
+#3442041 "Provide data for generating image maps":
+  An experimental feature has been added to allow a callback function to
+  process the coordinates of individual plotted data points. This is most
+  useful for generating an HTML image map for the plot. Refer to the text
+  file Imagemaps.txt included in the PHPlot release for details. Caution:
+  This is an experimental feature. It is subject to change, and not yet
+  documented in the reference manual.
+
+#3481195 "Custom message image":
+  A new function DrawMessage() has been implement for special cases where you
+  need to display an image containing a message, rather than a plot. This
+  extends the PHPlot error reporting mechanism, and is intended for
+  application-level errors. More information and an example can be found
+  in the PHPlot Reference Manual.
+
+
+-----------------------------------------------------------------------------
+
 2012-01-02 Release 5.6.0
 
 === Overview:
