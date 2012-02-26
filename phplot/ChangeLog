@@ -2,6 +2,11 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2012-02-25       ===== Released as 5.7.0 =====
+    * phplot.php: Updated version comment and version constant
+    * README.txt: Updated for new release
+    * NEWS.txt: Add text for new release
+
 2012-02-19
     * Feature request #3442041 "Provide data for generating image maps":
       Note: This is being added as an experimental feature, subject to change
