@@ -4,6 +4,11 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2012-03-16
+   * reference.xml: In SetDrawXDataLabelLines(), document that these
+     also work with bubble plots, and that data labels must be on.
+     (Bug #3506408 "Data Label Lines vs new plot types")
+
 2012-02-24
    * main.xml: Indicate version of next release PHPlot-5.7.0.
    * concepts.xml, developer.xml, examples.xml, reference.xml,

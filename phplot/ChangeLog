@@ -2,6 +2,14 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2012-03-16
+    * Mark as unreleased version, and change minimum requirement to PHP-5.3.
+      (Since PHP-5.4 is released, PHP-5.2.x will no longer be tested.)
+
+    * Fixed bug #3506408 "Data Label Lines vs new plot types":
+      Bubble plots do work with data label lines. No code change.
+      OHLC plots do not work well with data label lines, so don't draw them.
+
 2012-02-25       ===== Released as 5.7.0 =====
     * phplot.php: Updated version comment and version constant
     * README.txt: Updated for new release
