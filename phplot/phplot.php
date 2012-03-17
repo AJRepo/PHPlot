@@ -1,7 +1,7 @@
 <?php
 /* $Id$ */
 /*
- * PHPLOT Version 5.7.0
+ * PHPLOT Version 5.7.0 + unreleased changes
  *
  * A PHP class for creating scientific and business charts
  * Visit http://sourceforge.net/projects/phplot/
@@ -30,12 +30,12 @@
  * Maintainer (2006-present)
  * <lbayuk AT users DOT sourceforge DOT net>
  *
- * Requires PHP 5.2.x or later.
+ * Requires PHP 5.3 or later.
  */
 
 class PHPlot
 {
-    const version = '5.7.0';
+    const version = '5.7.0-Unreleased $Revision$';
 
     /* Declare class variables which are initialized to static values. Many more class variables
      * are used, defined as needed, but are unset by default.
@@ -6634,7 +6634,7 @@ class PHPlot
             $x_right = $x_now_pixels + $dw;
 
             if ($this->x_data_label_pos != 'none')          // Draw X Data labels?
-                $this->DrawXDataLabel($this->data[$row][0], $x_now_pixels, $row);
+                $this->DrawXDataLabel($this->data[$row][0], $x_now_pixels);
 
             // Each row must have 4 values, but skip rows with non-numeric entries.
             if ($this->num_recs[$row] - $record != 4) {
