@@ -10,38 +10,54 @@ $tp = array_merge(array(
   'groups' => 1,            # Number of data groups (1 or more)
   'labelpos' => 'none',     # X Data Label Position: plotup, plotdown, both, none
   'labellines' => False,    # Draw data lines? False or True
-  'plottype' => 'points',   # Plot type: lines, points, or linepoints.
+  'plottype' => 'points',   # Plot type
         ), $tp);
 require_once 'phplot.php';
+
+$n_x = 12; // Fixed number of  X values (rows)
+$max_y = 20; // Max random Y
+
 
 # To get a repeatable test with 'random' data:
 mt_srand(1);
 
 # Make a data array with $tp['groups'] data sets.
-$data = array(
-  array('Jan', 40, 2, 4), array('Feb', 30, 3, 4), array('Mar', 20, 4, 4),
-  array('Apr', 10, 5, 4), array('May',  3, 6, 4), array('Jun',  7, 7, 4),
-  array('Jul', 10, 8, 4), array('Aug', 15, 9, 4), array('Sep', 20, 5, 4),
-  array('Oct', 18, 4, 4), array('Nov', 16, 7, 4), array('Dec', 14, 3, 4),
-);
 $data = array();
 $ng = $tp['groups'];
-for ($pt = 0; $pt < 12; $pt++) {
-  # It's a test script. I can be obscure if I want to.
-  $row = array(strftime('%b', mktime(12, 12, 12, $pt+1, 1, 2000)));
-  for ($r = 0; $r < $ng; $r++) {
-    $row[] = mt_rand(0, 20);
-  }
-  $data[] = $row;
+if ($tp['plottype'] != 'bubbles') {
+    // For lines, points, linepoints:
+    $data_type = 'text-data';
+
+    for ($pt = 0; $pt < $n_x; $pt++) {
+        $row = array(strftime('%b', mktime(12, 12, 12, $pt+1, 1, 2000)));
+        for ($r = 0; $r < $ng; $r++) {
+            $row[] = mt_rand(0, $max_y);
+        }
+        $data[] = $row;
+    }
+
+} else {
+    // Special case data set for bubbles plot, needs 3D data.
+    $data_type = 'data-data-xyz';
+
+    // Note: X values matche auto-generated values for text-data: 0.5, 1.5, etc
+    for ($pt = 0; $pt < $n_x; $pt++) {
+        $row = array(strftime('%b', mktime(12, 12, 12, $pt+1, 1, 2000)),
+                     $pt + 0.5);
+        for ($r = 0; $r < $ng; $r++) {
+            $row[] = mt_rand(0, $max_y); // Y value
+            $row[] = mt_rand(0, 100); // Z value
+        }
+        $data[] = $row;
+    }
 }
 
 $plot = new PHPlot();
 $plot->SetTitle($tp['title'] . $tp['suffix']);
-$plot->SetDataType('text-data');
+$plot->SetDataType($data_type);
 $plot->SetDataValues($data);
 $plot->SetPlotType($tp['plottype']);
-$plot->SetPlotAreaWorld(NULL, 0, NULL, 20);
-
+$plot->SetPlotAreaWorld(0, 0, $n_x, $max_y);
 # Position data labels:
 $plot->SetXDataLabelPos($tp['labelpos']);
 # Turn data label lines on or off:
