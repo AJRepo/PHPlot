@@ -2238,7 +2238,8 @@ True to draw the data label lines, False to not draw the lines.
   <refsect1>
     <title>Notes</title>
     <para>
-Data label lines only work with these plot types: lines, points, and linepoints.
+Data label lines only work with these plot types: lines, points, linepoints,
+and bubbles. Data label lines can only be drawn if X axis data labels are on.
     </para>
     <para>
 If a graph contains multiple data sets, data label lines drawn down will start
@@ -2247,6 +2248,9 @@ start at the minimum Y value for each X value.
     </para>
     <para>
 By default, data label lines are not drawn.
+    </para>
+    <para>
+For an example of data label lines, see <xref linkend="ex-linepoints2"/>.
     </para>
   </refsect1>
 </refentry>
