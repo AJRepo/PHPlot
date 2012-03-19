@@ -1,6 +1,11 @@
 This is the Change Log for phplottest, the PHPlot Test Suite
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
+2012-03-19
+    * datalabellines.php: Add support for error plots.
+    * datalabellines[cde].php: 3 new tests, data label lines in error plots.
+    * tests.ini: List 3 new tests
+
 2012-03-16
     * datalabellines.php: Add support for testing data label lines with
       bubble plots (reference: bug #3506408).
