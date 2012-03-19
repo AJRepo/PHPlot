@@ -78,13 +78,14 @@ END;
 
 
 # Save resulting HTML for later viewing (in test directory, if applicable):
-$filename = $out_name . '.html';
+$save_html_file = $out_name . '.html';
 $r = getenv("RESULTDIR");
-if (!empty($r)) $filename = $r . DIRECTORY_SEPARATOR . $filename;
+if (empty($r)) $save_html = $save_html_file;
+else $save_html = $r . DIRECTORY_SEPARATOR . $save_html_file;
 
-if (($f = fopen($filename, "w"))) {
+if (($f = fopen($save_html, "w"))) {
     fwrite($f, $html);
-    fwrite(STDOUT, "Note: Wrote HTML to $filename in results directory\n");
+    echo "Note: Wrote HTML to $save_html_file in results directory\n";
     fclose($f);
 }
 
