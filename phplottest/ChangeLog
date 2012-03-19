@@ -6,6 +6,10 @@ The project home page is http://sourceforge.net/projects/phplot/
     * datalabellines[cde].php: 3 new tests, data label lines in error plots.
     * tests.ini: List 3 new tests
 
+    * imagemap_html-{b,bu,c,pi,pt}.php: Fix the test output messages so they
+      do not contain the path to the results directory, to avoid spurious
+      result compare errors.
+
 2012-03-16
     * datalabellines.php: Add support for testing data label lines with
       bubble plots (reference: bug #3506408).
