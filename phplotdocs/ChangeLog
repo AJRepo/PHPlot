@@ -4,6 +4,25 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+* 2012-03-24
+    * Feature request #3488042 "Display only some data value labels":
+      Document new feature that passes $row or $row, $column to custom label
+      formatting functions.
+      + developer.xml: Document new usage for internal functions
+        CheckDataValueLabels(), DrawDataValueLabel(), DrawXDataLabel(),
+        DrawYDataLabel(), and FormatLabel().
+      + reference.xml: Changed SetXLabelType(), SetXDataLabelType(),
+        SetYLabelType(), and SetYDataLabelType() (same changes to all 4) -
+        document new arguments to custom formatting callbacks, and link to
+        new Concepts sections.
+      + concepts.xml: Expand sections on label formatting.
+      + examples.xml: Add new example of custom label formatting.
+      + examples/dlexformat.php: New example of custom label formatting.
+      + Makefile: Add new files for dlexformat example.
+      + changelog.xml: updated
+
+    * concepts.xml: Fix typo in description of data-data-yx: Y, not X.
+
 2012-03-16
    * reference.xml: In SetDrawXDataLabelLines(), document that these
      also work with bubble plots, and that data labels must be on.

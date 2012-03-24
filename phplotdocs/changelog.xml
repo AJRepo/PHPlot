@@ -14,6 +14,17 @@ see the ChangeLog file inside the PHPlot distribution.)
 
 <variablelist>
   <varlistentry>
+    <term>2012-03-23</term>
+    <listitem>
+      <para>
+Break apart the section on label formatting into separate sub-sections
+for each formatting type, and include documentation for the new arguments
+to custom formatting callback functions.
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
     <term>2012-02-25</term>
     <listitem>
       <para>
