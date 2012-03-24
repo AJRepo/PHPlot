@@ -102,6 +102,7 @@ EXAMPLES_PHP=\
   examples/bubbles1.php \
   examples/colorcallbackbars.php \
   examples/colorcallbackgradient.php \
+  examples/dlexformat.php \
   examples/drawmessage.php \
   examples/encodeimage.php \
   examples/histogram.php \
@@ -161,6 +162,7 @@ EXAMPLES_IMAGES=\
   examples/bubbles1.png \
   examples/colorcallbackbars.png \
   examples/colorcallbackgradient.png \
+  examples/dlexformat.png \
   examples/drawmessage.png \
   examples/histogram.jpg \
   examples/horizbar.png \
