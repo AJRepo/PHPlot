@@ -1690,4 +1690,50 @@ The DrawMessage function was added in PHPlot-5.7.0.
 </sect1>
 
 <!-- =============================================== -->
+<pagebreak/>
+<sect1 id="ex-dlexformat">
+<title>Example - Custom Data Value Label Formatting</title>
+<para>
+This example shows some advanced usage of label formatting. A user-defined
+function can be used to format labels, using the <literal>custom</literal>
+label type in <xref linkend="SetXLabelType"/>, <xref linkend="SetYLabelType"/>,
+<xref linkend="SetXDataLabelType"/>, and <xref linkend="SetYDataLabelType"/>.
+The user-defined function will have access to the row and column of the data
+point being plotted (for most data value labels), or the column (for axis data
+labels), and it can use these variables to control the formatting.
+</para>
+<para>
+This example produces a linepoints plot with multiple data sets and with
+labels identifying the data values. The goal is to label only the greatest
+Y value for each X value. Before plotting, the data array is scanned to
+find the column index of the largest Y value for each row, and this
+information is stored in an array <literal>$max_indexes</literal>. That
+array is passed to the custom label formatting function as the pass-through
+argument. The label formatting function uses the array, along with the row
+and column of the point being labeled, to determine if a label should be
+produced or not.
+</para>
+<para>
+Access to the data point row and column index was added after PHPlot-5.7.0.
+</para>
+
+<example id="example-dlexformat">
+<?dbfo keep-together="auto"?>
+<title>Custom Data Value Label Formatting</title>
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="examples/dlexformat.png" scale="58" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>Custom Data Value Label Formatting Example</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+&dlexformat;
+</example>
+</sect1>
+
+<!-- =============================================== -->
+
 </chapter>
