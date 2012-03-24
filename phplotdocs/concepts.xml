@@ -459,7 +459,7 @@ and thinbarline plot types.
       <para>
 Each record contains a label, a Y value, then one or more X values:
 <literal>array('label', y, x1, x2, ...)</literal>.
-This is the same as 'text-data-yx' except the X values are explicitly given.
+This is the same as 'text-data-yx' except the Y values are explicitly given.
 This data type is for horizontal plots, and only works with the thinbarline
 plot type.
       </para>
@@ -2511,23 +2511,48 @@ labels.
 </para>
 
 <para>
+The following sections contain details of the available formatting types.
+More examples can be found in the reference page for
+<xref linkend="SetXLabelType"/>.
+</para>
+
+<sect3 id="conc-labels-format-data">
+<title>Formatting Labels: 'data' type</title>
+<para>
 Label format type 'data' expects the tick label, data label, or pie label
 values to be numbers, and formats the values as floating point numbers with
 a separator between every group of thousands and a fixed number of decimal
 places.  You can set the number of digits of precision, with the default
-being 1 digit.  PHPlot will try to set the thousands grouping separator and
+being 1 digit. You can also set a prefix and/or suffix string (such as a
+currency symbol or percent sign).
+PHPlot will try to set the thousands grouping separator and
 decimal separator according to your locale, but this can be overridden if
 necessary.
 </para>
+<para>
+For example:
+  <programlisting><![CDATA[$plot->SetYLabelType('data', 2, '$');
+]]></programlisting>
+This might format the value 1234.567 as "$1,234.57" (depending on locale).
+</para>
+</sect3>
 
+<sect3 id="conc-labels-format-time">
+<title>Formatting Labels: 'time' type</title>
 <para>
 Label format type 'time' expects the tick or data label values to be a PHP time
 value (number of seconds since a fixed base data, the Unix Epoch).
 PHPlot will format the labels according to the format string you provide.
 Refer to the PHP documentation for <function>strftime()</function> for
-details on the format string, but here are some examples for 31 December
-2004 at 1:23:45 pm:
-
+details on the format string.
+</para>
+<para>
+For example:
+  <programlisting><![CDATA[$plot->SetXLabelType('time', $format);
+]]></programlisting>
+If a label value is the numeric equivalent of "31 December 2004 at 1:23:45 pm"
+(which is 1104517425 on some platforms), the following table shows some
+examples of the result with different values of $format:
 <informaltable>
   <?dbfo table-width="40%"?> <!-- Table width hint for PDF only -->
   <?dbfo keep-together="always"?>
@@ -2537,7 +2562,7 @@ details on the format string, but here are some examples for 31 December
     <colspec colname="c2" colwidth="50*" />
     <thead>
       <row>
-        <entry>Format String:</entry>
+        <entry>$format:</entry>
         <entry>Result:</entry>
       </row>
     </thead>
@@ -2590,13 +2615,201 @@ Y values (and it is hard to imagine where that would be useful), you have
 no option but to use the 'time' format labels for tick values.
 </para>
 
+</sect3>
+
+<sect3 id="conc-labels-format-printf">
+<title>Formatting Labels: 'printf' type</title>
 <para>
-Two additional label format types are available.
-Label format type 'printf' uses a custom print format string.
-To use label format type 'custom', you supply a function of your own
-to format the labels. See <xref linkend="SetXLabelType"/> for more
-details about these format types.
+Label format type 'printf' expects a second argument specifying a
+<function>printf</function> format string, and formats the label value
+according to the string.
+The format string must contain exactly one conversion specification
+(%-code) which consumes a single argument.
+For example:
+  <programlisting><![CDATA[$plot->SetYLabelType('printf', '%8.2e parsecs');
+]]></programlisting>
+This might produce a label like " 1.23e+8 parsecs".
 </para>
+
+</sect3>
+
+<sect3 id="conc-labels-format-custom">
+<title>Formatting Labels: 'custom' type</title>
+<para>
+A user-defined function can be provided to format labels. Specify
+formatting type 'custom', and provide the name of your function as
+a string. (This is actually a PHP <emphasis>callback</emphasis> type
+argument, which can also be an array containing an object and a method
+name. See the PHP documentation on callbacks for more details.)
+You can provide an additional argument which will be passed
+to your function when formatting labels (a
+<emphasis>pass-through</emphasis> argument).
+</para>
+
+<para>
+In this example, the user-provided function is called
+<function>my_formatter</function>, and you want an additional argument $data
+passed to the function.
+  <programlisting><![CDATA[$plot->SetYLabelType('custom', 'my_formatter', $data);
+]]></programlisting>
+</para>
+
+<para>
+Your formatting function will accept 1 or 2 arguments (or more - see below).
+  <programlisting><![CDATA[function my_formatter($label, $arg)
+{
+    ...
+    return $some_result;
+}
+]]></programlisting>
+The function will be called with $label set to the value of the label to be
+formatted, and is expected to return the formatted label text. $arg is a 
+pass-through argument that has whatever value you used with
+<function>SetXLabelType</function> (etc.). In the above example, this is
+$data. You need to declare this second argument in your function only if
+you are using a pass-through argument.
+</para>
+
+<note>
+  <para>
+PHPlot may call your label formatting function multiple times for the same
+label, and your function must return the same value each time.
+Also, do not rely on the labels being formatted in any particular order.
+  </para>
+  <para>
+A custom label formatting function will not be called at all if the
+label value is an empty string (<literal>''</literal>).
+This generally only applies to axis data labels (the label strings in
+your data array), since others are numbers.
+This means you cannot use custom label formatting to replace an empty
+string with something else. The custom label formatting function
+will be called if the label string is anything other than an empty
+string, such as a string with single space.
+  </para>
+</note>
+
+<para>
+Custom label formatting is extremely flexible. You can convert values into
+another format (for example, degrees, minutes, seconds), or look up values
+in an external array (see <xref linkend="ex-bubbles1"/>), for example.
+However, using this method, you can only selectively format or display labels
+based on their value. For even more control, use the additional arguments
+provided to the formatting function which are described in the next section.
+</para>
+</sect3>
+
+<sect3 id="conc-labels-format-custom2">
+<title>Formatting Labels: Extended 'custom' type</title>
+<para>
+When you use 'custom' formatting type, PHPlot actually provides 0, 1, or 2
+additional arguments to your callback. These identify the row, or row and
+column, of the data point being labeled. You can use these extra arguments
+in your callback for selective formatting or filtering based on the
+position of the point being plotted in your data array.
+</para>
+
+<para>
+PHPlot provides the following additional arguments to a custom label
+formatting callback (after the label value and pass-through arguments):
+<informaltable>
+  <?dbfo table-width="70%"?> <!-- Table width hint for PDF only -->
+  <?dbfo keep-together="always"?>
+  <tgroup cols="2">
+    <?dbhtml table-summary="Custom formatting callback arguments"?>
+    <colspec colname="c1" colwidth="50*" />
+    <colspec colname="c2" colwidth="50*" />
+    <thead>
+      <row>
+        <entry>Label:</entry>
+        <entry>Arguments Provided:</entry>
+      </row>
+    </thead>
+    <tbody>
+      <row>
+        <entry>Tick Labels</entry>
+        <entry>(None)</entry>
+      </row>
+      <row>
+        <entry>Axis Data Labels</entry>
+        <entry>$row</entry>
+      </row>
+      <row>
+        <entry>Data Value Labels (other than stackedbars total labels)</entry>
+        <entry>$row, $column</entry>
+      </row>
+      <row>
+        <entry>stackedbars data value labels for bar totals</entry>
+        <entry>$row</entry>
+      </row>
+    </tbody>
+  </tgroup>
+</informaltable>
+</para>
+
+<para>
+You need not declare these arguments unless you are using them, but if you
+do declare them, it is safer to make them optional with default NULL.
+(If you are only using the custom callback function for one specific type of
+label, you can omit the defaults.)
+For example:
+  <programlisting><![CDATA[function my_formatter($label, $arg, $row=NULL, $column=NULL)
+{
+    ...
+    return $some_result;
+}
+]]></programlisting>
+</para>
+
+<para>
+The <emphasis>row</emphasis> argument value is an index starting with zero
+that numbers the rows in your data array. This corresponds to the ordinal
+position of the independent variable (X for vertical plots, Y for
+horizontal plots). This is also the outer index of your data array.
+</para>
+
+<para>
+The <emphasis>column</emphasis> argument value is an index starting with zero
+that numbers the data sets in each row. This corresponds to the ordinal
+position of the dependent variable (Y for vertical plots, X for
+horizontal plots). Note that this is not simply the inner index of your
+data array, because the data array rows also have labels, and (depending on
+the data type) may contain other values.
+For example, given the data type <literal>data-data</literal> and this data
+array:
+  <programlisting><![CDATA[$data = array(
+    array('Jan', 1,  10, 11, 12),
+    array('Feb', 2,  20, 21, 22),
+    array('Mar', 3,  30, 31, 32),
+);
+]]></programlisting>
+When formatting a data value label for X=2, Y=22 (the 3rd data set in
+the row labeled 'Feb'), PHPlot will call a custom label formatting function
+like this:
+  <programlisting><![CDATA[my_formatter(22, $passthrough, 1, 2);
+]]></programlisting>
+That is, row=1 and column=2.
+</para>
+
+<para>
+As described in <xref linkend="conc-labels-format-custom"/>, your callback
+function returns the value of the formatted label. You can return an empty
+string to display no label. This can be used to display data value labels
+for only one data set, for example - just return an empty string if $column
+is not equal to the index of the data set you want to label.
+</para>
+
+<para>
+See <xref linkend="ex-dlexformat"/> for an example.
+</para>
+
+<note>
+  <para>
+These additional row and column arguments are only available after PHPlot-5.7.0.
+  </para>
+</note>
+
+</sect3>
+
 </sect2>
 
 </sect1>
