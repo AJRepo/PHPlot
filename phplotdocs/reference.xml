@@ -7968,8 +7968,12 @@ For type 'custom', there is one required argument and one optional argument:
 A callback function to format the label. This is either the name of a
 function (as a string), or a two-element array with an object instance and
 method name. (Refer to the PHP documentation for more information on the
-callback type.) The callback will be called with two arguments: the value
-of the label to be formatted, and the pass-through argument (see next).
+callback type.)
+The callback will be called with two, three, or four arguments:
+the value of the label to be formatted, the pass-through argument (see next),
+and the row and column of the data point (if applicable to the label type).
+See <xref linkend="conc-labels-format-custom2"/> for more on the row and
+column arguments supplied to the callback.
             </para>
           </listitem>
         </varlistentry>
@@ -7990,7 +7994,13 @@ If omitted, NULL is used.
     <title>Notes</title>
     <para>
 This function applies to both X axis data labels and X data value labels.
-See <xref linkend="conc-labels"/> for more information on data labels.
+(There is no ambiguity, because vertical plots have only X axis data labels,
+and horizontal plots have only X data value labels.)
+    </para>
+    <para>
+See <xref linkend="conc-labels"/> for more information on labels, and
+specifically <xref linkend="conc-labels-format"/> for more information on
+formatting labels.
     </para>
     <para>
 The default formatting mode is to do no special formatting of the labels.
@@ -8016,6 +8026,10 @@ See <xref linkend="SetXLabelType" />.
 
   <refsect1>
     <title>History</title>
+    <para>
+Custom label formatting functions are passed the row and column arguments
+(if applicable) starting after PHPlot-5.7.0.
+    </para>
     <para>
 This function was added in PHPlot-5.1.0.
 Through PHPlot-5.0.7, data labels and tick labels always used the same
@@ -8232,8 +8246,12 @@ For type 'custom', there is one required argument and one optional argument:
 A callback function to format the label. This is either the name of a
 function (as a string), or a two-element array with an object instance and
 method name. (Refer to the PHP documentation for more information on the
-callback type.) The callback will be called with two arguments: the value
-of the label to be formatted, and the pass-through argument (see next).
+callback type.)
+The callback will be called with two, three, or four arguments:
+the value of the label to be formatted, the pass-through argument (see next),
+and the row and column of the data point (if applicable to the label type).
+See <xref linkend="conc-labels-format-custom2"/> for more on the row and
+column arguments supplied to the callback.
             </para>
           </listitem>
         </varlistentry>
@@ -8252,6 +8270,11 @@ If omitted, NULL is used.
 
   <refsect1>
     <title>Notes</title>
+    <para>
+See <xref linkend="conc-labels"/> for more information on labels, and
+specifically <xref linkend="conc-labels-format"/> for more information on
+formatting labels.
+    </para>
     <para>
 The default formatting mode is to do no special formatting of the labels.
 Strings will be output as-is, and numbers will be output using PHP's
@@ -8408,6 +8431,10 @@ $plot->SetXLabelType('custom', 'deg_min_sec');
   </refsect1>
   <refsect1>
     <title>History</title>
+    <para>
+Custom label formatting functions are passed the row and column arguments
+(if applicable) starting after PHPlot-5.7.0.
+    </para>
     <para>
 Through PHPlot-5.0.7, this function set the format type for both X tick
 labels and X data labels.
@@ -9629,8 +9656,12 @@ For type 'custom', there is one required argument and one optional argument:
 A callback function to format the label. This is either the name of a
 function (as a string), or a two-element array with an object instance and
 method name. (Refer to the PHP documentation for more information on the
-callback type.) The callback will be called with two arguments: the value
-of the label to be formatted, and the pass-through argument (see next).
+callback type.)
+The callback will be called with two, three, or four arguments:
+the value of the label to be formatted, the pass-through argument (see next),
+and the row and column of the data point (if applicable to the label type).
+See <xref linkend="conc-labels-format-custom2"/> for more on the row and
+column arguments supplied to the callback.
             </para>
           </listitem>
         </varlistentry>
@@ -9651,7 +9682,13 @@ If omitted, NULL is used.
     <title>Notes</title>
     <para>
 This function applies to both Y axis data labels and Y data value labels.
-See <xref linkend="conc-labels"/> for more information on data labels.
+(There is no ambiguity, because vertical plots have only Y data value labels,
+and horizontal plots have only Y axis data labels.)
+    </para>
+    <para>
+See <xref linkend="conc-labels"/> for more information on labels, and
+specifically <xref linkend="conc-labels-format"/> for more information on
+formatting labels.
     </para>
     <para>
 The default formatting mode is to do no special formatting of the labels.
@@ -9675,6 +9712,10 @@ See <xref linkend="SetXLabelType" />.
   </refsect1>
   <refsect1>
     <title>History</title>
+    <para>
+Custom label formatting functions are passed the row and column arguments
+(if applicable) starting after PHPlot-5.7.0.
+    </para>
     <para>
 This function was added in PHPlot-5.1.0.
 Through PHPlot-5.0.7, data labels and tick labels always used the same
@@ -9883,8 +9924,12 @@ For type 'custom', there is one required argument and one optional argument:
 A callback function to format the label. This is either the name of a
 function (as a string), or a two-element array with an object instance and
 method name. (Refer to the PHP documentation for more information on the
-callback type.) The callback will be called with two arguments: the value
-of the label to be formatted, and the pass-through argument (see next).
+callback type.)
+The callback will be called with two, three, or four arguments:
+the value of the label to be formatted, the pass-through argument (see next),
+and the row and column of the data point (if applicable to the label type).
+See <xref linkend="conc-labels-format-custom2"/> for more on the row and
+column arguments supplied to the callback.
             </para>
           </listitem>
         </varlistentry>
@@ -9903,6 +9948,11 @@ If omitted, NULL is used.
 
   <refsect1>
     <title>Notes</title>
+    <para>
+See <xref linkend="conc-labels"/> for more information on labels, and
+specifically <xref linkend="conc-labels-format"/> for more information on
+formatting labels.
+    </para>
     <para>
 The default formatting mode is to do no special formatting of the labels.
 Strings will be output as-is, and numbers will be output using PHP's
@@ -9929,6 +9979,10 @@ See <xref linkend="SetXLabelType" />.
   </refsect1>
   <refsect1>
     <title>History</title>
+    <para>
+Custom label formatting functions are passed the row and column arguments
+(if applicable) starting after PHPlot-5.7.0.
+    </para>
     <para>
 Through PHPlot-5.0.7, this function set the format type for both Y tick
 labels and Y data labels.
