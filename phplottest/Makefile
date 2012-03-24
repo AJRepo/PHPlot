@@ -11,7 +11,7 @@ TESTS := $(shell sed -n 's/^\[\([^]]*\).*/\1.php/p' tests.ini)
 
 # Extra files needed for testing:
 EXTRA=run_test.php compare_tests.php \
-  config.php usupport.php esupport.php testclass.php \
+  config.php usupport.php esupport.php testclass.php makedata.php \
   tests.ini transparent.html drawtext.php ohlcdata.csv ex-pielabeltypedata.php
 
 # Additional files to release:
