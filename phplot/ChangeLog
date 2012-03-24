@@ -2,6 +2,37 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2012-03-24
+    * Feature request #3488042 "Display only some data value labels":
+      A custom formatting callback function for Data Value Labels will now
+      receive 2 extra arguments: the data array row and column indexes for the
+      point. A custom formatting callback function for Axis Data Labels will
+      now receive 1 extra argument: the data array row index. This allows
+      selective formatting (or skipping) of labels based on their position
+      in the data array. For example, you can skip data value labels
+      for some data sets, and label others.
+      + Changed usage of internal CheckDataValueLabels() to combine 4
+        arguments into an array. This is to correspond to the new usage of
+        DrawDataValueLabel().
+      + In CalcMaxDataLabelSize(), when calculating the maximum axis data
+        label size, pass the row to the formatting function.
+      + Changed internal FormatLabel() to pass any additional arguments to a
+        custom label formatting function.
+      + Changed usage of internal DrawDataValueLabel(). Added arguments for
+        row and column, and combined 6 arguments into an array (because the
+        argument list was already too long). Pass the row and column to
+        FormatLabel() so they are available for custom label formatting.
+      + Changed usage of internal DrawXDataLabel(). The row argument is now
+        required, and used for custom label formatting and data label lines.
+        There is a new argument $do_lines to control drawing of data label
+        lines. (Previously, one argument served both purposes.)
+      + Changed usage of internal DrawYDataLabel(). Add a row argument to
+        pass to FormatLabel() for use in custom label formatting.
+      + Changed all plotting functions that call DrawXDataLabel() or
+        DrawYDataLabel() to include the new row argument.
+      + Changed all functions that call CheckDataValueLabels() and
+        DrawDataValueLabel() per new usage.
+
 2012-03-16
     * Mark as unreleased version, and change minimum requirement to PHP-5.3.
       (Since PHP-5.4 is released, PHP-5.2.x will no longer be tested.)
