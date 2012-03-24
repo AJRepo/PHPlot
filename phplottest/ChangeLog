@@ -1,6 +1,18 @@
 This is the Change Log for phplottest, the PHPlot Test Suite
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
+2012-03-24
+    * dlexformat*.php: 19 new tests for custom label formatting with
+      row and column arguments.
+    * ex-dlexformat.php : 1 new test from new reference manual example.
+    * tests.ini: List 20 new tests
+    * makedata.php: New support script, used by new tests.
+    * Makefile: List new support script
+
+    * u.dvlpos.php: Fix test which broke due to new usage of
+      CheckDataValueLabels().  Changed to auto-detect old or new usage
+      and now works with both.
+
 2012-03-19
     * datalabellines.php: Add support for error plots.
     * datalabellines[cde].php: 3 new tests, data label lines in error plots.
