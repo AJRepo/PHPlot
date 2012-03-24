@@ -399,19 +399,22 @@ the plot drawing functions check the data type.
 </varlistentry>
 
 <varlistentry>
-  <term><anchor id="CheckDataValueLabels" xreflabel="CheckDataValueLabels"/>CheckDataValueLabels($label_control, &amp;$x_adj, &amp;$y_adj, &amp;$h_align, &amp;$v_align)</term>
+  <term><anchor id="CheckDataValueLabels" xreflabel="CheckDataValueLabels"/>CheckDataValueLabels($label_control, &amp;$dvl)</term>
   <listitem>
     <para>
 Checks to see if data value labels should be drawn, based on $label_control
 (which is always <literal>$this->y_data_label_pos</literal>, since only
 vertical plot functions currently use this).
 Returns FALSE if the labels are off, else returns TRUE and sets 4 variables
-which are used by <xref linkend="DrawDataValueLabel"/> to position the label.
-$x_adj and $y_adj are pixel offsets for the label,
-and $h_align and $v_align set the text alignment.
+in the $dvl array. This array is used by <xref linkend="DrawDataValueLabel"/>
+to position the label. The array contains these keys: x_offset, y_offset :
+device coordinate (pixel) offsets for the label; h_align, v_align :
+text alignment.
 Called by plot type drawing functions such as <xref linkend="DrawDots"/>
 which do data value labels, other than bars and stackedbars.
 This was added in PHPlot-5.3.0.
+Through PHPlot-5.7.0, four separate reference arguments were used for the
+return values, instead of an array.
     </para>
   </listitem>
 </varlistentry>
@@ -654,32 +657,45 @@ by <xref linkend="DrawDataValueLabel"/>.
 </varlistentry>
 
 <varlistentry>
-  <term><anchor id="DrawDataValueLabel" xreflabel="DrawDataValueLabel"/>DrawDataValueLabel($x_or_y, $x_world, $y_world, $text, $halign, $valign, $x_adjustment=0, $y_adjustment=0, $min_width=NULL, min_height=NULL)</term>
+  <term><anchor id="DrawDataValueLabel" xreflabel="DrawDataValueLabel"/>DrawDataValueLabel($x_or_y, $row, $column, $x_world, $y_world, $text, $dvl)</term>
   <listitem>
     <para>
 Draws a data value label (previously called "Y data label").
-These are the above-bar or in-bar labels on bar and stackedbar charts.
+These are the above-bar or in-bar labels on bar and stackedbar charts, and
+the labels near data points available with some other plot types.
 </para>
 <para>
-x_or_y is 'x' or 'y' to select the font, angle, and formatting type.
-The label is drawn at world coordinates (x_world, y_world) after device
-coordinate offset (x_adjustment, y_adjustment) is applied.
-Two arguments halign and valign specify the text alignment relative
-to the plotting point (see <xref linkend="DrawText"/>).
-The text argument is formatted with <xref linkend="FormatLabel"/> before
-drawing.
-The final arguments min_width and min_height are used to prevent labels
-from overlapping their allocated space. If either of these is supplied, the
-text is sized before drawing, and if it won't fit in the space the text is
-not drawn. This is used to suppress labels that are too wide to be drawn
-inside their bars, for example.
+$x_or_y is 'x' or 'y' to select the font, angle, and formatting type.
+The $row and $column are passed to <xref linkend="FormatLabel"/>
+for possible use with a custom formatting function.
+The label is drawn at world coordinates ($x_world, $y_world) after device
+coordinate offset is applied (see below).
+$text is the label text, which gets formatted with
+<xref linkend="FormatLabel"/> before drawing.
+</para>
+<para>
+The $dvl argument is an array with up to 6 variables containing positioning
+and related information. In $dvl, x_offset and y_offset are pixel offsets
+for the label; h_align and v_align specify the text alignment relative
+to the plotting point (see <xref linkend="DrawText"/>);
+min_width and max_width used to prevent labels from overlapping their
+allocated space. If either min_width or max_width is supplied in the $dvl
+array, the text is sized before drawing, and if it won't fit in the space
+the label is not drawn. This is used to suppress labels that are too wide to
+be drawn inside their bars, for example.
+The defaults for the X and Y offsets are 0, and the default alignment is
+(center, center). (The $dvl argument is required, but none of its elements
+is required.)
+</para>
+<para>
+This function is called by all plot drawing functions which support data value
+labels, if those labels are enabled.
 </para>
 <para>
 This function was added in PHPlot-5.1.3 and replaced
 <xref linkend="DrawDataLabel"/>.
-It is called by the bar chart drawing functions including
-<xref linkend="DrawBars"/> and <xref linkend="DrawStackedBars"/>
-if these labels are enabled.
+Through PHPlot-5.7.0, 6 separate arguments were used instead of the $dvl
+array, and the $row and $column arguments were not present.
     </para>
   </listitem>
 </varlistentry>
@@ -1061,16 +1077,20 @@ Called by <xref linkend="DrawGraph"/>.
 </varlistentry>
 
 <varlistentry>
-  <term><anchor id="DrawXDataLabel" xreflabel="DrawXDataLabel"/>DrawXDataLabel($xlab, $xpos, $row=FALSE)</term>
+  <term><anchor id="DrawXDataLabel" xreflabel="DrawXDataLabel"/>DrawXDataLabel($xlab, $xpos, $row, $do_lines=FALSE)</term>
   <listitem>
     <para>
 Draws an axis data label for an X value. The labels are above or below the plot
 area or both, depending on the value set with
 <xref linkend="SetXDataLabelPos"/>.
-This also calls <xref linkend="DrawXDataLine"/> to draw a line from the
-label to the point, if enabled.
-This is used by vertical plots.
-Called by plot drawing routines for all plot types except
+The $row value indicates the row index in the data array for this label; it
+is used to position the data label line, and for custom label formatting.
+If $do_lines is true, this calls <xref linkend="DrawXDataLine"/> to draw a
+line from the label to the point, if enabled and supported by the plot type.
+    </para>
+    <para>
+This function is used by vertical plots.
+It is called by plot drawing routines for all plot types except
 <literal>pie</literal>:
 <xref linkend="DrawArea"/>, 
 <xref linkend="DrawBars"/>,
@@ -1153,13 +1173,17 @@ Called by <xref linkend="DrawGraph"/>.
 </varlistentry>
 
 <varlistentry>
-  <term><anchor id="DrawYDataLabel" xreflabel="DrawYDataLabel"/>DrawYDataLabel($ylab, $ypos)</term>
+  <term><anchor id="DrawYDataLabel" xreflabel="DrawYDataLabel"/>DrawYDataLabel($ylab, $ypos, $row)</term>
   <listitem>
     <para>
 Draws an axis data label for a Y value. The labels are along the Y axis or
 side of the plot, or both, depending on the value set with
 <xref linkend="SetYDataLabelPos"/>.
-This is used by horizontal plots, and was added in PHPlot-5.1.2.
+The $row value indicates the row index in the data array for this label; it
+is used for custom label formatting. (Note: This function is similar to
+<xref linkend="DrawXDataLabel"/> except it does not draw data label
+lines, since no horizontal plot type currently supports data label lines.)
+This function is used by horizontal plots, and was added in PHPlot-5.1.2.
 Called by horizontal plot drawing functions such as
 <xref linkend="DrawHorizBars"/>.
     </para>
@@ -1239,7 +1263,7 @@ from various places, with a flag data_limits_done to indicate it was called.)
 </varlistentry>
 
 <varlistentry>
-  <term><anchor id="FormatLabel" xreflabel="FormatLabel"/>FormatLabel($which_pos, $which_lab)</term>
+  <term><anchor id="FormatLabel" xreflabel="FormatLabel"/>FormatLabel($which_pos, $which_lab, ...)</term>
   <listitem>
     <para>
 Formats a value for use as a tick, data, or pie chart label.
@@ -1251,10 +1275,17 @@ If no formatting is in effect for that label type ($which_pos), it returns the
 label string $which_lab as-is. Otherwise, it formats it as directed. This
 can be a floating point number (formatted with <xref linkend="number_format"/>),
 a date/time value, or it can be formatted with <function>sprintf</function>
-or a user-defined function.
+or a user-defined function (type 'custom').
+Any additional arguments after the first 2 are passed through to a custom label
+formatting function. This is used to make the data row and column available
+to the user-defined function (if applicable for the label type).
+    </para>
+    <para>
 Called by several functions that need to format label values.
 Separation of data and tick label formatting was available starting with
 PHPlot-5.1.0. Use with pie chart labels was added in PHPlot-5.6.0.
+Support for additional arguments for custom functions  was added
+after PHPlot-5.7.0.
     </para>
   </listitem>
 </varlistentry>
