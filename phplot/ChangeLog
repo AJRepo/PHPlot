@@ -1,6 +1,11 @@
 This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
+2012-03-26
+    * Code cleanup: Don't format tick labels unless they are on.
+      + Pass the actual tick value, not an already-formatted label, from
+        Draw[XY]Ticks() to Draw[XY]Tick(), so they can format it if needed.
+      + Clean up loop in DrawXTicks(), DrawYTicks(). No functional changes.
 
 2012-03-24
     * Feature request #3488042 "Display only some data value labels":
