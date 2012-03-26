@@ -4494,95 +4494,104 @@ class PHPlot
 
     /*
      * Draw one X tick mark and its tick label.
-     *   $which_xlab : Formatted X value for the label.
-     *   $which_xpix : X device coordinate for this tick mark.
+     *   $x : X value for the label. This is the unformatted value (in PHPlot>5.7.0)
+     *   $x_pixels : X device coordinate for this tick mark.
      */
-    protected function DrawXTick($which_xlab, $which_xpix)
+    protected function DrawXTick($x, $x_pixels)
     {
         // Ticks on X axis
         if ($this->x_tick_pos == 'xaxis') {
-            ImageLine($this->img, $which_xpix, $this->x_axis_y_pixels - $this->x_tick_cross,
-                      $which_xpix, $this->x_axis_y_pixels + $this->x_tick_length, $this->ndx_tick_color);
+            ImageLine($this->img, $x_pixels, $this->x_axis_y_pixels - $this->x_tick_cross,
+                      $x_pixels, $this->x_axis_y_pixels + $this->x_tick_length, $this->ndx_tick_color);
         }
 
         // Ticks on top of the Plot Area
         if ($this->x_tick_pos == 'plotup' || $this->x_tick_pos == 'both') {
-            ImageLine($this->img, $which_xpix, $this->plot_area[1] - $this->x_tick_length,
-                      $which_xpix, $this->plot_area[1] + $this->x_tick_cross, $this->ndx_tick_color);
+            ImageLine($this->img, $x_pixels, $this->plot_area[1] - $this->x_tick_length,
+                      $x_pixels, $this->plot_area[1] + $this->x_tick_cross, $this->ndx_tick_color);
         }
 
         // Ticks on bottom of Plot Area
         if ($this->x_tick_pos == 'plotdown' || $this->x_tick_pos == 'both') {
-            ImageLine($this->img, $which_xpix, $this->plot_area[3] + $this->x_tick_length,
-                      $which_xpix, $this->plot_area[3] - $this->x_tick_cross, $this->ndx_tick_color);
+            ImageLine($this->img, $x_pixels, $this->plot_area[3] + $this->x_tick_length,
+                      $x_pixels, $this->plot_area[3] - $this->x_tick_cross, $this->ndx_tick_color);
         }
 
-        // Label on X axis
-        if ($this->x_tick_label_pos == 'xaxis') {
-            $this->DrawText($this->fonts['x_label'], $this->x_label_angle,
-                            $which_xpix, $this->x_axis_y_pixels + $this->x_label_axis_offset,
-                            $this->ndx_ticklabel_color, $which_xlab, 'center', 'top');
-        }
+        if ($this->x_tick_label_pos != 'none') {
+            $x_label = $this->FormatLabel('x', $x);
 
-        // Label on top of the Plot Area
-        if ($this->x_tick_label_pos == 'plotup' || $this->x_tick_label_pos == 'both') {
-            $this->DrawText($this->fonts['x_label'], $this->x_label_angle,
-                            $which_xpix, $this->plot_area[1] - $this->x_label_top_offset,
-                            $this->ndx_ticklabel_color, $which_xlab, 'center', 'bottom');
-        }
+            // Label on X axis
+            if ($this->x_tick_label_pos == 'xaxis') {
+                $this->DrawText($this->fonts['x_label'], $this->x_label_angle,
+                                $x_pixels, $this->x_axis_y_pixels + $this->x_label_axis_offset,
+                                $this->ndx_ticklabel_color, $x_label, 'center', 'top');
+            }
 
-        // Label on bottom of the Plot Area
-        if ($this->x_tick_label_pos == 'plotdown' || $this->x_tick_label_pos == 'both') {
-            $this->DrawText($this->fonts['x_label'], $this->x_label_angle,
-                            $which_xpix, $this->plot_area[3] + $this->x_label_bot_offset,
-                            $this->ndx_ticklabel_color, $which_xlab, 'center', 'top');
+            // Label on top of the plot area
+            if ($this->x_tick_label_pos == 'plotup' || $this->x_tick_label_pos == 'both') {
+                $this->DrawText($this->fonts['x_label'], $this->x_label_angle,
+                                $x_pixels, $this->plot_area[1] - $this->x_label_top_offset,
+                                $this->ndx_ticklabel_color, $x_label, 'center', 'bottom');
+            }
+
+            // Label on bottom of the plot area
+            if ($this->x_tick_label_pos == 'plotdown' || $this->x_tick_label_pos == 'both') {
+                $this->DrawText($this->fonts['x_label'], $this->x_label_angle,
+                                $x_pixels, $this->plot_area[3] + $this->x_label_bot_offset,
+                                $this->ndx_ticklabel_color, $x_label, 'center', 'top');
+            }
         }
         return TRUE;
     }
 
     /*
-     * Draw one Y tick mark and its tick label. Called from DrawYTicks() and DrawXAxis()
-     *   $which_ylab : Formatted Y value for the label.
-     *   $which_ypix : Y device coordinate for this tick mark.
+     * Draw one Y tick mark and its tick label.
+     *   $y : Y value for the label. This is the unformatted value (in PHPlot>5.7.0)
+     *   $y_pixels : Y device coordinate for this tick mark.
      */
-    protected function DrawYTick($which_ylab, $which_ypix)
+    protected function DrawYTick($y, $y_pixels)
     {
         // Ticks on Y axis
         if ($this->y_tick_pos == 'yaxis') {
-            ImageLine($this->img, $this->y_axis_x_pixels - $this->y_tick_length, $which_ypix,
-                      $this->y_axis_x_pixels + $this->y_tick_cross, $which_ypix, $this->ndx_tick_color);
+            ImageLine($this->img, $this->y_axis_x_pixels - $this->y_tick_length, $y_pixels,
+                      $this->y_axis_x_pixels + $this->y_tick_cross, $y_pixels, $this->ndx_tick_color);
         }
 
         // Ticks to the left of the Plot Area
         if (($this->y_tick_pos == 'plotleft') || ($this->y_tick_pos == 'both') ) {
-            ImageLine($this->img, $this->plot_area[0] - $this->y_tick_length, $which_ypix,
-                      $this->plot_area[0] + $this->y_tick_cross, $which_ypix, $this->ndx_tick_color);
+            ImageLine($this->img, $this->plot_area[0] - $this->y_tick_length, $y_pixels,
+                      $this->plot_area[0] + $this->y_tick_cross, $y_pixels, $this->ndx_tick_color);
         }
 
         // Ticks to the right of the Plot Area
         if (($this->y_tick_pos == 'plotright') || ($this->y_tick_pos == 'both') ) {
-            ImageLine($this->img, $this->plot_area[2] + $this->y_tick_length, $which_ypix,
-                      $this->plot_area[2] - $this->y_tick_cross, $which_ypix, $this->ndx_tick_color);
+            ImageLine($this->img, $this->plot_area[2] + $this->y_tick_length, $y_pixels,
+                      $this->plot_area[2] - $this->y_tick_cross, $y_pixels, $this->ndx_tick_color);
         }
 
-        // Labels on Y axis
-        if ($this->y_tick_label_pos == 'yaxis') {
-            $this->DrawText($this->fonts['y_label'], $this->y_label_angle,
-                            $this->y_axis_x_pixels - $this->y_label_axis_offset, $which_ypix,
-                            $this->ndx_ticklabel_color, $which_ylab, 'right', 'center');
-        }
+        if ($this->y_tick_label_pos != 'none') {
+            $y_label = $this->FormatLabel('y', $y);
 
-        // Labels to the left of the plot area
-        if ($this->y_tick_label_pos == 'plotleft' || $this->y_tick_label_pos == 'both') {
-            $this->DrawText($this->fonts['y_label'], $this->y_label_angle,
-                            $this->plot_area[0] - $this->y_label_left_offset, $which_ypix,
-                            $this->ndx_ticklabel_color, $which_ylab, 'right', 'center');
-        }
-        // Labels to the right of the plot area
-        if ($this->y_tick_label_pos == 'plotright' || $this->y_tick_label_pos == 'both') {
-            $this->DrawText($this->fonts['y_label'], $this->y_label_angle,
-                            $this->plot_area[2] + $this->y_label_right_offset, $which_ypix,
-                            $this->ndx_ticklabel_color, $which_ylab, 'left', 'center');
+            // Labels on Y axis
+            if ($this->y_tick_label_pos == 'yaxis') {
+                $this->DrawText($this->fonts['y_label'], $this->y_label_angle,
+                                $this->y_axis_x_pixels - $this->y_label_axis_offset, $y_pixels,
+                                $this->ndx_ticklabel_color, $y_label, 'right', 'center');
+            }
+
+            // Labels to the left of the plot area
+            if ($this->y_tick_label_pos == 'plotleft' || $this->y_tick_label_pos == 'both') {
+                $this->DrawText($this->fonts['y_label'], $this->y_label_angle,
+                                $this->plot_area[0] - $this->y_label_left_offset, $y_pixels,
+                                $this->ndx_ticklabel_color, $y_label, 'right', 'center');
+            }
+
+            // Labels to the right of the plot area
+            if ($this->y_tick_label_pos == 'plotright' || $this->y_tick_label_pos == 'both') {
+                $this->DrawText($this->fonts['y_label'], $this->y_label_angle,
+                                $this->plot_area[2] + $this->y_label_right_offset, $y_pixels,
+                                $this->ndx_ticklabel_color, $y_label, 'left', 'center');
+            }
         }
         return TRUE;
     }
@@ -4607,23 +4616,17 @@ class PHPlot
         // Calculate the tick start, end, and step:
         list($x_start, $x_end, $delta_x) = $this->CalcTicks('x');
 
-        // Loop, avoiding cumulative round-off errors from $x_tmp += $delta_x
-        $n = 0;
-        $x_tmp = $x_start;
-        while ($x_tmp <= $x_end) {
-            $xlab = $this->FormatLabel('x', $x_tmp);
-            $x_pixels = $this->xtr($x_tmp);
+        // Loop, avoiding cumulative round-off errors from $x += $delta_x
+        for ($n = 0; ($x = $x_start + $n * $delta_x) <= $x_end; $n++) {
+            $x_pixels = $this->xtr($x);
 
-            // Vertical grid lines
+            // Draw vertical grid line:
             if ($this->draw_x_grid) {
                 ImageLine($this->img, $x_pixels, $this->plot_area[1], $x_pixels, $this->plot_area[3], $style);
             }
 
-            // Draw tick mark(s)
-            $this->DrawXTick($xlab, $x_pixels);
-
-            // Step to next X, without accumulating error
-            $x_tmp = $x_start + ++$n * $delta_x;
+            // Draw tick mark and tick label:
+            $this->DrawXTick($x, $x_pixels);
         }
         return TRUE;
     }
@@ -4646,24 +4649,18 @@ class PHPlot
         // Calculate the tick start, end, and step:
         list($y_start, $y_end, $delta_y) = $this->CalcTicks('y');
 
-        // Loop, avoiding cumulative round-off errors from $y_tmp += $delta_y
-        $n = 0;
-        $y_tmp = $y_start;
-        while ($y_tmp <= $y_end) {
-            $ylab = $this->FormatLabel('y', $y_tmp);
-            $y_pixels = $this->ytr($y_tmp);
+        // Loop, avoiding cumulative round-off errors from $y += $delta_y
+        for ($n = 0; ($y = $y_start + $n * $delta_y) <= $y_end; $n++) {
+            $y_pixels = $this->ytr($y);
 
-            // Horizontal grid line
+            // Draw horizontal grid line:
             if ($this->draw_y_grid) {
                 ImageLine($this->img, $this->plot_area[0]+1, $y_pixels, $this->plot_area[2]-1,
                           $y_pixels, $style);
             }
 
-            // Draw tick mark(s)
-            $this->DrawYTick($ylab, $y_pixels);
-
-            // Step to next Y, without accumulating error
-            $y_tmp = $y_start + ++$n * $delta_y;
+            // Draw tick mark and tick label:
+            $this->DrawYTick($y, $y_pixels);
         }
         return TRUE;
     }
