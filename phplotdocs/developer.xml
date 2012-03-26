@@ -1120,7 +1120,7 @@ Called by <xref linkend="DrawXDataLabel"/>.
 </varlistentry>
 
 <varlistentry>
-  <term><anchor id="DrawXTick" xreflabel="DrawXTick"/>DrawXTick($which_xlab, $which_xpix)</term>
+  <term><anchor id="DrawXTick" xreflabel="DrawXTick"/>DrawXTick($x, $x_pixels)</term>
   <listitem>
     <para>
 Draws a single X value tick mark and its label.
@@ -1128,9 +1128,14 @@ These can appear on the bottom of the graph, top of the graph, along the
 X axis (even if it is in the middle somewhere), on both sides, or nowhere,
 as set with <xref linkend="SetXTickPos"/> and
 <xref linkend="SetXTickLabelPos"/>.
+$x is the X value of the tick, and $x_pixels is its device coordinate value.
 Called by <xref linkend="DrawXTicks"/>.
 This was added at PHPlot-5.0.5 by splitting the code out of DrawXTicks,
 for symmetry with DrawYTicks.
+Through PHPlot-5.7.0, $x was passed to this function already formatted with
+<xref linkend="FormatLabel"/>. Starting after PHPlot-5.7.0, the actual tick
+value is passed, so <function>DrawXTick</function> can decide whether or
+not to format it.
     </para>
   </listitem>
 </varlistentry>
@@ -1206,7 +1211,7 @@ plot (upper range error and lower range error).
 </varlistentry>
 
 <varlistentry>
-  <term><anchor id="DrawYTick" xreflabel="DrawYTick"/>DrawYTick($which_ylab, $which_ypix)</term>
+  <term><anchor id="DrawYTick" xreflabel="DrawYTick"/>DrawYTick($y, $y_pixels)</term>
   <listitem>
     <para>
 Draws a single Y value tick mark and its label.
@@ -1214,7 +1219,12 @@ These can appear on the left of the graph, right of the graph, along the
 Y axis (even if it is in the middle somewhere), on both sides, or nowhere,
 as set with <xref linkend="SetYTickPos"/> and
 <xref linkend="SetYTickLabelPos"/>.
+$y is the Y value of the tick, and $y_pixels is its device coordinate value.
 Called by <xref linkend="DrawYTicks"/>.
+Through PHPlot-5.7.0, $y was passed to this function already formatted with
+<xref linkend="FormatLabel"/>. Starting after PHPlot-5.7.0, the actual tick
+value is passed, so <function>DrawYTick</function> can decide whether or
+not to format it.
     </para>
   </listitem>
 </varlistentry>
