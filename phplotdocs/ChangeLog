@@ -3,6 +3,10 @@ This is phplotdocs/ChangeLog, listing changes to the PHPlot Reference Manual
 Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
+* 2012-03-30
+    * reference.xml: Fix out-of-order reference SetDataValueLabelColor().
+      Fix typo in DrawMessage()
+
 * 2012-03-26
     * developer.xml: Document usage change for internal functions
       DrawXTick() and DrawYTick().
