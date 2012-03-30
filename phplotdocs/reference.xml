@@ -169,7 +169,7 @@ array may contain the following keys and values:
     <para>
 The default option values are chosen to be appropriate for error messages,
 and are designed to be 'fail-safe'. (For example, resetting fonts to use
-the built-on GD fonts ensures that there will be no error with TrueType
+the built-in GD fonts ensures that there will be no error with TrueType
 font files while displaying an error message.)
     </para>
 
@@ -265,7 +265,6 @@ This function was added in PHPlot-5.7.0.
   </refsect1>
 
 </refentry>
-
 
 <refentry id="EncodeImage">
   <refmeta>
@@ -1542,84 +1541,6 @@ also changed the color of other elements.
   </refsect1>
 </refentry>
 
-<refentry id="SetDataValueLabelColor">
-  <refmeta>
-    <refentrytitle>SetDataValueLabelColor</refentrytitle>
-  </refmeta>
-
-  <refnamediv>
-    <refname>SetDataValueLabelColor</refname>
-    <refpurpose>Set the color for data value labels</refpurpose>
-  </refnamediv>
-
-  <refsynopsisdiv>
-    <synopsis>$plot-&gt;SetDataValueLabelColor(<parameter>$color</parameter>)</synopsis>
-  </refsynopsisdiv>
-
-  <refsect1>
-    <title>Description</title>
-    <para>
-<function>SetDataValueLabelColor</function> sets the color which is used for
-data value labels. These are the labels which show the values of data points
-or bars, within the plot area. (Do not confuse these with axis data labels,
-which are displayed along the X or Y axis lines.)
-    </para>
-  </refsect1>
-
-  <refsect1>
-    <title>Parameters</title>
-    <variablelist>
-      <varlistentry>
-        <term><replaceable>$color</replaceable></term>
-        <listitem>
-          <para>
-Color value to use.
-See <xref linkend="conc-colors" /> for more on color values.
-          </para>
-        </listitem>
-      </varlistentry>
-    </variablelist>
-  </refsect1>
-
-  <refsect1>
-    <title>Notes</title>
-    <para>
-If <function>SetDataValueLabelColor</function> is not used, data value labels
-default to using the color set for all data labels with
-<xref linkend="SetDataLabelColor"/>.
-If that function is not used, both types of data labels default to using the
-general text color set with <xref linkend="SetTextColor"/>.
-If none of <function>SetDataValueLabelColor</function>,
-<function>SetDataLabelColor</function>, or <function>SetTextColor</function>
-is used, the default color for all data labels is black.
-    </para>
-    <para>
-See also <xref linkend="conc-labels"/> for information about different
-label types.
-    </para>
-    <para>
-PHPlot has a deprecated function called <function>SetLabelColor</function>.
-Do not use this function. It does not set the color used for labels.
-    </para>
-  </refsect1>
-
-  <refsect1>
-    <title>History</title>
-    <para>
-This function was added in PHPlot-5.7.0, and the defaults were changed as
-described above. Through PHPlot-5.6.0, the data value labels were drawn using
-the title color, as set with <xref linkend="SetTitleColor"/>.
-Since data value labels are not titles, this was incorrect, and they should
-have been using the general text color like other data labels. There were
-two parts to the fix in PHPlot-5.7.0: data value label color now defaults to
-the general text color rather than the title color, and new functions
-<function>SetDataValueLabelColor</function> and
-<xref linkend="SetDataLabelColor"/> were added to allow separate control of
-label colors.
-    </para>
-  </refsect1>
-</refentry>
-
 <refentry id="SetDataType">
   <refmeta>
     <refentrytitle>SetDataType</refentrytitle>
@@ -1766,6 +1687,84 @@ Data type <literal>text-data-yx</literal> for horizontal plots was added
 in PHPlot-5.1.2.
 Data type <literal>data-data-yx</literal> for horizontal plots was added
 in PHPlot-5.1.3.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="SetDataValueLabelColor">
+  <refmeta>
+    <refentrytitle>SetDataValueLabelColor</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetDataValueLabelColor</refname>
+    <refpurpose>Set the color for data value labels</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>$plot-&gt;SetDataValueLabelColor(<parameter>$color</parameter>)</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetDataValueLabelColor</function> sets the color which is used for
+data value labels. These are the labels which show the values of data points
+or bars, within the plot area. (Do not confuse these with axis data labels,
+which are displayed along the X or Y axis lines.)
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$color</replaceable></term>
+        <listitem>
+          <para>
+Color value to use.
+See <xref linkend="conc-colors" /> for more on color values.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+If <function>SetDataValueLabelColor</function> is not used, data value labels
+default to using the color set for all data labels with
+<xref linkend="SetDataLabelColor"/>.
+If that function is not used, both types of data labels default to using the
+general text color set with <xref linkend="SetTextColor"/>.
+If none of <function>SetDataValueLabelColor</function>,
+<function>SetDataLabelColor</function>, or <function>SetTextColor</function>
+is used, the default color for all data labels is black.
+    </para>
+    <para>
+See also <xref linkend="conc-labels"/> for information about different
+label types.
+    </para>
+    <para>
+PHPlot has a deprecated function called <function>SetLabelColor</function>.
+Do not use this function. It does not set the color used for labels.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>History</title>
+    <para>
+This function was added in PHPlot-5.7.0, and the defaults were changed as
+described above. Through PHPlot-5.6.0, the data value labels were drawn using
+the title color, as set with <xref linkend="SetTitleColor"/>.
+Since data value labels are not titles, this was incorrect, and they should
+have been using the general text color like other data labels. There were
+two parts to the fix in PHPlot-5.7.0: data value label color now defaults to
+the general text color rather than the title color, and new functions
+<function>SetDataValueLabelColor</function> and
+<xref linkend="SetDataLabelColor"/> were added to allow separate control of
+label colors.
     </para>
   </refsect1>
 </refentry>
