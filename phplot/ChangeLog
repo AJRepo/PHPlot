@@ -1,6 +1,12 @@
 This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
+2012-03-31
+    * Feature request #3501500 "Looping plot section":
+      Implemented streaming plots (motion-JPEG).
+      + New public functions StartStream(), EndStream(), PrintImageFrame().
+      + New protected function DisableCaching(), code from PrintImage().
+
 2012-03-26
     * Code cleanup: Don't format tick labels unless they are on.
       + Pass the actual tick value, not an already-formatted label, from
