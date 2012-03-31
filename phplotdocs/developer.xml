@@ -544,6 +544,19 @@ as needed.
 </varlistentry>
 
 <varlistentry>
+  <term><anchor id="DisableCaching" xreflabel="DisableCaching"/>DisableCaching()</term>
+  <listitem>
+    <para>
+Sends HTTP headers to the browser to disable client-side caching.  This is
+called by <xref linkend="PrintImage"/> if
+<xref linkend="SetBrowserCache"/> was used to disable caching.
+It is also used by <xref linkend="StartStream"/>.
+This was added after PHPlot-5.7.0 by moving code out of PrintImage.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
   <term><anchor id="DoCallback" xreflabel="DoCallback"/>DoCallback($reason, ...)</term>
   <listitem>
     <para>
@@ -557,7 +570,7 @@ callback registered for the given reason, otherwise it calls the callback
 function. See <xref linkend="callbacks"/> for more information on callbacks.
     </para>
     <para>
-Starting with PHPlot-5.1.3, <function>oCallback</function> returns the value
+Starting with PHPlot-5.1.3, <function>DoCallback</function> returns the value
 returned by the callback function, if any. If there is no callback defined for
 the given reason,  <literal>NULL</literal> is returned. So it is possible to
 define a callback that returns a meaningful value (such as True/False), and
