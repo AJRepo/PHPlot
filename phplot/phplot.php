@@ -1640,17 +1640,25 @@ class PHPlot
     }
 
     /*
+     * Helper for PrintImage() : tell browser not to cache the page.
+     * Originally submitted by Thiemo Nagel; modified to add more options based on mjpg-streamer.
+     */
+    protected function DisableCaching()
+    {
+        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+        header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . 'GMT');
+        header('Cache-Control: no-store, no-cache, must-revalidate, pre-check=0, post-check=0, max-age=0');
+        header('Pragma: no-cache');
+        return TRUE;
+    }
+
+    /*
      * Output the generated image to standard output or to a file.
      */
     function PrintImage()
     {
-        // Browser cache stuff submitted by Thiemo Nagel
-        if ( (! $this->browser_cache) && (! $this->is_inline)) {
-            header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-            header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . 'GMT');
-            header('Cache-Control: no-cache, must-revalidate');
-            header('Pragma: no-cache');
-        }
+        if (!$this->browser_cache && !$this->is_inline)
+            $this->DisableCaching();
 
         // Get MIME type and GD output function name:
         if (!$this->GetImageType($mime_type, $output_f)) return FALSE;
@@ -1766,6 +1774,45 @@ class PHPlot
     function SetFailureImage($error_image)
     {
         $this->suppress_error_image = !$error_image;
+        return TRUE;
+    }
+
+    /*
+     * Begin a Motion-JPEG (or other type) stream
+     */
+    function StartStream()
+    {
+        $this->GetImageType($mime_type, $this->stream_output_f);
+        $this->stream_boundary = "PHPlot-Streaming-Frame"; // Arbitrary MIME boundary
+        $this->stream_frame_header = "\r\n--$this->stream_boundary\r\nContent-Type: $mime_type\r\n";
+        $this->DisableCaching();  // Send headers to disable browser-side caching
+        header("Content-type: multipart/x-mixed-replace; boundary=\"$this->stream_boundary\"");
+        return TRUE;
+    }
+
+    /*
+     * End a Motion-JPEG (or other type) stream
+     */
+    function EndStream()
+    {
+        echo "\r\n--$this->stream_boundary--\r\n";
+        flush();
+        return TRUE;
+    }
+
+    /*
+     * Output a plot as a frame in a Motion JPEG (or other type) stream, and set up for another.
+     */
+    function PrintImageFrame()
+    {
+        ob_start();
+        call_user_func($this->stream_output_f, $this->img);
+        $size = ob_get_length();
+        $frame = ob_get_clean();
+        echo $this->stream_frame_header, "Content-Length: $size\r\n\r\n", $frame, "\r\n";
+        flush();
+        // This gets the next DrawGraph() to do background and titles again.
+        unset($this->done);
         return TRUE;
     }
 
