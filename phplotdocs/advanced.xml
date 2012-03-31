@@ -2277,4 +2277,447 @@ rather than <literal>SetLegend(NULL)</literal>.
 </sect2>
 </sect1> <!-- Multiple Plots -->
 
+<sect1 id="adv-streaming">
+<title>Streaming Plots</title>
+<abstract><title></title>
+  <para>
+This section contains information about producing streaming plots.
+The end of this section contains a complete example.
+  </para>
+</abstract>
+
+<para>
+A script can use PHPlot to produce a series of plots that are streamed to a
+browser or other viewing application. The result is a movie, or video,
+consisting of a plot with changing data. This might be used to display
+real-time data, to replay historical data, or for graphical display of
+any data where adding a time dimension improves the presentation.
+This feature was added after PHPlot-5.7.0.
+</para>
+
+<note>
+  <para>
+Some of the PHP functions described here may require PHP-5.3 or higher.
+(PHPlot versions after 5.7.0 do not support PHP versions before 5.3 anyway.)
+  </para>
+</note>
+
+<para>
+This feature is intended for use when you want to update a plot one or more
+times per second. If instead you want each plot to be displayed for one or
+more seconds, consider using a refreshing page instead, for example
+using using a "Refresh" meta-tag.
+</para>
+
+<warning>
+  <para>
+Producing streaming plots will place a significant load on your server.
+See <xref linkend="adv-streaming-performance"/> below for more information.
+  </para>
+</warning>
+
+<para>
+PHPlot produces streaming plots using
+<ulink url="http://en.wikipedia.org/wiki/Motion_Jpeg">Motion JPEG</ulink>
+(M-JPEG), specifically Streaming M-JPEG over HTTP.
+This method (which is not a standard) sends a series of JPEG images,
+with appropriate MIME headers, in a stream to the browser or viewer.
+PHPlot produces each plot as usual, and sends it out as part of the stream.
+Your script is responsible for changing the data (or other plot
+elements) between frames, and for the overall frame timing.
+</para>
+
+<para>
+Browsers and viewers which have been found to be capable of displaying
+a Motion-JPEG Stream over HTTP include recent versions of:
+  <itemizedlist>
+    <listitem>
+      <para>Mozilla Firefox</para>
+    </listitem>
+    <listitem>
+      <para>Mozilla Seamonkey</para>
+    </listitem>
+    <listitem>
+      <para>VLC Media Player</para>
+    </listitem>
+  </itemizedlist>
+Note: Microsoft Internet Explorer is <emphasis>not</emphasis> able to
+display these streams without an add-on.
+Google Chrome and Apple Safari are reported to be capable of displaying these
+streams, but they have not been tested with PHPlot.
+</para>
+
+<para>
+Although only JPEG images are used in this section, the same method
+works in theory for other image types such as PNG, and PHPlot does not
+force the use of JPEG with streaming plots.  Mozilla Firefox and
+Seamonkey have been found to be able to display "Motion-PNG" streams - a
+sequence of PNG images using the same MIME structure as Motion-JPEG.
+(VLC Media Player cannot display them.) Since plot images using JPEG
+compression are of poorer quality than PNG images, you might want to
+consider using another format such as PNG, however compatibility with
+viewers is a bigger issue than with JPEG.
+</para>
+
+<sect2 id="adv-streaming-using">
+<title>Streaming Plots - Creating Moving Plots</title>
+<para>
+There are generally 3 parts to a script that produces streaming plots:
+  <orderedlist>
+    <listitem>
+      <para>
+Creating a PHPlot object, and configuring your plot. This is the same as
+for single image plots.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+You will need an incremental way to produce data for the plot. Typically,
+it will produce one new row of a PHPlot data array for each plot frame.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+Your script will have a loop that produces frames and includes frame timing.
+(If your data is produced at fixed intervals, your loop may not need any
+additional timing.) You may choose to produce a fixed number of frames (or
+equivalently, run for a fixed length of time), or run forever. The user can
+always end the stream by stopping their browser or viewer, and the script
+will terminate on the server.
+      </para>
+    </listitem>
+  </orderedlist>
+</para>
+
+<para>
+You will use these PHPlot functions to produce streaming plots, in addition
+to the functions used for static plots.
+  <itemizedlist>
+    <listitem>
+      <para>
+Use <xref linkend="SetPrintImage"/>(False) to disable automatic printing
+from <xref linkend="DrawGraph"/>.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+Use <xref linkend="SetFileFormat"/>('jpg') to select JPEG format. This is
+the only format that is 'legal' with Motion-JPEG Streaming, although other
+formats work with some browsers.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+Call <xref linkend="StartStream"/> outside your main loop to begin the plot
+stream.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+Within your main loop, use <xref linkend="SetDataValues"/> to reload the
+data array after addition the new row(s). This is necessary because PHPlot
+creates a copy (rather than a reference) of your data.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+Use <xref linkend="DrawGraph"/> to produce the plot (but not output it).
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+Still within your main loop, use <xref linkend="PrintImageFrame"/> to
+output the plot as a single frame within the plot stream.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+If your plot stream ends at some point (rather than running until stopped
+by the user), call <xref linkend="EndStream"/> to cleanly end the plot stream.
+      </para>
+    </listitem>
+  </itemizedlist>
+</para>
+
+<para>
+Your PHP script should be referenced from an HTML page using an
+<literal>&lt;img&gt;</literal> tag, just like when creating a single plot.
+The MIME type returned by PHPlot (<literal>multipart/x-mixed-replace</literal>
+rather than <literal>image/jpeg</literal> for example) tells the browser or
+viewer to expect a stream rather than a single image.
+</para>
+
+<para>
+Be aware that PHP is usually configured to time out scripts that run too
+long, and will terminate your streaming plot script. To prevent this, use
+the PHP function <literal>set_time_limit($seconds)</literal>. If you know
+the total number of frames and frame rate, you can set the timeout to a bit
+more than the total expected runtime.
+Alternatively, you can call <function>set_time_limit</function> within
+your main loop, so it is called when each frame is produced. Because this
+function resets the PHP timer, your script will not time out and can
+produce frames forever.
+</para>
+
+<para>
+For frame timing, you can use the PHP functions <function>microtime()</function>
+and <function>time_sleep_until()</function>.
+Call <literal>microtime(TRUE)</literal> once, to get a
+precise timestamp as a floating point number. Then, within your main loop,
+use <literal>time_sleep_until($timestamp)</literal> to put your script to 
+sleep until the time to start of the next frame.
+</para>
+
+<note>
+  <para>
+Be sure your PHP script does not leak memory during the loop that produces
+frames, especially if the script is designed to runs until stopped (rather
+than producing a fixed number of frames). Appending to an array inside the
+loop is an example of something to avoid.
+  </para>
+</note>
+
+</sect2>
+
+<sect2 id="adv-streaming-performance">
+<title>Streaming Plots - Performance Considerations</title>
+<para>
+This section discusses performance considerations for streaming plots,
+starting with some definitions.
+  <variablelist>
+    <varlistentry>
+      <term>Frame Rate</term>
+      <listitem>
+        <para>
+The number of plots (frames) produced per second.
+        </para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>Frame Time</term>
+      <listitem>
+        <para>
+The total time per frame, equal to the reciprocal of the frame rate.
+        </para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>Plot Time, Output Time, Idle Time</term>
+      <listitem>
+        <para>
+These are the 3 parts of the Frame Time. The Plot Time is the time it takes
+to prepare your data for each frame and draw the plot graphics. The Output
+Time is the time to send the completed plot to the browser or viewer.
+Idle time is when your script is sleeping, waiting for the next frame's time
+interval.
+        </para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>Frame Slippage, Missed Frames</term>
+      <listitem>
+        <para>
+If your script and processor cannot keep up with the plot stream requirements,
+the idle time will drop to zero. Frame slippage is when the frame time exceeds
+the desired goal, so the frame rate drops (but no frames are lost).
+A different approach is to enforce the frame time and drop frames to catch
+up, resulting in missed frames.
+        </para>
+      </listitem>
+    </varlistentry>
+  </variablelist>
+</para>
+
+<para>
+To produce a good plot stream, your script and server must be able to
+consistently produce and output frames at the desired rate.
+The frame rate you want will depend on your data and application, while the
+rate you can achieve depends on the complexity of your script and your
+available processing power. Although typical video runs at between 24 and
+60 frames per second, those rates are likely too fast to be useful with plot
+data.
+A more realistic starting point for streaming plots is 10 frames per second.
+This will provide the appearance of continuous motion of the graph(s),
+but without too much blurring of the data.
+</para>
+<para>
+Here are some real performance numbers, using a relatively simple plot, and
+hardware that is old but was considered high performance when introduced
+several year ago (circa 2007).
+With a PHPlot script producing 10 frames per second, the Apache server
+process was found to be using about 24% of one processor core's available
+CPU time. (Keep in mind that this is not a short-term load, but means 24%
+for the duration of the plot stream.) On the same hardware, 15 frames per
+second used 35% CPU time, and 30 frames per second used 70% CPU time (of
+one core).
+</para>
+
+<para>
+You can measure the performance of your script with a small change, if you
+are using a main loop like the one shown in the full example in the next
+section (repeated briefly here).
+  <programlisting><![CDATA[$timestamp = microtime(TRUE);
+$frame_time = 1 / $frame_rate;
+$slip = 0; // Number of slipped frames
+$frame = 0; // Current frame number
+while(1) {
+    $frame++;
+    ...
+    $plot->DrawGraph();
+    $plot->PrintImageFrame();
+    if (!@time_sleep_until($timestamp += $frame_time)) $slip++;
+}]]></programlisting>
+The PHP function <function>time_sleep_until()</function> returns FALSE if the
+desired time already passed. (We use @ to suppress the message which would
+be logged in that case.) The variable $slip counts the number of slipped
+frames.
+The ratio of $slip to $frame should be as low as possible, ideally zero.
+If <literal>($slip/$frame)</literal> gets too high, you may need to use a
+lower frame rate, because either your frame rate is too high, your plot is
+too complex, or your server is too slow to keep up.
+However, optimizing your plot may help.
+</para>
+
+<para>
+To optimize performance of your streaming plot, you should avoid these more
+expensive features:
+  <itemizedlist>
+    <listitem>
+      <para>
+Plots that use area fills are slower. This especially includes pie charts
+with shading (because PHPLot redraws the filled pie segments for each
+level of shading). Area and stackedarea plots have a lot of area fill.
+Bar charts have some area fill, with shaded bar charts having more shading
+(but not nearly as much as shaded pie charts).
+The fastest plot types are line plots.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+TrueType fonts are slower than GD fonts. Consider using text in the HTML
+page containing the image reference, rather than in the image itself.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+Some operations on truecolor images are slow (for example, gamma adjustment
+or anti-aliasing) and should be avoided.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+Avoid using a background image, especially one which needs to be scaled.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+Avoid external factors that can affect performance. An obvious example is
+database access, since a database server can take a variable amount of time
+to respond to a query.
+      </para>
+    </listitem>
+  </itemizedlist>
+</para>
+
+<para>
+Note that PHPlot redraws the complete plot image for each frame, regardless
+of which functions are used inside or outside your loop. For example, if
+you use <xref linkend="SetTitle"/> to set title text outside the frame loop,
+the same title will be drawn into each frame. If it is inside the loop,
+you can change the text for each frame. Either way, the time to draw the title
+counts for each frame. The same is true for legend, labels, etc.
+Although you should keep invariant PHPlot "Set...()" function calls outside
+your frame loop, this does not significantly affect the performance.
+</para>
+
+</sect2>
+
+<sect2 id="adv-streaming-example">
+<title>Streaming Plots - Example</title>
+<para>
+This is a complete example that produces a streaming plot sequence showing
+sin() and cos(). The frame rate and run time are set with variables at the
+top.
+</para>
+<para>
+  <programlisting><![CDATA[<?php
+# Example of Streaming Plots with PHPlot
+# This simply plots sin(x) and cos(x), updating at the rate given below.
+# Replace the function next_row() to plot something else.
+# This must run using a web server, not CLI.
+
+require_once 'phplot.php';
+
+# Configuration:
+# This is the fixed number of points along the X axis:
+$n_rows = 40;
+# Data range for Y:
+$max_y = 1;
+$min_y = -1;
+# Frames per second:
+$frame_rate = 10;
+# Total runtime in seconds. Use 0 to run 'forever':
+$run_for = 0;
+
+# Derived:
+$run_forever = $run_for == 0;
+$frame_time = 1 / $frame_rate;
+$n_frames = $frame_rate * $run_for;
+
+# Return the next data row (per PHPlot text-data data type):
+function next_row($x)
+{
+    global $frame_rate;
+    # Map 8 seconds of frames into 360 degrees (360/8 = 45 degrees/second)
+    $theta = deg2rad(45 * $x / $frame_rate);
+    return array('', sin($theta), cos($theta));
+}
+
+# Create an initial data array with no values. New values will be
+# shifted in to the end. This is text-data format; the X values
+# are implicit and ignored (not plotted).
+for ($i = 0; $i < $n_rows; $i++) $data[$i] = array('', '', '');
+
+# Create and configure the PHPlot object:
+$plot = new PHPlot(640, 480);
+$plot->SetDataType('text-data');
+$plot->SetPlotType('lines');
+$plot->SetFileFormat('jpg');
+$plot->SetXTickLabelPos('none');
+$plot->SetXTickPos('none');
+$plot->SetXDataLabelPos('none');
+# Don't draw the initial, empty values:
+$plot->SetDrawBrokenLines(True);
+# Force the Y range, or it will use the first frame to calculate:
+$plot->SetPlotAreaWorld(NULL, $min_y, NULL, $max_y);
+$plot->SetPrintImage(False);
+
+# Main loop:
+$plot->StartStream();
+$timestamp = microtime(TRUE);
+for ($frame = 0; $run_forever || $frame < $n_frames; $frame++) {
+    # Set PHP timeout so it won't terminate the script early.
+    set_time_limit(60);
+    # Discard the oldest data row, and shift in the new row:
+    array_shift($data);
+    $data[] = next_row($frame);
+    # Set a plot title that includes the frame number:
+    $plot->SetTitle(sprintf("Moving Plot Test (Frame %4d)", $frame));
+    # Reload the data array:
+    $plot->SetDataValues($data);
+    # Draw and output the plot:
+    $plot->DrawGraph();
+    $plot->PrintImageFrame();
+    # Sleep until it is time to start the next frame:
+    time_sleep_until($timestamp += $frame_time);
+}
+# End the stream:
+$plot->EndStream();
+]]></programlisting>
+</para>
+
+</sect2>
+
+</sect1> <!-- Streaming Plots -->
+
 </chapter>
