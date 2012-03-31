@@ -3,6 +3,15 @@ This is phplotdocs/ChangeLog, listing changes to the PHPlot Reference Manual
 Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
+* 2012-03-31
+    * Feature request #3501500 "Looping plot section":
+      + advanced.xml: New section on streaming plots.
+      + developer.xml: Document new internal DisableCaching().
+      + functions.xml: Add links to 3 new functions. Move EncodeImage.
+      + reference.xml: Document 3 new functions StartStream(),
+        PrintImageFrame(), and EndStream(), for producing plot streams.
+      + variables.list: List 3 new class variables used for streaming
+
 * 2012-03-30
     * reference.xml: Fix out-of-order reference SetDataValueLabelColor().
       Fix typo in DrawMessage()
