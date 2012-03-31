@@ -413,6 +413,68 @@ This function was added in PHPlot-5.5.0.
   </refsect1>
 </refentry>
 
+<refentry id="EndStream">
+  <refmeta>
+    <refentrytitle>EndStream</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>EndStream</refname>
+    <refpurpose>End a Motion-JPEG (or other type) plot stream</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>$plot-&gt;EndStream()</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>EndStream</function> is used to end a plot stream, started
+with <xref linkend="StartStream"/> and containing frames produced by
+<xref linkend="PrintImageFrame"/>.
+This function simply outputs the ending MIME boundary for the stream.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <para>
+None
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The three functions <xref linkend="StartStream"/>,
+<xref linkend="PrintImageFrame"/>, and <function>EndStream</function>
+are used together to produce streaming plots.
+Scripts producing streaming plots must use a web server.
+The PHP CLI will not work, because streaming plots require HTTP headers.
+    </para>
+    <para>
+For more on streaming plots, see <xref linkend="adv-streaming"/>.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Example</title>
+    <para>
+See <xref linkend="PrintImageFrame"/> for a partial example, and
+<xref linkend="adv-streaming-example"/> for the complete example.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>History</title>
+    <para>
+This function was added after PHPlot-5.7.0.
+Prior releases are not able to produce streaming plots.
+    </para>
+  </refsect1>
+</refentry>
+
 <refentry id="GetCallback">
   <refmeta>
     <refentrytitle>GetCallback</refentrytitle>
@@ -922,6 +984,91 @@ told not to using <xref linkend="SetPrintImage" />.
     <title>Parameters</title>
     <para>
 None
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="PrintImageFrame">
+  <refmeta>
+    <refentrytitle>PrintImageFrame</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>PrintImageFrame</refname>
+    <refpurpose>Output the generated plot as one frame in a plot stream</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>$plot-&gt;PrintImageFrame()</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>PrintImageFrame</function> is used to output (that is, send to
+the browser) a single plot in a plot stream.
+This function is similar to <xref linkend="PrintImage"/>, except that the
+image is preceded by MIME headers that indicate it is part of a stream.
+Also, after producing the plot, <function>PrintImageFrame()</function> changes
+the PHPlot object so that a new plot can be drawn using the same object.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <para>
+None
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The three functions <xref linkend="StartStream"/>,
+<function>PrintImageFrame</function>, and <xref linkend="EndStream"/>
+are used together to produce streaming plots.
+Scripts producing streaming plots must use a web server.
+The PHP CLI will not work, because streaming plots require HTTP headers.
+    </para>
+    <para>
+<function>PrintImageFrame</function> resets internal flags in the PHPlot
+object that will result in the next plot starting with a blank background,
+just like the initial plot in the series. It does not change any of the
+plot settings.
+    </para>
+    <para>
+For more on streaming plots, see <xref linkend="adv-streaming"/>.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Example</title>
+    <para>
+This is a partial example showing how the 3 functions are used to produce
+streaming plots. See <xref linkend="adv-streaming-example"/> for the
+complete example.
+      <programlisting><![CDATA[$plot = new PHPlot(640, 480);
+...
+$plot->SetPrintImage(False);
+$plot->StartStream();
+$timestamp = microtime(TRUE);
+for ($frame = 0; $frame < $n_frames; $frame++) {
+    array_shift($data);
+    $data[] = next_row();
+    $plot->SetDataValues($data);
+    $plot->DrawGraph();
+    $plot->PrintImageFrame();
+    time_sleep_until($timestamp += $frame_time);
+}
+$plot->EndStream();]]></programlisting>
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>History</title>
+    <para>
+This function was added after PHPlot-5.7.0.
+Prior releases are not able to produce streaming plots.
     </para>
   </refsect1>
 </refentry>
@@ -10715,6 +10862,69 @@ it defaults to black.
     <para>
 This function was added in PHPlot-5.2.0.
 Through PHPlot-5.1.3, the main, X, and Y titles always used the same color.
+    </para>
+  </refsect1>
+</refentry>
+
+<refentry id="StartStream">
+  <refmeta>
+    <refentrytitle>StartStream</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>StartStream</refname>
+    <refpurpose>Begin a Motion-JPEG (or other type) plot stream</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>$plot-&gt;StartStream()</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>StartStream</function> is used to begin producing streaming
+plots. This is a series of plots that are displayed rapidly, resulting in
+a moving video-like sequence.
+<function>StartStream</function> outputs the initial HTTP headers for the
+stream, disables browser-side caching, and prepares for the plot stream.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <para>
+None
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+The three functions <function>StartStream()</function>,
+<xref linkend="PrintImageFrame"/>, and <xref linkend="EndStream"/>
+are used together to produce streaming plots.
+Scripts producing streaming plots must use a web server.
+The PHP CLI will not work, because streaming plots require HTTP headers.
+    </para>
+    <para>
+For more on streaming plots, see <xref linkend="adv-streaming"/>.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Example</title>
+    <para>
+See <xref linkend="PrintImageFrame"/> for a partial example, and
+<xref linkend="adv-streaming-example"/> for the complete example.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>History</title>
+    <para>
+This function was added after PHPlot-5.7.0.
+Prior releases are not able to produce streaming plots.
     </para>
   </refsect1>
 </refentry>
