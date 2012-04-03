@@ -3,6 +3,9 @@ This is phplotdocs/ChangeLog, listing changes to the PHPlot Reference Manual
 Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
+* 2012-04-02
+    * changelog.xml: Missing change from 2012-03-31
+
 * 2012-03-31
     * Feature request #3501500 "Looping plot section":
       + advanced.xml: New section on streaming plots.
