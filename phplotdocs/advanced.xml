@@ -74,6 +74,73 @@ you might use any other PHPlot object.
 
 </sect1>
 
+<sect1 id="adv-serialize">
+<title>PHPlot Object Serialization</title>
+<abstract><title></title>
+  <para>
+This section contains information about serializing and unserializing
+a PHPlot object.
+  </para>
+</abstract>
+<para>
+<emphasis>Serializing</emphasis> a PHP variable, array, or object
+with the PHP function <function>serialize()</function>
+generates a string representation of the value which can be stored or
+transmitted.
+<emphasis>Unserialization</emphasis> with the PHP function
+<function>unserialize()</function> re-creates the variable, array, or
+object from the string representation.
+</para>
+
+<para>
+Starting after PHPlot-5.7.0, PHPlot objects can be serialized and
+unserialized, subject to these limitations:
+  <itemizedlist>
+    <listitem>
+      <para>
+A PHPlot object can only be serialized until <xref linkend="DrawGraph"/>
+is used.
+However, you can serialize the object, then call
+<function>DrawGraph</function>, if you want both the serialization and the
+actual plot.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+Serialization and unserialization will not work when an input file is
+specified in the <xref linkend="PHPlot"/> or
+<xref linkend="PHPlot-truecolor"/> constructors.
+Consider using <xref linkend="SetBgImage"/> instead.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+You must serialize and unserialize with the exact same version of PHPlot.
+      </para>
+    </listitem>
+  </itemizedlist>
+</para>
+
+<para>
+Here is an example of serializing a PHPlot object:
+<programlisting><![CDATA[require_once 'phplot.php';
+$plot = new PHPlot(800, 600);
+... // Configure the PHPlot object: Set plot type, data values, etc.
+// Do not use DrawGraph (yet)
+$str = serialize($plot);
+]]></programlisting>
+</para>
+
+<para>
+The corresponding unserialization looks like this:
+<programlisting><![CDATA[require_once 'phplot.php';
+$newplot = unserialize($str);
+// You can do additional plot setup here if desired.
+$newplot->DrawGraph(); // Draw it
+]]></programlisting>
+</para>
+</sect1>
+
 <sect1 id="conc-truecolor">
 <title>Truecolor Images</title>
 <abstract><title></title>
