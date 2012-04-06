@@ -1,5 +1,5 @@
 phplottest - PHPlot Test Suite
-Last Updated: 2011-08-02
+Last Updated: 2012-04-06
 -----------------------------------------------------------------------------
 OVERVIEW:
 
@@ -54,6 +54,7 @@ CONTENTS:
    drawtext.php       Used by drawtext* tests.
    esupport.php       Test support library for error tests.
    images/*           Static image files and a font, used in tests.
+   makedata.php       Test support function - build a data array
    run_test.php       Test driver script.
    testclass.php      Test support script.
    tests.ini          Test validation data, list of test names.
@@ -210,6 +211,8 @@ Requirements for writing test scripts:
 
    b) Don't make the result dependent on the current date or time.
 
+   c) Don't include full file paths in any output messages.
+
 6) If the script produces a plot, the plot should have a plot title. A title
    explaining what the plot should look like is best.  (For example, "Line
    graph with 3 lines" is better than "Peak Stock Price").  Somebody will
@@ -278,7 +281,9 @@ Some of the scripts are parameterized. The 'core' script uses an optional
 array $tp to control the graph. 'Secondary' scripts just set the array,
 then include the core script. For example, see stock.php (core) and
 stock?.php (secondaries). This is used to test small changes, for example
-setting a line width parameter.
+setting a line width parameter. In some cases, individual variables are
+used instead of an array. This should all be documented at the top of the
+'core' script.
 
 
 Access to protected methods:

@@ -1,6 +1,10 @@
 This is the Change Log for phplottest, the PHPlot Test Suite
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
+2012-04-06
+    * serialize1.php : New test for serialize/unserialize
+    * tests.ini: List 1 new test.
+
 2012-04-01
     * stream1.php, stream2.php : 2 new tests for streaming plots.
     * tests.ini: List 2 new tests. Total is now 802 tests.
