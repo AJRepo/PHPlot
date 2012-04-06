@@ -299,6 +299,34 @@ class PHPlot
     }
 
     /*
+     * Support for serialize/unserialize: Prepare object for serialization.
+     * The image resource cannot be serialized. But rather than try to filter it out from the other
+     * properties, just let PHP serialize it (it will become an integer=0), and then fix it in __wakeup.
+     * This way the object is still usable after serialize().
+     * Note: This does not work if an input file was provided to the constructor.
+     */
+    function __sleep()
+    {
+        $this->truecolor = imageistruecolor($this->img); // Remember image type
+        $this->saved_version = PHPlot::version; // Remember version of PHPlot, for checking on unserialize
+        return array_keys(get_object_vars($this));
+    }
+
+    /*
+     * Support for serialize/unserialize: Cleanup after unserialization - recreate the image resource.
+     */
+    function __wakeup()
+    {
+        if (strcmp($this->saved_version, PHPlot::version) != 0)
+            $this->PrintError(get_class($this) . '(): Unserialize version mismatch');
+        $imagecreate_function = $this->truecolor ? 'imagecreatetruecolor' : 'imagecreate';
+        $this->img = call_user_func($imagecreate_function, $this->image_width, $this->image_height);
+        if (!$this->img)
+            $this->PrintError(get_class($this) . '(): Could not create image resource.');
+        unset($this->truecolor, $this->saved_version);
+    }
+
+    /*
      * Reads an image file. Stores width and height, and returns the image
      * resource. On error, calls PrintError and returns False.
      * This is used by the constructor via SetInputFile, and by tile_img().
