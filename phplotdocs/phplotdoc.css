@@ -15,6 +15,7 @@ h3.corpauthor, h3.author, .affiliation {
 
 /* Shade examples */
 pre.programlisting, pre.synopsis, pre.screen {
+  color: #000000;
   background-color: #e0e0e0;
   padding: 10px;
 }
