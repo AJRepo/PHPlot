@@ -14,6 +14,16 @@ see the ChangeLog file inside the PHPlot distribution.)
 
 <variablelist>
   <varlistentry>
+    <term>2012-04-06</term>
+    <listitem>
+      <para>
+Added new <xref linkend="adv-serialize"/> under <xref linkend="advanced"/>
+about serializing and unserializing a PHPlot object.
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
     <term>2012-03-31</term>
     <listitem>
       <para>

@@ -3,6 +3,16 @@ This is phplotdocs/ChangeLog, listing changes to the PHPlot Reference Manual
 Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
+* 2012-04-06
+    * advanced.xml: New small section on object serialization.
+    * changelog.xml: Note new section
+
+* 2012-04-03
+    * phplotdoc.css: Set foreground color whenever setting background color
+      (mostly applies for programlisting - examples). This ensures it is
+      readable if browser colors are changed. But let the browser color and
+      font settings be used in all other cases.
+
 * 2012-04-02
     * changelog.xml: Missing change from 2012-03-31
 
