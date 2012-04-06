@@ -1,6 +1,11 @@
 This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
+2012-04-06
+    * Feature request #3515519 "Support object serialize/unserialize":
+      Add __sleep() and __wakeup() magic methods to support serialize
+      and unserialize.
+
 2012-03-31
     * Feature request #3501500 "Looping plot section":
       Implemented streaming plots (motion-JPEG).
