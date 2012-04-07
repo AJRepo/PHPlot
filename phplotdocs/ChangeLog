@@ -5,7 +5,15 @@ manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 * 2012-04-06
     * advanced.xml: New small section on object serialization.
-    * changelog.xml: Note new section
+    * changelog.xml: Note new section(s).
+
+    For release with PHPlot-5.8.0:
+    * main.xml: Indicate version of next release PHPlot-5.8.0.
+    * advanced.xml, concepts.xml, developer.xml, examples.xml, reference.xml,
+      variables.list: Set PHPlot release version.
+    * install.xml: Remove obsolete information about PHP version requirements.
+      Just list current information and refer to NEWS and README.
+
 
 * 2012-04-03
     * phplotdoc.css: Set foreground color whenever setting background color
