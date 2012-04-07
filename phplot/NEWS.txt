@@ -5,6 +5,49 @@ Refer the the ChangeLog file for detailed source changes.
 See NEWS_part1.txt for older release documentation.
 -----------------------------------------------------------------------------
 
+2012-04-06 Release 5.8.0
+
+=== Overview:
+
+This is the current stable release of PHPlot. This release adds several new
+features, including the ability to generate "streaming plots" - a video
+stream showing updated plot data.
+
+The PHPlot Reference Manual has been updated to match this release.
+
+
+=== Cautions, Important Notes, and Compatibility Issues:
+
+There are no known compatibility issues in upgrading from PHPlot-5.7.0 to
+this release. For issues with previous releases, see below in this file.
+
+
+=== Bugs Fixed in 5.8.0:
+
+Fix bug #3506408 "Data Label Lines vs new plot types":
+Data label lines do work with bubble plots. This is now documented. Data
+label lines did not work well with OHLC plot types. This was never documented
+to work, and is now disabled.
+
+
+=== New features in 5.8.0:
+
+Feature request #3488042 "Display only some data value labels":
+Custom label formatting functions now have access to the data point row and
+column for data value labels, and to the row for axis data labels. You can
+now filter or modify labels based on their position in the data array.
+Documentation was updated.
+
+Feature request #3501500 "Looping plot section (updating plot data)":
+PHPlot can now produce "streaming plots", with updating data presented as a
+Motion-JPEG stream. Documentation has been added to the reference manual.
+
+Feature request #3515519 "Support object serialize/unserialize":
+You can now serialize and unserialize a PHPlot object, subject to some
+minor restrictions. Details are in the PHPlot Reference Manual.
+
+-----------------------------------------------------------------------------
+
 2012-02-25 Release 5.7.0
 
 === Overview:

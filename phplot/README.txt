@@ -1,5 +1,5 @@
 This is the README file for PHPlot
-Last updated for PHPlot-5.7.0 on 2012-02-25
+Last updated for PHPlot-5.8.0 on 2012-04-06
 The project web site is http://sourceforge.net/projects/phplot/
 The project home page is http://phplot.sourceforge.net/
 -----------------------------------------------------------------------------
@@ -33,10 +33,10 @@ CONTENTS:
 REQUIREMENTS:
 
 You need a recent version of PHP5, and you are advised to use the latest
-stable release.  This version of PHPlot has been tested with PHP-5.3.10,
-PHP-5.3.6(ubuntu), and PHP-5.2.17 on Linux, and with PHP-5.3.10 on Windows XP.
-Note that this might be the last release to be tested with PHP-5.2.
-(There is no longer any support for PHP-5.2, and PHP-5.4 is expected soon.)
+stable release.  This version of PHPlot has been tested with PHP-5.4.0,
+PHP-5.3.10, and PHP-5.3.6-13ubuntu on Linux, and with PHP-5.4.0 on Windows XP.
+Note that starting with this release, PHPlot requires PHP-5.3.x or higher.
+PHP-5.2.x is no longer tested or supported.
 
 You need the GD extension to PHP either built in to PHP or loaded as a
 module. Refer to the PHP documentation for more information - see the
@@ -118,8 +118,8 @@ Ubuntu-derived distributions such as Linux Mint.
   + Some PHP installations may have a memory limit set too low to support
 large images, especially truecolor images.
 
-  + PHP-5.3.2 and PHP-5.2.13 have a bug in rendering TrueType fonts (TTF).
-Avoid using these versions if you use TTF text in PHPlot.
+  + PHP-5.3.2 has a bug in rendering TrueType fonts (TTF).  Avoid using this
+version if you use TTF text in PHPlot.
 
 
 
