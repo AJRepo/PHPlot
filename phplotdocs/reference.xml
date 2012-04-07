@@ -469,7 +469,7 @@ See <xref linkend="PrintImageFrame"/> for a partial example, and
   <refsect1>
     <title>History</title>
     <para>
-This function was added after PHPlot-5.7.0.
+This function was added in PHPlot-5.8.0.
 Prior releases are not able to produce streaming plots.
     </para>
   </refsect1>
@@ -1067,7 +1067,7 @@ $plot->EndStream();]]></programlisting>
   <refsect1>
     <title>History</title>
     <para>
-This function was added after PHPlot-5.7.0.
+This function was added in PHPlot-5.8.0.
 Prior releases are not able to produce streaming plots.
     </para>
   </refsect1>
@@ -8174,7 +8174,7 @@ See <xref linkend="SetXLabelType" />.
     <title>History</title>
     <para>
 Custom label formatting functions are passed the row and column arguments
-(if applicable) starting after PHPlot-5.7.0.
+(if applicable) starting with PHPlot-5.8.0.
     </para>
     <para>
 This function was added in PHPlot-5.1.0.
@@ -8579,7 +8579,7 @@ $plot->SetXLabelType('custom', 'deg_min_sec');
     <title>History</title>
     <para>
 Custom label formatting functions are passed the row and column arguments
-(if applicable) starting after PHPlot-5.7.0.
+(if applicable) starting with PHPlot-5.8.0.
     </para>
     <para>
 Through PHPlot-5.0.7, this function set the format type for both X tick
@@ -9860,7 +9860,7 @@ See <xref linkend="SetXLabelType" />.
     <title>History</title>
     <para>
 Custom label formatting functions are passed the row and column arguments
-(if applicable) starting after PHPlot-5.7.0.
+(if applicable) starting with PHPlot-5.8.0.
     </para>
     <para>
 This function was added in PHPlot-5.1.0.
@@ -10127,7 +10127,7 @@ See <xref linkend="SetXLabelType" />.
     <title>History</title>
     <para>
 Custom label formatting functions are passed the row and column arguments
-(if applicable) starting after PHPlot-5.7.0.
+(if applicable) starting with PHPlot-5.8.0.
     </para>
     <para>
 Through PHPlot-5.0.7, this function set the format type for both Y tick
@@ -10923,7 +10923,7 @@ See <xref linkend="PrintImageFrame"/> for a partial example, and
   <refsect1>
     <title>History</title>
     <para>
-This function was added after PHPlot-5.7.0.
+This function was added in PHPlot-5.8.0.
 Prior releases are not able to produce streaming plots.
     </para>
   </refsect1>

@@ -2804,7 +2804,8 @@ See <xref linkend="ex-dlexformat"/> for an example.
 
 <note>
   <para>
-These additional row and column arguments are only available after PHPlot-5.7.0.
+These additional row and column arguments are only available
+starting with PHPlot-5.8.0.
   </para>
 </note>
 

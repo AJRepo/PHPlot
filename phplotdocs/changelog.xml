@@ -17,29 +17,13 @@ see the ChangeLog file inside the PHPlot distribution.)
     <term>2012-04-06</term>
     <listitem>
       <para>
-Added new <xref linkend="adv-serialize"/> under <xref linkend="advanced"/>
-about serializing and unserializing a PHPlot object.
-      </para>
-    </listitem>
-  </varlistentry>
-
-  <varlistentry>
-    <term>2012-03-31</term>
-    <listitem>
-      <para>
-Added new <xref linkend="adv-streaming"/> under <xref linkend="advanced"/>
-about the new streaming plots feature.
-      </para>
-    </listitem>
-  </varlistentry>
-
-  <varlistentry>
-    <term>2012-03-23</term>
-    <listitem>
-      <para>
-Break apart the section on label formatting into separate sub-sections
-for each formatting type, and include documentation for the new arguments
-to custom formatting callback functions.
+Released updated version of the manual corresponding to PHPlot-5.8.0.
+<xref linkend="adv-serialize"/> and <xref linkend="adv-streaming"/>
+under <xref linkend="advanced"/>
+were added, documenting new features.
+The section on label formatting was broken apart into a separate
+sub-section for each formatting type, and now includes documentation for
+the new arguments to custom formatting callback functions.
       </para>
     </listitem>
   </varlistentry>

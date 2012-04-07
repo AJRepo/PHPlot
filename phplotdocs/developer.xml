@@ -551,7 +551,7 @@ Sends HTTP headers to the browser to disable client-side caching.  This is
 called by <xref linkend="PrintImage"/> if
 <xref linkend="SetBrowserCache"/> was used to disable caching.
 It is also used by <xref linkend="StartStream"/>.
-This was added after PHPlot-5.7.0 by moving code out of PrintImage.
+This was added in PHPlot-5.8.0 by moving code out of PrintImage.
     </para>
   </listitem>
 </varlistentry>
@@ -1146,7 +1146,7 @@ Called by <xref linkend="DrawXTicks"/>.
 This was added at PHPlot-5.0.5 by splitting the code out of DrawXTicks,
 for symmetry with DrawYTicks.
 Through PHPlot-5.7.0, $x was passed to this function already formatted with
-<xref linkend="FormatLabel"/>. Starting after PHPlot-5.7.0, the actual tick
+<xref linkend="FormatLabel"/>. Starting with PHPlot-5.8.0, the actual tick
 value is passed, so <function>DrawXTick</function> can decide whether or
 not to format it.
     </para>
@@ -1235,7 +1235,7 @@ as set with <xref linkend="SetYTickPos"/> and
 $y is the Y value of the tick, and $y_pixels is its device coordinate value.
 Called by <xref linkend="DrawYTicks"/>.
 Through PHPlot-5.7.0, $y was passed to this function already formatted with
-<xref linkend="FormatLabel"/>. Starting after PHPlot-5.7.0, the actual tick
+<xref linkend="FormatLabel"/>. Starting with PHPlot-5.8.0, the actual tick
 value is passed, so <function>DrawYTick</function> can decide whether or
 not to format it.
     </para>
@@ -1308,7 +1308,7 @@ Called by several functions that need to format label values.
 Separation of data and tick label formatting was available starting with
 PHPlot-5.1.0. Use with pie chart labels was added in PHPlot-5.6.0.
 Support for additional arguments for custom functions  was added
-after PHPlot-5.7.0.
+in PHPlot-5.8.0.
     </para>
   </listitem>
 </varlistentry>

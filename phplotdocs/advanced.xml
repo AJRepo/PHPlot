@@ -93,7 +93,7 @@ object from the string representation.
 </para>
 
 <para>
-Starting after PHPlot-5.7.0, PHPlot objects can be serialized and
+Starting with PHPlot-5.8.0, PHPlot objects can be serialized and
 unserialized, subject to these limitations:
   <itemizedlist>
     <listitem>
@@ -2359,7 +2359,7 @@ browser or other viewing application. The result is a movie, or video,
 consisting of a plot with changing data. This might be used to display
 real-time data, to replay historical data, or for graphical display of
 any data where adding a time dimension improves the presentation.
-This feature was added after PHPlot-5.7.0.
+This feature was added in PHPlot-5.8.0.
 </para>
 
 <note>

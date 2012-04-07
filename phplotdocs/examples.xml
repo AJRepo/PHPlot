@@ -1714,7 +1714,7 @@ and column of the point being labeled, to determine if a label should be
 produced or not.
 </para>
 <para>
-Access to the data point row and column index was added after PHPlot-5.7.0.
+Access to the data point row and column index was added in PHPlot-5.8.0.
 </para>
 
 <example id="example-dlexformat">
