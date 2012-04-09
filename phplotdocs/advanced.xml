@@ -1960,7 +1960,7 @@ that range applies to all subsequent plots unless overridden.
 Even if you set a new data array, the calculated or pre-set data range from
 the previous plot applies. Without being told otherwise, PHPlot will not
 re-examine the data array to recalculate the data range.
-This allows you to re-use an automatically calculated date range, if you want.
+This allows you to re-use an automatically calculated data range, if you want.
   <note>
     <para>
 Nothing related to world coordinates and data scaling applies to pie charts,
