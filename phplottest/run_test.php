@@ -1,9 +1,9 @@
 <?php
 # $Id$
-# phplot/test/run_test.php : PHPlot test driver
-# Copyright 2007-2011 lbayuk@pobox.com
-
 /*
+     PHPlot Test Suite - Driver Script
+     Copyright 2007-2012 lbayuk AT users.sourceforge.net
+     Refer to the file LICENSES in the PHPlot test suite for details
 
 There are 3 types of tests: graphic, unit, and error. The purpose of a
 graphic test is to produce a plot image. The purpose of a unit test is to
@@ -38,6 +38,8 @@ define('LOGFILENAME', "test.log");
 $php_exe = '';           # Path to PHP interpreter to be used for testing
 $php_version = '';       # Version of PHP being used for testing
 $result_dir = '';        # Directory to hold output files
+$n_test = 0;             # Number of the current test being run
+$total_tests = 0;        # Total number of tests to run
 $n_pass = 0;             # Number of tests which passed
 $n_fail = 0;             # Number of tests which failed
 $fail_list = array();    # Array (list) of tests which failed.
@@ -58,13 +60,18 @@ $val_data_defaults = array(
 function usage()
 {
     fwrite(STDERR, <<<END
-Usage: php run_test.php  script_file... | - | -all
+Usage: php run_test.php  script_file... | - | -all | -match patn
   Use '-' to read script filenames from standard input.
   Use -all to run all tests listed in the test configuration file.
+  Use -match patn to specify a wildcard match pattern (like shell
+     wildcards). This will limit the test to only the matching names.
 
-This uses the PHP (required) and RESULTDIR (optional) environment variables.
+Environment variables used:
+    PHP (required) - points to the PHP CLI program to use for testing.
+    RESULTDIR (optional) - directory to store results.
 
-The file 'test.ini' contains validation information about the tests.
+The file 'test.ini' contains validation information about the tests. It
+must be found in the current directory.
 
 END
 );
@@ -192,21 +199,22 @@ function cleanup()
 # Output the preface text before running tests:
 function preface()
 {
-    global $php_exe, $result_dir, $log_filename, $php_version;
+    global $php_exe, $result_dir, $log_filename, $php_version, $total_tests;
     lecho("====== This is the PHPlot Test Suite ======\n");
     lprintfts("Setting up for testing");
     lecho("  Tests will be run using PHP interpreter: $php_exe\n");
     lecho("  PHP interpreter used for testing reports as: PHP $php_version\n");
     lecho("  Result files will be saved in: $result_dir\n");
     lecho("  Testing log will be written to: $log_filename\n");
-    lprintfts("Testing begins");
+    $pl = $total_tests == 1 ? '' : 's';
+    lprintfts("Testing begins ($total_tests test$pl)");
 }
 
 # Output the test result summary:
-function summarize()
+function summarize($total_run_time)
 {
     global $n_pass, $n_fail, $fail_list, $result_dir, $log_filename, $log_f;
-    lprintfts("Testing complete");
+    lprintfts("Testing complete - Elapsed time %.2f seconds", $total_run_time);
     lprintf("  Passed:  %3d\n", $n_pass);
     lprintf("  Failed:  %3d\n", $n_fail);
     if (!empty($fail_list))
@@ -223,8 +231,9 @@ function summarize()
 #   runtime : Run-time of the test, in seconds as floating point.
 function test_fail($test_name, $message, $runtime = 0.0)
 {
-    global $n_fail;
-    lprintfts("%-24s => [ERROR] %6.3f sec%s", $test_name, $runtime,
+    global $n_test, $total_tests, $n_fail;
+    lprintfts("%-24s => [ERROR] (%04d/%04d) %6.3f sec%s",
+        $test_name, $n_test, $total_tests, $runtime,
         empty($message) ? '' : "\n$message");
     $n_fail++;
     return False;
@@ -236,8 +245,9 @@ function test_fail($test_name, $message, $runtime = 0.0)
 #   runtime : Run-time of the test, in seconds as floating point.
 function test_pass($test_name, $message, $runtime)
 {
-    global $n_pass;
-    lprintfts("%-24s => [OK]    %6.3f sec%s", $test_name, $runtime,
+    global $n_test, $total_tests, $n_pass;
+    lprintfts("%-24s => [OK]    (%04d/%04d) %6.3f sec%s",
+        $test_name, $n_test, $total_tests, $runtime,
         empty($message) ? '' : "\n$message");
     $n_pass++;
     return True;
@@ -458,7 +468,7 @@ function run_test($test_name, $script_file, $output_file, $error_file)
 function do_test($filename)
 {
     global $result_dir, $verbose;
-    global $n_pass, $n_fail, $fail_list;
+    global $n_test, $n_pass, $n_fail, $fail_list;
 
     # Get the test name (xyz) from the filename (/path/to/xyz.ext).
     # This is also used to build the stdout and stderr names.
@@ -482,32 +492,46 @@ function do_test($filename)
 
     # Run the test. Return value indicates pass/fail status, but each
     # test handler is responsible for reporting the error.
+    $n_test++;
     if (!run_test($test_name, $filename, $output_file, $error_file)) {
         $fail_list[] = $filename;
     }
 }
 
-# Main: Process all tests on the command line, or - for stdin, or -all to
-# run everything in the config file.
-$argc = $_SERVER['argc'];
-$argv = $_SERVER['argv'];
+# Main: Process all tests and options on the command line.
+#   -all means all tests from config. - means read names from stdin.
+#   A -match pattern can be used to limit tests.
 if ($argc <= 1) usage();
 setup();
-preface();
+$match_pattern = '';
+$tests_to_run = array(); // Will contain filenames (testname.php)
 for ($arg = 1; $arg < $argc; $arg++) {
     $name = $argv[$arg];
     if ($name == '-') {
         while (($line = fgets(STDIN)) !== False)
-            if (($filename = trim($line)) != '') do_test($filename);
+            if (($filename = trim($line)) != '') $tests_to_run[] = $filename;
     } elseif ($name == '-all') {
         # Each 'section' in the config file becomes a key in the array.
         # The section name plus .php is the test script name.
         foreach (array_keys($val_data) as $test_name)
-            do_test($test_name . '.php');
+            $tests_to_run[] = $test_name . '.php';
+    } elseif ($name == '-match') {
+        if (++$arg >= $argc) break;
+        $match_pattern = $argv[$arg];
     } else {
-        do_test($name);
+        $tests_to_run[] = $name;
     }
 }
-summarize();
+# Apply a match pattern (-match pattern) to limit the tests to run:
+if (!empty($match_pattern)) {
+    $tests_to_run = array_values(array_filter($tests_to_run,
+                 create_function('$s',
+                     "return fnmatch('$match_pattern', \$s);")));
+}
+$total_tests = count($tests_to_run);
+preface();
+$start_time = microtime(TRUE);
+foreach ($tests_to_run as $name) do_test($name);
+summarize(microtime(TRUE) - $start_time);
 cleanup();
 exit(0);
