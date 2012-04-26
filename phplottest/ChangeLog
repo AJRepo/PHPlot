@@ -1,6 +1,10 @@
 This is the Change Log for phplottest, the PHPlot Test Suite
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
+2012-04-26
+    * run_test.php: Track and report test "N of M"; report total elapsed time
+      at end, and add -match command line option for selecting tests.
+
 2012-04-06
     * serialize1.php : New test for serialize/unserialize
     * tests.ini: List 1 new test.
