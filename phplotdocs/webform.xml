@@ -210,11 +210,11 @@ function check_form_params(&$param)
 {
     $valid = True;
 
-    if (empty($_GET['deposit']) || !is_numeric($_GET['deposit'])
+    if (!isset($_GET['deposit']) || !is_numeric($_GET['deposit'])
            || ($deposit = floatval($_GET['deposit'])) < 0)
         $valid = False;
 
-    if (empty($_GET['intrate']) || !is_numeric($_GET['intrate'])
+    if (!isset($_GET['intrate']) || !is_numeric($_GET['intrate'])
            || ($intrate = floatval($_GET['intrate'])) < 0 || $intrate > 100)
         $valid = False;
 
@@ -324,11 +324,11 @@ function check_form_params(&$param)
     $depost = 0;
     $intrate = 0;
 
-    if (empty($_GET['deposit']) || !is_numeric($_GET['deposit'])
+    if (!isset($_GET['deposit']) || !is_numeric($_GET['deposit'])
            || ($deposit = floatval($_GET['deposit'])) < 0)
         $valid = False;
 
-    if (empty($_GET['intrate']) || !is_numeric($_GET['intrate'])
+    if (!isset($_GET['intrate']) || !is_numeric($_GET['intrate'])
            || ($intrate = floatval($_GET['intrate'])) < 0 || $intrate > 100)
         $valid = False;
 
