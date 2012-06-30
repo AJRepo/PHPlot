@@ -3,6 +3,12 @@ This is phplotdocs/ChangeLog, listing changes to the PHPlot Reference Manual
 Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
+* 2012-06-29
+    * webform.xml: Fix bug in parameter validation in the example. It did
+      not accept 0 for deposit or interest, due to incorrect use of empty()
+      vs isset().  Using 0 produces uninteresting results, but it was supposed
+      to work.  Found and reported by Sourceforge user bvn1 on the forum.
+
 * 2012-04-06
     * advanced.xml: New small section on object serialization.
     * changelog.xml: Note new section(s).
