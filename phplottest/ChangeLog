@@ -1,6 +1,11 @@
 This is the Change Log for phplottest, the PHPlot Test Suite
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
+2012-07-27
+    New tests for release 6.0.0 changes to SetPlotAreaWorld() range checking:
+    * error-SetPlotAreaWorld*.php : 10 new tests
+    * tests.ini: List 10 new tests.
+
 2012-07-26
     * misc-a1.php: Removed incorrect comment about color definition, and
       removed unneeded colors from the map. This goes along with corrections
