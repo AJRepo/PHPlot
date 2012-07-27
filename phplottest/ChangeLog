@@ -1,6 +1,22 @@
 This is the Change Log for phplottest, the PHPlot Test Suite
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
+2012-07-26
+    * misc-a1.php: Removed incorrect comment about color definition, and
+      removed unneeded colors from the map. This goes along with corrections
+      made to the reference manual for SetRGBArray() on 2012-06-12 in the
+      "Rel6" branch for release 6.0.0. (It is not necessary to define
+      PHPlot's internally-used colors in the custom color map.)
+      No change to test output.
+    * misc-a2.php: New test for error detection in SetRGBArray().
+      Note: This test fails (does not detect the error) before PHPlot-6.0.0.
+    * ex-pieangle.php: New test from new reference manual example showing
+      pie chart start angle and direction setting.
+      Note: This test fails before PHPlot-6.0.0.
+    * drawtextfont.php: New test of font argument extension in DrawText().
+      Note: This test fails before PHPlot-6.0.0.
+    * tests.ini: List 3 new tests.
+
 2012-04-26
     * run_test.php: Track and report test "N of M"; report total elapsed time
       at end, and add -match command line option for selecting tests.
