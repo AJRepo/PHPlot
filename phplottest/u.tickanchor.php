@@ -12,7 +12,6 @@ class PHPlot_test extends PHPlot
     function test_CalcTicks($which)
     {
         return $this->CalcTicks($which);
-        return '';
     }
 }
 
@@ -23,12 +22,17 @@ function test($start, $step, $anchor)
     global $cases, $errors, $verbose;
 
     $plot = new PHPlot_test();
-    // Setup for CalcTicks:
-    $plot->plot_min_y = $start;
-    $plot->plot_max_y = $start + 10 * $step;
+    // Minimal plot setup. Data values do not matter - only CalcTicks is used.
+    $plot->SetPlotAreaWorld(NULL, $start, NULL, $start + 10 * $step);
     $plot->SetYTickIncrement($step);
     $plot->SetYTickAnchor($anchor);
+    $plot->SetDataValues(array(array('', $start), array('', $start+1)));
+    $plot->SetDataType('text-data');
+    $plot->SetPlotType('points');
+    $plot->SetPrintImage(False);
+    $plot->DrawGraph();
 
+    // Get the actual values from CalcTicks() for Y:
     list($tick_start, $tick_end, $tick_step) = $plot->test_CalcTicks('y');
     $cases++;
 
