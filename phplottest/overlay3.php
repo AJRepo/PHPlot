@@ -26,6 +26,7 @@ $p->DrawGraph();
 $p->SetPlotType('points');
 $p->SetXTitle(''); // Disable; already done
 $p->SetYTitle(''); // Disable; already done
+$p->SetDrawYGrid(False); // Don't draw over the grid
 $p->DrawGraph();
 
 $p->PrintImage(); // Now output the completed image
