@@ -1,6 +1,13 @@
 This is the Change Log for phplottest, the PHPlot Test Suite
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
+2012-08-03
+    * u.tickanchor.php: Fixed test failure on new "Rel6" branch code, due
+      to internal changes, by going through to DrawGraph() before fetching
+      the tick values. No changes to test output.
+      Also fixed typo (unreachable return).
+    * drawtextfont.php: Fix typo in variable name. No changes to test.
+
 2012-07-27
     New tests for release 6.0.0 changes to SetPlotAreaWorld() range checking:
     * error-SetPlotAreaWorld*.php : 10 new tests
