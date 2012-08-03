@@ -7,6 +7,11 @@ The project home page is http://sourceforge.net/projects/phplot/
       the tick values. No changes to test output.
       Also fixed typo (unreachable return).
     * drawtextfont.php: Fix typo in variable name. No changes to test.
+    * overlay3.php: Need to turn off Y grid before second plot, else it
+      draws over the grid a second time which may or may not change the
+      plot appearance.
+    * resets3.php: Add a comment explaining the odd values on the Y axis of
+      the lower plot, after settings are reset from the top plot.
 
 2012-07-27
     New tests for release 6.0.0 changes to SetPlotAreaWorld() range checking:
