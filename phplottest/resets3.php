@@ -7,6 +7,28 @@
 # interact so they can't be done in one test.)
 require_once 'phplot.php';
 
+/*
+Note: The lower plot's Y axis will look strange. This is because PHPlot
+calculates and sets the top and bottom of the Y range at the first plot,
+and divides it into the exact number of intervals given. It does not
+attempt to round this off to 'nice' numbers, because of the fixed number of
+tick intervals.
+
+The second plot removes the fixed number of intervals, but the range is
+'sticky' so it persists from the first plot. In particular, PHPlot will not
+adjust the range of the second plot to make a tick mark fall on 0. It will
+start a tick mark at the bottom of the range. This is the expected
+behavior, even though it results in unusual numbers along the Y axis.
+
+In a real application, you would probably do one of the following to make
+more reasonable tick mark values:
+    SetPlotAreaWorld() - have PHPlot re-calculate the range and tick values
+Or
+    SetYTickAnchor(0) - force a tick at Y=0; this moves all the ticks to
+whole numbers.
+
+*/
+
 $data = array();
 # This is a cubic equation with roots at -8, 2, 10
 for ($x = -10; $x <= 10; $x++)
