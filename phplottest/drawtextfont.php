@@ -9,16 +9,16 @@ function my_draw($img, $plot)
     $black = imagecolorresolve($img, 0, 0, 0);
     $x = 100;
     $y = 50;
-    $dx = 30;
-    $plot->DrawText('', 0, $x, $y+=$dx, $black,
+    $dy = 30;
+    $plot->DrawText('', 0, $x, $y+=$dy, $black,
                     'Font="" (generic): sans italic 12pt');
-    $plot->DrawText('generic', 0, $x, $y+=$dx, $black,
+    $plot->DrawText('generic', 0, $x, $y+=$dy, $black,
                     'Font="generic": sans italic 12pt');
-    $plot->DrawText('legend', 0, $x, $y+=$dx, $black,
+    $plot->DrawText('legend', 0, $x, $y+=$dy, $black,
                     'Font="legend": serif bold 14pt');
-    $plot->DrawText($plot->fonts['title'], 0, $x, $y+=$dx, $black,
+    $plot->DrawText($plot->fonts['title'], 0, $x, $y+=$dy, $black,
                     'Font=fonts["title"]: sans 12pt');
-    $plot->DrawText('x_title', 0, $x, $y+=$dx, $black,
+    $plot->DrawText('x_title', 0, $x, $y+=$dy, $black,
                     'Font="x_title": mono bold 10pt');
 }
 
