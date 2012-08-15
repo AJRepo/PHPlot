@@ -1,6 +1,24 @@
 This is the Change Log for phplottest, the PHPlot Test Suite
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
+2012-08-14
+    Fixed multiple tests that broke with an upcoming change for PHPlot-6.0.0
+    which makes most class variables protected visibility. In most cases,
+    the fix was to use a new class which extends PHPlot and allows access
+    to the needed variable(s).  No changes to test output.
+    * colors.php: Allow access to $rgb_array.
+    * defaultfont1a.php, defaultfont2a.php: Allow access to $default_ttfont.
+    * linepoints1.php: Allow access to $point_shapes.
+    * stream2.php: Allow access to $stream_frame_header, $stream_boundary.
+    * u.FindDataLimits: Allow access to internal methods CheckDataArray()
+      and FindDataLimits(), and to the 4 min/max x/y variables.
+    * u.dvlpos.php: Make a new object for each case, instead of reusing it
+      and doing unset() on the tuning variables.  Also, removed compatibility
+      code for PHPlot-5.7.0 and older. The test now requires 5.8.0 or higher.
+    * u.pmarg.php: Allow access to $plot_area.
+    * u.setcolors.php: Allow access to $default_colors, $data_colors,
+      $data_border_colors, $error_bar_colors.
+
 2012-08-03
     * u.tickanchor.php: Fixed test failure on new "Rel6" branch code, due
       to internal changes, by going through to DrawGraph() before fetching
