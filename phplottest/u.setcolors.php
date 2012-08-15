@@ -23,6 +23,29 @@
 
 require_once 'phplot.php';
 
+// Extend PHPlot class to allow access to protected variable(s):
+class PHPlot_pv extends PHPlot {
+    public function HAS_default_colors()
+    {
+        return isset($this->default_colors);
+    }
+    public function GET_data_colors()
+    {
+        if (isset($this->data_colors)) return $this->data_colors;
+        return NULL;
+    }
+    public function GET_data_border_colors()
+    {
+        if (isset($this->data_border_colors)) return $this->data_border_colors;
+        return NULL;
+    }
+    public function GET_error_bar_colors()
+    {
+        if (isset($this->error_bar_colors)) return $this->error_bar_colors;
+        return NULL;
+    }
+}
+
 # True to report test cases and all results:
 $test_verbose = False;
 # Set this to true (vs undefined) to report color map details.
@@ -43,7 +66,7 @@ $c6 = array('red', 'green', 'blue', 'cyan', 'magenta', 'yellow');
 # Returns -1 if null, -2 if scalar, or N>=0 if array of N elements.
 # Starting PHPlot > 5.1.2 (colors rewrite), the color arrays are no longer
 # arrays of names but arrays of array(r,g,b,a)
-function describe($name, &$v)
+function describe($name, $v)
 {
     global $test_debug;
 
@@ -83,11 +106,14 @@ function test($name, $p, $e_data_colors, $e_border_colors, $e_error_colors)
 
    $error = '';
 
-   if (($n = describe('Data Colors', $p->data_colors)) != $e_data_colors)
+   if (($n = describe('Data Colors', $p->GET_data_colors()))
+                    != $e_data_colors)
        $error .= "  Data Colors status $n expecting $e_data_colors\n";
-   if (($n = describe('Data Border Colors', $p->data_border_colors)) != $e_border_colors)
+   if (($n = describe('Data Border Colors', $p->GET_data_border_colors()))
+                    != $e_border_colors)
        $error .= "  Data Border Colors status $n expecting $e_border_colors\n";
-   if (($n = describe('Error Bar Colors', $p->error_bar_colors)) != $e_error_colors)
+   if (($n = describe('Error Bar Colors', $p->GET_error_bar_colors()))
+                    != $e_error_colors)
        $error .= "  Error Bar Colors status $n expecting $e_error_colors\n";
 
 
@@ -101,10 +127,10 @@ function test($name, $p, $e_data_colors, $e_border_colors, $e_error_colors)
 
 # ===== Test Cases =====
 
-$p = new PHPlot();
-# This is a cheat to determine the PHPlot version. After this variable
+$p = new PHPlot_pv();
+# Use an internal variable to determine the PHPlot version. After this variable
 # was introduced, the color maps expanded.
-if (isset($p->default_colors)) {
+if ($p->HAS_default_colors()) {
     $dcol = 16;
     $ecol = 16;
     $bcol = 1;
@@ -122,7 +148,7 @@ $p->SetErrorBarColors('green');
 test('Then set color arrays to single word',
      $p, 1, 1, 1);
 
-$p = new PHPlot();
+$p = new PHPlot_pv();
 $p->SetDataColors($c6);
 $p->SetDataBorderColors($c6);
 $p->SetErrorBarColors($c6);
@@ -141,7 +167,7 @@ $p->SetErrorBarColors('');
 test('Then set color arrays to default, using empty string',
      $p, $dcol, $bcol, $ecol);
 
-$p = new PHPlot();
+$p = new PHPlot_pv();
 $p->SetDataColors($c6);
 $p->SetDataColors(False);
 $p->SetDataBorderColors(False);

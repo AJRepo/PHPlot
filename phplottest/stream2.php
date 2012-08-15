@@ -7,6 +7,12 @@
 # This test just checks the overall syntax of the output frames.
 require_once 'phplot.php';
 
+// Extend PHPlot class to allow access to protected variable(s):
+class PHPlot_pv extends PHPlot {
+    public function GET_stream_boundary() { return $this->stream_boundary; }
+    public function GET_stream_frame_header() { return $this->stream_frame_header; }
+}
+
 $errors = 0;
 $mime_type = 'image/jpeg';
 
@@ -35,7 +41,7 @@ function check_frame($frame, $boundary)
 }
 
 # Initial plot object setup:
-$plot = new PHPlot(640, 480);
+$plot = new PHPlot_pv(640, 480);
 $plot->SetDataType('text-data');
 $plot->SetPlotType('lines');
 $plot->SetFileFormat('jpg');
@@ -48,9 +54,9 @@ $plot->SetPrintImage(False);
 # StartStream does no output, only headers (which we cannot catch using the
 # CLI), so just check the variables it sets:
 $plot->StartStream();
-$boundary = $plot->stream_boundary;
+$boundary = $plot->GET_stream_boundary();
 # Check: Stream frame header includes content-type with expected MIME type
-$sfh = $plot->stream_frame_header;
+$sfh = $plot->GET_stream_frame_header();
 if (!preg_match("\x01Content-Type: $mime_type\x01", $sfh)) {
     fwrite(STDERR, "Error: Did not match Content type in header:\n$sfh\n");
     $errors++;

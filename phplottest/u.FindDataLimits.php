@@ -5,7 +5,6 @@
 # for various data sets.
 require_once 'phplot.php';
 require_once 'usupport.php';    // Unit test support
-require_once 'testclass.php';   // Superclass with access to protected members
 
 # True to report test cases and all results:
 $test_verbose = False;
@@ -14,6 +13,28 @@ $test_verbose = False;
 $n_tests = 0;
 $n_pass = 0;
 $n_fail = 0;
+
+// Extend PHPlot to access protected method and variables.
+class PHPlot_test extends PHPlot
+{
+    // CheckDataArray()
+    function CALL_CheckDataArray()
+    {
+        if (method_exists($this, 'CheckDataArray')) $this->CheckDataArray();
+    }
+
+    function CALL_FindDataLimits()
+    {
+        return $this->FindDataLimits();
+    }
+
+    // Return an array of min_x, max_x, min_y, max_y converted to float:
+    function GET_min_max_x_y()
+    {
+        return array((float)$this->min_x, (float)$this->max_x,
+                     (float)$this->min_y, (float)$this->max_y);
+    }
+}
 
 # Single test case.
 #  $name : Name of this test case
@@ -35,13 +56,12 @@ function test($name, $data_type, $plot_type, $data, $expected)
     $p->SetPlotType($plot_type);
     $p->SetDataValues($data);
     // For PHPlot>5.1.2 (CVS). FindDataLimits requires this.
-    $p->test_CheckDataArray();
+    $p->CALL_CheckDataArray();
 
-    # Call internal function:
-    $p->test_FindDataLimits();
-    // Cast to float for comparing:
-    $results = array((float)$p->min_x, (float)$p->max_x, (float)$p->min_y,
-                 (float)$p->max_y);
+    // Call internal function:
+    $p->CALL_FindDataLimits();
+    // Get min,max x,y - cast to float for comparing
+    $results = $p->GET_min_max_x_y();
 
     $error = '';
     if (expect_equal($expected, $results, $title, $error)) {

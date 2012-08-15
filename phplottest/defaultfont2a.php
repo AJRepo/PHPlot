@@ -6,12 +6,17 @@
 require_once 'phplot.php';
 define('TEST_FONT', 'FreeUniversal-Regular.ttf');
 
+// Extend PHPlot class to allow access to protected variable(s):
+class PHPlot_pv extends PHPlot {
+    public function GET_default_ttfont() { return $this->default_ttfont; }
+}
+
 $data = array(
   array('A', 3,  6),
   array('B', 2,  4),
   array('C', 1,  2),
 );
-$p = new PHPlot(800, 800);
+$p = new PHPlot_pv(800, 800);
 $p->SetDataType('text-data');
 $p->SetDataValues($data);
 $p->SetPlotType('bars');
@@ -22,4 +27,5 @@ $p->SetTTFPath(getcwd() . DIRECTORY_SEPARATOR . 'images');
 $p->SetDefaultTTFont(TEST_FONT);
 $p->SetUseTTF(True);
 $p->DrawGraph();
-fwrite(STDERR, "OK defaultfont2a: default_ttfont=".$p->default_ttfont."\n");
+fwrite(STDERR, "OK defaultfont2a: default_ttfont="
+               . $p->GET_default_ttfont() . "\n");

@@ -3,11 +3,15 @@
 # Testing phplot - Color Chart
 require_once 'phplot.php';
 
-$p = new PHPlot(800,700);
+// Extend PHPlot class to allow access to protected variable(s):
+class PHPlot_pv extends PHPlot {
+    public function GET_rgb_array() { return $this->rgb_array; }
+}
 
-# This is cheating. The PHPlot constructor sets this->rgb_array to the
-# default 'small' color maps. Key is the color name.
-$colors = array_keys($p->rgb_array);
+$p = new PHPlot_pv(800,700);
+
+# Use internal color map rgb_array to get a list of colors:
+$colors = array_keys($p->GET_rgb_array());
 sort($colors);
 $nc = count($colors);
 # Make a data array with 1 point, $nc data sets:

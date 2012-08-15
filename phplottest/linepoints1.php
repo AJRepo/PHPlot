@@ -5,6 +5,11 @@
 # the default shapes, otherwise show all shapes.
 require_once 'phplot.php';
 
+// Extend PHPlot class to allow access to protected variable(s):
+class PHPlot_pv extends PHPlot {
+    public function GET_point_shapes() { return $this->point_shapes; }
+}
+
 # This is a list of selected colors in the PHPlot 'small' map:
 $colors = array(
   'orange', 'blue', 'maroon', 'red', 'peru', 'cyan', 'black', 'gold',
@@ -12,12 +17,11 @@ $colors = array(
   'aquamarine1', 'violet', 'salmon', 'brown', 'pink', 'DimGrey',
 );
 
-$plot = new PHPlot(800, 600);
-
+$plot = new PHPlot_pv(800, 600);
 # Define the $shapes array, used for both the point shapes and legend:
 if (isset($use_default_shapes)) {
     # Cheat: grab phplot's internal shapes
-    $shapes = $plot->point_shapes;
+    $shapes = $plot->GET_point_shapes();
     $title_suffix = ' (PHPlot Defaults)';
 } else {
     $shapes = array(

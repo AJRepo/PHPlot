@@ -13,9 +13,13 @@ $fails = 0;
 /* 
 Notes:
 
-Usage of CheckDataValueLabels() changed after phplot-5.7.0.
+Usage of CheckDataValueLabels() changed after phplot-5.7.0. Through SVN rev
+1234, this script tested for and adapted to the old and new versions:
   Through 5.7.0: CheckDataValueLabels($flag, &$x, &$y, &$h, &$v)
   After 5.8.0:   CheckDataValueLabels($flag, &$dvl)
+But this was removed later, and the test now works only with PHPlot-5.8.0
+and higher.
+
 Because they use reference args, it won't work to pass-through the arg list
 with func_get_args() and call_user_func_array(). That won't correctly pass
 the references. So the conversion is handled in test_CheckDataValueLabels()
@@ -26,46 +30,17 @@ result in an error if the older one is in use.
 
 # ====== Test support functions ======
 
-# Error handler for detecting interface version. A trial call will be made
-# using the new interface, which has fewer args. If the old one is in effect,
-# the call will get a missing argument error.
-function test_cdvl_handler($errno, $errstr)
-{
-    global $test_error_flag;
-    $test_error_flag = TRUE;
-}
-
-
 # Extend the class to allow access to protected method.
 class PHPlot_test extends PHPlot
 {
-    # This flag is used to indicate which version of CheckDataValueLabels is
-    # in use. If NULL, it means the auto-detection has not yet run.
-    # It is TRUE to use the post PHPlot-5.7.0 CheckDataValueLabels.
-    static $v2if = NULL;
-
     // CheckDataValueLabels()
     function test_CheckDataValueLabels($flag, &$x, &$y, &$h, &$v)
     {
-        global $test_error_flag;
-        if (!isset(self::$v2if)) {
-            // Auto-detect version. See notes above.
-            $test_error_flag = FALSE;
-            set_error_handler('test_cdvl_handler', E_ALL);
-            @$this->CheckDataValueLabels('plotin', $dummy);
-            restore_error_handler();
-            self::$v2if = !$test_error_flag;
-        }
-
-        if (self::$v2if) {
-            $result = $this->CheckDataValueLabels($flag, $dvl);
-            $x = $dvl['x_offset'];
-            $y = $dvl['y_offset'];
-            $h = $dvl['h_align'];
-            $v = $dvl['v_align'];
-        } else {
-            $result = $this->CheckDataValueLabels($flag, $x, $y, $h, $v);
-        }
+        $result = $this->CheckDataValueLabels($flag, $dvl);
+        $x = $dvl['x_offset'];
+        $y = $dvl['y_offset'];
+        $h = $dvl['h_align'];
+        $v = $dvl['v_align'];
         return $result;
     }
 }
@@ -73,15 +48,15 @@ class PHPlot_test extends PHPlot
 # ===== Test Wrappers ======
 function test($msg, $angle, $dist, $expect_xoff, $expect_yoff, $expected_align)
 {
-  global $p, $test_debug, $tests, $fails, $error;
+  global $test_debug, $tests, $fails, $error;
 
   $failed = False;
   $tests++;
 
+  $p = new PHPlot_test();
+
   if (isset($angle)) $p->data_value_label_angle = $angle;
-  else unset($p->data_value_label_angle);
   if (isset($dist)) $p->data_value_label_distance = $dist;
-  else unset($p->data_value_label_distance);
   // 'plotin' arg always enables labels.
   $p->test_CheckDataValueLabels('plotin', $x_adj, $y_adj, $h_align, $v_align);
   $align = $h_align . $v_align;
@@ -104,8 +79,6 @@ function test($msg, $angle, $dist, $expect_xoff, $expect_yoff, $expected_align)
 }
 
 # ===== Testing =====
-
-$p = new PHPlot_test();
 
 test('Default angle and dist', NULL, NULL,  0,   -5, 'centerbottom');
 test('Default angle @ 100   ', NULL,  100,  0, -100, 'centerbottom');

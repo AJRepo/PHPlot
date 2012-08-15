@@ -6,9 +6,13 @@
 # which can be NULL, giving 32 test cases, plus not calling at all.
 # For each test case, produce the plot but don't output an image. Look inside
 # the PHPlot object to report the resulting plot area.
-
 require_once 'phplot.php';
 require_once 'usupport.php';  # Support functions for unit tests.
+
+// Extend PHPlot class to allow access to protected variable(s):
+class PHPlot_pv extends PHPlot {
+    public function GET_plot_area() { return $this->plot_area; }
+}
 
 # True to report test cases and all results:
 $test_verbose = False;
@@ -75,7 +79,7 @@ function pmarg_test($call_SetMarginsPixels,
 {
     global $data, $margins_override, $plotarea_override;
 
-    $p = new PHPlot(PLOT_WIDTH, PLOT_HEIGHT);
+    $p = new PHPlot_pv(PLOT_WIDTH, PLOT_HEIGHT);
     $p->SetTitle("Unused Title Goes Here");
     $p->SetDataType('data-data');
     $p->SetDataValues($data);
@@ -108,11 +112,12 @@ function pmarg_test($call_SetMarginsPixels,
     $p->DrawGraph();
 
     # Return the resulting margins or coordinates, as requested.
+    $plot_area = $p->GET_plot_area();
     if ($return_margins) {
-        return array($p->plot_area[0], PLOT_WIDTH - $p->plot_area[2],
-                     $p->plot_area[1], PLOT_HEIGHT - $p->plot_area[3]);
+        return array($plot_area[0], PLOT_WIDTH - $plot_area[2],
+                     $plot_area[1], PLOT_HEIGHT - $plot_area[3]);
     }
-    return $p->plot_area;
+    return $plot_area;
 }
 
 # Execute one test case.
