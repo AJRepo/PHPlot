@@ -1,6 +1,21 @@
 This is the Change Log for phplottest, the PHPlot Test Suite
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
+2012-08-20
+    Added 6 new tests. These are related to bug #3557510 "Calculated defaults
+    applied to subsequent plots". Details:
+    * multidefault-axis[12].php: Calculated default axis position sticks to
+      next plot (1), unless reset (2). Documented behavior, not a bug.
+    * multidefault-labelgrid[12].php: Calculated label position and grid
+      on/off stick to next plot (1). Grid part is a bug, to be fixed in
+      PHPlot-6.0.0. Label position is not yet determined to be a bug. In
+      (2) the label positions are reset.
+    * multidefault-labelangle1.php: X data label angle defaults to X label
+      angle, but sticks even if X label angle changes. Will be fixed in 6.0.0.
+    * multidefault-tickinc1.php: Tick increment needs to be calculated again
+      for each plot. PHPlot-5.8.0 does this right. 6.0.0 in development was
+      broken for a while, but now does it right too.
+
 2012-08-14
     Fixed multiple tests that broke with an upcoming change for PHPlot-6.0.0
     which makes most class variables protected visibility. In most cases,
