@@ -1,6 +1,11 @@
 This is the Change Log for phplottest, the PHPlot Test Suite
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
+2012-09-23
+    Added 6 new tests for feature request #46 "Control pie chart borders":
+    * piebcol*.php: 6 new tests
+    * tests.ini: List 6 new tests. Total now is 836 tests.
+
 2012-09-10
     Added 8 new tests for bug #165 "Missing axis labels on some empty plots":
     * empty-nocols*.php : 8 new tests
