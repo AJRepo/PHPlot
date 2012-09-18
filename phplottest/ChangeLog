@@ -1,6 +1,21 @@
 This is the Change Log for phplottest, the PHPlot Test Suite
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
+2012-09-18
+    Added 23 new tests for feature request #47 "Extend horizontal plots to
+    more types":
+    * ex-horizlinepts.php: New example from reference manual
+    * horzlpe*.php: 15 new tests for horizontal lines/points
+    * ydatalabellines*.php: 7 new tests for Y data label lines
+    * tests.ini: List 23 new tests. Total now is 859 tests.
+    These test changes were needed because of the feature request:
+    * u.ptdt.php: Changed expected results, since 3 plottypes now accept
+      2 more data types each (6 cases now expected to work).
+    * dlexformat3[abc].php: Removed flag saying data value labels won't be
+      produced, since data-data-error plots can now display them.
+    * dlexformat.php: For data-data-error plots, set the data value label
+      angle, so the labels aren't on top of the error bars.
+
 2012-09-23
     Added 6 new tests for feature request #46 "Control pie chart borders":
     * piebcol*.php: 6 new tests
