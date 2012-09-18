@@ -37,17 +37,19 @@ $data_types = array(
 );
 
 # Plot types, and which data types they support, ordered per $data_types.
+# Note: These rows should match the rows in the Reference Manual, "Concepts"
+# chapter, Plot Types and Data Types table.
 $plot_types = array(
     "area"           => array( 1, 1, 0, 0, 0, 0, 0),
     "bars"           => array( 1, 0, 0, 0, 1, 0, 0),
     "bubbles"        => array( 0, 0, 0, 0, 0, 0, 1),
     "candlesticks"   => array( 1, 1, 0, 0, 0, 0, 0),
     "candlesticks2"  => array( 1, 1, 0, 0, 0, 0, 0),
-    "linepoints"     => array( 1, 1, 1, 0, 0, 0, 0),
-    "lines"          => array( 1, 1, 1, 0, 0, 0, 0),
+    "linepoints"     => array( 1, 1, 1, 0, 1, 1, 0), // PHPlot-6.0.0
+    "lines"          => array( 1, 1, 1, 0, 1, 1, 0), // PHPlot-6.0.0
     "pie"            => array( 1, 1, 0, 1, 0, 0, 0),
     "ohlc"           => array( 1, 1, 0, 0, 0, 0, 0),
-    "points"         => array( 1, 1, 1, 0, 0, 0, 0),
+    "points"         => array( 1, 1, 1, 0, 1, 1, 0), // PHPlot-6.0.0
     "squared"        => array( 1, 1, 0, 0, 0, 0, 0),
     "stackedarea"    => array( 1, 1, 0, 0, 0, 0, 0),
     "stackedbars"    => array( 1, 0, 0, 0, 1, 0, 0),
