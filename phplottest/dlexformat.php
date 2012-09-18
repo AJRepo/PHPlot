@@ -76,5 +76,9 @@ if ($data_type == 'text-data-yx' || $data_type == 'data-data-yx') {
     $plot->SetPlotAreaWorld(0, 0, $nx, NULL);
     $plot->SetYTickIncrement(1);
 }
+# For data-data-error plots, pivot the data value labels away from
+# the error bars:
+if ($data_type == 'data-data-error')
+    $plot->data_value_label_angle = 45;
 
 $plot->DrawGraph();
