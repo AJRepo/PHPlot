@@ -5,5 +5,4 @@
 $plot_type = 'lines';
 $data_type = 'data-data-error';
 $ny = 1;
-$dvls = False; // This plot & data type does not do Data Value Labels.
 require 'dlexformat.php';
