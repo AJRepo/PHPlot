@@ -1,6 +1,13 @@
 This is the Change Log for phplottest, the PHPlot Test Suite
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
+2012-12-23
+    Added new tests for feature requests #50 and #51:
+    * drawdataborder*.php : 8 new tests for SetDrawDataBorders()
+    * legendcolorboxborder*.php : 4 new tests for SetLegendColorboxBorders()
+    * legendlinemarker*.php : 15 new tests for line markers in legend
+    * tests.ini: List 27 new tests.
+
 2012-09-23
     Added 3 new tests for bug #164 (previously #3557510) "Calculated
     defaults applied to subsequent plots".
