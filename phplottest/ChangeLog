@@ -1,6 +1,10 @@
 This is the Change Log for phplottest, the PHPlot Test Suite
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
+2012-12-27
+    * testversion.php: Removed obsolete check for "CVS" string in version,
+      and added check for new version_id constant.
+
 2012-12-24
     * legshape2.php: This test 'broke' with recent code changes. It was
       supposed to show SetLegendUseShapes(True) being ignored for a plot
