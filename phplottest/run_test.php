@@ -10,11 +10,6 @@ graphic test is to produce a plot image. The purpose of a unit test is to
 test some internal function. The purpose of an error test is to verify that
 error conditions are correctly detected and handled.
 
-(Originally, the 3 types were distinguished by filenames: unit-* or u.* for
-unit tests, and error-* for error tests; everything else was a graphic
-test. And the filename determined how the test ran. With the tests.ini
-file, this is no longer needed and tests can use any filenames.)
-
 Test validation is controlled through a configuration file called: tests.ini
 This file is in PHP "ini" format. Each section names a test script, without
 the .php extension. For each test, the configuration file contains
@@ -26,9 +21,12 @@ that. Unit tests generally self-validate. Error tests are validated by
 checking the error output.)
 
 See the test directory README file for more information about tests.ini
+and test script design.
 
 */
 
+# Name of the product being tested:
+define('PRODUCT', 'PHPlot');
 # Name of the file containing test validation data:
 define('TEST_DATA_FILE', 'tests.ini');
 # Name of the test log file, located in the results directory:
@@ -41,9 +39,11 @@ $result_dir = '';        # Directory to hold output files
 $n_test = 0;             # Number of the current test being run
 $total_tests = 0;        # Total number of tests to run
 $n_pass = 0;             # Number of tests which passed
+$n_skip = 0;             # Number of tests which were skipped
 $n_fail = 0;             # Number of tests which failed
-$fail_list = array();    # Array (list) of tests which failed.
-$verbose = 1;            # Verbosity level.
+$fail_list = array();    # Array (list) of tests which failed
+$skip_list = array();    # Array (list) of tests which were skipped
+$verbose = 1;            # Verbosity level
 $val_data = array();     # Validation data read from TEST_DATA_FILE
 
 # Default values for the test validation data:
@@ -81,7 +81,7 @@ END
 # Report a pre-test failure and exit:
 function fail($why)
 {
-    fwrite(STDERR, "PHPlot test setup error: $why\n");
+    fwrite(STDERR, PRODUCT . " test setup error: $why\n");
     exit(1);
 }
 
@@ -200,7 +200,7 @@ function cleanup()
 function preface()
 {
     global $php_exe, $result_dir, $log_filename, $php_version, $total_tests;
-    lecho("====== This is the PHPlot Test Suite ======\n");
+    lecho("====== This is the " . PRODUCT . " Test Suite ======\n");
     lprintfts("Setting up for testing");
     lecho("  Tests will be run using PHP interpreter: $php_exe\n");
     lecho("  PHP interpreter used for testing reports as: PHP $php_version\n");
@@ -213,33 +213,38 @@ function preface()
 # Output the test result summary:
 function summarize($total_run_time)
 {
-    global $n_pass, $n_fail, $fail_list, $result_dir, $log_filename, $log_f;
+    global $n_pass, $n_fail, $n_skip, $result_dir, $log_filename, $log_f;
+    global $fail_list, $skip_list;
     lprintfts("Testing complete - Elapsed time %.2f seconds", $total_run_time);
     lprintf("  Passed:  %3d\n", $n_pass);
     lprintf("  Failed:  %3d\n", $n_fail);
+    lprintf("  Skipped: %3d\n", $n_skip);
     if (!empty($fail_list))
-        lecho("  Failed scripts:\n    "
+        lecho("  Failed tests:\n    "
            . wordwrap(implode(', ', $fail_list)) .  "\n\n");
+    if (!empty($skip_list))
+        lecho("  Skipped tests:\n    "
+           . wordwrap(implode(', ', $skip_list)) .  "\n\n");
     lecho("  Results were saved in: $result_dir\n");
     lecho("  Test log was written to: $log_filename\n");
     fclose($log_f);
 }
 
-# Report a failed test, and return False:
+# Report a failed test:
 #   test_name : The short name of the test (base filename).
 #   message : The failure message. May be multi-line.
 #   runtime : Run-time of the test, in seconds as floating point.
 function test_fail($test_name, $message, $runtime = 0.0)
 {
-    global $n_test, $total_tests, $n_fail;
+    global $n_test, $total_tests, $n_fail, $fail_list;
     lprintfts("%-24s => [ERROR] (%04d/%04d) %6.3f sec%s",
         $test_name, $n_test, $total_tests, $runtime,
         empty($message) ? '' : "\n$message");
     $n_fail++;
-    return False;
+    $fail_list[] = $test_name;
 }
 
-# Report a passing test, and return True:
+# Report a passing test:
 #   test_name : The short name of the test (base filename).
 #   message : Test info message, may be empty.
 #   runtime : Run-time of the test, in seconds as floating point.
@@ -250,16 +255,29 @@ function test_pass($test_name, $message, $runtime)
         $test_name, $n_test, $total_tests, $runtime,
         empty($message) ? '' : "\n$message");
     $n_pass++;
-    return True;
+}
+
+# Report a skipped test:
+#   test_name : The short name of the test (base filename).
+#   message : Message from the test, explaining why it was skipped.
+#   runtime : Run-time of the test, in seconds as floating point (ignored)
+function test_skip($test_name, $message, $runtime)
+{
+    global $n_test, $total_tests, $n_skip, $skip_list;
+    lprintfts("%-24s => [SKIP]  (%04d/%04d)%s",
+        $test_name, $n_test, $total_tests,
+        empty($message) ? '' : "\n$message");
+    $n_skip++;
+    $skip_list[] = $test_name;
 }
 
 # Test helper: Run command line and check for status.
 # If the script won't run, return False after storing a message.
 # If the script ran, return True, but if the script returned an error status
 # than append a message to $error.
-# (Return status indicates whether the test should go on and check output
-# or not.)
-# The exit status is stored in $rval. This is used for error tests.
+# Note: return True means the test ran (pass, fail, or skip). Return False
+# means the test did not run (so don't bother checking the output).
+# The actual test's exit status is stored in $rval.
 function run_command($cmd, $script_file, $output_file, $error_file,
     &$error, &$rval)
 {
@@ -279,6 +297,7 @@ function run_command($cmd, $script_file, $output_file, $error_file,
     # Close the process and wait for exit, then check exit status:
     $rval = proc_close($p);
     if ($rval != 0)
+        # Note: distinguishing 'fail' and 'skip' status is done by caller.
         $error .= "Test returned error status: $rval\n";
     return True;
 }
@@ -383,12 +402,25 @@ function run_test($test_name, $script_file, $output_file, $error_file)
     $cmd = "$php_exe -r \"$phpcmd\"";
     
     # Run the test command. False return means abort, True means the
-    # the script ran (although it might have failed).
+    # the script ran (although it might have failed, or be a skipped test).
     $start_time = microtime(TRUE);
     if (!run_command($cmd, $script_file, $output_file, $error_file,
-                     $error, $rval))
-        return test_fail($test_name, $error);
+                     $error, $rval)) {
+        test_fail($test_name, $error);
+        return;
+    }
     $runtime = microtime(TRUE) - $start_time;
+
+    # Check for skipped test:
+    if ($rval == 2) {
+        # Ignore $error from run_command, as this was not a test error.
+        # Get skip reason from stdout - it should be one short line.
+        $message = "  " . check_file($output_file);
+        test_skip($test_name, $message, $runtime);
+        @unlink($done_file); # Cleanup
+        check_file($error_file); # Cleanup
+        return;
+    }
 
     # If $error is not empty, it represents a return status.
     if (!empty($error))
@@ -457,18 +489,19 @@ function run_test($test_name, $script_file, $output_file, $error_file)
         $failures[] = "Script exited and did not return properly";
 
    # Final test status:
-   if (empty($failures))
-       return test_pass($test_name, $message, $runtime);
-   return test_fail($test_name, $message . "Validation failure(s):\n - "
-         . implode("\n - ",  $failures), $runtime);
+   if (empty($failures)) {
+       test_pass($test_name, $message, $runtime);
+   } else {
+       test_fail($test_name, $message . "Validation failure(s):\n - "
+                 . implode("\n - ",  $failures), $runtime);
+   }
 }
 
 # Run an individual test script. This builds the filenames for the output
 # and error streams, and calls a function to perform the test.
 function do_test($filename)
 {
-    global $result_dir, $verbose;
-    global $n_test, $n_pass, $n_fail, $fail_list;
+    global $result_dir, $verbose, $n_test, $n_pass, $n_fail;
 
     # Get the test name (xyz) from the filename (/path/to/xyz.ext).
     # This is also used to build the stdout and stderr names.
@@ -477,8 +510,8 @@ function do_test($filename)
 
     # Make sure the test script exists.
     if (!is_readable($filename)) {
-        $fail_list[] = $filename;
-        return test_fail($test_name, "Script not found: $filename\n");
+        test_fail($test_name, "Script not found: $filename\n");
+        return;
     }
 
     $output_file = $result_dir . DIRECTORY_SEPARATOR . $test_name .  '.out';
@@ -490,12 +523,9 @@ function do_test($filename)
            . "  Output to: $output_file\n"
            . "  Errors to: $error_file\n");
 
-    # Run the test. Return value indicates pass/fail status, but each
-    # test handler is responsible for reporting the error.
+    # Run the test, and handle the result (pass, fail, or skip):
     $n_test++;
-    if (!run_test($test_name, $filename, $output_file, $error_file)) {
-        $fail_list[] = $filename;
-    }
+    run_test($test_name, $filename, $output_file, $error_file);
 }
 
 # Main: Process all tests and options on the command line.
