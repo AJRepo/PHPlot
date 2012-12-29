@@ -3,6 +3,12 @@
 # PHPlot Example - Horizontal linepoints plot with Y Data Label Lines
 require_once 'phplot.php';
 
+# Check for PHPlot method and skip the test if it is missing:
+if (!method_exists('PHPlot', 'SetDrawYDataLabelLines')) {
+    echo "Skipping test because it requires SetDrawYDataLabelLines()\n";
+    exit(2);
+}
+
 $data = array(
             array("SEA\nLEVEL", 0, ''),
             array('100m', 1, 10),

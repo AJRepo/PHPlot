@@ -18,6 +18,12 @@ $tp = array_merge(array(
         ), $tp);
 require_once 'phplot.php';
 
+# Check for PHPlot method and skip the test if it is missing:
+if (!method_exists('PHPlot', 'SetDrawYDataLabelLines')) {
+    echo "Skipping test because it requires SetDrawYDataLabelLines()\n";
+    exit(2);
+}
+
 $n_y = 12; // Fixed number of Y values (rows)
 $max_x = 20; // Max random X
 

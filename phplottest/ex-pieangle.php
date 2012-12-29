@@ -4,6 +4,12 @@
 # Note: This requires PHPlot-6.0.0 or higher.
 require_once 'phplot.php';
 
+# Check for PHPlot method and skip the test if it is missing:
+if (!method_exists('PHPlot', 'SetPieStartAngle')) {
+    echo "Skipping test because it requires SetPieStartAngle()\n";
+    exit(2);
+}
+
 $pie_slices = 6;
 $base_angle = 0;
 

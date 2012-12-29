@@ -11,10 +11,10 @@ $tp = array_merge(array(
         ), $tp);
 require_once 'phplot.php';
 
-# Check for new PHPlot method and abort the test if it is missing:
+# Check for PHPlot method and skip the test if it is missing:
 if (!method_exists('PHPlot', 'SetDrawDataBorders')) {
-    fwrite(STDERR, "Test abort: Missing required PHPlot method\n");
-    exit(1);
+    echo "Skipping test because it requires SetDrawDataBorders()\n";
+    exit(2);
 }
 
 $data = array(

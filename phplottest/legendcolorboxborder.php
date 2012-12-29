@@ -12,10 +12,10 @@ $tp = array_merge(array(
         ), $tp);
 require_once 'phplot.php';
 
-# Check for new PHPlot method and abort the test if it is missing:
+# Check for new PHPlot method and skip the test if it is missing:
 if (!method_exists('PHPlot', 'SetLegendColorboxBorders')) {
-    fwrite(STDERR, "Test abort: Missing required PHPlot method\n");
-    exit(1);
+    echo "Skipping test because it requires SetLegendColorboxBorders()\n";
+    exit(2);
 }
 
 # Title building helper for string variables (which might be NULL):
