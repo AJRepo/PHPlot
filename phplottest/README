@@ -1,5 +1,5 @@
 phplottest - PHPlot Test Suite
-Last Updated: 2012-04-06
+Last Updated: 2012-12-28
 -----------------------------------------------------------------------------
 OVERVIEW:
 
@@ -32,7 +32,7 @@ fail with an error message.
 The test driver can run through all the tests with a single command.  Each
 test script is run using the PHP interpreter, and the status of the test is
 checked. The test driver will save any generated output images, and report
-the test results as a count of tests that passed and failed.
+the test results as counts of the tests that passed, failed, or were skipped.
 
 To run these tests, you need PHPlot and a PHP CLI (command line
 interpreter).  To view the test output images, you need an image viewer
@@ -194,11 +194,11 @@ Requirements for writing test scripts:
 
 3) The script must have "require_once 'phplot.php';" without any path.
 
-4) The script must not end with exit(), unless it fails. Just fall off the end
-   in PHP mode.  (Don't end with the ?> close tag either.) Using "return"
-   from a global context (outside a function) works too. (If a test uses
-   exit(0), the test will be reported as a failure because the driver detects
-   that it didn't run to the end.)
+4) If the script completes successfully, it must not use exit(). It needs to
+   just continue to the end of the script file, or use return from a global
+   context (outside any function). Any test using exit(), even exit(0), will
+   assume to not have passed, because the test driver will detect that it did
+   not run through to the end.
 
 5) The script should produce the same output each time it runs. If the script
    produces an image, the image should be identical for each run. (This is
@@ -225,6 +225,16 @@ Requirements for writing test scripts:
      $f = fopen(getenv("RESULTDIR" . DIRECTORY_SEPARATOR . "testfile.dat", "w");
    Note: This filename is a bad example. To avoid filename collisions, each
    test script should begin filenames with its own name.
+
+8) If a script gets an error, it should use exit(1) after writing an error
+   message to stderr. Note that this doesn't necessarily mean the test failed,
+   as the validation data determines the pass/fail status.
+
+9) A script can use exit(2) to indicate that it should be skipped. This
+   is appropriate if the script depends on a class method which is not
+   present. (This is used to reduce the number of errors when testing older
+   versions of the software.)
+
 
 Some tests, generally "Graphics Tests", are expected to produce an image.
 The image file must be produced on standard output, with no other output
@@ -295,6 +305,23 @@ methods of PHPlot were left as "public" specifically for the test scripts.
 However, this now avoided by using an extended class that can provide access
 to protected methods. The class is in "testclass.php" and defines a few
 "test_xxx()" methods that call the PHPlot protected "xxx()" method.
+
+
+Skipping tests:
+
+A script uses exit(2) to indicate that it should be skipped. The tests.ini
+data for the test is completely ignored for skipped tests. Skipping is
+appropriate when a required method is missing, for example:
+  if (!method_exists('Classname', 'methodname')) { ... }
+
+It is also possible to use a version constant to check for a particular
+version of the software, or newer, before continuing. Note that the integer
+constant PHPlot::version_id was only added in PHPlot-6.0.0, and the string
+constant PHPlot::version is not useful for comparison. A script can
+therefore only check for versions 6.0.0 or later.
+
+Before using exit(2), the script should write a short (1-line) message to
+stdout explaining why it is being skipped.
 
 -----------------------------------------------------------------------------
 THE tests.ini CONFIGURATION FILE:
