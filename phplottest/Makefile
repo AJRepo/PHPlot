@@ -15,7 +15,7 @@ EXTRA=run_test.php compare_tests.php \
   tests.ini transparent.html drawtext.php ohlcdata.csv ex-pielabeltypedata.php
 
 # Additional files to release:
-ETCFILES=README LICENSES Makefile
+ETCFILES=README LICENSES Makefile ChangeLog
 
 # Static images and other non-text used by tests, in IMAGES/*
 IMAGES=\
