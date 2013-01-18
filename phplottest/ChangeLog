@@ -1,6 +1,14 @@
 This is the Change Log for phplottest, the PHPlot Test Suite
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
+2013-01-17
+    * LICENSES: Update copyright year, no change to licenses.
+    Added new tests for legend background & text color control:
+    * legendtxbgcolor*.php : 4 new tests for SetLegendBgColor() and
+      SetLegendTextColor().
+    * tests.ini: List 4 new tests.
+
+
 2012-12-29
     * run_test.php: Implemented 'skipped' tests, using exit(2).
     * README: Updated to describe new 'skip test' exit status.
