@@ -34,7 +34,31 @@ class PHPlot_test extends PHPlot
         return array((float)$this->min_x, (float)$this->max_x,
                      (float)$this->min_y, (float)$this->max_y);
     }
+
+    // Return the version ID constant, if present, else make one up.
+   function get_version()
+   {
+       if (defined('self::version_id')) return self::version_id;
+       else return 50000;
+   }
 }
+
+# Compatibility fix
+# Starting at Rel6/SVN 1502, the returned range for implied independent
+# variable cases (text-data) changed from 0,NP-1 to 0,NP with
+# NP points. The expected results in all the applicable test cases were
+# changed to account for this. In order to keep the test working with
+# older versions, this function adjusts the expected results to match the
+# older versions. (Note: This will not work on some intermediate SVN versions.)
+function compat_1($plot, $data_type, &$expected)
+{
+    if ($plot->get_version() < 60000
+          && preg_match('/^text-data/', $data_type)) {
+        # Adjust max_x expected result for PHPlot < 6.0.0
+        $expected[1]--;
+    }
+}
+
 
 # Single test case.
 #  $name : Name of this test case
@@ -63,6 +87,9 @@ function test($name, $data_type, $plot_type, $data, $expected)
     // Get min,max x,y - cast to float for comparing
     $results = $p->GET_min_max_x_y();
 
+    // Backward compatibility fixup(s):
+    compat_1($p, $data_type, $expected);
+
     $error = '';
     if (expect_equal($expected, $results, $title, $error)) {
         $n_pass++;
@@ -87,7 +114,7 @@ test('data-data baseline', 'data-data', 'lines', array(
 test('text-data.2', 'text-data', 'lines', array(
          array('a', 1, 100, 100, -200), 
          array('b', 2, 100, 200,  300)),
-     array(0.0, 1.0, -200.0, 300.0));
+     array(0.0, 2.0, -200.0, 300.0));
 
 test('data-data.3', 'data-data', 'lines', array(
          array('a', 1, 100, 100, -200), 
@@ -100,14 +127,14 @@ test('text-data.4', 'text-data', 'lines', array(
          array('a', 100),
          array('b', -100),
          array('c', 0)),
-     array(0.0, 2.0, -100.0, 100.0));
+     array(0.0, 3.0, -100.0, 100.0));
 
 # Missing data point cases
 test('Missing Y data point, text-data', 'text-data', 'lines', array(
          array('a', 100, 100, 50), 
          array('b', 100, 200, ''), 
          array('c', 100, '',  300)),
-     array(0.0, 2.0, 50.0, 300.0));
+     array(0.0, 3.0, 50.0, 300.0));
 
 test('Missing Y data point, data-data', 'data-data', 'lines', array(
          array('a', 1, '', 200),
@@ -135,7 +162,7 @@ test('Missing Y data for only X', 'data-data', 'lines', array(
 test('Stackedbars.1', 'text-data', 'stackedbars', array(
          array('a', 10, 20, 5, 2),
          array('b', 40, 20, 10, 5)),
-     array(0.0, 1.0, 0.0, 75.0));
+     array(0.0, 2.0, 0.0, 75.0));
 
 # Data-data-error: Bug report 2786354
 test('data-data-error.1', 'data-data-error', 'lines', array(
