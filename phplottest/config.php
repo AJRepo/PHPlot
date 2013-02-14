@@ -7,76 +7,81 @@
 #    phplot_test_ttfonts[] = An array of font names. The available
 #      array keys are:  (sans|serif|mono)(|bold|italic|bolditalic)
 
-# This sample file has settings for windows (PHP_OS=WINNT) and others.
-# The others are assumed to have the Linux/X.org fonts and font path.
+# This file has settings for Windows (PHP_OS=WINNT) and 'everything else'.
+# It has been tried on Slackware Linux, Xubuntu Linux, and Windows XP.
+# It may or may not work on different operating systems, or even those
+# same operating systems - depending on the available fonts.
 
-# As of 12/2009 use the same font on Linux and Windows in order to be
-# able to automatically compare the fonts. The WindowsXP system used for
-# testing was found to have "DejaVu" font families installed, which is
-# also on Linux. However, it is not known if DejaVu is standard in Windows
-# or came in with some other software.
+# In order to facility automatic results comparisons, the same fonts are
+# used on all systems by default. This is the "DejaVu" font family.
+# These are not standard on Windows systems, but will be present if you
+# have Libreoffice installed. (OpenOffice.org might have the same fonts,
+# but with slightly different names - without dashes - so it won't work.)
 
-# 8/2010 Ubuntu for some reason puts the fonts into subdirectories,
-#  so there is a special case for that.
+# If you are running on Windows and don't have DejaVu fonts, you can set
+# this variable to use 'standard' Windows fonts instead:
+#   $phplot_test_use_windows_standard_fonts = TRUE;
+# The tests will work, but it will be harder to compare with those from
+# other systems.
 
+
+# DejaVu font family:
+
+$phplot_test_ttfonts = array(
+  'sans'            => 'DejaVuSans.ttf',                 # DejaVu Sans
+  'sansbold'        => 'DejaVuSans-Bold.ttf',            # DejaVu Sans Bold
+  'sansitalic'      => 'DejaVuSans-Oblique.ttf',         # DejaVu Sans Oblique
+  'sansbolditalic'  => 'DejaVuSans-BoldOblique.ttf',     # DejaVu Sans Bold Oblique
+  'serif'           => 'DejaVuSerif.ttf',                # DejaVu Serif
+  'serifbold'       => 'DejaVuSerif-Bold.ttf',           # DejaVu Serif Bold
+  'serifitalic'     => 'DejaVuSerif-Italic.ttf',         # DejaVu Serif Italic
+  'serifbolditalic' => 'DejaVuSerif-BoldItalic.ttf',     # DejaVu Serif Bold Italic
+  'mono'            => 'DejaVuSansMono.ttf',             # DejaVu Sans Mono
+  'monobold'        => 'DejaVuSansMono-Bold.ttf',        # DejaVu Sans Mono Bold
+  'monoitalic'      => 'DejaVuSansMono-Oblique.ttf',     # DejaVu Sans Mono Oblique
+  'monobolditalic'  => 'DejaVuSansMono-BoldOblique.ttf', # DejaVu Sans Mono Bold Oblique
+);
+
+# Operating system specific fixes:
 if (PHP_OS == "WINNT") {
 
     # Explicitly tell it where to find the fonts:
     $phplot_test_ttfdir = $_SERVER['windir'] . '\\fonts\\';
 
-    $phplot_test_ttfonts = array(
-      'sans'            => 'DejaVuSans.ttf',                 # DejaVu Sans
-      'sansbold'        => 'DejaVuSansBold.ttf',             # DejaVu Sans Bold
-      'sansitalic'      => 'DejaVuSansOblique.ttf',          # DejaVu Sans Oblique
-      'sansbolditalic'  => 'DejaVuSansBoldOblique.ttf',      # DejaVu Sans Bold Oblique
-      'serif'           => 'DejaVuSerif.ttf',                # DejaVu Serif
-      'serifbold'       => 'DejaVuSerifBold.ttf',            # DejaVu Serif Bold
-      'serifitalic'     => 'DejaVuSerifItalic.ttf',          # DejaVu Serif Italic
-      'serifbolditalic' => 'DejaVuSerifBoldItalic.ttf',      # DejaVu Serif Bold Italic
-# Note: Windows font name = DejaVu Sans Mono, but filename is DejaVuMonoSans ?
-      'mono'            => 'DejaVuMonoSans.ttf',             # DejaVu Sans Mono
-      'monobold'        => 'DejaVuMonoSansBold.ttf',         # DejaVu Sans Mono Bold
-      'monoitalic'      => 'DejaVuMonoSansOblique.ttf',      # DejaVu Sans Mono Oblique
-      'monobolditalic'  => 'DejaVuMonoSansBoldOblique.ttf',  # DejaVu Sans Mono Bold Oblique
-    );
+    # You can select to use these standard Windows fonts instead, but
+    # then it will be harder to verify results vs Linux output.
+    if (!empty($phplot_test_use_windows_standard_fonts)) {
 
-} elseif (file_exists('/usr/bin/ubuntu-support-status')) {
-    # Special handling for Ubuntu: (and others?)
+        $phplot_test_ttfonts = array(
+          'sans'            => 'arial.ttf',     # Arial
+          'sansbold'        => 'arialbd.ttf',   # Arial Bold
+          'sansitalic'      => 'ariali.ttf',    # Arial Italic
+          'sansbolditalic'  => 'arialbi.ttf',   # Arial Bold Italic
+          'serif'           => 'times.ttf',     # Times New Roman
+          'serifbold'       => 'timesbd.ttf',   # Times New Roman Bold
+          'serifitalic'     => 'timesi.ttf',    # Times New Roman Italic
+          'serifbolditalic' => 'timesbi.ttf',   # Times New Roman Bold Italic
+          'mono'            => 'cour.ttf',      # Courier New
+          'monobold'        => 'courbd.ttf',    # Courier New Bold
+          'monoitalic'      => 'couri.ttf',     # Courier New Italic
+          'monobolditalic'  => 'courbi.ttf',    # Courier New Bold Italic
+        );
+    }
+
+} elseif (file_exists('/usr/share/fonts/truetype/ttf-dejavu')) {
+    # Ubuntu (and others) use this base directory:
     $phplot_test_ttfdir = '/usr/share/fonts/truetype/';
 
-    $phplot_test_ttfonts = array(
-      'sans'            => 'ttf-dejavu/DejaVuSans.ttf',
-      'sansbold'        => 'ttf-dejavu/DejaVuSans-Bold.ttf',
-      'sansitalic'      => 'ttf-dejavu/DejaVuSans-Oblique.ttf',
-      'sansbolditalic'  => 'ttf-dejavu/DejaVuSans-BoldOblique.ttf',
-      'serif'           => 'ttf-dejavu/DejaVuSerif.ttf',
-      'serifbold'       => 'ttf-dejavu/DejaVuSerif-Bold.ttf',
-      'serifitalic'     => 'ttf-dejavu/DejaVuSerif-Italic.ttf',
-      'serifbolditalic' => 'ttf-dejavu/DejaVuSerif-BoldItalic.ttf',
-      'mono'            => 'ttf-dejavu/DejaVuSansMono.ttf',
-      'monobold'        => 'ttf-dejavu/DejaVuSansMono-Bold.ttf',
-      'monoitalic'      => 'ttf-dejavu/DejaVuSansMono-Oblique.ttf',
-      'monobolditalic'  => 'ttf-dejavu/DejaVuSansMono-BoldOblique.ttf',
-    );
+    # In order for GD to find the fonts using only the basename, the
+    # subdirectory prefix has to be inserted before all of the names:
+    foreach ($phplot_test_ttfonts as $key => $value) {
+        $phplot_test_ttfonts[$key] = 'ttf-dejavu/' .  $value;
+    }
+    unset($key);
+    unset($value);
 
 } else {
-    # X.org standard path for TrueType fonts:
+    # Use this as a fallback / default for other X.org systems:
     $phplot_test_ttfdir = '/usr/share/fonts/TTF/';
-
-    # See note at top regarding use of DejaVu fonts.
-    $phplot_test_ttfonts = array(
-      'sans'            => 'DejaVuSans.ttf',                 # DejaVu Sans
-      'sansbold'        => 'DejaVuSans-Bold.ttf',            # DejaVu Sans Bold
-      'sansitalic'      => 'DejaVuSans-Oblique.ttf',         # DejaVu Sans Oblique
-      'sansbolditalic'  => 'DejaVuSans-BoldOblique.ttf',     # DejaVu Sans Bold Oblique
-      'serif'           => 'DejaVuSerif.ttf',                # DejaVu Serif
-      'serifbold'       => 'DejaVuSerif-Bold.ttf',           # DejaVu Serif Bold
-      'serifitalic'     => 'DejaVuSerif-Italic.ttf',         # DejaVu Serif Italic
-      'serifbolditalic' => 'DejaVuSerif-BoldItalic.ttf',     # DejaVu Serif Bold Italic
-      'mono'            => 'DejaVuSansMono.ttf',             # DejaVu Sans Mono
-      'monobold'        => 'DejaVuSansMono-Bold.ttf',        # DejaVu Sans Mono Bold
-      'monoitalic'      => 'DejaVuSansMono-Oblique.ttf',     # DejaVu Sans Mono Oblique
-      'monobolditalic'  => 'DejaVuSansMono-BoldOblique.ttf', # DejaVu Sans Mono Bold Oblique
-    );
 
 }
