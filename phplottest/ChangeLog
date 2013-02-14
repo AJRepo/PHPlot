@@ -1,6 +1,12 @@
 This is the Change Log for phplottest, the PHPlot Test Suite
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
+2013-02-11
+    * config.php: Fix font name issues on Windows. The default option
+      still uses the DejaVu font family on all systems. (This font is included
+      with LibreOffice.) A flag can be set which will use standard Windows
+      fonts instead, however it will be much harder to verify results.
+
 2013-02-03
     * u.FindDataLimits.php: At SVN rev 1502 on the /Rel6 branch, this test
       broke because PHPlot now sets the min/max limits for implied range
