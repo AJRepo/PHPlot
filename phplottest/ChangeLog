@@ -1,6 +1,20 @@
 This is the Change Log for phplottest, the PHPlot Test Suite
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
+2013-03-02
+    Re-synchronize the tests named "ex-*" with the examples in the PHPlot
+    Reference Manual. These tests started out as copies of the examples,
+    but as the manual is updated sometimes the examples have to change.
+    * tests.ini: List 1 new test
+    * ex-legendshape.php: extended test to support variable plot type.
+    * ex-legendshape2.php: new test, variation of legend shapes for line plot.
+    * ex-ohlcbasic.php, ex-ohlccandlesticks.php, ex-ohlccandlesticks2.php: Use
+      new tuning function to suppress scaling the Y axis to include zero,
+      which improves the appearance of these plots.
+    * ex-ytickanchor.php: Force the plot range, to demonstrate the need for
+      a Y tick anchor. Starting with PHPlot-6.0.0, the default behavior was
+      such that this example no longer showed the problem, before this fix.
+
 2013-02-11
     * config.php: Fix font name issues on Windows. The default option
       still uses the DejaVu font family on all systems. (This font is included
