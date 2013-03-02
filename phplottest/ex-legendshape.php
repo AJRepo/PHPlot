@@ -7,6 +7,8 @@ require_once 'phplot.php';
 # script which calls this script, to use shape markers
 # rather than color boxes in the legend.
 if (empty($use_shapes)) $use_shapes = FALSE;
+# The variable $plot_type can be set in another script as well.
+if (empty($plot_type)) $plot_type = 'linepoints';
 
 # Use data labels to display only the points we want,
 # but specify the same values for X to get the correct
@@ -24,8 +26,9 @@ $legend_text = array('Morning Papers', 'Evening Papers', 'Sunday Papers');
 $plot = new PHPlot(800, 600);
 $plot->SetImageBorderType('plain'); // Improves presentation in the manual
 $plot->SetTitle("US Daily Newspaper Circulation\n"
-  . '(Legend using ' . ($use_shapes ? 'shape markers' : 'color boxes') . ')');
-$plot->SetPlotType('linepoints');
+             .  $plot_type . ' plot with SetLegendUseShapes('
+             . ($use_shapes ? 'True' : 'False') .  ')');
+$plot->SetPlotType($plot_type);
 $plot->SetDataType('data-data');
 $plot->SetDataValues($data);
 $plot->SetPlotAreaWorld(1988, 0, 2010, 80000);
@@ -35,5 +38,7 @@ $plot->SetXTickPos('none');
 $plot->SetDrawXDataLabelLines(True);
 $plot->SetLegendUseShapes($use_shapes); // Use color boxes or shapes
 $plot->SetPointSizes(12); // Make points bigger for visibility
+$plot->SetLineStyles('solid'); // Make all lines solid
+$plot->SetLineWidths(2); // Make all lines thicker
 
 $plot->DrawGraph();

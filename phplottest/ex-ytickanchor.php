@@ -30,6 +30,11 @@ $plot->SetDataValues($data);
 $plot->SetPlotType('lines');
 $plot->SetXTickLabelPos('none');
 $plot->SetXTickPos('none');
+# Set the plot range.  This was not needed before PHPlot-6.0.0, when the
+# default behavior demonstrated the need for setting a Y tick anchor at 0.
+# But starting with PHPlot-6.0.0, the default behavior improved, so this
+# example no longer shows the need for the tick anchor without forcing it.
+$plot->SetPlotAreaWorld(NULL, -3.5, NULL, 13.5);
 
 if (isset($set_anchor))
     $plot->SetYTickAnchor($set_anchor);
