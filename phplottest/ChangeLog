@@ -1,6 +1,11 @@
 This is the Change Log for phplottest, the PHPlot Test Suite
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
+2013-03-19
+    Added new tests for bug #166 legend with point shapes vs shape 'none':
+    * useshape-noshape*.php : 2 new tests
+    * tests.ini: List 2 new tests.
+
 2013-03-02
     Re-synchronize the tests named "ex-*" with the examples in the PHPlot
     Reference Manual. These tests started out as copies of the examples,
