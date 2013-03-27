@@ -141,7 +141,7 @@ $newplot->DrawGraph(); // Draw it
 </para>
 </sect1>
 
-<sect1 id="conc-truecolor">
+<sect1 id="adv-truecolor">
 <title>Truecolor Images</title>
 <abstract><title></title>
   <para>
@@ -170,7 +170,7 @@ An example of using Truecolor with PHPlot can be found in
 <xref linkend="ex-truecolor-histogram"/>.
 </para>
 
-<sect2 id="conc-truecolor-overview">
+<sect2 id="adv-truecolor-overview">
 <title>Using Truecolor Images in PHPlot</title>
 <para>
 To make a Truecolor image in PHPlot, create an object of the derived class
@@ -189,7 +189,7 @@ That is all you need to do in order to create truecolor images. All PHPlot
 methods are compatible with PHPlot_truecolor objects. An image file
 produced from a PHPlot_truecolor object with no other programming changes
 will be the same as an image file produced from a PHPlot object except as
-described under <xref linkend="conc-truecolor-fileformats"/>.
+described under <xref linkend="adv-truecolor-fileformats"/>.
 </para>
 
 <para>
@@ -199,7 +199,7 @@ variable transparency. This is described in the next two sections.
 
 </sect2>
 
-<sect2 id="conc-truecolor-alpha">
+<sect2 id="adv-truecolor-alpha">
 <title>Understanding Variable Transparency (Alpha)</title>
 <para>
 Colors in a truecolor image have four components: red, green, blue, and
@@ -272,7 +272,7 @@ the images are magnified 2x to show detail.
 
 </sect2>
 
-<sect2 id="conc-truecolor-using-alpha">
+<sect2 id="adv-truecolor-using-alpha">
 <title>Using Variable Transparency (Alpha) in PHPlot</title>
 <para>
 To use partially transparent colors (that is, colors with an alpha channel)
@@ -283,7 +283,7 @@ colors.
 
 <para>
 Use of alpha values with a color specification is described below,
-in <xref linkend="conc-truecolor-forms"/>.
+in <xref linkend="adv-truecolor-forms"/>.
 Here are some examples of using colors with an alpha specification.
 </para>
 
@@ -333,7 +333,7 @@ transparent data colors without re-specifying all the colors.
 </para>
 </sect2>
 
-<sect2 id="conc-truecolor-forms">
+<sect2 id="adv-truecolor-forms">
 <title>Color Parameter Form Extensions</title>
 <para>
 In addition to the forms specified in <xref linkend="conc-colors-forms"/>,
@@ -377,7 +377,7 @@ For example,
 
 </sect2>
 
-<sect2 id="conc-truecolor-fileformats">
+<sect2 id="adv-truecolor-fileformats">
 <title>Image Formats and File Formats, Palette and Truecolor</title>
 <para>
 PHPlot can produce JPEG, PNG, and GIF image files (and possibly others).
@@ -404,7 +404,7 @@ and palette images are created with the <literal>PHPlot</literal> class.
 If you specify a background image, the GD image created by PHPlot matches the
 type - truecolor or palette - of your background image file.
 More on background image files can be found in
-<xref linkend="conc-truecolor-background"/> below.
+<xref linkend="adv-truecolor-background"/> below.
 </para>
 
 <para>
@@ -464,11 +464,11 @@ PHPlot_truecolor object. This was changed in PHPlot-5.1.2, and alpha
 channel information is used for both PHPlot and PHPlot_truecolor classes.
 However, alpha channel information is not always useful with palette
 images.
-More on this can be found in <xref linkend="conc-truecolor-palette"/> below.
+More on this can be found in <xref linkend="adv-truecolor-palette"/> below.
 </para>
 </sect2>
 
-<sect2 id="conc-truecolor-plottypes">
+<sect2 id="adv-truecolor-plottypes">
 <title>Truecolor Images and Plot Types</title>
 <para>
 All PHPlot plot types work with truecolor images, but not all plot types
@@ -505,7 +505,7 @@ portions of the bars. With alpha blending, the overlaps take on new colors.
 
 </sect2>
 
-<sect2 id="conc-truecolor-background">
+<sect2 id="adv-truecolor-background">
 <title>Background Images</title>
 <para><?dbfo keep-together="always"?>
 When creating a PHPlot or PHPlot_truecolor object, you can provide an
@@ -540,7 +540,7 @@ nor to a plot area background set with <xref linkend="SetPlotAreaBgImage"/>.
 
 </sect2>
 
-<sect2 id="conc-truecolor-callbacks">
+<sect2 id="adv-truecolor-callbacks">
 <title>Additional Operations on Truecolor Images Using Callbacks</title>
 <para>
 Advanced operations on truecolor PHPlot images are possible using PHPlot
@@ -556,7 +556,7 @@ bundled version of the GD library.
   </para>
 </note>
 
-<sect3 id="conc-truecolor-callbacks-antialias">
+<sect3 id="adv-truecolor-callbacks-antialias">
 <title>imageantialias()</title>
 <para><?dbfo keep-together="always"?>
 You can turn on anti-aliasing of truecolor images. This must be done before
@@ -583,7 +583,7 @@ palette images, regardless of the use of <function>imageantialias()</function>.
 </para>
 </sect3>
 
-<sect3 id="conc-truecolor-callbacks-alphablending">
+<sect3 id="adv-truecolor-callbacks-alphablending">
 <title>imagealphablending() and imagelayereffect()</title>
 <para>
 These functions control the combining of partially transparent colors. They
@@ -593,7 +593,7 @@ Note that alpha blending is on by default with all truecolor images.
 </para>
 </sect3>
 
-<sect3 id="conc-truecolor-callbacks-gammacorrect">
+<sect3 id="adv-truecolor-callbacks-gammacorrect">
 <title>imagegammacorrect()</title>
 <para><?dbfo keep-together="always"?>
 You can have the GD library perform gamma adjustment on a truecolor image.
@@ -612,7 +612,7 @@ $plot->SetCallback('draw_all', 'post_plot');
 </sect3>
 </sect2>
 
-<sect2 id="conc-truecolor-palette">
+<sect2 id="adv-truecolor-palette">
 <title>Palette Images and Advanced Color Features</title>
 <para>
 You will have a GD palette image if you use the <literal>PHPlot</literal>
@@ -653,7 +653,7 @@ not all viewers properly support this.
 </para>
 
 <para>
-Nothing described in <xref linkend="conc-truecolor-callbacks"/> works with
+Nothing described in <xref linkend="adv-truecolor-callbacks"/> works with
 palette images, including gamma adjust and anti-aliasing (except that
 TrueType Font text is always anti-aliased.)
 </para>
@@ -882,7 +882,16 @@ The following table lists the available callback reasons.
           <entry>The callback is expected to return an integer color index
              into the data colors array. This is for custom color selection.
              For more information, see
-             <xref linkend="conc-colors-datacolor-callback"/>.</entry>
+             <xref linkend="adv-datacolor-callback"/>.</entry>
+        </row>
+        <row>
+          <entry>data_points</entry>
+          <entry>Every time a data point is plotted, for supported plot types.</entry>
+          <entry>$shape, $row, $col, ...</entry>
+          <entry>This callback is primarily used to create image maps.
+             For more information, see <xref linkend="adv-imgmap"/>.
+             This was added in PHPlot-5.7.0.
+          </entry>
         </row>
         <row>
           <entry>draw_setup</entry>
@@ -1140,7 +1149,7 @@ functions, you need device coordinates, as described above.
 </para>
 <para>
 You can also add text to your plot using the PHPlot function
-<function>DrawText</function>. This is documented only for internal
+<xref linkend="DrawText"/>. This is documented only for internal
 use by PHPlot, so there is a risk of future incompatibility. But this
 function provides support for controlling the text justification, and works
 better with multi-line text.
@@ -1236,9 +1245,10 @@ imagestring($img, $font, $best_x-$fw*4, $best_y-$fh-10, 'Good Job!', $green);
 </para>
 
 <para>
-Or, we can use the PHPlot internal function DrawText. With a PHPlot version
-5.1.0 and later, we omit the font specification and it will default to the
-generic font, which can be set with <xref linkend="SetFont"/>('generic', ...)
+Or, we can use the PHPlot internal function <xref linkend="DrawText"/>.
+With a PHPlot version 5.1.0 and later, we omit the font specification
+and it will default to the generic font, which can be set with
+<xref linkend="SetFont"/>('generic', ...)
 <programlisting><![CDATA[$plot->DrawText('', 0, $worst_x, $worst_y-10, $red, 'Bad News!', 'center', 'bottom');
 ]]></programlisting>
 </para>
@@ -1249,7 +1259,7 @@ generic font, which can be set with <xref linkend="SetFont"/>('generic', ...)
 
 </sect1> <!-- callbacks -->
 
-<sect1 id="conc-colors-datacolor-callback">
+<sect1 id="adv-datacolor-callback">
 <title>Custom Data Color Selection</title>
 <abstract><title></title>
   <para>
@@ -1258,7 +1268,7 @@ PHPlot callback. The data color callback was added in PHPlot-5.1.3.
   </para>
 </abstract>
 
-<sect2 id="conc-colors-datacolor-callback-standard">
+<sect2 id="adv-datacolor-callback-standard">
 <title>Standard Behavior of Data Color Selection</title>
 <para>
 Before explaining how to customize data color selection, here is a review
@@ -1321,7 +1331,7 @@ data color selection.
 </para>
 </sect2>
 
-<sect2 id="conc-colors-datacolor-callback-custom">
+<sect2 id="adv-datacolor-callback-custom">
 <title>Custom Data Color Selection</title>
 <para>
 If you need more control over data colors, you can use the PHPlot
@@ -1442,7 +1452,7 @@ your callback function each time it is called.
 </para>
 </sect2>
 
-<sect2 id="conc-colors-datacolor-callback-legend">
+<sect2 id="adv-datacolor-callback-legend">
 <title>Custom Data Color Selection and Legend</title>
 <para>
 If your plot includes a <link linkend="conc-legend">legend</link>,
@@ -1457,7 +1467,7 @@ The Custom Bar Colors example referenced below demonstrates this.
 </para>
 </sect2>
 
-<sect2 id="conc-colors-datacolor-callback-examples">
+<sect2 id="adv-datacolor-callback-examples">
 <title>Custom Data Color Selection Examples</title>
 <para>
 For examples of using a data color callback, see
@@ -1468,7 +1478,1080 @@ For examples of using a data color callback, see
 </sect2>
 </sect1> <!-- Custom data colors -->
 
-<sect1 id="conc-tuning">
+<sect1 id="adv-autorange">
+<title>Plot Range and Tick Increment Calculations</title>
+<abstract><title></title>
+  <para>
+This section describes how PHPlot calculates the range of
+<link linkend="def-worldcoor">World Coordinate</link> space, and the tick
+increment for each axis, when those values have not been set manually.
+  </para>
+</abstract>
+
+<para>
+In order to plot a data set, PHPlot needs to map the data points from world
+coordinate space to device coordinate space. The world coordinates of the
+data points are generally in real-world units, such as kilometers, seconds,
+degrees centigrade, etc. Device coordinates are pixels in an image file,
+display screen, or paper hardcopy. PHPlot knows the pixel coordinates of
+the limits of the plot area in device space.  In order to translate data
+points from world coordinates into pixel coordinates, it needs to know the
+limits of world coordinate space.  These can be provided manually, or
+computed by PHPlot.
+</para>
+
+<para>
+The limits of world coordinate space are the end-points of the X and Y axis
+lines.  The two end-points of an axis are also referred to as the plot
+range along that axis.  Each of those plot ranges is divided into uniformly
+sized tick intervals, which may or may not be marked by visible tick marks.
+The space between tick marks is called the tick increment. PHPlot will
+calculate a suitable tick increment if necessary.
+</para>
+
+<para>
+The rest of this section describes how PHPlot calculates the limits of the
+plot ranges, and the tick increments.
+</para>
+
+<note>
+  <para>
+This section does not apply to pie charts, which do not have X or Y axis lines.
+  </para>
+</note>
+
+<sect2 id="adv-autorange-manual">
+<title>Manual (Fixed) Plot Range and Tick Increment</title>
+<para>
+If you use <xref linkend="SetPlotAreaWorld"/> to set both
+<varname>Xmin</varname> and <varname>Xmax</varname> to non-NULL values,
+this will fix both ends of the X axis.  Similarly, setting both
+<varname>Ymin</varname> and <varname>Ymax</varname> to non-NULL values
+will fix both ends of the Y axis.
+If you set both ends of an axis, PHPlot will use exactly that for the plot
+range on that axis.  This is recommended if your data has a range which is
+known, predictable, and/or 'natural'. For example, if your Y axis represents
+percentage values from 0 to 100, you might use this to fix the Y axis ends:
+
+<programlisting><![CDATA[$plot->SetPlotAreaWorld(NULL, 0, NULL, 100);
+]]></programlisting>
+</para>
+
+<para>
+You can use <xref linkend="SetXTickIncrement"/> to set a fixed X tick
+increment, and <xref linkend="SetYTickIncrement"/> to set a fixed Y tick
+increment.
+If you set a fixed tick increment along an axis, PHPlot will use exactly
+that value (even if it results in too many, or too few tick marks).
+</para>
+
+<para>
+Another way to manually specify tick increments is with
+<xref linkend="SetNumXTicks"/> or <xref linkend="SetNumYTicks"/>.
+These set the desired number of tick intervals.
+PHPlot will then calculate the tick increment by dividing the plot range into
+exactly that many intervals.
+For example, if the Y axis range is 0 to 17, and you use
+<literal>$plot->SetNumYTicks(6)</literal> to get 6 intervals, then the tick
+mark spacing will be about 2.833333.
+This is probably not a desirable value for the tick increment.
+Using <function>SetNumXTicks</function> or <function>SetNumYTicks</function>
+to set the number of tick intervals is usually not a good idea, unless you
+also set the plot range with <xref linkend="SetPlotAreaWorld"/>.
+</para>
+
+<para>
+If you set both ends of the X or Y plot range, PHPlot will position
+tick marks starting from the lower end of that range, by default.
+For example, if you set the Y axis range from 1 to 20, with a tick
+increment of 5, the tick marks will be at 1, 6, 11, and 16.
+You can set a <emphasis>tick anchor</emphasis> to change this.
+See <xref linkend="adv-autorange-tick-positions"/> below for more information.
+</para>
+
+</sect2>
+
+<sect2 id="adv-autorange-partial">
+<title>Partial Fixed Plot Range</title>
+<para>
+If you use <xref linkend="SetPlotAreaWorld"/> to set either
+<varname>Xmin</varname> or <varname>Xmax</varname> (but not both) to a
+non-NULL value, or you set either
+<varname>Ymin</varname> or <varname>Ymax</varname> (but not both) to a
+non-NULL value, then you are fixing one end of the plot range.
+PHPlot will use your fixed value for that end of the range, and calculate the
+other end as described below.
+</para>
+
+<para>
+This may make sense if your data has a fixed lower (or upper) bound. For
+example, if you are plotting outdoor summer temperatures in degrees
+Fahrenheit, you might use something like this:
+<programlisting><![CDATA[$plot->SetPlotAreaWorld(NULL, 60);
+]]></programlisting>
+which sets Ymin to 60.
+</para>
+
+<para>
+Since PHPlot positions tick marks starting from the lower limit of the X
+and Y plot ranges, setting <varname>Xmin</varname> or <varname>Ymin</varname>
+establishes the basis for tick marks along that axis.
+For example, if you set the lower end of the X axis range to 12, with a tick
+increment of 10, the tick marks along X will be at 12, 22, 32, etc.
+You can set a <emphasis>tick anchor</emphasis> to change this.
+See <xref linkend="adv-autorange-tick-positions"/> below for more information.
+</para>
+</sect2>
+
+<sect2 id="adv-autorange-range">
+<title>Automatic Range Calculation</title>
+<para>
+Each end of the plot range (for both X and Y) which is not specified using
+<xref linkend="SetPlotAreaWorld"/> will be calculated by PHPlot.
+The algorithm used by PHPlot to calculate the ends of a plot range is not
+perfect, but is meant to create reasonable plots in a majority of cases.
+</para>
+<note>
+  <para>
+This description applies starting with PHPlot-6.0.0. In older versions,
+PHPlot used a more simplistic approach to calculating the plot range.
+  </para>
+</note>
+
+<para>
+Here is an overview of the method, using the Y axis as an example.
+<literal>DataMin</literal> and <literal>DataMax</literal>
+are the smallest and largest Y values in the data array (or the values
+derived from the data array, for some plot types).
+<literal>PlotMin</literal> and <literal>PlotMax</literal> are the
+calculated limits of the plot range. Remember that PHPlot only calculates
+PlotMax and PlotMin if they have not already been set using
+<xref linkend="SetPlotAreaWorld"/>.
+
+  <orderedlist>
+    <listitem>
+      <para>
+Initialization:
+Start by setting the plot range to the data range: PlotMin = DataMin, and
+PlotMax = DataMax. The plot range will now include all the data, but just
+barely.
+      </para>
+    </listitem>
+
+    <listitem>
+      <para>
+Zero Magnet:
+If the plot range does not currently include zero
+(PlotMin &lt;= 0 and 0 &lt;= PlotMax), PHPlot tries to extend the range so it
+will begin or end at zero. This is done by either by moving PlotMin down to
+zero (for positive data), or by moving PlotMax up to zero (for negative data).
+There is a limit as to how far PHPlot is willing to extend the plot range
+to include zero (see below).
+      </para>
+    </listitem>
+
+    <listitem>
+      <para>
+End Adjust / Increase range:
+PHPlot may then adjust the ends of the plot range by a factor
+(adjust_amount) multiplied by the plot range.  This provides some extra
+room above or below the data for data value labels, and prevents the top
+(or bottom) of the plotted data from hitting the edge of the plot area,
+which would detract from the appearance. Adjustment only occurs for PlotMin
+if it is negative, and for PlotMax if it is positive. This corresponds to
+the direction of the plot data 'away' from zero.
+<!-- This is: 0 < PlotMin < PlotMax  -->
+For example, if 0&nbsp;&lt;&nbsp;PlotMin&nbsp;&lt;&nbsp;PlotMax
+(all the data is positive), then PlotMax will be increased.
+<!-- This is PlotMin < PlotMax < 0 -->
+If PlotMin&nbsp;&lt;&nbsp;PlotMax&nbsp;&lt;&nbsp;0 (all the data is negative),
+then PlotMin will be decreased.
+<!-- This is PlotMin < 0 < PlotMax-->
+If the range spans 0 with PlotMin&nbsp;&lt;&nbsp;0&nbsp;&lt;&nbsp;PlotMax,
+then both PlotMin will be decreased and PlotMax will be increased.
+      </para>
+    </listitem>
+
+    <listitem>
+      <para>
+End Adjust / Finalize:
+PHPlot may then adjust the ends of the plot range further, based on the
+adjustment mode (<literal>adjust_mode</literal>), but only if the end of
+the range is not already zero.
+        <itemizedlist>
+          <listitem>
+            <para>
+If the adjustment mode is <literal>T</literal> (Tick, the default mode),
+then PlotMax is adjusted up to the next higher tick mark position, and
+PlotMin is adjusted down to the next lower tick mark position. Note that
+this happens even if tick marks are not displayed.
+If a tick anchor is set, this is taken into account when adjusting the
+range (see <xref linkend="adv-autorange-tick-positions"/> below).
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+If the adjustment mode is <literal>R</literal> (Range), there is no further
+adjustment.
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+If the adjustment mode is <literal>I</literal> (Integer), then PlotMax is
+adjusted up to the next higher integer, and PlotMin is adjusted down to the
+next lower integer.
+            </para>
+          </listitem>
+        </itemizedlist>
+Note that adjustment modes <literal>R</literal> and <literal>I</literal> are
+intended for special applications where the default <literal>T</literal>
+(Tick) mode produces undesirable results.
+      </para>
+    </listitem>
+  </orderedlist>
+</para>
+
+</sect2>
+
+<sect2 id="adv-autorange-params">
+<title>Automatic Range Parameters</title>
+<para>
+The range calculation uses parameters which can be set using
+<xref linkend="TuneXAutoRange"/> and <xref linkend="TuneYAutoRange"/>.
+The parameters are described in the next sections.
+</para>
+
+<sect3 id="autorange-zero-magnet">
+<title>Range parameter: zero_magnet</title>
+<para>
+The <varname>zero_magnet</varname> parameter sets the strength of the
+<emphasis>zero magnet</emphasis>, which controls how far PHPlot is
+willing to extend the plot range to include zero, if the range does not
+already include zero.
+This is a floating point number greater than or equal to 0, and less than
+or equal to 1.0.
+A value of 0 means the magnet is disabled. PHPlot will not extend the
+plot range to include zero.
+A value of 1.0 means the magnet strength is infinite, and PHPlot will
+always extend the plot range to include zero.
+For increasing values between 0.0 and 1.0, the zero magnet becomes
+stronger, and PHPlot will go further in extending the plot range to include
+zero.
+</para>
+
+<para>
+Between 0 and 1.0, the zero magnet factor is applied as follows. Let
+<mathphrase>ZF = zero_magnet / (1 - zero_magnet)</mathphrase>.
+This maps the zero magnet domain of 0:1 into the range 0:infinity.
+PHPlot will extend the plot range to include 0 if that increases
+the range by a factor of ZF or less.
+</para>
+
+<para>
+For example, the default zero magnet factor of 6/7 results in ZF=6, so
+PHPlot will 'pull' the bottom of the plot range down to zero if doing so
+will stretch the range by 600% or less. (If the data is all negative, it
+will apply the zero magnet to 'pushing' the top of the range to zero in the
+same manner.)
+If the data range is 500 to 600, PHPlot will adjust it to become 0 to 600,
+because adjusting the lower range by 500 is less than the maximum 6*100.
+If the data range is 900 to 1000, PHPlot will not adjust it to start at 0,
+because the zero magnet is only 'strong enough' to pull the range down by
+6*100, not 900.
+</para>
+
+<para>
+The purpose of having a variable <emphasis>zero magnet</emphasis> is
+to balance two conflicting goals:
+  <itemizedlist>
+    <listitem>
+      <para>
+Including zero in the data range improves the utility of plots, 
+as it facilitates comparing relative changes and differences.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+Increasing the data range of a plot makes it harder to see relatively small
+changes in the data.
+      </para>
+    </listitem>
+  </itemizedlist>
+</para>
+</sect3>
+
+<sect3 id="autorange-adjust-mode">
+<title>Range parameter: adjust_mode</title>
+<para>
+The <varname>adjust_mode</varname> parameter selects from one of three methods
+PHPlot has to determine how to extend the end of the plot range.
+The value is a single character, selecting one of three available modes.
+  <informaltable>
+    <?dbfo table-width="50%"?> <!-- Table width hint for PDF only -->
+    <tgroup cols="2">
+      <?dbhtml table-summary="Range adjust mode choices"?>
+      <colspec colname="c1" colwidth="20*" align="center" />
+      <colspec colname="c2" colwidth="80*" />
+      <thead>
+        <row>
+          <entry>Mode</entry>
+          <entry>Description</entry>
+        </row>
+      </thead>
+      <tbody>
+        <row>
+          <entry>T</entry>
+          <entry>
+Tick : extend the range, then to the next tick mark.
+          </entry>
+        </row>
+        <row>
+          <entry>R</entry>
+          <entry>
+Range : extend the range.
+          </entry>
+        </row>
+        <row>
+          <entry>I</entry>
+          <entry>
+Integer : extend the range, then to the next integer value.
+          </entry>
+        </row>
+      </tbody>
+    </tgroup>
+  </informaltable>
+The default mode is <literal>T</literal>, extend to tick mark.
+Mode <literal>I</literal>, extend to integer, is similar to the only
+available adjustment mode available before PHPlot-6.0.0.
+</para>
+
+<para>
+Range end adjustment works as follows. First, PlotMin is extended by the
+<literal>adjust_amount</literal> multiplied by the current plot range
+<mathphrase>(PlotMax - PlotMin)</mathphrase>, but only if PlotMin is negative.
+Similarly, PlotMax is extended by the same factor, but only if it is positive.
+This corresponds to where extra spaces is needed for data value labels, for
+example: above positive values, and below negative values.
+</para>
+
+<para>
+For adjustment mode <literal>R</literal>, that completes the range adjustment.
+For example, in this mode, with the adjustment amount 0.025 and data range
+-10 to 10, the resulting plot range will be -10.5 to 10.5 (having been
+increased at each end by 2.5% times the range of 20).
+</para>
+
+<para>
+For adjustment mode <literal>I</literal>, after extending the range,
+PHPlot adjusts PlotMin to the next lowest integer, and PlotMax to the
+next highest integer.
+Using the same example, with the data range -10 to 10 and adjustment amount
+0.025, the range is now -11 to 11 using this mode.
+</para>
+
+<para>
+Adjustment mode <literal>T</literal>, the default mode, extends the range
+end to coincide with a tick mark (or where a tick mark would be, if tick
+marks were displayed).
+In this mode, the <literal>adjust_amount</literal> can be thought
+of as controlling the minimum amount of space between the top of the data and
+the next tick mark.  If the adjust_amount is 0, and the maximum data value
+DataMax falls exactly on a tick mark, PHPlot will end the range at that
+tick mark. But if adjust_amount is greater than zero, PHPlot will extend
+the range by least one additional tick mark.
+</para>
+
+<para>
+As an example of <literal>T</literal> adjustment mode, consider a Y tick
+increment of 10, and adjustment amount 0.03 (3%). With the Y data range of
+0 to 95, PHPlot will set PlotMax to 100 - extending the range to the very
+next tick mark.  But with a Y data range of 0 to 98, the space between
+DataMax and the tick mark at 100 is not enough (less than 3% of the range),
+so the range is extended to the next tick mark after that, at 110.
+</para>
+</sect3>
+
+<sect3 id="autorange-adjust-amount">
+<title>Range parameter: adjust_amount</title>
+<para>
+The <varname>adjust_amount</varname> parameter determines how much the end of
+the plot range is adjusted (extended) to leave room for labels within the plot
+area, or to keep the plotted data from pushing against the edge of the plot.
+This is a non-negative floating point value.
+</para>
+
+<para>
+See the previous section on how the adjust_mode and adjust_amount
+parameters are used.
+</para>
+
+<para>
+The default adjustment amount is either 0 (0%) or 0.03 (3%), depending on the
+plot type, and on whether the adjustment is for the independent or dependent
+variable. For most plot types, the default is 0 for the independent
+variable axis (X for vertical plots, Y for horizontal plots), and 3%
+for the dependent variable axis.
+Some plot types, such as <link linkend="plottype-bubbles">bubbles</link>,
+benefit from adjustment on both axes, so the default value for
+adjust_amount is 3% for both X and Y.
+Other plot types, such as
+<link linkend="plottype-candlesticks">candlesticks</link>, do not need any
+adjustment on either axis (because there are no data value labels, and the
+upper wick may touch the edge of the plot without harm).
+For these plot types, the default adjust_amount is 0% for both X and Y.
+</para>
+</sect3>
+
+</sect2>
+
+<sect2 id="adv-autorange-examples">
+<title>Examples of Automatic Range Calculation</title>
+
+<para>
+Here are 3 examples showing the automatic range calculation. Each figure
+contains 4 plots showing the cumulative effect of the numbered steps which
+are detailed above: (1) initial range, (2) zero magnet, (3) end adjust /
+increase range, and (4) end adjust / finalize ('Tick' adjust mode).
+</para>
+
+<para>
+<?dbfo keep-together="always"?>
+In the first example, the data is all positive (DataMin &gt; 0).
+  <informalfigure>
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/fig-autorange-a.png" scale="58" format="PNG" />
+      </imageobject>
+      <textobject>
+        <phrase>Automatic Range calculation steps, positive data.</phrase>
+      </textobject>
+    </mediaobject>
+  </informalfigure>
+</para>
+
+<para>
+Note: You can see in the figure about that the small adjustment to the top
+of the Y range made at step (3) is completely absorbed in the adjustment to
+reach the tick mark at step (4). This is not always the case. If the data
+happens to end exactly at a tick mark, and the <literal>adjust_amount</literal>
+parameter is greater than zero, PHPlot will extend the range to the next tick
+mark after that. In a more general sense, when using 'Tick' adjustment mode,
+the adjustment amount represents the minimum amount of space to allow between
+the data maximum and the plot maximum.
+</para>
+
+<para>
+<?dbfo keep-together="always"?>
+In the second example, the data is both negative and positive.
+Note that in this case the zero magnet (step 2) has no effect, and the end
+adjustment (step 3) and adjust to tick (step 4) change
+<emphasis>both</emphasis> ends of the range.
+  <informalfigure>
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/fig-autorange-b.png" scale="58" format="PNG" />
+      </imageobject>
+      <textobject>
+        <phrase>Automatic Range calculation steps, data spans zero.</phrase>
+      </textobject>
+    </mediaobject>
+  </informalfigure>
+</para>
+
+<para>
+<?dbfo keep-together="always"?>
+The third example has all negative data (DataMax &lt; 0). Zero magnet
+applies to the top of the range, and end adjustment applies to the bottom
+of the range in this case.
+  <informalfigure>
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="images/fig-autorange-c.png" scale="58" format="PNG" />
+      </imageobject>
+      <textobject>
+        <phrase>Automatic Range calculation steps, negative data.</phrase>
+      </textobject>
+    </mediaobject>
+  </informalfigure>
+</para>
+</sect2>
+
+<sect2 id="adv-autorange-implied">
+<title>Implied Independent Variable Case</title>
+<para>
+There are two <emphasis>implied independent variable</emphasis> cases:
+  <orderedlist>
+    <listitem>
+      <para>
+When using the <link linkend="text-data">text-data</link> data type, you
+are drawing a vertical plot without specifying the values of the independent
+variable X. Your data array will contain only labels and Y values; the X
+values are implied.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+When using the <link linkend="text-data-yx">text-data-yx</link> data type, you
+are drawing a horizontal plot without specifying the values of the independent
+variable Y. Your data array will contain only labels and X values; the Y
+values are implied.
+      </para>
+    </listitem>
+  </orderedlist>
+</para>
+
+<para>
+If you don't use <xref linkend="SetPlotAreaWorld"/> to set an explicit plot
+range for the independent variable axis in these cases, PHPlot sets the plot
+range for that axis to start at 0 and end at N, where N is the number of rows
+in the data array. The automatic range calculation is disabled for that
+axis, and there is no adjustment.
+</para>
+</sect2>
+
+<sect2 id="adv-autorange-tick">
+<title>Automatic Tick Increment Calculation</title>
+<para>
+For both the X axis and Y axis, PHPlot calculates a tick increment if it was
+not set as described above.
+(Even if your plot has no visible tick marks along an axis, PHPlot will
+calculate a tick increment for that axis, since it might be used in adjusting
+the plot range.)
+</para>
+
+<note>
+  <para>
+This description applies starting with PHPlot-6.0.0. In older versions,
+PHPlot simply divided the plot range by 10 to calculate the tick increment.
+  </para>
+</note>
+
+<para>
+PHPlot uses one of three methods to calculate a tick increment for a given plot
+range (along the X or Y axis). The methods are called 'decimal', 'binary',
+and 'date', and correspond to the <varname>tick_mode</varname> parameter
+described below.  By default, PHPlot uses the 'decimal' method, unless the axis
+labels have been set up to use date/time labels, in which case it uses the
+'date' mode.
+You can also directly control which method is used.
+</para>
+
+<para>
+Using the <emphasis>decimal</emphasis> method, PHPlot picks the largest tick
+increment which is 1, 2, or 5 times a power of 10, and which divides the plot
+range into no fewer than the acceptable minimum number of tick intervals
+(see the <varname>min_ticks</varname> parameter below).
+The power of 10 can be negative, zero, or positive.
+Valid automatically-calculated tick increments for non-negative powers of 10
+include 1, 2, 5, 10, 20, 50, 100, 200, 500, etc.
+Valid automatically-calculated tick increments for negative powers of 10
+include 0.5, 0.2, 0.1, 0.05, 0.02, 0.01, etc.
+</para>
+
+<para>
+For example, given the range 0 to 135, and the default min_ticks of 8,
+PHPlot will calculate a tick increment of 10, giving 14 intervals.  A tick
+increment of 20 is not valid because it would result in only 7 intervals,
+fewer than the minimum of 8.
+A tick increment of 5 would result in 28 intervals; while there is no
+explicit maximum, PHPlot chooses the largest valid increment that produces
+8 or more intervals.
+</para>
+
+<para>
+When using the <emphasis>date</emphasis> method, PHPlot selects from a
+pre-defined list of valid tick increments.
+The list covers a range from 1 second up to 7 days: 1, 2, 5, 10, 15, and 30
+seconds; 1, 2, 5, 10, 15, and 30 minutes, then 1, 2, 4, 8, 12, 24, 48, 96,
+and 168 hours.
+PHPlot will pick the largest increment in the list which will result in no
+fewer than the acceptable minimum number of tick intervals
+(<varname>min_ticks</varname>).
+If the plot area range exceeds 7 days, PHPlot switches to the 'decimal' method
+instead, with units of 24 hours.
+With the 'date' method, PHPlot never chooses an increment less than 1 second.
+</para>
+
+<para>
+For example, given a date/time range which spans 1020 seconds (17 minutes),
+and the default min_ticks of 8, PHPlot will calculate a tick increment of 120
+seconds (2 minutes), which results in 9 intervals. This is the largest
+increment in the list above which results in 8 or more intervals.
+</para>
+
+<para>
+When using the <emphasis>binary</emphasis> method, PHPlot picks the largest
+tick increment which is a power of 2, and which divides the plot range into no
+fewer than the acceptable minimum number of tick intervals
+(see the <varname>min_ticks</varname> parameter below).
+The power of 2 can be negative, zero, or positive.
+Valid automatically-calculated tick increments for non-negative powers of 2
+include 1, 2, 4, 8, 16, 32, etc.
+Valid automatically-calculated tick increments for negative powers of 2
+include 1/2, 1/4, 1/8, 1/16, 1/32, etc. (Note that PHPlot will label these
+ticks as decimal values 0.5, 0.25, 0.125 etc., not fractions.)
+</para>
+
+</sect2>
+
+<sect2 id="adv-autorange-tick-params">
+<title>Automatic Tick Increment Parameters</title>
+<para>
+The tick increment calculation uses parameters which can be set using
+<xref linkend="TuneXAutoTicks"/> and <xref linkend="TuneYAutoTicks"/>.
+The parameters are described in the next sections.
+</para>
+
+<sect3 id="autotick-min-ticks">
+<title>Tick Increment parameter: min_ticks</title>
+<para>
+The <varname>min_ticks</varname> parameter sets the minimum number of tick
+intervals along the axis. The default is 8.
+The maximum number of tick intervals will be about 2.5 times the minimum.
+(The value 2.5 comes from the largest ratio between adjacent acceptable tick
+increment values. This is true for the 'decimal' method choices of 1, 2, 5,
+10, 20, etc., the 'binary' method, and also for the pre-defined list of values
+used with the 'date' method.)
+Therefore, by default, a plot range will have between 8 and 20 tick intervals
+inclusive (before possible additional tick intervals resulting from
+adjustment to the range, as described above).
+</para>
+</sect3>
+
+<sect3 id="autotick-mode">
+<title>Tick Increment parameter: tick_mode</title>
+<para>
+The <varname>tick_mode</varname> parameter selects one of the three available
+methods to calculate the tick increment:
+  <informaltable>
+    <?dbfo table-width="50%"?> <!-- Table width hint for PDF only -->
+    <tgroup cols="2">
+      <?dbhtml table-summary="Axis tick modes"?>
+      <colspec colname="c1" colwidth="20*" />
+      <colspec colname="c2" colwidth="80*" />
+      <thead>
+        <row>
+          <entry>Mode</entry>
+          <entry>Description</entry>
+        </row>
+      </thead>
+      <tbody>
+        <row>
+          <entry>decimal</entry>
+          <entry>Use a power of 10 times 1, 2, or 5</entry>
+        </row>
+        <row>
+          <entry>binary</entry>
+          <entry>Use a power of 2</entry>
+        </row>
+        <row>
+          <entry>date</entry>
+          <entry>Use a date/time increment value</entry>
+        </row>
+      </tbody>
+    </tgroup>
+  </informaltable>
+These methods are described in more detail above.
+</para>
+
+<para>
+By default, PHPlot will automatically decide which method to use.
+It will use the <literal>'date'</literal> method if the corresponding axis
+tick labels use date/time formatting (as set with 
+<xref linkend="SetXLabelType"/><literal>('time')</literal> or
+<xref linkend="SetYLabelType"/><literal>('time')</literal>).
+Otherwise is will use the <literal>'decimal'</literal>  method.
+</para>
+
+<para>
+Use this parameter to override the automatic tick increment method selection.
+For example, if you are using date/time values along the X axis,
+but have a custom label formatting function (rather than selecting
+<literal>time</literal> format type), you will probably want to tell PHPlot
+to pick a date/time tick increment for the X axis:
+<programlisting><![CDATA[// Pick a date/time tick increment on X:
+$plot->TuneXAutoTicks(NULL, 'date');
+]]></programlisting>
+</para>
+
+<para>
+Another example is if you are using time value label types along X,
+but you want tick increments to follow the 1, 2, 5 times power of 10 rule,
+rather than choosing a date/time value. You can use:
+<programlisting><![CDATA[// Format X labels as time values:
+$plot->SetXLabelType('time', '%H:%M:%S');
+// Override default and use the decimal method to pick a tick increment:
+$plot->TuneXAutoTicks(NULL, 'decimal');
+]]></programlisting>
+</para>
+
+<para>
+In this third example, your Y axis values represent something like memory
+sizes which are normally measured in powers of two. You can have PHPlot pick
+a power of two as a tick increment with:
+<programlisting><![CDATA[// Use a power of 2 for the Y axis tick increment:
+$plot->TuneYAutoTicks(NULL, 'binary');
+]]></programlisting>
+</para>
+
+<para>
+If the plot range is small enough, PHPlot may select a tick increment which
+is less than one - a negative power of two.
+This results in a tick increment of 1/2, 1/4, 1/8, 1/16, or smaller.
+If you want to use the binary tick method, but do not want fractional tick
+increments, set <varname>tick_inc_integer</varname> (see next section):
+<programlisting><![CDATA[// Valid tick increments are powers of 2 &gt;= 1
+$plot->TuneXAutoTicks(NULL, 'binary', TRUE);
+]]></programlisting>
+</para>
+
+</sect3>
+
+<sect3 id="autotick-tick-inc-integer">
+<title>Tick Increment parameter: tick_inc_integer</title>
+<para>
+The <varname>tick_inc_integer</varname> parameter is a boolean flag which
+can be set to prevent fractional tick increments.
+If the flag is TRUE, PHPlot will not pick a tick increment less than 1.
+This may result in fewer than <varname>min_ticks</varname> tick intervals.
+If the flag is FALSE, PHPlot may pick any tick increment.
+The default is FALSE.
+</para>
+
+<para>
+The 'decimal' and 'binary' tick increment selection methods (see above)
+can select tick increments less than 1, using negative powers of 10 or 2
+respectively.
+This will happen if the plot range is small enough (and/or
+<varname>min_ticks</varname> is high enough).
+Specifically, a fractional tick increment will result from having a plot
+range which is less than the minimum number of ticks.
+Set <varname>tick_inc_integer</varname> to TRUE if you do not want
+fractional tick increments.
+This parameter does not apply to the 'date' tick increment selection method,
+which does not support tick increments less than 1 second.
+In 'date' mode, <varname>tick_inc_integer</varname> is assumed TRUE.
+</para>
+
+<note>
+  <para>
+PHPlot never picks a tick increment which is greater than one and not a whole
+number. Selected tick increments are either integers &gt;= 1, or fractions
+between 0 and 1.
+  </para>
+</note>
+
+<para>
+For example, if your Y data range is 0 to 1.8, and you set the
+<varname>tick_inc_integer</varname> parameter for Y to TRUE,
+then PHPlot will use a tick increment of 1, and you will get only
+2 tick intervals.  This is less than the default minimum of 8
+tick intervals.
+With <varname>tick_inc_integer</varname> FALSE, PHPlot would use a tick
+increment of 0.2 in 'decimal' mode, or 0.125 in 'binary' mode.
+</para>
+
+</sect3>
+
+</sect2>
+
+<sect2 id="adv-autorange-tick-positions">
+<title>Tick Positions</title>
+<para>
+This section describes how PHPlot positions the tick marks along the X and Y
+axis (if tick marks are enabled), and the tick label values which result.
+Several factors are involved:
+  <itemizedlist>
+    <listitem>
+      <para>
+The plot range minimum (PlotMin), which is the world coordinates of the left
+end of the X axis, or the world coordinates of the bottom of the Y axis.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+Whether or not a tick anchor was set. You use a tick anchor to tell PHPlot
+that you want tick marks based on a particular world coordinate value.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+The plot range adjustment mode <varname>adjust_mode</varname> (see above),
+if PHPlot calculated the plot range minimum PlotMin automatically.
+      </para>
+    </listitem>
+  </itemizedlist>
+</para>
+
+<para>
+PHPlot generally places tick marks along each axis starting from the minimum
+value of the plot range (PlotMin), which is the left-most position on the X
+axis, and the bottom-most position on the Y axis.
+Therefore, the value of PlotMin affects all the tick values. For example,
+if the tick increment is 10, and PlotMin is 12, ticks will be at 12, 22,
+32, 42.
+</para>
+
+<para>
+A tick anchor can be set with <xref linkend="SetXTickAnchor"/> or
+<xref linkend="SetYTickAnchor"/> to change tick mark positions. In the
+above example, with PlotMin 12, if you set a tick anchor at 10, you will
+get tick positions 20, 30, 40, etc. Setting the tick anchor shifts all the
+ticks, so one of them falls at the anchor (or would, if the axis was
+extended).  Thus, a tick anchor can be used to 'round off' the tick values
+to desired numbers, when the plot range minimum (PlotMin) is not a multiple
+of the tick increment.
+</para>
+
+<para>
+If you set the plot range minimum (PlotMin) to a fixed value with
+<xref linkend="SetPlotAreaWorld"/>, consider that this value will be
+used as the basis for tick marks along that axis, unless you also set
+a tick anchor.
+</para>
+
+<para>
+If PHPlot calculates the plot range minimum using the default adjustment
+mode <literal>T</literal> (adjust to tick, see above), then PHPlot will
+adjust the range to start at a tick mark. That is, PHPlot acts as if a
+tick anchor was set at 0. Your tick marks will be at whole multiples
+of the tick increment, unless you set a tick anchor to move them somewhere
+else.
+</para>
+
+<para>
+In the other adjustments modes - <literal>I</literal> (integer) or
+<literal>R</literal> (range) - PHPlot makes no attempt to correlate the
+plot range minimum with the tick increment. Your tick marks will probably
+not be located at multiples of the tick increment.
+In mode <literal>R</literal> (range), your tick marks will likely not even be
+whole numbers.  As in all other cases, you can set a tick anchor to position
+the tick marks at the values you prefer.
+</para>
+
+<para>
+Here are some examples of PHPlot-calculated plot ranges and tick positions,
+when no tick anchor has been set.
+  <informaltable>
+    <?dbfo table-width="100%"?> <!-- Table width hint for PDF only -->
+    <tgroup cols="6">
+      <?dbhtml table-summary="Range and tick position results"?>
+      <colspec colname="c1" colwidth="8*" align="center" />
+      <colspec colname="c2" colwidth="8*" align="center" />
+      <colspec colname="c3" colwidth="12*" align="center" />
+      <colspec colname="c4" colwidth="12*" align="center" />
+      <colspec colname="c5" colwidth="25*" align="center" />
+      <colspec colname="c6" colwidth="35*" />
+      <thead>
+        <row>
+          <entry>Y data min</entry>
+          <entry>Y data max</entry>
+          <entry>Adjustment Mode</entry>
+          <entry>Resulting Plot Range</entry>
+          <entry>Resulting Tick Positions</entry>
+          <entry>Notes</entry>
+        </row>
+      </thead>
+      <tbody>
+        <row>
+          <entry>7</entry>
+          <entry>123</entry>
+          <entry><literal>T</literal> (tick)</entry>
+          <entry>0 to 130</entry>
+          <entry>0, 10, 20, ... 130</entry>
+          <entry>
+The bottom of the Y range is extended to zero, and the tick marks are at
+multiples of 10. The top of the Y range is extended to the next tick mark.
+          </entry>
+        </row>
+        <row>
+          <entry>7</entry>
+          <entry>123</entry>
+          <entry><literal>R</literal> (range)</entry>
+          <entry>0 to 126.69</entry>
+          <entry>0, 10, 20, ... 120</entry>
+          <entry>
+With <literal>'R'</literal> adjustment mode, the top of the Y range is
+extended by 3% of the range. The bottom of the Y range was moved to zero
+(due to the <emphasis>zero magnet</emphasis>), so the tick marks are based
+at 0 and positioned at whole multiples of 10. The resulting tick marks
+are the same as <literal>'T'</literal> mode, except the Y axis does not end
+at a tick mark.
+          </entry>
+        </row>
+        <row>
+          <entry>7</entry>
+          <entry>123</entry>
+          <entry><literal>I</literal> (integer)</entry>
+          <entry>0 to 127</entry>
+          <entry>0, 10, 20, ... 120</entry>
+          <entry>
+Here <literal>'I'</literal> adjustment mode is almost the the same as the
+previous case, except the top of the range is adjusted to the next integer.
+Since there is no tick mark there, the difference would not be visible.
+          </entry>
+        </row>
+        <row>
+          <entry>-17</entry>
+          <entry>33</entry>
+          <entry><literal>T</literal> (tick)</entry>
+          <entry>-20 to 35</entry>
+          <entry>-20, -15, -10, -5, 0, 5, 10, ... 35</entry>
+          <entry>
+Both ends of plot range are adjusted to a tick position,
+with an implied tick anchor at 0. The resulting tick marks are at
+whole multiples of the tick step 5.
+          </entry>
+        </row>
+        <row>
+          <entry>-17</entry>
+          <entry>33</entry>
+          <entry><literal>R</literal> (range)</entry>
+          <entry>-18.5 to 34.5</entry>
+          <entry>-18.5, -13.5, -8.5, 1.5, 6.5, ... 31.5</entry>
+          <entry>
+In this mode, the range is simply extended by 3% (by default) at each end,
+where 3% of (33+17) = 1.5. The resulting tick mark positions are probably
+not ideal.
+          </entry>
+        </row>
+        <row>
+          <entry>-17</entry>
+          <entry>33</entry>
+          <entry><literal>I</literal> (integer)</entry>
+          <entry>-19 to 35</entry>
+          <entry>-19, -14, -9, -4, 1, 6, ... 31</entry>
+          <entry>
+In this mode, the range is extended by 3%, and then the ends are extended
+to the next integer. The tick mark positions are whole numbers now, but
+not anchored at 0.
+          </entry>
+        </row>
+      </tbody>
+    </tgroup>
+  </informaltable>
+</para>
+
+<para>
+To summarize, setting a tick anchor to force the tick positions to align one
+tick at a particular value, usually 0, can be useful in the situations
+including:
+  <itemizedlist>
+    <listitem>
+      <para>
+You are letting PHPlot calculate the range, but with adjustment mode
+<literal>R</literal> (range) or <literal>I</literal> (integer).
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+You are manually setting the minimum of the plot range with
+<xref linkend="SetPlotAreaWorld"/> to a value other than zero or
+a whole multiple of the tick increment.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+You are using date/time values along the axis, and you need the ticks to
+start at a specific date/time value (such as the start of an experiment).
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+You are using a version before PHPlot-6.0.0, which only supports an
+adjustment mode similar to <literal>I</literal> (integer).
+      </para>
+    </listitem>
+  </itemizedlist>
+</para>
+
+</sect2>
+
+<sect2 id="adv-autorange-regress">
+<title>Plot Range Regressive Cases</title>
+<para>
+Given incomplete or contradictory data, PHPlot will always produce a positive
+plot range (PlotMin &lt; PlotMax), although the range may be somewhat arbitrary.
+Here are some of the regressive cases, and how PHPlot produces an automatic
+range for them. <literal>DataMin</literal> and <literal>DataMax</literal>
+mean the limits of the data from the data array; <literal>PlotMin</literal>
+and <literal>PlotMax</literal> are the limits of the plot range.
+In all cases, any values specified in <xref linkend="SetPlotAreaWorld"/> will
+not be altered by PHPlot, even if it results in a plot with no visible data
+points.
+
+  <variablelist>
+    <varlistentry>
+      <term>Empty range with non-zero values (DataMin == DataMax != 0):</term>
+      <listitem>
+        <para>
+For positive data, PHPlot uses the range 0 to K, where K is the larger of
+DataMin and 10. For example, if all the Y values are 5, PHPlot uses 0 to 10
+for the Y range; if all the Y values are 150, PHPlot uses 0 to 150.
+For negative data, PHPlot uses a similar method, setting PlotMax=0.
+        </para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>Empty range with all zero values (DataMin == DataMax == 0):</term>
+      <listitem>
+        <para>
+PHPlot uses the arbitrary range 0 to 10.
+        </para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>Partially specified range with maximum set and all data above that:</term>
+      <listitem>
+        <para>
+If you set PlotMax to a value, but all your data is above that (DataMin &gt;
+PlotMax), you will get an empty plot. PHPlot will use a range of 0 to
+PlotMax if your PlotMax is positive, else a range of PlotMax-10 to PlotMax.
+All your data points will be outside the plot area.
+        </para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>Partially specified range with minimum set and all data below that:</term>
+      <listitem>
+        <para>
+If you set PlotMin to a value, but all your data is below that (DataMax &lt;
+PlotMin), you will get an empty plot. PHPlot will use a range of PlotMin
+to 0 if your PlotMin is negative, else a range of PlotMin to PlotMin+10.
+All your data points will be outside the plot area.
+        </para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>Negative range or zero range:</term>
+      <listitem>
+        <para>
+If you try to use <xref linkend="SetPlotAreaWorld"/> to set a negative
+range (PlotMin &gt; PlotMax) or zero range (PlotMin == PlotMax), PHPlot
+will report an error and not produce a plot.
+        </para>
+      </listitem>
+    </varlistentry>
+
+  </variablelist>
+</para>
+
+<para>
+Note that the above range choices happen as part of the "initialization"
+step of automatic range calculation (see <xref linkend="adv-autorange-range"/>
+above). That is, the selected range is then subject to the same adjustments as
+in other cases.
+</para>
+
+</sect2>
+
+</sect1>
+
+<sect1 id="adv-tuning">
 <title>Tuning Parameters</title>
 <abstract><title></title>
   <para>
@@ -1497,7 +2580,7 @@ $plot->grid_at_foreground = TRUE; // Draw grid after plot
 ]]></programlisting>
 </para>
 
-<sect2 id="conc-tuning-bars">
+<sect2 id="adv-tuning-bars">
 <title>Tuning Bar Charts</title>
 <para>
 These variables affect plot types <link linkend="plottype-bars">bars</link>
@@ -1549,7 +2632,7 @@ then all the bars touch (within each group, and adjacent groups).
 
 </sect2>
 
-<sect2 id="conc-tuning-bubbles">
+<sect2 id="adv-tuning-bubbles">
 <title>Tuning Bubble Plots</title>
 <para>
 These two variables set the range of bubble size in
@@ -1593,7 +2676,7 @@ will be 50 pixels (600 / 12).
 
 </sect2>
 
-<sect2 id="conc-tuning-ohlc">
+<sect2 id="adv-tuning-ohlc">
 <title>Tuning OHLC Charts</title>
 <para>
 These variables affect plot types <link linkend="plottype-ohlc">ohlc</link>,
@@ -1648,7 +2731,7 @@ Where avail_area = plot_area_width / number_data_points
 </para>
 </sect2>
 
-<sect2 id="conc-tuning-pie">
+<sect2 id="adv-tuning-pie">
 <title>Tuning Pie Charts</title>
 <para>
 These variables adjusts the appearance of
@@ -1700,7 +2783,7 @@ later still leaves a small gap between the pie and the plot area boundary.)
 
 </sect2>
 
-<sect2 id="conc-tuning-legend">
+<sect2 id="adv-tuning-legend">
 <title>Tuning the Legend</title>
 <para>
 This variable adjusts the appearance of the legend.
@@ -1718,25 +2801,37 @@ A value of 2.0 makes the color boxes twice as wide, and 0.5 makes them half
 the character width.
 (This was added in PHPlot-5.3.0.)
         </para>
+
         <para>
 If point shapes are used in the legend instead of color boxes
-(see <xref linkend="SetLegendUseShapes"/>),
+(see <xref linkend="SetLegendUseShapes"/> - for points plots and similar),
 then <literal>legend_colorbox_width</literal> still adjusts the horizontal
 space allocated for the point shape. The point shape itself is not scaled,
 but is always drawn at the same size as in the plot itself. If the plot
 area has a color background, the width adjustment will stretch the
 box in that color which is drawn behind the point shape.
         </para>
+
+        <para>
+If line markers are used in the legend of instead of color boxes (see
+<xref linkend="SetLegendUseShapes"/> - with line plots and similar),
+then <literal>legend_colorbox_width</literal> scales the horizontal
+space allocated for the line marker, but there is an additional factor
+of 4 applied by PHPlot.
+This leaves enough room to draw a line segment that can be identified
+visually by color and width.
+        </para>
+
       </listitem>
     </varlistentry>
   </variablelist>
 </para>
 </sect2>
 
-<sect2 id="conc-tuning-labels">
-<title>Label Tuning</title>
+<sect2 id="adv-tuning-labels">
+<title>Tuning Labels</title>
 <para>
-These variables affect the display of labels.
+These variables affect the appearance of labels.
 </para>
 
 <para>
@@ -1751,7 +2846,7 @@ Together with <varname>data_value_label_distance</varname>,
 it determines the position of the reference point for the label.
 (This does not apply to data value labels for bars or stackedbars plots, as
 the label position is fixed for these plot types.)
-The default if unset is 90 degrees, which places the label above the data point.
+The default is 90 degrees, which places the label above the data point.
 PHPlot automatically selects which text alignment to use, based on the angle.
 For example, with the default 90 degree angle, the label will
 be horizontally centered, vertically bottom aligned.  If the angle is 0
@@ -1769,7 +2864,7 @@ Together with <varname>data_value_label_angle</varname>,
 it determines the position of the reference point for the label.
 (This does not apply to data value labels for bars or stackedbars plots, as
 the label position is fixed for these plot types.)
-The default if unset is 5 pixels.
+The default is 5 pixels.
         </para>
       </listitem>
     </varlistentry>
@@ -1778,7 +2873,7 @@ The default if unset is 5 pixels.
 
 </sect2>
 
-<sect2 id="conc-tuning-misc">
+<sect2 id="adv-tuning-misc">
 <title>Miscellaneous Tuning</title>
 <para>
 These variables affect other aspects of the appearance of a plot.
@@ -2362,13 +3457,6 @@ any data where adding a time dimension improves the presentation.
 This feature was added in PHPlot-5.8.0.
 </para>
 
-<note>
-  <para>
-Some of the PHP functions described here may require PHP-5.3 or higher.
-(PHPlot versions after 5.7.0 do not support PHP versions before 5.3 anyway.)
-  </para>
-</note>
-
 <para>
 This feature is intended for use when you want to update a plot one or more
 times per second. If instead you want each plot to be displayed for one or
@@ -2652,7 +3740,7 @@ expensive features:
     <listitem>
       <para>
 Plots that use area fills are slower. This especially includes pie charts
-with shading (because PHPLot redraws the filled pie segments for each
+with shading (because PHPlot redraws the filled pie segments for each
 level of shading). Area and stackedarea plots have a lot of area fill.
 Bar charts have some area fill, with shaded bar charts having more shading
 (but not nearly as much as shaded pie charts).
@@ -2786,5 +3874,988 @@ $plot->EndStream();
 </sect2>
 
 </sect1> <!-- Streaming Plots -->
+
+<sect1 id="adv-imgmap">
+<title>Image Maps for Plot Data</title>
+<!-- Note: The text for this section on Image Maps is based on the text
+     file Imagemaps.txt that was distributed with PHPlot-5.7.0.
+     The 2 examples in that file can be found in the Examples chapter, in
+     addition to the 3rd example which was quoted but not included in full.
+-->
+<abstract><title></title>
+  <para>
+This section describes the use of the <literal>data_points</literal>
+callback to generate an HTML image map (or other similar construct) from
+plot data.
+An image map created using this callback will contain links from the
+data points or shapes on the plot.
+This feature was first added in PHPlot-5.7.0 as an experimental feature,
+and was first documented in this Reference Manual with PHPlot-6.0.0.
+  </para>
+</abstract>
+
+<note>
+  <para>
+    Use of callbacks is documented in <xref linkend="callbacks"/>.
+  </para>
+</note>
+
+<para>
+The <literal>data_points</literal> callback makes the
+<link linkend="def-devcoor">device coordinates</link> of
+plotted data available to a script using PHPlot.
+If a script registers a function as a handler for the
+<literal>data_points</literal> callback name, the function will be called
+repeatedly when the plot is being generated.  Each call will contain
+parameters describing the graphics for the corresponding data point.
+These parameters can be used to create an HTML image map.
+</para>
+
+<para>
+This feature is most likely only useful when generating embedded image data
+with PHPlot.
+(See <xref linkend="EncodeImage"/> for details on embedded image data.)
+This is because HTML requires the image map be included in the
+HTML page which contains the reference to the plot image.
+The browser will first request the HTML page, then make a second request for
+the image. Normally, the image is generated by a script using PHPlot, but
+the image map has to be available before this script runs.
+Using embedded image data allows a single PHP script to produce both the
+image map and the image data, and return the result as a single page.
+</para>
+
+<para>
+Nevertheless, it is also possible to create an image map with a non-embedded
+image.  See <xref linkend="adv-imgmap-nonembed"/> for details.
+</para>
+
+<para>
+The <literal>data_points</literal> callback works with the following plot
+types:
+  <itemizedlist>
+    <listitem>
+      <para>
+<link linkend="plottype-bars">bars</link> and
+<link linkend="plottype-stackedbars">stackedbars</link>
+(both horizontal and vertical)
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+<link linkend="plottype-points">points</link> and
+<link linkend="plottype-linepoints">linepoints</link>
+(both standard and error bar plots)
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+<link linkend="plottype-pie">pie</link>
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+<link linkend="plottype-bubbles">bubbles</link>
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+<link linkend="plottype-ohlc">ohlc</link>,
+<link linkend="plottype-candlesticks">candlesticks</link>, and
+<link linkend="plottype-candlesticks2">candlesticks2</link>
+      </para>
+    </listitem>
+  </itemizedlist>
+No other plot type is supported. This includes lines, squared, thinbarline,
+area, and stackedarea. (These plot types do not have well-defined areas
+which could map to data points.)
+</para>
+
+<para>
+The rest of this section contains details on the callback, usage with
+each plot type, and additional information.
+</para>
+
+<sect2 id="adv-imgmap-usage">
+<title>Image Maps - Usage</title>
+<para>
+To register a callback function to handle <literal>data_points</literal>, use:
+<programlisting><![CDATA[$plot->SetCallback('data_points', 'my_handler', $my_arg);
+]]></programlisting>
+Where <literal>my_handler</literal> is the name of your function,
+<literal>$my_arg</literal> is an optional additional argument to pass
+to your function.
+</para>
+
+<para>
+The <literal>data_points</literal> callback function
+(<function>my_handler()</function> above) will be called with 5
+fixed-purpose arguments followed by variable arguments. The number and
+purpose of the variable arguments depends on the plot type.  If your
+handler only needs to work with one specific plot type, you can declare
+these arguments in your function definition.
+</para>
+
+<para>
+If your handler must handle multiple plot types, define your function without
+arguments and use <function>func_get_arg()</function> or
+<function>func_get_args()</function> to access the arguments.
+You can use the value of the 3rd argument, <literal>$shape</literal>,
+to determine the number and usage of the variable arguments, since there is
+one specific function argument set for each value of <literal>$shape</literal>.
+See <xref linkend="adv-imgmap-callback"/> for more information.
+</para>
+
+<para>
+Here are the fixed arguments to the <literal>data_points</literal>
+callback function, with this general declaration:
+<programlisting><![CDATA[function my_handler($img, $passthru, $shape, $row, $column, ...)
+]]></programlisting>
+<variablelist>
+  <varlistentry>
+    <term>$img</term>
+    <listitem>
+      <para>
+The image resource (standard for all callbacks).
+Not generally used with a <literal>data_points</literal> callback, which
+cannot safely draw on the image (since PHPlot is in the middle of drawing
+the plot on the same image).
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>$passthru</term>
+    <listitem>
+      <para>
+Pass-through argument, supplied in the <xref linkend="SetCallback"/>() call
+(standard for all callbacks, referred to above as <literal>$my_arg</literal>).
+You can use this however you want, or ignore it.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>$shape</term>
+    <listitem>
+      <para>
+A word describing the shape of the area being described. This does not
+necessarily correspond to an HTML image map &lt;area&gt; shape.
+Each plot type passes a specific shape value, and the shape value defines
+the usage of the variable arguments.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>$row</term>
+    <listitem>
+      <para>
+The number of the data row being plotted. This typically corresponds
+to the ordinal of the X axis values (Y for horizontal plots), starting
+with 0 for the first point, 1 for the second point, etc.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>$column</term>
+    <listitem>
+      <para>
+The column, or data set index, starting with 0 for the first data set.
+This indicates which Y value for a given X, for example, or
+which bar within a bar group, or segment within a stacked bar.
+(For horizontal plots, this would indicate which X for a given Y.)
+Always 0 for pie charts and OHLC plots, which only have a single data set.
+      </para>
+    </listitem>
+  </varlistentry>
+</variablelist>
+</para>
+
+<para>
+For the variable arguments, refer to the sections below which describe each
+plot type.
+</para>
+
+<sect3 id="adv-imgmap-bars">
+<title>Image Maps from Bars and Stackedbars Plots</title>
+<para>
+With plot types <link linkend="plottype-bars">bars</link>
+and <link linkend="plottype-stackedbars">stackedbars</link>,
+an image map can be produced which indicates the area of each bar or stacked
+bar segment. This works with both vertical and horizontal plots.
+</para>
+<para>
+For bar and stackedbar plots, the <literal>data_points</literal> callback
+has this form:
+<programlisting><![CDATA[function my_handler($img, $passthru, $shape, $row, $column, $x1, $y1, $x2, $y2)
+]]></programlisting>
+The first 2 arguments are standard for all PHPlot callbacks and are not
+described here. The next 3 arguments are common to all data_points
+callbacks, and there are 4 additional arguments:
+<variablelist>
+  <varlistentry>
+    <term>$shape</term>
+    <listitem>
+      <para>
+Always <literal>rect</literal>, indicating a rectangle shape.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>$row</term>
+    <listitem>
+      <para>
+This is the bar group index.
+The left-most bar group (for vertical bar charts) is row 0.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>$column</term>
+    <listitem>
+      <para>
+This is the bar index within a group.  For vertical plot type 'bars', index 0
+is the left-most in the group. For vertical plot type 'stackedbars', index 0
+is the bar segment closest to the X axis.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>$x1, $y1</term>
+    <listitem>
+      <para>
+Device coordinates of the upper left corner of a bar or segment.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>$x2, $y2</term>
+    <listitem>
+      <para>
+Device coordinates of the lower right corner of a bar or segment.
+      </para>
+    </listitem>
+  </varlistentry>
+</variablelist>
+</para>
+
+<para>
+Generating an image map for bar and stackedbar plots is straight-forward.
+The provided <literal>$shape</literal> and coordinates are compatible with
+HTML &lt;area&gt; markup.
+You must provide the URL, alternate text, and optionally a title (tooltip text).
+</para>
+
+<para>
+This example appends the image map line to a string.
+sprintf() is used to convert the coordinates to integers for cleaner HTML.
+<programlisting><![CDATA[$coords = sprintf("%d,%d,%d,%d", $x1, $y1, $x2, $y2);
+$image_map .= "  <area shape=\"rect\" coords=\"$coords\""
+          .. " title=\"$title_text\" alt=\"$alt_text\" href=\"$url\">\n";
+]]></programlisting>
+The <literal>$url</literal>, <literal>$title_text</literal>, and
+<literal>$alt_text</literal> would typically depend on the passed
+<literal>$row</literal> and <literal>$column</literal>.
+</para>
+
+<para>
+Refer to <xref linkend="ex-imagemap-bars"/> for a complete example of an
+image map for a bar chart.
+</para>
+
+</sect3>
+
+<sect3 id="adv-imgmap-points">
+<title>Image Maps from Points and Linepoints Plots</title>
+<para>
+With plot types <link linkend="plottype-points">points</link>
+and <link linkend="plottype-linepoints">linepoints</link>,
+an image map can be produced which indicates the area around each point.
+The lines in a linepoints plot are not part of the image map areas.
+This also works with error plots that use these plot types, however the
+error bars are not part of the image map areas.
+</para>
+
+<para>
+For points and linepoints plots, the <literal>data_points</literal> callback
+has this form:
+<programlisting><![CDATA[function my_handler($img, $passthru, $shape, $row, $column, $x, $y)
+]]></programlisting>
+The first 2 arguments are standard for all PHPlot callbacks and are not
+described here. The next 3 arguments are common to all data_points
+callbacks, and there are 2 additional arguments:
+<variablelist>
+  <varlistentry>
+    <term>$shape</term>
+    <listitem>
+      <para>
+Always <literal>dot</literal>, indicating a single point.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>$row</term>
+    <listitem>
+      <para>
+The row is the index for the independent variable X.
+The first X value has index 0.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>$column</term>
+    <listitem>
+      <para>
+The column is the index for the dependent variable Y.
+For the first (or only) dataset for each X, the column index is 0.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>$x, $y</term>
+    <listitem>
+      <para>
+Device coordinates of the center of the point marker.
+      </para>
+    </listitem>
+  </varlistentry>
+</variablelist>
+</para>
+
+<para>
+Generating an image map for points and linepoints plots is straight-forward.
+PHPlot provides only the center coordinates for each point marker. It
+does not indicate the shape or size of the marker, nor the coordinates of
+any line segments or error bars. To generate an image map, you should use a
+fixed radius size and define the image map areas as circles with that
+radius centered around each data point. You need to choose a radius. A
+larger radius provides a larger clickable area, but the area of adjacent
+points may overlap.
+</para>
+
+<para>
+Here is an example of generating one area in an image map from a points
+or linepoints plot. You must provide the URL, alternate text, and
+optionally a title (tooltip text).  This appends the image map line to a
+string.  sprintf() is used to convert the coordinates to integers for
+cleaner HTML.  This example uses a 20 pixel radius for the areas around
+each data point.
+<programlisting><![CDATA[define('MAP_RADIUS', 20); // Capture area circle radii
+$coords = sprintf("%d,%d,%d", $x, $y, MAP_RADIUS);
+$image_map .= "  <area shape=\"circle\" coords=\"$coords\""
+           . " title=\"$title_text\" alt=\"$alt_text\" href=\"$url\">\n";
+]]></programlisting>
+The <literal>$url</literal>, <literal>$title_text</literal>, and
+<literal>$alt_text</literal> would typically depend on the passed
+<literal>$row</literal> and <literal>$column</literal>.
+</para>
+
+<para>
+Other than the above code, a script to generate an image map for a points or
+linepoints plot would be similar to <xref linkend="ex-imagemap-bars"/>, which
+produces a bar chart.
+</para>
+
+</sect3>
+
+<sect3 id="adv-imgmap-pie">
+<title>Image Maps from Pie Plots</title>
+<para>
+With plot type <link linkend="plottype-pie">pie</link>,
+an image map can be produced which indicates the area of each pie segment.
+However, PHPlot only supplies the values which identify the outline of the
+pie segment, and HTML maps do not support areas of this shape.
+Therefore, the callback handler function needs to generate
+one or more polygons which approximate the pie segment area.
+</para>
+
+<note>
+  <para>
+PHPlot does not attempt to draw pie segments that are too small (due to
+the implementation of the PHP/GD drawing function). If a segment's calculated
+start angle and end angle are equal (after converting to integers), the
+segment will not be drawn, and the data_points callback will not be called for
+that segment.
+  </para>
+</note>
+
+<para>
+For pie charts, the <literal>data_points</literal> callback has this form:
+<programlisting><![CDATA[function my_handler($img, $passthru, $shape, $row, $column, $x, $y,
+                    $pie_width, $pie_height, $start_angle, $end_angle)
+]]></programlisting>
+The first 2 arguments are standard for all PHPlot callbacks and are not
+described here. The next 3 arguments are common to all data_points
+callbacks, and there are 6 additional arguments:
+<variablelist>
+  <varlistentry>
+    <term>$shape</term>
+    <listitem>
+      <para>
+Always <literal>pie</literal>, indicating a pie segment of an ellipse.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>$row</term>
+    <listitem>
+      <para>
+The pie segment index, starting at 0 for the first segment.
+(By default, segments are drawn counter-clockwise from 0 degrees, but this
+can be changed.)
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>$column</term>
+    <listitem>
+      <para>
+This is unused, and always 0.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>$x, $y</term>
+    <listitem>
+      <para>
+Device coordinates of the center of the pie.
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
+    <term>$pie_width</term>
+    <listitem>
+      <para>
+Horizontal diameter of the pie, in pixels.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>$pie_height</term>
+    <listitem>
+      <para>
+Vertical diameter of the pie, in pixels.
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
+    <term>$start_angle</term>
+    <listitem>
+      <para>
+Starting angle for the segment, in clockwise degrees (see note).
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>$end_angle</term>
+    <listitem>
+      <para>
+Ending angle for the segment, in clockwise degrees.
+      </para>
+    </listitem>
+  </varlistentry>
+</variablelist>
+</para>
+<note>
+  <para>
+<emphasis>clockwise degrees</emphasis> means (360 - A), where A is an angle
+measured in the conventional sense: counter-clockwise from the X axis.
+For example, a pie segment that starts at the top of the pie ('North') and
+ends at the bottom point ('South') would have start_angle=270 and end_angle=90.
+The start_angle is always greater than the end angle.
+  </para>
+</note>
+
+<para>
+Generating an image map for pie charts is more involved than with other
+plot types.
+Each pie segment is defined by the ellipse center point, the two diameter
+values, and the start and end angles.
+Due to the PHP/GD implementation, PHPlot uses clockwise angles (360-A), so
+the start_angle is greater than the end_angle, and the segment is drawn
+clockwise from the end_angle to the start_angle.
+</para>
+
+<para>
+HTML image maps do not support ellipse section shapes directly.
+Therefore, the callback function has to approximate the area using one or
+more polygons.
+</para>
+
+<para>
+The method shown in the example linked below approximates the pie segment
+area using a polygon with one point at the pie center, one point at each
+end of the arc, and zero or more points along the arc , such that the
+maximum separation of points along the circumference is no more than 20
+degrees. This has been found to produce a good fit for image maps.  More
+details on the method can be found in the example.
+</para>
+
+<para>
+Once you have your points (converted to integers, in an array
+<literal>$points</literal> with X and Y values alternating), you can generate
+a line in the image map as follows.
+This example appends the image map line to a string.
+<programlisting><![CDATA[$coords = implode(',', $points);
+$image_map .= "  <area shape=\"poly\" coords=\"$coords\""
+           .  " title=\"$title_text\" alt=\"$alt_text\" href=\"$url\">\n";
+]]></programlisting>
+The <literal>$url</literal>, <literal>$title_text</literal>, and
+<literal>$alt_text</literal> would typically depend on the passed
+<literal>$row</literal>.
+</para>
+
+<para>
+Refer to <xref linkend="ex-imagemap-pie"/> for a complete example of an
+image map for a pie chart.
+</para>
+
+</sect3>
+
+<sect3 id="adv-imgmap-bubble">
+<title>Image Maps from Bubbles Plots</title>
+<para>
+With plot type <link linkend="plottype-bubbles">bubbles</link>,
+an image map can be produced which indicates the area of each bubble.
+</para>
+
+<para>
+For bubbles plots, the <literal>data_points</literal> callback
+has this form:
+<programlisting><![CDATA[function my_handler($img, $passthru, $shape, $row, $column, $x, $y, $diam)
+]]></programlisting>
+The first 2 arguments are standard for all PHPlot callbacks and are not
+described here. The next 3 arguments are common to all data_points
+callbacks, and there are 3 additional arguments:
+<variablelist>
+  <varlistentry>
+    <term>$shape</term>
+    <listitem>
+      <para>
+Always <literal>circle</literal>, indicating a disk shape.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>$row</term>
+    <listitem>
+      <para>
+The row is the index for the independent variable X.
+The first X value has index 0.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>$column</term>
+    <listitem>
+      <para>
+The column is the index for the dependent variable Y.
+For the first (or only) dataset for each X, the column index is 0.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>$x, $y</term>
+    <listitem>
+      <para>
+Device coordinates of the center of the bubble.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>$diam</term>
+    <listitem>
+      <para>
+Diameter of the bubble, in pixels.
+      </para>
+    </listitem>
+  </varlistentry>
+</variablelist>
+</para>
+
+<para>
+Generating an image map for bubble plots is straight-forward.
+PHPlot provides parameters that are compatible with HTML image map markup,
+except that PHPlot provides a diameter, and HTML requires the radius.
+</para>
+
+<para>
+Here is an example of generating one area in an image map from a bubbles
+plot. You must provide the URL, alternate text, and
+optionally a title (tooltip text).  This appends the image map line to a
+string.  sprintf() is used to convert the coordinates to integers for
+cleaner HTML. 
+<programlisting><![CDATA[$coords = sprintf("%d,%d,%d", $x, $y, $diam / 2);
+$image_map .= "  <area shape=\"circle\" coords=\"$coords\""
+            . " title=\"$title_text\" alt=\"$alt_text\" href=\"$url\">\n";
+]]></programlisting>
+The <literal>$url</literal>, <literal>$title_text</literal>, and
+<literal>$alt_text</literal> would typically depend on the passed
+<literal>$row</literal> and <literal>$column</literal>.
+</para>
+
+<para>
+Other than the above code, a script to generate an image map for a bubbles
+plot would be similar to <xref linkend="ex-imagemap-bars"/>, which produces
+a bar chart.
+</para>
+
+</sect3>
+
+<sect3 id="adv-imgmap-ohlc">
+<title>Image Maps from Financial OHLC Plots</title>
+<para>
+With plot types <link linkend="plottype-ohlc">ohlc</link>,
+<link linkend="plottype-candlesticks">candlesticks</link>, and
+<link linkend="plottype-candlesticks2">candlesticks2</link>
+(collectively called OHLC - open, high, low, close plots),
+an image map can be produced which indicates the area of each data point.
+For candlesticks and candlesticks2 plots, this area is the bounding box
+containing the candlestick and its wicks.
+For ohlc plots, this area is the bounding box formed by the vertical line
+and horizontal ticks.
+</para>
+
+<para>
+For OHLC plots, the <literal>data_points</literal> callback
+has this form:
+<programlisting><![CDATA[function my_handler($img, $passthru, $shape, $row, $column, $x1, $y1, $x2, $y2)
+]]></programlisting>
+The first 2 arguments are standard for all PHPlot callbacks and are not
+described here. The next 3 arguments are common to all data_points
+callbacks, and there are 4 additional arguments:
+<variablelist>
+  <varlistentry>
+    <term>$shape</term>
+    <listitem>
+      <para>
+Always <literal>rect</literal>, indicating a rectangle shape.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>$row</term>
+    <listitem>
+      <para>
+The index of the data row, starting with 0 for the first X value.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>$column</term>
+    <listitem>
+      <para>
+This is unused, and always 0.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>$x1, $y1</term>
+    <listitem>
+      <para>
+Device coordinates of the upper left corner.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>$x2, $y2</term>
+    <listitem>
+      <para>
+Device coordinates of the lower right corner.
+      </para>
+    </listitem>
+  </varlistentry>
+</variablelist>
+The upper left and lower right coordinates above refer to the bounding box
+as described above.
+</para>
+
+<para>
+Generating an image map for OHLC plots is straight-forward.
+The provided <literal>$shape</literal> and coordinates are compatible with
+HTML &lt;area&gt; markup.
+You must provide the URL, alternate text, and optionally a title (tooltip text).
+</para>
+
+<para>
+This example appends the image map line to a string.
+sprintf() is used to convert the coordinates to integers for cleaner HTML.
+<programlisting><![CDATA[$coords = sprintf("%d,%d,%d,%d", $x1, $y1, $x2, $y2);
+$image_map .= "  <area shape=\"rect\" coords=\"$coords\""
+          .. " title=\"$title_text\" alt=\"$alt_text\" href=\"$url\">\n";
+]]></programlisting>
+The <literal>$url</literal>, <literal>$title_text</literal>, and
+<literal>$alt_text</literal> would typically depend on the passed
+<literal>$row</literal>.
+</para>
+
+<para>
+<xref linkend="ex-imagemap-bars"/> contains a complete example of an
+image map for a bar chart, and the parameters and usage for OHLC plots is
+the same.
+</para>
+
+</sect3>
+
+</sect2>
+
+<sect2 id="adv-imgmap-callback">
+<title>Image Maps - data_points Callback Parameter Summary</title>
+<para>
+The following table contains a summary of the <literal>data_points</literal>
+callback parameters for each supported plot type.
+
+<!-- Editor's note: In the first column, each cell spans 2 rows. -->
+<informaltable>
+  <tgroup cols="2">
+    <?dbhtml table-summary="data_points callback parameter summary"?>
+    <colspec colname="c1" colwidth="20*" />
+    <colspec colname="c2" colwidth="80*" />
+    <thead>
+      <row>
+        <entry>Plot Type(s)</entry>
+        <entry>Callback Parameters / Notes</entry>
+      </row>
+    </thead>
+    <tbody>
+
+      <row>
+        <entry morerows="1">points, linepoints</entry>
+        <entry>$img, $passthru, $shape='dot', $row, $column, $x, $y</entry>
+      </row>
+      <row>
+        <entry>
+          x,y is center. Supply a radius for image map circle areas.
+          Image map area will cover the points only, not lines.
+        </entry>
+      </row>
+
+      <row>
+        <entry morerows="1">bars, stackedbars </entry>
+        <entry>$img, $passthru, $shape='rect', $row, $column, $x1, $y1, $x2, $y2</entry>
+      </row>
+      <row>
+        <entry>
+          Image map area does not include shading.
+        </entry>
+      </row>
+
+      <row>
+        <entry morerows="1">pie</entry>
+        <entry>$img, $passthru, $shape='pie', $row, 0, $x, $y, $width, $height, $start_angle, $end_angle</entry>
+      </row>
+      <row>
+        <entry>
+          Callback needs to fit a polygon to the ellipse segment.
+        </entry>
+      </row>
+
+      <row>
+        <entry morerows="1">bubbles</entry>
+        <entry>$img, $passthru, $shape='circle', $row, $column, $x, $y, $diam</entry>
+      </row>
+      <row>
+        <entry>
+          x,y is center. Use diam/2 for radius in image map circle area.
+        </entry>
+      </row>
+
+      <row>
+        <entry morerows="1">candlesticks, candlesticks, ohlc</entry>
+        <entry>$img, $passthru, $shape='rect', $row, 0, $x1, $y1, $x2, $y2</entry>
+      </row>
+      <row>
+        <entry>
+          Rectangle shape includes body, wicks, ticks of each candlestick
+          or OHLC marker.
+        </entry>
+      </row>
+    </tbody>
+  </tgroup>
+</informaltable>
+</para>
+</sect2>
+
+<sect2 id="adv-imgmap-impl-notes">
+<title>Image Maps - Implementation Notes and Limitations</title>
+<para>
+Since most PHPlot scripts will not produce image maps, the burden of
+converting data points into a format for HTML image maps was left to the
+implementation in the callback function. This is why PHPlot passes the
+diameter values it already calculated (instead of radius values), and why
+pie chart segments must be interpolated by the callback function.
+</para>
+
+<para>
+You can generate image maps for error plots (data type
+<link linkend="data-data-error">data-data-error</link>)
+with points and linepoints plot types, but the image map areas will not
+include the error bars. For these plot types, the only the coordinates of
+the data points are provided.
+</para>
+
+<para>
+PHPlot does not provide the data values from the data array that go with
+the points. If you need these values, for example in tooltips, your callback
+function needs to get them from the data array, using the $row and $column
+index values. This may be complex for pie charts (for example, if you want
+tooltip text to show the percentage value of the pie segment).
+<xref linkend="ex-imagemap-pie"/> shows access to data values for a pie
+chart in the simple case of data type <literal>text-data-single</literal>.
+<xref linkend="ex-imagemap-nonembed"/> shows access to data values for a
+bar chart.
+</para>
+
+<para>
+For OHLC plots (candlesticks, candlesticks2, and ohlc plot types),
+PHPlot does not provide the callback with the coordinates of individual
+features (such as the candlestick body rather than the high point wick).
+PHPlot only provides the bounding box rectangle for the overall data point
+graphic.
+</para>
+
+<para>
+The image map must be located in the same HTML file as the image reference.
+Although the HTML definition of the <literal>usemap</literal> attribute
+of the <literal>&lt;img&gt;</literal> tag seems to indicate that a URL to an
+external file containing the map may be used, this does not in fact work.
+</para>
+
+</sect2>
+
+<sect2 id="adv-imgmap-nonembed">
+<title>Image Maps with Non-embedded Image Data</title>
+<para>
+It is also possible to generate an image map when the PHPlot script
+produces an image in the normal way (not embedded) and returns it to the
+browser as image data.  But the script will need to run twice: once to
+generate the PHPlot image, and once to generate the containing HTML page
+with the image map.  (You can use two separate scripts instead, but this is
+not recommended, since both operations must create identical plots so the
+image map areas correspond to the plot areas.)
+</para>
+
+<para>
+In the following example, the script normally generates an HTML page. The page
+contains an image map, generated with PHPlot, and also a
+<literal>&lt;img&gt;</literal> image tag which points back to the same script
+to have it generate the plot image.
+When requesting the image, the script adds a parameter 'mode=plot' to the
+URL. This tells the second execution of the script to generate the image
+data instead of the HTML page.
+</para>
+
+<para>
+The obvious drawback to this method is that you are processing a complete
+plot twice each time a plot is needed. The first time, only the image map
+is needed, and the plot itself is discarded. This is inefficient, especially
+if the plotting script needs to query a database or perform extensive
+calculations.
+</para>
+
+<para>
+Another concern is if the script queries a database, the data could change
+between the two uses of the script, resulting in an image map and plot
+which do not correlate.
+</para>
+
+<para>
+The rest of this section contains selected, annotated code from
+<xref linkend="ex-imagemap-nonembed"/>.
+</para>
+
+<para>
+Start by checking for the mode parameter:
+<programlisting><![CDATA[# Produce an image if the URL has mode=plot, and an HTML page otherwise:
+$do_html = empty($_GET['mode']) || $_GET['mode'] != 'plot';
+]]></programlisting>
+</para>
+
+<para>
+The callback handler is the same as the other imagemap examples, in that it
+appends to the global string $image_map one line from the image map.
+<programlisting><![CDATA[# Callback for 'data_points' : Generate 1 line in the image map.
+function store_map($im, $data, $shape, $row, $col, $x1, $y1, $x2, $y2)
+{ ... }
+]]></programlisting>
+</para>
+
+<para>
+The <function>generate_html()</function> function creates the containing
+HTML page. Only parts of the code are shown.
+<programlisting><![CDATA[function generate_html()
+{
+    global $image_map;
+]]></programlisting>
+</para>
+
+<para>
+Create a self-referencing URL with mode=plot parameter for the
+<literal>&lt;img&gt;</literal> tag:
+<programlisting><![CDATA[    # If the URL already has parameters, use & separator, else ?.
+    $sep = empty($_SERVER['QUERY_STRING']) ? '?' : '&';
+    $url = htmlspecialchars($_SERVER['REQUEST_URI'] . $sep .  'mode=plot');
+]]></programlisting>
+</para>
+
+<para>
+Now generate the HTML page. Include the image map using the global string
+<literal>$image_map</literal>, which our callback function has
+built line-by-line as PHPlot produced the plot.
+Also include the reference to the plot image. This will result in the browser
+making a second request to the script, this time with the mode=plot parameter.
+<programlisting><![CDATA[    echo <<<END
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+     "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+...
+<map name="map1">
+$image_map
+</map>
+...
+<img src="$url" alt="Plot image" usemap="#map1">
+...
+</html>
+
+END;
+}
+]]></programlisting>
+</para>
+
+<para>
+This ends the <function>generate_html()</function> function.
+</para>
+
+<para>
+In the main body of the script, create a PHPlot object and configure the
+plot as usual.  Set the <literal>data_points</literal> callback. (You need only
+do this in the case of generating HTML, not the image case.)
+There are two other places where the operation differs for the HTML or image
+generation, based on the <literal>$do_html</literal> flag: disabling automatic
+output with <xref linkend="SetPrintImage"/>, and calling
+the <function>generate_html()</function> function at the end.
+<programlisting><![CDATA[$plot = new PHPlot(800, 600);
+if ($do_html) {
+    // Do not output the image in this mode:
+    $plot->SetPrintImage(False);
+    // Set the callback for image map generation:
+    $plot->SetCallback('data_points', 'store_map');
+}
+... // Set up the plot, data values, plot type, etc.
+// Output the image (in plot mode), or build the image map (in html mode):
+$plot->DrawGraph();
+if ($do_html) generate_html();
+]]></programlisting>
+</para>
+
+<para>
+That's all. If <literal>$do_html</literal> is true, no image will be produced
+(due to <literal>SetPrintImage(False)</literal>),
+and <function>generate_html()</function> will be called.
+If <literal>$do_html</literal> is false, <function>DrawGraph()</function>
+will output the plot image, and the map data will be not be produced or output.
+</para>
+</sect2>
+
+</sect1> <!-- Image Maps -->
 
 </chapter>

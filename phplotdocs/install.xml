@@ -15,7 +15,7 @@ This chapter explains how to install PHPlot.
 <para>
 Before you can use PHPlot, you need a recent version of PHP with the GD
 extension.
-PHPlot-5.8.0 requires at least PHP-5.3.
+PHPlot-5.8.0 and later require at least PHP-5.3.
 (See the README and NEWS files included with the PHPlot distribution
 for requirements of other versions.)
 In general, you should always use the latest available version of PHP5.
@@ -107,8 +107,8 @@ Unpack the PHPlot distribution into a convenient directory. Recent releases
 of PHPlot are available both as ZIP files, and as gzip-compressed TAR files.
 Use whichever format is more convenient for you. In the example below, the
 TAR format is unpacked.
-<screen><![CDATA[$ tar -xvzf phplot-5.*.tar.gz
-$ cd phplot-5.*
+<screen><![CDATA[$ tar -xvzf phplot-6.*.tar.gz
+$ cd phplot-6.*
 ]]></screen>
 (Use the appropriate filename.)
 Check the distribution for README and/or INSTALL files which may contain

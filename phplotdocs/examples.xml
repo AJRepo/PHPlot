@@ -683,7 +683,7 @@ This example creates a <link linkend="def-truecolor">Truecolor</link>
 plot containing a histogram of a photograph, then overlays the histogram on
 a scaled-down copy of the photograph. The histogram is partly transparent so
 you can still see the photograph below.
-Refer to <xref linkend="conc-truecolor"/> for more information on using
+Refer to <xref linkend="adv-truecolor"/> for more information on using
 truecolor PHPlot images.
 </para>
 <para>
@@ -771,11 +771,11 @@ allowed in a palette image.
 </para>
 <para>
 Using the data color callback is described in
-<xref linkend="conc-colors-datacolor-callback"/>.
+<xref linkend="adv-datacolor-callback"/>.
 More information on callbacks can be found in
 <xref linkend="callbacks" />.
 More information on truecolor images can be found in
-<xref linkend="conc-truecolor" />.
+<xref linkend="adv-truecolor" />.
 </para>
 <example id="example-colorcallbackgradient">
 <?dbfo keep-together="auto"?>
@@ -814,7 +814,7 @@ colors array: 0, 1, or 2, depending on the value.
 </para>
 <para>
 Using the data color callback is described in
-<xref linkend="conc-colors-datacolor-callback"/>.
+<xref linkend="adv-datacolor-callback"/>.
 More information on callbacks can be found in <xref linkend="callbacks" />.
 </para>
 <example id="example-colorcallbackbars">
@@ -940,7 +940,7 @@ which show the same data but with a different presentation.
 In this example, the data array is read from an external file in Comma
 Separated Value (CSV) format. (Financial data in this format is available
 for download from sites such as Yahoo! Finance.)
-An portion example of the data file can be found below.
+A portion of the data file can be found below.
 </para>
 <para>
 This example uses the dates from the data file as row labels in the data
@@ -950,6 +950,16 @@ first reads the data into a temporary array, sorts by the date, then copies
 the data into a PHPlot data array. Compare this with the other two OHLC
 examples, where the same data is used differently.
 </para>
+<para>
+This example uses <xref linkend="TuneYAutoRange"/> to disable the
+<emphasis>zero magnet</emphasis>, which would otherwise stretch the Y axis
+range to include 0. For many plots, including 0 on the axis is desirable,
+but for this financial plot we want to be able to see small changes in the
+values, and are less interested in the relative amounts.
+(The zero magnet feature was added at PHPlot-6.0.0, and the script tests
+for the method availability before using it.)
+</para>
+
 <example id="example-ohlcbasic">
 <?dbfo keep-together="auto"?>
 <title>Basic OHLC Plot</title>
@@ -1132,18 +1142,22 @@ See <xref linkend="adv-multiplot" /> for more information.
 <!-- =============================================== -->
 <pagebreak/>
 <sect1 id="ex-legendshape">
-<title>Example - Legend with Point Shapes</title>
+<title>Example - Legend with Shape Markers</title>
 <para>
 This example shows the standard legend appearance, followed by the same
-plot with point shapes in the legend instead of color boxes.
+plot with point shape markers in the legend instead of color boxes,
+and again using a line plot with line markers.
 Using point shapes in the legend was added in PHPlot-5.4.0.
-This feature is useful if you need to be able to interpret the legend
-without color, for example with monochrome printing, or for accessibility
-reasons. See <xref linkend="conc-legend"/> for more on the plot legend.
+These are useful if you need to be able to interpret the legend without color,
+for example with monochrome printing, or for accessibility reasons.
+Using line markers in the legend was added in PHPlot-6.0.0.
+When used with varying line widths, this can reduce the dependency on color
+to identify the plotted lines.
+See <xref linkend="conc-legend"/> for more on the plot legend.
 </para>
 <example id="example-legendshape">
 <?dbfo keep-together="auto"?>
-<title>Legend with Color Boxes or Point Shapes</title>
+<title>Legend with Color Boxes or Shape Markers</title>
 <para>
 First, here is the standard legend with color boxes.
 </para>
@@ -1161,6 +1175,7 @@ First, here is the standard legend with color boxes.
 <para>
 Changing the call to <xref linkend="SetLegendUseShapes"/> results in a
 legend using point shapes instead of color boxes.
+(This requires PHPlot-5.4.0 or later.)
 </para>
 <informalfigure>
   <mediaobject>
@@ -1173,6 +1188,22 @@ legend using point shapes instead of color boxes.
   </mediaobject>
 </informalfigure>
 &legendshape1;
+<para>
+With a line plot, the shape markers are line segments rather than point
+markers.
+(This requires PHPlot-6.0.0 or later.)
+</para>
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="examples/legendshape2.png" scale="58" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>Legend with Line Markers</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+&legendshape2;
 </example>
 </sect1>
 
@@ -1327,6 +1358,16 @@ that we want a tick mark and label at a specific value.
 First, here is the example without a Y tick anchor. Note that there is no Y
 tick mark or label at the X axis Y=0.
 </para>
+<note>
+  <para>
+The script uses <xref linkend="SetPlotAreaWorld"/> to set the Y axis range
+to -3.5 to 13.5. This is used here to illustrate the need for setting a Y
+tick anchor, and the effect of setting the Y tick anchor at 0.  Without
+<function>SetPlotAreaWorld()</function>, PHPlot-6.0.0 and later (but not
+older versions) will automatically calculate the Y range such that a tick
+mark will be at Y=0 even without <function>SetYTickAnchor(0)</function>.
+  </para>
+</note>
 <informalfigure>
   <mediaobject>
     <imageobject>
@@ -1428,13 +1469,13 @@ Note: This feature was added in PHPlot-5.5.0.
 <para>
 This is the same plot as <xref linkend="ex-lines2"/>, except instead of
 producing the image on standard output, this script embeds the image in an HTML
-page, which is produced on standard output. The screen shot below shows how the
+page, which is produced on standard output. The screenshot below shows how the
 web page looks in Firefox.
 </para>
 
 <example id="example-encodeimage">
 <?dbfo keep-together="auto"?>
-<title>Embedding Image with EncodeImage</title>
+<title>Embedding Image with EncodeImage (Browser screenshot)</title>
 <informalfigure>
   <mediaobject>
     <imageobject>
@@ -1735,5 +1776,221 @@ Access to the data point row and column index was added in PHPlot-5.8.0.
 </sect1>
 
 <!-- =============================================== -->
+<pagebreak/>
+<sect1 id="ex-imagemap-bars">
+<title>Example - Image Map from Bar Chart</title>
+<para>
+This example produces an HTML page with an embedded image containing a bar
+chart, and an image map.  The image map makes the bars in the bar chart into
+hotlinks. In this example, tool-tip float-over text identifies the bars and
+groups, and clicking on a bar displays the same text in an alert popup.
+These looks could be used instead to link to another web page, display data
+in a popup window, etc.
+</para>
+<para>
+See <xref linkend="adv-imgmap"/> for more information on image maps.
+This capability was added in PHPlot-5.7.0.
+See <xref linkend="EncodeImage"/> for more on embedding plot images within
+an HTML page.
+</para>
 
+<example id="example-imagemap-bars">
+<?dbfo keep-together="auto"?>
+<title>Image Map from Bar Chart (Browser screenshot)</title>
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="images/imagemap-bars.png" scale="58" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>Image Map from Bar Chart Example</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+&imagemapbars;
+</example>
+</sect1>
+
+<!-- =============================================== -->
+<pagebreak/>
+<sect1 id="ex-imagemap-pie">
+<title>Example - Image Map from Pie Chart</title>
+<para>
+This example produces an HTML page with an embedded image containing a pie
+chart, and an image map.  The image map makes the pie sectors in the chart
+into hotlinks.  In this example, tool-tip text identifies the segment
+number and its numeric value, and clicking on a pie segment displays the
+same text in an alert popup.  These looks could be used instead to link to
+another web page, display data in a popup window, etc.
+</para>
+
+<para>
+This example also shows getting access to the data values. The
+callback handler accesses the data array to get the current segment value
+and uses that in the tool-tip text and alert box. This is dependent on the
+data type of the array, and the code shown here only works with data type
+text-data-single.
+</para>
+
+<para>
+Unlike the <link linkend="ex-imagemap-bars">previous example</link> with a
+bar chart, in this example the callback function needs to do some more
+significant calculations in order to produce the image map areas. This is
+because HTML image maps do not directly support any area shape which
+corresponds to a pie chart segment.
+Therefore the callback function approximates each pie chart segment with a
+polygon. This is explained in the code shown below.
+</para>
+
+<para>
+See <xref linkend="adv-imgmap"/> for more information on image maps.
+This capability was added in PHPlot-5.7.0.
+See <xref linkend="EncodeImage"/> for more on embedding plot images within
+an HTML page.
+</para>
+
+<example id="example-imagemap-pie">
+<?dbfo keep-together="auto"?>
+<title>Image Map from Pie Chart (Browser screenshot)</title>
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="images/imagemap-pie.png" scale="58" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>Image Map from Pie Chart Example</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+&imagemappie;
+</example>
+</sect1>
+
+<!-- =============================================== -->
+<pagebreak/>
+<sect1 id="ex-imagemap-nonembed">
+<title>Example - Image Map and Non-embedded Plot Image</title>
+<para>
+This the complete example described in <xref linkend="adv-imgmap-nonembed"/>.
+It shows that image maps can also be produced when using PHPlot without
+using embedded ("data-URL") images. The down-side is that the script must
+run and process the plot data twice - once to create the HTML page with the
+image map, and once to create the plot image.
+</para>
+
+<example id="example-imagemap-nonembed">
+<?dbfo keep-together="auto"?>
+<title>Image Map and Non-embedded Plot Image (Browser screenshot)</title>
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="images/imagemap-nonembed.png" scale="55" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>Image Map and Non-embedded Plot Image Example</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+&imagemapnonembed;
+</example>
+</sect1>
+
+<!-- =============================================== -->
+<pagebreak/>
+<sect1 id="ex-pieangle">
+<title>Example - Pie Chart Start Angle and Direction</title>
+<para>
+This example shows the use of <xref linkend="SetPieStartAngle"/> and
+<xref linkend="SetPieDirection"/> to set the starting angle for the first
+segment in a pie chart, and the direction of the segments (clockwise or
+counter-clockwise).
+Note that the ability to change the starting angle and segment direction
+was added to PHPlot-6.0.0.
+</para>
+
+<para>
+In each of the 8 plots, the pie segments are numbered from 0, with segment 0
+being the first entry in the data array.
+The upper-left plot represents the default, and the only available
+option before PHPlot-6.0.0, with counter-clockwise pie segments starting
+at 0 degrees.
+</para>
+
+<example id="example-pieangle">
+<?dbfo keep-together="auto"?>
+<title>Pie Chart Start Angle and Direction</title>
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="examples/pieangle.png" scale="58" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>Pie Chart Start Angle and Direction Example</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+&pieangle;
+</example>
+</sect1>
+
+<!-- =============================================== -->
+<pagebreak/>
+<sect1 id="ex-horizlinepts">
+<title>Example - Horizontal Linepoints Plot with Data Value Labels and Lines</title>
+<para>
+This is a horizontal 'linepoints' plot.
+In a horizontal plot, the Y (vertical) axis is for the independent values,
+and the X axis (horizontal) is for the dependent values, so PHPlot is
+graphing <mathphrase>X = F(Y)</mathphrase>.
+</para>
+
+<para>
+This plot has:
+  <itemizedlist>
+    <listitem>
+      <para>
+Y axis data labels, which show the values from the label positions in the data
+array along the Y axis
+(see <xref linkend="SetYDataLabelPos"/>, not used in the example below
+because the default is to plot labels along the Y axis if they are not
+empty)
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+X data value labels, which show the X value just above each data point
+(see <xref linkend="SetXDataLabelPos"/>)
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+Y data label lines, which connect the data points horizontally to the Y
+axis data labels (see <xref linkend="SetDrawYDataLabelLines" />)
+      </para>
+    </listitem>
+  </itemizedlist>
+</para>
+
+<para>
+Note: Horizontal linepoints plots were added in PHPlot-6.0.0.
+</para>
+
+<example id="example-horizlinepts">
+<?dbfo keep-together="auto"?>
+<title>Horizontal Linepoints Plot with Data Value Labels and Data Lines</title>
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="examples/horizlinepts.png" scale="58" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>Horizontal Linepoints Plot with Data Value Labels and Data Lines Example</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+&horizlinepts;
+</example>
+</sect1>
+
+<!-- =============================================== -->
 </chapter>

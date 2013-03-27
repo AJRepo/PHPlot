@@ -29,6 +29,8 @@ $plot->SetDataValues($data);
 $plot->SetPlotType('lines');
 $plot->SetXTickLabelPos('none');
 $plot->SetXTickPos('none');
+# See notes in reference manual on this:
+$plot->SetPlotAreaWorld(NULL, -3.5, NULL, 13.5);
 
 if (isset($set_anchor))
     $plot->SetYTickAnchor($set_anchor);

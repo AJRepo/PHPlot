@@ -48,4 +48,6 @@ $plot->SetPlotType('ohlc');
 $plot->SetDataColors('black');
 $plot->SetXLabelAngle(90);
 $plot->SetXTickPos('none');
+if (method_exists($plot, 'TuneYAutoRange'))
+    $plot->TuneYAutoRange(0); // Suppress Y zero magnet (PHPlot >= 6.0.0)
 $plot->DrawGraph();

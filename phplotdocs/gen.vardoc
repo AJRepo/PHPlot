@@ -27,7 +27,7 @@ proc output_header {} {
     <thead>
       <row>
         <entry>Variable Name:</entry>
-        <entry>Initialized to Value:</entry>
+        <entry>Default Value:</entry>
         <entry>Reference Function:</entry>
         <entry>Description:</entry>
       </row>

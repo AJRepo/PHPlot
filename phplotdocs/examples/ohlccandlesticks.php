@@ -43,4 +43,6 @@ $plot->SetDataColors(array('SlateBlue', 'black', 'SlateBlue', 'black'));
 $plot->SetXLabelAngle(90);
 $plot->SetXLabelType('time', '%Y-%m-%d');
 $plot->SetXTickIncrement(7*24*60*60); // 1 week interval
+if (method_exists($plot, 'TuneYAutoRange'))
+    $plot->TuneYAutoRange(0); // Suppress Y zero magnet (PHPlot >= 6.0.0)
 $plot->DrawGraph();

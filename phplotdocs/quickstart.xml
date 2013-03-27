@@ -318,7 +318,12 @@ Lines
     </listitem>
     <listitem>
       <para>
-Linepoints (a faster way of plotting when you want both points and lines)
+Points (a lot of point shapes are available)
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+Linepoints (as you might expect, both points and lines)
       </para>
     </listitem>
     <listitem>
@@ -328,12 +333,7 @@ Area and Stacked Area
     </listitem>
     <listitem>
       <para>
-Points (lots of point types here)
-      </para>
-    </listitem>
-    <listitem>
-      <para>
-Pie (2D or 3D)
+Pie (2D or 3D look)
       </para>
     </listitem>
     <listitem>
@@ -343,12 +343,22 @@ Thinbarline (sometimes also called impulse), both vertical and horizontal
     </listitem>
     <listitem>
       <para>
-Error bar (which can also be used for stock market data graphs)
+Lines, Points, and Linepoints with Error bars
       </para>
     </listitem>
     <listitem>
       <para>
 Squared (steps)
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+Bubbles
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+Open/High/Low/Close (shows price changes for a stock, for example)
       </para>
     </listitem>
   </itemizedlist>

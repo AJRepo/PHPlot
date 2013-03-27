@@ -42,8 +42,14 @@ STATIC_IMAGES=\
   images/drop.png \
   images/encodeimage.png \
   images/error-image.png \
+  images/fig-autorange-a.png \
+  images/fig-autorange-b.png \
+  images/fig-autorange-c.png \
   images/fonts.png \
   images/gdinfo.png \
+  images/imagemap-bars.png \
+  images/imagemap-nonembed.png \
+  images/imagemap-pie.png \
   images/labels-bar.png \
   images/labels-horizbar.png \
   images/labels-pie.png \
@@ -78,6 +84,20 @@ STATIC_IMAGES=\
   images/shape-trianglemid.png \
   images/shape-up.png \
   images/shape-yield.png \
+  images/thumbnail-area.png \
+  images/thumbnail-bars.png \
+  images/thumbnail-bubbles.png \
+  images/thumbnail-candlesticks.png \
+  images/thumbnail-candlesticks2.png \
+  images/thumbnail-linepoints.png \
+  images/thumbnail-lines.png \
+  images/thumbnail-ohlc.png \
+  images/thumbnail-pie.png \
+  images/thumbnail-points.png \
+  images/thumbnail-squared.png \
+  images/thumbnail-stackedarea.png \
+  images/thumbnail-stackedbars.png \
+  images/thumbnail-thinbarline.png \
   images/ticksize.png \
   images/truecolor-formats.png \
   images/typical-grid.png \
@@ -107,10 +127,15 @@ EXAMPLES_PHP=\
   examples/encodeimage.php \
   examples/histogram.php \
   examples/horizbar.php \
+  examples/horizlinepts.php \
   examples/horizstackedbar.php \
   examples/horizthinbarline.php \
+  examples/imagemapbars.php \
+  examples/imagemapnonembed.php \
+  examples/imagemappie.php \
   examples/legendshape.php \
   examples/legendshape1.php \
+  examples/legendshape2.php \
   examples/linepoints1.php \
   examples/linepoints2.php \
   examples/lines1.php \
@@ -122,6 +147,7 @@ EXAMPLES_PHP=\
   examples/pie1.php \
   examples/pie2.php \
   examples/pie3.php \
+  examples/pieangle.php \
   examples/pielabeltype1.php \
   examples/pielabeltype2.php \
   examples/pielabeltype3.php \
@@ -166,10 +192,12 @@ EXAMPLES_IMAGES=\
   examples/drawmessage.png \
   examples/histogram.jpg \
   examples/horizbar.png \
+  examples/horizlinepts.png \
   examples/horizstackedbar.png \
   examples/horizthinbarline.png \
   examples/legendshape.png \
   examples/legendshape1.png \
+  examples/legendshape2.png \
   examples/linepoints1.png \
   examples/linepoints2.png \
   examples/lines1.png \
@@ -181,6 +209,7 @@ EXAMPLES_IMAGES=\
   examples/pie1.png \
   examples/pie2.png \
   examples/pie3.png \
+  examples/pieangle.png \
   examples/pielabeltype1.png \
   examples/pielabeltype2.png \
   examples/pielabeltype3.png \

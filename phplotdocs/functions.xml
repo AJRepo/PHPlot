@@ -70,7 +70,7 @@ direct the output, control browser caching, and control error handling.
 The functions in this section are used to control the colors and
 line styles of PHPlot elements.
 More information about using colors in PHPlot can be found in
-<xref linkend="conc-colors" /> and <xref linkend="conc-truecolor" />.
+<xref linkend="conc-colors" /> and <xref linkend="adv-truecolor" />.
 </para>
 
 <para>
@@ -85,9 +85,12 @@ More information about using colors in PHPlot can be found in
   <listitem><para><xref linkend="SetGridColor" /></para></listitem>
   <listitem><para><xref linkend="SetImageBorderColor" /></para></listitem>
   <listitem><para><xref linkend="SetImageBorderWidth" /></para></listitem>
+  <listitem><para><xref linkend="SetLegendBgColor" /></para></listitem>
+  <listitem><para><xref linkend="SetLegendTextColor" /></para></listitem>
   <listitem><para><xref linkend="SetLightGridColor" /></para></listitem>
   <listitem><para><xref linkend="SetLineStyles" /></para></listitem>
   <listitem><para><xref linkend="SetLineWidths" /></para></listitem>
+  <listitem><para><xref linkend="SetPieBorderColor" /></para></listitem>
   <listitem><para><xref linkend="SetPieLabelColor" /></para></listitem>
   <listitem><para><xref linkend="SetPlotBgColor" /></para></listitem>
   <listitem><para><xref linkend="SetRGBArray" /></para></listitem>
@@ -114,12 +117,16 @@ plots, and shading for 3D affects.
 <itemizedlist>
   <listitem><para><xref linkend="SetBgImage" /></para></listitem>
   <listitem><para><xref linkend="SetDrawBrokenLines" /></para></listitem>
+  <listitem><para><xref linkend="SetDrawDataBorders" /></para></listitem>
+  <listitem><para><xref linkend="SetDrawPieBorders" /></para></listitem>
   <listitem><para><xref linkend="SetDrawPlotAreaBackground" /></para></listitem>
   <listitem><para><xref linkend="SetImageBorderType" /></para></listitem>
+  <listitem><para><xref linkend="SetPieDirection" /></para></listitem>
+  <listitem><para><xref linkend="SetPieStartAngle" /></para></listitem>
+  <listitem><para><xref linkend="SetPlotAreaBgImage" /></para></listitem>
+  <listitem><para><xref linkend="SetPlotBorderType" /></para></listitem>
   <listitem><para><xref linkend="SetPointShapes" /></para></listitem>
   <listitem><para><xref linkend="SetPointSizes" /></para></listitem>
-  <listitem><para><xref linkend="SetPlotBorderType" /></para></listitem>
-  <listitem><para><xref linkend="SetPlotAreaBgImage" /></para></listitem>
   <listitem><para><xref linkend="SetShading" /></para></listitem>
 </itemizedlist>
 </para>
@@ -190,7 +197,8 @@ and <xref linkend="SetFont" /> to set the title fonts.
 <para>
 The functions in this section control the legend.
 For more information, see <xref linkend="conc-legend"/>.
-See also <xref linkend="SetTextColor" /> to set the legend text color,
+See also <xref linkend="SetLegendTextColor" /> to set the legend text color,
+<xref linkend="SetLegendBgColor"/> to set the legend background color,
 <xref linkend="SetGridColor" /> to set the legend border color,
 and <xref linkend="SetFont" /> to set the legend text font.
 </para>
@@ -199,6 +207,7 @@ and <xref linkend="SetFont" /> to set the legend text font.
 <itemizedlist>
   <listitem><para><xref linkend="GetLegendSize" /></para></listitem>
   <listitem><para><xref linkend="SetLegend" /></para></listitem>
+  <listitem><para><xref linkend="SetLegendColorboxBorders" /></para></listitem>
   <listitem><para><xref linkend="SetLegendPixels" /></para></listitem>
   <listitem><para><xref linkend="SetLegendPosition" /></para></listitem>
   <listitem><para><xref linkend="SetLegendReverse" /></para></listitem>
@@ -260,6 +269,7 @@ For more information, see <xref linkend="conc-labels"/>.
 <para>
 <itemizedlist>
   <listitem><para><xref linkend="SetDrawXDataLabelLines" /></para></listitem>
+  <listitem><para><xref linkend="SetDrawYDataLabelLines" /></para></listitem>
   <listitem><para><xref linkend="SetLabelScalePosition" /></para></listitem>
   <listitem><para><xref linkend="SetNumberFormat" /></para></listitem>
   <listitem><para><xref linkend="SetPieLabelType" /></para></listitem>
@@ -308,6 +318,8 @@ For more information, see <xref linkend="conc-ticks"/>.
   <listitem><para><xref linkend="SetYTickIncrement" /></para></listitem>
   <listitem><para><xref linkend="SetYTickLength" /></para></listitem>
   <listitem><para><xref linkend="SetYTickPos" /></para></listitem>
+  <listitem><para><xref linkend="TuneXAutoTicks" /></para></listitem>
+  <listitem><para><xref linkend="TuneYAutoTicks" /></para></listitem>
 </itemizedlist>
 </para>
 </sect1>
@@ -326,6 +338,8 @@ positioning of the plot on the image, or translate coordinates.
   <listitem><para><xref linkend="SetPieAutoSize" /></para></listitem>
   <listitem><para><xref linkend="SetPlotAreaPixels" /></para></listitem>
   <listitem><para><xref linkend="SetPlotAreaWorld" /></para></listitem>
+  <listitem><para><xref linkend="TuneXAutoRange" /></para></listitem>
+  <listitem><para><xref linkend="TuneYAutoRange" /></para></listitem>
 </itemizedlist>
 </para>
 </sect1>
