@@ -1,0 +1,13 @@
+<?php
+# $Id$
+# PHPlot test: Plot auto-range test
+# This is a parameterized test. See the script named at the bottom for details.
+$tp = array(
+  'subtitle' => 'Decimal tick step (2x): check edge, expecting step=200',
+  'min' => 0,              # Lowest data value
+  'max' => 1000,            # Highest data value
+  'adjust_mode' => 'T',    # Range adjust mode: 'T', 'R', or 'I'
+  'adjust_amount' => 0,    #  % of range for adjustment
+  'tick_mode' => 'decimal', # Tick selection mode
+  );
+require 'range-auto.php';
