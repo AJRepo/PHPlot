@@ -25,12 +25,12 @@ function ifset(&$var)
 # Check for missing methods:
 if (!empty($legend_bg_color) &&
       !method_exists('PHPlot', 'SetLegendBgColor')) {
-    fwrite(STDERR, "Skipping test because it requires SetLegendBgColor()\n");
+    echo "Skipping test because it requires SetLegendBgColor()\n";
     exit(2); // Tells test suite to skip this test
 }
 if (!empty($legend_text_color) &&
       !method_exists('PHPlot', 'SetLegendTextColor')) {
-    fwrite(STDERR, "Skipping test because it requires SetLegendTextColor()\n");
+    echo "Skipping test because it requires SetLegendTextColor()\n";
     exit(2); // Tells test suite to skip this test
 }
 
