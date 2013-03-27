@@ -1,6 +1,21 @@
 This is the Change Log for phplottest, the PHPlot Test Suite
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
+2013-03-26
+    Added new tests for auto-range/auto-tick calculations (bugs #132, #101)
+    which are the major new changes in PHPlot-6.0.0. Note: Each of these
+    tests should either run under PHPlot-5.x, or else exit gracefully
+    with 'skip' status if they need features added in PHPlot-6.0.0.
+    * u.calcplotareaworld.php, u.calcstep.php: New unit tests for
+      auto-range/auto-tick calculations.
+    * fractionticks.php: Test fractional tick labels.
+    * range-*.php, tickset*.php: New tests for auto-range/auto-tick
+      calculations.
+    * tests.ini: List 93 new tests.
+
+
+    * legendtxbgcolor.php: Send 'test skipped' message to stdout not stderr.
+
 2013-03-19
     Added new tests for bug #166 legend with point shapes vs shape 'none':
     * useshape-noshape*.php : 2 new tests
