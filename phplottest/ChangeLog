@@ -1,6 +1,12 @@
 This is the Change Log for phplottest, the PHPlot Test Suite
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
+2013-04-01
+    More tests for auto-range/auto-tick calculations.
+    * range-auto7date[1-5].php, range-auto8mt[4-9].php, range-autoii[1-3].php:
+      New tests
+    * tests.ini: List 14 new tests.
+
 2013-03-26
     Added new tests for auto-range/auto-tick calculations (bugs #132, #101)
     which are the major new changes in PHPlot-6.0.0. Note: Each of these
