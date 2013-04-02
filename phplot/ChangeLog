@@ -2,6 +2,15 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2013-03-27
+    * Merged /branches/Rel6 changes back into trunk. Changes recorded below
+      with "(/branches/Rel6)" were made on the branch. Note: Subversion
+      change history for those changes is only available by looking at
+      revision 1558 on the branch, for example: 
+         svn log ^/branches/Rel6/phplot/phplot.php@1558
+      The /branches/Rel6 tree has not been deleted, but may be in the future
+      (as recommended in Subversion documentation).
+
 2013-03-22 (/branches/Rel6)
     * Changed default minimum number of ticks intervals (min_ticks) for both
       X and Y from 5 to 8. Considering PHPlot previously used 10 intervals
