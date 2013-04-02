@@ -1,6 +1,13 @@
 This is the Change Log for phplottest, the PHPlot Test Suite
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
+2013-04-02
+    Fix 8 tests that failed to prove their point because of the change
+    in default minticks from 5 to 8.
+    * range-auto7bin[45].php, range-auto7dec4[a-f].php: Set minticks to 5
+      (the old default) so the tests show the intended change in resulting
+      tick increment at the thresholds.
+
 2013-04-01
     More tests for auto-range/auto-tick calculations.
     * range-auto7date[1-5].php, range-auto8mt[4-9].php, range-autoii[1-3].php:
