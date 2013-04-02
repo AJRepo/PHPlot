@@ -1,5 +1,5 @@
 This is phplotdocs/README, for the PHPlot Reference Manual source
-Last updated on 2012-12-16
+Last updated on 2013-04-01
 -----------------------------------------------------------------------------
 
 This directory contains the DocBook-XML source files for the PHPlot Reference
@@ -73,7 +73,7 @@ The Makefile has the following targets:
     and the images and stylesheet to a directory named by the DESTDIR
     variable.
     This is used to create a working copy of the manual outside of the
-    CVS work area, and to stage the manual for uploading (via rsync) to
+    Subversion work area, and to stage the manual for uploading (via rsync) to
     Sourceforge where it can be viewed on-line (see "make sfhtml" below).
   "make clean" deletes some intermediate files, but leaves the manual output.
   "make allclean" deletes every generated file.
