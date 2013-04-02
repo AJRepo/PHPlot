@@ -2,6 +2,13 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2013-04-01       ===== Released as 6.0.0 =====
+    Tentantive release date is 2013-04-03; NEWS and README files already
+    have that date.
+    * phplot.php: Updated version comment and version constants
+    * README.txt: Updated for new release
+    * NEWS.txt: Add text for new release
+
 2013-03-27
     * Merged /branches/Rel6 changes back into trunk. Changes recorded below
       with "(/branches/Rel6)" were made on the branch. Note: Subversion
