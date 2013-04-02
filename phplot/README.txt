@@ -1,5 +1,5 @@
 This is the README file for PHPlot
-Last updated for PHPlot-5.8.0 on 2012-04-06
+Last updated for PHPlot-6.0.0 on 2013-04-03
 The project web site is http://sourceforge.net/projects/phplot/
 The project home page is http://phplot.sourceforge.net/
 -----------------------------------------------------------------------------
@@ -27,16 +27,13 @@ CONTENTS:
    contrib  . . . . . . . . . . . . "Contributed" directory, add-ons
    phplot.php   . . . . . . . . . . The main PHPlot source file
    rgb.inc.php  . . . . . . . . . . Optional extended color table
-   Imagemaps.txt  . . . . . . . . . Documentation for new experimental feature
 
 
 REQUIREMENTS:
 
 You need a recent version of PHP5, and you are advised to use the latest
-stable release.  This version of PHPlot has been tested with PHP-5.4.0,
-PHP-5.3.10, and PHP-5.3.6-13ubuntu on Linux, and with PHP-5.4.0 on Windows XP.
-Note that starting with this release, PHPlot requires PHP-5.3.x or higher.
-PHP-5.2.x is no longer tested or supported.
+stable release.  This version of PHPlot has been tested with PHP-5.4.3 and
+PHP-5.3.23 on Linux, and with PHP-5.4.11 on Windows XP.
 
 You need the GD extension to PHP either built in to PHP or loaded as a
 module. Refer to the PHP documentation for more information - see the
@@ -81,20 +78,13 @@ KNOWN ISSUES:
 Here are some of the problems we know about in PHPlot. See the bug tracker
 on the PHPlot project web site for more information.
 
-#3142124 Clip plot elements to plot area
+#146 (was: 3142124) Clip plot elements to plot area
   Plot elements are not currently clipped to the plot area, and may extend
   beyond. PHP does not currently support the GD clipping control.
 
-#1795969 The automatic range calculation for Y values needs to be rewritten.  
-  This is especially a problem with small offset ranges (e.g. Y=[999:1001]).
-  You can use SetPlotAreaWorld to set a specific range instead.
-
-#1605558 Wide/Custom dashed lines don't work well
-  This is partially a GD issue, partially PHPlot's fault.
-
-#2919086 Improve tick interval calculations
-  Tick interval calculations should try for intervals of 1, 2, or 5 times
-  a power of 10.
+#93 (was: 1605558) Wide/Custom dashed lines don't work well
+  There is a question whether this is a PHP/GD issue, or behaving as
+  expected.
 
 
 PHP Issues:
@@ -120,6 +110,16 @@ large images, especially truecolor images.
 
   + PHP-5.3.2 has a bug in rendering TrueType fonts (TTF).  Avoid using this
 version if you use TTF text in PHPlot.
+
+  + The default TrueType font can be changed by external factors. If you
+enable TrueType fonts, but don't select a font name, PHPlot can find a
+default TrueType font on many systems, including Windows. However, the
+selected font can change if you install or remove software. For example, on
+Windows, PHPlot may select the Arial font. But then, if you install
+LibreOffice, the default font will change to Liberation Sans. This will
+change plot appearance.  This happens because LibreOffice installs the
+Liberation font family in the Windows fonts directory, and the Liberation
+Sans font precedes Arial in PHPlot's list of candidate default fonts.
 
 
 
