@@ -3,6 +3,11 @@ This is phplotdocs/ChangeLog, listing changes to the PHPlot Reference Manual
 Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
+2013-04-01
+    For release with PHPlot-6.0.0:
+    * changelog.xml: Update with summary of all changes for 6.0.0.
+    * README: Fix obsolete reference to CVS.
+
 2013-03-27
     * Merged /branches/Rel6 changes back into trunk. Changes recorded below
       with "(/branches/Rel6)" were made on the branch. Note: Subversion
@@ -12,23 +17,23 @@ manual, which only contains summaries of changes.
       The /branches/Rel6 tree has not been deleted, but may be in the future
       (as recommended in Subversion documentation).
 
-* 2013-03-22 (/branches/Rel6)
+2013-03-22 (/branches/Rel6)
     * advanced.xml, developer.xml, reference.xml: Documented change in the
       minimum ticks default (min_ticks) from 5 to 8, including updating
       the in-line examples.
     * etc/fig-autorange-a.php, images/fig-autorange-[abc].png: Update
       figures per new min_ticks, and restore end adjustment to default  3%.
 
-* 2013-03-19 (/branches/Rel6)
+2013-03-19 (/branches/Rel6)
     * developer.xml: Documented usage change to internal DrawShape() to
       address bug #166, legend vs 'none' point shape.
 
-* 2013-03-18 (/branches/Rel6)
+2013-03-18 (/branches/Rel6)
     * concepts.xml: Documented changes for fix to bug #167 "Fails to find
       a default font on Ubuntu" - new font search list. Also added note
       about non-use of fontconfig.
 
-* 2013-03-11 (/branches/Rel6)
+2013-03-11 (/branches/Rel6)
     * Document changes from 2 to 3 tick selection modes:
 
       + advanced.xml: Rewrote parts of "Plot Range and Tick Increment
@@ -43,7 +48,7 @@ manual, which only contains summaries of changes.
         TuneYAutoRange(). Documented parameter change to TuneXAutoTicks()
         and TuneYAutoTicks(): tick_mode replaces datetime_interval.
 
-* 2013-03-01 (/branches/Rel6)
+2013-03-01 (/branches/Rel6)
     * Documented latest changes to auto-range and auto-tick calculations,
       including moving from tuning variables to Tune*() functions.
 
@@ -85,7 +90,7 @@ manual, which only contains summaries of changes.
       + Makefile: List 3 new static image files for release.
       + .ispell_words: Added new method names.
 
-* 2013-01-17 (/branches/Rel6)
+2013-01-17 (/branches/Rel6)
     * More changes for feature request #29 "Finer control over plot element
       colors":
       + .ispell_words: Added new method names.
@@ -96,16 +101,16 @@ manual, which only contains summaries of changes.
       + reference.xml: Documented new functions SetLegendBgColor() and
         SetLegendTextColor(), and updated some cross-references.
 
-* 2013-01-02 (/branches/Rel6)
+2013-01-02 (/branches/Rel6)
     * main.xml: Extend copyright to 2013
     * developer.xml: Member Variable Notes, plots[]: rewrote top description
       to provide more accurate information about the purpose of this array.
       Changed to match code change: draw_axes changed to suppress_axes.
 
-* 2012-12-27 (/branches/Rel6)
+2012-12-27 (/branches/Rel6)
     * developer.xml: Document new class constant version_id.
 
-* 2012-12-26 (/branches/Rel6)
+2012-12-26 (/branches/Rel6)
     * reference.xml: Added cross-reference from SetPieLabelType() to
       SetLabelScalePosition(), especially for turning the labels off.
 
@@ -119,7 +124,7 @@ manual, which only contains summaries of changes.
     * Makefile : List 14 new static image files.
 
 
-* 2012-12-24 (/branches/Rel6)
+2012-12-24 (/branches/Rel6)
     * concepts.xml: Fix description of color and line width usage for
        candlesticks and candlesticks2 plots. (Line widths are not used
        when drawing filled rectangles.)
@@ -157,18 +162,18 @@ manual, which only contains summaries of changes.
       a new section, instead of being a separate chapter. (DocBook was making a
       bad "previous" link from next page, and this change avoids the error.)
 
-* 2012-12-17 (/branches/Rel6)
+2012-12-17 (/branches/Rel6)
     * images/gdinfo.png: Replaced with updated image, showing recent versions
       of libraries used by GD.
 
-* 2012-10-16 (/branches/Rel6)
+2012-10-16 (/branches/Rel6)
     * concepts.xml: Expanded explanation of out-of-order and duplicate value
       data points in data arrays, and moved this into a new subsection.
 
-* 2012-09-21 (/branches/Rel6)
+2012-09-21 (/branches/Rel6)
     * concepts.xml: Added missing "Y data lines" in color elements table.
 
-* 2012-09-18 (/branches/Rel6)
+2012-09-18 (/branches/Rel6)
     * Changes for feature request #47 "Extend horizontal plots to more types":
       + developer.xml: Documented changes to internal functions: Removed
         DrawDotsError() and DrawLinesError(); updated DrawDots() and
@@ -187,7 +192,7 @@ manual, which only contains summaries of changes.
       + examples.xml: New example of horizontal linepoints plot.
       + Makefile: Added new file with example.
 
-* 2012-09-12 (/branches/Rel6)
+2012-09-12 (/branches/Rel6)
     * Changes for feature request #46 "Control pie chart borders":
       + .ispell_words : Added new function names
       + concepts.xml: Updated table of color elements, and added note on
@@ -197,20 +202,20 @@ manual, which only contains summaries of changes.
         and SetDrawPieBorders(). Updated SetGridColor().
       + variables.list: Documented 3 new class variables.
 
-* 2012-08-27 (/branches/Rel6)
+2012-08-27 (/branches/Rel6)
     * reference.xml: SetDefaultTTFont() argument is now optional, and added
       text here and in SetUseTTF() about resetting fonts to defaults.
       SetTransparentColor() argument is now optional, and rewrote some of
       the descriptive text for this function.
 
-* 2012-08-23 (/branches/Rel6)
+2012-08-23 (/branches/Rel6)
     * quickstart.xml: Updated the list of plot types under Customization,
       mostly to fix the obsolete information that error plots can be used
       for stock market graphs (PHPlot now has OHLC plots for that).
     * concepts.xml: Stated that error handler returning FALSE will result
       in PHP error handling, so the script will exit.
 
-* 2012-08-20 (/branches/Rel6)
+2012-08-20 (/branches/Rel6)
     * Updated for class variable visibility and initialization changes.
       + advanced.xml: Variables have default values, not unset by default.
       + concepts.xml: Noted that color map has the available color names,
@@ -223,7 +228,7 @@ manual, which only contains summaries of changes.
         changes and new variable. Don't list colors, as they are not assigned
         as defaults in the class variable declarations.
 
-* 2012-08-09 (/branches/Rel6)
+2012-08-09 (/branches/Rel6)
     * Changes to fix problem with grid drawing defaults being stored back
       into the class, and applied to subsequent multiple-plots:
       + developer.xml: Indicated that CalcGridSettings() was removed, and
@@ -235,10 +240,10 @@ manual, which only contains summaries of changes.
       + variables.list: Changed descriptions of draw_x_grid, draw_y_grid.
     * variables.list: Fixed typo in is_inline description
 
-* 2012-08-03 (/branches/Rel6)
+2012-08-03 (/branches/Rel6)
     * variables.list: Documented new class variables x_tick_step, y_tick_step.
 
-* 2012-07-09 (/branches/Rel6)
+2012-07-09 (/branches/Rel6)
     * Documented changes for feature request #3541471 "Control pie chart start
       angle":
       + Makefile: Added new file with pie chart example
@@ -255,13 +260,13 @@ manual, which only contains summaries of changes.
       + examples/pieangle.php: New example file for pie chart options
     * .ispell_words: Updated spelling list
 
-* 2012-07-08 (/branches/Rel6)
+2012-07-08 (/branches/Rel6)
     * Documented changes to internal DrawText() and SizeText() that makes
       them easier to use from a callback.
       + developer.xml: Updated DrawText() and SizeText() descriptions.
       + advanced.xml: Link to DrawText().
 
-* 2012-07-04 (/branches/Rel6)
+2012-07-04 (/branches/Rel6)
     * Checked and corrected errors with documentation for class variables.
       + advanced.xml: Fixed mis-named tuning variables [xy]_tick_inc_integer.
       + variables.list: Added missing variable pie_label_source.
@@ -271,13 +276,13 @@ manual, which only contains summaries of changes.
         Linked 10 variables to the Tuning Plot Range section.
       + developer.xml: Added missing __sleep() and __wake() methods.
 
-* 2012-06-29 (/trunk, merged into /branches/Rel6)
+2012-06-29 (/trunk, merged into /branches/Rel6)
     * webform.xml: Fix bug in parameter validation in the example. It did
       not accept 0 for deposit or interest, due to incorrect use of empty()
       vs isset().  Using 0 produces uninteresting results, but it was supposed
       to work.  Found and reported by Sourceforge user bvn1 on the forum.
 
-* 2012-06-28 (/branches/Rel6)
+2012-06-28 (/branches/Rel6)
      + advanced.xml, concepts.xml, developer.xml, examples.xml,
        functions.xml, reference.xml, variables.list: Changed ID values for
        sections in the Advanced chapter that used to be in Concepts, and all
@@ -285,7 +290,7 @@ manual, which only contains summaries of changes.
        the others (adv-*) in that chapter.  Note that the IDs are used to
        name the HTML files (for the top-level sections).
 
-* 2012-06-26 (/branches/Rel6)
+2012-06-26 (/branches/Rel6)
     Changes for new plot area range and tick increment calculations:
     + advanced.xml: Added new section "Tuning Plot Range and Tick Increment
       Calculations".
@@ -309,7 +314,7 @@ manual, which only contains summaries of changes.
     Note: Descriptions of Set[XY]TickAnchor() need to be updated.
 
 
-* 2012-06-15 (/branches/Rel6)
+2012-06-15 (/branches/Rel6)
     Changes from recent code cleanup:
     + reference.xml: GetLegendSize() returns FALSE if there is no legend.
     + gen.vardoc: Changed a column header in the generated member variables
@@ -325,24 +330,24 @@ manual, which only contains summaries of changes.
       are not initialized at the top of the class definition. This
       includes 17 recently changed. Also deleted 1 class variable.
 
-* 2012-06-12 (/branches/Rel6)
+2012-06-12 (/branches/Rel6)
     + reference.xml: Clarified SetRGBArray() behavior. Made it clear that
       color names are resolved when used, with the current color array.
       Documented that colors not in the array can also be used.
       Added history section, including upcoming error behavior change.
 
-* 2012-06-06 (/branches/Rel6)
+2012-06-06 (/branches/Rel6)
     Final review and edits for documentation on image maps.
     + .ispell_words: Updated spelling list
     + advanced.xml: Reformat table of imagemap callback parameters because
       it was ugly in PDF. A few other minor edits.
 
-* 2012-06-05 (/branches/Rel6)
+2012-06-05 (/branches/Rel6)
     Continue documentation for image maps.
     + examples.xml: review and edit image map example descriptions.
     + advanced.xml: Added material from Imagemaps.txt to overview and intro.
 
-* 2012-06-04 (/branches/Rel6)
+2012-06-04 (/branches/Rel6)
     Including documentation for image maps, a previously-experimental
     feature added in PHPlot-5.7.0. The text and examples are based on
     the file Imagemaps.txt included in the PHPlot releases 5.7.0 and 5.8.0.
@@ -357,11 +362,11 @@ manual, which only contains summaries of changes.
       Started new section on image maps, taken from "Imagemaps.txt" file.
       Note: Only a few subsections have been converted so far.
 
-* 2012-06-03 (/branches/Rel6)
+2012-06-03 (/branches/Rel6)
     Branch for Release 6.0.0
     + main.xml: Indicate this is for future release PHPlot-6.0.0
 
-* 2012-04-06
+2012-04-06
     * advanced.xml: New small section on object serialization.
     * changelog.xml: Note new section(s).
 
@@ -373,16 +378,16 @@ manual, which only contains summaries of changes.
       Just list current information and refer to NEWS and README.
 
 
-* 2012-04-03
+2012-04-03
     * phplotdoc.css: Set foreground color whenever setting background color
       (mostly applies for programlisting - examples). This ensures it is
       readable if browser colors are changed. But let the browser color and
       font settings be used in all other cases.
 
-* 2012-04-02
+2012-04-02
     * changelog.xml: Missing change from 2012-03-31
 
-* 2012-03-31
+2012-03-31
     * Feature request #3501500 "Looping plot section":
       + advanced.xml: New section on streaming plots.
       + developer.xml: Document new internal DisableCaching().
@@ -391,15 +396,15 @@ manual, which only contains summaries of changes.
         PrintImageFrame(), and EndStream(), for producing plot streams.
       + variables.list: List 3 new class variables used for streaming
 
-* 2012-03-30
+2012-03-30
     * reference.xml: Fix out-of-order reference SetDataValueLabelColor().
       Fix typo in DrawMessage()
 
-* 2012-03-26
+2012-03-26
     * developer.xml: Document usage change for internal functions
       DrawXTick() and DrawYTick().
 
-* 2012-03-24
+2012-03-24
     * Feature request #3488042 "Display only some data value labels":
       Document new feature that passes $row or $row, $column to custom label
       formatting functions.
