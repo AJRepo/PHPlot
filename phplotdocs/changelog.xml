@@ -7,12 +7,67 @@
   <para>
 This is the summary change log for the PHPlot Reference Manual.
 (For a more detailed list of changes, see the ChangeLog file
-in the manual's CVS repository.  For changes to PHPlot itself,
+in the manual's Subversion repository.  For changes to PHPlot itself,
 see the ChangeLog file inside the PHPlot distribution.)
   </para>
 </abstract>
 
 <variablelist>
+  <varlistentry>
+    <term>2013-04-01</term>
+    <listitem>
+      <para>
+This is a summary of the changes to the manual for PHPlot-6.0.0.
+        <itemizedlist>
+          <listitem>
+            <para>
+New <xref linkend="adv-imgmap"/> on creating image maps for PHPlot images.
+This was previously an experimental feature documented in a text file
+<filename>Imagemaps.txt</filename> included in previous PHPlot releases.
+New examples were added.
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+New <xref linkend="adv-autorange"/> describes the new PHPlot-6.0.0
+automatic range and tick increment calculations in detail.
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+Documented new PHPlot functions (methods) in the Function Reference:
+<xref linkend="SetDrawDataBorders" />,
+<xref linkend="SetDrawPieBorders" />,
+<xref linkend="SetDrawYDataLabelLines" />,
+<xref linkend="SetLegendBgColor" />,
+<xref linkend="SetLegendColorboxBorders" />,
+<xref linkend="SetLegendTextColor" />,
+<xref linkend="SetPieBorderColor" />,
+<xref linkend="SetPieDirection" />,
+<xref linkend="SetPieStartAngle" />,
+<xref linkend="TuneXAutoRange" />,
+<xref linkend="TuneXAutoTicks" />,
+<xref linkend="TuneYAutoRange" />, and
+<xref linkend="TuneYAutoTicks" />.
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+Added small plot images to the table of plot types in
+<xref linkend="conc-plottypes"/>.
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+Documented all changes to internal functions and class variables in the
+Developers Guide section.
+            </para>
+          </listitem>
+        </itemizedlist>
+      </para>
+    </listitem>
+  </varlistentry>
+
   <varlistentry>
     <term>2012-04-06</term>
     <listitem>
