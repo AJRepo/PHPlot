@@ -2,6 +2,13 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2013-04-02
+    * phplot.php: Fixed 2 comment errors. No code changes.
+    * NEWS.txt: Add 4 missing items: 2 more compatibility issues, and 2
+      changes that were made along side feature requests but were not
+      directly described in those requests.
+
+
 2013-04-01       ===== Released as 6.0.0 =====
     Tentantive release date is 2013-04-03; NEWS and README files already
     have that date.
