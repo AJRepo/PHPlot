@@ -3,6 +3,11 @@ This is phplotdocs/ChangeLog, listing changes to the PHPlot Reference Manual
 Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
+2013-04-02
+    * reference.xml: Fixed SetXDataLabelPos(). This was not completely
+      updated with the new PHPlot-6.0.0 support for data value labels on
+      more plot types.
+
 2013-04-01
     For release with PHPlot-6.0.0:
     * changelog.xml: Update with summary of all changes for 6.0.0.
