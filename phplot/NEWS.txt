@@ -64,6 +64,22 @@ please: (1) see if you can use a public PHPlot class function instead, or
 (2) post a message to the PHPlot help forum explaining why you need access to
 a particular class variable.
 
++ SetPlotAreaWorld() now validates arguments
+
+Starting with PHPlot-6.0.0, the SetPlotAreaWorld() function checks non-NULL
+arguments for validity. For both X and Y, it is required that min < max if
+both are specified. If you have a script that calls SetPlotAreaWorld() with
+max >= min for either X or Y, that script will now fail. On the other hand,
+some valid cases where you specify only one end of a range would previously
+fail and now work.
+
++ SetRGBArray() now validates argument
+
+If you use SetRGBArray() to load a custom color map but pass an invalid
+argument (not an array or one of the known keywords), PHPlot will now fail
+with an error message. In previous releases, a default black/white color
+map was loaded in that case, with no error reported.
+
 + Removed order dependency: number of ticks and tick increment
 
 If you want to control the tick increments (rather than letting PHPlot
@@ -138,14 +154,30 @@ shaded), and the color can be set independent of other elements.
 
 Feature request #47 "Extend horizontal plots to more types":
 This is partially implemented. Horizontal lines, linepoints, and points plots
-are now implemented. Error plot versions of those horizontal plot types will
-probably be in the next release 6.1.0.
+are now implemented. Error plot versions of those horizontal plot types are
+not yet implemented, but will probably be in the next release 6.1.0 (with
+the introduction of a new data type).
+
+   Note: In implementing feature request #47, the code for 'error' and
+   'non-error' versions of the 3 plot types above were merged. A side effect
+   of this is that data value labels (the labels within the plot area,
+   identifying the data value at each point) now work for error plots, if
+   enabled.  However, the default label position at 90 degrees will be crossed
+   by the positive error bar. To avoid this, you can use the tuning variable
+   data_value_label_angle; for example setting it to 45 degrees.
 
 Feature request #50 "Control legend colorbox borders":
 Implemented with new function SetLegendColorboxBorders().  There are now 3
 choices for the borders around color boxes in the legend: 1) use the 'text'
 color (the default, and compatible with PHPlot-5.8.0 and older); 2) use
 data border colors; and 3) disable the borders.
+
+  Note: Along with the implementation of feature request #50, a new function
+  SetDrawDataBorders() was added to control drawing the data borders on bars
+  and stackedbars plots. This supports having the same style (borders with
+  matching color, or no borders) on both the legend color boxes and the data
+  bars. The default is backward compatible: borders on unshaded plots, and
+  no borders on shaded plots.
 
 Feature request #51 "Lines instead of colorboxes in legend":
 Implemented with existing function SetLegendUseShapes().  PHPlot now has
