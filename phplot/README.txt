@@ -32,8 +32,8 @@ CONTENTS:
 REQUIREMENTS:
 
 You need a recent version of PHP5, and you are advised to use the latest
-stable release.  This version of PHPlot has been tested with PHP-5.4.3 and
-PHP-5.3.23 on Linux, and with PHP-5.4.11 on Windows XP.
+stable release.  This version of PHPlot has been tested with PHP-5.4.13 and
+PHP-5.3.23 on Linux, and with PHP-5.4.13 on Windows XP.
 
 You need the GD extension to PHP either built in to PHP or loaded as a
 module. Refer to the PHP documentation for more information - see the
