@@ -14,10 +14,11 @@ see the ChangeLog file inside the PHPlot distribution.)
 
 <variablelist>
   <varlistentry>
-    <term>2013-04-01</term>
+    <term>2013-04-03</term>
     <listitem>
       <para>
-This is a summary of the changes to the manual for PHPlot-6.0.0.
+Released updated version of the manual corresponding to PHPlot-6.0.0.
+This is a summary of the changes:
         <itemizedlist>
           <listitem>
             <para>
