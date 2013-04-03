@@ -1990,7 +1990,7 @@ class PHPlot
      * Sets position for X data labels.
      * For vertical plots, these are X axis data labels, showing label strings from the data array.
      *    Accepted positions are: plotdown, plotup, both, none.
-     * For horizontal plots (bar, stackedbar only), these are X data value labels, show the data values.
+     * For horizontal plots (where available), these are X data value labels, show the data values.
      *    Accepted positions are: plotin, plotstack, none.
      */
     function SetXDataLabelPos($which_xdlp)
@@ -6024,7 +6024,7 @@ class PHPlot
      *   $x1, $y1 : One corner of the bar.
      *   $x2, $y2 : Other corner of the bar.
      *   $data_color : Color index to use for the bar fill.
-     *   $shade_color : Color index to use for the shading (if shading is on, else NULL.
+     *   $shade_color : Color index to use for the shading (if shading is on, else NULL).
      *   $border_color : Color index to use for the bar outlines (borders), if enabled, else NULL.
      *      See GetBarColors() for where these arguments come from.
      *   $shade_top : Shade the top? (Suppressed for downward stack segments except first.)
