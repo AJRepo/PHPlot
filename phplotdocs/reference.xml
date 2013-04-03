@@ -8756,8 +8756,7 @@ strings from your data array.
 The labels can be drawn at the bottom of the plot (below the X axis),
 above the plot, in both positions, or neither.
 For horizontal plots, these are X data value labels, displaying the value of the
-data point. They can be drawn within the plot to label bars and bar segments.
-This type of label is only available for 'bars' and 'stackedbars' plots.
+data point within the plot area.
     </para>
   </refsect1>
 
@@ -8799,17 +8798,18 @@ A string indicating the desired position for the X data labels:
                   </row>
                   <row>
                     <entry>plotin</entry>
-                    <entry>Data value labels to the right (or left) of each
-                        bar.  For stacked bar charts, this means only the
-                        bar total labels and not the bar segment labels.
-                        This is valid for horizontal bar and horizontal
-                        stacked bar plots only.
+                    <entry>Data value labels within the plot area.
+                        For bar charts, this displays the value to the right
+                        (or left) of each bar.
+                        For stacked bar charts, this display only the bar total
+                        labels and not the bar segment labels.
+                        For other plot types, see notes below.
                     </entry>
                   </row>
                   <row>
                     <entry>plotstack</entry>
-                    <entry>Data value labels to the right of each bar, and
-                      just left of the end of each bar segment.
+                    <entry>Data value labels to the right (or left) of each bar,
+                      and just left of the end of each bar segment.
                       This is valid for horizontal stacked bar plots only.
                       It turns on both bar total labels (as with 'plotin')
                       and bar segment labels.
@@ -8847,7 +8847,14 @@ enable the tick labels and the data labels are not all empty.
     <para>
 The default position for X data value labels (for horizontal plots) is 'none',
 meaning no labels.
-X data value labels only apply to horizontal bar and stackedbar plots.
+For plot types 'bars' and 'stackedbars', X data value labels are drawn
+(if enabled) at fixed positions within or left/right of the bars.
+For plot types 'lines', 'points', and 'linepoints', X data labels
+are drawn (if enabled) above the data points by default.
+The position can be changed (see <xref linkend="adv-tuning-labels"/>), but
+PHPlot does not attempt to prevent interference between the labels and
+other plot elements.
+X data value labels are not available with other plot types.
     </para>
     <para>
 For tick labels, see <xref linkend="SetXTickLabelPos" />.
@@ -8875,6 +8882,10 @@ The X data label text format can be controlled with
   </refsect1>
   <refsect1>
     <title>History</title>
+    <para>
+Horizontal lines, points, and linepoints plots and data value labels for
+them were first available in PHPlot-6.0.0.
+    </para>
     <para>
 Horizontal bar plot data value labels were added in PHPlot-5.1.3.
 Through PHPlot-5.1.2, the 'plotin' and 'plotstack' values were not available.
