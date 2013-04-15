@@ -1,6 +1,13 @@
 This is the Change Log for phplottest, the PHPlot Test Suite
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
+
+2013-04-14
+    Added new tests for horizontal error plots (feature request #47, for
+    PHPlot-6.1.0).
+    * horzerrplt*.php: New tests for horizontal error plots.
+    * tests.ini: List 10 new tests.
+
 2013-04-02
     Fix 8 tests that failed to prove their point because of the change
     in default minticks from 5 to 8.
