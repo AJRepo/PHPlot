@@ -7,6 +7,7 @@ The project home page is http://sourceforge.net/projects/phplot/
     PHPlot-6.1.0).
     * horzerrplt*.php: New tests for horizontal error plots.
     * tests.ini: List 10 new tests.
+    * u.ptdt.php: Expand to include the new data type in the test cases.
 
 2013-04-02
     Fix 8 tests that failed to prove their point because of the change
