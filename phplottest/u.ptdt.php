@@ -31,29 +31,30 @@ $data_types = array(
     "data-data",
     "data-data-error",
     "text-data-single",
-    "text-data-yx",
-    "data-data-yx",
-    "data-data-xyz",
+    "text-data-yx",           // PHPlot-5.1.2
+    "data-data-yx",           // PHPlot-5.1.3
+    "data-data-yx-error",     // PHPlot-6.1.0
+    "data-data-xyz",          // PHPlot-5.5.0
 );
 
 # Plot types, and which data types they support, ordered per $data_types.
 # Note: These rows should match the rows in the Reference Manual, "Concepts"
 # chapter, Plot Types and Data Types table.
 $plot_types = array(
-    "area"           => array( 1, 1, 0, 0, 0, 0, 0),
-    "bars"           => array( 1, 0, 0, 0, 1, 0, 0),
-    "bubbles"        => array( 0, 0, 0, 0, 0, 0, 1),
-    "candlesticks"   => array( 1, 1, 0, 0, 0, 0, 0),
-    "candlesticks2"  => array( 1, 1, 0, 0, 0, 0, 0),
-    "linepoints"     => array( 1, 1, 1, 0, 1, 1, 0), // PHPlot-6.0.0
-    "lines"          => array( 1, 1, 1, 0, 1, 1, 0), // PHPlot-6.0.0
-    "pie"            => array( 1, 1, 0, 1, 0, 0, 0),
-    "ohlc"           => array( 1, 1, 0, 0, 0, 0, 0),
-    "points"         => array( 1, 1, 1, 0, 1, 1, 0), // PHPlot-6.0.0
-    "squared"        => array( 1, 1, 0, 0, 0, 0, 0),
-    "stackedarea"    => array( 1, 1, 0, 0, 0, 0, 0),
-    "stackedbars"    => array( 1, 0, 0, 0, 1, 0, 0),
-    "thinbarline"    => array( 1, 1, 0, 0, 1, 1, 0),
+    "area"           => array( 1, 1, 0, 0, 0, 0, 0, 0),
+    "bars"           => array( 1, 0, 0, 0, 1, 0, 0, 0),
+    "bubbles"        => array( 0, 0, 0, 0, 0, 0, 0, 1), // PHPlot-5.5.0
+    "candlesticks"   => array( 1, 1, 0, 0, 0, 0, 0, 0), // PHPlot-5.3.0
+    "candlesticks2"  => array( 1, 1, 0, 0, 0, 0, 0, 0), // PHPlot-5.3.0
+    "linepoints"     => array( 1, 1, 1, 0, 1, 1, 1, 0),
+    "lines"          => array( 1, 1, 1, 0, 1, 1, 1, 0),
+    "pie"            => array( 1, 1, 0, 1, 0, 0, 0, 0),
+    "ohlc"           => array( 1, 1, 0, 0, 0, 0, 0, 0), // PHPlot-5.3.0
+    "points"         => array( 1, 1, 1, 0, 1, 1, 1, 0),
+    "squared"        => array( 1, 1, 0, 0, 0, 0, 0, 0),
+    "stackedarea"    => array( 1, 1, 0, 0, 0, 0, 0, 0), // PHPlot-5.1.1
+    "stackedbars"    => array( 1, 0, 0, 0, 1, 0, 0, 0),
+    "thinbarline"    => array( 1, 1, 0, 0, 1, 1, 0, 0),
 );
 
 
@@ -88,7 +89,7 @@ function make_data_array($plot_type, $data_type)
             && $data_type != 'text-data-yx');
 
     # Data values to use:
-    if ($data_type == 'data-data-error') {
+    if ($data_type == 'data-data-error' || $data_type == 'data-data-yx-error') {
         # Special case: error plots
         $n_cols = 3;
         $y = array( array(1, 2, 1),
