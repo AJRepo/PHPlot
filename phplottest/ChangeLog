@@ -2,6 +2,16 @@ This is the Change Log for phplottest, the PHPlot Test Suite
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2013-04-16
+    Added new test to check the data type aliases in SetDataType() which
+    was re-written for PHPlot-6.1.0.
+    * dtaliases.php: New unit test.
+    * tests.ini: 1 new test.
+
+    Add new example from Reference Manual as a test:
+    * ex-horizerror.php: New example from reference manual.
+    * tests.ini: 1 new test.
+
 2013-04-14
     Added new tests for horizontal error plots (feature request #47, for
     PHPlot-6.1.0).
