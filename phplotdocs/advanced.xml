@@ -4686,8 +4686,9 @@ pie chart segments must be interpolated by the callback function.
 </para>
 
 <para>
-You can generate image maps for error plots (data type
-<link linkend="data-data-error">data-data-error</link>)
+You can generate image maps for error plots (data types
+<link linkend="data-data-error">data-data-error</link> and
+<link linkend="data-data-yx-error">data-data-yx-error</link>)
 with points and linepoints plot types, but the image map areas will not
 include the error bars. For these plot types, the only the coordinates of
 the data points are provided.

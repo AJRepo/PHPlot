@@ -384,15 +384,20 @@ supported plot type / data type combinations.
 The following data types are available in PHPlot:
 
 <variablelist>
-
+<!--  Note: Keep these in the same order as the table in
+      conc-plottype-datatype below. 
+-->
   <varlistentry>
     <term><anchor id="text-data" xreflabel="text-data"/>text-data</term>
     <listitem>
       <para>
-Each record contains a label, followed by one or more Y values:
+This is the simplest data type, used for vertical plots where the X values are
+implied, rather than specified, and there are one or more Y values for each X.
+When using this data type, each record (row) in the data array contains a
+label (which can be empty), followed by one or more Y values:
 <literal>array('label', y1, y2, ...)</literal>.
-The corresponding X value for all Y values in a record is implicit.
-PHPlot assigns x=0.5 to the first data record, x=1.5 to the second, etc.
+PHPlot assigns X=0.5 to the first data record, X=1.5 to the second data record,
+and so on.
       </para>
     </listitem>
   </varlistentry>
@@ -401,9 +406,12 @@ PHPlot assigns x=0.5 to the first data record, x=1.5 to the second, etc.
     <term><anchor id="data-data" xreflabel="data-data"/>data-data</term>
     <listitem>
       <para>
-Each record contains a label, an X value, then one or more Y values:
+This data type is similar to <literal>text-data</literal> except that the
+values of the independent variable X are supplied in the data array rather
+than being implied. This is used for vertical plots.
+When using this data type, each record (row) in the data array contains a
+label (which can be empty), an X value, then one or more Y values:
 <literal>array('label', x, y1, y2, ...)</literal>.
-This is the same as 'text-data' except the X values are explicitly given.
       </para>
     </listitem>
   </varlistentry>
@@ -412,17 +420,18 @@ This is the same as 'text-data' except the X values are explicitly given.
     <term><anchor id="data-data-error" xreflabel="data-data-error"/>data-data-error</term>
     <listitem>
       <para>
-Each record contains a label, an X value, then sets of 3 values for each Y
+This data type is used to make error plots - a plot showing values and
+error ranges at each point. This is for vertical plots.
+When using this data type, each record (row) in the data array contains a
+label (which can be empty), an X value, then sets of 3 values for each Y
 point: the Y value, error in the positive direction, and error in the
 negative direction:
 <literal>array('label', x, y1, e1+, e1-, y2, e2+, e2-, ...)</literal>.
-This data type is used to make error plots - a plot showing values and
-error ranges at each point.
       </para>
       <para>
 Note that both errors (e+ and e-) are given as positive numbers. They
 represent the absolute value of the error in the positive and negative
-directions respectively.
+directions respectively. These must be greater than or equal to zero.
       </para>
     </listitem>
   </varlistentry>
@@ -431,9 +440,12 @@ directions respectively.
     <term><anchor id="text-data-single" xreflabel="text-data-single"/>text-data-single</term>
     <listitem>
       <para>
-Each record contains a label and a single value:
-<literal>array('label', factor)</literal>.
-This data type is only for the pie chart plot type.
+This data type is only used for pie charts, where the size of each pie
+segment is represented by a single row and value. (There are other data types
+that work with pie charts too.)
+When using this data type, each record (row) in the data array contains a
+label (which can be empty), and a single value:
+<literal>array('label', value)</literal>.
       </para>
     </listitem>
   </varlistentry>
@@ -442,11 +454,15 @@ This data type is only for the pie chart plot type.
     <term><anchor id="text-data-yx" xreflabel="text-data-yx"/>text-data-yx</term>
     <listitem>
       <para>
-Each record contains a label, followed by one or more X values:
+This data type is used for horizontal plots where the Y values are implied,
+rather than specified, and there are one or more X values for each Y.
+(For horizontal plots, Y is the independent variable.)
+When using this data type, each record (row) in the data array contains a
+label (which can be empty), followed by one or more X values:
 <literal>array('label', x1, x2, ...)</literal>.
-The corresponding Y value for all X values in a record is implicit.
-PHPlot assigns y=0.5 to the first data record, y=1.5 to the second, etc.
-This data type is for horizontal plots.
+PHPlot assigns Y=0.5 to the first data record, Y=1.5 to the second data record,
+and so on.
+This is the horizontal plot variation of <literal>text-data</literal>.
       </para>
     </listitem>
   </varlistentry>
@@ -455,10 +471,37 @@ This data type is for horizontal plots.
     <term><anchor id="data-data-yx" xreflabel="data-data-yx"/>data-data-yx</term>
     <listitem>
       <para>
-Each record contains a label, a Y value, then one or more X values:
+This data type is used for horizontal plots where the Y values are supplied
+in the data array rather than being implied.
+(For horizontal plots, Y is the independent variable.)
+When using this data type, each record (row) in the data array contains a
+label (which can be empty), a Y value, then one or more X values:
 <literal>array('label', y, x1, x2, ...)</literal>.
-This is the same as 'text-data-yx' except the Y values are explicitly given.
-This data type is for horizontal plots.
+This is the horizontal plot variation of <literal>data-data</literal>.
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
+    <term><anchor id="data-data-yx-error" xreflabel="data-data-yx-error"/>data-data-yx-error</term>
+    <listitem>
+      <para>
+This data type is used to make horizontal error plots - a plot showing values
+and error ranges at each point.
+When using this data type, each record (row) in the data array contains a
+label (which can be empty), a Y value, then sets of 3 values for each X
+point: the X value, error in the positive direction, and error in the
+negative direction:
+<literal>array('label', y, x1, e1+, e1-, x2, e2+, e2-, ...)</literal>.
+      </para>
+      <para>
+Note that both errors (e+ and e-) are given as positive numbers. They
+represent the absolute value of the error in the positive and negative
+directions respectively. These must be greater than or equal to zero.
+      </para>
+      <para>
+Note that you can also use the alias <literal>data-data-error-yx</literal>
+for horizontal error plots.
       </para>
     </listitem>
   </varlistentry>
@@ -467,8 +510,10 @@ This data type is for horizontal plots.
     <term><anchor id="data-data-xyz" xreflabel="data-data-xyz"/>data-data-xyz</term>
     <listitem>
       <para>
-Each record contains a label, an X value, and then one or more pairs of Y
-and Z values:
+This data type is used for plots which have a 3D component.
+When using this data type, each record (row) in the data array contains a
+label (which can be empty), an X value, then one or more pairs of Y and Z
+values:
 <literal>array('label', x, y1, z1, y2, z2, ...)</literal>.
 A single data set in an array using this data type contains (x, y, z)
 triplets. Multiple data sets can also be represented, with each row in the
@@ -494,9 +539,9 @@ constant values in PHP code. For example:
   array('',  5, 125,  25, -50),
 );
 ]]></programlisting>
-Which contains 6 records, each with an empty label, an X value (assuming
-the data type is 'data-data'), and then 3 Y values representing 3 data sets
-to plot.
+This data array contains 6 records, each with an empty label, an X value
+(assuming the data type is 'data-data'), and then 3 Y values representing 3
+data sets to plot.
 </para>
 
 <para>
@@ -583,8 +628,8 @@ will convert the data array to use numeric indexes.
 <para>
 With data types 'data-data' and 'data-data-error', the independent variable
 X is explicitly given for each data point.
-With data type 'data-data-yx', the independent variable
-Y is explicitly given for each data point.
+With data types 'data-data-yx' and 'data-data-yx-error', the independent
+variable Y is explicitly given for each data point.
 With data type 'data-data-xyz', the independent variables X and Y
 are explicitly given for each data point.
 With each of these data types, it is possible to create a data array
@@ -684,6 +729,17 @@ these plot types.
 All other plot types support missing points and simply ignore the point.
 That is, no bar, point shape, thinbar line, etc. will be plotted at that
 position.
+</para>
+
+<para>
+With error plots, missing points are represented by an empty string for the
+dependent variable value.
+This is the Y value for vertical error plots
+(data type <link linkend="data-data-error">data-data-error</link>),
+and the X value for horizontal error plots
+(data type <link linkend="data-data-yx-error">data-data-yx-error</link>).
+There still must be two error value entries in the array for each missing
+point, although the actual values of these will be ignored.
 </para>
 
 <para>
@@ -1245,20 +1301,23 @@ This plot type was added in PHPlot-5.3.0.
 <title>Plot Type: linepoints (Lines and Points)</title>
 <para>
 This plot type draws a line graph with a marker at each point, thus
-combining the 'line' and 'point' plot types.
+combining the 'lines' and 'points' plot types.
 </para>
 <para>
 This plot type works with data types <xref linkend="text-data"/>
 and <xref linkend="data-data"/>.
 For 'text-data', the data X values are assumed to be at 0.5+N for N=0,1,2...
-It also works with <xref linkend="data-data-error"/> for error bars.
+It also works with <xref linkend="data-data-error"/> for error plots.
 These produce the usual vertical plots.
 </para>
 <para>
 This plot type also works with data types <xref linkend="text-data-yx"/>
-and <xref linkend="data-data-yx"/> to produce horizontal plots.
+and <xref linkend="data-data-yx"/> to produce horizontal plots, and with
+data type <xref linkend="data-data-yx-error"/> to produce horizontal error
+plots.
 For 'text-data-yx', the data Y values are assumed to be at 0.5+N for N=0,1,2...
-(Horizontal linepoints plots were added in PHPlot-6.0.0.)
+(Horizontal 'linepoints' plots were added in PHPlot-6.0.0.
+Horizontal 'linepoints' error plots were added in PHPlot-6.1.0.)
 </para>
 <para>
 An empty string (or any non-numeric value) for the dependent variable
@@ -1283,7 +1342,7 @@ Refer to <xref linkend="SetLineStyles" /> and <xref linkend="SetPointShapes" />
 for details.
 </para>
 <para>
-For error-bar plots with data type 'data-data-error' only:
+For error plots only:
 Error bar colors for each line are set with <xref linkend="SetErrorBarColors" />.
 Error bar shape (tee or line) is set with <xref linkend="SetErrorBarShape" />.
 If tee-shaped error bars are used, the width of the
@@ -1305,14 +1364,17 @@ This plot type simply draws a line from each point to the next.
 This plot type works with data types <xref linkend="text-data"/>
 and <xref linkend="data-data"/>.
 For 'text-data', the data X values are assumed to be at 0.5+N for N=0,1,2...
-It also works with <xref linkend="data-data-error"/> for error bars.
+It also works with <xref linkend="data-data-error"/> for error plots.
 These produce the usual vertical plots.
 </para>
 <para>
 This plot type also works with data types <xref linkend="text-data-yx"/>
-and <xref linkend="data-data-yx"/> to produce horizontal plots.
+and <xref linkend="data-data-yx"/> to produce horizontal plots, and with
+data type <xref linkend="data-data-yx-error"/> to produce horizontal error
+plots.
 For 'text-data-yx', the data Y values are assumed to be at 0.5+N for N=0,1,2...
-(Horizontal line plots were added in PHPlot-6.0.0.)
+(Horizontal 'lines' plots were added in PHPlot-6.0.0.
+Horizontal 'lines' error plots were added in PHPlot-6.1.0.)
 </para>
 <para>
 An empty string (or any non-numeric value) for the dependent variable
@@ -1327,7 +1389,7 @@ Line styles (solid or dashed) for each line are set with
 <xref linkend="SetLineStyles" />.
 </para>
 <para>
-For error-bar plots with data type 'data-data-error' only:
+For error plots only:
 Error bar colors for each line are set with <xref linkend="SetErrorBarColors" />.
 Error bar shape (tee or line) is set with <xref linkend="SetErrorBarShape" />.
 If tee-shaped error bars are used, the width of the
@@ -1527,14 +1589,17 @@ This plot type draws a point marker at each X,Y value.
 This plot type works with data types <xref linkend="text-data"/>
 and <xref linkend="data-data"/>.
 For 'text-data', the data X values are assumed to be at 0.5+N for N=0,1,2...
-It also works with <xref linkend="data-data-error"/> for error bars.
+It also works with <xref linkend="data-data-error"/> for error plots.
 These produce the usual vertical plots.
 </para>
 <para>
 This plot type also works with data types <xref linkend="text-data-yx"/>
-and <xref linkend="data-data-yx"/> to produce horizontal plots.
+and <xref linkend="data-data-yx"/> to produce horizontal plots, and with
+data type <xref linkend="data-data-yx-error"/> to produce horizontal error
+plots.
 For 'text-data-yx', the data Y values are assumed to be at 0.5+N for N=0,1,2...
-(Horizontal points plots were added in PHPlot-6.0.0.)
+(Horizontal 'points' plots were added in PHPlot-6.0.0.
+Horizontal 'points' error plots were added in PHPlot-6.1.0.)
 </para>
 <para>
 Marker colors for each line are set with <xref linkend="SetDataColors" />.
@@ -1542,7 +1607,7 @@ Marker styles for each line are set with <xref linkend="SetPointShapes" />.
 Marker sizes for each line are set with <xref linkend="SetPointSizes" />.
 </para>
 <para>
-For error-bar plots with data type 'data-data-error' only:
+For error plots only:
 Error bar colors for each line are set with <xref linkend="SetErrorBarColors" />.
 Error bar shape (tee or line) is set with <xref linkend="SetErrorBarShape" />.
 If tee-shaped error bars are used, the width of the
@@ -1556,8 +1621,9 @@ No point marker will be drawn at missing point positions.
 </para>
 <para>
 Examples of this plot type can be seen in
-<xref linkend="ex-points2" />, and
-<xref linkend="ex-points1" />.
+<xref linkend="ex-points2" />,
+<xref linkend="ex-points1" />, and
+<xref linkend="ex-horizerror" />.
 </para>
 </sect2>
 
@@ -1747,21 +1813,22 @@ Refer to <xref linkend="conc-datatypes"/> for more information on data
 types.
 <informaltable>
   <?dbfo keep-together="always"?>
-  <tgroup cols="8">
+  <tgroup cols="9">
     <?dbhtml table-summary="Supported plot type/data type combinations."?>
     <?dbhtml cellpadding="4"?>
     <colspec colname="pt" align="left" colwidth="16*" />
-    <colspec colname="dt1" align="center" colwidth="12*" />
-    <colspec colname="dt2" align="center" colwidth="12*" />
-    <colspec colname="dt3" align="center" colwidth="12*" />
-    <colspec colname="dt4" align="center" colwidth="12*" />
-    <colspec colname="dt5" align="center" colwidth="12*" />
-    <colspec colname="dt6" align="center" colwidth="12*" />
-    <colspec colname="dt7" align="center" colwidth="12*" />
+    <colspec colname="dt1" align="center" colwidth="10.5*" />
+    <colspec colname="dt2" align="center" colwidth="10.5*" />
+    <colspec colname="dt3" align="center" colwidth="10.5*" />
+    <colspec colname="dt4" align="center" colwidth="10.5*" />
+    <colspec colname="dt5" align="center" colwidth="10.5*" />
+    <colspec colname="dt6" align="center" colwidth="10.5*" />
+    <colspec colname="dt7" align="center" colwidth="10.5*" />
+    <colspec colname="dt8" align="center" colwidth="10.5*" />
     <thead>
       <row>
         <entry morerows="1" valign="bottom">Plot Type:</entry>
-        <entry namest="dt1" nameend="dt7">Data Type:</entry>
+        <entry namest="dt1" nameend="dt8">Data Type:</entry>
       </row>
       <row>
         <entry><xref linkend="text-data" /></entry>
@@ -1770,6 +1837,7 @@ types.
         <entry><xref linkend="text-data-single" /></entry>
         <entry><xref linkend="text-data-yx" /></entry>
         <entry><xref linkend="data-data-yx" /></entry>
+        <entry><xref linkend="data-data-yx-error" /></entry>
         <entry><xref linkend="data-data-xyz" /></entry>
       </row>
     </thead>
@@ -1778,6 +1846,7 @@ types.
         <entry><link linkend="plottype-area">area</link></entry>
         <entry>Yes</entry>
         <entry>Yes</entry>
+        <entry> </entry>
         <entry> </entry>
         <entry> </entry>
         <entry> </entry>
@@ -1793,9 +1862,11 @@ types.
         <entry>Yes</entry>
         <entry> </entry>
         <entry> </entry>
+        <entry> </entry>
       </row>
       <row>
         <entry><link linkend="plottype-bubbles">bubbles</link></entry>
+        <entry> </entry>
         <entry> </entry>
         <entry> </entry>
         <entry> </entry>
@@ -1813,11 +1884,13 @@ types.
         <entry> </entry>
         <entry> </entry>
         <entry> </entry>
+        <entry> </entry>
       </row>
       <row>
         <entry><link linkend="plottype-candlesticks2">candlesticks2</link></entry>
         <entry>Yes</entry>
         <entry>Yes</entry>
+        <entry> </entry>
         <entry> </entry>
         <entry> </entry>
         <entry> </entry>
@@ -1832,6 +1905,7 @@ types.
         <entry> </entry>
         <entry>Yes</entry>
         <entry>Yes</entry>
+        <entry>Yes</entry>
         <entry> </entry>
       </row>
       <row>
@@ -1840,6 +1914,7 @@ types.
         <entry>Yes</entry>
         <entry>Yes</entry>
         <entry> </entry>
+        <entry>Yes</entry>
         <entry>Yes</entry>
         <entry>Yes</entry>
         <entry> </entry>
@@ -1853,11 +1928,13 @@ types.
         <entry> </entry>
         <entry> </entry>
         <entry> </entry>
+        <entry> </entry>
       </row>
       <row>
         <entry><link linkend="plottype-ohlc">ohlc</link></entry>
         <entry>Yes</entry>
         <entry>Yes</entry>
+        <entry> </entry>
         <entry> </entry>
         <entry> </entry>
         <entry> </entry>
@@ -1872,12 +1949,14 @@ types.
         <entry> </entry>
         <entry>Yes</entry>
         <entry>Yes</entry>
+        <entry>Yes</entry>
         <entry> </entry>
       </row>
       <row>
         <entry><link linkend="plottype-squared">squared</link></entry>
         <entry>Yes</entry>
         <entry>Yes</entry>
+        <entry> </entry>
         <entry> </entry>
         <entry> </entry>
         <entry> </entry>
@@ -1893,6 +1972,7 @@ types.
         <entry> </entry>
         <entry> </entry>
         <entry> </entry>
+        <entry> </entry>
       </row>
       <row>
         <entry><link linkend="plottype-stackedbars">stackedbars</link></entry>
@@ -1901,6 +1981,7 @@ types.
         <entry> </entry>
         <entry> </entry>
         <entry>Yes</entry>
+        <entry> </entry>
         <entry> </entry>
         <entry> </entry>
       </row>
@@ -1912,6 +1993,7 @@ types.
         <entry> </entry>
         <entry>Yes</entry>
         <entry>Yes</entry>
+        <entry> </entry>
         <entry> </entry>
       </row>
     </tbody>
@@ -2199,7 +2281,8 @@ By default, the Data Colors list contains the following 16 colors in order.
 </para>
 <para>
 An additional color list is used with error plots. These have data type
-data-data-error (see <xref linkend="conc-datatypes-types"/>).
+<literal>data-data-error</literal> or <literal>data-data-yx-error</literal>
+(see <xref linkend="conc-datatypes-types"/>).
 The positive and negative error bars use a color map that is set using
 <xref linkend="SetErrorBarColors"/>. By default, this color list contains
 the same colors as the data color list, so each data set and its error bars

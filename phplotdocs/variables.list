@@ -39,6 +39,8 @@ datatype_implied		DecodeDataType	Flag: data type has implied X or Y. (Added in P
 datatype_pie_single		DecodeDataType	Flag: data type is one-column data for pie chart with one segments per row. (Added in PHPlot-5.1.3)
 datatype_swapped_xy		DecodeDataType	Flag: data type has swapped X and Y values. (Added in PHPlot-5.1.3)
 datatype_yz		DecodeDataType	Flag: data type includes Y and Z value pairs (Added in PHPlot-5.5.0)
+datatypes	array(...)	DecodeDataType SetDataType	Static array of data type information (Added in PHPlot-6.1.0) <link linkend="var-datatypes">(See notes for more)</link>
+datatypes_map	array(...)	SetDataType	Static array of data type aliases (keys) and the corresponding primary name (values) (Added in PHPlot-6.1.0)
 decimal_point		SetNumberFormat	Character to use for decimal point in formatted numbers
 default_colors	array(...)	SetDataColors SetErrorBarColors	The default color array, used to initialize data_colors and error_bar_colors. (Added in PHPlot-5.1.0)
 default_dashed_style		SetDefaultDashedStyle	Formatted PHP code to build a dashed line pattern

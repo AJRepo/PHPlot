@@ -1751,55 +1751,63 @@ The data array format type, which must be one of the following values:
                 <colspec colname="c2" colwidth="80*" />
                 <thead>
                   <row>
-                    <entry>Format</entry>
+                    <entry>Data Type</entry>
                     <entry>Description</entry>
                   </row>
                 </thead>
                 <tbody>
                   <row>
                     <entry>text-data</entry>
-                    <entry>Each data array entry is an array with a label,
-                      followed by one or more Y values.</entry>
+                    <entry>
+Plot with implied X: <literal>(Label, Y1, [Y2, ...])</literal>
+                    </entry>
                   </row>
                   <row>
                     <entry>data-data</entry>
-                    <entry>Each data array entry is an array with a label,
-                      an X value, then one or more Y values.</entry>
+                    <entry>
+Plot with explicit X: <literal>(Label, X, Y1, [Y2, ...])</literal>
+                    </entry>
                   </row>
                   <row>
                     <entry>data-data-error</entry>
-                    <entry>Each data array entry is an array with a label,
-                      an X value, then one or more triplets of Y value,
-                      error in the positive directory, and error in the
-                      negative direction.</entry>
+                    <entry>
+Error plot: <literal>(Label, X, Y1, Y1err+, Y1err-, [Y2, ...])</literal>
+                    </entry>
                   </row>
                   <row>
                     <entry>text-data-single</entry>
-                    <entry>This is used only for pie charts. Each data
-                      array entry is an array with a label and a single
-                      data value.</entry>
+                    <entry>
+Simple pie chart data: <literal>(Label, Value)</literal>
+                    </entry>
                   </row>
                   <row>
                     <entry>text-data-yx</entry>
-                    <entry>Each data array entry is an array with a label,
-                      followed by one or more X values. The Y value is
-                      implied. This is used for horizontal plots.</entry>
+                    <entry>
+Horizontal plot with implied Y: <literal>(Label, X1, [X2, ...])</literal>
+                    </entry>
                   </row>
                   <row>
                     <entry>data-data-yx</entry>
-                    <entry>Each data array entry is an array with a label,
-                      a Y value, then one or more X values.
-                      This is used for horizontal plots.</entry>
+                    <entry>
+Horizontal plot with explicit Y: <literal>(Label, Y, X1, [X2, ...])</literal>
+                    </entry>
+                  </row>
+                  <row>
+                    <entry>data-data-yx-error</entry>
+                    <entry>
+Horizontal error plot: <literal>(Label, Y, X1, X1err+, X1err-, [X2, ...])</literal>
+                    </entry>
                   </row>
                   <row>
                     <entry>data-data-xyz</entry>
-                    <entry>Each data array entry is an array with a label,
-                      an X value, then one or more pairs of Y and Z values.
-                      This is used for plots that use (X,Y,Z) triplets.</entry>
+                    <entry>
+Plot with X, Y, Z data: <literal>(Label, X, Y1, Z1, [Y2, Z2, ...])</literal>
+                    </entry>
                   </row>
                 </tbody>
               </tgroup>
             </informaltable>
+Note: The descriptions above show one row of the data array.
           </para>
         </listitem>
       </varlistentry>
@@ -1818,7 +1826,7 @@ An example of a <literal>text-data</literal> data array is:
                 array('Mar', 120, 145, 200),
                 array('Apr', 110, 160, 220) );
 ]]></programlisting>
-This defines the data for 3 plots with 4 points on each, and a month name
+This defines the data for 3 data sets with 4 points on each, and a month name
 as label for each point.
 This is also a valid data array for data type <literal>text-data-yx</literal>.
     </para>
@@ -1831,7 +1839,7 @@ An example of a <literal>data-data</literal> data array is:
                 array('', 8, 20) );
 ]]></programlisting>
 Here the labels are empty strings, next are the X values, then a single
-set of Y values (1 plot).
+set of Y values (1 data set, 1 plot line).
 This is also a valid data array for data type <literal>data-data-yx</literal>,
 with each row containing a Y value, followed by a single X value.
     </para>
@@ -1854,19 +1862,29 @@ used only for pie charts, is:
                 array('', 40),
                 array('', 50) );
 ]]></programlisting>
-Here the labels are empty (they aren't used with a pie chart anyway),
+Here the labels are empty,
 and 3 segments with relative weights of 10, 40, and 50 are defined.
     </para>
+
+    <para>
+Data type alias <literal>data-data-error-yx</literal> can be used in place
+of <literal>data-data-yx-error</literal>. There are other data type aliases,
+such as <literal>text-linear</literal>, which exist for compatibility with very
+old versions of PHPlot, but they are not documented.
+    </para>
   </refsect1>
+
   <refsect1>
     <title>History</title>
     <para>
+Data type <literal>data-data-yx-error</literal> was added in PHPlot-6.1.0
+for horizontal error plots.
 Data type <literal>data-data-xyz</literal> was added in PHPlot-5.5.0 for
 the <link linkend="plottype-bubbles">bubbles</link> plot type.
-Data type <literal>text-data-yx</literal> for horizontal plots was added
-in PHPlot-5.1.2.
 Data type <literal>data-data-yx</literal> for horizontal plots was added
 in PHPlot-5.1.3.
+Data type <literal>text-data-yx</literal> for horizontal bar charts was added
+in PHPlot-5.1.2.
     </para>
   </refsect1>
 </refentry>
@@ -2975,7 +2993,9 @@ Desired width in pixels of the lines used to draw error bars.
 The default is to use 1 pixel wide lines.
     </para>
     <para>
-This is only used with <literal>data-data-error</literal> plot data type.
+This is only used with error plots (data types
+<link linkend="data-data-error">data-data-error</link> and
+<link linkend="data-data-yx-error">data-data-yx-error</link>).
     </para>
     <para>
 All lines in a plot use the same error bar width.
@@ -3026,7 +3046,9 @@ Error bar shape: either 'tee' or 'line'.
 The default error bar shape is 'tee'.
     </para>
     <para>
-This is only used with <literal>data-data-error</literal> plot data type.
+This is only used with error plots (data types
+<link linkend="data-data-error">data-data-error</link> and
+<link linkend="data-data-yx-error">data-data-yx-error</link>).
     </para>
     <para>
 All lines in a plot use the same error bar shape.
@@ -3077,7 +3099,9 @@ Error bar tee length in pixels.
 The default size is 5 pixels.
     </para>
     <para>
-This is only used with <literal>data-data-error</literal> plot data type,
+This is only used with error plots (data types
+<link linkend="data-data-error">data-data-error</link> and
+<link linkend="data-data-yx-error">data-data-yx-error</link>),
 and with error bar shape 'tee'.
     </para>
     <para>
@@ -6954,9 +6978,7 @@ Starting with PHPlot-5.1.2, the additional choices 'right', 'top', and
     <title>Description</title>
     <para>
 <function>SetPlotType</function> selects a type of plot from among the plot
-types supported by PHPlot. This includes bar charts, line plots, point
-plots, and others. A complete description of the type of plots available
-can be found in <xref linkend="conc-plottypes" />.
+types supported by PHPlot.
     </para>
   </refsect1>
 
@@ -6971,6 +6993,7 @@ A string indicating the type of plot. The following types are available:
             <itemizedlist spacing="compact">
               <listitem><para>area</para></listitem>
               <listitem><para>bars</para></listitem>
+              <listitem><para>bubbles</para></listitem>
               <listitem><para>candlesticks</para></listitem>
               <listitem><para>candlesticks2</para></listitem>
               <listitem><para>linepoints</para></listitem>
@@ -6992,10 +7015,17 @@ A string indicating the type of plot. The following types are available:
     <title>Notes</title>
     <para>
 The default plot type is 'linepoints'.
-     </para>
+    </para>
+    <para>
+A complete description of the available plot types can be found in
+<xref linkend="conc-plottypes" />.
+    </para>
   </refsect1>
   <refsect1>
     <title>History</title>
+    <para>
+Plot type 'bubbles' was added in PHPlot-5.5.0.
+     </para>
     <para>
 Plot types 'candlesticks', 'candlesticks2', and 'ohlc'
 were added in PHPlot-5.3.0.
@@ -8879,9 +8909,20 @@ The X data label text angle is set with <xref linkend="SetXDataLabelAngle"/>.
 The X data label text format can be controlled with
 <xref linkend="SetXDataLabelType"/> or <xref linkend="SetXLabelType"/>.
     </para>
+    <para>
+X data value labels do work with horizontal error plots (plot types 'lines',
+'points', and 'linepoints' and data type
+<link linkend="data-data-yx-error">data-data-yx-error</link>).
+The labels will identify the base X values of the points.
+You can change the default label positions (offset and angle) as explained in
+<xref linkend="adv-tuning-labels"/>).
+    </para>
   </refsect1>
   <refsect1>
     <title>History</title>
+    <para>
+Horizontal error plots, with data labels, were first available in PHPlot-6.1.0.
+    </para>
     <para>
 Horizontal lines, points, and linepoints plots and data value labels for
 them were first available in PHPlot-6.0.0.

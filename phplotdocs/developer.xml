@@ -695,7 +695,7 @@ This was added in PHPlot-5.1.0.
   <term><anchor id="DecodeDataType" xreflabel="DecodeDataType"/>DecodeDataType()</term>
   <listitem>
     <para>
-Analyzes the data type and sets several member variables that other functions
+Decodes the data type, and sets several member variables that other functions
 can use to understand how to process the data array. The variables it sets
 all have names starting with "datatype_" (refer to <xref linkend="dev-vars"/>).
 This is called by <xref linkend="DrawGraph"/>.
@@ -705,6 +705,9 @@ data array.)
 In PHPlot-5.1.3, it was changed to set member variables instead.
 It is now called just once, and the other functions reference the variables
 as needed.
+Starting with PHPlot-6.1.0, it uses the
+<link linkend="var-datatypes">$datatypes</link> array to set the flags based
+on the data type, so it no longer needs to 'know' the actual data type names.
     </para>
   </listitem>
 </varlistentry>
@@ -929,7 +932,7 @@ and horizontal points and linepoints plots.
 </varlistentry>
 
 <varlistentry>
-  <term><anchor id="DrawDotsError" xreflabel="DrawDotsError"/>DrawDotsError($paired = False)</term>
+  <term><anchor id="DrawDotsError" xreflabel="DrawDotsError"/>DrawDotsError($paired = False)</term> <!-- REMOVED -->
   <listitem>
     <para>
 This function was removed in PHPlot-6.0.0 and merged into
@@ -1036,7 +1039,7 @@ and horizontal lines and linepoints plots.
 </varlistentry>
 
 <varlistentry>
-  <term><anchor id="DrawLinesError" xreflabel="DrawLinesError"/>DrawLinesError($paired = False)</term>
+  <term><anchor id="DrawLinesError" xreflabel="DrawLinesError"/>DrawLinesError($paired = False)</term> <!-- REMOVED -->
   <listitem>
     <para>
 This function was removed in PHPlot-6.0.0 and merged into
@@ -1297,6 +1300,21 @@ Called by <xref linkend="DrawXDataLabel"/>.
 </varlistentry>
 
 <varlistentry>
+  <term><anchor id="DrawXErrorBars"
+xreflabel="DrawXErrorBars"/>DrawXErrorBars($x, $y $error_plus, $error_minus, $color)</term> 
+  <listitem>
+    <para>
+Draws an error bar set for the point at world coordinates ($x, $y).
+$error_plus and $error_minus are the X error amounts (in world coordinates).
+Both are non-negative values.
+Called by <xref linkend="DrawDots"/> and <xref linkend="DrawLines"/> when
+the data type indicates a horizontal error plot.
+This was added in PHPlot-6.1.0 when horizontal error plots were implemented.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
   <term><anchor id="DrawXTick" xreflabel="DrawXTick"/>DrawXTick($x, $x_pixels)</term>
   <listitem>
     <para>
@@ -1391,16 +1409,26 @@ This was added in PHPlot-6.0.0.
 </varlistentry>
 
 <varlistentry>
-  <term><anchor id="DrawYErrorBar" xreflabel="DrawYErrorBar"/>DrawYErrorBar($x_world, $y_world, $error_height, $color)</term>
+  <term><anchor id="DrawYErrorBar" xreflabel="DrawYErrorBar"/>DrawYErrorBar($x_world, $y_world, $error_height, $color)</term> <!-- REMOVED -->
   <listitem>
     <para>
-Draws an error bar for the point at world coordinates ($x_world, $y_world).
-$error_height is the height (in world coordinates) of the error bar:
-positive for the upper range error, negative for the lower range error.
+This function was removed in PHPlot-6.1.0 and replaced with
+<xref linkend="DrawYErrorBars"/>.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term><anchor id="DrawYErrorBars" xreflabel="DrawYErrorBars"/>DrawYErrorBars($x, $y $error_plus, $error_minus, $color)</term> 
+  <listitem>
+    <para>
+Draws an error bar set for the point at world coordinates ($x, $y).
+$error_plus and $error_minus are the Y error amounts (in world coordinates).
+Both are non-negative values.
 Called by <xref linkend="DrawDots"/> and <xref linkend="DrawLines"/> when
-the data type indicates an error plot, twice for each point on the
-plot (upper range error and lower range error).
-(Before PHPlot-6.0.0, there was an additional argument $error_bar_type.)
+the data type indicates a vertical error plot.
+This was added in PHPlot-6.1.0, replacing <xref linkend="DrawYErrorBar"/>
+(which drew only 1 of the error bars for a point).
     </para>
   </listitem>
 </varlistentry>
@@ -2414,6 +2442,52 @@ Remember that all PHPlot class member variables are meant for internal use only.
   </para>
 </abstract>
 
+<sect2 id="var-datatypes">
+<title>datatypes[]</title>
+<para>
+The <varname>datatypes[]</varname> array contains information about the
+available data types. See <xref linkend="conc-datatypes"/> for more
+information about data types.
+It is used by <xref linkend="SetDataType"/> to validated the supplied data
+type, and by <xref linkend="DecodeDataType"/> to set the flags that
+describe the datatype.
+</para>
+
+<para>
+The goal is to keep the names and details about the data types in this
+array only, and minimize other uses of the actual data type names. However,
+each plot type drawing function (for example <xref linkend="DrawLines"/>)
+also 'knows' about the data types it supports, and specifies the data type
+names when calling <xref linkend="CheckDataType"/>.
+</para>
+
+<para>
+This array was added in PHPlot-6.1.0.
+It is a protected static member variable in the PHPlot class, so it must be
+accessed as <varname>self::$datatypes</varname> from inside the class (or a
+derived class), and not through an instance of the class.
+Is not accessible from outside the class or derived classes.
+</para>
+
+<para>
+The array keys are the data types (for example: 'text-data').
+The values are arrays which contain information about the data type.
+The second-level array keys correspond to the 'datatype' flag variables,
+without the 'datatype_' prefix. A key will be present, with the value
+<literal>TRUE</literal>, if the flag should be set for that data type.
+The key will be absent if the flag should not be set.
+For example: for data type <literal>text-data</literal>, the array contains
+one value: <literal>'implied' =&gt; TRUE</literal>. This means that for
+data type text-data, the <literal>datatype_implied</literal> flag should be
+TRUE (indicating that this data type has implied independent variable
+values), and all other flags should be FALSE. In addition to
+<literal>implied</literal>, the other possible keys are
+<literal>pie_single</literal>, <literal>error_bars</literal>,
+<literal>swapped_xy</literal>, and <literal>yz</literal>.
+</para>
+
+</sect2>
+
 <sect2 id="var-fonts">
 <title>fonts[]</title>
 <para>
@@ -2615,6 +2689,56 @@ keys and values:
 
 </sect2>
 
+<sect2 id="var-legendpos">
+<title>legend_pos[]</title>
+<para>
+The <varname>legend_pos[]</varname> array contains information about
+positioning of the legend. This is set by <xref linkend="SetLegendPosition"/>,
+and by the functions which use it (<xref linkend="SetLegendPixels"/> and
+<xref linkend="SetLegendWorld"/>).
+This was added in PHPlot-5.4.0, replacing scalar variables legend_x_pos,
+legend_y_pos, and legend_xy_world.
+</para>
+
+<para>
+<?dbfo keep-together="always"?> <!-- Prevent PDF break before table -->
+The array keys correspond to the arguments to
+<xref linkend="SetLegendPosition"/> and are shown in the following table.
+<informaltable>
+  <tgroup cols="2">
+    <?dbhtml table-summary="legend_pos[] array elements"?>
+    <colspec colname="c1" colwidth="40*" />
+    <colspec colname="c2" colwidth="60*" />
+    <thead>
+      <row>
+        <entry>Keys</entry>
+        <entry>Value</entry>
+      </row>
+    </thead>
+    <tbody>
+      <row>
+        <entry>x, y</entry>
+        <entry>Relative coordinates of a point on the legend box</entry>
+      </row>
+      <row>
+        <entry>mode</entry>
+        <entry>One of: image, plot, title, or world</entry>
+      </row>
+      <row>
+        <entry>x_base, y_base</entry>
+        <entry>Relative coordinates of a point on the image, plot, or
+           title, or world coordinates</entry>
+      </row>
+      <row>
+        <entry>x_offset, y_offset</entry>
+        <entry>Pixel offset to be applied last</entry>
+      </row>
+    </tbody>
+  </tgroup>
+</informaltable>
+</para>
+</sect2>
+
 <sect2 id="var-plots">
 <title>plots[]</title>
 <para>
@@ -2784,56 +2908,6 @@ If omitted, the default value 0 is used.
 A value of 0 means apply the adjustment for the dependent variable only.
 A value of 1 means apply the adjustment for both X and Y, and a value of
 2 means do not apply the adjustment to either X or Y.
-</para>
-</sect2>
-
-<sect2 id="var-legendpos">
-<title>legend_pos[]</title>
-<para>
-The <varname>legend_pos[]</varname> array contains information about
-positioning of the legend. This is set by <xref linkend="SetLegendPosition"/>,
-and by the functions which use it (<xref linkend="SetLegendPixels"/> and
-<xref linkend="SetLegendWorld"/>).
-This was added in PHPlot-5.4.0, replacing scalar variables legend_x_pos,
-legend_y_pos, and legend_xy_world.
-</para>
-
-<para>
-<?dbfo keep-together="always"?> <!-- Prevent PDF break before table -->
-The array keys correspond to the arguments to
-<xref linkend="SetLegendPosition"/> and are shown in the following table.
-<informaltable>
-  <tgroup cols="2">
-    <?dbhtml table-summary="legend_pos[] array elements"?>
-    <colspec colname="c1" colwidth="40*" />
-    <colspec colname="c2" colwidth="60*" />
-    <thead>
-      <row>
-        <entry>Keys</entry>
-        <entry>Value</entry>
-      </row>
-    </thead>
-    <tbody>
-      <row>
-        <entry>x, y</entry>
-        <entry>Relative coordinates of a point on the legend box</entry>
-      </row>
-      <row>
-        <entry>mode</entry>
-        <entry>One of: image, plot, title, or world</entry>
-      </row>
-      <row>
-        <entry>x_base, y_base</entry>
-        <entry>Relative coordinates of a point on the image, plot, or
-           title, or world coordinates</entry>
-      </row>
-      <row>
-        <entry>x_offset, y_offset</entry>
-        <entry>Pixel offset to be applied last</entry>
-      </row>
-    </tbody>
-  </tgroup>
-</informaltable>
 </para>
 </sect2>
 

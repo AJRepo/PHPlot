@@ -136,7 +136,8 @@ plots, and shading for 3D affects.
 <title>Error Bar Controls</title>
 <para>
 The functions in this section control the appearance of error bars, used in
-plots with plot data type <literal>data-data-error</literal>.
+plots with data types <literal>data-data-error</literal> and
+<literal>data-data-yx-error</literal>.
 </para>
 <para>
 See also <xref linkend="SetErrorBarColors" />, which sets the color used for
