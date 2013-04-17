@@ -2,6 +2,27 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2013-04-16
+    * Mark as pre-release 6.1.0
+
+    * Feature Request #47 "Extend horizontal plots to more types":
+      Implemented horizontal error plots. (This is the remaining,
+      unimplemented part the feature request.)
+      + Added new datatype 'data-data-yx-error' for horizontal error plots.
+      + Added new internal static array $datatypes to hold information
+        about the available data types.
+      + Added new internal static array $datatypes_map to handle the old
+        data type names, and also a new alias 'data-data-error-yx'.
+      + Rewrote internal DecodeDataType() to use the new array instead
+        of code to set the datatype flags from the data type.
+      + Changed SetDataType() to use the 2 new arrays to map and validate
+        the data type.
+      + Replaced internal function DrawYErrorBar() - draw one error bar
+        for vertical plots - with DrawYErrorBars() and DrawXErrorBars(),
+        each of which draws both parts of an error bar pair.
+      + Changed DrawDots() and DrawLines() to support both vertical and
+        horizontal error plots.
+
 2013-04-03 ===== Released as 6.0.0 =====
     * README.txt: Fix PHP versions used for testing - should be 5.4.13 on
       both Linux and XP.
