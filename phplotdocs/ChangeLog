@@ -4,6 +4,26 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2013-04-16
+    * main.xml: Indicate this is for next release PHPlot-6.1.0.
+    * .ispell_words: Added new function names.
+    * Makefile: List files for new example.
+    * examples/horizerror.php: New example of horizontal error plots.
+    * examples.xml: Added example of horizontal error plots.
+    * advanced.xml: Indicate new data type.
+    * concepts.xml: Edits to data type descriptions, and added new data
+      type data-data-yz-error. Edits to plot types re: error plots. Added
+      new data type to table of plot types and supported data types.
+    * developer.xml: Updated DecodeDataType() and the functions usd
+      to draw error bars. New section on the new $datatypes static array.
+    * functions.xml: Added new data type to Error bar Controls section.
+    * reference.xml: Updated SetDataType(), SetErrorBarLineWidth(),
+      SetErrorBarShape(), SetErrorBarSize() with new data type.
+      Fixed SetPlotType() - missing xref and plot type choice.
+      Updated SetXDataLabelAngle() and SetXDataLabelPos() for new
+      horizontal error plots.
+    * variables.list: Added 2 new static arrays used for data types.
+
 2013-04-03 Released manual dated 2013-04-03 for PHPlot-6.0.0
 
 2013-04-02
