@@ -1,7 +1,7 @@
 <?php
 /* $Id$ */
 /*
- * PHPLOT Version 6.0.0
+ * PHPLOT Version 6.1.0 PRE-RELEASE
  *
  * A PHP class for creating scientific and business charts
  * Visit http://sourceforge.net/projects/phplot/
@@ -35,8 +35,8 @@
 
 class PHPlot
 {
-    const version = '6.0.0';
-    const version_id = 60000;
+    const version = '6.1.0-Pre-release $Revision$';
+    const version_id = 60100;
 
     // All class variables are declared here, and initialized (if applicable).
     // Starting with PHPlot-6.0, most variables have 'protected' visibility
@@ -86,6 +86,23 @@ class PHPlot
     protected $datatype_pie_single;
     protected $datatype_swapped_xy;
     protected $datatype_yz;
+    static protected $datatypes = array(   // See DecodeDataType() and $datatype_* flags
+        'text-data'          => array('implied' => TRUE),
+        'text-data-single'   => array('implied' => TRUE, 'pie_single' => TRUE),
+        'data-data'          => array(),
+        'data-data-error'    => array('error_bars' => TRUE),
+        'data-data-yx'       => array('swapped_xy' => TRUE),
+        'text-data-yx'       => array('implied' => TRUE, 'swapped_xy' => TRUE),
+        'data-data-xyz'      => array('yz' => TRUE),
+        'data-data-yx-error' => array('swapped_xy' => TRUE, 'error_bars' => TRUE),
+    );
+    static protected $datatypes_map = array(  // For backward compatiblity or aliases, see SetDataType()
+        'text-linear' => 'text-data',
+        'linear-linear' => 'data-data',
+        'linear-linear-error' => 'data-data-error',
+        'text-data-pie' => 'text-data-single',
+        'data-data-error-yx' => 'data-data-yx-error',
+    );
     protected $decimal_point;
     protected $default_colors = array(
         'SkyBlue', 'green', 'orange', 'blue', 'red', 'DarkGreen', 'purple', 'peru',
@@ -2321,24 +2338,16 @@ class PHPlot
 
     /*
      * Decode the data type into variables used to determine how to process a data array.
-     * The goal is minimize which functions understand the actual data type values.
-     * This sets the datatype_* variables for use by other member functions.
-     *   datatype_implied : Implicit independent variable (e.g. text-data vs data-data)
-     *   datatype_swapped_xy : Swapped X/Y (horizontal plot)
-     *   datatype_error_bars : Data array has error bar data
-     *   datatype_pie_single : Data array is for a pie chart with one row per slice
-     *   datatype_yz : Data array contains pairs of Y and Z for each X.
+     * This sets the $datatype_* flags for use by other member functions.
      */
     protected function DecodeDataType()
     {
-        $dt = $this->data_type;
-
-        $this->datatype_implied = ($dt == 'text-data' || $dt == 'text-data-single'
-                                || $dt == 'text-data-yx');
-        $this->datatype_swapped_xy = ($dt == 'text-data-yx' || $dt == 'data-data-yx');
-        $this->datatype_error_bars = ($dt == 'data-data-error');
-        $this->datatype_pie_single = ($dt == 'text-data-single');
-        $this->datatype_yz = ($dt == 'data-data-xyz');
+        $v = &self::$datatypes[$this->data_type]; // Shortcut reference, already validated in SetDataType()
+        $this->datatype_implied =    !empty($v['implied']);     // X (Y for horizontal plots) is implied
+        $this->datatype_error_bars = !empty($v['error_bars']);  // Has +error, -error values
+        $this->datatype_pie_single = !empty($v['pie_single']);  // Single-row pie chart
+        $this->datatype_swapped_xy = !empty($v['swapped_xy']);  // Horizontal plot with swapped X:Y
+        $this->datatype_yz =         !empty($v['yz']);          // Has a Z value for each Y
     }
 
     /*
@@ -2770,27 +2779,16 @@ class PHPlot
     }
 
     /*
-     * Set the data type, which defines the structure of the data array
-     *  text-data: ('label', y1, y2, y3, ...)
-     *  text-data-single: ('label', data), for some pie charts.
-     *  data-data: ('label', x, y1, y2, y3, ...)
-     *  data-data-error: ('label', x1, y1, e1+, e2-, y2, e2+, e2-, y3, e3+, e3-, ...)
-     *  data-data-yx: ('label', y, x1, x2, x3, ..)
-     *  text-data-yx: ('label', x1, x2, x3, ...)
-     *  data-data-xyz: ('label', x, y1, z1, ...)
+     * Set the data type, which defines the structure of the data array. See static $datatypes at top.
      */
     function SetDataType($which_dt)
     {
-        //The next four lines are for past compatibility.
-        if ($which_dt == 'text-linear') $which_dt = 'text-data';
-        elseif ($which_dt == 'linear-linear') $which_dt = 'data-data';
-        elseif ($which_dt == 'linear-linear-error') $which_dt = 'data-data-error';
-        elseif ($which_dt == 'text-data-pie') $which_dt = 'text-data-single';
-
-        $this->data_type = $this->CheckOption($which_dt, 'text-data, text-data-single, '.
-                                                         'data-data, data-data-error, '.
-                                                         'data-data-yx, text-data-yx, data-data-xyz',
-                                                         __FUNCTION__);
+        // Handle data type aliases - mostly for backward compatibility:
+        if (isset(self::$datatypes_map[$which_dt]))
+            $which_dt = self::$datatypes_map[$which_dt];
+        // Validate the datatype argument against the available data types:
+        $valid_data_types = implode(', ', array_keys(self::$datatypes));
+        $this->data_type = $this->CheckOption($which_dt, $valid_data_types, __FUNCTION__);
         return (boolean)$this->data_type;
     }
 
@@ -6073,20 +6071,50 @@ class PHPlot
     }
 
     /*
-     *  Draw an Error Bar. Used by DrawDots and DrawLines
+     *  Draw an Error Bar set for horizontal plots, showing X +/- errors.
+     *   $x, $y : World coordinates of the data point. Note X is the dependent variable here.
+     *   $error_plus, $error_minus : X error offsets, in world coordinates (both positive).
+     *   $color : Color to use for the error bars.
      */
-    protected function DrawYErrorBar($x_world, $y_world, $error_height, $color)
+    protected function DrawXErrorBars($x, $y, $error_plus, $error_minus, $color)
     {
-        $x1 = $this->xtr($x_world);
-        $y1 = $this->ytr($y_world);
-        $y2 = $this->ytr($y_world+$error_height) ;
+        $x1 = $this->xtr($x);
+        $y1 = $this->ytr($y);
+        $x2p = $this->xtr($x + $error_plus);
+        $x2m = $this->xtr($x - $error_minus);
 
-        ImageSetThickness($this->img, $this->error_bar_line_width);
-        ImageLine($this->img, $x1, $y1 , $x1, $y2, $color);
+        imagesetthickness($this->img, $this->error_bar_line_width);
+        imageline($this->img, $x2p, $y1 , $x2m, $y1, $color);
         if ($this->error_bar_shape == 'tee') {
-            ImageLine($this->img, $x1-$this->error_bar_size, $y2, $x1+$this->error_bar_size, $y2, $color);
+            $e = $this->error_bar_size;
+            imageline($this->img, $x2p, $y1 - $e, $x2p, $y1 + $e, $color);
+            imageline($this->img, $x2m, $y1 - $e, $x2m, $y1 + $e, $color);
         }
-        ImageSetThickness($this->img, 1);
+        imagesetthickness($this->img, 1);
+        return TRUE;
+    }
+
+    /*
+     *  Draw an Error Bar set for vertical plots. Used by DrawDots and DrawLines for vertical plots.
+     *   $x, $y : World coordinates of the data point.
+     *   $error_plus, $error_minus : Y error offsets, in world coordinates (both positive).
+     *   $color : Color to use for the error bars.
+     */
+    protected function DrawYErrorBars($x, $y, $error_plus, $error_minus, $color)
+    {
+        $x1 = $this->xtr($x);
+        $y1 = $this->ytr($y);
+        $y2p = $this->ytr($y + $error_plus);
+        $y2m = $this->ytr($y - $error_minus);
+
+        imagesetthickness($this->img, $this->error_bar_line_width);
+        imageline($this->img, $x1, $y2p , $x1, $y2m, $color);
+        if ($this->error_bar_shape == 'tee') {
+            $e = $this->error_bar_size;
+            imageline($this->img, $x1 - $e, $y2p, $x1 + $e, $y2p, $color);
+            imageline($this->img, $x1 - $e, $y2m, $x1 + $e, $y2m, $color);
+        }
+        imagesetthickness($this->img, 1);
         return TRUE;
     }
 
@@ -6351,14 +6379,14 @@ class PHPlot
 
     /*
      * Draw a points plot, or the points for a linepoints plot, including error plots.
-     * This supports both vertical and horizontal* plots. "iv" is used for the independent variable (X for
+     * This supports both vertical and horizontal plots. "iv" is used for the independent variable (X for
      * vertical plots, Y for horizontal) and "dv" is used for the dependent variable (Y or X respectively).
      *   $paired is true for linepoints plots, to make sure elements are only drawn once. See DrawLinePoints
-     *     *Note: No current support for horizontal error plots.
      */
     protected function DrawDots($paired = FALSE)
     {
-        if (!$this->CheckDataType('text-data, data-data, text-data-yx, data-data-yx, data-data-error'))
+        if (!$this->CheckDataType('text-data, data-data, text-data-yx, data-data-yx, '
+                                . 'data-data-error, data-data-yx-error'))
             return FALSE;
 
         // Adjust the point shapes and point sizes arrays:
@@ -6408,26 +6436,30 @@ class PHPlot
                         $this->GetDataColor($row, $idx, $gcvars, $data_color, $alt_flag);
                     }
 
-                    // Draw the marker:
+                    // Draw the marker, and error bar (if enabled):
                     if ($this->datatype_swapped_xy) {
                         $this->DrawDot($row, $idx, $dv, $iv, $data_color);
+                        if ($this->datatype_error_bars) {
+                            $this->DrawXErrorBars($dv, $iv, $this->data[$row][$rec],
+                                                  $this->data[$row][$rec+1], $error_color);
+                        }
                     } else {
                         $this->DrawDot($row, $idx, $iv, $dv, $data_color);
+                        if ($this->datatype_error_bars) {
+                            $this->DrawYErrorBars($iv, $dv, $this->data[$row][$rec],
+                                                  $this->data[$row][$rec+1], $error_color);
+                        }
                     }
 
                     // Draw data value labels?
-                    if ($do_y_valu_labels) // Vertical plot
+                    if ($do_y_valu_labels) { // Vertical plot
                         $this->DrawDataValueLabel('y', $row, $idx, $iv, $dv, $dv, $dvl);
-                    elseif ($do_x_valu_labels) // Horizontal plot
+                    } elseif ($do_x_valu_labels) { // Horizontal plot
                         $this->DrawDataValueLabel('x', $row, $idx, $dv, $iv, $dv, $dvl);
-
-                    // Draw error bars (currently for vertical plots only):
-                    if ($this->datatype_error_bars) {
-                        $this->DrawYErrorBar($iv, $dv, $this->data[$row][$rec++], $error_color);
-                        $this->DrawYErrorBar($iv, $dv, -$this->data[$row][$rec++], $error_color);
                     }
-                } elseif ($this->datatype_error_bars) {
-                    $rec += 2; // Skip over error bar positions for case of missing dependent variable
+                }
+                if ($this->datatype_error_bars) {
+                    $rec += 2; // Skip over error bar values, even in missing data case.
                 }
             }
         }
@@ -6591,14 +6623,14 @@ class PHPlot
 
     /*
      * Draw a line plot, or the lines part of a linepoints plot, including error plots.
-     * This supports both vertical and horizontal* plots. "iv" is used for the independent variable (X for
+     * This supports both vertical and horizontal plots. "iv" is used for the independent variable (X for
      * vertical plots, Y for horizontal) and "dv" is used for the dependent variable (Y or X respectively).
      *   $paired is true for linepoints plots, to make sure elements are only drawn once. See DrawLinePoints
-     *     *Note: No current support for horizontal error plots.
      */
     protected function DrawLines($paired = FALSE)
     {
-        if (!$this->CheckDataType('text-data, data-data, text-data-yx, data-data-yx, data-data-error'))
+        if (!$this->CheckDataType('text-data, data-data, text-data-yx, data-data-yx, '
+                                . 'data-data-error, data-data-yx-error'))
             return FALSE;
 
         // Flag array telling if the current point is valid, one element per plot line.
@@ -6678,31 +6710,31 @@ class PHPlot
                                   $lastx[$idx], $lasty[$idx], $style);
                     }
 
+                    // Draw error bars, but not for linepoints plots, because DrawPoints() does it.
+                    if ($this->datatype_error_bars && !$paired) {
+                        if ($this->datatype_swapped_xy) {
+                            $this->DrawXErrorBars($dv, $iv, $this->data[$row][$rec],
+                                                  $this->data[$row][$rec+1], $error_color);
+                        } else {
+                            $this->DrawYErrorBars($iv, $dv, $this->data[$row][$rec],
+                                                  $this->data[$row][$rec+1], $error_color);
+                        }
+                    }
+
                     // Draw data value labels?
                     if ($do_y_valu_labels) // Vertical plot
                         $this->DrawDataValueLabel('y', $row, $idx, $iv, $dv, $dv, $dvl);
                     elseif ($do_x_valu_labels) // Horizontal plot
                         $this->DrawDataValueLabel('x', $row, $idx, $dv, $iv, $dv, $dvl);
 
-                    // Draw error bars (currently for vertical plots only):
-                    if ($this->datatype_error_bars) {
-                        if ($paired) {
-                            $rec += 2; // Skip error bars - done in the 'points' part of 'linepoints'.
-                        } else {
-                            $this->DrawYErrorBar($iv, $dv, $this->data[$row][$rec++], $error_color);
-                            $this->DrawYErrorBar($iv, $dv, -$this->data[$row][$rec++], $error_color);
-                        }
-                    }
-
                     $lastx[$idx] = $x_now_pixels;
                     $lasty[$idx] = $y_now_pixels;
                     $start_lines[$idx] = TRUE;
-                } else {       // Missing point value or line style suppression
-                    if ($this->datatype_error_bars)
-                        $rec += 2;  // Skip over error value positions for missing value
-                    if ($this->draw_broken_lines)
-                        $start_lines[$idx] = FALSE;
+                } elseif ($this->draw_broken_lines) {
+                    $start_lines[$idx] = FALSE; // Missing point value or line style suppression
                 }
+                if ($this->datatype_error_bars)
+                    $rec += 2; // Skip over error bar values, even in missing data case.
             }
         }
 
