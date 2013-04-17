@@ -10,6 +10,7 @@ CalcPlotAreaWorld
 CalcPlotRange
 CalcRangeInit
 CalcStep
+CalcStepBinary
 CalcStepDatetime
 CalcTicks
 CalcTranslation
@@ -63,6 +64,7 @@ DrawTitle
 DrawXAxis
 DrawXDataLabel
 DrawXDataLine
+DrawXErrorBars
 DrawXTick
 DrawXTicks
 DrawXTitle
@@ -70,6 +72,7 @@ DrawYAxis
 DrawYDataLabel
 DrawYDataLine
 DrawYErrorBar
+DrawYErrorBars
 DrawYTick
 DrawYTicks
 DrawYTitle
