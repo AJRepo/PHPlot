@@ -127,6 +127,7 @@ EXAMPLES_PHP=\
   examples/encodeimage.php \
   examples/histogram.php \
   examples/horizbar.php \
+  examples/horizerror.php \
   examples/horizlinepts.php \
   examples/horizstackedbar.php \
   examples/horizthinbarline.php \
@@ -192,6 +193,7 @@ EXAMPLES_IMAGES=\
   examples/drawmessage.png \
   examples/histogram.jpg \
   examples/horizbar.png \
+  examples/horizerror.png \
   examples/horizlinepts.png \
   examples/horizstackedbar.png \
   examples/horizthinbarline.png \

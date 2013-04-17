@@ -1993,4 +1993,36 @@ Note: Horizontal linepoints plots were added in PHPlot-6.0.0.
 </sect1>
 
 <!-- =============================================== -->
+<pagebreak/>
+<sect1 id="ex-horizerror">
+<title>Example - Horizontal Error Plot</title>
+<para>
+This is a horizontal error plot, showing a series of measurements as
+a 'points' plot, with error bars.
+In a horizontal plot, the Y (vertical) axis is for the independent values,
+and the X axis (horizontal) is for the dependent values.
+</para>
+
+<para>
+Note: Horizontal error plots were added in PHPlot-6.1.0.
+</para>
+
+<example id="example-horizerror">
+<?dbfo keep-together="auto"?>
+<title>Horizontal Error Plot</title>
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="examples/horizerror.png" scale="58" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>Horizontal Error Plot Example</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+&horizerror;
+</example>
+</sect1>
+
+<!-- =============================================== -->
 </chapter>
