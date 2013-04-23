@@ -877,6 +877,21 @@ The following plot types are available:
         <entry>
           <inlinemediaobject>
             <imageobject>
+              <imagedata fileref="images/thumbnail-boxes.png" scale="100" format="PNG" />
+            </imageobject>
+            <textobject>
+              <phrase>box plot thumbnail</phrase>
+            </textobject>
+          </inlinemediaobject>
+        </entry>
+        <entry><link linkend="plottype-boxes">boxes</link></entry>
+        <entry>Box plot, showing a 5-number statistical summary of a data set.</entry>
+      </row>
+
+      <row>
+        <entry>
+          <inlinemediaobject>
+            <imageobject>
               <imagedata fileref="images/thumbnail-bubbles.png" scale="100" format="PNG" />
             </imageobject>
             <textobject>
@@ -1135,6 +1150,9 @@ An empty string (or any non-numeric value) for the dependent variable
 No bar will be drawn at missing point positions.
 </para>
 <para>
+See also <xref linkend="adv-tuning-bars" />.
+</para>
+<para>
 Examples of this plot type can be seen in
 <xref linkend="ex-bars1" />,
 <xref linkend="ex-bars2" />,
@@ -1147,8 +1165,177 @@ Horizontal bar plots were added in PHPlot-5.1.2.
 </para>
 </sect2>
 
+<sect2 id="plottype-boxes">
+<title>Plot Type: boxes (Box Plot)</title>
+<para>
+A box plot uses groups of 5 or more numbers to plot a statistical summary of a
+data set.
+(This is sometimes called a <emphasis>box and whisker plot</emphasis>.)
+The first 5 Y values in each row are referred to as Ymin, YQ1, Ymid, YQ3, and
+Ymax.  By convention, these represent:
+  <informaltable>
+    <tgroup cols="2">
+      <?dbhtml table-summary="Numbers in a box plot"?>
+      <colspec colname="c1" colwidth="30*" />
+      <colspec colname="c2" colwidth="70*" />
+      <thead>
+        <row>
+          <entry>Value</entry>
+          <entry>Description</entry>
+        </row>
+      </thead>
+      <tbody>
+        <row>
+          <entry>Ymin</entry>
+          <entry>Minimum value.
+                 Sometimes used as 5th or 9th percentile instead.
+          </entry>
+        </row>
+        <row>
+          <entry>YQ1</entry>
+          <entry>Lower quartile - 25th percentile, meaning 25% of the data
+                 points are below this value, and 75% are above.
+          </entry>
+        </row>
+        <row>
+          <entry>Ymid</entry>
+          <entry>Median - 50th percentile, meaning half the data points are
+                 below this value, and half are above.
+          </entry>
+        </row>
+        <row>
+          <entry>YQ3</entry>
+          <entry>Upper quartile - 75th percentile, meaning 75% of the data
+                 points are below this value, and 25% are above.
+          </entry>
+        </row>
+        <row>
+          <entry>Ymax</entry>
+          <entry>Maximum value.
+                 Sometimes used as 95th or 91st percentile instead.
+          </entry>
+        </row>
+      </tbody>
+    </tgroup>
+  </informaltable>
+</para>
+
+<para>
+Any additional numbers (beyond 5) in each row represent outliers. These
+are generally points outside the range of Ymin and Ymax, and are used when Ymin
+and Ymax are for some low and high (respectively) percentile values, such as
+5th and 95th.
+</para>
+
+<para>
+At each X value, a box plot has the following features:
+  <itemizedlist>
+    <listitem>
+      <para>
+box: A rectangular box is drawn from YQ1 to YQ3.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+belt: A horizontal line is drawn through the box at the median position Ymid.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+lower whisker: A vertical line is drawn from the bottom center of the box at
+the YQ1 position down to the Ymin position, and an upside-down 'T' is drawn
+at Ymin.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+upper whisker: A vertical line is drawn from the top center of the box at
+the YQ3 position up to the Ymax position, and a 'T' is drawn at Ymax.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+outliers: If there are any additional values in the row, a marker point
+(similar to that drawn in a <link linkend="plottype-points">points</link> plot)
+is drawn at each given Y value.
+      </para>
+    </listitem>
+  </itemizedlist>
+</para>
+
+<para>
+Note that PHPlot does not force any particular interpretation on the numbers
+in each row. It draws a box, belt, two whiskers, and zero or more outliers
+at each X as described above.
+PHPlot does however require that the numbers be in order:
+<![CDATA[ Ymin <= YQ1 <= Ymid <= YQ3 <= Ymax
+]]>
+Any outlier values should be greater than Ymax, or less than Ymin, but
+PHPlot does not enforce that.
+</para>
+
+<para>
+This plot type works with data types <xref linkend="text-data"/>
+and <xref linkend="data-data"/>.
+For 'text-data', the data X values are assumed to be at 0.5+N for N=0,1,2...
+</para>
+
+<para>
+This plot type requires 5 or more Y values for each X.
+Multiple data sets are not supported.
+A missing point is indicated by using an empty string (or any non-numeric
+value) for either YQ1 or YQ3 (or both). Nothing at all will be drawn at
+that position.
+If the median value Ymin is an empty string or non-numeric, the belt
+(median line) is not drawn, but the rest of the box plot features are.
+If either Ymin or Ymax are empty strings or non-numeric, the corresponding
+whisker and 'T' end will not be drawn.
+Finally, any empty strings or non-numeric values in the outlier positions
+of the data array row are ignored.
+Regardless of missing values, every row in the data array must still have at
+least 5 entries for Y values.
+</para>
+
+<para>
+This plot type uses 4 colors from the data colors array, indexes 0 through 3.
+You can use <xref linkend="SetDataColors"/> to change the colors used in the
+plot.
+Color 0 is used for the box, color 1 is used for the belt (median line),
+color 2 is used for the outliers, and color 3 is used for the whiskers
+(including the 'T' at the top and bottom).
+</para>
+
+<para>
+<xref linkend="SetLineWidths"/> can be used to set line widths.
+Index 0 will be used to draw the box, index 1 is used to draw the belt
+(median line), and index 2 is used to draw the whiskers and 'T' ends.
+</para>
+
+<para>
+The whiskers in a box plot are drawn using the first line style, which defaults
+to a solid line. Box plots sometimes use dashed lines for the whiskers.
+Use <xref linkend="SetLineStyles"/><literal>('dashed')</literal>
+to have the whiskers drawn as dashed lines.
+All other features of a box plot (box, belt, and 'T' ends) use solid lines.
+</para>
+
+<para>
+See also <xref linkend="adv-tuning-boxes" />.
+</para>
+
+<para>
+Examples of this plot type can be seen in
+<xref linkend="ex-boxplot1" /> and <xref linkend="ex-boxplot2" />.
+</para>
+
+<para>
+Box plots were added in PHPlot-6.1.0.
+</para>
+
+</sect2>
+
 <sect2 id="plottype-bubbles">
-<title>Plot Type: Bubbles</title>
+<title>Plot Type: bubbles</title>
 <para>
 This plot type produces a scatter-plot using filled circles, with the diameter
 of each circle representing a Z value for the point.
@@ -1178,6 +1365,10 @@ Each (X,Y,Z) triplet from the data array produces a bubble on the plot.
 An empty string (or any non-numeric value) for Y indicates a missing point
 and will not be plotted. A corresponding Z entry must be provided in the
 data array, but the value is ignored.
+</para>
+
+<para>
+See also <xref linkend="adv-tuning-bubbles" />.
 </para>
 
 <para>
@@ -1238,6 +1429,9 @@ security closes down).
 Line width index 1 will be used to draw the wicks.
 </para>
 <para>
+See also <xref linkend="adv-tuning-ohlc" />.
+</para>
+<para>
 An example of this plot type can be seen in
 <xref linkend="ex-ohlccandlesticks"/>.
 </para>
@@ -1277,8 +1471,6 @@ line width) is never used. Line width index 1 is used for the wicks.
 This plot type works with data types <xref linkend="text-data"/>
 and <xref linkend="data-data"/>.
 For 'text-data', the data X values are assumed to be at 0.5+N for N=0,1,2...
-As with candlesticks, this plot type requires exactly 4 Y values for each X:
-Open, High, Low, and Close prices.
 </para>
 <para>
 This plot type requires exactly 4 Y values for each X. These represent the
@@ -1287,6 +1479,9 @@ Multiple data sets are not supported.
 A missing point is indicated by using four empty strings
 (or any non-numeric value) for the 4 Y values.
 (Missing points were not allowed for this plot type in PHPlot-5.4.0 and earlier.)
+</para>
+<para>
+See also <xref linkend="adv-tuning-ohlc" />.
 </para>
 <para>
 An example of this plot type can be seen in
@@ -1444,6 +1639,9 @@ Index 0 will be used to draw the vertical lines, and index 1 will
 be used to draw the tick marks.
 </para>
 <para>
+See also <xref linkend="adv-tuning-ohlc" />.
+</para>
+<para>
 An example of this plot type can be seen in
 <xref linkend="ex-ohlcbasic"/>.
 </para>
@@ -1485,6 +1683,9 @@ Missing values (an empty string or any non-numeric value) are taken as zero.
 Any segment with arc angle less than 1 degree will not be drawn. (This is
 due to the PHP GD implementation of <function>imagefilledarc</function>,
 which uses integer degrees.)
+</para>
+<para>
+See also <xref linkend="adv-tuning-pie" />.
 </para>
 <para>
 Examples of this plot type can be seen in
@@ -1751,6 +1952,9 @@ The border color (if shading is off) can be set with
 Missing values (an empty string or any non-numeric value) are taken as zero,
 except that they do not result in a visible segment in the case of a moved
 axis described above.
+</para>
+<para>
+See also <xref linkend="adv-tuning-bars" />.
 </para>
 <para>
 Examples of this plot type can be seen in
@@ -2310,6 +2514,17 @@ Instead of using sequential data colors for plotted data sets, you can
 control exactly which data color is used for each data value using the
 data color callback.
 For more information, see <xref linkend="adv-datacolor-callback"/>.
+</para>
+
+<para>
+Some plot types which only support a single data set still use multiple
+data colors, but in a way that is specific to that plot type.  This is
+described for each applicable plot type in <xref linkend="conc-plottypes"/>.
+For example, the 3 OHLC financial plot types use the first 4 data colors for
+different parts of the marker at each data point, as well as to indicate
+the overall direction (up or down). You can use the same methods -
+<xref linkend="SetDataColors"/> or a data color callback - to change colors
+for these plot types.
 </para>
 
 </sect2>
