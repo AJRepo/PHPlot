@@ -3,6 +3,27 @@ This is phplotdocs/ChangeLog, listing changes to the PHPlot Reference Manual
 Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
+2013-04-22
+    * Document changes for new plot type 'boxes' (Feature Request #52):
+      + examples/boxplot[12].php: 2 new examples of box plots.
+      + examples.xml: Added 2 examples of box plots.
+      + Makefile: List files for new examples.
+      + images/thumbnail-boxes.png: New thumbnail for plot-types table
+      + etc/thumbnail.php: Updated thumbnail maker script for new plot type.
+      + advanced.xml: Added new section on tuning variables for box plots.
+      + concepts.xml: Added box plots to table and section on plot types.
+        Added links from plot type descriptions to the section on tuning
+        variables for that plot type, if applicable.
+        Added a note in Plotting Colors that some plot types use data colors
+        in other ways (not for different data sets).
+      + developer.xml: Added 1 new internal function.
+      + reference.xml: Updated notes for SetDataColors() to indicate that
+        some plot types use the data colors for other than different data sets.
+        (The 3 OHLC types already did this, and the new box plot does too.)
+        Updated notes for SetLineWidths() to indicate which plot types support
+        line widths, and which ones use line widths for other than different
+        data sets. Updated SetPlotType() with new plot type.
+      + variables.list: Added 4 new box plot tuning variables.
 
 2013-04-16
     * main.xml: Indicate this is for next release PHPlot-6.1.0.
