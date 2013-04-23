@@ -2,6 +2,12 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2013-04-22
+    * Feature request #52 "Box Plots":
+      + New plot type 'boxes'.
+      + New internal method DrawBoxes() draws a box plot.
+      + Added 4 new tuning variables for box plot feature size tuning.
+
 2013-04-16
     * Mark as pre-release 6.1.0
 
