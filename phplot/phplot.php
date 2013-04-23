@@ -50,6 +50,10 @@ class PHPlot
     protected $bg_color;
     protected $bgimg;
     protected $bgmode;
+    public $boxes_frac_width = 0.3;
+    public $boxes_t_width = 0.6;
+    public $boxes_max_width = 8;
+    public $boxes_min_width = 2;
     protected $browser_cache = FALSE;
     public $bubbles_max_size; // Calculated default
     public $bubbles_min_size = 6;
@@ -219,6 +223,10 @@ class PHPlot
         ),
         'bars' => array(
             'draw_method' => 'DrawBars',
+        ),
+        'boxes' => array(
+            'draw_method' => 'DrawBoxes',
+            'adjust_type' => 1, // See GetRangeEndAdjust()
         ),
         'bubbles' => array(
             'draw_method' => 'DrawBubbles',
@@ -7360,6 +7368,108 @@ class PHPlot
         }
         return TRUE;
     }
+
+    /*
+     * Draw a box plot. Each row has 5 or more Y values: (Ymin, YQ1, Ymid, YQ3, Ymax, [Youtlier1,...])
+     * Typically, YQ1 = lower quartile (25%), Ymid = Median (50%), and YQ3 = upper quartile (75%),
+     * but PHPlot does not assume or enforce anything but Ymin <= YQ1 <= Ymid <= YQ3 <= Ymax.
+     * Outliers should be < Ymin or > Ymax, but PHPlot does not enforce that either.
+     */
+    protected function DrawBoxes()
+    {
+        if (!$this->CheckDataType('text-data, data-data'))
+            return FALSE;
+        if ($this->data_columns < 5)   // early error check (more inside the loop)
+            return $this->PrintError("DrawBoxes(): rows must have 5 or more values.");
+
+        // Set up the point shapes/sizes arrays - needed for outliers:
+        $this->CheckPointParams();
+
+        // Calculate the half-width of the boxes.
+        // This is scaled based on the plot density, but within tight limits.
+        $width1 = max($this->boxes_min_width, min($this->boxes_max_width,
+                     (int)($this->boxes_frac_width * $this->plot_area_width / $this->num_data_rows)));
+        // This is the half-width of the upper and lower T's and the ends of the whiskers:
+        $width2 = $this->boxes_t_width * $width1;
+
+        // A box plot can use up to 3 different line widths:
+        list($box_thickness, $belt_thickness, $whisker_thickness) = $this->line_widths;
+
+        $gcvars = array(); // For GetDataColor, which initializes and uses this.
+
+        for ($row = 0; $row < $this->num_data_rows; $row++) {
+            $record = 1;                                    // Skip record #0 (data label)
+
+            if ($this->datatype_implied)                    // Implied X values?
+                $xw = 0.5 + $row;                           // Place text-data at X = 0.5, 1.5, 2.5, etc...
+            else
+                $xw = $this->data[$row][$record++];         // Read it, advance record index
+
+            $xd = $this->xtr($xw);       // Convert X to device coordinates
+            $x_left = $xd - $width1;
+            $x_right = $xd + $width1;
+
+            if ($this->x_data_label_pos != 'none')          // Draw X Data labels?
+                $this->DrawXDataLabel($this->data[$row][0], $xd, $row);
+
+            // Each row must have at least 5 values:
+            $num_y = $this->num_recs[$row] - $record;
+            if ($num_y < 5) {
+                return $this->PrintError("DrawBoxes(): row $row must have at least 5 values.");
+            }
+
+            // Collect the 5 primary Y values, plus any outliers:
+            $yd = array(); // Device coords
+            for ($i = 0; $i < $num_y; $i++) {
+                $yd[$i] = is_numeric($y = $this->data[$row][$record++]) ? $this->ytr($y) : NULL;
+            }
+
+            // Skip the row if either YQ1 or YQ3 is missing:
+            if (!isset($yd[1], $yd[3])) continue;
+
+            // Box plot uses 4 colors, and 1 dashed line style for the whiskers:
+            $this->GetDataColor($row, 0, $gcvars, $box_color);
+            $this->GetDataColor($row, 1, $gcvars, $belt_color);
+            $this->GetDataColor($row, 2, $gcvars, $outlier_color);
+            $this->GetDataColor($row, 3, $gcvars, $whisker_color);
+            $whisker_style = $this->SetDashedStyle($whisker_color, $this->line_styles[0] == 'dashed');
+
+            // Draw the lower whisker and T
+            if (isset($yd[0]) && $yd[0] > $yd[1]) {   // Note device Y coordinates are inverted (*-1)
+                imagesetthickness($this->img, $whisker_thickness);
+                imageline($this->img, $xd, $yd[0], $xd, $yd[1], $whisker_style);
+                imageline($this->img, $xd - $width2, $yd[0], $xd + $width2, $yd[0], $whisker_color);
+            }
+
+            // Draw the upper whisker and T
+            if (isset($yd[4]) && $yd[3] > $yd[4]) {   // Meaning: Yworld[3] < Yworld[4]
+                imagesetthickness($this->img, $whisker_thickness);
+                imageline($this->img, $xd, $yd[3], $xd, $yd[4], $whisker_style);
+                imageline($this->img, $xd - $width2, $yd[4], $xd + $width2, $yd[4], $whisker_color);
+            }
+
+            // Draw the median belt (before the box, so the ends of the belt don't break up the box.)
+            if (isset($yd[2])) {
+                imagesetthickness($this->img, $belt_thickness);
+                imageline($this->img, $x_left, $yd[2], $x_right, $yd[2], $belt_color);
+             }
+
+            // Draw the box
+            imagesetthickness($this->img, $box_thickness);
+            imagerectangle($this->img, $x_left, $yd[3], $x_right, $yd[1], $box_color);
+            imagesetthickness($this->img, 1);
+
+            // Draw any outliers, all using the same shape marker (index 0) and color:
+            for ($i = 5; $i < $num_y; $i++) {
+                if (isset($yd[$i]))
+                    $this->DrawShape($xd, $yd[$i], 0, $outlier_color);
+            }
+
+            $this->DoCallback('data_points', 'rect', $row, 0, $x_left, $yd[4], $x_right, $yd[0]);
+        }
+        return TRUE;
+    }
+
 
     /*
      * Draw the graph.
