@@ -2632,6 +2632,64 @@ then all the bars touch (within each group, and adjacent groups).
 
 </sect2>
 
+<sect2 id="adv-tuning-boxes">
+<title>Tuning Box Plots</title>
+<para>
+These variables affect plot type <link linkend="plottype-boxes">boxes</link>.
+(Box Plots were added in PHPlot-6.1.0.)
+</para>
+<para>
+  <variablelist>
+    <varlistentry>
+      <term><varname>boxes_max_width</varname></term>
+      <listitem>
+        <para>
+This is one half the maximum width of the boxes. The default is 8 pixels.
+        </para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term><varname>boxes_min_width</varname></term>
+      <listitem>
+        <para>
+This is one half the minimum width of the boxes. The default is 2 pixels.
+        </para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term><varname>boxes_frac_width</varname></term>
+      <listitem>
+        <para>
+This is the fractional amount of the available space (plot width area
+divided by number of points) to use for half the width of the boxes.
+The default is 0.3. This needs to be less than 0.5 or there will be
+overlap between adjacent boxes.
+        </para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term><varname>boxes_t_width</varname></term>
+      <listitem>
+        <para>
+This is the ratio of the width of the 'T' ends of the whiskers to the
+width of the boxes.  The default is 0.6, meaning the 'T' ends are 60%
+of the width of the boxes.
+        </para>
+      </listitem>
+    </varlistentry>
+  </variablelist>
+</para>
+
+<para>
+PHPlot calculates the width of the boxes in a box plot in the same way as
+it does for OHLC and candlestick plots (see <xref linkend="adv-tuning-ohlc" />).
+Half of the width of each box is:
+<programlisting>half_width = max(boxes_min_width, min(boxes_max_width, boxes_frac_width * avail_area))
+Where avail_area = plot_area_width / number_data_points
+</programlisting>
+</para>
+</sect2>
+
 <sect2 id="adv-tuning-bubbles">
 <title>Tuning Bubble Plots</title>
 <para>
@@ -2725,7 +2783,7 @@ bodies or OHLC tick marks. The default is 0.3. This needs to be less than
 <para>
 PHPlot calculates a value to use for one half the width of the candlestick
 bodies, or for the OHLC open/close tick mark lengths, as follows:
-<programlisting>half_width = max(ohlc_min_width, min(ohlc_max_width, ohlc_frac_width * avail_area)
+<programlisting>half_width = max(ohlc_min_width, min(ohlc_max_width, ohlc_frac_width * avail_area))
 Where avail_area = plot_area_width / number_data_points
 </programlisting>
 </para>
