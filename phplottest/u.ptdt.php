@@ -43,6 +43,7 @@ $data_types = array(
 $plot_types = array(
     "area"           => array( 1, 1, 0, 0, 0, 0, 0, 0),
     "bars"           => array( 1, 0, 0, 0, 1, 0, 0, 0),
+    "boxes"          => array( 1, 1, 0, 0, 0, 0, 0, 0), // PHPlot-6.1.0
     "bubbles"        => array( 0, 0, 0, 0, 0, 0, 0, 1), // PHPlot-5.5.0
     "candlesticks"   => array( 1, 1, 0, 0, 0, 0, 0, 0), // PHPlot-5.3.0
     "candlesticks2"  => array( 1, 1, 0, 0, 0, 0, 0, 0), // PHPlot-5.3.0
@@ -111,6 +112,20 @@ function make_data_array($plot_type, $data_type)
                     array(14, 18, 12, 16),
                     array(16, 20, 14, 18));
 
+    } elseif ($data_type != 'text-data-single'
+               && $data_type != 'data-data-xyz'
+               && $plot_type == 'boxes') {
+
+        # Special case: box plots require 5 (or more) Y values per row.
+        # Note: box plots and text-data-single, data-data-xyz are not legal
+        # but they still need valid data arrays. Below would get the wrong
+        # error message if used for those.
+        $n_cols = 5;
+        $y = array( array(5, 10, 15, 20, 25),
+					array(5, 10, 15, 20, 25),
+                    array(5, 10, 15, 20, 25),
+                    array(5, 10, 15, 20, 25));
+    
     } elseif ($data_type == 'data-data-xyz') {
         $n_cols = 4;
         # This is actually Y, Z pairs.
