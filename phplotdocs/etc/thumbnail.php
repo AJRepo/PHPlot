@@ -34,16 +34,9 @@ class thumbnail extends PHPlot {
 
 # Make thumbnails for these plot types:
 $plot_types = array(
-    'area', 'bars', 'bubbles', 'candlesticks', 'candlesticks2',
-    'lines',
-    'linepoints',
-    'ohlc',
-    'pie',
-    'points',
-    'squared',
-    'stackedarea',
-    'stackedbars',
-    'thinbarline',
+    'area', 'bars', 'boxes', 'bubbles', 'candlesticks', 'candlesticks2',
+    'lines', 'linepoints', 'ohlc', 'pie', 'points', 'squared',
+    'stackedarea', 'stackedbars', 'thinbarline',
 );
 
 
@@ -62,6 +55,15 @@ $data_values['bars'] = array(
     array('', 4, 6),
     array('', 7, 5),
     array('', 4, 9),
+);
+
+$data_types['boxes'] = 'text-data';
+$data_values['boxes'] = array(
+    // Ymin YQ1 Ymid YQ3 Ymax (outliers not used)
+    array('', 1, 2, 3, 4, 6),
+    array('', 2, 3, 4, 5, 6),
+    array('', 1, 2, 3, 4, 5),
+    array('', 1, 3, 4, 5, 6),
 );
 
 $data_types['bubbles'] = 'data-data-xyz';
@@ -159,6 +161,11 @@ function setup_candlesticks2($plot)
 function setup_ohlc($plot)
 {
     setup_candlesticks($plot);
+}
+
+function setup_boxes($plot)
+{
+    $plot->SetDataColors(array('blue', 'red', 'blue', 'red'));
 }
 
 
