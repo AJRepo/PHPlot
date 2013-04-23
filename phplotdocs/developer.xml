@@ -824,6 +824,19 @@ calls <xref linkend="DrawHorizBars"/> instead.
 </varlistentry>
 
 <varlistentry>
+  <term><anchor id="DrawBoxes" xreflabel="DrawBoxes"/>DrawBoxes()</term>
+  <listitem>
+    <para>
+Draws a box plot.
+Called by <xref linkend="DrawGraph"/> when the plot type is
+<literal>boxes</literal>.
+This was added in PHPlot-6.1.0.
+    </para>
+  </listitem>
+</varlistentry>
+
+
+<varlistentry>
   <term><anchor id="DrawBubbles" xreflabel="DrawBubbles"/>DrawBubbles()</term>
   <listitem>
     <para>
