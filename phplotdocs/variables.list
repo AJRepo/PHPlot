@@ -18,6 +18,10 @@ bg_color		SetBackgroundColor	Color (R,G,B,A) for image background
 bgimg		SetBgImage	Background image filename
 bgmode		SetBgImage	Background image tiling mode
 browser_cache	FALSE	SetBrowserCache	Flag: Don't send cache suppression headers
+boxes_frac_width	0.3	DrawBoxes	Scale factor for box widths in box plots. Default is 0.3, meaning within min and max limits the boxes will use 30% of the available space for half their width.  <link linkend="adv-tuning-boxes">(See Tuning Parameters for more)</link> (Added in PHPlot-6.1.0)
+boxes_max_width	8	DrawBoxes	Maximum half-width for boxes in box plots. Default is 8 pixels.  <link linkend="adv-tuning-boxes">(See Tuning Parameters for more)</link> (Added in PHPlot-6.1.0)
+boxes_min_width	2	DrawBoxes	Minimum half-width for boxes in box plots.  Default is 2 pixels.  <link linkend="adv-tuning-boxes">(See Tuning Parameters for more)</link> (Added in PHPlot-6.1.0)
+boxes_t_width	0.6	DrawBoxes	Ratio of the width of the 'T' ends of box plot whiskers to the width of the boxes. Default is 0.6.  <link linkend="adv-tuning-boxes">(See Tuning Parameters for more)</link> (Added in PHPlot-6.1.0)
 bubbles_max_size		DrawBubbles	Max bubble size for bubbles plots <link linkend="adv-tuning-bubbles">(See Tuning Parameters for more)</link> (Added in PHPlot-5.4.0)
 bubbles_min_size	6	DrawBubbles	Min bubbles size for bubble plots <link linkend="adv-tuning-bubbles">(See Tuning Parameters for more)</link> (Added in PHPlot-5.4.0)
 callbacks	array(...)	SetCallback	Callback (hook) function information. Indexed by callback reason; value is an array of function name and pass-through argument if the callback is in use, else NULL.
