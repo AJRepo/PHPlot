@@ -2025,4 +2025,73 @@ Note: Horizontal error plots were added in PHPlot-6.1.0.
 </sect1>
 
 <!-- =============================================== -->
+<pagebreak/>
+<sect1 id="ex-boxplot1">
+<title>Example - Box Plot with Data Reduction</title>
+<para>
+This is a box plot (plot type <link linkend="plottype-boxes">boxes</link>),
+without outliers.
+This example also shows how a PHP function might be used to create a PHPlot
+data array from experimental results. The input data is a series of lists
+of test results, and the output is a PHPlot data array for a box plot, with
+rows in the form <literal>(label, Ymin, YQ1, Ymid, YQ3, Ymax)</literal>.
+</para>
+
+<para>
+Note: Box plots were added in PHPlot-6.1.0.
+</para>
+
+<example id="example-boxplot1">
+<?dbfo keep-together="auto"?>
+<title>Box Plot with Data Reduction</title>
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="examples/boxplot1.png" scale="58" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>Box Plot with Data Reduction Example</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+&boxplot1;
+</example>
+</sect1>
+
+<!-- =============================================== -->
+<pagebreak/>
+<sect1 id="ex-boxplot2">
+<title>Example - Box Plot with Outliers and Styles</title>
+<para>
+This is a box plot (plot type <link linkend="plottype-boxes">boxes</link>).
+Unlike the previous example (<xref linkend="ex-boxplot1"/>) the data array
+is already processed, and includes the 5 values that make up each row for a
+box plot (<literal>Ymin, YQ1, Ymid, YQ3, Ymax</literal>) and some
+additional <emphasis>outlier</emphasis> points.
+This example also shows how colors and line styles can be applied to a box
+plot.
+</para>
+
+<para>
+Note: Box plots were added in PHPlot-6.1.0.
+</para>
+
+<example id="example-boxplot2">
+<?dbfo keep-together="auto"?>
+<title>Box Plot with Outliers and Styles</title>
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="examples/boxplot2.png" scale="58" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>Box Plot with Outliers and Styles</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+&boxplot2;
+</example>
+</sect1>
+
+<!-- =============================================== -->
 </chapter>
