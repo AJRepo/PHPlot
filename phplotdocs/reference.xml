@@ -1623,7 +1623,15 @@ data colors.
 You can control how the data colors array is used with a data colors callback.
 See <xref linkend="adv-datacolor-callback" /> for more information.
     </para>
+
+    <para>
+Some plot types which only support a single data set still use multiple
+data colors, but in a way that is specific to that plot type.  This is
+described for each applicable plot type in <xref linkend="conc-plottypes"/>.
+    </para>
+
   </refsect1>
+
   <refsect1>
     <title>History</title>
     <para>
@@ -5248,6 +5256,22 @@ If an array is used for <parameter>$lw</parameter>, it
 must use zero-based sequential integer indexes.
     </para>
     <para>
+The plot types that support using different line widths for the data sets
+being plotted are:
+<link linkend="plottype-lines">lines</link>,
+<link linkend="plottype-linepoints">linepoints</link>,
+<link linkend="plottype-squared">squared</link>, and
+<link linkend="plottype-thinbarline">thinbarline</link>.
+In addition, you can use <function>SetLineWidths</function> with some
+other plot types which support only a single data set but use multiple
+line widths in a plot-specific way:
+<link linkend="plottype-boxes">boxes</link>,
+<link linkend="plottype-candlesticks">candlesticks</link>,
+<link linkend="plottype-candlesticks2">candlesticks2</link>, and
+<link linkend="plottype-ohlc">ohlc</link>.
+Line widths do not apply to all other plot types.
+    </para>
+    <para>
 By default, all data set plot lines are 1 pixel wide.
     </para>
   </refsect1>
@@ -6993,6 +7017,7 @@ A string indicating the type of plot. The following types are available:
             <itemizedlist spacing="compact">
               <listitem><para>area</para></listitem>
               <listitem><para>bars</para></listitem>
+              <listitem><para>boxes</para></listitem>
               <listitem><para>bubbles</para></listitem>
               <listitem><para>candlesticks</para></listitem>
               <listitem><para>candlesticks2</para></listitem>
@@ -7023,6 +7048,9 @@ A complete description of the available plot types can be found in
   </refsect1>
   <refsect1>
     <title>History</title>
+    <para>
+Plot type 'boxes' was added in PHPlot-6.1.0.
+     </para>
     <para>
 Plot type 'bubbles' was added in PHPlot-5.5.0.
      </para>
