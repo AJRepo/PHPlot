@@ -3,6 +3,11 @@ This is phplotdocs/ChangeLog, listing changes to the PHPlot Reference Manual
 Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
+2013-04-24
+    * advanced.xml: Document image maps with new 'boxes' plot type.
+      Also, in the image map section, sorted the sub-sections, list elements,
+      and table rows by plot type name for consistency.
+
 2013-04-22
     * Document changes for new plot type 'boxes' (Feature Request #52):
       + examples/boxplot[12].php: 2 new examples of box plots.
