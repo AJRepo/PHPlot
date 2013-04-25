@@ -4000,14 +4000,7 @@ types:
     </listitem>
     <listitem>
       <para>
-<link linkend="plottype-points">points</link> and
-<link linkend="plottype-linepoints">linepoints</link>
-(both standard and error bar plots)
-      </para>
-    </listitem>
-    <listitem>
-      <para>
-<link linkend="plottype-pie">pie</link>
+<link linkend="plottype-boxes">boxes</link>
       </para>
     </listitem>
     <listitem>
@@ -4020,6 +4013,18 @@ types:
 <link linkend="plottype-ohlc">ohlc</link>,
 <link linkend="plottype-candlesticks">candlesticks</link>, and
 <link linkend="plottype-candlesticks2">candlesticks2</link>
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+<link linkend="plottype-pie">pie</link>
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+<link linkend="plottype-points">points</link> and
+<link linkend="plottype-linepoints">linepoints</link>
+(both standard and error bar plots)
       </para>
     </listitem>
   </itemizedlist>
@@ -4220,31 +4225,28 @@ image map for a bar chart.
 
 </sect3>
 
-<sect3 id="adv-imgmap-points">
-<title>Image Maps from Points and Linepoints Plots</title>
+<sect3 id="adv-imgmap-boxes">
+<title>Image Maps from Box Plots</title>
 <para>
-With plot types <link linkend="plottype-points">points</link>
-and <link linkend="plottype-linepoints">linepoints</link>,
-an image map can be produced which indicates the area around each point.
-The lines in a linepoints plot are not part of the image map areas.
-This also works with error plots that use these plot types, however the
-error bars are not part of the image map areas.
+With plot type <link linkend="plottype-boxes">boxes</link>, an image map
+can be produced which indicates the area of each data point.
+This area is the bounding box which includes the box and both whiskers.
 </para>
 
 <para>
-For points and linepoints plots, the <literal>data_points</literal> callback
+For box plots, the <literal>data_points</literal> callback
 has this form:
-<programlisting><![CDATA[function my_handler($img, $passthru, $shape, $row, $column, $x, $y)
+<programlisting><![CDATA[function my_handler($img, $passthru, $shape, $row, $column, $x1, $y1, $x2, $y2)
 ]]></programlisting>
 The first 2 arguments are standard for all PHPlot callbacks and are not
 described here. The next 3 arguments are common to all data_points
-callbacks, and there are 2 additional arguments:
+callbacks, and there are 4 additional arguments:
 <variablelist>
   <varlistentry>
     <term>$shape</term>
     <listitem>
       <para>
-Always <literal>dot</literal>, indicating a single point.
+Always <literal>rect</literal>, indicating a rectangle shape.
       </para>
     </listitem>
   </varlistentry>
@@ -4252,112 +4254,7 @@ Always <literal>dot</literal>, indicating a single point.
     <term>$row</term>
     <listitem>
       <para>
-The row is the index for the independent variable X.
-The first X value has index 0.
-      </para>
-    </listitem>
-  </varlistentry>
-  <varlistentry>
-    <term>$column</term>
-    <listitem>
-      <para>
-The column is the index for the dependent variable Y.
-For the first (or only) dataset for each X, the column index is 0.
-      </para>
-    </listitem>
-  </varlistentry>
-  <varlistentry>
-    <term>$x, $y</term>
-    <listitem>
-      <para>
-Device coordinates of the center of the point marker.
-      </para>
-    </listitem>
-  </varlistentry>
-</variablelist>
-</para>
-
-<para>
-Generating an image map for points and linepoints plots is straight-forward.
-PHPlot provides only the center coordinates for each point marker. It
-does not indicate the shape or size of the marker, nor the coordinates of
-any line segments or error bars. To generate an image map, you should use a
-fixed radius size and define the image map areas as circles with that
-radius centered around each data point. You need to choose a radius. A
-larger radius provides a larger clickable area, but the area of adjacent
-points may overlap.
-</para>
-
-<para>
-Here is an example of generating one area in an image map from a points
-or linepoints plot. You must provide the URL, alternate text, and
-optionally a title (tooltip text).  This appends the image map line to a
-string.  sprintf() is used to convert the coordinates to integers for
-cleaner HTML.  This example uses a 20 pixel radius for the areas around
-each data point.
-<programlisting><![CDATA[define('MAP_RADIUS', 20); // Capture area circle radii
-$coords = sprintf("%d,%d,%d", $x, $y, MAP_RADIUS);
-$image_map .= "  <area shape=\"circle\" coords=\"$coords\""
-           . " title=\"$title_text\" alt=\"$alt_text\" href=\"$url\">\n";
-]]></programlisting>
-The <literal>$url</literal>, <literal>$title_text</literal>, and
-<literal>$alt_text</literal> would typically depend on the passed
-<literal>$row</literal> and <literal>$column</literal>.
-</para>
-
-<para>
-Other than the above code, a script to generate an image map for a points or
-linepoints plot would be similar to <xref linkend="ex-imagemap-bars"/>, which
-produces a bar chart.
-</para>
-
-</sect3>
-
-<sect3 id="adv-imgmap-pie">
-<title>Image Maps from Pie Plots</title>
-<para>
-With plot type <link linkend="plottype-pie">pie</link>,
-an image map can be produced which indicates the area of each pie segment.
-However, PHPlot only supplies the values which identify the outline of the
-pie segment, and HTML maps do not support areas of this shape.
-Therefore, the callback handler function needs to generate
-one or more polygons which approximate the pie segment area.
-</para>
-
-<note>
-  <para>
-PHPlot does not attempt to draw pie segments that are too small (due to
-the implementation of the PHP/GD drawing function). If a segment's calculated
-start angle and end angle are equal (after converting to integers), the
-segment will not be drawn, and the data_points callback will not be called for
-that segment.
-  </para>
-</note>
-
-<para>
-For pie charts, the <literal>data_points</literal> callback has this form:
-<programlisting><![CDATA[function my_handler($img, $passthru, $shape, $row, $column, $x, $y,
-                    $pie_width, $pie_height, $start_angle, $end_angle)
-]]></programlisting>
-The first 2 arguments are standard for all PHPlot callbacks and are not
-described here. The next 3 arguments are common to all data_points
-callbacks, and there are 6 additional arguments:
-<variablelist>
-  <varlistentry>
-    <term>$shape</term>
-    <listitem>
-      <para>
-Always <literal>pie</literal>, indicating a pie segment of an ellipse.
-      </para>
-    </listitem>
-  </varlistentry>
-  <varlistentry>
-    <term>$row</term>
-    <listitem>
-      <para>
-The pie segment index, starting at 0 for the first segment.
-(By default, segments are drawn counter-clockwise from 0 degrees, but this
-can be changed.)
+The index of the data row, starting with 0 for the first X value.
       </para>
     </listitem>
   </varlistentry>
@@ -4370,92 +4267,39 @@ This is unused, and always 0.
     </listitem>
   </varlistentry>
   <varlistentry>
-    <term>$x, $y</term>
+    <term>$x1, $y1</term>
     <listitem>
       <para>
-Device coordinates of the center of the pie.
-      </para>
-    </listitem>
-  </varlistentry>
-
-  <varlistentry>
-    <term>$pie_width</term>
-    <listitem>
-      <para>
-Horizontal diameter of the pie, in pixels.
+Device coordinates of the upper left corner.
       </para>
     </listitem>
   </varlistentry>
   <varlistentry>
-    <term>$pie_height</term>
+    <term>$x2, $y2</term>
     <listitem>
       <para>
-Vertical diameter of the pie, in pixels.
-      </para>
-    </listitem>
-  </varlistentry>
-
-  <varlistentry>
-    <term>$start_angle</term>
-    <listitem>
-      <para>
-Starting angle for the segment, in clockwise degrees (see note).
-      </para>
-    </listitem>
-  </varlistentry>
-  <varlistentry>
-    <term>$end_angle</term>
-    <listitem>
-      <para>
-Ending angle for the segment, in clockwise degrees.
+Device coordinates of the lower right corner.
       </para>
     </listitem>
   </varlistentry>
 </variablelist>
-</para>
-<note>
-  <para>
-<emphasis>clockwise degrees</emphasis> means (360 - A), where A is an angle
-measured in the conventional sense: counter-clockwise from the X axis.
-For example, a pie segment that starts at the top of the pie ('North') and
-ends at the bottom point ('South') would have start_angle=270 and end_angle=90.
-The start_angle is always greater than the end angle.
-  </para>
-</note>
-
-<para>
-Generating an image map for pie charts is more involved than with other
-plot types.
-Each pie segment is defined by the ellipse center point, the two diameter
-values, and the start and end angles.
-Due to the PHP/GD implementation, PHPlot uses clockwise angles (360-A), so
-the start_angle is greater than the end_angle, and the segment is drawn
-clockwise from the end_angle to the start_angle.
+The upper left and lower right coordinates above refer to the bounding box
+as described above.
 </para>
 
 <para>
-HTML image maps do not support ellipse section shapes directly.
-Therefore, the callback function has to approximate the area using one or
-more polygons.
+Generating an image map for box plots is straight-forward.
+The provided <literal>$shape</literal> and coordinates are compatible with
+HTML &lt;area&gt; markup.
+You must provide the URL, alternate text, and optionally a title (tooltip text).
 </para>
 
 <para>
-The method shown in the example linked below approximates the pie segment
-area using a polygon with one point at the pie center, one point at each
-end of the arc, and zero or more points along the arc , such that the
-maximum separation of points along the circumference is no more than 20
-degrees. This has been found to produce a good fit for image maps.  More
-details on the method can be found in the example.
-</para>
-
-<para>
-Once you have your points (converted to integers, in an array
-<literal>$points</literal> with X and Y values alternating), you can generate
-a line in the image map as follows.
 This example appends the image map line to a string.
-<programlisting><![CDATA[$coords = implode(',', $points);
-$image_map .= "  <area shape=\"poly\" coords=\"$coords\""
-           .  " title=\"$title_text\" alt=\"$alt_text\" href=\"$url\">\n";
+sprintf() is used to convert the coordinates to integers for cleaner HTML.
+<programlisting><![CDATA[$coords = sprintf("%d,%d,%d,%d", $x1, $y1, $x2, $y2);
+$image_map .= "  <area shape=\"rect\" coords=\"$coords\""
+          .. " title=\"$title_text\" alt=\"$alt_text\" href=\"$url\">\n";
 ]]></programlisting>
 The <literal>$url</literal>, <literal>$title_text</literal>, and
 <literal>$alt_text</literal> would typically depend on the passed
@@ -4463,8 +4307,10 @@ The <literal>$url</literal>, <literal>$title_text</literal>, and
 </para>
 
 <para>
-Refer to <xref linkend="ex-imagemap-pie"/> for a complete example of an
-image map for a pie chart.
+<xref linkend="ex-imagemap-bars"/> contains a complete example of an
+image map for a bar chart, and the parameters and usage for box plots are
+the same except that the $col (column) parameter is always 0, since there
+is only one data set.
 </para>
 
 </sect3>
@@ -4648,8 +4494,258 @@ The <literal>$url</literal>, <literal>$title_text</literal>, and
 
 <para>
 <xref linkend="ex-imagemap-bars"/> contains a complete example of an
-image map for a bar chart, and the parameters and usage for OHLC plots is
-the same.
+image map for a bar chart, and the parameters and usage for OHLC plots are
+the same except that the $col (column) parameter is always 0, since there
+is only one data set.
+</para>
+
+</sect3>
+
+<sect3 id="adv-imgmap-pie">
+<title>Image Maps from Pie Plots</title>
+<para>
+With plot type <link linkend="plottype-pie">pie</link>,
+an image map can be produced which indicates the area of each pie segment.
+However, PHPlot only supplies the values which identify the outline of the
+pie segment, and HTML maps do not support areas of this shape.
+Therefore, the callback handler function needs to generate
+one or more polygons which approximate the pie segment area.
+</para>
+
+<note>
+  <para>
+PHPlot does not attempt to draw pie segments that are too small (due to
+the implementation of the PHP/GD drawing function). If a segment's calculated
+start angle and end angle are equal (after converting to integers), the
+segment will not be drawn, and the data_points callback will not be called for
+that segment.
+  </para>
+</note>
+
+<para>
+For pie charts, the <literal>data_points</literal> callback has this form:
+<programlisting><![CDATA[function my_handler($img, $passthru, $shape, $row, $column, $x, $y,
+                    $pie_width, $pie_height, $start_angle, $end_angle)
+]]></programlisting>
+The first 2 arguments are standard for all PHPlot callbacks and are not
+described here. The next 3 arguments are common to all data_points
+callbacks, and there are 6 additional arguments:
+<variablelist>
+  <varlistentry>
+    <term>$shape</term>
+    <listitem>
+      <para>
+Always <literal>pie</literal>, indicating a pie segment of an ellipse.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>$row</term>
+    <listitem>
+      <para>
+The pie segment index, starting at 0 for the first segment.
+(By default, segments are drawn counter-clockwise from 0 degrees, but this
+can be changed.)
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>$column</term>
+    <listitem>
+      <para>
+This is unused, and always 0.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>$x, $y</term>
+    <listitem>
+      <para>
+Device coordinates of the center of the pie.
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
+    <term>$pie_width</term>
+    <listitem>
+      <para>
+Horizontal diameter of the pie, in pixels.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>$pie_height</term>
+    <listitem>
+      <para>
+Vertical diameter of the pie, in pixels.
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
+    <term>$start_angle</term>
+    <listitem>
+      <para>
+Starting angle for the segment, in clockwise degrees (see note).
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>$end_angle</term>
+    <listitem>
+      <para>
+Ending angle for the segment, in clockwise degrees.
+      </para>
+    </listitem>
+  </varlistentry>
+</variablelist>
+</para>
+<note>
+  <para>
+<emphasis>clockwise degrees</emphasis> means (360 - A), where A is an angle
+measured in the conventional sense: counter-clockwise from the X axis.
+For example, a pie segment that starts at the top of the pie ('North') and
+ends at the bottom point ('South') would have start_angle=270 and end_angle=90.
+The start_angle is always greater than the end angle.
+  </para>
+</note>
+
+<para>
+Generating an image map for pie charts is more involved than with other
+plot types.
+Each pie segment is defined by the ellipse center point, the two diameter
+values, and the start and end angles.
+Due to the PHP/GD implementation, PHPlot uses clockwise angles (360-A), so
+the start_angle is greater than the end_angle, and the segment is drawn
+clockwise from the end_angle to the start_angle.
+</para>
+
+<para>
+HTML image maps do not support ellipse section shapes directly.
+Therefore, the callback function has to approximate the area using one or
+more polygons.
+</para>
+
+<para>
+The method shown in the example linked below approximates the pie segment
+area using a polygon with one point at the pie center, one point at each
+end of the arc, and zero or more points along the arc , such that the
+maximum separation of points along the circumference is no more than 20
+degrees. This has been found to produce a good fit for image maps.  More
+details on the method can be found in the example.
+</para>
+
+<para>
+Once you have your points (converted to integers, in an array
+<literal>$points</literal> with X and Y values alternating), you can generate
+a line in the image map as follows.
+This example appends the image map line to a string.
+<programlisting><![CDATA[$coords = implode(',', $points);
+$image_map .= "  <area shape=\"poly\" coords=\"$coords\""
+           .  " title=\"$title_text\" alt=\"$alt_text\" href=\"$url\">\n";
+]]></programlisting>
+The <literal>$url</literal>, <literal>$title_text</literal>, and
+<literal>$alt_text</literal> would typically depend on the passed
+<literal>$row</literal>.
+</para>
+
+<para>
+Refer to <xref linkend="ex-imagemap-pie"/> for a complete example of an
+image map for a pie chart.
+</para>
+
+</sect3>
+
+<sect3 id="adv-imgmap-points">
+<title>Image Maps from Points and Linepoints Plots</title>
+<para>
+With plot types <link linkend="plottype-points">points</link>
+and <link linkend="plottype-linepoints">linepoints</link>,
+an image map can be produced which indicates the area around each point.
+The lines in a linepoints plot are not part of the image map areas.
+This also works with error plots that use these plot types, however the
+error bars are not part of the image map areas.
+</para>
+
+<para>
+For points and linepoints plots, the <literal>data_points</literal> callback
+has this form:
+<programlisting><![CDATA[function my_handler($img, $passthru, $shape, $row, $column, $x, $y)
+]]></programlisting>
+The first 2 arguments are standard for all PHPlot callbacks and are not
+described here. The next 3 arguments are common to all data_points
+callbacks, and there are 2 additional arguments:
+<variablelist>
+  <varlistentry>
+    <term>$shape</term>
+    <listitem>
+      <para>
+Always <literal>dot</literal>, indicating a single point.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>$row</term>
+    <listitem>
+      <para>
+The row is the index for the independent variable X.
+The first X value has index 0.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>$column</term>
+    <listitem>
+      <para>
+The column is the index for the dependent variable Y.
+For the first (or only) dataset for each X, the column index is 0.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>$x, $y</term>
+    <listitem>
+      <para>
+Device coordinates of the center of the point marker.
+      </para>
+    </listitem>
+  </varlistentry>
+</variablelist>
+</para>
+
+<para>
+Generating an image map for points and linepoints plots is straight-forward.
+PHPlot provides only the center coordinates for each point marker. It
+does not indicate the shape or size of the marker, nor the coordinates of
+any line segments or error bars. To generate an image map, you should use a
+fixed radius size and define the image map areas as circles with that
+radius centered around each data point. You need to choose a radius. A
+larger radius provides a larger clickable area, but the area of adjacent
+points may overlap.
+</para>
+
+<para>
+Here is an example of generating one area in an image map from a points
+or linepoints plot. You must provide the URL, alternate text, and
+optionally a title (tooltip text).  This appends the image map line to a
+string.  sprintf() is used to convert the coordinates to integers for
+cleaner HTML.  This example uses a 20 pixel radius for the areas around
+each data point.
+<programlisting><![CDATA[define('MAP_RADIUS', 20); // Capture area circle radii
+$coords = sprintf("%d,%d,%d", $x, $y, MAP_RADIUS);
+$image_map .= "  <area shape=\"circle\" coords=\"$coords\""
+           . " title=\"$title_text\" alt=\"$alt_text\" href=\"$url\">\n";
+]]></programlisting>
+The <literal>$url</literal>, <literal>$title_text</literal>, and
+<literal>$alt_text</literal> would typically depend on the passed
+<literal>$row</literal> and <literal>$column</literal>.
+</para>
+
+<para>
+Other than the above code, a script to generate an image map for a points or
+linepoints plot would be similar to <xref linkend="ex-imagemap-bars"/>, which
+produces a bar chart.
 </para>
 
 </sect3>
@@ -4677,17 +4773,6 @@ callback parameters for each supported plot type.
     <tbody>
 
       <row>
-        <entry morerows="1">points, linepoints</entry>
-        <entry>$img, $passthru, $shape='dot', $row, $column, $x, $y</entry>
-      </row>
-      <row>
-        <entry>
-          x,y is center. Supply a radius for image map circle areas.
-          Image map area will cover the points only, not lines.
-        </entry>
-      </row>
-
-      <row>
         <entry morerows="1">bars, stackedbars </entry>
         <entry>$img, $passthru, $shape='rect', $row, $column, $x1, $y1, $x2, $y2</entry>
       </row>
@@ -4698,12 +4783,13 @@ callback parameters for each supported plot type.
       </row>
 
       <row>
-        <entry morerows="1">pie</entry>
-        <entry>$img, $passthru, $shape='pie', $row, 0, $x, $y, $width, $height, $start_angle, $end_angle</entry>
+        <entry morerows="1">boxes</entry>
+        <entry>$img, $passthru, $shape='rect', $row, 0, $x1, $y1, $x2, $y2</entry>
       </row>
       <row>
         <entry>
-          Callback needs to fit a polygon to the ellipse segment.
+          Rectangle shape includes box and whiskers. It does not include
+          any outliers.
         </entry>
       </row>
 
@@ -4727,6 +4813,28 @@ callback parameters for each supported plot type.
           or OHLC marker.
         </entry>
       </row>
+
+      <row>
+        <entry morerows="1">pie</entry>
+        <entry>$img, $passthru, $shape='pie', $row, 0, $x, $y, $width, $height, $start_angle, $end_angle</entry>
+      </row>
+      <row>
+        <entry>
+          Callback needs to fit a polygon to the ellipse segment.
+        </entry>
+      </row>
+
+      <row>
+        <entry morerows="1">points, linepoints</entry>
+        <entry>$img, $passthru, $shape='dot', $row, $column, $x, $y</entry>
+      </row>
+      <row>
+        <entry>
+          x,y is center. Supply a radius for image map circle areas.
+          Image map area will cover the points only, not lines.
+        </entry>
+      </row>
+
     </tbody>
   </tgroup>
 </informaltable>
@@ -4765,7 +4873,8 @@ bar chart.
 </para>
 
 <para>
-For OHLC plots (candlesticks, candlesticks2, and ohlc plot types),
+For OHLC plots (candlesticks, candlesticks2, and ohlc plot types), and
+for box plots,
 PHPlot does not provide the callback with the coordinates of individual
 features (such as the candlestick body rather than the high point wick).
 PHPlot only provides the bounding box rectangle for the overall data point
