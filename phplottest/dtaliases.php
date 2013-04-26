@@ -1,4 +1,5 @@
 <?php
+# $Id$
 # PHPlot test: Data Type Aliases
 # This test does not output any images. It creates pairs of images as
 # data, one for the alias and one for the primary data type, and sees if

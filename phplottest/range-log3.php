@@ -1,6 +1,6 @@
 <?php
 # $Id$
-# PHPlot test: >>One-line test description, also used as RCS message
+# PHPlot test: Log/log scales
 # This is a parameterized test. See the script named at the bottom for details.
 $tp = array(
   'c' => 10,         # Plotting XY = C
