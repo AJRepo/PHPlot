@@ -2,6 +2,13 @@ This is the Change Log for phplottest, the PHPlot Test Suite
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2013-04-25
+    Added new tests for making imagemaps from the new box plots:
+    * imagemap_html-bx.php, imagemap_trace-bx.php: 2 new tests
+    * tests.ini: List 2 new tests.
+    Changed test for new plot type:
+    * u.baddata.php: Add test cases for new box plots.
+
 2013-04-23
     Added new tests for Box Plots (feature request #52):
     * ex-boxplot[12].php: New box plot examples from reference manual.
