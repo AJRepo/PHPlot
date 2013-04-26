@@ -215,10 +215,14 @@ test('OHLC, data-data with wrong value count [not valid]',
      array(array('a', 1, 2, 3, 1)),
      'data-data', 'ohlc', True, 'must have 4 values');
 
-# All plot types with no values. All should make an empty plot with no error.
+# All plot types with no values.
+# Except for special cases, all should make an empty plot with no error.
 # text-data data type:
 test('area plot: no values', $data2, 'text-data', 'area', False);
 test('bars plot: no values', $data2, 'text-data', 'bars', False);
+#     Special case, requires 5 or more values per row
+test('boxes plot: no values', $data2, 'text-data', 'boxes', True,
+      'must have 5 or more values');
 test('linepoints plot: no values', $data2, 'text-data', 'linepoints', False);
 test('lines plot: no values', $data2, 'text-data', 'lines', False);
 test('pie plot: no values', $data2, 'text-data', 'pie', False);
@@ -232,6 +236,9 @@ test('stackedbars plot: no values', $data2, 'text-data', 'stackedbars', False);
 test('thinbarline plot: no values', $data2, 'text-data', 'thinbarline', False);
 # data-data data type:
 test('area data-data plot: no values', $data3, 'data-data', 'area', False);
+#     Special case, requires 5 or more values per row
+test('boxes data-data plot: no values', $data3, 'data-data', 'boxes', True,
+      'must have 5 or more values');
 test('linepoints data-data plot: no values', $data3, 'data-data', 'linepoints', False);
 test('lines data-data plot: no values', $data3, 'data-data', 'lines', False);
 test('pie data-data plot: no values', $data3, 'data-data', 'pie', False);
@@ -260,6 +267,9 @@ test('bubbles plot: no values', $data3, 'data-data-xyz', 'bubbles', False);
 # text-data data type:
 test('area plot: 1 row/1 missing value', $data4, 'text-data', 'area', False);
 test('bars plot: 1 row/1 missing value', $data4, 'text-data', 'bars', False);
+#     Special case, requires 5 or more values per row
+test('boxes plot: 1 row/1 missing value', $data4, 'text-data', 'boxes', True,
+      'must have 5 or more values');
 test('linepoints plot: 1 row/1 missing value', $data4, 'text-data', 'linepoints', False);
 test('lines plot: 1 row/1 missing value', $data4, 'text-data', 'lines', False);
 test('pie plot: 1 row/1 missing value', $data4, 'text-data', 'pie', False);
@@ -273,6 +283,9 @@ test('stackedbars plot: 1 row/1 missing value', $data4, 'text-data', 'stackedbar
 test('thinbarline plot: 1 row/1 missing value', $data4, 'text-data', 'thinbarline', False);
 # data-data data type:
 test('area data-data plot: 1 row/1 missing value', $data5, 'data-data', 'area', False);
+#     Special case, requires 5 or more values per row
+test('boxes data-data plot: 1 row/1 missing value', $data5, 'data-data', 'boxes', True,
+      'must have 5 or more values');
 test('linepoints data-data plot: 1 row/1 missing value', $data5, 'data-data', 'linepoints', False);
 test('lines data-data plot: 1 row/1 missing value', $data5, 'data-data', 'lines', False);
 test('pie data-data plot: 1 row/1 missing value', $data5, 'data-data', 'pie', False);
@@ -315,12 +328,18 @@ test('stackedarea plot: 1 of 3 rows without value',
 test('ohlc plot: 1 of 3 rows without value',
      $data7, 'text-data', 'ohlc', True, 'must have 4');
 
+# Empty plot cases without error for plot types requiring specific numbers of values:
 # OHLC (after 5.4.0) requires 4 values but accepts empty values and skips that point.
 # Test OHLC with one empty row.
 test('ohlc plot: 1 row no values',
      array(array('a', '', '', '', '')), 'text-data', 'ohlc', False);
 test('ohlc plot: 1 row no values',
      array(array('a', 1, '', '', '', '')), 'data-data', 'ohlc', False);
+# Test Box plot with 1 empty row (needs 5 Y values per row).
+test('box plot: 1 row no values',
+     array(array('a', '', '', '', '', '')), 'text-data', 'boxes', False);
+test('box plot: 1 row no values',
+     array(array('a', 1, '', '', '', '', '')), 'data-data', 'boxes', False);
 
 # ===== Summarize:
 echo "test bad data array results: $n_tests test cases, $n_pass pass, $n_fail fail\n";
