@@ -2,6 +2,12 @@ This is the Change Log for phplottest, the PHPlot Test Suite
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2013-05-07
+    * transparent-reset*.php: 2 tests that were overlooked (written but never
+      added to the test suite for PHPlot-6.0.0). They test the fix/feature for
+      resetting transparent color selection.
+    * tests.ini: List 2 new tests.
+
 2013-04-26
     * dtaliases.php, range-log[1-5].php: Fix top comments (these are
       extracted by a script used to help keep track of the tests).
