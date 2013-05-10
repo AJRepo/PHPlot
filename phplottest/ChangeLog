@@ -2,6 +2,11 @@ This is the Change Log for phplottest, the PHPlot Test Suite
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2013-05-10
+    * compare_tests.php: Updated this utility script which compares test
+      results against a baseline. Added text file compare, -q option for
+      quieter operation, and -m option to check only matched tests.
+
 2013-05-07
     * transparent-reset*.php: 2 tests that were overlooked (written but never
       added to the test suite for PHPlot-6.0.0). They test the fix/feature for
