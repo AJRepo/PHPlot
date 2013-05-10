@@ -2,10 +2,19 @@
 # $Id$
 # compare_tests : Check test output from PHPlot testing
 
+# Default image viewer command. This needs to accept 1 or 2 image file
+# names; with 2 names it should allow back/forth toggling.
+# The VIEWER environment variable overrides this.
+define('DEFAULT_VIEWER', 'qiv -p');
+
+# Default text file compare command.
+# The DIFF environment variable overrides this.
+define('DEFAULT_DIFF', 'diff -u');
+
 # Display usage and exit:
 function usage()
 {
-    fwrite(STDERR, '
+    fprintf(STDERR, '
 Usage: compare_tests [options] result_dir reference_dir
   result_dir is the directory where the test results can be found.
   reference_dir is the directory with saved reference output.
@@ -13,8 +22,14 @@ Usage: compare_tests [options] result_dir reference_dir
      -a   View all file pairs
      -d   View all differing pairs
      -n   View all new pairs
+     -q   Quiet mode: do not list matching tests
+     -m P Check only tests matching wildcard match pattern P
    Also -d -n, or -dn or -nd views new or differing pairs.
-');
+   The VIEWER environment variable defines the command line for an image
+file viewer. The default is: %s
+   The DIFF environment variable defines the command line for text
+file comparison. The default is: %s
+',  DEFAULT_VIEWER, DEFAULT_DIFF);
     exit(1);
 
 }
@@ -29,32 +44,59 @@ function compare_files($file1, $file2)
        && $s1 === $s2);
 }
 
-# View an image file or pair of image files:
-function view_file($filename, $refname = NULL)
+# Return true if the given filename seems to be an image file:
+function is_image_file($filename)
+{
+    return preg_match('/\\.(png|gif|jpg)$/i', $filename);
+}
+
+# View a single image or text file. This is used when there is a new test
+# result (no matching reference file), or when the results match but the
+# 'view all' option was used.
+function view_file($filename)
 {
     global $viewer;
-    # Skip non-image files:
-    if (!preg_match('/\\.(png|gif|jpg)$/i', $filename)) return;
 
-    if (empty($refname)) {
+    if (is_image_file($filename)) {
         echo "View: $filename\n";
         system("$viewer $filename");
     } else {
-        echo "View: $refname $filename\n";
-        system("$viewer $refname $filename");
+        # Text file
+        echo "===== Text file: $filename\n";
+        readfile($filename);
+        echo "=====\n";
     }
 }
 
-# If a viewer is defined in the envronment, use that:
-if (($viewer = getenv('VIEWER')) === False) {
-    # Happens to be my preference:
-    $viewer = 'qiv -p';
+# View a pair of image or text files. This is used when the test results
+# do not match: the reference file differs from the result file.
+function view_files($filename, $refname)
+{
+    global $viewer, $diff;
+
+    if (is_image_file($filename)) {
+        echo "View: $refname $filename\n";
+        system("$viewer $refname $filename");
+    } else {
+        # Text file
+        echo "===== Compare: $refname $filename\n";
+        system("$diff $refname $filename");
+        echo "=====\n";
+    }
 }
+
+# Get the command lines to use for viewer and text file compare:
+if (($viewer = getenv('VIEWER')) === False)
+    $viewer = DEFAULT_VIEWER;
+if (($diff = getenv('DIFF')) === False)
+    $diff = DEFAULT_DIFF;
 
 # Default options:
 $view_all = False; # -a option
 $view_new = False; # -n option
 $view_dif = False; # -d option
+$be_quiet = FALSE; # -q option
+$match_pattern = '';  # -m option
 # Parse command arguments:
 $argc = $_SERVER['argc'];
 $argv = $_SERVER['argv'];
@@ -72,6 +114,11 @@ for ($narg = 1; $narg < $argc; $narg++) {
             case 'n': $view_new = True; break;
             case 'd': $view_dif = True; break;
             case 'a': $view_all = True; break;
+            case 'q': $be_quiet = True; break;
+            case 'm':
+                if (++$narg >= $argc) usage(); # Missing arg value
+                $match_pattern = $argv[$narg];
+                break;
             default: usage();
         }
     }
@@ -86,18 +133,29 @@ $n_new  = 0;
 $n_diff = 0;
 $s_diff = array();
 $s_new = array();
+$n_total = 0;   # Total result files, before -m filtering.
 
 # Get a sorted list of image files and text output files from the outdir:
 $o_list = array();
 $d = opendir($outdir);
 if (!$d) die("Failed to open directory: $outdir\n");
 while (($filename = readdir($d)) !== False) {
-    if (preg_match('/\\.(png|gif|jpg|out)$/i', $filename))
-        $o_list[] = $filename;
+    # Look only at image and .out files:
+    if (preg_match('/\\.(png|gif|jpg|out)$/i', $filename)) {
+        $n_total++;
+        if (empty($match_pattern) || fnmatch($match_pattern, $filename)) {
+            $o_list[] = $filename;
+        }
+    }
+}
+$n_check = count($o_list);
+if ($n_check == 0) {
+    fwrite(STDERR, "Error: No matching files to check\n");
+    exit(1);
 }
 sort($o_list);
 
-# Process each file in the outdir:
+# Process each result file:
 foreach ($o_list as $filename) {
     $srcname = $outdir . DIRECTORY_SEPARATOR . $filename;
     $refname = $refdir . DIRECTORY_SEPARATOR . $filename;
@@ -110,7 +168,8 @@ foreach ($o_list as $filename) {
 
     } elseif (compare_files($srcname, $refname)) {
         $n_same++;
-        echo "  $filename: Matches\n";
+        if (!$be_quiet)
+            echo "  $filename: Matches\n";
         if ($view_all)
             view_file($srcname);
 
@@ -119,11 +178,16 @@ foreach ($o_list as $filename) {
         $s_diff[] = $filename;
         echo "! $filename: Output differs\n";
         if ($view_all || $view_dif)
-            view_file($srcname, $refname);
+            view_files($srcname, $refname);
     }
 }
-echo "Same: $n_same,  New: $n_new,  Differ: $n_diff\n";
+
+# Report the results:
+
+echo "\nResults: Same: $n_same,  New: $n_new,  Differ: $n_diff\n";
 if (count($s_diff) > 0)
     echo "\nFiles that differ: " . implode(', ', $s_diff) . "\n";
 if (count($s_new) > 0)
     echo "\nFiles that are new: " . implode(', ', $s_new) . "\n";
+if (($n_filtered_out = $n_total - $n_check) > 0)
+    echo "\nWarning: $n_filtered_out result file(s) were filtered out.\n";
