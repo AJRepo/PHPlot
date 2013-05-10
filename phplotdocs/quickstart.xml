@@ -361,6 +361,11 @@ Bubbles
 Open/High/Low/Close (shows price changes for a stock, for example)
       </para>
     </listitem>
+    <listitem>
+      <para>
+Boxes (5-number statistical summary)
+      </para>
+    </listitem>
   </itemizedlist>
 </para>
 

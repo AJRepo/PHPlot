@@ -86,6 +86,7 @@ STATIC_IMAGES=\
   images/shape-yield.png \
   images/thumbnail-area.png \
   images/thumbnail-bars.png \
+  images/thumbnail-boxes.png \
   images/thumbnail-bubbles.png \
   images/thumbnail-candlesticks.png \
   images/thumbnail-candlesticks2.png \

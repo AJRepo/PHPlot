@@ -4231,6 +4231,7 @@ image map for a bar chart.
 With plot type <link linkend="plottype-boxes">boxes</link>, an image map
 can be produced which indicates the area of each data point.
 This area is the bounding box which includes the box and both whiskers.
+The bounding box does not include any outliers.
 </para>
 
 <para>

@@ -3,6 +3,14 @@ This is phplotdocs/ChangeLog, listing changes to the PHPlot Reference Manual
 Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
+2013-05-09
+    Reference Manual review with minor corrections:
+    * Makefile: Add missing static image thumbnail-boxes.png
+    * install.xml: Minor clarifications; add note on Windows install.
+    * quickstart.xml: Include new boxes plot type.
+    * concepts.xml: Corrected definition of Device Coordinates, other fixes.
+    * advanced.xml: Minor clarification in image maps section.
+
 2013-04-24
     * advanced.xml: Document image maps with new 'boxes' plot type.
       Also, in the image map section, sorted the sub-sections, list elements,

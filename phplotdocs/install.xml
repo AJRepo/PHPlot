@@ -18,7 +18,7 @@ extension.
 PHPlot-5.8.0 and later require at least PHP-5.3.
 (See the README and NEWS files included with the PHPlot distribution
 for requirements of other versions.)
-In general, you should always use the latest available version of PHP5.
+In general, you should always use the latest available stable version of PHP5.
 </para>
 
 <para>
@@ -28,21 +28,27 @@ without a web server.
 </para>
 
 <para>
-You need the GD extension to PHP either built in to PHP or loaded as a
-module. The version of GD which is bundled with recent versions of PHP
-will work fine.
+You need the GD extension to PHP, either built in to PHP or loaded as a
+module.
+The GD extension to PHP is included with PHP source releases, and is also
+included in the binary Windows releases (as a loadable module).
+The PHP GD extension uses the GD library (libgd).
+A version of the GD library is included with PHP releases, and use of this
+version is recommended, but you can also use the PHP GD extension with a
+separate GD library (for example, one included with your operating system).
 </para>
 
 <para>
 If you aren't sure what extensions you have in PHP, create this PHP
 script called <filename>phpinfo.php</filename> somewhere in
 your web server's document tree:
-<programlisting><![CDATA[<?php phpinfo(); ?>
+<programlisting><![CDATA[<?php phpinfo();
 ]]></programlisting>
 Access this page with your browser to view your PHP configuration.
 Look for the section labeled 'gd'. If you have no 'gd' section in the
-PHP Info output, you don't have the required 'gd' extension. Consult the
-PHP documentation to find out how to get it.
+PHP Info output, you don't have the required 'gd' extension.
+(The extension is either missing, or the module was not loaded.)
+Consult the PHP documentation to find out how to get it loaded.
 Here's what the GD section of the PHP Info listing might look like:
 <informalfigure>
   <mediaobject>
@@ -64,7 +70,8 @@ Check the table for <emphasis>PNG Support</emphasis>,
 since PNG is the default output format for PHPlot.
 If you want to create GIF or JPEG (JPG) format images,
 check the table to see if they are available.
-If the image formats you want are not available, you will have to rebuild PHP.
+If the image formats you want are not available, you will have to rebuild PHP
+(or rebuild the GD extension).
 </para>
 
 <para>
@@ -103,14 +110,14 @@ install PHPlot.
 <sect1 id="install-install">
 <title>Installing</title>
 <para>
-Unpack the PHPlot distribution into a convenient directory. Recent releases
-of PHPlot are available both as ZIP files, and as gzip-compressed TAR files.
+Unpack the PHPlot distribution into a convenient directory. PHPlot releases
+are available both as ZIP files, and as gzip-compressed TAR files.
 Use whichever format is more convenient for you. In the example below, the
 TAR format is unpacked.
 <screen><![CDATA[$ tar -xvzf phplot-6.*.tar.gz
 $ cd phplot-6.*
 ]]></screen>
-(Use the appropriate filename.)
+(Use the appropriate file and directory (folder) name.)
 Check the distribution for README and/or INSTALL files which may contain
 newer instructions.
 </para>
@@ -139,6 +146,14 @@ your PHP include path, you can install PHPlot with:
 <screen><![CDATA[$ cp phplot.php rgb.inc.php /usr/local/share/php
 ]]></screen>
 </para>
+
+<note>
+  <para>
+On Windows systems, you can simply download the release ZIP file, expand it
+using Windows Explorer, and copy the needed script file(s) out of the
+contained <filename>phplot-*</filename> folder into place.
+  </para>
+<note>
 
 </sect1>
 

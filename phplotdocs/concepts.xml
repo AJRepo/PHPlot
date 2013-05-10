@@ -54,7 +54,7 @@ A set of data points which represent some function, trend, samples, etc.
       <listitem>
         <para>
 The coordinate space used by GD to create images. The origin is at the
-upper left corner, X increases to the left, Y increases down, and the units
+upper left corner, X increases to the right, Y increases down, and the units
 are pixels. Also known as Pixel Coordinates or GD Coordinates.
         </para>
       </listitem>
@@ -75,9 +75,9 @@ A component of a graph, such as a label, tick mark, axis, or plot.
         <para>
 A programming library used to create and manipulate images.
 GD can be found at the <ulink url="http://libgd.org/">GD Graphics
-Library home page</ulink>.
+Library home page</ulink>, but is also included with PHP releases.
 You can think of GD as a software implementation of a video card.
-GD is also available as a PHP extension, and that is what PHPlot uses to
+GD is also available via a PHP extension, and that is what PHPlot uses to
 create images.
         </para>
       </listitem>
@@ -98,9 +98,13 @@ tick marks, and labels.
       <term><anchor id="def-horizplot" />Horizontal Plot</term>
       <listitem>
         <para>
-A plot in which the Y axis represents the independent variable, and the X
-axis represents the dependent variable values. In a horizontal bar chart,
-for example, the bars extend to the right from the Y axis.
+A plot in which the Y (vertical) axis represents the independent variable, and
+the X (horizontal) axis represents the dependent variable values.
+In a horizontal bar chart, for example, the bars extend to the right from the
+Y axis. A horizontal plot might represent X = F(Y), for example.
+(Note: This usage is specific to PHPlot. An alternate approach, not
+used by PHPlot, is to swap the X and Y axis orientation to make horizontal
+plots.)
         </para>
       </listitem>
     </varlistentry>
@@ -178,7 +182,8 @@ See also <link linkend="def-palette">Palette Image</link>.
         <para>
 A plot in which the X axis represents the independent variable, and the Y
 axis represents the dependent variable values. This is the usual orientation
-for plots. Compare with <link linkend="def-horizplot">horizontal plot</link>.
+for plots, and might represent Y = F(X).
+Compare with <link linkend="def-horizplot">horizontal plot</link>.
         </para>
       </listitem>
     </varlistentry>
@@ -268,14 +273,15 @@ You will most likely need a way to communicate parameters from your main
 script to your image script. Two good ways to do this are using URL parameters,
 and with PHP session variables.
   </para>
-</note>
 
-<para>
+  <para>
 An alternative to using two scripts - one generating HTML, and one using PHPlot
 to create the plot image - is available starting with PHPlot-5.5.0. You can
 write a single script which generates HTML and also embeds the PHPlot-generated
 plot image.  See <xref linkend="ex-encodeimage"/>.
-</para>
+  </para>
+
+</note>
 
 </sect2>
 
@@ -2069,6 +2075,17 @@ types.
         <entry> </entry>
       </row>
       <row>
+        <entry><link linkend="plottype-boxes">boxes</link></entry>
+        <entry>Yes</entry>
+        <entry>Yes</entry>
+        <entry> </entry>
+        <entry> </entry>
+        <entry> </entry>
+        <entry> </entry>
+        <entry> </entry>
+        <entry> </entry>
+      </row>
+      <row>
         <entry><link linkend="plottype-bubbles">bubbles</link></entry>
         <entry> </entry>
         <entry> </entry>
@@ -2491,8 +2508,8 @@ The positive and negative error bars use a color map that is set using
 <xref linkend="SetErrorBarColors"/>. By default, this color list contains
 the same colors as the data color list, so each data set and its error bars
 will be in the same color. If you change the data colors list with
-<xref linkend="SetDataColors"/>, you probably want to use the same color
-list for the error bars.
+<xref linkend="SetDataColors"/>, you probably want to change the error bar
+color list too, so you get the same colors for data sets and their error bars.
 </para>
 <para>
 In bar charts and stackedbar charts, the bars will have borders if shading is
@@ -3975,6 +3992,13 @@ $chars = iconv('iso-8859-15', 'utf-8', chr(0xA4));
 ]]></programlisting>
 </para>
 </sect2>
+
+<note>
+  <para>
+GD does not support using named character entities such as &amp;euro; directly
+in strings - they must be numerically encoded as described above.
+  </para>
+</note>
 
 </sect1>
 
