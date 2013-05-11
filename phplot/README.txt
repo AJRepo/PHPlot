@@ -1,5 +1,5 @@
 This is the README file for PHPlot
-Last updated for PHPlot-6.0.0 on 2013-04-03
+Last updated for PHPlot-6.1.0 on 2013-05-11
 The project web site is http://sourceforge.net/projects/phplot/
 The project home page is http://phplot.sourceforge.net/
 -----------------------------------------------------------------------------
@@ -32,8 +32,8 @@ CONTENTS:
 REQUIREMENTS:
 
 You need a recent version of PHP5, and you are advised to use the latest
-stable release.  This version of PHPlot has been tested with PHP-5.4.13 and
-PHP-5.3.23 on Linux, and with PHP-5.4.13 on Windows XP.
+stable release.  This version of PHPlot was tested with PHP-5.4.15 and
+PHP-5.3.25 on Linux, and with PHP-5.4.15 on Windows XP.
 
 You need the GD extension to PHP either built in to PHP or loaded as a
 module. Refer to the PHP documentation for more information - see the
@@ -89,7 +89,7 @@ on the PHPlot project web site for more information.
 
 PHP Issues:
 
-  PHP has many build-time and configuration options, and these can affect
+PHP has many build-time and configuration options, and these can affect
 the operation of PHPlot (as well as any other application or library). Here
 are some known issues:
 
@@ -168,7 +168,7 @@ graph, check your web server error log for more information.
 
 COPYRIGHT and LICENSE:
 
-PHPlot is Copyright (C) 1998-2012 Afan Ottenheimer
+PHPlot is Copyright (C) 1998-2013 Afan Ottenheimer
 
 This is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public

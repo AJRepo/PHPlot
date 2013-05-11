@@ -5,6 +5,45 @@ Refer the the ChangeLog file for detailed source changes.
 See NEWS_part1.txt for older release documentation.
 -----------------------------------------------------------------------------
 
+2013-05-11 Release 6.1.0
+
+=== Overview:
+
+This is the current stable release of PHPlot. This release includes two new
+plot type features (which were not completed in time to make it into
+PHPlot-6.0.0).
+
+The PHPlot Reference Manual has been updated to match this release.
+
+
+=== Cautions, Important Notes, and Compatibility Issues:
+
+There are no new compatibility issues in this release. However, if
+upgrading from PHPlot-5.8.0 or older, please read the Cautions, Important
+Notes, and Compatibility Issues from the PHPlot-6.0.0 release. Everything
+there is still applicable.
+
+
+=== Bugs Fixed in 6.1.0:
+
+(none)
+
+
+=== New features in 6.1.0:
+
+Feature Request #47 "Extend horizontal plots to more types":
+This feature request was mostly implemented in PHPlot-6.0.0, except for
+horizontal error plots, which are now implemented. A new data type
+'data-data-yx-error' is used for horizontal error plots of type lines,
+points, and linepoints.
+
+Feature request #52 "Box Plots":
+A new plot type 'boxes' is added. This produces a Box Plot, which is used
+to present a 5-number statistical summary of a data set.
+
+
+-----------------------------------------------------------------------------
+
 2013-04-03 Release 6.0.0
 
 === Overview:
