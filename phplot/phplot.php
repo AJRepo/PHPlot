@@ -1,7 +1,7 @@
 <?php
 /* $Id$ */
 /*
- * PHPLOT Version 6.1.0 PRE-RELEASE
+ * PHPLOT Version 6.1.0
  *
  * A PHP class for creating scientific and business charts
  * Visit http://sourceforge.net/projects/phplot/
@@ -35,7 +35,7 @@
 
 class PHPlot
 {
-    const version = '6.1.0-Pre-release $Revision$';
+    const version = '6.1.0';
     const version_id = 60100;
 
     // All class variables are declared here, and initialized (if applicable).
