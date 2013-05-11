@@ -14,6 +14,18 @@ see the ChangeLog file inside the PHPlot distribution.)
 
 <variablelist>
   <varlistentry>
+    <term>2013-05-11</term>
+    <listitem>
+      <para>
+Released updated version of the manual corresponding to PHPlot-6.1.0.
+This documents the new <literal>boxes</literal> plot type for Box Plots,
+and the new <literal>data-data-yx-error</literal> data type for
+horizontal error plots.
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
     <term>2013-04-03</term>
     <listitem>
       <para>

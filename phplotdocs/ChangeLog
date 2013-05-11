@@ -3,6 +3,9 @@ This is phplotdocs/ChangeLog, listing changes to the PHPlot Reference Manual
 Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
+
+2013-05-11 Released manual dated 2013-05-11 for PHPlot-6.1.0
+
 2013-05-09
     Reference Manual review with minor corrections:
     * Makefile: Add missing static image thumbnail-boxes.png
