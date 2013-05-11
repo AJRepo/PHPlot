@@ -2,6 +2,11 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2013-05-11 ===== Released as 6.1.0 =====
+    * phplot.php: Updated version comment and version constant
+    * README.txt: Updated for new release, fix copyright year
+    * NEWS.txt: Add text for new release
+
 2013-04-22
     * Feature request #52 "Box Plots":
       + New plot type 'boxes'.
