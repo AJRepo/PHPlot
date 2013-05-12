@@ -93,6 +93,14 @@ PHP has many build-time and configuration options, and these can affect
 the operation of PHPlot (as well as any other application or library). Here
 are some known issues:
 
+  + If PHP is built with Thread Safety on (ZTS), the GD extension is
+unable to find TrueType fonts unless the full path is given. (This is
+probably a PHP bug.) The text in the PHPlot Reference Manual section
+"TrueType Font Selection" concerning finding fonts without a path does not
+work on these systems. This has been found to affect the version of PHP
+distributed with Slackware, but not Ubuntu. It affects the thread-safe PHP
+Windows release, but not the non-thread-safe (NTS) Windows release.
+
   + Slackware Linux includes a version of PHP built with --enable-gd-jis-conv
 (JIS-mapped Japanese font support). This prevents the usual UTF-8 encoding
 of characters from working in TrueType Font (TTF) text strings.
