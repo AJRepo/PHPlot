@@ -4,6 +4,12 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2013-11-04
+    * reference.xml: Add missing reference from SetLightGridColor() to
+      Y data label lines.
+    * concepts.xml, reference.xml, examples.xml, developer.xml: Fix several
+      uses of "data lines" that should be "data label lines".
+
 2013-05-11 Released manual dated 2013-05-11 for PHPlot-6.1.0
 
 2013-05-09
