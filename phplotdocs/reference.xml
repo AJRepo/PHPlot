@@ -2532,7 +2532,7 @@ This function was added in PHPlot-5.3.0.
 
   <refnamediv>
     <refname>SetDrawXDataLabelLines</refname>
-    <refpurpose>Draw data lines</refpurpose>
+    <refpurpose>Draw data label lines for vertical plots</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
@@ -2726,7 +2726,7 @@ This function was added in PHPlot-5.3.0.
 
   <refnamediv>
     <refname>SetDrawYDataLabelLines</refname>
-    <refpurpose>Draw data lines for horizontal plots</refpurpose>
+    <refpurpose>Draw data label lines for horizontal plots</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
@@ -5021,7 +5021,7 @@ you supply are not scaled until the plot is drawn.
 
   <refnamediv>
     <refname>SetLightGridColor</refname>
-    <refpurpose>Set the color for grid lines and X data label lines</refpurpose>
+    <refpurpose>Set the color for grid lines and data label lines</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
@@ -5033,8 +5033,10 @@ you supply are not scaled until the plot is drawn.
     <para>
 <function>SetLightGridColor</function> sets the color used for the X and Y
 grid lines.
-This color is also used for X Data Lines, if enabled with
-<xref linkend="SetDrawXDataLabelLines"/>.
+This color is also used for X data label lines, if enabled with
+<xref linkend="SetDrawXDataLabelLines"/>,
+and for Y data label lines, if enabled with
+<xref linkend="SetDrawYDataLabelLines"/>.
     </para>
   </refsect1>
 
@@ -5056,9 +5058,11 @@ See <xref linkend="conc-colors" /> for more on color values.
   <refsect1>
     <title>Notes</title>
     <para>
+The default color is gray.
+    </para>
+    <para>
 This function, not <xref linkend="SetGridColor" />, sets the color for the
 grid lines.
-The default color is gray.
     </para>
   </refsect1>
 </refentry>
@@ -8928,7 +8932,7 @@ This only applies to horizontal bar charts.
 Stacked bar charts are not allowed to have negative values.
     </para>
     <para>
-If X data lines are enabled with <xref linkend="SetDrawXDataLabelLines"/>,
+If X data label lines are enabled with <xref linkend="SetDrawXDataLabelLines"/>,
 then SetXDataLabelPos() also determines the direction of the lines which
 are drawn from the data points.
     </para>
@@ -10677,7 +10681,7 @@ This only applies to vertical bar charts.
 Stacked bar charts are not allowed to have negative values.
     </para>
     <para>
-If Y data lines are enabled with <xref linkend="SetDrawYDataLabelLines"/>,
+If Y data label lines are enabled with <xref linkend="SetDrawYDataLabelLines"/>,
 then SetYDataLabelPos() also determines the direction of the lines which
 are drawn from the data points.
     </para>
