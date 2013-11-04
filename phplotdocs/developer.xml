@@ -1302,8 +1302,8 @@ It is called by plot drawing routines for all plot types except
   <term><anchor id="DrawXDataLine" xreflabel="DrawXDataLine"/>DrawXDataLine($xpos, $row)</term>
   <listitem>
     <para>
-Draws X data lines, which are vertical lines from the bottom or top of the
-plot to the data points. This is enabled with
+Draws X data label lines, which are vertical lines from the bottom or top
+of the plot to the data points. This is enabled with
 <xref linkend="SetDrawXDataLabelLines"/>. The lines are drawn from the
 position (above, below, or both) of the X axis data labels, which are set with
 <xref linkend="SetXDataLabelPos"/>.
@@ -1409,8 +1409,8 @@ supporting data label lines were first available.
   <term><anchor id="DrawYDataLine" xreflabel="DrawYDataLine"/>DrawYDataLine($ypos, $row)</term>
   <listitem>
     <para>
-Draws Y data lines, which are horizontal lines from the left or right side of
-the plot to the data points. This is enabled with
+Draws Y data label lines, which are horizontal lines from the left or right
+side of the plot to the data points. This is enabled with
 <xref linkend="SetDrawYDataLabelLines"/>, and is only valid with horizontal
 plots which support Y data label lines. The lines are drawn from the
 position (left, right, or both) of the Y axis data labels, which are set with

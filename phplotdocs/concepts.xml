@@ -2693,7 +2693,7 @@ with the second function, etc.)
         <entry>black</entry>
       </row>
       <row>
-        <entry>X data lines</entry>
+        <entry>X data label lines</entry>
         <entry><xref linkend="SetLightGridColor"/></entry>
         <entry>gray</entry>
       </row>
@@ -2731,7 +2731,7 @@ with the second function, etc.)
         <entry>black</entry>
       </row>
       <row>
-        <entry>Y data lines</entry>
+        <entry>Y data label lines</entry>
         <entry><xref linkend="SetLightGridColor"/></entry>
         <entry>gray</entry>
       </row>

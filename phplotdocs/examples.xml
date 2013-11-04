@@ -1977,14 +1977,14 @@ Note: Horizontal linepoints plots were added in PHPlot-6.0.0.
 
 <example id="example-horizlinepts">
 <?dbfo keep-together="auto"?>
-<title>Horizontal Linepoints Plot with Data Value Labels and Data Lines</title>
+<title>Horizontal Linepoints Plot with Data Value Labels and Lines</title>
 <informalfigure>
   <mediaobject>
     <imageobject>
       <imagedata fileref="examples/horizlinepts.png" scale="58" format="PNG" />
     </imageobject>
     <textobject>
-      <phrase>Horizontal Linepoints Plot with Data Value Labels and Data Lines Example</phrase>
+      <phrase>Horizontal Linepoints Plot with Data Value Labels and Lines Example</phrase>
     </textobject>
   </mediaobject>
 </informalfigure>
