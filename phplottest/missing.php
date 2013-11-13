@@ -7,11 +7,12 @@ if (!isset($tp)) $tp = array();
 $tp = array_merge(array(
   'title' => 'Missing Value Test',
   'suffix' => " (lines, default behavior)",       # Title part 2
-  'xmiss1' => 5,         # First X (0-14 or NULL) for which Y data is missing
-  'xmiss2' => NULL,      # Second X (0-14 or NULL) for which Y data is missing
+  'xmiss1' => 5,         # First X|Y (0-14 or NULL) for which Y|X is missing
+  'xmiss2' => NULL,      # Second X|Y (0-14 or NULL) for which Y|X is missing
   'DBLines' => NULL,     # DrawBrokenLines: True or False or NULL to omit
   'PType' => 'lines',    # Plot Type
-  'DataLines' => False,  # Labels at top and data lines on
+  'DataLines' => False,  # Labels at top or right, and data lines on
+  'horizontal' => False, # Horizontal plot
         ), $tp);
 require_once 'phplot.php';
 extract($tp); # Import parameters into namespace
@@ -23,8 +24,10 @@ extract($tp); # Import parameters into namespace
 
 # Build a valid data array, before taking out missing points.
 # Supported plot types:
-# + 'bars' and 'stackedbars', using data type text-data.
-# + 'lines', 'points', 'linepoints', 'squared', 'thinbarline' - using data-data.
+# + 'bars' and 'stackedbars', using data type text-data
+#   or text-data-yx for horizontal.
+# + 'lines', 'points', 'linepoints', 'squared', 'thinbarline' - using data-data
+#   or data-data-yx for horizontal (if supported).
 # + 'pie' using data type text-data-single only.
 # Unsupported plot types:
 # - 'area' and 'stackedarea' - don't support missing values.
@@ -45,14 +48,24 @@ if ($PType == 'bars' || $PType == 'stackedbars') {
     for ($i = 0; $i < 15; $i++) $data[$i] = array('', $i, $i * $i);
 }
 
-# Need to show the missing X's in the title:
+if ($horizontal) {
+    $datatype .= '-yx';
+    $title .= ' [Horiz]';
+    $iv = 'Y';
+    $dv = 'X';
+} else {
+    $iv = 'X';
+    $dv = 'Y';
+}
+
+# Need to show the missing independent variables in the title:
 if (isset($xmiss1)) {
-  $data[$xmiss1][$offset] = '';
-  $title .= " X={$xmiss1}";
+    $data[$xmiss1][$offset] = '';
+    $title .= " $iv={$xmiss1}";
 }
 if (isset($xmiss2)) {
-  $data[$xmiss2][$offset] = '';
-  $title .= " X={$xmiss2}";
+    $data[$xmiss2][$offset] = '';
+    $title .= " $iv={$xmiss2}";
 }
 
 $p = new PHPlot(1024, 768);
@@ -61,16 +74,22 @@ $p->SetPlotType($PType);
 $p->SetDataType($datatype);
 $p->SetDataValues($data);
 if ($DataLines) {
-  $title .= ' (w/DataLines)';
-  $p->SetXDataLabelPos('plotup');
-  $p->SetDrawXDataLabelLines(True);
-  $p->SetDrawXGrid(False);
-  $p->SetDrawYGrid(False);
+    if ($horizontal) {
+        $p->SetYDataLabelPos('plotright');
+        $p->SetDrawYDataLabelLines(True);
+    } else {
+        $p->SetXDataLabelPos('plotup');
+        $p->SetDrawXDataLabelLines(True);
+    }
+    $p->SetDrawXGrid(False);
+    $p->SetDrawYGrid(False);
 }
 
 if (isset($DBLines)) $p->SetDrawBrokenLines($DBLines);
 
-$p->SetXTickIncrement(1);
-$p->SetYTickIncrement(20);
+# Set tick increment on independent variable axis:
+call_user_func(array($p, "Set{$iv}TickIncrement"), 1);
+# Set tick increment on dependent variable axis:
+call_user_func(array($p, "Set{$dv}TickIncrement"), 20);
 
 $p->DrawGraph();
