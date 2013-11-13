@@ -2,6 +2,17 @@ This is the Change Log for phplottest, the PHPlot Test Suite
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2013-11-13
+    * missing.php: Add support to this test for horizontal plots, which
+      were not being tested for missing point behavior.
+    * missingh*.php: 10 new tests for missing points in horizontal plots.
+    * tests.ini: List 10 new tests.
+
+    * testversion.php: Fix to also work with under-development PHPlot which
+      uses phpdoc comments. (This test checks the source code for a version
+      string in a comment; the new code uses a phpdoc tag for that. The
+      test now works with both.)
+
 2013-05-10
     * compare_tests.php: Updated this utility script which compares test
       results against a baseline. Added text file compare, -q option for
