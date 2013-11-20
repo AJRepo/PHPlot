@@ -2201,7 +2201,7 @@ This behavior of this function was changed significantly at PHPlot-5.0rc3.
     <title>Description</title>
     <para>
 <function>SetDrawBrokenLines</function> determines how to plot lines with
-missing data points (that is, missing Y values). By default, PHPlot will
+missing data points. By default, PHPlot will
 act as if the point does not exist, connecting the points before and after
 the missing datum in the usual way. Use SetDrawBrokenLines to leave a gap
 between the points before and after missing data instead.
@@ -2218,7 +2218,7 @@ This only applies to 'lines', 'linepoints', and 'squared' plot types.
         <term><replaceable>$bl</replaceable></term>
         <listitem>
           <para>
-True to break the lines at missing Y data points. False to connect the
+True to break the lines at missing data points. False to connect the
 lines around missing data.
           </para>
         </listitem>
@@ -2232,8 +2232,10 @@ lines around missing data.
 The default is to ignore missing data and connect lines around missing points.
     </para>
     <para>
-A missing Y value can be represented in the data array by an empty string.
-(Anything non-numeric works.)
+A missing data point is indicated by an empty string in the corresponding
+position for the dependent variable value in the data array.
+This is the Y value for vertical plots, or X value for horizontal plots.
+See <xref linkend="conc-datatypes-missing"/> for more information.
     </para>
   </refsect1>
 </refentry>
@@ -4131,8 +4133,9 @@ calls to SetLegend, supplying one line per call (in the same order as
 the data sets in the data array).
     </para>
     <para>
-Legend text lines are displayed in order from top to bottom in the legend.
-Each line has a color box or shape maker with the corresponding color from
+By default, legend text lines are displayed in order from top to bottom in
+the legend. (See <xref linkend="SetLegendReverse"/> to reverse the order.)
+Each line also has a color box or shape maker with the corresponding color from
 the data colors array.
 The colors used in the legend color boxes or shape markers are independent of
 any custom data color callback
@@ -4594,8 +4597,10 @@ No other legend positioning methods were available in earlier releases.
 <function>SetLegendReverse</function> is used to change the order of entries
 in the legend.
 A legend is drawn if <xref linkend="SetLegend" /> is used.
-The legend contains of a series of text strings, and optionally color boxes
-or shape markers, identifying the data sets (for example, plot lines).
+The legend consists of a series of text strings and color boxes or shape
+markers.
+The contents of the legend helps identify the different data sets in the
+plot (for example, the separate plot lines).
 The legend line identifying the first data set is normally drawn at the top
 of the legend, with the rest of the lines in order below it.
 <function>SetLegendReverse</function> can be used to reverse that order, so
@@ -7559,9 +7564,15 @@ The default is to format numbers with 1 decimal position, but only
 if 'data' mode formatting is selected.
     </para>
     <para>
-This applies to both X data labels and X tick labels (only one of which
-should be enabled). Using 'data' format for X data labels only makes sense
+This function applies to both X tick labels and X data labels.
+(X data labels are axis data labels for vertical plots,
+or data value labels within the plot area for horizontal plots.
+See <xref linkend="conc-labels"/> for more on labels.)
+Using 'data' format for X axis data labels only makes sense
 when your data array contains numeric data in the label position.
+    </para>
+    <para>
+See <xref linkend="SetPrecisionY"/> for Y tick and data labels.
     </para>
   </refsect1>
   <refsect1>
@@ -7580,7 +7591,7 @@ is exactly the same as calling <code>SetXLabelType('data', $n)</code>.
 
   <refnamediv>
     <refname>SetPrecisionY</refname>
-    <refpurpose>Set precision for numeric formated Y tick labels</refpurpose>
+    <refpurpose>Set precision for numeric formated Y labels</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
@@ -7628,8 +7639,22 @@ The default is to format numbers with 1 decimal position, but only
 if 'data' mode formatting is selected.
     </para>
     <para>
-This function applies to Y tick labels, and also to the Y data labels
-available with bar charts and stacked bar charts.
+This function applies to both Y tick labels and Y data labels.
+(Y data labels are data value labels within the plot area for vertical plots,
+or axis data labels for horizontal plots.
+See <xref linkend="conc-labels"/> for more on labels.)
+Using 'data' format for Y axis data labels only makes sense
+when your data array contains numeric data in the label position.
+    </para>
+    <para>
+See <xref linkend="SetPrecisionX"/> for X tick and data labels.
+    </para>
+    <para>
+This function also affects pie chart labels, for backward compatibility.
+When drawing a pie chart, if <xref linkend="SetPieLabelType"/> was not called,
+and <function>SetPrecisionY</function> was called, then the precision set
+with <function>SetPrecisionY</function> is used when formatting pie chart
+labels.
     </para>
   </refsect1>
   <refsect1>
