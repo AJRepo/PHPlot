@@ -10,6 +10,8 @@ manual, which only contains summaries of changes.
       UTF-8 encoded characters can be entered directly in PHP strings (if
       you can figure out how to input them).
 
+    * examples/boxplot1.php: Fix for PDF production (prevent para overflow).
+
 2013-11-19
     Fix more errors found while doing Feature Request #55 (phpdoc comments):
     * reference.xml:
