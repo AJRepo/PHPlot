@@ -3921,38 +3921,42 @@ font pathnames.
 </para>
 </sect2>
 
+<!-- Note: leave ID as conc-text-special although the title was changed
+     from "Using Special Characters". For non-English languages, these
+     characters aren't 'special'.
+-->
 <sect2 id="conc-text-special">
-<title>Using Special Characters</title>
+<title>Using Extended Characters</title>
 <para>
-You can include special characters in your PHPlot labels and titles. This
-refers to characters which you may not be able to type with a single key
-on your keyboard, including accented characters and special symbols.
+You can include non-ASCII characters in your PHPlot labels and titles.
+This includes characters from languages other than English, accented
+characters, and special symbols.
 </para>
 
 <para>
 PHPlot itself does not do any special processing of text strings, so you
 should refer to the PHP GD and Image Functions reference for more
-information.
+information, in particular <function>imagettftext()</function>.
 </para>
 
 <note>
   <para>
 This mostly only works with TrueType fonts. The built-in GD fonts do
-have some extended characters, but they are encoded in ISO8859-2 which is
+have some extended characters, but they are encoded in ISO 8859-2 which is
 probably not what you might expect, and the GD font routines do not support
 special character entities.
   </para>
 </note>
 
 <para>
-To use special characters in your PHPlot text strings, you need a TrueType
+To use extended characters in your PHPlot text strings, you need a TrueType
 font that contains the characters you want. Ideally, you want a Unicode
 font. You might have to examine the font using an operating system-specific
 tool to see if your characters are present and to find their numeric values.
 </para>
 
 <para>
-There are two basic ways to include special characters in your text
+There are three basic ways to include extended characters in your text
 strings. The examples below use the Euro character, which is decimal
 Unicode value 8364.
 <itemizedlist>
@@ -3968,11 +3972,19 @@ Include the UTF-8 encoding of the Unicode value in your string as a series
 of hex escapes. For example, the Euro symbol is: "\xe2\x82\xac".
     </para>
   </listitem>
+  <listitem>
+    <para>
+Include the UTF-8 encoding of the Unicode value directly in your character
+string. We can't show you an example of what this looks like, or tell you
+how to enter these characters, because it depends on your own hardware,
+operating system, text editor, and locale.
+    </para>
+  </listitem>
 </itemizedlist>
 </para>
 <para>
-These are shown in the example below, both of which set the Y axis title to
-"Items per &euro;100".
+The first two of these options are shown in the example below, both of which
+set the Y axis title to "Items per &euro;100".
 <programlisting><![CDATA[$plot->SetYTitle("Items per &#8364;100"); # Numeric character entity
 $plot->SetYTitle("Items per \xe2\x82\xac100"); # UTF-8 encoding
 ]]></programlisting>
