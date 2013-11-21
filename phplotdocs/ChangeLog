@@ -4,6 +4,12 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2013-11-20
+    * concepts.xml: Rename subsection "Using Special Characters" to "Using
+      Extended Characters". Edit to widen the scope, and add a third method:
+      UTF-8 encoded characters can be entered directly in PHP strings (if
+      you can figure out how to input them).
+
 2013-11-19
     Fix more errors found while doing Feature Request #55 (phpdoc comments):
     * reference.xml:
