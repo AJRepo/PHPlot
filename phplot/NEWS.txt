@@ -108,7 +108,7 @@ a particular class variable.
 Starting with PHPlot-6.0.0, the SetPlotAreaWorld() function checks non-NULL
 arguments for validity. For both X and Y, it is required that min < max if
 both are specified. If you have a script that calls SetPlotAreaWorld() with
-max >= min for either X or Y, that script will now fail. On the other hand,
+max <= min for either X or Y, that script will now fail. On the other hand,
 some valid cases where you specify only one end of a range would previously
 fail and now work.
 
