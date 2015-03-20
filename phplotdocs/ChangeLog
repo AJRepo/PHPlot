@@ -4,6 +4,18 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2015-03-20
+    Found while doing Feature Request #55 (phpdoc comments):
+    * developer.xml:
+      + Internal CheckDataValueLabels() is in fact used for both vertical
+        and horizontal plots.
+      + Internal CalcRangeInit() argument list and return value were
+        corrected. (The code changed before 6.0.0 release but the change
+        was omitted from the manual.)
+      + Fix typos in FormatLabel() and tile_img().
+    * variables.list:
+      + Fix 3 minor typos in variable descriptions, 1 out-of-order entry
+
 2013-11-20
     * concepts.xml: Rename subsection "Using Special Characters" to "Using
       Extended Characters". Edit to widen the scope, and add a third method:
