@@ -371,7 +371,7 @@ Called by <xref linkend="CalcPlotAreaWorld"/>, once for X and once for Y.
 </varlistentry>
 
 <varlistentry>
-  <term><anchor id="CalcRangeInit" xreflabel="CalcRangeInit"/>CalcRangeInit(&amp;$plot_limit, $implied, $min_flag, $data_limit, &amp;$adjust_flag)</term>
+  <term><anchor id="CalcRangeInit" xreflabel="CalcRangeInit"/>CalcRangeInit(&amp;$plot_limit, $implied, $data_limit)</term>
   <listitem>
     <para>
 Calculates the initial values for the plot range ends.
@@ -380,12 +380,10 @@ reference because it might be unset. Unset, NULL, or an empty string means
 this end of the range has not been set and needs to be calculated.
 $implied is true when the data type does not specify the value (for
 example, the X value in text-data data type).
-$min_flag is TRUE for the low end of a range; this affects the range end
-for the $implied case only.
 $data_limit is the actual data limit (min or max) at this end of the range;
 given no other information this is the initial guess for the plot range limit.
-Returns the initial value for the plot limit value, and sets the
-$adjust_flag to TRUE if that needs further adjustments.
+Returns an array of 2 elements: the initial value for the plot range limit,
+and a flag indicating if additional adjustment of that value is to be done.
     </para>
     <para>
 This was added in PHPlot-6.0.0.
@@ -539,8 +537,8 @@ the plot drawing functions check the data type.
   <listitem>
     <para>
 Checks to see if data value labels should be drawn, based on $label_control
-(which is always <literal>$this->y_data_label_pos</literal>, since only
-vertical plot functions currently use this).
+(which is either <literal>$this->y_data_label_pos</literal> for vertical plots,
+or <literal>$this->x_data_label_pos</literal> for horizontal plots).
 Returns FALSE if the labels are off, else returns TRUE and sets 4 variables
 in the $dvl array. This array is used by <xref linkend="DrawDataValueLabel"/>
 to position the label. The array contains these keys: x_offset, y_offset :
@@ -1515,7 +1513,7 @@ from various places, with a flag data_limits_done to indicate it was called.)
 Formats a value for use as a tick, data, or pie chart label.
 This implements the format type selected with
 <xref linkend="SetXLabelType"/>, <xref linkend="SetYLabelType"/>,
-<xref linkend="SetXDataLabelType"/> ,<xref linkend="SetYDataLabelType"/>,
+<xref linkend="SetXDataLabelType"/>, <xref linkend="SetYDataLabelType"/>,
 and <xref linkend="SetPieLabelType"/>.
 If no formatting is in effect for that label type ($which_pos), it returns the 
 label string $which_lab as-is. Otherwise, it formats it as directed. This
@@ -2259,7 +2257,7 @@ This function replaced <xref linkend="TTFBBoxSize"/> at PHPlot-5.0.5.
   <term><anchor id="tile_img" xreflabel="tile_img"/>tile_img($file, $xorig, $yorig, $width, $height, $mode)</term>
   <listitem>
     <para>
-Tiles an image file over another the current plot image.
+Tiles an image from a file onto the plot image.
 $file is the filename of the image to use as the tile.
 ($xorig, $yorig) are the origin point for the tiling,
 and ($width, $height) are the area to be tiled. These are used to tile just
