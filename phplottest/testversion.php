@@ -29,7 +29,7 @@ if (!defined('PHPlot::version')) {
     $f = fopen('phplot.php', 'r', TRUE);
     if (!$f) exit(1); // Error already reported by fopen. Fatal.
     $found = False;
-    for ($i = 0; $i < 10; $i++) {
+    for ($i = 0; $i < 25; $i++) {
         $s = fgets($f);
         if ($s === False) break;
         if (preg_match('/(PHPLOT Version|@version) +(\\d+\\.\\d+\\.\\d+)/i', $s, $m)) {
