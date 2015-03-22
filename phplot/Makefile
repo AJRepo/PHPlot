@@ -36,9 +36,26 @@ RDIR=$(PROJ)-$(VER)
 # Release directory path:
 RDIRPATH=$(TMP)/$(RDIR)
 
+# For phpDocumentor2:
+# Path or name of php cli:
+PHP=php
+# Example command for phpDocumentor2 installed from unpacked release:
+#PHPDOCUMENTOR=/opt/phpdoc/bin/phpdoc run
+# Example command for phpDocumentor2 running from the PHAR package:
+PHPDOCUMENTOR=/opt/phpdoc/phpDocumentor.phar
+# phpDocumentor template to use:
+TEMPLATE=clean
+# Where to place the phpDocumentor output.
+PHPDOCDIR=../../docs
+
+
 default:
 	@echo "Usage:  make VER=v release : Make release packages"
 	@echo "    Example:  make VER=5.0.1 release"
+	@echo "Usage:  make phpdoc   : Make phpDocumentor2 docs"
+	@echo "    Specify PHPDOCDIR=path for destination directory"
+	@echo "    Specify PHP=command for the PHP CLI if necessary."
+
 
 release:
 	@if [[ x$(VER) = x ]]; then echo "Error: must set VER variable"; exit 1; fi
@@ -53,3 +70,8 @@ release:
 	rm -rf $(RDIRPATH)
 	@echo "Release packages are: $(TMP)/$(RDIR).zip"
 	@echo "                 and: $(TMP)/$(RDIR).tar.gz"
+
+phpdoc:
+	mkdir -p $(PHPDOCDIR)
+	$(PHP) $(PHPDOCUMENTOR) --template=$(TEMPLATE) -f phplot.php -t $(PHPDOCDIR)
+

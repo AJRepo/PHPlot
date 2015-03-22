@@ -2,6 +2,25 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2015-03-21
+    * Feature Request #55 "Method documentation in phpdoc format":
+      Added phpdoc comments (docblocks). All class functions (methods) now
+      have docblocks with summary, parameters, and return value (other than
+      the old deprecated functions, which have just a @deprecated tag).
+      phpDocumentor2 is able to generate documentation from the source, but
+      there is no plan to use this to replace any portion of the PHPlot
+      Reference Manual.
+
+      In order to accommodate phpDocumentor2 problems with functions that take
+      variable argument lists, while remaining compatible with PHP 5.5 and
+      PHP 5.4, it was necessary to change the parameter lists for 5 public
+      methods and 2 protected methods. No change was made to the usage of
+      these functions: unused parameter names were added, with NULL defaults,
+      so phpdoc '@param' tags could be used for them.
+
+    * Mark as pre-release 6.1.1
+    * Makefile: Added phpdoc target to run phpDocumentor2.
+
 2013-05-11 ===== Released as 6.1.0 =====
     * phplot.php: Updated version comment and version constant
     * README.txt: Updated for new release, fix copyright year
