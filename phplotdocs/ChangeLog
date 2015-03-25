@@ -4,6 +4,11 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2015-03-25
+    Changed information on dashed line style internals, from  bug #170:
+    * variables.list: Changed description of default_dashed_style variable.
+    * developer.xml: Rewrote explanation of SetDashedStyle().
+
 2015-03-20
     Found while doing Feature Request #55 (phpdoc comments):
     * developer.xml:
