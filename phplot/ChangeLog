@@ -2,6 +2,17 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2015-03-25
+    * Fixed bug #170 "Replace eval():..."
+      Removed the one use of eval() in PHPlot, because eval() makes people
+      nervous, is incompatible with some VM setups, and the specific usage
+      was hard to understand.  Changed SetDefaultDashedStyle() to create a
+      string template (rather than a code string) in the class variable
+      default_dashed_style. Changed internal SetDashedStyle() to apply the
+      template without eval(). There is no change to the API or behavior,
+      except PHPlot now validates the dashed line specification argument to
+      SetDefaultDashedStyle() more thoroughly.
+
 2015-03-21
     * Feature Request #55 "Method documentation in phpdoc format":
       Added phpdoc comments (docblocks). All class functions (methods) now
