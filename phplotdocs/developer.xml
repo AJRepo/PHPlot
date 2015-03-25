@@ -2086,19 +2086,29 @@ as the color argument in drawing functions such as
 <function>imageline</function>.
     </para>
     <para>
-To understand how this function works, see the documentation for the
-PHP GD function <function>ImageSetStyle()</function> and also refer to
-<xref linkend="SetDefaultDashedStyle"/>. GD expects a line style to be
-specified as an array of pixel values, which is awkward to deal with.
-PHPlot uses a shorthand notation with integer values indicating pairs of
-the number of color, then transparent pixels.
-<function>SetDefaultDashedStyle</function> creates a string of PHP code to
-generate an array of pixel values the way GD wants them, but defers filling
-in the exact color to use. <function>SetDashedStyle</function> evaluates this
-string with <varname>$which_ndxcol</varname> set to the color to use for
-the current line.
-The result is an array of pixel values for <function>ImageSetStyle</function>.
+To understand how this function works, see the documentation for the PHP GD
+function <function>ImageSetStyle()</function> and also refer to <xref
+linkend="SetDefaultDashedStyle"/>. GD expects a line style to be specified
+as an array of pixel values, which is awkward to deal with.  PHPlot uses a
+shorthand notation with integer values indicating pairs of the number of
+color pixels ("on" pixels), then transparent pixels ("off" pixels).
+<function>SetDefaultDashedStyle()</function> creates a template string with
+a marker for each "on" pixel, and the special GD color code for transparent
+pixels for each "off" pixel.  This template is saved in the class variable
+<varname>default_dashed_style</varname>.  The actual color to use for the
+"on" pixels is filled in by <function>SetDashedStyle()</function> before
+the dashed style is used.  The result is an array of pixel values for
+<function>ImageSetStyle()</function>.
     </para>
+    <para>
+(In PHPlot-6.1.0 and earlier, <function>SetDefaultDashedStyle()</function>
+created a string of PHP code to generate an array of pixel values in the
+form used by the GD function <function>ImageSetStyle()</function>, and
+saved this as <varname>default_dashed_style</varname>.
+<function>SetDashedStyle()</function> then evaluated the PHP code, with
+the correct color filled in from <varname>$which_ndxcol</varname>.)
+    </para>
+
     <para>
 Called by all functions that need to draw lines that can have a line style
 applied, including <xref linkend="DrawXTicks"/> and <xref linkend="DrawYTicks"/>
