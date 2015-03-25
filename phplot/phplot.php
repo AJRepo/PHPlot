@@ -174,7 +174,7 @@ class PHPlot
         'SkyBlue', 'green', 'orange', 'blue', 'red', 'DarkGreen', 'purple', 'peru',
         'cyan', 'salmon', 'SlateBlue', 'YellowGreen', 'magenta', 'aquamarine1', 'gold', 'violet'
     );
-    /** Formatted PHP code to build a dashed line pattern */
+    /** Dashed-line template, as a string of space-separated markers (see SetDefaultDashedStyle) */
     protected $default_dashed_style;
     /** Default TrueType font file */
     protected $default_ttfont;
@@ -1348,41 +1348,40 @@ class PHPlot
      *
      * For example: SetDashedStyle('2-3-1-2') means 2 dots of color, 3
      * transparent, 1 color, then 2 transparent.
-     * This builds a string $this->default_dashed_style which will evaluate to
-     * an array of integers. Each colored dot is '$which_ndxcol' and each
-     * transparent dot is 'IMG_COLOR_TRANSPARENT'. When SetDashedStyle() eval's
-     * this with $which_ndxcol set, the result is a GD line style array.
+     * This builds a template string $this->default_dashed_style which contains
+     * a space-separated series of marker (#) for pixels on, and the value of
+     * IMG_COLOR_TRANSPARENT for each pixel which is off.
+     * See SetDashedStyle() for how it is used.
      *
      * @param string $which_style  Dashed line specification, in the form <pixels_on>-<pixels_off>...
      * @return bool  True (False on error if an error handler returns True)
      */
     function SetDefaultDashedStyle($which_style)
     {
-        // Explode "numcol-numtrans-numcol-numtrans..." into segment counts:
-        $asked = explode('-', $which_style);
-
-        if (count($asked) < 2) {
+        // Validate the argument as "(number)-(number)-..." with at least 2 numbers:
+        if (!preg_match('/^\d+-\d+(-\d+)*$/', $which_style)) {
             return $this->PrintError("SetDefaultDashedStyle(): Wrong parameter '$which_style'.");
         }
-
-        // Build the string to be evaluated later by SetDashedStyle() with $which_ndxcolor set.
         $result = '';
-        $vals = array('$which_ndxcol,', 'IMG_COLOR_TRANSPARENT,');
-        $index = 0;
-        foreach ($asked as $n) {
-            $result .= str_repeat($vals[$index], $n);
-            $index = 1 - $index;
+        $use_color = TRUE;
+        $transparent = ' ' . IMG_COLOR_TRANSPARENT;
+        // Expand the dashed line style specifier:
+        foreach (explode('-', $which_style) as $n) {
+            $result .= str_repeat($use_color ? ' #' : $transparent, $n);
+            $use_color = !$use_color;  // Alternate color and transparent
         }
-        $this->default_dashed_style = "array($result)";
-
+        $this->default_dashed_style = ltrim($result);
         return TRUE;
     }
 
     /**
      * Returns a GD line style for drawing patterned or solid lines
      *
-     * See SetDefaultDashedStyle() for an explanation of how this works. The parameter
-     * name $which_ndxcol is known by that function and must be kept consistent.
+     * This returns a value which can be used in GD when drawing lines.
+     * If styles are off, it just returns the color supplied.
+     * If styles are on, it applies the given color to the pre-set dashed
+     * line style (see SetDefaultDashedStyle()) and sets that as the GD
+     * line style, then returns the special GD code for drawing styled lines.
      *
      * @param int $which_ndxcol  Color index to be used for drawing
      * @param bool $use_style  TRUE or omit for dashed lines, FALSE for solid lines
@@ -1390,12 +1389,11 @@ class PHPlot
      */
     protected function SetDashedStyle($which_ndxcol, $use_style = TRUE)
     {
-        if ($use_style) {
-            eval ("\$style = $this->default_dashed_style;"); // See SetDefaultDashedStyle() above
-            imagesetstyle($this->img, $style);
-            return IMG_COLOR_STYLED; // Use this value as the color for drawing
-        }
-        return $which_ndxcol; // Styles are off; use original color for drawing
+        if (!$use_style)
+            return $which_ndxcol; // Styles are off; use original color for drawing
+        // Set the line style, substituting the specified color for the # marker:
+        imagesetstyle($this->img, explode(' ', str_replace('#', $which_ndxcol, $this->default_dashed_style)));
+        return IMG_COLOR_STYLED; // Use this value as the color for drawing
     }
 
     /**
