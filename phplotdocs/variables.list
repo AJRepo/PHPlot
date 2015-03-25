@@ -47,7 +47,7 @@ datatypes	array(...)	DecodeDataType SetDataType	Static array of data type inform
 datatypes_map	array(...)	SetDataType	Static array of data type aliases (keys) and the corresponding primary name (values) (Added in PHPlot-6.1.0)
 decimal_point		SetNumberFormat	Character to use for decimal point in formatted numbers
 default_colors	array(...)	SetDataColors SetErrorBarColors	The default color array, used to initialize data_colors and error_bar_colors. (Added in PHPlot-5.1.0)
-default_dashed_style		SetDefaultDashedStyle	Formatted PHP code to build a dashed line pattern
+default_dashed_style		SetDefaultDashedStyle	Template string for the dashed line pattern. (In PHPlot-6.1.0 and earlier, this was a PHP code string.)
 default_ttfont		SetDefaultTTFont GetDefaultTTFont	Default TrueType font file. (Through PHPlot-5.1.2, there was a static default 'benjamingothic.ttf'. After PHPlot-5.1.2, the default is dynamic.)
 done	array()	DrawBackground DrawImageBorder DrawTitle	Array of flags for elements that must be drawn at most once. Flag is set TRUE when drawn. Indexes are: background, border, title. (Replaced separate variables in PHPlot-5.3.1.)
 draw_broken_lines	FALSE	SetDrawBrokenLines	Flag: How to handle missing Y values
