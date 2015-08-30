@@ -4,6 +4,14 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2015-08-29
+    Changes for PHP7:
+    * advanced.xml: Changed "Object Methods as Callbacks" to use the
+      correct constructor name convention, and rewrote the note to
+      explain that the old usage is deprecated at PHP7.
+      Also: delete notes about PHP4.
+    * advanced.xml, install.xml, reference.xml: Minor changes for PHP7.
+
 2015-03-25
     Changed information on dashed line style internals, from  bug #170:
     * variables.list: Changed description of default_dashed_style variable.
