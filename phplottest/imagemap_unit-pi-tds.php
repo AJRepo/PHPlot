@@ -16,7 +16,7 @@ $test_verbose = False;
 # ===========
 
 # Capture the points which would be generated for the image map:
-function store_map($im, $unused, $shape, $segment, $unused,
+function store_map($im, $unused1, $shape, $segment, $unused2,
                    $xc, $yc, $wd, $ht, $start_angle, $end_angle)
 {
   global $points;
