@@ -2,8 +2,14 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2015-08-29
+    * Fixed bug #172 "Fixes for PHP7":
+      PHP7 (currently pre-release) deprecates the use of the class name
+      as the constructor, which was how PHP4 did it. Fixed the constructor
+      name to work with PHP7. Note this may affect extended classes.
+
 2015-03-25
-    * Fixed bug #170 "Replace eval():..."
+    * Fixed bug #170 "Replace eval():...":
       Removed the one use of eval() in PHPlot, because eval() makes people
       nervous, is incompatible with some VM setups, and the specific usage
       was hard to understand.  Changed SetDefaultDashedStyle() to create a
