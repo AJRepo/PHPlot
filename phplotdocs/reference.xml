@@ -827,7 +827,7 @@ assignment was used. This quasi-destructor was removed at PHPlot-5.0.4
 because it interfered with memory deallocation until the script ended.
 So the reference assignment should not be used.
 In addition, reference assignment of a newly created object instance
-is deprecated starting with PHP5.
+is deprecated starting with PHP5, and removed in PHP7.
     </para>
   </refsect1>
 </refentry>

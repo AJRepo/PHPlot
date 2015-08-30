@@ -18,7 +18,7 @@ extension.
 PHPlot-5.8.0 and later require at least PHP-5.3.
 (See the README and NEWS files included with the PHPlot distribution
 for requirements of other versions.)
-In general, you should always use the latest available stable version of PHP5.
+In general, you should always use the latest available stable version of PHP.
 </para>
 
 <para>
