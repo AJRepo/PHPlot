@@ -2,6 +2,12 @@ This is the Change Log for phplottest, the PHPlot Test Suite
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2015-08-29
+    Fixes needed for PHP-7.0 (not yet released):
+    * callback2.php: Class name as constructor raises DEPRECATED warning.
+      Fixed when calling parent constructor too.
+    * imagemap_unit-pi-tds.php: Fixed duplicate parameter $unused.
+
 2015-03-20
     * testversion.php: Fix for fix made 2013-11-13 below to accept phpdoc tag
       for version. Despite a comment saying it checked the top 25 lines of
