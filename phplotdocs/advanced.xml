@@ -804,10 +804,8 @@ You can declare your PHPlot class instance variable as
     <listitem>
       <para>
 You can pass the instance variable as the $arg when registering the
-callback. With PHP5, this will pass a reference to the object, which allows
-reading and changing variables. (PHP4 would pass a copy of the object at the
-time the callback function is being set up, which would probably not be
-useful. There are work-arounds, but PHP4 is no longer supported.)
+callback. With PHP5 and above, this will pass a reference to the object,
+which allows reading and changing variables.
       </para>
     </listitem>
     <listitem>
@@ -993,9 +991,9 @@ Consider the following setup:
 <para>
   <programlisting><![CDATA[class my_PHPlot extends PHPlot
 {
-  function my_PHPlot($width=600, $height=400, $outfile=NULL, $infile=NULL)
+  function __construct($width=600, $height=400, $outfile=NULL, $infile=NULL)
   {
-    $this->PHPlot($width, $height, $outfile, $infile);
+    parent::__construct($width, $height, $outfile, $infile);
   }
 
   function callback($img, $arg)
@@ -1011,8 +1009,22 @@ Consider the following setup:
 <para>
 We define a class which extends PHPlot, and a method 'callback' which
 displays the plot area using the internal PHPlot class variable plot_area.
-(Note we are using a PHP4-style constructor, which also works with PHP5.
-You can use the PHP5 constructor method instead.)
+  <note>
+    <para>
+PHPlot version 6.1.0 and earlier used the class name as the constructor
+method name, as required in PHP4.  This was deprecated in PHP7.
+Earlier versions of this reference manual used
+<literal>$this->PHPlot(...)</literal> to call the parent constructor.
+This will not work with PHPlot after version 6.1.0 when the constructor
+name was changed for PHP7.
+    </para>
+    <para>
+Using <literal>__construct()</literal> in the extended class as shown
+above - for both the extended class constructor and when calling the
+base class constructor - will work in PHP5 and PHP7, and with PHPlot
+versions before and after the constructor name change.
+    </para>
+  </note>
 </para>
 
 <para>
@@ -1020,8 +1032,6 @@ We will then create an instance of the extended class, and set a callback.
   <programlisting><![CDATA[$plot = new my_PHPlot(400,300);
 $plot->SetCallback('draw_titles', array($plot, 'callback'));
 ]]></programlisting>
-This is for PHP5. For PHP4, you need to use a reference to the $plot instance.
-Note that PHP4 is no longer supported.
 </para>
 
 <para>
