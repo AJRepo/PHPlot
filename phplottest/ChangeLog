@@ -6,6 +6,7 @@ The project home page is http://sourceforge.net/projects/phplot/
     * labelprec*.php: 4 new (actually from 2013) tests for label precision.
     * tests.ini: List 4 new tests.
     * run_test.php: Fix format in summary.
+    * compare_tests.php: Check for and report removed tests, clean up output.
 
 2015-08-29
     Fixes needed for PHP-7.0 (not yet released):
