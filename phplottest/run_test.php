@@ -2,7 +2,7 @@
 # $Id$
 /*
      PHPlot Test Suite - Driver Script
-     Copyright 2007-2012 lbayuk AT users.sourceforge.net
+     Copyright 2007-2015 lbayuk AT users.sourceforge.net
      Refer to the file LICENSES in the PHPlot test suite for details
 
 There are 3 types of tests: graphic, unit, and error. The purpose of a
@@ -216,9 +216,9 @@ function summarize($total_run_time)
     global $n_pass, $n_fail, $n_skip, $result_dir, $log_filename, $log_f;
     global $fail_list, $skip_list;
     lprintfts("Testing complete - Elapsed time %.2f seconds", $total_run_time);
-    lprintf("  Passed:  %3d\n", $n_pass);
-    lprintf("  Failed:  %3d\n", $n_fail);
-    lprintf("  Skipped: %3d\n", $n_skip);
+    lprintf("  Passed:  %4d\n", $n_pass);
+    lprintf("  Failed:  %4d\n", $n_fail);
+    lprintf("  Skipped: %4d\n", $n_skip);
     if (!empty($fail_list))
         lecho("  Failed tests:\n    "
            . wordwrap(implode(', ', $fail_list)) .  "\n\n");
