@@ -85,6 +85,40 @@ function view_files($filename, $refname)
     }
 }
 
+# Return a sorted list of image files and text output files in the $dir:
+# This also uses the global $match_pattern as a filter, if not empty.
+function get_file_list($dir)
+{
+    global $match_pattern;
+
+    $list = array();
+    $d = opendir($dir);
+    if (!$d) die("Failed to open directory: $dir\n");
+    while (($filename = readdir($d)) !== False) {
+        # Look only at image and .out files:
+        if (preg_match('/\\.(png|gif|jpg|out)$/i', $filename)) {
+            if (empty($match_pattern) || fnmatch($match_pattern, $filename)) {
+                $list[] = $filename;
+            }
+        }
+    }
+    sort($list);
+    return $list;
+}
+
+# Reporting helper, used to show list of files
+function show_result_details($what, $list)
+{
+    if (count($list) == 0) return;
+    echo "\nFiles that $what:\n    "
+          . wordwrap(implode(' ', $list), 72, "\n    ")
+          . "\n";
+}
+
+
+
+# MAIN:
+
 # Get the command lines to use for viewer and text file compare:
 if (($viewer = getenv('VIEWER')) === False)
     $viewer = DEFAULT_VIEWER;
@@ -136,24 +170,12 @@ $s_new = array();
 $n_total = 0;   # Total result files, before -m filtering.
 
 # Get a sorted list of image files and text output files from the outdir:
-$o_list = array();
-$d = opendir($outdir);
-if (!$d) die("Failed to open directory: $outdir\n");
-while (($filename = readdir($d)) !== False) {
-    # Look only at image and .out files:
-    if (preg_match('/\\.(png|gif|jpg|out)$/i', $filename)) {
-        $n_total++;
-        if (empty($match_pattern) || fnmatch($match_pattern, $filename)) {
-            $o_list[] = $filename;
-        }
-    }
-}
+$o_list = get_file_list($outdir);
 $n_check = count($o_list);
 if ($n_check == 0) {
     fwrite(STDERR, "Error: No matching files to check\n");
     exit(1);
 }
-sort($o_list);
 
 # Process each result file:
 foreach ($o_list as $filename) {
@@ -182,12 +204,12 @@ foreach ($o_list as $filename) {
     }
 }
 
-# Report the results:
+# Check for any deleted or missing results files:
+$s_gone = array_diff(get_file_list($refdir), $o_list);
+$n_gone = count($s_gone);
 
-echo "\nResults: Same: $n_same,  New: $n_new,  Differ: $n_diff\n";
-if (count($s_diff) > 0)
-    echo "\nFiles that differ: " . implode(', ', $s_diff) . "\n";
-if (count($s_new) > 0)
-    echo "\nFiles that are new: " . implode(', ', $s_new) . "\n";
-if (($n_filtered_out = $n_total - $n_check) > 0)
-    echo "\nWarning: $n_filtered_out result file(s) were filtered out.\n";
+# Report the results:
+echo "\nResults: Same: $n_same,  Differ: $n_diff,  New: $n_new,  Removed: $n_gone\n";
+show_result_details('differ',  $s_diff);
+show_result_details('are new',     $s_new);
+show_result_details('were removed', $s_gone);
