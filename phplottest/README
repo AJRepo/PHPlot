@@ -1,5 +1,5 @@
 phplottest - PHPlot Test Suite
-Last Updated: 2012-12-28
+Last Updated: 2015-10-16
 -----------------------------------------------------------------------------
 OVERVIEW:
 
@@ -222,7 +222,7 @@ Requirements for writing test scripts:
 7) If the script needs to write files, temporary or otherwise, it must place
    them in the directory named by the RESULTDIR environment variable.
    For example, to make a file called 'testfile.dat', use something like:
-     $f = fopen(getenv("RESULTDIR" . DIRECTORY_SEPARATOR . "testfile.dat", "w");
+    $f = fopen(getenv("RESULTDIR") . DIRECTORY_SEPARATOR . "testfile.dat", "w");
    Note: This filename is a bad example. To avoid filename collisions, each
    test script should begin filenames with its own name.
 
