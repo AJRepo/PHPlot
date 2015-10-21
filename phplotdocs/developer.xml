@@ -557,17 +557,18 @@ return values, instead of an array.
   <term><anchor id="CheckLabels" xreflabel="CheckLabels"/>CheckLabels()</term>
   <listitem>
     <para>
-Fixes up the data and tick label position, angle, and format settings.
+Fixes up the data and tick label position and angle.
 This applies defaults to data label and tick label positions but avoids
 having them overlap unless the user deliberately positioned them that way.
-Also sets the default angle for X data labels, and the default formatting
-for X and Y data labels, to match the corresponding settings for tick
-labels if they were not already set.
+Also sets the default angle for X data labels.
 This is for compatibility with PHPlot-5.0.7 and earlier, when there was only
 one control for both types of labels.
 Called by <xref linkend="DrawGraph"/> before calculating margins with
 <xref linkend="CalcMargins"/>.
 This was added in PHPlot-5.1.0.
+Before PHPlot-6.0.0, it also applied tick label format settings as
+defaults for data label formatting. Starting with PHPlot-6.0.0, this
+is now handled in <xref linkend="FormatLabel"/> instead.
     </para>
   </listitem>
 </varlistentry>
@@ -2628,10 +2629,9 @@ text labels should be formatted. This array has 5 entries, with keys 'x',
 'y', 'xd', 'yd', and 'p'. The 'x' and 'y' entries are for tick labels, and the
 'xd' and 'yd' entries are for data labels. (Note that PHPlot defaults data
 label formatting to match tick label formatting, but this is handled in
-<xref linkend="CheckLabels"/>, with the tick label format information copied
-to the data label format information if necessary.) The 'p' entry is for
-pie chart labels, and will only exist for pie charts. (The 'p' entry was
-added in PHPlot-5.6.0.)
+<xref linkend="FormatLabel"/>.)
+The 'p' entry is for pie chart labels, and will only exist for pie charts.
+(The 'p' entry was added in PHPlot-5.6.0.)
 </para>
 
 <para>
