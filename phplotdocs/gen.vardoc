@@ -1,20 +1,26 @@
-#!/usr/bin/tclsh
-# $Id$
-# Generate documentation for PHPlot variables
-#    Copyright 2009 ljb - This is part of the PHPlot Reference Manual Source
-#    and may be used/distributed according to the same terms.
-# The input file is tab-separated fields with the first line being headers.
-# The expected header fields (in any order) are:
-#    VARNAME DEFAULT REFERENCE DESCRIPTION
-# The input file is assumed to already be sorted, and output in the same order.
-# There is no escaping. If any text has < > or &, must escape in the source
-# data file.
+<?php
+/*
+$Id$
 
-# ===== Output processing:
+Generate documentation for PHPlot variables
+   Copyright 2015 ljb - This is part of the PHPlot Reference Manual Source
+   and may be used/distributed according to the same terms.
+The input file is tab-separated fields with the first line being headers.
+The required header fields (in any order) are:
+   VARNAME DEFAULT REFERENCE DESCRIPTION
+The input file is assumed to already be sorted, and output lines will be in
+the same order.
+There is no escaping, which allows for XML markup in the input.
 
-# Output the header
-proc output_header {} {
-  puts {
+*/
+
+// Functions for output processing:
+
+// Output the header
+function output_header()
+{
+    echo <<<END
+
 <!-- Note: This table was generated using a script. Do not edit. -->
 <informaltable id="memvarlist">
   <tgroup cols="4">
@@ -32,79 +38,95 @@ proc output_header {} {
         <entry>Description:</entry>
       </row>
     </thead>
-    <tbody>}
+    <tbody>
+
+END;
 }
 
-# Output one record
-# d is an array indexed by field name.
-proc output_record {d_name} {
-  upvar $d_name d
+// Output one record
+//   $d is an array indexed by field name.
+function output_record($d)
+{
 
-  # Reference col is a link, unless empty or "(none)". But the source
-  # can contain multiple words, each of which needs a link.
-  set ref $d(REFERENCE)
-  if {$ref eq "" || $ref eq "(none)"} {
-    set ref_col ""
-  } else {
-    set ref_col_list {}
-    foreach ref [split $d(REFERENCE)] {
-      lappend ref_col_list "<xref linkend=\"$ref\" />"
+    // Process the REFERENCE field. Unless empty or "(none)", this generates
+    // a Docbook XML cross-reference link to each word in the field.
+    $ref = $d["REFERENCE"];
+    if (empty($ref) || $ref == "(none)") {
+        $ref_col = "";
+    } else {
+        $ref_col_list = array();
+        $r = strtok($ref, " \t");
+        while ($r !== False) {
+            if (!empty($r))
+                $ref_col_list[] = "<xref linkend=\"$r\" />";
+            $r = strtok(" \t");
+        }
+        $ref_col = implode(", ", $ref_col_list);
     }
-    set ref_col [join $ref_col_list {, }]
-  }
 
-  puts "      <row>"
-  puts "        <entry>$d(VARNAME)</entry>"
-  puts "        <entry>$d(DEFAULT)</entry>"
-  puts "        <entry>$ref_col</entry>"
-  puts "        <entry>$d(DESCRIPTION)</entry>"
-  puts "      </row>"
+    echo <<<END
+      <row>
+        <entry>{$d["VARNAME"]}</entry>
+        <entry>{$d["DEFAULT"]}</entry>
+        <entry>$ref_col</entry>
+        <entry>{$d["DESCRIPTION"]}</entry>
+      </row>
+
+END;
 }
 
-# Output the footer
-proc output_footer {} {
-  puts {
+// Output the footer
+function output_footer()
+{
+    echo <<<END
     </tbody>
   </tgroup>
 </informaltable>
-<!-- End generated content -->}
+<!-- End generated content -->
+
+END;
 }
 
-# Read the next line from a file, ignoring blank and comment lines.
-# Comment lines begin with # in the first column.
-# Blank lines contain only whitespace.
-# Like {gets stream varname} and returns -1 on EOF else 1.
-proc getline {f line_name} {
-  upvar $line_name line
-  while {1} {
-    if {[set r [gets $f line]] < 0} {
-      return -1
+// Read the next line from a file, ignoring blank and comment lines.
+// Comment lines begin with # in the first column.
+// Blank lines contain only whitespace.
+// Returns False on end of file, else True
+function getline($f, &$line)
+{
+    while (true) {
+        $line = fgets($f);
+        if ($line === False) return False;
+        if (strlen($line) > 0 && $line[0] != '#') {
+            $line = trim($line);
+            if (!empty($line)) return True;
+        }
     }
-    if {$r > 0 && [string index $line 0] ne "#" && [string trim $line] ne ""} {
-     return 1
+}
+
+// Main processing:
+
+// Read the headers:
+if (!getline(STDIN, $line)) {
+    fwrite(STDERR, "Error processing file: unable to read header\n");
+    exit(1);
+}
+$headers = explode("\t", $line);
+$n_headers = count($headers);
+
+output_header();
+
+// Read the file and process each record:
+$n_rec = 0;
+while (getline(STDIN, $line)) {
+    $n_rec++;
+    $d = array();
+    // Assign $d[COL] to the corresponding field in the input line,
+    // where the data fields are in the same order as the header fields.
+    $fields = explode("\t", $line);
+    for ($i = 0; $i < $n_headers; $i++) {
+        $d[$headers[$i]] = $fields[$i];
     }
-  }
+    output_record($d);
 }
-
-# =====
-
-# Read the headers:
-if {[getline stdin line] <= 0} {
-  error "Unable to read file header"
-}
-set headers [split $line "\t"]
-
-output_header
-
-# Read the file and process each record:
-set n_rec 0
-while {[getline stdin line] >= 0} {
-  incr n_rec
-  array unset d
-  foreach header $headers value [split $line "\t"] {
-    set d($header) $value
-  }
-  output_record d
-}
-output_footer
-puts stderr "Read and processed: $n_rec records"
+output_footer();
+fwrite(STDERR, "Read and processed: $n_rec records\n");
