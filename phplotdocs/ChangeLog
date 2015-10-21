@@ -4,6 +4,21 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2015-10-20
+    * developer.xml: Correction: CheckLabels() does not apply defaults
+      for data labels from tick labels - this was moved to FormatLabel
+      in PHPlot-6.0.0 to better handle multi-plotting.
+      Also corrected in the description of the label_format array.
+
+    Removed dependency on Tcl when building manual.
+    * gen.vardoc: Rewrite in PHP (which is already required for manual
+      building).
+    * Makefile: Use PHP to run gen.vardoc
+    * README: Remove Tcl dependency.
+
+    * concepts.xml: Document that for a single data set, area and
+      stackedarea plots are identical, as are bars and stackedbars.
+
 2015-08-29
     Changes for PHP7:
     * advanced.xml: Changed "Object Methods as Callbacks" to use the
