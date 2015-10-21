@@ -356,6 +356,6 @@ examples/pielabeltype5.png: examples/pielabeltype5.php examples/pielabeltypedata
 # === For building the variable list documentation ===
 
 $(VARIABLE_LIST): variables.list gen.vardoc 
-	./gen.vardoc < variables.list > $(VARIABLE_LIST)
+	$(PHP) gen.vardoc < variables.list > $(VARIABLE_LIST)
 
 # ===
