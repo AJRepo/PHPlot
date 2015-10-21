@@ -1,5 +1,5 @@
 This is phplotdocs/README, for the PHPlot Reference Manual source
-Last updated on 2013-04-01
+Last updated on 2015-10-12
 -----------------------------------------------------------------------------
 
 This directory contains the DocBook-XML source files for the PHPlot Reference
@@ -38,8 +38,8 @@ manual. Other versions may work too.
 
    DocBook XSL Style Sheets docbook-xsl-1.76.1
    xsltproc from libxsltproc-1.1.26 and libxml2-2.8.0
-   Tcl shell (tclsh) is used to generate the table in the Variables chapter.
    PHP (CLI) and PHPlot are needed to produce the example figures.
+     PHP is also used to generate the table in the Variables chapter.
 
 The following additional tool is used to produce the PDF version of the
 manual:
@@ -156,8 +156,7 @@ There is a table in the Member Variables chapter with information about
 all of the PHPlot class variables. The information about the variables is
 maintained in the tab-separated text file 'variables.list'. This is converted
 by the Makefile into a DocBook-XML file 'variablelist.xml', which is included
-into the manual. The conversion is done using a short Tcl script 'gen.vardoc',
-so you will need the Tcl shell tclsh to build the manual.
+into the manual. The conversion is done using a short PHP script 'gen.vardoc'.
 
 
 PDF Output:
