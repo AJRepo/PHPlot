@@ -2,6 +2,12 @@ This is the Change Log for phplottest, the PHPlot Test Suite
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2015-10-22
+    New tests for multi-format printf in label formatting (FR#56).
+    * labelformats[789].php: New tests for 1, 2, and 3 format strings.
+    * fmtlab-printf3.php: New unit test.
+    * tests.ini: List 4 new tests.
+
 2015-10-16
     A pair of new tests that came out of taking a closer look at area fill
     plot types.
