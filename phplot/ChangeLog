@@ -2,6 +2,21 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2015-10-22
+    * Changed version to 6.2.0-unreleased (was: 6.1.1-unreleased).
+
+    * Feature Request #56 "Hidden Y values when zero":
+      Extended the 'printf' label formatting type by allowing 1-3 format
+      strings. Selection of a format string depends on the sign of the value
+      being formatted (similar to the way spreadsheets do cell formatting).
+      This supports a wide variety of format variations, including the one
+      requested in this FR, without having to use a custom function.
+      + Changed SetLabelType() to accept up to 3 format strings, and store
+        then in the class variable as an array.
+      + Changed FormatLabel() to accept a format string, or an array of
+        1, 2, or 3 format strings, and select among them based on the sign
+        of the value being formatted.
+
 2015-08-29
     * Fixed bug #172 "Fixes for PHP7":
       PHP7 (currently pre-release) deprecates the use of the class name
