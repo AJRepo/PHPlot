@@ -10,7 +10,7 @@
  *
  * $Id$
  *
- * @version 6.1.1-unreleased
+ * @version 6.2.0-unreleased
  * @copyright 1998-2015 Afan Ottenheimer
  * @license GNU Lesser General Public License, version 2.1
  * @link http://sourceforge.net/projects/phplot/ PHPlot Web Site with downloads, tracker, discussion
@@ -59,9 +59,9 @@
 class PHPlot
 {
     /** PHPlot version constant as a string */
-    const version = '6.1.1-Unreleased $Revision$';
+    const version = '6.2.0-Unreleased $Revision$';
     /** PHPlot version constant as a number = major * 10000 + minor * 100 + patch */
-    const version_id = 60101;
+    const version_id = 60200;
 
     // All class variables are declared here, and initialized (if applicable).
     // Starting with PHPlot-6.0, most variables have 'protected' visibility
@@ -2575,7 +2575,7 @@ class PHPlot
      * for the callback are optional.
      * For type='data': $args[1] = precision, $args[2] = prefix, $args[3] = suffix.
      * For type 'time': $args[1] = format string for strftime().
-     * For type 'printf': $args[1] = format string for sprintf().
+     * For type 'printf': $args[1:3] = 1, 2, or 3 format strings for sprintf().
      * For type 'custom': $args[1] = the callback (required), $args[2] = pass-through argument.
      *
      * @param string $mode  Which label type to configure: x | y | xd | yd | p
@@ -2608,7 +2608,8 @@ class PHPlot
 
         case 'printf':
             if (isset($args[1]))
-                $format['printf_format'] = $args[1];
+                // Accept 1, 2, or 3 format strings (see FormatLabel)
+                $format['printf_format'] = array_slice($args, 1, 3);
             elseif (!isset($format['printf_format']))
                 $format['printf_format'] = '%e';
             break;
@@ -5360,7 +5361,21 @@ class PHPlot
                 $which_lab = strftime($format['time_format'], $which_lab);
                 break;
             case 'printf':
-                $which_lab = sprintf($format['printf_format'], $which_lab);
+                if (!is_array($format['printf_format'])) {
+                    $use_format = $format['printf_format'];
+                } else {
+                    // Select from 1, 2, or 3 formats based on the sign of the value (like spreadsheets).
+                    // With 2 formats, use [0] for >= 0, [1] for < 0.
+                    // With 3 formats, use [0] for > 0, [1] for < 0, [2] for = 0.
+                    $n_formats = count($format['printf_format']);
+                    if ($n_formats == 3 && $which_lab == 0) {
+                        $use_format = $format['printf_format'][2];
+                    } elseif ($n_formats > 1 && $which_lab < 0) {
+                        $use_format = $format['printf_format'][1];
+                        $which_lab = -$which_lab; // Format the absolute value
+                    } else $use_format = $format['printf_format'][0];
+                }
+                $which_lab = sprintf($use_format, $which_lab);
                 break;
             case 'custom':
                 // Build argument vector: (text, custom_callback_arg, other_args...)
