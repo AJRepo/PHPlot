@@ -6285,6 +6285,16 @@ To turn the labels off completely, use
 <literal>SetLabelScalePosition(False)</literal>.
     </para>
 
+    <para>
+<function>SetPieLabelType</function> also supports the use of two or three
+format strings with 'printf' formatting type, as described in
+<xref linkend="SetXLabelType"/> and
+<xref linkend="conc-labels-format-printf"/>.
+(The additional format strings are used for negative numbers, or zero.)
+But this feature is almost never useful with pie charts, where all pie slices
+have size greater than zero.
+    </para>
+
   </refsect1>
 
   <refsect1>
@@ -9041,8 +9051,8 @@ format string specified as an additional argument to SetXDataLabelType.
     </para>
     <para>
 'printf' formatting formats the labels using the standard
-<function>sprintf</function> function, with the format string specified
-as an additional argument to SetXDataLabelType.
+<function>sprintf</function> function. One, two, or three format strings
+are specified as additional arguments to SetXDataLabelType.
     </para>
     <para>
 'custom' formatting formats the labels using a caller-provided function,
@@ -9121,17 +9131,42 @@ If omitted, the default is '%H:%M:%S' (hours, minutes, and seconds).
     </para>
 
     <para>
-For type 'printf', there is one optional argument:
+For type 'printf', there can be one, two, or three optional arguments:
       <variablelist>
         <varlistentry>
-          <term><replaceable>$format</replaceable></term>
+          <term><replaceable>$format1</replaceable>,
+              <optional><replaceable>$format2</replaceable>,
+                <optional><replaceable>$format3</replaceable>
+              </optional></optional>
+          </term>
           <listitem>
             <para>
-Formatting string, used with <function>sprintf()</function>.
-The formatting string must contain exactly one conversion specification
+Format string(s), used with <function>sprintf()</function>.
+The format string(s) must contain at most one conversion specification
 (%-code) which consumes a single argument.
-If omitted, the default value of '%e' uses scientific notation with default
-field sizes.
+If no format strings are specified, the default value of '%e' uses scientific
+notation with default field sizes.
+            </para>
+            <para>
+If a single format string is given (<literal>$format1</literal>),
+it is used for all label values.
+            </para>
+            <para>
+If two format strings are given (<literal>$format1, $format2</literal>),
+then the first string <literal>$format1</literal> is used to format the value
+of the label if it is greater than or equal to zero.
+The second string <literal>$format2</literal> is used to format
+the absolute value of the label if it is less than zero.
+            </para>
+            <para>
+If three format strings are given (<literal>$format1, $format2,
+$format3</literal>),
+then the first string <literal>$format1</literal> is used to format the value
+of the label if it is greater than zero.
+The second string <literal>$format2</literal> is used to format
+the absolute value of the label if it is less than zero.
+The third string <literal>$format3</literal> is used when the value of the
+label is zero.
             </para>
           </listitem>
         </varlistentry>
@@ -9195,6 +9230,15 @@ use SetXDataLabelType without arguments, or with an empty string argument.
 When using a custom label formatting function, do not assume the labels are
 formatted in any particular order, or only once each.
     </para>
+    <para>
+When using 2 or 3 'printf' format strings, the labels being formatted must
+be numeric values.
+    </para>
+    <para>
+When using 2 or 3 'printf' format strings, the second one is used to format
+the <emphasis>absolute value</emphasis> of the label, so you generally must
+provide some indication in the format string that the value is negative.
+    </para>
   </refsect1>
 
   <refsect1>
@@ -9206,6 +9250,10 @@ See <xref linkend="SetXLabelType" />.
 
   <refsect1>
     <title>History</title>
+    <para>
+The 'printf' label format type was extended to support 2 or 3 format strings
+in PHPlot-6.2.0. Before that release, only a single format string could be used.
+    </para>
     <para>
 Custom label formatting functions are passed the row and column arguments
 (if applicable) starting with PHPlot-5.8.0.
@@ -9316,8 +9364,8 @@ or using an additional argument to SetXLabelType.
     </para>
     <para>
 'printf' formatting formats the labels using the standard
-<function>sprintf</function> function, with the format string specified
-as an additional argument to SetXLabelType.
+<function>sprintf</function> function. One, two, or three format strings
+are specified as additional arguments to SetXLabelType.
     </para>
     <para>
 'custom' formatting formats the labels using a caller-provided function,
@@ -9386,7 +9434,7 @@ For type 'time', there is one optional argument:
           <term><replaceable>$format</replaceable></term>
           <listitem>
             <para>
-Formatting string, used with <function>strftime()</function>.
+Format string, used with <function>strftime()</function>.
 For example, '%Y-%m-%d' results in formatting a <literal>time_t</literal>
 value as a year, month, and day numbers.
 If omitted, the value set with <xref linkend="SetXTimeFormat" /> is used,
@@ -9399,17 +9447,42 @@ and seconds).
     </para>
 
     <para>
-For type 'printf', there is one optional argument:
+For type 'printf', there can be one, two, or three optional arguments:
       <variablelist>
         <varlistentry>
-          <term><replaceable>$format</replaceable></term>
+          <term><replaceable>$format1</replaceable>,
+              <optional><replaceable>$format2</replaceable>,
+                <optional><replaceable>$format3</replaceable>
+              </optional></optional>
+          </term>
           <listitem>
             <para>
-Formatting string, used with <function>sprintf()</function>.
-The formatting string must contain exactly one conversion specification
+Format string(s), used with <function>sprintf()</function>.
+The format string(s) must contain at most one conversion specification
 (%-code) which consumes a single argument.
-If omitted, the default value of '%e' uses scientific notation with default
-field sizes.
+If no format strings are specified, the default value of '%e' uses scientific
+notation with default field sizes.
+            </para>
+            <para>
+If a single format string is given (<literal>$format1</literal>),
+it is used for all label values.
+            </para>
+            <para>
+If two format strings are given (<literal>$format1, $format2</literal>),
+then the first string <literal>$format1</literal> is used to format the value
+of the label if it is greater than or equal to zero.
+The second string <literal>$format2</literal> is used to format
+the absolute value of the label if it is less than zero.
+            </para>
+            <para>
+If three format strings are given (<literal>$format1, $format2,
+$format3</literal>),
+then the first string <literal>$format1</literal> is used to format the value
+of the label if it is greater than zero.
+The second string <literal>$format2</literal> is used to format
+the absolute value of the label if it is less than zero.
+The third string <literal>$format3</literal> is used when the value of the
+label is zero.
             </para>
           </listitem>
         </varlistentry>
@@ -9472,23 +9545,33 @@ side effect on the format type.
 When using a custom label formatting function, do not assume the labels are
 formatted in any particular order, or only once each.
     </para>
+    <para>
+When using 2 or 3 'printf' format strings, the labels being formatted must
+be numeric values.
+    </para>
+    <para>
+When using 2 or 3 'printf' format strings, the second one is used to format
+the <emphasis>absolute value</emphasis> of the label, so you generally must
+provide some indication in the format string that the value is negative.
+    </para>
   </refsect1>
 
   <refsect1>
     <title>Examples</title>
     <para>
-The following table shows some label formatting examples.
+The following tables show some label formatting examples.
 These also apply to <function>SetXLabelType</function>,
 <xref linkend="SetXDataLabelType"/>, <xref linkend="SetYLabelType"/>,
 and <xref linkend="SetYDataLabelType"/>.
+    </para>
+
+    <para><?dbfo keep-together="always"?>
+Data (numeric) formatting with two digits of precision.
+Grouping and decimal separators depend on locale.
       <informaltable>
-<!-- This table's rows alternate a row spanning 3 columns with description,
-     then a 3 column row (Code, Value, Result).
-     This used to be a 4 column table, but was too wide for PDF pages.
--->
         <?dbfo table-width="100%"?>
         <tgroup cols="3">
-          <?dbhtml table-summary="Examples of label formatting"?>
+          <?dbhtml table-summary="Examples of label formatting, Part 1"?>
           <colspec colname="c1" colwidth="60*" />
           <colspec colname="c2" colwidth="20*" />
           <colspec colname="c3" colwidth="20*" />
@@ -9502,95 +9585,255 @@ and <xref linkend="SetYDataLabelType"/>.
 
           <tbody>
             <row>
-              <entry namest="c1" nameend="c3">
-Data (numeric) formatting with two digits of precision.
-Grouping and decimal separators depend on locale.
-              </entry>
-            </row>
-            <row>
-              <entry><programlisting><![CDATA[$plot->SetXLabelType('data', 2);
+              <entry morerows="1"><programlisting><![CDATA[$plot->SetXLabelType('data', 2);
 ]]></programlisting></entry>
               <entry>1234.56</entry>
               <entry>1,234.56</entry>
             </row>
+            <row> <!-- First cell is spanned by entry above -->
+              <entry>3.14159</entry>
+              <entry>3.14</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+    </para>
 
-            <row>
-              <entry namest="c1" nameend="c3">
+    <para><?dbfo keep-together="always"?>
 Data (numeric) formatting with prefix.
 &amp;#8364; is the entity code for the Euro sign in Unicode. (Numeric entity
 codes are handled by the GD library, but not named character entity codes.)
 Here we use it as a prefix, common usage for English.
 The Euro sign may appear differently in your browser. But when used with
 PHPlot it requires a Unicode font on the server.
-              </entry>
+      <informaltable>
+        <?dbfo table-width="100%"?>
+        <tgroup cols="3">
+          <?dbhtml table-summary="Examples of label formatting, Part 2"?>
+          <colspec colname="c1" colwidth="60*" />
+          <colspec colname="c2" colwidth="20*" />
+          <colspec colname="c3" colwidth="20*" />
+          <thead>
+            <row>
+              <entry>Code:</entry>
+              <entry>Value:</entry>
+              <entry>Result:</entry>
             </row>
+          </thead>
+
+          <tbody>
             <row>
               <entry><programlisting><![CDATA[$plot->SetXLabelType('data', 0, '&amp;#8364;');
 ]]></programlisting></entry>
-              <entry>100000</entry>
+              <entry>1000000</entry>
               <entry>&euro;1,000,000</entry>
             </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+    </para>
 
-            <row>
-              <entry namest="c1" nameend="c3">
+    <para><?dbfo keep-together="always"?>
 Data (numeric) formatting with suffix.
-Here we use the Euro as a suffix, common usage for French.
-Unlike the previous example, here we represent it as a 3 byte UTF-8
-sequence. You can use html_entity_decode() with UTF-8 as the character set
-to translate &amp;euro; into this sequence. (You cannot used named
-character entity codes in PHPlot strings that are processed by GD, as GD
-only handles UTF-8 sequences or numeric entity codes.)
-The thousands and decimal separator default to locale-dependent values,
-but here we set them ourselves with SetNumberFormat.
-The Euro sign may appear differently in your browser. But when used with
-PHPlot it requires a Unicode font on the server.
-              </entry>
-            </row>
+Here we use the Euro as a suffix, common usage for French, represented by a
+3 byte UTF code.
+You can use html_entity_decode() with UTF-8 as the character set
+to translate &amp;euro; into this sequence. 
+SetNumberFormat is used here to override the locale settings for
+thousands and decimal separators.
+      <informaltable>
+        <?dbfo table-width="100%"?>
+        <tgroup cols="3">
+          <?dbhtml table-summary="Examples of label formatting, Part 3"?>
+          <colspec colname="c1" colwidth="60*" />
+          <colspec colname="c2" colwidth="20*" />
+          <colspec colname="c3" colwidth="20*" />
+          <thead>
             <row>
-              <entry><programlisting><![CDATA[$plot->SetNumberFormat(',', '.');
+              <entry>Code:</entry>
+              <entry>Value:</entry>
+              <entry>Result:</entry>
+            </row>
+          </thead>
+
+          <tbody>
+            <row>
+              <entry morerows="1"><programlisting><![CDATA[$plot->SetNumberFormat(',', '.');
 $plot->SetXLabelType('data', 2, '',
-                     '\xe2\x82\xac');
+                     "\xe2\x82\xac");
 ]]></programlisting></entry>
-              <entry>100000</entry>
+              <entry>1e6</entry>
               <entry>1.000.000,00&euro;</entry>
             </row>
+            <row> <!-- First cell is spanned by entry above -->
+              <entry>4321.123</entry>
+              <entry>4.321,123&euro;</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+    </para>
 
-            <row>
-              <entry namest="c1" nameend="c3">
+    <para><?dbfo keep-together="always"?>
 Date/time formatting.
 The given value is mktime(0,0,0,4,15,2008).
 The format string could be set with SetXTimeFormat instead.
-              </entry>
+      <informaltable>
+        <?dbfo table-width="100%"?>
+        <tgroup cols="3">
+          <?dbhtml table-summary="Examples of label formatting, Part 4"?>
+          <colspec colname="c1" colwidth="60*" />
+          <colspec colname="c2" colwidth="20*" />
+          <colspec colname="c3" colwidth="20*" />
+          <thead>
+            <row>
+              <entry>Code:</entry>
+              <entry>Value:</entry>
+              <entry>Result:</entry>
             </row>
+          </thead>
+
+          <tbody>
             <row>
               <entry><programlisting><![CDATA[$plot->SetXLabelType('time', '%m/%Y');
 ]]></programlisting></entry>
               <entry>1208232000</entry>
               <entry>04/2008</entry>
             </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+    </para>
 
-            <row>
-              <entry namest="c1" nameend="c3">
+    <para><?dbfo keep-together="always"?>
 Formatting using printf.
 Note PHP printf may differ from the standard C library. For example, PHP
 outputs only a one digit exponent here.
-              </entry>
+      <informaltable>
+        <?dbfo table-width="100%"?>
+        <tgroup cols="3">
+          <?dbhtml table-summary="Examples of label formatting, Part 5"?>
+          <colspec colname="c1" colwidth="60*" />
+          <colspec colname="c2" colwidth="20*" />
+          <colspec colname="c3" colwidth="20*" />
+          <thead>
+            <row>
+              <entry>Code:</entry>
+              <entry>Value:</entry>
+              <entry>Result:</entry>
             </row>
+          </thead>
+
+          <tbody>
             <row>
               <entry><programlisting><![CDATA[$plot->SetXLabelType('printf', '%8.2e');
 ]]></programlisting></entry>
               <entry>1234</entry>
-              <entry>1.23e+3</entry>
+              <entry>&nbsp;1.23e+3</entry>
             </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+    </para>
 
+    <para><?dbfo keep-together="always"?>
+When two format strings are used with printf formatting, the first is used
+for non-negative values, and the second for negative values (with the
+absolute value formatted).
+      <informaltable>
+        <?dbfo table-width="100%"?>
+        <tgroup cols="3">
+          <?dbhtml table-summary="Examples of label formatting, Part 6"?>
+          <colspec colname="c1" colwidth="60*" />
+          <colspec colname="c2" colwidth="20*" />
+          <colspec colname="c3" colwidth="20*" />
+          <thead>
             <row>
-              <entry namest="c1" nameend="c3">
-A custom formatting function is used to format values in decimal degrees as
-degrees, minutes, and seconds. (This only works for non-negative angles.)
-              </entry>
+              <entry>Code:</entry>
+              <entry>Value:</entry>
+              <entry>Result:</entry>
             </row>
+          </thead>
+
+          <tbody>
             <row>
-              <entry><programlisting><![CDATA[function deg_min_sec($value)
+              <entry morerows="1"><programlisting><![CDATA[$plot->SetXLabelType('printf', '%.2f', '(%.2f)');
+]]></programlisting></entry>
+              <entry>15.6</entry>
+              <entry>15.60</entry>
+            </row>
+            <row> <!-- First cell is spanned by entry above -->
+              <entry>-9.87</entry>
+              <entry>(9.87)</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+    </para>
+
+    <para><?dbfo keep-together="always"?>
+When three format strings are used with printf formatting, the first is used
+for positive values, the second for negative values (with the absolute value
+formatted), and the third for zero.
+You can suppress zero with an empty third format string.
+      <informaltable>
+        <?dbfo table-width="100%"?>
+        <tgroup cols="3">
+          <?dbhtml table-summary="Examples of label formatting, Part 7"?>
+          <colspec colname="c1" colwidth="60*" />
+          <colspec colname="c2" colwidth="20*" />
+          <colspec colname="c3" colwidth="20*" />
+          <thead>
+            <row>
+              <entry>Code:</entry>
+              <entry>Value:</entry>
+              <entry>Result:</entry>
+            </row>
+          </thead>
+
+          <tbody>
+            <row>
+              <entry morerows="2"><programlisting><![CDATA[$plot->SetXLabelType('printf', 'GAIN:$%.2f',
+    'LOSS:($%.2f)', '[Unchanged]');
+]]></programlisting></entry>
+              <entry>9.1</entry>
+              <entry>GAIN:$9.10</entry>
+            </row>
+            <row> <!-- First cell is spanned by entry above -->
+              <entry>-26.35</entry>
+              <entry>LOSS:($26.35)</entry>
+            </row>
+            <row> <!-- First cell is spanned by entry above -->
+              <entry>0</entry>
+              <entry>[Unchanged]</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+    </para>
+
+    <para><?dbfo keep-together="always"?>
+In this example, a custom formatting function is used to format values in
+decimal degrees as degrees, minutes, and seconds.
+(This only works for non-negative angles.)
+      <informaltable>
+        <?dbfo table-width="100%"?>
+        <tgroup cols="3">
+          <?dbhtml table-summary="Examples of label formatting, Part 8"?>
+          <colspec colname="c1" colwidth="60*" />
+          <colspec colname="c2" colwidth="20*" />
+          <colspec colname="c3" colwidth="20*" />
+          <thead>
+            <row>
+              <entry>Code:</entry>
+              <entry>Value:</entry>
+              <entry>Result:</entry>
+            </row>
+          </thead>
+
+          <tbody>
+            <row>
+              <entry morerows="2"><programlisting><![CDATA[function deg_min_sec($value)
 {
   $deg = (int)$value;
   $value = ($value - $deg) * 60;
@@ -9603,6 +9846,14 @@ $plot->SetXLabelType('custom', 'deg_min_sec');
               <entry>75.12345</entry>
               <entry>75d 7m 24s</entry>
             </row>
+            <row> <!-- First cell is spanned by entry above -->
+              <entry>0</entry>
+              <entry>0d 0m 0s</entry>
+            </row>
+            <row> <!-- First cell is spanned by entry above -->
+              <entry>136.5</entry>
+              <entry>136d 30m 0s</entry>
+            </row>
           </tbody>
         </tgroup>
       </informaltable>
@@ -9611,6 +9862,10 @@ $plot->SetXLabelType('custom', 'deg_min_sec');
   </refsect1>
   <refsect1>
     <title>History</title>
+    <para>
+The 'printf' label format type was extended to support 2 or 3 format strings
+in PHPlot-6.2.0. Before that release, only a single format string could be used.
+    </para>
     <para>
 Custom label formatting functions are passed the row and column arguments
 (if applicable) starting with PHPlot-5.8.0.
@@ -10793,8 +11048,8 @@ format string specified as an additional argument to SetYDataLabelType.
     </para>
     <para>
 'printf' formatting formats the labels using the standard
-<function>sprintf</function> function, with the format string specified
-as an additional argument to SetYDataLabelType.
+<function>sprintf</function> function. One, two, or three format strings
+are specified as additional arguments to SetYDataLabelType.
     </para>
     <para>
 'custom' formatting formats the labels using a caller-provided function,
@@ -10873,17 +11128,42 @@ If omitted, the default is '%H:%M:%S' (hours, minutes, and seconds).
     </para>
 
     <para>
-For type 'printf', there is one optional argument:
+For type 'printf', there can be one, two, or three optional arguments:
       <variablelist>
         <varlistentry>
-          <term><replaceable>$format</replaceable></term>
+          <term><replaceable>$format1</replaceable>,
+              <optional><replaceable>$format2</replaceable>,
+                <optional><replaceable>$format3</replaceable>
+              </optional></optional>
+          </term>
           <listitem>
             <para>
-Formatting string, used with <function>sprintf()</function>.
-The formatting string must contain exactly one conversion specification
+Format string(s), used with <function>sprintf()</function>.
+The format string(s) must contain at most one conversion specification
 (%-code) which consumes a single argument.
-If omitted, the default value of '%e' uses scientific notation with default
-field sizes.
+If no format strings are specified, the default value of '%e' uses scientific
+notation with default field sizes.
+            </para>
+            <para>
+If a single format string is given (<literal>$format1</literal>),
+it is used for all label values.
+            </para>
+            <para>
+If two format strings are given (<literal>$format1, $format2</literal>),
+then the first string <literal>$format1</literal> is used to format the value
+of the label if it is greater than or equal to zero.
+The second string <literal>$format2</literal> is used to format
+the absolute value of the label if it is less than zero.
+            </para>
+            <para>
+If three format strings are given (<literal>$format1, $format2,
+$format3</literal>),
+then the first string <literal>$format1</literal> is used to format the value
+of the label if it is greater than zero.
+The second string <literal>$format2</literal> is used to format
+the absolute value of the label if it is less than zero.
+The third string <literal>$format3</literal> is used when the value of the
+label is zero.
             </para>
           </listitem>
         </varlistentry>
@@ -10947,6 +11227,15 @@ use SetYDataLabelType without arguments, or with an empty string argument.
 When using a custom label formatting function, do not assume the labels are
 formatted in any particular order, or only once each.
     </para>
+    <para>
+When using 2 or 3 'printf' format strings, the labels being formatted must
+be numeric values.
+    </para>
+    <para>
+When using 2 or 3 'printf' format strings, the second one is used to format
+the <emphasis>absolute value</emphasis> of the label, so you generally must
+provide some indication in the format string that the value is negative.
+    </para>
   </refsect1>
   <refsect1>
     <title>Examples</title>
@@ -10956,6 +11245,10 @@ See <xref linkend="SetXLabelType" />.
   </refsect1>
   <refsect1>
     <title>History</title>
+    <para>
+The 'printf' label format type was extended to support 2 or 3 format strings
+in PHPlot-6.2.0. Before that release, only a single format string could be used.
+    </para>
     <para>
 Custom label formatting functions are passed the row and column arguments
 (if applicable) starting with PHPlot-5.8.0.
@@ -11058,8 +11351,8 @@ or using an additional argument to SetYLabelType.
     </para>
     <para>
 'printf' formatting formats the labels using the standard
-<function>sprintf</function> function, with the format string specified
-as an additional argument to SetYLabelType.
+<function>sprintf</function> function. One, two, or three format strings
+are specified as additional arguments to SetYLabelType.
     </para>
     <para>
 'custom' formatting formats the labels using a caller-provided function,
@@ -11141,17 +11434,42 @@ and seconds).
     </para>
 
     <para>
-For type 'printf', there is one optional argument:
+For type 'printf', there can be one, two, or three optional arguments:
       <variablelist>
         <varlistentry>
-          <term><replaceable>$format</replaceable></term>
+          <term><replaceable>$format1</replaceable>,
+              <optional><replaceable>$format2</replaceable>,
+                <optional><replaceable>$format3</replaceable>
+              </optional></optional>
+          </term>
           <listitem>
             <para>
-Formatting string, used with <function>sprintf()</function>.
-The formatting string must contain exactly one conversion specification
+Format string(s), used with <function>sprintf()</function>.
+The format string(s) must contain at most one conversion specification
 (%-code) which consumes a single argument.
-If omitted, the default value of '%e' uses scientific notation with default
-field sizes.
+If no format strings are specified, the default value of '%e' uses scientific
+notation with default field sizes.
+            </para>
+            <para>
+If a single format string is given (<literal>$format1</literal>),
+it is used for all label values.
+            </para>
+            <para>
+If two format strings are given (<literal>$format1, $format2</literal>),
+then the first string <literal>$format1</literal> is used to format the value
+of the label if it is greater than or equal to zero.
+The second string <literal>$format2</literal> is used to format
+the absolute value of the label if it is less than zero.
+            </para>
+            <para>
+If three format strings are given (<literal>$format1, $format2,
+$format3</literal>),
+then the first string <literal>$format1</literal> is used to format the value
+of the label if it is greater than zero.
+The second string <literal>$format2</literal> is used to format
+the absolute value of the label if it is less than zero.
+The third string <literal>$format3</literal> is used when the value of the
+label is zero.
             </para>
           </listitem>
         </varlistentry>
@@ -11214,6 +11532,15 @@ side effect on the format type.
 When using a custom label formatting function, do not assume the labels are
 formatted in any particular order, or only once each.
     </para>
+    <para>
+When using 2 or 3 'printf' format strings, the labels being formatted must
+be numeric values.
+    </para>
+    <para>
+When using 2 or 3 'printf' format strings, the second one is used to format
+the <emphasis>absolute value</emphasis> of the label, so you generally must
+provide some indication in the format string that the value is negative.
+    </para>
   </refsect1>
   <refsect1>
     <title>Examples</title>
@@ -11223,6 +11550,10 @@ See <xref linkend="SetXLabelType" />.
   </refsect1>
   <refsect1>
     <title>History</title>
+    <para>
+The 'printf' label format type was extended to support 2 or 3 format strings
+in PHPlot-6.2.0. Before that release, only a single format string could be used.
+    </para>
     <para>
 Custom label formatting functions are passed the row and column arguments
 (if applicable) starting with PHPlot-5.8.0.
