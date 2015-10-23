@@ -3275,9 +3275,10 @@ no option but to use the 'time' format labels for tick values.
 <sect3 id="conc-labels-format-printf">
 <title>Formatting Labels: 'printf' type</title>
 <para>
-Label format type 'printf' expects a second argument specifying a
-<function>printf</function> format string, and formats the label value
-according to the string.
+Label format type 'printf' expects one, two, or three additional
+arguments specifying <function>printf</function> format strings,
+and formats the label value according to the format string(s).
+If a single format string is given, it is used for the label values.
 The format string must contain exactly one conversion specification
 (%-code) which consumes a single argument.
 For example:
@@ -3285,6 +3286,29 @@ For example:
 ]]></programlisting>
 This might produce a label like " 1.23e+8 parsecs".
 </para>
+<para>
+If two format strings are provided, the first is used to format the value
+of the label if it is greater than or equal to zero. The second format
+string is used to format the absolute value of the label if the label value
+is less than zero.
+</para>
+<para>
+If three format strings are provided, the first is used to format the value
+of the label if it is greater than zero. The second format string is used to
+format the absolute value of the label if the label value is less than zero.
+The third is used to format the value of the label if it is zero. In some
+applications, it may be appropriate to use an empty string as the third
+format string, which will suppress the display of labels with a value of zero.
+</para>
+
+<note>
+  <para>
+Support for using two or three 'printf' format strings was added
+in PHPlot-6.2.0.
+When using 2 or 3 'printf' format strings, the labels being formatted must
+be numeric values.
+  </para>
+</note>
 
 </sect3>
 
