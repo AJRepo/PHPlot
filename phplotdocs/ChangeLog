@@ -4,6 +4,26 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2015-10-23
+    Document extension to 'printf' label formatting:
+    * reference.xml: SetXLabelType, SetXDataLabelType, SetYLabelType, and
+      SetYDataLabelType: 'printf' label format type now accepts 1, 2, or 3
+      format strings.
+
+      Add note to SetPieLabelType that it works there too but is not useful.
+
+      Fixed the examples under SetXLabelType.  Some of the examples had
+      errors. These have now been copied into a unit test in the test suite
+      so they can be checked. All have been corrected, and new examples were
+      added. The single Examples table became too long (for PDF), so it had
+      to be broken into one table per example. This paginates better in PDF,
+      but the down-side is the HTML version has inconsistent column widths
+      (this is a Docbook issue).
+    * concepts.xml: Document 'printf' label formatting with 2 or 3 format
+      strings.
+    * developer.xml: label_format[]['printf_format'] can now be an array
+      of 1-3 format strings.
+
 2015-10-20
     * developer.xml: Correction: CheckLabels() does not apply defaults
       for data labels from tick labels - this was moved to FormatLabel
