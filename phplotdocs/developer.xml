@@ -2689,7 +2689,9 @@ keys and values:
       <row>
         <entry>printf_format</entry>
         <entry>printf</entry>
-        <entry>The format string for the PHP printf() function.</entry>
+        <entry>The format string(s) for the PHP printf() function.
+           This can be a single string, or an array of one to three strings.
+           </entry>
       </row>
       <row>
         <entry>custom_callback</entry>
@@ -2706,6 +2708,10 @@ keys and values:
     </tbody>
   </tgroup>
 </informaltable>
+</para>
+<para>
+Use of multiple strings for <literal>printf_format</literal> was added in
+PHPlot-6.2.0.
 </para>
 
 </sect2>
