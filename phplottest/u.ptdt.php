@@ -49,10 +49,13 @@ $plot_types = array(
     "candlesticks2"  => array( 1, 1, 0, 0, 0, 0, 0, 0), // PHPlot-5.3.0
     "linepoints"     => array( 1, 1, 1, 0, 1, 1, 1, 0),
     "lines"          => array( 1, 1, 1, 0, 1, 1, 1, 0),
-    "pie"            => array( 1, 1, 0, 1, 0, 0, 0, 0),
     "ohlc"           => array( 1, 1, 0, 0, 0, 0, 0, 0), // PHPlot-5.3.0
+    "pie"            => array( 1, 1, 0, 1, 0, 0, 0, 0),
     "points"         => array( 1, 1, 1, 0, 1, 1, 1, 0),
     "squared"        => array( 1, 1, 0, 0, 0, 0, 0, 0),
+    "squaredarea"    => array( 1, 1, 0, 0, 0, 0, 0, 0), // PHPlot-6.2.0
+    "stackedsquaredarea"
+                     => array( 1, 1, 0, 0, 0, 0, 0, 0), // PHPlot-6.2.0
     "stackedarea"    => array( 1, 1, 0, 0, 0, 0, 0, 0), // PHPlot-5.1.1
     "stackedbars"    => array( 1, 0, 0, 0, 1, 0, 0, 0),
     "thinbarline"    => array( 1, 1, 0, 0, 1, 1, 0, 0),
