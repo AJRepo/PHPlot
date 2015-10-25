@@ -30,6 +30,7 @@ $data5 = array(array('a', 1, ''));  // For data-data: 1 row with 1 missing value
 $data6 = array(array('a', 1, '', '', '')); // For data-data-error: 1 row missing value
 $data7 = array(array('a', 1), array('b'), array('c', 3));
 $data8 = array(array('a', 1, '' ,''));  // For data-data-xyz: 1 row, missing value
+$data9 = array(array('a', 1, 2, 3), array('b', 4, 5), array('c', 3, 2, 1)); // Unmatched column counts
 
 # Extend the PHPlot class to suppress error images.
 # Instead of displaying an error image, the error text is stored
@@ -231,8 +232,10 @@ test('ohlc plot: no values', $data2, 'text-data', 'ohlc',
       True, 'must have 4 values');
 test('points plot: no values', $data2, 'text-data', 'points', False);
 test('squared plot: no values', $data2, 'text-data', 'squared', False);
+test('squaredarea plot: no values', $data2, 'text-data', 'squaredarea', False);
 test('stackedarea plot: no values', $data2, 'text-data', 'stackedarea', False);
 test('stackedbars plot: no values', $data2, 'text-data', 'stackedbars', False);
+test('stackedsquaredarea plot: no values', $data2, 'text-data', 'stackedsquaredarea', False);
 test('thinbarline plot: no values', $data2, 'text-data', 'thinbarline', False);
 # data-data data type:
 test('area data-data plot: no values', $data3, 'data-data', 'area', False);
@@ -247,7 +250,9 @@ test('ohlc data-data plot: no values', $data3, 'data-data', 'ohlc',
       True, 'must have 4 values');
 test('points data-data plot: no values', $data3, 'data-data', 'points', False);
 test('squared data-data plot: no values', $data3, 'data-data', 'squared', False);
+test('squaredarea data-data plot: no values', $data3, 'data-data', 'squaredarea', False);
 test('stackedarea data-data plot: no values', $data3, 'data-data', 'stackedarea', False);
+test('stackedsquaredarea data-data plot: no values', $data3, 'data-data', 'stackedsquaredarea', False);
 test('thinbarline data-data plot: no values', $data3, 'data-data', 'thinbarline', False);
 # data-data-error data type:
 test('linepoints error plot: no values', $data3, 'data-data-error', 'linepoints', False);
@@ -278,8 +283,10 @@ test('ohlc plot: 1 row/1 missing value', $data4, 'text-data', 'ohlc',
       True, 'must have 4 values');
 test('points plot: 1 row/1 missing value', $data4, 'text-data', 'points', False);
 test('squared plot: 1 row/1 missing value', $data4, 'text-data', 'squared', False);
+test('squaredarea plot: 1 row/1 missing value', $data4, 'text-data', 'squaredarea', False);
 test('stackedarea plot: 1 row/1 missing value', $data4, 'text-data', 'stackedarea', False);
 test('stackedbars plot: 1 row/1 missing value', $data4, 'text-data', 'stackedbars', False);
+test('stackedsquaredarea plot: 1 row/1 missing value', $data4, 'text-data', 'stackedsquaredarea', False);
 test('thinbarline plot: 1 row/1 missing value', $data4, 'text-data', 'thinbarline', False);
 # data-data data type:
 test('area data-data plot: 1 row/1 missing value', $data5, 'data-data', 'area', False);
@@ -294,7 +301,9 @@ test('ohlc data-data plot: 1 row/1 missing value', $data5, 'data-data', 'ohlc',
       True, 'must have 4 values');
 test('points data-data plot: 1 row/1 missing value', $data5, 'data-data', 'points', False);
 test('squared data-data plot: 1 row/1 missing value', $data5, 'data-data', 'squared', False);
+test('squaredarea data-data plot: 1 row/1 missing value', $data5, 'data-data', 'squaredarea', False);
 test('stackedarea data-data plot: 1 row/1 missing value', $data5, 'data-data', 'stackedarea', False);
+test('stackedsquaredarea data-data plot: 1 row/1 missing value', $data5, 'data-data', 'stackedsquaredarea', False);
 test('thinbarline data-data plot: 1 row/1 missing value', $data5, 'data-data', 'thinbarline', False);
 # data-data-error data type:
 test('linepoints error plot: 1 row/1 missing value', $data6, 'data-data-error', 'linepoints', False);
@@ -323,10 +332,22 @@ test('thinbarline plot: 1 of 3 rows without value',
 # Special cases with requirements on number of values:
 test('area plot: 1 of 3 rows without value',
      $data7, 'text-data', 'area', True, 'must contain the same number');
+test('squaredarea plot: 1 of 3 rows without value',
+     $data7, 'text-data', 'squaredarea', True, 'must contain the same number');
 test('stackedarea plot: 1 of 3 rows without value',
      $data7, 'text-data', 'stackedarea', True, 'must contain the same number');
+test('stackedsquaredarea plot: 1 of 3 rows without value',
+     $data7, 'text-data', 'stackedsquaredarea', True, 'must contain the same number');
 test('ohlc plot: 1 of 3 rows without value',
      $data7, 'text-data', 'ohlc', True, 'must have 4');
+test('area plot: different value counts per row',
+     $data9, 'text-data', 'area', True, 'must contain the same number');
+test('squaredarea plot: different value counts per row',
+     $data9, 'text-data', 'squaredarea', True, 'must contain the same number');
+test('stackedarea plot: different value counts per row',
+     $data9, 'text-data', 'stackedarea', True, 'must contain the same number');
+test('stackedsquaredarea plot: different value counts per row',
+     $data9, 'text-data', 'stackedsquaredarea', True, 'must contain the same number');
 
 # Empty plot cases without error for plot types requiring specific numbers of values:
 # OHLC (after 5.4.0) requires 4 values but accepts empty values and skips that point.
