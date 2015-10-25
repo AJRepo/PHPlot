@@ -435,6 +435,10 @@ class PHPlot
             'draw_method' => 'DrawSquared',
             'legend_alt_marker' => 'line',
         ),
+        'squaredarea' => array(
+            'draw_method' => 'DrawSquaredArea',
+            'abs_vals' => TRUE,
+        ),
         'stackedarea' => array(
             'draw_method' => 'DrawArea',
             'draw_arg' => array(TRUE), // Tells DrawArea to draw stacked area plot
@@ -444,6 +448,12 @@ class PHPlot
         'stackedbars' => array(
             'draw_method' => 'DrawStackedBars',
             'sum_vals' => TRUE,
+        ),
+        'stackedsquaredarea' => array(
+            'draw_method' => 'DrawSquaredArea',
+            'draw_arg' => array(TRUE), // Tells DrawSquaredArea the data is cumulative
+            'sum_vals' => TRUE,
+            'abs_vals' => TRUE,
         ),
         'thinbarline' => array(
             'draw_method' => 'DrawThinBarLines',
@@ -7258,6 +7268,67 @@ class PHPlot
         return $this->pie_label_source; // Use label type set set with SetPieLabelType()
     }
 
+    /**
+     * Sets up for an area plot, calculating a points list and drawing data labels
+     *
+     * This is used for area fill plots: [stacked]area and [stacked]squaredarea.
+     * It converts the data array to device coordinate arrays. This also
+     * draws the axis data labels (if enabled).  Caller ensures there are at
+     * least 2 rows (X), and all rows have same number of columns (Y).
+     * Note that the returned $yd array has an extra column for points along
+     * the X axis. See comment below on 'artifical Y value'.
+     * This does not support missing points or data value labels.
+     *
+     * @param bool $stacked  True for a stacked plot (cumulative Y), false if not
+     * @param int[] $xd  Reference variable - returned array with X device coordinates
+     * @param int[] $yd  Reference variable - returned 2D array with Y device coordinates
+     * @return int  Number of columns in yd[][], which is $this->data_columns + 1
+     * @since 6.2.0
+     */
+    protected function SetupAreaPlot($stacked, &$xd, &$yd)
+    {
+        $xd = array();
+        $yd = array();
+
+        // Outer loop over rows (X); inner over columns (Y):
+        for ($row = 0; $row < $this->num_data_rows; $row++) {
+            $rec = 1;                                       // Skip record #0 (data label)
+
+            if ($this->datatype_implied)                    // Implied X values?
+                $x_now = 0.5 + $row;                        // Place text-data at X = 0.5, 1.5, 2.5, etc...
+            else
+                $x_now = $this->data[$row][$rec++];         // Read it, advance record index
+
+            $xd[$row] = $x_now_pixels = $this->xtr($x_now); // Save in device coordinates
+
+            if ($this->x_data_label_pos != 'none')          // Draw X Data labels?
+                $this->DrawXDataLabel($this->data[$row][0], $x_now_pixels, $row);
+
+            // There is an artificial Y value at the X axis. For stacked plots, it goes before the
+            // first real Y, so the first area fill is from the axis to the first Y data set.
+            // For non-stacked plots, it goes after the last Y, so the last area fill is from axis
+            // to the last Y data set.
+            if ($stacked)
+                $yd[$row] = array($this->x_axis_y_pixels);
+            else
+                $yd[$row] = array();
+
+            // Store the Y values for this X. Missing Y values are not supported, and are replaced with 0.
+            // Negative numbers are not supported, and are replaced with absolute values.
+            // The resulting numbers are also clipped to the X axis' Y value (which can be > 0).
+            $y = 0; // Accumulate (if not reset below) the Y values
+            for ($idx = 0; $rec < $this->records_per_group; $rec++, $idx++) {
+                if (is_numeric($y_now = $this->data[$row][$rec]))
+                    $y += abs($y_now);
+                $yd[$row][] = $this->ytr(max($this->x_axis_position, $y));
+                if (!$stacked) $y = 0; // For non-stacked plots, reset Y in each loop.
+            }
+            // See above: For non-stacked plots, the Y value for X axis goes at the end.
+            if (!$stacked)
+                $yd[$row][] = $this->x_axis_y_pixels;
+        }
+        return ($this->data_columns + 1); // This is the size of each yd[][]
+    }
 
 /////////////////////////////////////////////
 ////////////////////             PLOT DRAWING
@@ -7681,11 +7752,10 @@ class PHPlot
      * Draws an area or stackedarea plot
      *
      * This is the main function for drawing area and stackedarea plots.  Both
-     * of these fill the area between lines, but in the stacked area plot the
-     * Y values are accumulated for each X, same as stacked bars. In the
-     * regular area graph, the areas are filled in order from the X axis up to
-     * each Y (so the Y values for each X need to be in decreasing order in
-     * this case).
+     * of these fill the area between lines, but 'stackedarea' is cumulative (like
+     * stackedbars), and 'area' is not. Also 'area' fills from the last data set to
+     * the X axis, and 'stackedarea' fills from the X axis to the first data set.
+     * 'area' and 'stackedarea' plots are identical when there is only one data set.
      *
      * Supported data types are data-data and text-data.  All Y values must be
      * >= 0 (with absolute value used if any negative values are found).
@@ -7701,77 +7771,34 @@ class PHPlot
         if (!$this->CheckDataType('text-data, data-data'))
             return FALSE;
 
-        $n = $this->num_data_rows;  // Number of X values
-        if ($n < 2) return TRUE;    // Require at least 2 rows, for imagefilledpolygon().
-
-        // These arrays store the device X and Y coordinates for all lines:
-        $xd = array();
-        $yd = array();
-
-        // Make sure each row has the same number of values. Note records_per_group is max(num_recs).
+        // Validation: Need at least 2 rows; all rows must have same number of columns.
+        if (($n_rows = $this->num_data_rows) < 2) return TRUE;
         if ($this->records_per_group != min($this->num_recs)) {
             return $this->PrintError("DrawArea(): Data array must contain the same number"
                       . " of Y values for each X");
         }
 
-        // Calculate the Y value for each X, and store the device
-        // coordinates into the xd and yd arrays.
-        // For stacked area plots, the Y values accumulate.
-        for ($row = 0; $row < $n; $row++) {
-            $rec = 1;                                       // Skip record #0 (data label)
+		// Calculate and store device coordinates xd[] and yd[][], and draw the data labels.
+        $n_columns = $this->SetupAreaPlot($do_stacked, $xd, $yd);
 
-            if ($this->datatype_implied)                    // Implied X values?
-                $x_now = 0.5 + $row;                        // Place text-data at X = 0.5, 1.5, 2.5, etc...
-            else
-                $x_now = $this->data[$row][$rec++];         // Read it, advance record index
-
-            $x_now_pixels = $this->xtr($x_now);
-
-            if ($this->x_data_label_pos != 'none')          // Draw X Data labels?
-                $this->DrawXDataLabel($this->data[$row][0], $x_now_pixels, $row);
-
-            // Store the X value.
-            // There is an artificial Y value at the axis. For 'area' it goes
-            // at the end; for stackedarea it goes before the start.
-            $xd[$row] = $x_now_pixels;
-            $yd[$row] = array();
-            if ($do_stacked)
-                $yd[$row][] = $this->x_axis_y_pixels;
-
-            // Store the Y values for this X.
-            // All Y values are clipped to the x axis which should be zero but can be moved.
-            $y = 0;
-            while ($rec < $this->records_per_group) {
-                if (is_numeric($y_now = $this->data[$row][$rec++])) // Treat missing values as 0.
-                    $y += abs($y_now);
-                $yd[$row][] = $this->ytr(max($this->x_axis_position, $y));
-                if (!$do_stacked) $y = 0;
-            }
-
-            if (!$do_stacked)
-                $yd[$row][] = $this->x_axis_y_pixels;
-        }
-
-        // Now draw the filled polygons.
+        // Draw the filled polygons.
         // Note data_columns is the number of Y points (columns excluding label and X), and the
         // number of entries in the yd[] arrays is data_columns+1.
-        $prev_row = 0;
-        for ($row = 1; $row <= $this->data_columns; $row++) { // 1 extra for X axis artificial row
+        $prev_col = 0;
+        for ($col = 1; $col < $n_columns; $col++) { // 1 extra for X axis artificial column
             $pts = array();
             // Previous data set forms top (for area) or bottom (for stackedarea):
-            for ($j = 0; $j < $n; $j++) {
-                $pts[] = $xd[$j];
-                $pts[] = $yd[$j][$prev_row];
+            for ($row = 0; $row < $n_rows; $row++) {
+                array_push($pts, $xd[$row], $yd[$row][$prev_col]);
             }
             // Current data set forms bottom (for area) or top (for stackedarea):
-            for ($j = $n- 1; $j >= 0; $j--) {
-                $pts[] = $xd[$j];
-                $pts[] = $yd[$j][$row];
+            for ($row = $n_rows - 1; $row >= 0; $row--) {
+                array_push($pts, $xd[$row], $yd[$row][$col]);
             }
             // Draw it:
-            ImageFilledPolygon($this->img, $pts, $n * 2, $this->ndx_data_colors[$prev_row]);
+            ImageFilledPolygon($this->img, $pts, $n_rows * 2, $this->ndx_data_colors[$prev_col]);
 
-            $prev_row = $row;
+            $prev_col = $col;
         }
         return TRUE;
     }
@@ -7932,7 +7959,7 @@ class PHPlot
      *
      * This is the main function for drawing a squared plot.  Supported data
      * types are data-data and text-data.  This is based on DrawLines(), with
-     * two line drawn for each point.
+     * two line segments drawn for each point.
      *
      * @return bool  True (False on error if an error handler returns True)
      */
@@ -7979,11 +8006,10 @@ class PHPlot
                         // Select solid color or dashed line
                         $style = $this->SetDashedStyle($data_color, $this->line_styles[$idx] == 'dashed');
 
-                        // Draw the step
-                        ImageLine($this->img, $lastx[$idx], $lasty[$idx],
-                                  $x_now_pixels, $lasty[$idx], $style);
-                        ImageLine($this->img, $x_now_pixels, $lasty[$idx],
-                                  $x_now_pixels, $y_now_pixels, $style);
+                        // Draw the step:
+                        $y_mid = $lasty[$idx];
+                        ImageLine($this->img, $lastx[$idx], $y_mid, $x_now_pixels, $y_mid, $style);
+                        ImageLine($this->img, $x_now_pixels, $y_mid, $x_now_pixels, $y_now_pixels, $style);
                     }
 
                     // Draw data value labels?
@@ -8000,6 +8026,106 @@ class PHPlot
         }
 
         ImageSetThickness($this->img, 1);
+        return TRUE;
+    }
+
+    /**
+     * Draws a squaredarea or stackedsquaredarea plot (Squared Area)
+     *
+     * This is the main function for drawing squaredarea and stackedsquaredarea plots,
+     * which area a blend of 'squared' plus either 'area' or 'stackedarea'. Supported
+     * data types are data-data and text-data.  Missing points are not allowed,
+     * and all data sets must have the same number of points.
+     *
+     * @param bool $do_stacked  True for cumulative (stacked), false or omit for unstacked.
+     * @return bool  True (False on error if an error handler returns True)
+     */
+    protected function DrawSquaredArea($do_stacked = FALSE)
+    {
+        if (!$this->CheckDataType('text-data, data-data'))
+            return FALSE;
+
+        // Validation: Need at least 2 rows; all rows must have same number of columns.
+        if (($n_rows = $this->num_data_rows) < 2) return TRUE;
+        if ($this->records_per_group != min($this->num_recs)) {
+            return $this->PrintError("DrawSquaredArea(): Data array must contain the same number"
+                      . " of Y values for each X");
+        }
+
+		// Calculate and store device coordinates xd[] and yd[][], and draw the data labels.
+        $n_columns = $this->SetupAreaPlot($do_stacked, $xd, $yd);
+
+        // Draw a filled polygon for each Y column
+        $prev_col = 0;
+        for ($col = 1; $col < $n_columns; $col++) { // 1 extra for X axis artificial column
+
+            // Current data set forms the top. For each point after the first, add 2 points.
+            $x_prev = $xd[0];
+            $y_prev = $yd[0][$col];
+            $pts = array($x_prev, $y_prev);  // Bottom left point
+            for ($row = 1; $row < $n_rows; $row++) {
+                $x = $xd[$row];
+                $y = $yd[$row][$col];
+                array_push($pts, $x, $y_prev, $x, $y);
+                $x_prev = $x;
+                $y_prev = $y;
+            }
+
+            // Previous data set forms the bottom. Process right to left.
+            // Note $row is now $n_rows, and it will be stepped back to 0.
+            $row--;
+            $x_prev = $xd[$row];
+            $y_prev = $yd[$row][$prev_col];
+            array_push($pts, $x_prev, $y_prev); // Bottom right point
+            while (--$row >= 0) {
+                $x = $xd[$row];
+                $y = $yd[$row][$prev_col];
+                array_push($pts, $x_prev, $y, $x, $y);
+                $x_prev = $x;
+                $y_prev = $y;
+            }
+
+            // Draw the resulting polygon, which has (2 * (1 + 2*(n_rows-1))) points:
+            ImageFilledPolygon($this->img, $pts, 4 * $n_rows - 2, $this->ndx_data_colors[$prev_col]);
+            $prev_col = $col;
+        }
+
+        // Draw the border/outline, if enabled. (After, else the area fills cover parts of it.)
+        // Note draw_data_borders is unset by default, so a local default can be applied (off, here).
+        if (!empty($this->draw_data_borders)) {
+
+            for ($col = 1; $col < $n_columns; $col++) {
+                $color = $this->ndx_data_border_colors[$col-1];
+                // This is due to the difference in the $yd array for stacked and unstacked.
+                if ($do_stacked) {
+                    $this_col = $col;         // Border follows column = 1 to N-1
+                    $other_col = $col - 1;    // Left and right edges use the previous column
+                } else {
+                    $this_col = $col - 1;     // Border follows column = 0 to N-2
+                    $other_col = $col;        // Left and right edges use the next column
+                }
+
+                // Left edge:
+                $prev_x = $xd[0];
+                $prev_y = $yd[0][$other_col];
+                $x = $xd[0];
+                $y = $yd[0][$this_col];
+                ImageLine($this->img, $prev_x, $prev_y, $x, $y, $color);
+
+                // Across the top, with an 'X then Y' step at each point:
+                for ($row = 1; $row < $n_rows; $row++) {
+                    $prev_x = $x;
+                    $prev_y = $y;
+                    $x = $xd[$row];
+                    $y = $yd[$row][$this_col];
+                    ImageLine($this->img, $prev_x, $prev_y, $x, $prev_y, $color);
+                    ImageLine($this->img, $x, $prev_y, $x, $y, $color);
+                }
+
+                // Right edge:
+                ImageLine($this->img, $x, $y, $x, $yd[$n_rows - 1][$other_col], $color);
+            }
+        }
         return TRUE;
     }
 
