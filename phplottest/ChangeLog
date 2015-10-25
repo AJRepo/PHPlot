@@ -2,6 +2,30 @@ This is the Change Log for phplottest, the PHPlot Test Suite
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2015-10-25
+    New tests for 'squaredarea' and 'stackedsquaredarea' plot types:
+    * squarea*.php: 22 new tests for new plot types.  (Note: 'squarea' is
+      short for 'squared area' and is only used in the test filenames.)
+    * tc-squaredarea.php: New test for squaredarea plot with transparency and
+      area overlap.
+    * tc-area2.php: New test for area plot with transparency. This is the
+      same as tc-squaredarea.php except for the plot type and title, and
+      allows for comparing these two plot types with the same data.
+    * ex-squaredarea1.php, ex-stackedsquaredarea1.php: New, examples which
+      will be in the reference manual.
+
+    Updated tests for new 'squaredarea' and 'stackedsquaredarea' plot types:
+    * matchtypes.php: Expanded the test to cover these 2 new plot types, and
+      also horizontal bars vs stackedbars.
+      Added option to save the plots to files, for debugging.
+    * u.ptdt.php: Add new plot types to plot type/data type matrix.
+    * u.baddata.php: Added 12 cases for new types + 2 cases for existing.
+    * empty-nocols-sqa.php, empty-nocols-ssq.php: New cases of empty-nocols.
+    * empty-plot-sqa.php, empty-plot-ssq.php: New cases of empty-plot.
+
+    * tests.ini: List 30 new tests.
+    * empty-nocols-sq.php: Fix typo
+
 2015-10-23
     Expanded and renamed unit test of label format types.
     * fmtlab-printf3.php: Renamed to u.formattype.php
