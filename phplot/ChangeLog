@@ -2,6 +2,17 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2015-10-25
+    * Feature Request #57 "squarefilled plot type":
+      + Defined 2 new plot types: squaredarea and stackedsquaredarea.
+      + Added new internal function SetupAreaPlot() which sets up for an
+        area fill plot, using code moved from DrawArea().
+      + Changed DrawArea() to use SetupAreaPlot(). Also fixed mis-named
+        variables: row versus column.
+      + Added new internal function DrawSquaredArea() to draw the new plot
+        types squaredarea and stackedsquaredarea.  This uses the new
+        SetupAreaPlot(), draws the area fills and optional border.
+
 2015-10-22
     * Changed version to 6.2.0-unreleased (was: 6.1.1-unreleased).
 
