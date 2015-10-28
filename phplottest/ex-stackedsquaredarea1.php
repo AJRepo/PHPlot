@@ -8,7 +8,7 @@ $title = "US Oil Imports by Country, Top 5\n"
 
 $countries = array(
                 'Canada', 'Saudi Arabia', 'Mexico', 'Venezuela', 'Nigeria',
-//              --------  --------------  --------  -----------  ---------
+#               --------  --------------  --------  -----------  ---------
 );
 $data = array(
   array('2002',     1445,           1519,     1500,        1201,      589),
@@ -20,7 +20,7 @@ $data = array(
   array('2008',     1956,           1503,     1187,        1039,      922),
 );
 
-// Append a duplicate of the last row, without label, to make it visible.
+# Append a duplicate of the last row, without label, to make it visible.
 $n_rows = count($data);
 $data[$n_rows] = $data[$n_rows-1];
 $data[$n_rows][0] = '';
@@ -35,10 +35,12 @@ $plot->SetXTickPos('none');
 $plot->SetLineStyles('solid');
 $plot->SetYTickIncrement(250);
 $plot->SetLegend($countries);
-// Make room for the legend to the left of the plot:
+# Make room for the legend to the left of the plot:
 $plot->SetMarginsPixels(200);
-// Move the legend to the left:
+# Move the legend to the left:
 $plot->SetLegendPixels(10, 10);
-// Flip the legend order for stacked plots:
+# Flip the legend order for stacked plots:
 $plot->SetLegendReverse(True);
+# To improve presentation in the manual:
+$plot->SetImageBorderType('plain');
 $plot->DrawGraph();
