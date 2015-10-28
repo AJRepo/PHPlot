@@ -2,6 +2,10 @@ This is the Change Log for phplottest, the PHPlot Test Suite
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2015-10-28
+    * ex-squaredarea1.php, ex-stackedsquaredarea1.php: style changes for
+      inclusion in the reference manual.
+
 2015-10-25
     New tests for 'squaredarea' and 'stackedsquaredarea' plot types:
     * squarea*.php: 22 new tests for new plot types.  (Note: 'squarea' is
