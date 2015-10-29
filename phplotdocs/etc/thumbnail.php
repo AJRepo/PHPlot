@@ -30,14 +30,15 @@ class thumbnail extends PHPlot {
         $this->SetLabelScalePosition(0); // Turn off pie chart labels
         $this->SetLineStyles('solid');
     }
+
+    // This static method returns the list of plot types from the PHPlot
+    // class (which is in a protected static array there).
+    static function get_plot_types()
+    {
+        return array_keys(PHPlot::$plots);
+    }
 }
 
-# Make thumbnails for these plot types:
-$plot_types = array(
-    'area', 'bars', 'boxes', 'bubbles', 'candlesticks', 'candlesticks2',
-    'lines', 'linepoints', 'ohlc', 'pie', 'points', 'squared',
-    'stackedarea', 'stackedbars', 'thinbarline',
-);
 
 
 # Data type and data array for each plot type:
@@ -83,24 +84,24 @@ $data_values['candlesticks'] = array(
     array('', 34, 41, 20, 27),
 );
 
-$data_types['candlesticks2'] = 'text-data';
+$data_types['candlesticks2'] = $data_types['candlesticks'];
 $data_values['candlesticks2'] = $data_values['candlesticks'];
 
-$data_types['ohlc'] = 'text-data';
+$data_types['ohlc'] = $data_types['candlesticks'];
 $data_values['ohlc'] = $data_values['candlesticks'];
 
 $data_types['lines'] = 'data-data';
 $data_values['lines'] = array(
-    array('', 0, 0, 0, 2),
-    array('', 1, 2, 3, 2),
-    array('', 2, 4, 6, 2),
-    array('', 3, 6, 9, 2),
+    array('', 0, 1, 2,  3),
+    array('', 1, 2, 3,  2),
+    array('', 2, 3, 5,  1),
+    array('', 3, 4, 7,  0),
 );
 
-$data_types['points'] = 'data-data';
+$data_types['points'] = $data_types['lines'];
 $data_values['points'] = $data_values['lines'];
 
-$data_types['linepoints'] = 'data-data';
+$data_types['linepoints'] = $data_types['lines'];
 $data_values['linepoints'] = $data_values['lines'];
 
 $data_types['pie'] = 'text-data-single';
@@ -112,10 +113,18 @@ $data_values['pie'] = array(
 
 $data_types['squared'] = 'data-data';
 $data_values['squared'] = array(
-    array('', 0, 0, 10),
-    array('', 1, 3, 12),
-    array('', 2, 6, 14),
-    array('', 3, 9, 16),
+    array('', 0, 0, 5, 8),
+    array('', 1, 2, 6, 8),
+    array('', 2, 4, 5, 7),
+    array('', 3, 2, 6, 8),
+);
+
+$data_types['squaredarea'] = 'data-data';
+$data_values['squaredarea'] = array(
+    array('', 0, 8, 5, 1),
+    array('', 1, 7, 6, 4),
+    array('', 2, 6, 3, 2),
+    array('', 3, 6, 2, 1),
 );
 
 $data_types['stackedarea'] = 'data-data';
@@ -126,13 +135,20 @@ $data_values['stackedarea'] = array(
     array('', 2, 3, 1, 0, 1),
 );
 
-
 $data_types['stackedbars'] = 'text-data';
 $data_values['stackedbars'] = array(
     array('', 2, 3, 5),
     array('', 2, 5, 4),
     array('', 2, 7, 3),
     array('', 2, 9, 2),
+);
+
+$data_types['stackedsquaredarea'] = 'data-data';
+$data_values['stackedsquaredarea'] = array(
+    array('', 0, 1, 1, 2),
+    array('', 1, 4, 1, 3),
+    array('', 2, 3, 2, 1),
+    array('', 3, 3, 1, 2),
 );
 
 $data_types['thinbarline'] = 'text-data';
@@ -171,8 +187,12 @@ function setup_boxes($plot)
 
 
 # Loop over each plot type and make the thumbnail image:
-foreach ($plot_types as $plot_type) {
+foreach (thumbnail::get_plot_types() as $plot_type) {
 
+    if (!isset($data_types[$plot_type], $data_values[$plot_type])) {
+        echo "Error: Missing data setup for plot type '$plot_type'\n";
+        exit(1);
+    }
     $filename = "thumbnail-$plot_type.png";
     $plot = new thumbnail($filename, $plot_type,
                         $data_types[$plot_type],
