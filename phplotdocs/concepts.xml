@@ -837,15 +837,15 @@ The following plot types are available:
   <tgroup cols="3">
     <?dbhtml table-summary="Available plot types"?>
     <colspec colname="c1" colwidth="15*" align="center"/>
-    <colspec colname="c2" colwidth="15*" align="center"/>
-    <colspec colname="c3" colwidth="70*" />
+    <colspec colname="c2" colwidth="20*" align="center"/>
+    <colspec colname="c3" colwidth="65*" />
     <thead>
       <row>
         <entry namest="c1" nameend="c2">Plot Type</entry>
         <entry>Description</entry>
       </row>
     </thead>
-    <tbody>
+    <tbody valign="middle">
 
       <row>
         <entry>
@@ -1032,7 +1032,22 @@ The following plot types are available:
           </inlinemediaobject>
         </entry>
         <entry><link linkend="plottype-squared">squared</link></entry>
-        <entry>Stepped lines</entry>
+        <entry>Stepped lines, also called squared lines.</entry>
+      </row>
+
+      <row>
+        <entry>
+          <inlinemediaobject>
+            <imageobject>
+              <imagedata fileref="images/thumbnail-squaredarea.png" scale="100" format="PNG" />
+            </imageobject>
+            <textobject>
+              <phrase>squaredarea plot thumbnail</phrase>
+            </textobject>
+          </inlinemediaobject>
+        </entry>
+        <entry><link linkend="plottype-squaredarea">squaredarea</link></entry>
+        <entry>Filled area between stepped lines.</entry>
       </row>
 
       <row>
@@ -1070,6 +1085,21 @@ The following plot types are available:
         <entry>
           <inlinemediaobject>
             <imageobject>
+              <imagedata fileref="images/thumbnail-stackedsquaredarea.png" scale="100" format="PNG" />
+            </imageobject>
+            <textobject>
+              <phrase>stackedsquaredarea plot thumbnail</phrase>
+            </textobject>
+          </inlinemediaobject>
+        </entry>
+        <entry><link linkend="plottype-stackedsquaredarea">stackedsquaredarea</link></entry>
+        <entry>Filled areas between stepped lines, with multiple data sets accumulated.</entry>
+      </row>
+
+      <row>
+        <entry>
+          <inlinemediaobject>
+            <imageobject>
               <imagedata fileref="images/thumbnail-thinbarline.png" scale="100" format="PNG" />
             </imageobject>
             <textobject>
@@ -1097,7 +1127,19 @@ This is often called a <emphasis>cumulative line plot</emphasis> or
 Each data set (set of corresponding Y values from each record in the
 data array) is plotted in order, with the area
 between each line and the next line filled solid. The area between the
-last line and the X axis is also filled. The data must be arranged
+last line and the X axis<footnote id="fnareaplotfill">
+    <para>
+The <literal>area</literal> and <literal>squaredarea</literal> plot types are
+actually intended to fill the area between each data set (set of Y values)
+and the X axis.
+The way it is described above is how it is actually implemented, however.
+When using opaque colors, there is no visible difference between the two
+methods. But when colors are partially transparent, filling the area
+between data sets (rather than data set to axis) avoids some unwanted color
+artifacts as the overlapping colors are blended.
+    </para>
+  </footnote> is also filled.
+The data must be arranged
 so the values are (generally) decreasing within each row, because later
 drawn filled areas will cover previously drawn areas.
 </para>
@@ -1131,7 +1173,7 @@ the two plot types are identical.
 </sect2>
 
 <sect2 id="plottype-bars">
-<title>Plot Type: bars (Bar Graph)</title>
+<title>Plot Type: bars (Bar Plot)</title>
 <para>
 This plot type draws a bar chart, with filled rectangles.
 Both vertical and horizontal bar charts are available.
@@ -1353,7 +1395,7 @@ Box plots were added in PHPlot-6.1.0.
 </sect2>
 
 <sect2 id="plottype-bubbles">
-<title>Plot Type: bubbles</title>
+<title>Plot Type: bubbles (Bubble Plot)</title>
 <para>
 This plot type produces a scatter-plot using filled circles, with the diameter
 of each circle representing a Z value for the point.
@@ -1511,7 +1553,7 @@ This plot type was added in PHPlot-5.3.0.
 </sect2>
 
 <sect2 id="plottype-linepoints">
-<title>Plot Type: linepoints (Lines and Points)</title>
+<title>Plot Type: linepoints (Lines and Points Plot)</title>
 <para>
 This plot type draws a line graph with a marker at each point, thus
 combining the 'lines' and 'points' plot types.
@@ -1569,7 +1611,7 @@ Example of this plot type can be seen in
 </sect2>
 
 <sect2 id="plottype-lines">
-<title>Plot Type: lines (Lines Graph)</title>
+<title>Plot Type: lines (Lines Plot)</title>
 <para>
 This plot type simply draws a line from each point to the next.
 </para>
@@ -1669,7 +1711,7 @@ This plot type was added in PHPlot-5.3.0.
 </sect2>
 
 <sect2 id="plottype-pie">
-<title>Plot Type: pie (Pie Chart)</title>
+<title>Plot Type: pie (Pie Plot)</title>
 <para>
 This plot type draws pie charts. The pie chart can have a 3-D look or be
 drawn flat.
@@ -1847,7 +1889,7 @@ Examples of this plot type can be seen in
 </sect2>
 
 <sect2 id="plottype-squared">
-<title>Plot Type: squared (Step Plot)</title>
+<title>Plot Type: squared (Squared Plot)</title>
 <para>
 This plot type makes stepped lines. For each point, you get a horizontal
 line from the previous point to the current X, then a vertical line to
@@ -1873,6 +1915,59 @@ Line style (solid or dashed) per line are set with
 <para>
 An example of this plot type can be seen in
 <xref linkend="ex-squared1" />.
+</para>
+</sect2>
+
+<sect2 id="plottype-squaredarea">
+<title>Plot Type: squaredarea (Squared Area Plot)</title>
+<para>
+This plot type draws filled areas between squared (or stepped) lines.
+Each data set (set of corresponding Y values from each record in the
+data array) is plotted in order, with the area between the data set and the
+next data set filled solid.
+The edges of the filled area are stepped lines, as with the
+<link linkend="plottype-squared">squared</link> plot type, rather than
+straight line segments, as in the <link linkend="plottype-area">area</link>
+plot type.  The area between the last line and the
+X axis<footnoteref linkend="fnareaplotfill" /> is also filled.
+The data must be arranged so the values are (generally) decreasing within
+each row, because later drawn filled areas will cover previously drawn areas.
+</para>
+<para>
+Because squared lines are drawn by stepping X first, then Y, the last Y
+value is usually not visible because there is no width for a filled area.
+One work-around is to append a copy of the last row of the data array.
+This is shown in the example linked below.
+</para>
+<para>
+This plot type works with data types <xref linkend="text-data"/>
+and <xref linkend="data-data"/>.
+For 'text-data', the data X values are assumed to be at 0.5+N for N=0,1,2...
+</para>
+<para>
+A minimum of 2 rows (X values and corresponding Y value(s)) is required for
+this plot type.  If there are fewer than 2 rows, an empty plot will be produced.
+</para>
+<para>
+This plot type uses the absolute value of each supplied Y, because negative
+values do not make sense here. Missing values are taken as zero.
+All records in the data array must have the same number of Y values.
+</para>
+<para>
+The areas are filled with colors as set with <xref linkend="SetDataColors" />.
+</para>
+<para>
+An example of this plot type can be seen in
+<xref linkend="ex-squaredarea1" />.
+</para>
+<para>
+The <literal>squaredarea</literal> plot type is similar to the
+<link linkend="plottype-stackedsquaredarea">stackedsquaredarea</link> plot type.
+When plotting a single data set (1 Y value per X),
+the two plot types are identical.
+</para>
+<para>
+This plot type was added in PHPlot-6.2.0.
 </para>
 </sect2>
 
@@ -1904,10 +1999,16 @@ All records in the data array must have the same number of Y values.
 </para>
 <para>
 The areas are filled with colors as set with <xref linkend="SetDataColors" />.
-Note that data sets are processed with stacked area plots in reverse order
-relative to area plots.  With stacked area plots, the first data set (using the
-first data color) will be at the bottom, but with area plots it will be at
-the top.
+Note that color selection with <literal>stackedarea</literal> plots tends to
+go in the reverse order compared to <literal>area</literal> plots.
+For stacked plots, the first area fill using the first color fills the area
+extending up from the X axis to the first data set. So the first color is
+always at the bottom of the plot.
+For unstacked plots, the last area fill using the last color fills the area
+extending up from the X axis to the last data set. Unless this data set
+contains the lowest Y values (and is drawn at the bottom of the plot), it
+will cover all the other data set area fills. So typically the unstacked
+plot has to have the last color at the bottom of the plot.
 Compare <xref linkend="ex-area1"/> and <xref linkend="ex-stackedarea1"/>.
 </para>
 <para>
@@ -1925,7 +2026,7 @@ when plotting a single data set (1 Y value per X),
 </sect2>
 
 <sect2 id="plottype-stackedbars">
-<title>Plot Type: stackedbars</title>
+<title>Plot Type: stackedbars (Stacked Bar Plot)</title>
 <para>
 This plot type draws a bar chart with stacked bars.
 Both vertical and horizontal stacked bar charts are available.
@@ -2003,8 +2104,74 @@ stack, but this was changed in PHPlot-5.7.0.
 </para>
 </sect2>
 
+<sect2 id="plottype-stackedsquaredarea">
+<title>Plot Type: stackedsquaredarea (Stacked Squared Area Plot)</title>
+<para>
+This plot type draws filled areas between squared (or stepped) lines,
+similar to <link linkend="plottype-squaredarea">squaredarea</link> except
+the values are accumulated as in
+<link linkend="plottype-stackedbars">stackedbars</link> plots.
+The area between the X axis and the first data set (the squared line
+resulting from the first Y value from each record) is filled first.
+Then the area above that up to the sum of the first and second Y values
+in each record is filled next.
+This repeats until filling the area up to the top-most squared line,
+which is the sum of all the Y values from each record.
+The edges of the filled areas are squared lines, as with the
+<link linkend="plottype-squared">squared</link> plot type.
+</para>
+<para>
+Because squared lines are drawn by stepping X first, then Y, the last Y
+value is usually not visible because there is no width for a filled area.
+One work-around is to append a copy of the last row of the data array.
+This is shown in the example linked below.
+</para>
+<para>
+This plot type works with data types <xref linkend="text-data"/>
+and <xref linkend="data-data"/>.
+For 'text-data', the data X values are assumed to be at 0.5+N for N=0,1,2...
+</para>
+<para>
+A minimum of 2 rows (X values and corresponding Y value(s)) is required for
+this plot type.  If there are fewer than 2 rows, an empty plot will be produced.
+</para>
+<para>
+This plot type uses the absolute value of each supplied Y, because negative
+values do not make sense here. Missing values are taken as zero.
+All records in the data array must have the same number of Y values.
+</para>
+<para>
+The areas are filled with colors as set with <xref linkend="SetDataColors" />.
+Note that color selection with <literal>stackedsquaredarea</literal> plots
+tends to go in the reverse order compared to <literal>squaredarea</literal>
+plots.
+For stacked plots, the first area fill using the first color fills the area
+extending up from the X axis to the first data set. So the first color is
+always at the bottom of the plot.
+For unstacked plots, the last area fill using the last color fills the area
+extending up from the X axis to the last data set. Unless this data set
+contains the lowest Y values (and is drawn at the bottom of the plot), it
+will cover all the other data set area fills. So typically the unstacked
+plot has to have the last color at the bottom of the plot.
+Compare <xref linkend="ex-squaredarea1"/>
+and <xref linkend="ex-stackedsquaredarea1"/>.
+</para>
+<para>
+An example of this plot type can be seen in
+<xref linkend="ex-stackedsquaredarea1" />.
+</para>
+<para>
+A <literal>stackedsquaredarea</literal> plot is identical to a
+<link linkend="plottype-squaredarea">squaredarea</link> plot
+when plotting a single data set (1 Y value per X).
+</para>
+<para>
+This plot type was added in PHPlot-6.2.0.
+</para>
+</sect2>
+
 <sect2 id="plottype-thinbarline">
-<title>Plot Type: thinbarline</title>
+<title>Plot Type: thinbarline (Thin Bar Line Plot)</title>
 <para>
 This plot type draws lines from the axis to the data value.
 Other implementations call this type of plot <emphasis>impulses</emphasis>.
@@ -2050,15 +2217,15 @@ types.
   <tgroup cols="9">
     <?dbhtml table-summary="Supported plot type/data type combinations."?>
     <?dbhtml cellpadding="4"?>
-    <colspec colname="pt" align="left" colwidth="16*" />
-    <colspec colname="dt1" align="center" colwidth="10.5*" />
-    <colspec colname="dt2" align="center" colwidth="10.5*" />
-    <colspec colname="dt3" align="center" colwidth="10.5*" />
-    <colspec colname="dt4" align="center" colwidth="10.5*" />
-    <colspec colname="dt5" align="center" colwidth="10.5*" />
-    <colspec colname="dt6" align="center" colwidth="10.5*" />
-    <colspec colname="dt7" align="center" colwidth="10.5*" />
-    <colspec colname="dt8" align="center" colwidth="10.5*" />
+    <colspec colname="pt" align="left" colwidth="18*" />
+    <colspec colname="dt1" align="center" colwidth="10.25*" />
+    <colspec colname="dt2" align="center" colwidth="10.25*" />
+    <colspec colname="dt3" align="center" colwidth="10.25*" />
+    <colspec colname="dt4" align="center" colwidth="10.25*" />
+    <colspec colname="dt5" align="center" colwidth="10.25*" />
+    <colspec colname="dt6" align="center" colwidth="10.25*" />
+    <colspec colname="dt7" align="center" colwidth="10.25*" />
+    <colspec colname="dt8" align="center" colwidth="10.25*" />
     <thead>
       <row>
         <entry morerows="1" valign="bottom">Plot Type:</entry>
@@ -2209,6 +2376,17 @@ types.
         <entry> </entry>
       </row>
       <row>
+        <entry><link linkend="plottype-squaredarea">squaredarea</link></entry>
+        <entry>Yes</entry>
+        <entry>Yes</entry>
+        <entry> </entry>
+        <entry> </entry>
+        <entry> </entry>
+        <entry> </entry>
+        <entry> </entry>
+        <entry> </entry>
+      </row>
+      <row>
         <entry><link linkend="plottype-stackedarea">stackedarea</link></entry>
         <entry>Yes</entry>
         <entry>Yes</entry>
@@ -2226,6 +2404,17 @@ types.
         <entry> </entry>
         <entry> </entry>
         <entry>Yes</entry>
+        <entry> </entry>
+        <entry> </entry>
+        <entry> </entry>
+      </row>
+      <row>
+        <entry><link linkend="plottype-stackedsquaredarea">stackedsquaredarea</link></entry>
+        <entry>Yes</entry>
+        <entry>Yes</entry>
+        <entry> </entry>
+        <entry> </entry>
+        <entry> </entry>
         <entry> </entry>
         <entry> </entry>
         <entry> </entry>
