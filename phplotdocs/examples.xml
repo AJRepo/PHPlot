@@ -2094,4 +2094,108 @@ Note: Box plots were added in PHPlot-6.1.0.
 </sect1>
 
 <!-- =============================================== -->
+<pagebreak/>
+<sect1 id="ex-squaredarea1">
+<title>Example - Squared Area Plot</title>
+<para>
+This is a squared area plot (plot type
+<link linkend="plottype-squaredarea">squaredarea</link>).
+It is similar to the <link linkend="plottype-area">area</link>)
+plot, but the data lines are stepped as in the
+<link linkend="plottype-squared">squared</link>) plot.
+</para>
+
+<para>
+Compare this image to the next example,
+<xref linkend="ex-stackedsquaredarea1"/>,
+which uses the same data but plots a stacked (or cumulative) plot.
+This unstacked plot shows the actual values for each country (which can be
+read on the Y axis scale) but only if they are visible.  For instance, in
+2007 the amount for Venezuela (dark blue) is a little more than the amount
+for Nigeria (red).  But in 2002-2003, the amounts for Canada (light blue)
+are less than the next two countries, which results in the Canada values
+being covered by the others and not visible.
+</para>
+
+<para>
+In the script below, a copy of the last data row is appended to the data array.
+This is usually necessary with the squaredarea plot if you want the
+last data set to be visible. For an explanation, see description of the
+<link linkend="plottype-squaredarea">squaredarea</link> plot type.
+</para>
+
+<para>
+Note: Squared Area plots were added in PHPlot-6.2.0.
+</para>
+
+<example id="example-squaredarea1">
+<?dbfo keep-together="auto"?>
+<title>Squared Area Plot</title>
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="examples/squaredarea1.png" scale="58" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>Squared Area Plot</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+&squaredarea1;
+</example>
+</sect1>
+
+<!-- =============================================== -->
+<pagebreak/>
+<sect1 id="ex-stackedsquaredarea1">
+<title>Example - Stacked Squared Area Plot</title>
+<para>
+This is a stacked squared area plot (plot type
+<link linkend="plottype-stackedsquaredarea">stackedsquaredarea</link>).
+It is similar to the <link linkend="plottype-stackedarea">stackedarea</link>)
+plot, but the data lines are stepped as in the
+<link linkend="plottype-squared">squared</link>) plot.
+</para>
+
+<para>
+Compare this image to the previous example,
+<xref linkend="ex-squaredarea1"/>,
+which uses the same data but plots an unstacked (or non-cumulative) plot.
+In this stacked plot, all the data sets are visible because they are
+accumulated from first (Canada, light blue) to last (Nigeria, red).
+Unlike in the unstacked plot, you cannot read the per-country values from
+the Y axis scale. But also unlike the unstacked plot, you can visually
+compare the relative amounts from each country, and also read the overall
+total at the top of the plot.
+</para>
+
+<para>
+In the script below, a copy of the last data row is appended to the data array.
+This is usually necessary with the stackedsquaredarea plot if you want the
+last data set to be visible. For an explanation, see description of the
+<link linkend="plottype-stackedsquaredarea">stackedsquaredarea</link> plot type.
+</para>
+
+<para>
+Note: Stacked Squared Area plots were added in PHPlot-6.2.0.
+</para>
+
+<example id="example-stackedsquaredarea1">
+<?dbfo keep-together="auto"?>
+<title>Stacked Squared Area Plot</title>
+<informalfigure>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="examples/stackedsquaredarea1.png" scale="58" format="PNG" />
+    </imageobject>
+    <textobject>
+      <phrase>Stacked Squared Area Plot</phrase>
+    </textobject>
+  </mediaobject>
+</informalfigure>
+&stackedsquaredarea1;
+</example>
+</sect1>
+
+<!-- =============================================== -->
 </chapter>
