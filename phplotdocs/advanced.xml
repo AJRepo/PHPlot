@@ -1371,9 +1371,12 @@ A bar chart where the bar color depends on the value of that data point.
 <note>
   <para>
 Custom data color selection is not available for plot types
-<literal>pie</literal>, <literal>area</literal>, or
-<literal>stackedarea</literal>.
-These three plot types already provide full control over the data color
+<literal>area</literal>,
+<literal>pie</literal>,
+<literal>squaredarea</literal>,
+<literal>stackedarea</literal>, or
+<literal>stackedsquaredarea</literal>.
+These plot types already provide full control over the data color
 selection, with no need for the callback function,
 because each color in the color array is only used once.
   </para>
@@ -3809,7 +3812,7 @@ expensive features:
       <para>
 Plots that use area fills are slower. This especially includes pie charts
 with shading (because PHPlot redraws the filled pie segments for each
-level of shading). Area and stackedarea plots have a lot of area fill.
+level of shading). Area plots and similar types have a lot of area fill.
 Bar charts have some area fill, with shaded bar charts having more shading
 (but not nearly as much as shaded pie charts).
 The fastest plot types are line plots.
@@ -4038,9 +4041,16 @@ types:
       </para>
     </listitem>
   </itemizedlist>
-No other plot type is supported. This includes lines, squared, thinbarline,
-area, and stackedarea. (These plot types do not have well-defined areas
-which could map to data points.)
+No other plot type is supported. This includes
+<literal>lines</literal>,
+<literal>squared</literal>, and
+<literal>thinbarline</literal>,
+which do not have well-defined areas which could map to data points, and
+<literal>area</literal>,
+<literal>squaredarea</literal>,
+<literal>stackedarea</literal>, and
+<literal>stackedsquaredarea</literal>
+for which this feature has not been implemented.
 </para>
 
 <para>

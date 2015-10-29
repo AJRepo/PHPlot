@@ -4627,8 +4627,9 @@ default order (top down).
     <title>Notes</title>
     <para>
 The main use of this function is to set the legend line order for
-<link linkend="plottype-stackedbars">stackedbars</link> and
-<link linkend="plottype-stackedarea">stackedarea</link> plots.
+<link linkend="plottype-stackedarea">stackedarea</link>,
+<link linkend="plottype-stackedbars">stackedbars</link>, and
+<link linkend="plottype-stackedsquaredarea">stackedsquaredarea</link> plots.
 In these plot types, the first data set (bar segment or area section) is
 plotted along the the bottom of the plot, with subsequent data sets in
 order above it. By default, a legend for these plot types will correctly

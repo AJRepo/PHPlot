@@ -683,10 +683,13 @@ On the other hand, with a <link linkend="plottype-lines">lines</link> plot
 rows), it probably makes no sense to have out-of-order or duplicate
 independent variable values in the data array.
 The same is true for plot types
-<link linkend="plottype-linepoints">linepoints</link>,
 <link linkend="plottype-area">area</link>,
-<link linkend="plottype-stackedarea">stackedarea</link>, and
-<link linkend="plottype-squared">squared</link>.
+<link linkend="plottype-linepoints">linepoints</link>,
+<link linkend="plottype-stackedarea">stackedarea</link>,
+<link linkend="plottype-squared">squared</link>,
+<link linkend="plottype-squaredarea">squaredarea</link>, and
+<link linkend="plottype-stackedsquaredarea">stackedsquaredarea</link>.
+
 </para>
 </sect2>
 
@@ -725,10 +728,12 @@ as empty strings. (This does not work with PHPlot-5.4.0 and earlier.)
 
 <para>
 The <link linkend="plottype-area">area</link>,
-<link linkend="plottype-stackedarea">stackedarea</link>, and
-<link linkend="plottype-stackedbars">stackedbars</link> plot types
-do not support missing points. Non-numeric values are taken as zero for
-these plot types.
+<link linkend="plottype-stackedarea">stackedarea</link>,
+<link linkend="plottype-stackedbars">stackedbars</link>,
+<link linkend="plottype-squaredarea">squaredarea</link>, and
+<link linkend="plottype-stackedsquaredarea">stackedsquaredarea</link>
+plot types do not support missing points.
+Non-numeric values are taken as zero for these plot types.
 </para>
 
 <para>
@@ -2808,7 +2813,7 @@ with the second function, etc.)
         <entry>black</entry>
       </row>
       <row>
-        <entry>Data elements (points, lines, bar fill, etc.)</entry>
+        <entry>Data elements (points, lines, area fill, etc.)</entry>
         <entry><xref linkend="SetDataColors"/></entry>
         <entry>See <xref linkend="conc-colors-datacolors"/></entry>
       </row>
