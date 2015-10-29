@@ -4,6 +4,31 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2015-10-28
+    Document two new plot types 'squaredarea' and 'stackedsquaredarea':
+    (More changes to come)
+    * Makefile: Make 2 new examples
+    * examples/squaredarea1.php: New example
+    * examples/stackedsquaredarea1.php: New example
+    * examples.xml: Added 2 examples for the new plot types.
+    * reference.xml: Add 2 plot types to SetPlotType().
+    * etc/thumbnail.php: Updated the script to get a list of plot types from
+      PHPlot, rather than listing them in the script. (It is still necessary
+      to edit the script to add a data setup for each new plot type, though.)
+      Added setups for the 2 new plot types.
+    * images/thumbnail*.png: Regenerated using updated script, including
+      2 new thumbnails for the new plot types.
+    * developer.xml: Documented 2 new internal functions DrawSquaredArea()
+      and SetupAreaPlot(). Link all main plot drawing functions to their
+      plot type descriptions.
+    * concepts.xml: Add two new plot types to the Plot Types section.
+      Added explanation (in footnote) of area filling for 'area' plots.
+      Other minor changes to the Plot Types section.
+
+    Also:
+    * main.xml: Updated copyright year and next PHPlot version.
+    * .ispell_words: Added new function names and other words.
+
 2015-10-23
     Document extension to 'printf' label formatting:
     * reference.xml: SetXLabelType, SetXDataLabelType, SetYLabelType, and
