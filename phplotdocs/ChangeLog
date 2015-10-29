@@ -4,6 +4,14 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2015-10-29
+    Continue documenting new plot types:
+    * advanced.xml: Add to lists of plot types in sections on custom color
+      selection, streaming, and image maps.
+    * concepts.xml: Add to lists of plot types in sections on duplicate and
+      out-of-order points, missing data, and element colors.
+    * reference.xml: List new plot type in SetLegendReverse.
+
 2015-10-28
     Document two new plot types 'squaredarea' and 'stackedsquaredarea':
     (More changes to come)
