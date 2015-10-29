@@ -7046,8 +7046,10 @@ A string indicating the type of plot. The following types are available:
               <listitem><para>pie</para></listitem>
               <listitem><para>points</para></listitem>
               <listitem><para>squared</para></listitem>
+              <listitem><para>squaredarea</para></listitem>
               <listitem><para>stackedarea</para></listitem>
               <listitem><para>stackedbars</para></listitem>
+              <listitem><para>stackedsquaredarea</para></listitem>
               <listitem><para>thinbarline</para></listitem>
             </itemizedlist>
           </para>
@@ -7067,6 +7069,9 @@ A complete description of the available plot types can be found in
   </refsect1>
   <refsect1>
     <title>History</title>
+    <para>
+Plot types 'squaredarea' and 'stackedsquaredarea' were added in PHPlot-6.2.0.
+     </para>
     <para>
 Plot type 'boxes' was added in PHPlot-6.1.0.
      </para>
