@@ -164,10 +164,12 @@ EXAMPLES_PHP=\
   examples/qs2.php \
   examples/qs3.php \
   examples/squared1.php \
+  examples/squaredarea1.php \
   examples/stackedarea1.php \
   examples/stackedbars1.php \
   examples/stackedbars2.php \
   examples/stackedbars3.php \
+  examples/stackedsquaredarea1.php \
   examples/thinbarline1.php \
   examples/thinbarline2.php \
   examples/twoplot1.php \
@@ -228,10 +230,12 @@ EXAMPLES_IMAGES=\
   examples/qs2.png \
   examples/qs3.png \
   examples/squared1.png \
+  examples/squaredarea1.png \
   examples/stackedarea1.png \
   examples/stackedbars1.png \
   examples/stackedbars2.png \
   examples/stackedbars3.png \
+  examples/stackedsquaredarea1.png \
   examples/thinbarline1.png \
   examples/thinbarline2.png \
   examples/twoplot1.png \
