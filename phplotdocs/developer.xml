@@ -755,7 +755,8 @@ often simpler to test first to see if a callback has been set, using
     <para>
 Draws an area plot, or a stacked area plot (if the optional argument is True).
 Called by <xref linkend="DrawGraph"/> when the plot type is
-<literal>area</literal> or <literal>stackedarea</literal>.
+<link linkend="plottype-area">area</link> or
+<link linkend="plottype-stackedarea">stackedarea</link>.
 Stacked area plots were added in PHPlot-5.1.1; through PHPlot-5.1.0 this
 function did not have a parameter and was used only for area plots.
     </para>
@@ -815,7 +816,7 @@ independent control over shading and borders.
     <para>
 Draws a bar chart plot.
 Called by <xref linkend="DrawGraph"/> when the plot type is
-<literal>bars</literal>.
+<link linkend="plottype-bars">bars</link>.
 If the data type indicates a horizontal bar chart,
 calls <xref linkend="DrawHorizBars"/> instead.
     </para>
@@ -828,12 +829,11 @@ calls <xref linkend="DrawHorizBars"/> instead.
     <para>
 Draws a box plot.
 Called by <xref linkend="DrawGraph"/> when the plot type is
-<literal>boxes</literal>.
+<link linkend="plottype-boxes">boxes</link>.
 This was added in PHPlot-6.1.0.
     </para>
   </listitem>
 </varlistentry>
-
 
 <varlistentry>
   <term><anchor id="DrawBubbles" xreflabel="DrawBubbles"/>DrawBubbles()</term>
@@ -841,7 +841,7 @@ This was added in PHPlot-6.1.0.
     <para>
 Draws a bubbles plot.
 Called by <xref linkend="DrawGraph"/> when the plot type is
-<literal>bubbles</literal>.
+<link linkend="plottype-bubbles">bubbles</link>.
 This was added in PHPlot-5.5.0.
     </para>
   </listitem>
@@ -931,8 +931,9 @@ The old $record argument is equivalent to the new $column argument.
     <para>
 Draws a points plot, or the points for a linepoints plot, including error plots.
 Called by <xref linkend="DrawGraph"/> when the plot type is 
-<literal>points</literal>, and by <xref linkend="DrawLinePoints"/> for the
-points portion of a <literal>linepoints</literal> plot.
+<link linkend="plottype-points">points</link>,
+and by <xref linkend="DrawLinePoints"/> for the
+points portion of a <link linkend="plottype-linepoints">linepoints</link> plot.
 $paired is true for <literal>linepoints</literal> plots.
 When $paired is true, DrawDots() draws the points and error bars, and
 <xref linkend="DrawLines" /> draws the lines and data labels.
@@ -1022,7 +1023,7 @@ but only if legend text has been set using <xref linkend="SetLegend"/>.
     <para>
 Draws a linepoints plot, with or without error bars.
 Called by <xref linkend="DrawGraph"/> when the plot type is
-<literal>linepoints</literal>.
+<link linkend="plottype-linepoints">linepoints</link>.
 It simply calls <xref linkend="DrawLines"/> and <xref linkend="DrawDots"/>,
 which handle both the plain and error bar cases.
 This was added in PHPlot-5.1.3 to provide a function specific to this
@@ -1038,8 +1039,9 @@ plot type.
 Draws a line plot, or the lines part of a linepoints plot, including error
 plots.
 Called by <xref linkend="DrawGraph"/> when the plot type is
-<literal>lines</literal>, and by <xref linkend="DrawLinePoints"/> for the
-lines portion of a <literal>linepoints</literal> plot.
+<link linkend="plottype-lines">lines</link>, and by
+<xref linkend="DrawLinePoints"/> for the
+lines portion of a <link linkend="plottype-linepoints">linepoints</link> plot.
 $paired is true for <literal>linepoints</literal> plots.
 When $paired is true, DrawLines() draws the lines and data labels, and
 <xref linkend="DrawDots" /> draw the points and error bars.
@@ -1066,13 +1068,13 @@ This function was removed in PHPlot-6.0.0 and merged into
     <para>
 Draws one of the three types of OHLC (Open/High/Low/Close) plots.
 If $draw_candles is FALSE, draws a basic OHLC plot
-(plot type <literal>ohlc</literal>).
+(plot type <link linkend="plottype-ohlc">ohlc</link>).
 If $draw_candles is TRUE and $always_fill is FALSE,
 draws a candlestick OHLC plot
-(plot type <literal>candlesticks</literal>).
+(plot type <link linkend="plottype-candlesticks">candlesticks</link>).
 If $draw_candles is TRUE and $always_fill is TRUE,
 draws a filled candlestick OHLC plot
-(plot type <literal>candlesticks2</literal>).
+(plot type <link linkend="plottype-candlesticks2">candlesticks2</link>).
 Called by <xref linkend="DrawGraph"/> when the plot type is one of those
 three types.
 This was added in PHPlot-5.3.0.
@@ -1086,7 +1088,7 @@ This was added in PHPlot-5.3.0.
     <para>
 Draws a pie chart plot.
 Called by <xref linkend="DrawGraph"/> with the plot type is
-<literal>pie</literal>.
+<link linkend="plottype-pie">pie</link>.
     </para>
   </listitem>
 </varlistentry>
@@ -1106,7 +1108,6 @@ This was added in PHPlot-5.6.0.
     </para>
   </listitem>
 </varlistentry>
-
 
 <varlistentry>
   <term><anchor id="DrawPlotAreaBackground" xreflabel="DrawPlotAreaBackground"/>DrawPlotAreaBackground()</term>
@@ -1169,7 +1170,21 @@ added in PHPlot-6.0.0.
     <para>
 Draws a squared (stepped lines) plot.
 Called by <xref linkend="DrawGraph"/> when the plot type is
-<literal>squared</literal>.
+<link linkend="plottype-squared">squared</link>.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term><anchor id="DrawSquaredArea" xreflabel="DrawSquaredArea"/>DrawSquaredArea($do_stacked = False)</term>
+  <listitem>
+    <para>
+Draws a squared area plot, or a stacked squared area plot
+(if the optional argument is True).
+Called by <xref linkend="DrawGraph"/> when the plot type is
+<link linkend="plottype-squaredarea">squaredarea</link> or
+<link linkend="plottype-stackedsquaredarea">stackedsquaredarea</link>.
+This was added in PHPlot-6.2.0.
     </para>
   </listitem>
 </varlistentry>
@@ -1180,7 +1195,7 @@ Called by <xref linkend="DrawGraph"/> when the plot type is
     <para>
 Draws a stacked bars chart plot.
 Called by <xref linkend="DrawGraph"/> when the plot type is
-<literal>stackedbars</literal>.
+<link linkend="plottype-stackedbars">stackedbars</link>.
 If the data type indicates a horizontal plot,
 calls <xref linkend="DrawHorizStackedBars"/> instead.
     </para>
@@ -1240,7 +1255,7 @@ other than 'generic' without referencing internal class variables.
     <para>
 Draws a thin bar lines plot. This is sometimes called an impulse plot.
 Called by <xref linkend="DrawGraph"/> when the plot type is
-<literal>thinbarline</literal>.
+<link linkend="plottype-thinbarline">thinbarline</link>.
 This function draws both vertical and horizontal variants of this plot type.
     </para>
   </listitem>
@@ -2237,6 +2252,37 @@ opaque.
 This is used directly by all functions that accept a color specification.
 Use of alpha in the color specification, the default alpha argument, and the
 4th component in the returned array were added in PHPlot-5.1.1.
+    </para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term><anchor id="SetupAreaPlot" xreflabel="SetupAreaPlot"/>SetupAreaPlot($stacked, &amp;$xd, &amp;$yd)</term>
+  <listitem>
+    <para>
+Sets up for an area plot (plot types <literal>area</literal>,
+<literal>stackedarea</literal>, <literal>squaredarea</literal>,
+and <literal>stackedsquaredarea</literal>).
+$stacked indicates a stacked (cumulative) plot, so the
+Y values in the data array are to be accumulated for each X row.
+    </para>
+    <para>
+This function calculates two arrays, $xd[] and $yd[], which are used for
+drawing area fills. On return, $xd[] contains the device coordinates for
+the X values from the data array (or implied, for text-data data type).
+$yd[] is returned as a 2-dimensional array of Y values in device coordinates.
+<function>SetupAreaPlot</function> adds an additional column of Y values
+representing the X axis, which is the base line for area fills.
+For stacked plots, this goes before the first real Y value in the array.
+For unstacked plots, it goes after the last real Y value in the array.
+    </para>
+    <para>
+While traversing the data array, this function also draws axis data labels
+if they are enabled. (Doing it here avoids having the calling functions
+need to access the data array at all.)
+    </para>
+    <para>
+This was added in PHPlot-6.2.0.
     </para>
   </listitem>
 </varlistentry>
