@@ -2,6 +2,10 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2015-10-30
+    * Fixed comments on functions and variables for data borders, which are
+      no longer used only for bar and stackedbar plot types.
+
 2015-10-25
     * Feature Request #57 "squarefilled plot type":
       + Defined 2 new plot types: squaredarea and stackedsquaredarea.
