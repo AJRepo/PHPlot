@@ -118,7 +118,7 @@ class PHPlot
     protected $dashed_style = '2-4';
     /** The (converted) data array */
     protected $data;
-    /** Array of colors (R,G,B,A) for bar chart data borders */
+    /** Array of colors (R,G,B,A) for data borders available with some plot types */
     protected $data_border_colors;
     /** Array of colors (R,G,B,A) for data lines/marks/bars/etc. */
     protected $data_colors;
@@ -182,7 +182,7 @@ class PHPlot
     protected $done = array();
     /** Flag: How to handle missing Y values */
     protected $draw_broken_lines = FALSE;
-    /** Flag: Draw data borders on bars, stackedbars */
+    /** Flag: Draw data borders, available with some plot types */
     protected $draw_data_borders;
     /** Flag: Draw borders on pie chart segments */
     protected $draw_pie_borders;
@@ -280,7 +280,7 @@ class PHPlot
     protected $min_z;
     /** Color index of image background */
     protected $ndx_bg_color;
-    /** Color index array for bar chart data borders */
+    /** Color index array for data borders */
     protected $ndx_data_border_colors;
     /** Color index array for plot data lines/marks/bars/etc. */
     protected $ndx_data_colors;
@@ -1290,8 +1290,10 @@ class PHPlot
     }
 
     /**
-     * Sets the rectangular border colors for bars and stacked bars
+     * Sets the colors used for data borders in some plot types
      *
+     * For plot types which support data borders, such as 'bars', this sets
+     * the colors used for those borders. See also SetDrawDataBorders().
      * Special cases: If $which_br is missing or NULL, use the default of all
      * black if colors were not already set; if an empty string or False then
      * set the default of all black regardless.
@@ -3133,7 +3135,10 @@ class PHPlot
     }
 
     /**
-     * Enables or disables drawing of data borders, for bars and stackedbars plots
+     * Enables or disables drawing of data borders for plot types that support them
+     *
+     * For plot types which support data borders, such as 'bars', this enables
+     * or disables them. The default depends on the plot type.
      *
      * @param bool $ddb  True to draw the data borders, false to not draw them
      * @return bool  True always
