@@ -1315,8 +1315,8 @@ colors in the data colors array are SkyBlue, green, and orange.
 <para>
 There are two other color arrays: the error bar colors and data border
 colors. Error bar colors are used in error plots to indicate the positive
-and negative error range, and data border colors are used to outline bars
-in bar charts when 3D shading is off.
+and negative error range, and data border colors are used to draw borders
+around areas representing the data for some plot types (such as bars).
 The same index (but not necessarily the same color) is used to
 select the color for any of the three elements which are used in a plot.
 For example, the first data set in a points plot with error bars will use

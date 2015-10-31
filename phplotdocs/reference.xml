@@ -1420,7 +1420,7 @@ as of PHPlot-5.0.5 and are no longer considered experimental.
 
   <refnamediv>
     <refname>SetDataBorderColors</refname>
-    <refpurpose>Set the rectangle border color on bars and stacked bars</refpurpose>
+    <refpurpose>Set the data border colors</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
@@ -1430,11 +1430,14 @@ as of PHPlot-5.0.5 and are no longer considered experimental.
   <refsect1>
     <title>Description</title>
     <para>
-<function>SetDataBorderColors</function> sets the colors used for the
-borders of the bars and stacked bars for plot types 'bars' and
-'stackedbars'. By default, the borders are only drawn if shading is turned off
-with <xref linkend="SetShading" />.
-Shaded bar and stackedbar plots do not use data borders by default.
+<function>SetDataBorderColors</function> sets the colors used for data borders
+on supported plot types.
+For plot types <link linkend="plottype-bars">bars</link> and
+<link linkend="plottype-stackedbars">stackedbars</link>,
+these are the borders around the individual bars or bar segments in the plot.
+For plot types <link linkend="plottype-squaredarea">squaredarea</link> and
+<link linkend="plottype-stackedsquaredarea">stackedsquaredarea</link>,
+these are outlines of the filled areas.
     </para>
   </refsect1>
 
@@ -1445,7 +1448,7 @@ Shaded bar and stackedbar plots do not use data borders by default.
         <term><replaceable>$border</replaceable></term>
         <listitem>
           <para>
-An array of color values, one for the bar border of each data set.
+An array of color values, one for the border of each data set.
 Or, a single color value (not an array) to use for all data sets.
 For other possibilities, see Notes.
 See <xref linkend="conc-colors" /> for more on color values.
@@ -1466,12 +1469,21 @@ If this function is never called, a default color map is used which sets all
 data borders to black.
     </para>
     <para>
-Data border colors are only used used for plot types 'bars' and 'stackedbars'.
-By default, unshaded plots (<xref linkend="SetShading"/><literal>(0)</literal>)
+Data borders can be used with plot types <literal>bars</literal> and
+<literal>stackedbars</literal>.
+With these plot types, by default,
+unshaded plots (<xref linkend="SetShading"/><literal>(0)</literal>)
 have data borders, and shaded plots have a 3D-look and no data borders.
 If you want unshaded plots with no data borders, use
 <xref linkend="SetDrawDataBorders"/><literal>(FALSE)</literal> to disable
 the borders.  You can enable data borders on shaded plots with
+<xref linkend="SetDrawDataBorders"/><literal>(TRUE)</literal>.
+    </para>
+    <para>
+Data borders can also be used with plot types
+<literal>squaredarea</literal> and <literal>stackedsquaredarea</literal>.
+With these plot types, by default, data borders are not drawn.
+You can enable data borders for these plot types with
 <xref linkend="SetDrawDataBorders"/><literal>(TRUE)</literal>.
     </para>
     <para>
@@ -1500,10 +1512,17 @@ This is used internal to PHPlot for one-time initialization.
 A data colors callback, as described in
 <xref linkend="adv-datacolor-callback" />,
 also controls selection of the color for data borders (if used).
+Note this does not apply to plot types that do not use the data colors
+callback.
     </para>
   </refsect1>
   <refsect1>
     <title>History</title>
+    <para>
+Starting with PHPlot-6.2.0, data borders are also available with
+<literal>squaredarea</literal> and <literal>stackedsquaredarea</literal>
+plot types.
+    </para>
     <para>
 Before PHPlot-6.0.0, unshaded bar and stackedbar plots always had data borders, 
 and shaded bar and stackedbar plots never had data borders.
@@ -2285,7 +2304,7 @@ True to use dashed lines, False to use solid lines.
 
   <refnamediv>
     <refname>SetDrawDataBorders</refname>
-    <refpurpose>Enable or disable drawing of data borders on bar and stackedbar plots</refpurpose>
+    <refpurpose>Enable or disable drawing of data borders</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
@@ -2296,9 +2315,13 @@ True to use dashed lines, False to use solid lines.
     <title>Description</title>
     <para>
 <function>SetDrawDataBorders</function> enables or disables drawing of the
-data borders on <link linkend="plottype-bars">bars</link> and
-<link linkend="plottype-stackedbars">stackedbars</link> plots.
-These are the borders around the individual bars or bar segments in the plot.
+data borders on supported plot types.
+For plot types <link linkend="plottype-bars">bars</link> and
+<link linkend="plottype-stackedbars">stackedbars</link>,
+these are the borders around the individual bars or bar segments in the plot.
+For plot types <link linkend="plottype-squaredarea">squaredarea</link> and
+<link linkend="plottype-stackedsquaredarea">stackedsquaredarea</link>,
+these are outlines of the filled areas.
     </para>
   </refsect1>
 
@@ -2319,16 +2342,30 @@ True to draw the data borders, False to not draw them.
   <refsect1>
     <title>Notes</title>
     <para>
-By default, data borders are drawn for unshaded plots, and not drawn for
-shaded plots. (By default, bar and stackedbar plots are shaded.
+By default, data borders are drawn for unshaded
+<literal>bars</literal> and <literal>stackedbars</literal> plots,
+and not drawn if shading is on.
+(By default, shading is on for these plot types.
 See <xref linkend="SetShading"/>.)
+    </para>
+    <para>
+By default, data borders are not drawn for <literal>squaredarea</literal>
+and <literal>stackedsquaredarea</literal> plot types.
     </para>
     <para>
 Use <xref linkend="SetDataBorderColors"/> to set the border colors.
     </para>
+    <para>
+For pie charts, see <xref linkend="SetDrawPieBorders"/>.
+    </para>
   </refsect1>
   <refsect1>
     <title>History</title>
+    <para>
+Starting with PHPlot-6.2.0, data borders are also available with
+<literal>squaredarea</literal> and <literal>stackedsquaredarea</literal>
+plot types.
+    </para>
     <para>
 This function was added in PHPlot-6.0.0. In prior versions, borders were
 always drawn for unshaded bar and stacked bar plots, and never drawn for

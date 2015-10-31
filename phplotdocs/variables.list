@@ -28,7 +28,7 @@ callbacks	array(...)	SetCallback	Callback (hook) function information. Indexed b
 dashed_grid	TRUE	SetDrawDashedGrid	Flag: Draw dashed or solid grid lines?
 dashed_style	'2-4'	SetDefaultStyles	Initial dashed pattern code
 data		SetDataValues	The data array
-data_border_colors		SetDataBorderColors	Array of colors (R,G,B,A) for bar chart data borders.
+data_border_colors		SetDataBorderColors	Array of colors (R,G,B,A) for data borders available with some plot types.
 data_colors		SetDataColors	Array of colors (R,G,B,A) for data lines/marks/bars/etc. See default_colors for initial value.
 data_columns		CheckDataArray	Maximum number of dependent variable values (usually Y values, or pie segments) in the data array rows. (Added in PHPlot-5.1.3)
 data_max		FindDataLimits	Array: Per row maximum Y value. (Before PHPlot-5.1.2 this was named data_maxy.)
@@ -51,7 +51,7 @@ default_dashed_style		SetDefaultDashedStyle	Template string for the dashed line 
 default_ttfont		SetDefaultTTFont GetDefaultTTFont	Default TrueType font file. (Through PHPlot-5.1.2, there was a static default 'benjamingothic.ttf'. After PHPlot-5.1.2, the default is dynamic.)
 done	array()	DrawBackground DrawImageBorder DrawTitle	Array of flags for elements that must be drawn at most once. Flag is set TRUE when drawn. Indexes are: background, border, title. (Replaced separate variables in PHPlot-5.3.1.)
 draw_broken_lines	FALSE	SetDrawBrokenLines	Flag: How to handle missing Y values
-draw_data_borders		SetDrawDataBorders	Flag: Draw data borders on bars, stackedbars (Added in PHPlot-6.0.0)
+draw_data_borders		SetDrawDataBorders	Flag: Draw data borders, available with some plot types (Added in PHPlot-6.0.0)
 draw_pie_borders		SetDrawPieBorders	Flag: Draw borders on pie chart segments (Added in PHPlot-6.0.0)
 draw_plot_area_background	FALSE	SetDrawPlotAreaBackground	Flag: Draw the background of the plot area
 draw_x_data_label_lines	FALSE	SetDrawXDataLabelLines	Flag: Draw X data label lines
@@ -100,7 +100,7 @@ min_x		FindDataLimits	Overall min X value in the data array
 min_y		FindDataLimits	Overall min Y value in the data array
 min_z		FindDataLimits	Overall min Z value in the data array (for X/Y/Z data type only) (Added in PHPlot-5.5.0)
 ndx_bg_color		SetColorIndexes	Color index of image background
-ndx_data_border_colors		SetColorIndexes	Color index array for bar chart data borders
+ndx_data_border_colors		SetColorIndexes	Color index array for data borders
 ndx_data_colors		SetColorIndexes	Color index array for plot data lines/marks/bars/etc.
 ndx_data_dark_colors		NeedDataDarkColors	Color index array for plot data, darker shade
 ndx_datalabel_color		SetColorIndexes	Color index for axis data labels (Added in PHPlot-5.7.0)

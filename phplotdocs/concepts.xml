@@ -1184,7 +1184,8 @@ This plot type draws a bar chart, with filled rectangles.
 Both vertical and horizontal bar charts are available.
 The bars are centered on the X values (for vertical charts),
 or on the Y values (for horizontal charts).
-The rectangles can have a 3-D look, or be flat with a border.
+The rectangles can have a 3-D look (without borders, by default),
+or be flat (with borders, by default).
 Multiple data-set plots work, with each one producing a set of bars
 offset from the previous set.
 </para>
@@ -1198,9 +1199,11 @@ No other data type works with bar graphs.
 <para>
 If shading is on with <xref linkend="SetShading" /> (default is on with value
 5 pixels), then the bars have a 3-D look. If shading is off
-(<function>SetShading(0)</function>), the bars are flat rectangles with borders.
-The filled rectangle color is set with <xref linkend="SetDataColors" />.
-The border color (if shading is off) can be set with
+(<function>SetShading(0)</function>), the bars are flat rectangles.
+The filled bar colors are set with <xref linkend="SetDataColors" />.
+Data borders are drawn by default when shading is off.
+Use <xref linkend="SetDrawDataBorders"/> to enable or disable the borders.
+If the borders are on, the border colors can be set with
 <xref linkend="SetDataBorderColors" />.
 </para>
 <para>
@@ -1960,6 +1963,10 @@ All records in the data array must have the same number of Y values.
 </para>
 <para>
 The areas are filled with colors as set with <xref linkend="SetDataColors" />.
+If data borders are enabled with <xref linkend="SetDrawDataBorders" />,
+then a border is drawn around each area fill, using the colors set with
+<xref linkend="SetDataBorderColors" />.
+By default, no data borders are drawn.
 </para>
 <para>
 An example of this plot type can be seen in
@@ -2071,10 +2078,12 @@ No other data type works with stacked bar plots.
 <para>
 If shading is on with <xref linkend="SetShading" /> (default is on with value
 5 pixels), then the bars have a 3-D look. If shading is off
-(<function>SetShading(0)</function>), the bars are flat rectangles with borders.
-The filled rectangle colors for each stacked segment are set with
+(<function>SetShading(0)</function>), the bars are flat rectangles.
+The filled colors for each stacked segment are set with
 <xref linkend="SetDataColors" />.
-The border color (if shading is off) can be set with
+Data borders are drawn by default when shading is off.
+Use <xref linkend="SetDrawDataBorders"/> to enable or disable the borders.
+If the borders are on, the border colors can be set with
 <xref linkend="SetDataBorderColors" />.
 </para>
 <para>
@@ -2147,6 +2156,12 @@ All records in the data array must have the same number of Y values.
 </para>
 <para>
 The areas are filled with colors as set with <xref linkend="SetDataColors" />.
+If data borders are enabled with <xref linkend="SetDrawDataBorders" />,
+then a border is drawn around each area fill, using the colors set with
+<xref linkend="SetDataBorderColors" />.
+By default, no data borders are drawn.
+</para>
+<para>
 Note that color selection with <literal>stackedsquaredarea</literal> plots
 tends to go in the reverse order compared to <literal>squaredarea</literal>
 plots.
@@ -2730,11 +2745,15 @@ will be in the same color. If you change the data colors list with
 color list too, so you get the same colors for data sets and their error bars.
 </para>
 <para>
-In bar charts and stackedbar charts, the bars will have borders if shading is
-off, or if <xref linkend="SetDrawDataBorders"/><literal>(True)</literal> is
-used.  The colors used for the bar borders can be set with
+Some plot types support data borders, which are outlines around filled areas.
+This includes the <literal>bars</literal> and <literal>squaredarea</literal>
+plot types, for example.
+Use <xref linkend="SetDrawDataBorders"/> to enable or disable drawing of
+data borders.
+The colors used for data borders can be set with
 <xref linkend="SetDataBorderColors"/>.
-By default, a black outline is used for all data sets, if borders are on.
+By default, a black data border is used for all data sets, if borders are
+enabled.
 </para>
 <para>
 Note: PHPlot through version 5.0.7 used 8 colors in the default Data Colors
@@ -2808,7 +2827,7 @@ with the second function, etc.)
     </thead>
     <tbody>
       <row>
-        <entry>Bar chart bar borders</entry>
+        <entry>Data borders</entry>
         <entry><xref linkend="SetDataBorderColors"/></entry>
         <entry>black</entry>
       </row>
@@ -2983,6 +3002,15 @@ with the second function, etc.)
 <para>
 The following notes apply to the table of plot element colors above:
   <itemizedlist>
+    <listitem>
+      <para>
+<emphasis>Data borders</emphasis> refers to the borders, or outlines, around
+bars in a 'bars' or 'stackedbars' plot.
+Data borders are also available with the 'squaredarea' and 'stackedsquaredarea'
+plot types.
+      </para>
+    </listitem>
+
     <listitem>
       <para>
 <xref linkend="SetPieBorderColor"/> was added in PHPlot-6.0.0. In prior
