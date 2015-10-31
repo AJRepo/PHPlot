@@ -4,6 +4,23 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2015-10-30
+    * README: Updated tool versions.
+
+    Continued documenting new plot types. Data borders previously applied
+    only to bars and stackedbars, and now applies to the new plot types too.
+    * advanced.xml: In 'Custom Data Color Selection', fixed explanation of
+      data border colors.
+    * concepts.xml: In 'Plot Element Colors', renamed 'bar chart bar
+      borders' to 'data borders', because it applies to other types too.
+      In the descriptions of the new plot types, added text on data borders.
+      in 'Plotting Colors', generalized the description of data borders.
+      Also fixed description of borders vs shading in 'bars' and 'stackedbars'
+      plot types (this was overlooked by a previous PHPlot change).
+    * variables.list: Fixed description of 3 variables related to data borders.
+    * reference.xml: Updated description of SetDrawDataBorders() and
+      SetDataBorderColors() which now apply to more plot types.
+
 2015-10-29
     Continue documenting new plot types:
     * advanced.xml: Add to lists of plot types in sections on custom color
