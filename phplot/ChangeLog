@@ -2,6 +2,19 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2015-10-31
+    * Feature Request #58 "data borders for area plot types":
+      Moved the code for data borders from DrawSquaredArea() into a new
+      internal function DrawAreaFillBorders(). Use that function in both
+      DrawSquaredArea() and DrawArea() to implement data borders for all 4
+      plot types (area, stackedarea, squaredarea, and stackedsquaredarea).
+
+      Note: There is a problem with the data borders in area and squaredarea
+      plots, when the data values are not decreasing in Y. The areas overlap
+      but the data borders are drawn without regard for the overlap. This is
+      not from this change, but the previous change which implemented data
+      borders for squaredarea plots. More on this to come.
+
 2015-10-30
     * Fixed comments on functions and variables for data borders, which are
       no longer used only for bar and stackedbar plot types.
