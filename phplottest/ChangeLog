@@ -2,6 +2,11 @@ This is the Change Log for phplottest, the PHPlot Test Suite
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2015-10-31
+    New tests for data borders with area fill plot types:
+    * areaborders??.php: 24 new tests
+    * tests.ini: List 24 new tests.
+
 2015-10-28
     * ex-squaredarea1.php, ex-stackedsquaredarea1.php: style changes for
       inclusion in the reference manual.
