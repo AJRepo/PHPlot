@@ -1,5 +1,5 @@
 This is phplotdocs/README, for the PHPlot Reference Manual source
-Last updated on 2015-10-12
+Last updated on 2015-10-30
 -----------------------------------------------------------------------------
 
 This directory contains the DocBook-XML source files for the PHPlot Reference
@@ -13,9 +13,9 @@ or anyone who wants to know how the manual is created and built.
 
 List of files:
 
+  ChangeLog           Record of changes to the manual
   Makefile            Makefile for building the manual
   README              This file
-  ChangeLog           Record of changes to the manual
   etc/                Extra files, includes scripts for non-example images
   examples/           Directory of self-producing examples
   style.xsl           XSL style sheet for producing XHTML output
@@ -36,14 +36,14 @@ Tools:
 I use the following tools and versions to produce the XHTML version of the
 manual. Other versions may work too.
 
-   DocBook XSL Style Sheets docbook-xsl-1.76.1
-   xsltproc from libxsltproc-1.1.26 and libxml2-2.8.0
+   DocBook XSL Style Sheets docbook-xsl-1.78.1
+   xsltproc from libxsltproc-1.1.28 and libxml2-2.9.1
    PHP (CLI) and PHPlot are needed to produce the example figures.
      PHP is also used to generate the table in the Variables chapter.
 
 The following additional tool is used to produce the PDF version of the
 manual:
-   Apache FOP (Format Object Processor) fop-1.1
+   Apache FOP (Formatting Objects Processor) fop-2.0
 
 
 Makefile:
