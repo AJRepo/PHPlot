@@ -7335,6 +7335,58 @@ class PHPlot
         return ($this->data_columns + 1); // This is the size of each yd[][]
     }
 
+    /**
+     * Draws the data borders for an area fill plot
+     *
+     * This is used by area fill plots (area, squaredarea, and their stacked
+     * variants) to draw the data borders, if enabled.
+     *
+     * @param int $n_columns  Number of columns in $yd, returned by SetupAreaPlot()
+     * @param int[] $xd  X device coordinate array from SetupAreaPlot()
+     * @param int[] $yd  Y device coordinate array from SetupAreaPlot()
+     * @param bool $stacked  True for a stacked plot (cumulative Y), false if not
+     * @param bool $stepped  True for a stepped (squared) plot, false for a regular area plot
+     * @return bool  True always
+     * @since 6.2.0
+     */
+     function DrawAreaFillBorders($n_columns, $xd, $yd, $stacked, $stepped)
+     {
+        for ($col = 1; $col < $n_columns; $col++) {
+            $color = $this->ndx_data_border_colors[$col-1];
+            // This is due to the difference in the $yd array for stacked and unstacked.
+            if ($stacked) {
+                $this_col = $col;         // Border follows column = 1 to N-1
+                $other_col = $col - 1;    // Left and right edges use the previous column
+            } else {
+                $this_col = $col - 1;     // Border follows column = 0 to N-2
+                $other_col = $col;        // Left and right edges use the next column
+            }
+
+            // Left edge:
+            $x = $xd[0];
+            $y = $yd[0][$this_col];
+            ImageLine($this->img, $x, $yd[0][$other_col], $x, $y, $color);
+
+            // Across the top, with an 'X then Y' step at each point:
+            for ($row = 1; $row < $this->num_data_rows; $row++) {
+                $prev_x = $x;
+                $prev_y = $y;
+                $x = $xd[$row];
+                $y = $yd[$row][$this_col];
+                if ($stepped) {
+                    ImageLine($this->img, $prev_x, $prev_y, $x, $prev_y, $color);
+                    ImageLine($this->img, $x, $prev_y, $x, $y, $color);
+                } else {
+                    ImageLine($this->img, $prev_x, $prev_y, $x, $y, $color);
+                }
+            }
+
+            // Right edge:
+            ImageLine($this->img, $x, $y, $x, $yd[$this->num_data_rows - 1][$other_col], $color);
+        }
+        return TRUE;
+     }
+
 /////////////////////////////////////////////
 ////////////////////             PLOT DRAWING
 /////////////////////////////////////////////
@@ -7805,6 +7857,11 @@ class PHPlot
 
             $prev_col = $col;
         }
+
+        // Draw the data borders, if enabled. (After, else the area fills cover parts of it.)
+        if (!empty($this->draw_data_borders))
+            $this->DrawAreaFillBorders($n_columns, $xd, $yd, $do_stacked, FALSE);
+
         return TRUE;
     }
 
@@ -8095,42 +8152,10 @@ class PHPlot
             $prev_col = $col;
         }
 
-        // Draw the border/outline, if enabled. (After, else the area fills cover parts of it.)
-        // Note draw_data_borders is unset by default, so a local default can be applied (off, here).
-        if (!empty($this->draw_data_borders)) {
+        // Draw the data borders, if enabled. (After, else the area fills cover parts of it.)
+        if (!empty($this->draw_data_borders))
+            $this->DrawAreaFillBorders($n_columns, $xd, $yd, $do_stacked, TRUE);
 
-            for ($col = 1; $col < $n_columns; $col++) {
-                $color = $this->ndx_data_border_colors[$col-1];
-                // This is due to the difference in the $yd array for stacked and unstacked.
-                if ($do_stacked) {
-                    $this_col = $col;         // Border follows column = 1 to N-1
-                    $other_col = $col - 1;    // Left and right edges use the previous column
-                } else {
-                    $this_col = $col - 1;     // Border follows column = 0 to N-2
-                    $other_col = $col;        // Left and right edges use the next column
-                }
-
-                // Left edge:
-                $prev_x = $xd[0];
-                $prev_y = $yd[0][$other_col];
-                $x = $xd[0];
-                $y = $yd[0][$this_col];
-                ImageLine($this->img, $prev_x, $prev_y, $x, $y, $color);
-
-                // Across the top, with an 'X then Y' step at each point:
-                for ($row = 1; $row < $n_rows; $row++) {
-                    $prev_x = $x;
-                    $prev_y = $y;
-                    $x = $xd[$row];
-                    $y = $yd[$row][$this_col];
-                    ImageLine($this->img, $prev_x, $prev_y, $x, $prev_y, $color);
-                    ImageLine($this->img, $x, $prev_y, $x, $y, $color);
-                }
-
-                // Right edge:
-                ImageLine($this->img, $x, $y, $x, $yd[$n_rows - 1][$other_col], $color);
-            }
-        }
         return TRUE;
     }
 
