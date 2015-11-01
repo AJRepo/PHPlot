@@ -4,6 +4,13 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2015-10-31
+    Changes for Feature Request #58, data borders for area plot types. This
+    extends the 2015-10-30 change to area and stackedarea plot types.
+    * concepts.xml: Added 2 plot types to those that support data borders.
+    * reference.xml: Updated description of SetDrawDataBorders() and
+      SetDataBorderColors().
+
 2015-10-30
     * README: Updated tool versions.
 
