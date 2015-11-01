@@ -1164,6 +1164,12 @@ All records in the data array must have the same number of Y values.
 </para>
 <para>
 The areas are filled with colors as set with <xref linkend="SetDataColors" />.
+If data borders are enabled with <xref linkend="SetDrawDataBorders" />,
+then a border is drawn around each area fill, using the colors set with
+<xref linkend="SetDataBorderColors" />.
+(Data borders for <literal>area</literal> plots were added
+in PHPlot-6.2.0.)
+By default, no data borders are drawn.
 </para>
 <para>
 An example of this plot type can be seen in
@@ -2022,6 +2028,15 @@ contains the lowest Y values (and is drawn at the bottom of the plot), it
 will cover all the other data set area fills. So typically the unstacked
 plot has to have the last color at the bottom of the plot.
 Compare <xref linkend="ex-area1"/> and <xref linkend="ex-stackedarea1"/>.
+</para>
+<para>
+If data borders are enabled with <xref linkend="SetDrawDataBorders" />,
+then a border is drawn around each area fill, using the colors set with
+<xref linkend="SetDataBorderColors" />.
+(Data borders for <literal>stackedarea</literal> plots were added
+in PHPlot-6.2.0.)
+By default, no data borders are drawn.
+
 </para>
 <para>
 An example of this plot type can be seen in
@@ -3005,9 +3020,12 @@ The following notes apply to the table of plot element colors above:
     <listitem>
       <para>
 <emphasis>Data borders</emphasis> refers to the borders, or outlines, around
-bars in a 'bars' or 'stackedbars' plot.
-Data borders are also available with the 'squaredarea' and 'stackedsquaredarea'
-plot types.
+bars in a <literal>bars</literal> or <literal>stackedbars</literal> plot.
+Data borders are also available with the
+<literal>area</literal>,
+<literal>squaredarea</literal>,
+<literal>stackedarea</literal>, and
+<literal>stackedsquaredarea</literal> plot types.
       </para>
     </listitem>
 

@@ -1435,7 +1435,10 @@ on supported plot types.
 For plot types <link linkend="plottype-bars">bars</link> and
 <link linkend="plottype-stackedbars">stackedbars</link>,
 these are the borders around the individual bars or bar segments in the plot.
-For plot types <link linkend="plottype-squaredarea">squaredarea</link> and
+For plot types
+<link linkend="plottype-area">area</link>,
+<link linkend="plottype-squaredarea">squaredarea</link>,
+<link linkend="plottype-stackedarea">stackedarea</link>, and
 <link linkend="plottype-stackedsquaredarea">stackedsquaredarea</link>,
 these are outlines of the filled areas.
     </para>
@@ -1481,7 +1484,10 @@ the borders.  You can enable data borders on shaded plots with
     </para>
     <para>
 Data borders can also be used with plot types
-<literal>squaredarea</literal> and <literal>stackedsquaredarea</literal>.
+<literal>area</literal>,
+<literal>squaredarea</literal>,
+<literal>stackedarea</literal>, and
+<literal>stackedsquaredarea</literal>.
 With these plot types, by default, data borders are not drawn.
 You can enable data borders for these plot types with
 <xref linkend="SetDrawDataBorders"/><literal>(TRUE)</literal>.
@@ -1519,7 +1525,9 @@ callback.
   <refsect1>
     <title>History</title>
     <para>
-Starting with PHPlot-6.2.0, data borders are also available with
+Starting with PHPlot-6.2.0, data borders are available with
+<literal>area</literal> and <literal>stackedarea</literal> plot types,
+and with the new
 <literal>squaredarea</literal> and <literal>stackedsquaredarea</literal>
 plot types.
     </para>
@@ -2319,7 +2327,10 @@ data borders on supported plot types.
 For plot types <link linkend="plottype-bars">bars</link> and
 <link linkend="plottype-stackedbars">stackedbars</link>,
 these are the borders around the individual bars or bar segments in the plot.
-For plot types <link linkend="plottype-squaredarea">squaredarea</link> and
+For plot types
+<link linkend="plottype-area">area</link>,
+<link linkend="plottype-squaredarea">squaredarea</link>,
+<link linkend="plottype-stackedarea">stackedarea</link>, and
 <link linkend="plottype-stackedsquaredarea">stackedsquaredarea</link>,
 these are outlines of the filled areas.
     </para>
@@ -2349,8 +2360,11 @@ and not drawn if shading is on.
 See <xref linkend="SetShading"/>.)
     </para>
     <para>
-By default, data borders are not drawn for <literal>squaredarea</literal>
-and <literal>stackedsquaredarea</literal> plot types.
+By default, data borders are not drawn for
+<literal>area</literal>,
+<literal>squaredarea</literal>,
+<literal>stackedarea</literal>, or
+<literal>stackedsquaredarea</literal> plot types.
     </para>
     <para>
 Use <xref linkend="SetDataBorderColors"/> to set the border colors.
@@ -2362,7 +2376,9 @@ For pie charts, see <xref linkend="SetDrawPieBorders"/>.
   <refsect1>
     <title>History</title>
     <para>
-Starting with PHPlot-6.2.0, data borders are also available with
+Starting with PHPlot-6.2.0, data borders are available with
+<literal>area</literal> and <literal>stackedarea</literal> plot types,
+and with the new
 <literal>squaredarea</literal> and <literal>stackedsquaredarea</literal>
 plot types.
     </para>
