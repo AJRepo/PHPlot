@@ -3589,6 +3589,28 @@ $data. You need to declare this second argument in your function only if
 you are using a pass-through argument.
 </para>
 
+<para>
+You can also use PHP anonymous functions for custom label formatting.
+This avoids having to define a function elsewhere in your code, and keeps
+the custom label formatting code near where it is being used.
+This is recommended only when the custom label formatting code is relatively
+short<footnote><para>You can't do unit testing on an anonymous
+function.</para></footnote>.
+Anonymous functions can also take advantage of the PHP <literal>use</literal>
+clause to inherit variables from the parent scope.
+</para>
+
+<para>
+Here is an example of a custom label formatting function that uses an
+anonymous function to offset the Y axis label by an amount in a local
+variable.
+  <programlisting><![CDATA[$offset = 10; // A local variable
+...
+$plot->SetYLabelType('custom', function ($y) use ($offset) {
+     return ($y - $offset); } );
+]]></programlisting>
+</para>
+
 <note>
   <para>
 PHPlot may call your label formatting function multiple times for the same
