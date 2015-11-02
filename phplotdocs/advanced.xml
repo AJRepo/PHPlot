@@ -779,6 +779,15 @@ Some callbacks are expected to return a value. This is documented in
 from a callback function is ignored.
 (Callbacks which return a value were implemented in PHPlot-5.1.3.)
 </para>
+
+<note>
+  <para>
+Instead of using the name of a function in <function>SetCallback</function>,
+you can use a PHP anonymous function.
+See the example in <xref linkend="adv-datacolor-callback-custom" />.
+  </para>
+</note>
+
 </sect2>
 
 <sect2 id="callbacks-access">
@@ -1463,6 +1472,24 @@ method can be used here instead - see <xref linkend="callbacks-objects"/>.
 The third argument is an optional pass-through value that will be sent to
 your callback function each time it is called.
 </para>
+
+<para>
+You can also use a PHP anonymous function as a data color callback (or as
+any callback). This is recommended only when the color selection code is
+relatively short. Here is an example of using an anonymous function as a
+data color callback. This uses color 1 (green) or 4 (red) based on the
+value of a bar chart value (<literal>text-data</literal> data type).
+Note the <literal>use</literal> clause is used by the anonymous function to
+access the data array <literal>$data</literal>.
+<programlisting><![CDATA[$plot->SetCallback('data_color',
+   function($img, $passthru, $row, $col) use($data) {
+       if ($data[$row][$col + 1] >= 50) return 1;
+       return 4;
+   }
+);
+]]></programlisting>
+</para>
+
 </sect2>
 
 <sect2 id="adv-datacolor-callback-legend">
