@@ -13,6 +13,21 @@ see the ChangeLog file inside the PHPlot distribution.)
 </abstract>
 
 <variablelist>
+
+  <varlistentry>
+    <term>2015-11-02</term>
+    <listitem>
+      <para>
+Released updated version of the manual corresponding to PHPlot-6.2.0.
+This documents the new plot types <literal>squaredarea</literal> and
+<literal>stackedsquaredarea</literal>, and extended <literal>printf</literal>
+custom label formatting.
+Numerous small corrections have been made throughout the manual, including
+changes for PHP-7, and changes based on phpdoc comments made in the PHPlot code.
+      </para>
+    </listitem>
+  </varlistentry>
+
   <varlistentry>
     <term>2013-05-11</term>
     <listitem>
