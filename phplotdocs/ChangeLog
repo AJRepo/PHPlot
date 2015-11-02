@@ -10,6 +10,9 @@ manual, which only contains summaries of changes.
     * advanced.xml: Added text about using PHP anonymous functions for
       callbacks, with an example under Custom Data Color Selection.
 
+    For release with PHPlot-6.2.0:
+    * changelog.xml: Update with summary of all changes for 6.2.0.
+
 2015-10-31
     Changes for Feature Request #58, data borders for area plot types. This
     extends the 2015-10-30 change to area and stackedarea plot types.
