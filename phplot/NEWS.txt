@@ -5,6 +5,102 @@ Refer the the ChangeLog file for detailed source changes.
 See NEWS_part1.txt for older release documentation.
 -----------------------------------------------------------------------------
 
+2015-11-01 Release 6.2.0  
+
+=== Overview:
+
+This is the current stable release of PHPlot. This is the first release
+that will work with the upcoming PHP-7. This release also adds two new plot
+types.
+
+The PHPlot Reference Manual has been updated to match this release.
+
+=== Cautions, Important Notes, and Compatibility Issues:
+
+PHP-7 deprecated use of older-style class constructor method names, where
+the constructor name matches the class name.  The PHPlot class constructor
+name in this release has been fixed to work with PHP-7. This release
+also works with PHP-5.4, 5.5, and 5.6. However, there is a compatibility
+issue with extended classes. This applies even if you are using PHP-5.
+
+If you define a class which extends the PHPlot class, you must use this
+syntax to call the PHPlot constructor from your class constructor:
+     parent::__construct(...);  // Call parent class constructor
+This syntax also works in previous releases of PHPlot. However, the
+following syntax also worked in older releases, and will no longer work:
+     $this->PHPlot(...);  // Do Not Use This to call parent class constructor
+or:  parent::PHPlot(...); // Do Not Use This Either
+You must use the correct syntax parent::__construct() even if using PHP-5.
+
+If you are using PHP-7 with PHPlot, here are a few other items to be aware of.
+(Some of these affected the PHPlot test suite.)
+
++ PHPlot uses is_numeric() to check for missing points in the data array.
+Starting with PHP-7, hexadecimal strings are no longer considered numeric.
+This means if your data array contains the string "0x10", for example, PHPlot
+will consider that to be the number 16 when using PHP-5.x, but will treat it
+as a missing point with PHP-7. (Unquoted hexadecimal values are still numbers.)
+
++ PHP-7 no longer allows multiple function parameters with the same name.
+A typical case which fails in PHP-7 is:
+       function myfunction($s, $unused, $unused);  // Fails in PHP-7
+This broke some PHPlot Test Suite scripts that implemented PHPlot callbacks
+with unused parameters.
+
++ New objects cannot be assigned by reference. Very old versions of the
+PHPlot Reference Manual had this syntax (and there may still be some old
+versions out there):
+        $plot =& new PHPlot(600, 400);  // Do not use &
+
++ Division by zero no longer results in E_WARNING, but you end up with one
+of the special float values +INF, -INF, or NAN instead.
+
+
+=== Bugs Fixed in 6.2.0:
+
+Fixed bug #170 "replace eval() ...":
+This was a request to remove use of eval() from SetDashedStyle(), because
+eval() makes people nervous about security, and is not supported by some
+Virtual Machines. Removed eval() by using a string template instead of a
+code string for the dashed line pattern. There are no changes in usage or
+behavior.
+
+Fixed bug #172 "Fixes for PHP7":
+This release now works with PHP-7 (currently pre-release). The constructor
+name was changed; there were no problems with the rest of the code.
+(Although several scripts in the PHPlot Test Suite also had to be fixed.)
+Any class that extends PHPlot must now use the correct syntax to call the
+parent constructor: parent::__construct(...). If they used the old syntax
+$this->PHPlot(...) they will not work (even with PHP-5.x).
+
+
+=== New features in 6.2.0:
+
+Feature Request #55 "Method documentation in PHPDoc format":
+PHPlot now uses "phpdoc"-style comments in the code, which apparently is
+supported by some editors/IDEs. Note that the PHPlot Reference Manual does
+currently make use of these comments.
+
+Feature Request #56 "Hidden Y values when zero":
+The request was for a way to hide Y label values when zero, but the
+implementation is much more general. When using 'printf' label formatting
+type, you can now specify 1, 2, or 3 separate format strings. These are
+applied in the same way spreadsheets support cell format strings: which
+format is used depends on the sign of the value.
+
+Feature Request #57 "squarefilled plot type":
+Two new plot types are added: 'squaredarea' and 'stackedsquaredarea'.
+These are like area and stackedarea, but the edges are stepped like
+'squared' plots.
+
+Feature Request #58 "Data borders for area plot types":
+After data borders support was added to the two new plot types 'squaredarea'
+and 'stackedsquaredarea', this was extended to the existing, similar plot
+types 'area' and 'stackedarea'. Data borders are off by default for all 4
+plot types.
+
+-----------------------------------------------------------------------------
+
 2013-05-11 Release 6.1.0
 
 === Overview:

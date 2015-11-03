@@ -1,5 +1,5 @@
 This is the README file for PHPlot
-Last updated for PHPlot-6.1.0 on 2013-05-11
+Last updated for PHPlot-6.2.0 on 2015-11-02
 The project web site is http://sourceforge.net/projects/phplot/
 The project home page is http://phplot.sourceforge.net/
 -----------------------------------------------------------------------------
@@ -31,9 +31,19 @@ CONTENTS:
 
 REQUIREMENTS:
 
-You need a recent version of PHP5, and you are advised to use the latest
-stable release.  This version of PHPlot was tested with PHP-5.4.15 and
-PHP-5.3.25 on Linux, and with PHP-5.4.15 on Windows XP.
+You need a recent version of PHP, and you are advised to use the latest
+stable release.  This version of PHPlot was tested with PHP-5.6.15,
+PHP-5.5.30, PHP-5.4.45, and also with the pre-release PHP-7.0.0RC6.
+(Windows testing was limited to PHP-5.4.x.)
+
+  Note: At the time of this release, PHP-5.4.x just entered end-of-life with
+  no expected further support from the PHP Group.  This version of PHPlot
+  still works with PHP-5.4.x, but future versions will probably not be
+  tested with or support PHP-5.4.x.
+
+  At the time of this release, PHP-7 has not yet been released.  This
+  version of PHPlot has been tested with a pre-release version of PHP-7,
+  and contains fixes that are required for PHP-7.
 
 You need the GD extension to PHP either built in to PHP or loaded as a
 module. Refer to the PHP documentation for more information - see the
@@ -78,6 +88,15 @@ KNOWN ISSUES:
 Here are some of the problems we know about in PHPlot. See the bug tracker
 on the PHPlot project web site for more information.
 
+#173 Area fill plots with data borders and overlapping areas
+  New in release 6.2.0 are data borders for area and squaredarea plot types.
+  With multiple data sets, if the areas overlap, the borders are drawn without
+  regard to the overlap, and don't correspond to the visible areas.
+
+#171 Dashed patters aren't continuing
+  PHPlot line styles are not being drawn properly when the dashed pattern
+  is long relative to the data point spacing.
+
 #146 (was: 3142124) Clip plot elements to plot area
   Plot elements are not currently clipped to the plot area, and may extend
   beyond. PHP does not currently support the GD clipping control.
@@ -94,8 +113,8 @@ the operation of PHPlot (as well as any other application or library). Here
 are some known issues:
 
   + If PHP is built with Thread Safety on (ZTS), the GD extension is
-unable to find TrueType fonts unless the full path is given. (This is
-probably a PHP bug.) The text in the PHPlot Reference Manual section
+unable to find TrueType fonts unless the full path is given. (This might
+be a PHP bug.) The text in the PHPlot Reference Manual section
 "TrueType Font Selection" concerning finding fonts without a path does not
 work on these systems. This has been found to affect the version of PHP
 distributed with Slackware, but not Ubuntu. It affects the thread-safe PHP
@@ -115,9 +134,6 @@ Ubuntu-derived distributions such as Linux Mint.
 
   + Some PHP installations may have a memory limit set too low to support
 large images, especially truecolor images.
-
-  + PHP-5.3.2 has a bug in rendering TrueType fonts (TTF).  Avoid using this
-version if you use TTF text in PHPlot.
 
   + The default TrueType font can be changed by external factors. If you
 enable TrueType fonts, but don't select a font name, PHPlot can find a
@@ -176,7 +192,7 @@ graph, check your web server error log for more information.
 
 COPYRIGHT and LICENSE:
 
-PHPlot is Copyright (C) 1998-2013 Afan Ottenheimer
+PHPlot is Copyright (C) 1998-2015 Afan Ottenheimer
 
 This is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -191,3 +207,9 @@ Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public
 License along with this software; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+
+   Notice: Despite the presence of the letters "PHP" in the name of 
+   PHPlot, it should be apparent that this software is not a product
+   of the PHP Group, is not derived from PHP, and the PHP Group does
+   endorse and is not responsible for this product.
+
