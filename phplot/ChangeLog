@@ -2,6 +2,11 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2015-11-02 ===== Released as 6.2.0 =====
+    * phplot.php: Updated version comment
+    * README.txt: Updated for new release
+    * NEWS.txt: Add text for new release
+
 2015-10-31
     * Feature Request #58 "data borders for area plot types":
       Moved the code for data borders from DrawSquaredArea() into a new
