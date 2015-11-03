@@ -59,8 +59,6 @@ default:
 
 release:
 	@if [[ x$(VER) = x ]]; then echo "Error: must set VER variable"; exit 1; fi
-	@echo "Note: The main script has the following version info:"
-	@grep -i 'phplot version' phplot.php
 	mkdir -p $(RDIRPATH) $(RDIRPATH)/contrib
 	cp -v -p $(REL) $(RDIRPATH)
 	cp -v -p $(REL_CONTRIB) $(RDIRPATH)/contrib
