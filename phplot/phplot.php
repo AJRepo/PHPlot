@@ -10,7 +10,7 @@
  *
  * $Id$
  *
- * @version 6.2.0-unreleased
+ * @version 6.2.0
  * @copyright 1998-2015 Afan Ottenheimer
  * @license GNU Lesser General Public License, version 2.1
  * @link http://sourceforge.net/projects/phplot/ PHPlot Web Site with downloads, tracker, discussion
@@ -59,7 +59,7 @@
 class PHPlot
 {
     /** PHPlot version constant as a string */
-    const version = '6.2.0-Unreleased $Revision$';
+    const version = '6.2.0';
     /** PHPlot version constant as a number = major * 10000 + minor * 100 + patch */
     const version_id = 60200;
 
