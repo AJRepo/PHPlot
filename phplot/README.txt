@@ -1,5 +1,5 @@
 This is the README file for PHPlot
-Last updated for PHPlot-6.2.0 on 2015-11-02
+Last updated for PHPlot-6.2.0 on 2015-11-03
 The project web site is http://sourceforge.net/projects/phplot/
 The project home page is http://phplot.sourceforge.net/
 -----------------------------------------------------------------------------
@@ -120,9 +120,10 @@ work on these systems. This has been found to affect the version of PHP
 distributed with Slackware, but not Ubuntu. It affects the thread-safe PHP
 Windows release, but not the non-thread-safe (NTS) Windows release.
 
-  + Slackware Linux includes a version of PHP built with --enable-gd-jis-conv
-(JIS-mapped Japanese font support). This prevents the usual UTF-8 encoding
-of characters from working in TrueType Font (TTF) text strings.
+  + Slackware Linux used to include a PHP built with --enable-gd-jis-conv
+(JIS-mapped Japanese font support). This prevented the usual UTF-8 encoding
+of characters from working in TrueType Font (TTF) text strings. This does
+not affect recent Slackware, though (14.0 and up).
 
   + The Ubuntu Linux PHP GD package (php5-gd) was built to use the external
 shared GD library, not the one bundled with PHP. This can result in small
