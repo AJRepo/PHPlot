@@ -11,6 +11,18 @@ define('DEFAULT_VIEWER', 'qiv -p');
 # The DIFF environment variable overrides this.
 define('DEFAULT_DIFF', 'diff -u');
 
+# Image file converters and flag indicating that compare_tests should
+# recheck images that differ after stripping meta-data:
+define('DO_IMAGE_RECHECK', TRUE);
+# If DO_IMAGE_RECHECK is true, these must be defined to command lines
+# that convert a file with the specified extension on standard input
+# to a 'plain' form like PNM on standard output:
+$converters = array(
+  'gif' => 'giftopnm',
+  'png' => 'pngtopnm',
+  'jpg' => 'jpegtopnm',
+);
+
 # Display usage and exit:
 function usage()
 {
@@ -34,14 +46,50 @@ file comparison. The default is: %s
 
 }
 
+# After they have been found to differ in a byte-for-byte check, re-check
+# them to see if they are image files that match when converted to PNM
+# (which strips off any metadata).
+# This is used by compare_files if DO_IMAGE_RECHECK is defined above.
+# Returns TRUE if the files are image files of the same type and match after
+# conversion, else FALSE.
+function recompare_files($file1, $file2)
+{
+  global $converters;
+
+  $ext1 = strtolower(pathinfo($file1, PATHINFO_EXTENSION));
+  $ext2 = strtolower(pathinfo($file2, PATHINFO_EXTENSION));
+
+  // Same file extensions? If not, then no match.
+  if ($ext1 != $ext2) return FALSE;
+
+  // Convertable image file? If not, then no match.
+  if (!isset($converters[$ext1])) return FALSE;
+
+  // Build command lines to convert them:
+  $cmd1 = $converters[$ext1] . ' 2> /dev/null < ' . $file1;
+  $cmd2 = $converters[$ext2] . ' 2> /dev/null < ' . $file2;
+  
+  // Convert, compare, and return the result:
+  return (`$cmd1` === `$cmd2`);
+}
+
 # Compare two files, byte for byte, return True if match else False.
-# The files (images) aren't too big, so just read the whole thing in
-# to memory and compare.
+# The files (usually images) aren't too big, so just read them into
+# memory and compare.
+# In some cases, image files can differ only by meta-data (e.g. PNG files
+# from different versions of libgd or libpng). To avoid many false difference
+# reports, there is an option for a second-stage compare (see recompare_files).
 function compare_files($file1, $file2)
 {
-  return (($s1 = file_get_contents($file1)) !== False
-       && ($s2 = file_get_contents($file2)) !== False
-       && $s1 === $s2);
+  if (($s1 = file_get_contents($file1)) === False
+        || ($s2 = file_get_contents($file2)) === False) return FALSE;
+  if ($s1 === $s2) return TRUE;
+
+  // Files differ, but maybe check the images without meta-data:
+  if (DO_IMAGE_RECHECK) return recompare_files($file1, $file2);
+
+  // The files differ:
+  return FALSE;
 }
 
 # Return true if the given filename seems to be an image file:
