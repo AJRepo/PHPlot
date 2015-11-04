@@ -68,14 +68,14 @@ if (PHP_OS == "WINNT") {
         );
     }
 
-} elseif (file_exists('/usr/share/fonts/truetype/ttf-dejavu')) {
+} elseif (file_exists('/usr/share/fonts/truetype/dejavu')) {
     # Ubuntu (and others) use this base directory:
     $phplot_test_ttfdir = '/usr/share/fonts/truetype/';
 
     # In order for GD to find the fonts using only the basename, the
     # subdirectory prefix has to be inserted before all of the names:
     foreach ($phplot_test_ttfonts as $key => $value) {
-        $phplot_test_ttfonts[$key] = 'ttf-dejavu/' .  $value;
+        $phplot_test_ttfonts[$key] = 'dejavu/' .  $value;
     }
     unset($key);
     unset($value);
