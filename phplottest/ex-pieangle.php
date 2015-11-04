@@ -3,6 +3,7 @@
 # PHPlot Example: Pie chart with varying start angle and direction
 # Note: This requires PHPlot-6.0.0 or higher.
 require_once 'phplot.php';
+require_once 'config.php'; // For font information
 
 # Check for PHPlot method and skip the test if it is missing:
 if (!method_exists('PHPlot', 'SetPieStartAngle')) {
@@ -46,6 +47,10 @@ $plot->SetImageBorderType('plain');
 $plot->SetPrintImage(False);
 $plot->SetTitle("Pie Chart - Vary Start Angle and Direction\n"
               . "(CW = Clockwise, CCW = Counter-clockwise)");
+
+# Setting the path for TTF should not be necessary, but
+# it is on systems with thread-safe PHP (probably a bug).
+$plot->SetTTFPath($phplot_test_ttfdir);
 
 # Configure pie labels: Show sector index, inside the pie, in a large font.
 $plot->SetPieLabelType('index');
