@@ -2,6 +2,24 @@ This is the Change Log for phplottest, the PHPlot Test Suite
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2015-11-03
+    Fixes needed to complete PHPlot-6.2.0 release testing:
+    * config.php: Fix for Ubuntu, font path has changed (no more ttf- prefix).
+      This caused a large number of tests using TTF to fail on Ubuntu.
+    * u.defaultfont.php: Use the test class PHPlot_test2 that also prevents
+      error images from being drawn, which was making it hard to diagnose
+      other font problems.
+    * compare_tests.php : Add a "second try" file comparison function. If
+      image files do not match byte-for-byte, try converting them to PNM and
+      then compare the results. This cleared up about 900 image differ
+      reports on Ubuntu, apparently because on Ubuntu some meta-data is
+      being added to the images (resolution?) and this caused the byte-by-byte
+      compares to fail even if the images are identical.
+    * piesize.php: Use full path for TrueType font file. (Otherwise this fails
+      with some PHP configurations. Font without path is tested elsewhere.)
+    * ex-pieangle.php: Set the path for TrueType font files, to prevent
+      test failures on some PHP configurations (thread safety enabled).
+
 2015-10-31
     New tests for data borders with area fill plot types:
     * areaborders??.php: 24 new tests
