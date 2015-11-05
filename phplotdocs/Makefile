@@ -96,6 +96,8 @@ STATIC_IMAGES=\
   images/thumbnail-pie.png \
   images/thumbnail-points.png \
   images/thumbnail-squared.png \
+  images/thumbnail-squaredarea.png \
+  images/thumbnail-stackedsquaredarea.png \
   images/thumbnail-stackedarea.png \
   images/thumbnail-stackedbars.png \
   images/thumbnail-thinbarline.png \
