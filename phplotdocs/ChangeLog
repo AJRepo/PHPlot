@@ -4,6 +4,10 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2015-11-05
+    * Makefile: Added 2 missing static images (thumbnails for new plot
+      types) which were omitted from the manual release.
+
 2015-11-02
     * concepts.xml: Added text about using PHP anonymous functions for
       custom label formatting, with an example.
