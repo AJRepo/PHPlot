@@ -4,6 +4,16 @@ Note: This is a more complete ChangeLog than the one in Appendix A of the
 manual, which only contains summaries of changes.
 -----------------------------------------------------------------------------
 
+2016-01-01
+    * main.xml: Indicate next version 6.2.1; extend copyright years to 2016.
+
+    Changes for Feature Request #59, legend border controls:
+    * concepts.xml: Updated color and other information on legend border.
+    * functions.xml: Added links to 2 new functions.
+    * reference.xml: Documented 2 new functions: SetDrawLegendBorder and
+       SetLegendBorderColor.
+    * variables.list: Added 3 new variables and changed 1 description.
+
 2015-11-05
     * Makefile: Added 2 missing static images (thumbnails for new plot
       types) which were omitted from the manual release.
