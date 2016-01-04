@@ -86,6 +86,7 @@ More information about using colors in PHPlot can be found in
   <listitem><para><xref linkend="SetImageBorderColor" /></para></listitem>
   <listitem><para><xref linkend="SetImageBorderWidth" /></para></listitem>
   <listitem><para><xref linkend="SetLegendBgColor" /></para></listitem>
+  <listitem><para><xref linkend="SetLegendBorderColor" /></para></listitem>
   <listitem><para><xref linkend="SetLegendTextColor" /></para></listitem>
   <listitem><para><xref linkend="SetLightGridColor" /></para></listitem>
   <listitem><para><xref linkend="SetLineStyles" /></para></listitem>
@@ -200,13 +201,14 @@ The functions in this section control the legend.
 For more information, see <xref linkend="conc-legend"/>.
 See also <xref linkend="SetLegendTextColor" /> to set the legend text color,
 <xref linkend="SetLegendBgColor"/> to set the legend background color,
-<xref linkend="SetGridColor" /> to set the legend border color,
+<xref linkend="SetLegendBorderColor" /> to set the legend outline border color,
 and <xref linkend="SetFont" /> to set the legend text font.
 </para>
 
 <para>
 <itemizedlist>
   <listitem><para><xref linkend="GetLegendSize" /></para></listitem>
+  <listitem><para><xref linkend="SetDrawLegendBorder" /></para></listitem>
   <listitem><para><xref linkend="SetLegend" /></para></listitem>
   <listitem><para><xref linkend="SetLegendColorboxBorders" /></para></listitem>
   <listitem><para><xref linkend="SetLegendPixels" /></para></listitem>
