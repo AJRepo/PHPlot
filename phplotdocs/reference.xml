@@ -2390,6 +2390,64 @@ shaded plots.
   </refsect1>
 </refentry>
 
+<refentry id="SetDrawLegendBorder">
+  <refmeta>
+    <refentrytitle>SetDrawLegendBorder</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetDrawLegendBorder</refname>
+    <refpurpose>Enable or disable drawing of the legend outline border</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>$plot-&gt;SetDrawLegendBorder(<parameter>$draw</parameter>)</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetDrawLegendBorder</function> enables or disables drawing of the
+the legend outline border.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$draw</replaceable></term>
+        <listitem>
+          <para>
+True to draw legend outline border, False to not draw it.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+See <xref linkend="conc-legend"/> for more on the plot legend.
+    </para>
+    <para>
+By default, the legend outline border is drawn.
+    </para>
+    <para>
+Use <xref linkend="SetLegendBorderColor"/> or <xref linkend="SetGridColor"/> to
+set the legend outline border color.
+    </para>
+  </refsect1>
+  <refsect1>
+    <title>History</title>
+    <para>
+This function was added in PHPlot-6.2.1 to provide a way to omit the legend
+outline border. In prior versions, the legend outline border was always drawn.
+    </para>
+  </refsect1>
+</refentry>
+
 <refentry id="SetDrawPieBorders">
   <refmeta>
     <refentrytitle>SetDrawPieBorders</refentrytitle>
@@ -3735,7 +3793,7 @@ to allow mixing GD and TrueType fonts in the same graph.
 
   <refnamediv>
     <refname>SetGridColor</refname>
-    <refpurpose>Set the color used for the axes and borders</refpurpose>
+    <refpurpose>Set the color used for the axis lines and borders</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
@@ -3746,9 +3804,9 @@ to allow mixing GD and TrueType fonts in the same graph.
     <title>Description</title>
     <para>
 <function>SetGridColor</function> sets the color used for the X and Y
-axes, the plot border, and the legend border.
-It also sets the default color for pie chart data labels and pie chart
-segment borders.
+axis lines and the plot area border.
+It also sets the default color for pie chart data labels, pie chart segment
+borders, and the legend border.
     </para>
   </refsect1>
 
@@ -3785,6 +3843,21 @@ The color used for pie chart segment borders is set with
 The color used for pie chart data labels is set with
 <xref linkend="SetPieLabelColor"/> (starting with PHPlot-5.7.0), with
 <function>SetGridColor</function> providing a default color.
+    </para>
+    <para>
+The color used for the legend border is set with
+<xref linkend="SetLegendBorderColor"/> (starting with PHPlot-6.2.1), with
+<function>SetGridColor</function> providing a default color.
+    </para>
+  </refsect1>
+  <refsect1>
+    <title>History</title>
+    <para>
+Although <function>SetGridColor</function> itself has not changed, the
+additional functions listed above have been added to set the color for
+certain plot elements, and these override any color set with
+<function>SetGridColor</function> for those elements. See the reference for
+those functions for the history of these changes.
     </para>
   </refsect1>
 </refentry>
@@ -4175,6 +4248,9 @@ Or, if not an array, the one line to be appended to the legend. See notes.
   <refsect1>
     <title>Notes</title>
     <para>
+See <xref linkend="conc-legend"/> for more on the plot legend.
+    </para>
+    <para>
 By default, no legend is displayed.
     </para>
     <para>
@@ -4219,6 +4295,71 @@ Through PHPlot-5.3.0, passing NULL would cause an error.
   </refsect1>
 </refentry>
 
+
+<refentry id="SetLegendBorderColor">
+  <refmeta>
+    <refentrytitle>SetLegendBorderColor</refentrytitle>
+  </refmeta>
+
+  <refnamediv>
+    <refname>SetLegendBorderColor</refname>
+    <refpurpose>Set the legend outline border color</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+    <synopsis>$plot-&gt;SetLegendBorderColor(<parameter>$color</parameter>)</synopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+    <title>Description</title>
+    <para>
+<function>SetLegendBorderColor</function> sets the color that is used to
+draw the rectangular outline border around the legend.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>Parameters</title>
+    <variablelist>
+      <varlistentry>
+        <term><replaceable>$color</replaceable></term>
+        <listitem>
+          <para>
+Color value to use.
+See <xref linkend="conc-colors" /> for more on color values.
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+
+  <refsect1>
+    <title>Notes</title>
+    <para>
+See <xref linkend="conc-legend"/> for more on the plot legend.
+    </para>
+    <para>
+If <function>SetLegendBorderColor</function> is not used, the legend outline
+border will be drawn using the color set with <xref linkend="SetGridColor"/>.
+If neither <function>SetLegendBorderColor</function> nor
+<function>SetGridColor</function> is used, the default color is black.
+    </para>
+    <para>
+Use <xref linkend="SetDrawLegendBorder"/><literal>(FALSE)</literal> if you
+do not want the legend to have an outline border.
+    </para>
+  </refsect1>
+
+  <refsect1>
+    <title>History</title>
+    <para>
+This function was added in PHPlot-6.2.1. In earlier releases, the legend
+outline border always used the color set with <xref linkend="SetGridColor"/>,
+which also sets the color of other elements.
+    </para>
+  </refsect1>
+</refentry>
+
 <refentry id="SetLegendBgColor">
   <refmeta>
     <refentrytitle>SetLegendBgColor</refentrytitle>
@@ -4258,6 +4399,9 @@ See <xref linkend="conc-colors" /> for more on color values.
 
   <refsect1>
     <title>Notes</title>
+    <para>
+See <xref linkend="conc-legend"/> for more on the plot legend.
+    </para>
     <para>
 If <function>SetLegendBgColor</function> is not used, the legend background
 color will be the same as the image background color.
@@ -4417,6 +4561,9 @@ If the values are omitted or NULL, the default behavior is restored.
   <refsect1>
     <title>Notes</title>
     <para>
+See <xref linkend="conc-legend"/> for more on the plot legend.
+    </para>
+    <para>
 The default behavior is for PHPlot to position the legend in the
 upper right corner of the plot area.
     </para>
@@ -4575,6 +4722,9 @@ plot, for example. If not specified, no offset is applied.
 
   <refsect1>
     <title>Notes</title>
+    <para>
+See <xref linkend="conc-legend"/> for more on the plot legend.
+    </para>
     <para>
 For examples of using <function>SetLegendPosition</function>, see
 <xref linkend="ex-legendpos"/>.
@@ -4765,6 +4915,9 @@ If this parameter is omitted, the same alignment as $text_align is used.
 
   <refsect1>
     <title>Notes</title>
+    <para>
+See <xref linkend="conc-legend"/> for more on the plot legend.
+    </para>
     <para>
 By default, the color boxes or shape markers are lined up along the right side
 of the legend box, and the text strings are right-aligned just left of the
@@ -5036,6 +5189,9 @@ The units and origin are the same as the data you are plotting.
 
   <refsect1>
     <title>Notes</title>
+    <para>
+See <xref linkend="conc-legend"/> for more on the plot legend.
+    </para>
     <para>
 The default behavior is for PHPlot to position the legend in the
 upper right corner of the plot area.
