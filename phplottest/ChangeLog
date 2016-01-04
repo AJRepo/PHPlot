@@ -2,6 +2,11 @@ This is the Change Log for phplottest, the PHPlot Test Suite
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2016-01-01
+    New tests for Feature Request #59, legend border color/disable control:
+    * legendborder*.php: Added 7 new tests.
+    * tests.ini: List 7 new tests.
+
 2015-11-03
     Fixes needed to complete PHPlot-6.2.0 release testing:
     * config.php: Fix for Ubuntu, font path has changed (no more ttf- prefix).
