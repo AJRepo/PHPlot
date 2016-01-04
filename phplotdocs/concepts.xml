@@ -2891,8 +2891,9 @@ with the second function, etc.)
         <entry>black</entry>
       </row>
       <row>
-        <entry>Legend border</entry>
-        <entry><xref linkend="SetGridColor"/></entry>
+        <entry>Legend outline border</entry>
+        <entry><xref linkend="SetLegendBorderColor"/>,
+               <xref linkend="SetGridColor"/></entry>
         <entry>black</entry>
       </row>
       <row>
@@ -3097,6 +3098,16 @@ by default.  Starting with PHPlot-6.0.0, you can set the legend text color
 separately with <xref linkend="SetLegendTextColor"/>.
       </para>
     </listitem>
+
+    <listitem>
+      <para>
+The legend outline border uses the color set with
+<xref linkend="SetGridColor"/> by default.  Starting with PHPlot-6.2.1,
+you can set the legend outline border color separately with
+<xref linkend="SetLegendBorderColor"/>.
+      </para>
+    </listitem>
+
   </itemizedlist>
 </para>
 
@@ -3839,8 +3850,15 @@ or <xref linkend="SetLegendPosition"/>.
     <listitem>
       <para>
 You can change the legend text color with <xref linkend="SetTextColor"/> or
-<xref linkend="SetLegendTextColor"/>, and the
-background color with <xref linkend="SetLegendBgColor"/>.
+<xref linkend="SetLegendTextColor"/>,
+the legend background color with <xref linkend="SetLegendBgColor"/>,
+and the legend outline border color with <xref linkend="SetLegendBorderColor"/>.
+If you don't want an outline border drawn around the legend, use
+<xref linkend="SetDrawLegendBorder"/> to turn it off.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
 You can control the color box border colors with
 <xref linkend="SetLegendColorboxBorders"/>.
 The colors of the color boxes or shape markers automatically match the
