@@ -2,6 +2,19 @@ This is the Change Log for PHPlot.
 The project home page is http://sourceforge.net/projects/phplot/
 -----------------------------------------------------------------------------
 
+2016-01-01
+    * Mark as pre-release version 6.2.1 and extend copyright to 2016.
+
+    * Feature Request #59 "Hide legend border, control legend border color":
+      Added ability to control the legend border color (independent of
+      the grid color), and also the ability to disable the legend border.
+      + Added new function SetDrawLegendBorder() to disable the border.
+      + Added new function SetLegendBorderColor() to set the color used
+        for the legend border. If this isn't used, the color set with
+        SetGridColor() is used, so this is fully backward compatible.
+      + New protected class variables draw_legend_border,
+        legend_border_color, and ndx_legend_border_color.
+
 2015-11-03 ===== Released as 6.2.0 =====
     * phplot.php: Updated version comment
     * README.txt: Updated for new release
