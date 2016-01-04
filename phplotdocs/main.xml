@@ -27,8 +27,8 @@
 <bookinfo>
   <title>PHPlot Reference Manual</title>
   <corpauthor>The PHPlot Documentation Team</corpauthor>
-  <releaseinfo>Release &version; for PHPlot-6.2.0</releaseinfo>
-  <copyright><year>2005-2015</year><holder>The PHPlot Documentation Team</holder></copyright>
+  <releaseinfo>Release &version; for PHPlot-6.2.1</releaseinfo>
+  <copyright><year>2005-2016</year><holder>The PHPlot Documentation Team</holder></copyright>
   <legalnotice id="copyright">
     <para>
 Permission to use, copy, modify and distribute this manual
