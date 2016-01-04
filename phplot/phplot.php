@@ -10,8 +10,8 @@
  *
  * $Id$
  *
- * @version 6.2.0
- * @copyright 1998-2015 Afan Ottenheimer
+ * @version 6.2.1-unreleased
+ * @copyright 1998-2016 Afan Ottenheimer
  * @license GNU Lesser General Public License, version 2.1
  * @link http://sourceforge.net/projects/phplot/ PHPlot Web Site with downloads, tracker, discussion
  * @link http://phplot.sourceforge.net PHPlot Project Web Site with links to documentation
@@ -59,9 +59,9 @@
 class PHPlot
 {
     /** PHPlot version constant as a string */
-    const version = '6.2.0';
+    const version = '6.2.1-Unreleased $Revision$';
     /** PHPlot version constant as a number = major * 10000 + minor * 100 + patch */
-    const version_id = 60200;
+    const version_id = 60201;
 
     // All class variables are declared here, and initialized (if applicable).
     // Starting with PHPlot-6.0, most variables have 'protected' visibility
@@ -184,6 +184,8 @@ class PHPlot
     protected $draw_broken_lines = FALSE;
     /** Flag: Draw data borders, available with some plot types */
     protected $draw_data_borders;
+    /** Flag: Draw legend border */
+    protected $draw_legend_border = TRUE;
     /** Flag: Draw borders on pie chart segments */
     protected $draw_pie_borders;
     /** Flag: Draw the background of the plot area */
@@ -240,6 +242,8 @@ class PHPlot
     protected $legend;
     /** Color (R,G,B,A) for the legend background */
     protected $legend_bg_color;
+    /** Color (R,G,B,A) for the legend border */
+    protected $legend_border_color;
     /** Alignment of color boxes or shape markers in the legend: left, right, or none */
     protected $legend_colorbox_align = 'right';
     /** Color control for colorbox borders in legend  */
@@ -292,12 +296,14 @@ class PHPlot
     protected $ndx_dvlabel_color;
     /** Color index array for error bars */
     protected $ndx_error_bar_colors;
-    /** Color index for axes, plot area border, legend border, pie chart lines and text */
+    /** Color index for axis lines, plot area border; default for legend border, pie chart lines and text */
     protected $ndx_grid_color;
     /** Color index for image border lines */
     protected $ndx_i_border;
     /** Color index for image border lines, darker shade */
     protected $ndx_i_border_dark;
+    /** Color index for the legend border */
+    protected $ndx_legend_border_color;
     /** Color index for the legend background  */
     protected $ndx_legend_bg_color;
     /** Color index for the legend text  */
@@ -3741,9 +3747,12 @@ class PHPlot
         $this->ndx_data_colors = $this->GetColorIndexArray($this->data_colors, $n_data);
         $this->ndx_data_border_colors = $this->GetColorIndexArray($this->data_border_colors, $n_border);
 
-        // Legend colors: background defaults to image background, text defaults to general text color.
+        // Legend colors: background defaults to image background, text defaults to general text color,
+        // and border defaults to grid color.
         $this->ndx_legend_bg_color = $this->GetColorIndex($this->legend_bg_color, $this->ndx_bg_color);
         $this->ndx_legend_text_color = $this->GetColorIndex($this->legend_text_color, $this->ndx_text_color);
+        $this->ndx_legend_border_color = $this->GetColorIndex($this->legend_border_color,
+                                                              $this->ndx_grid_color);
 
         // Set up a color as transparent, if SetTransparentColor was used.
         if (!empty($this->transparent_color)) {
@@ -6623,6 +6632,31 @@ class PHPlot
     }
 
     /**
+     * Controls drawing the legend border (the box around the legend)
+     *
+     * @param bool $draw  True to draw the border, False to not draw it
+     * @return bool  True always
+     * @since 6.2.1
+     */
+    function SetDrawLegendBorder($draw)
+    {
+        $this->draw_legend_border = (bool)$draw;
+        return TRUE;
+    }
+
+    /**
+     * Controls the color of the legend border, which defaults to the grid_color
+     *
+     * @param string $border_color  Color name or spec (#rrggbb, (r,b,b) array, etc)
+     * @return bool  True (False on error if an error handler returns True)
+     * @since 6.2.1
+     */
+     function SetLegendBorderColor($border_color)
+     {
+        return (bool)($this->legend_border_color = $this->SetRGBColor($border_color));
+     }
+
+    /**
      * Calculates legend sizing parameters
      *
      * Used by DrawLegend() and the public GetLegendSize().
@@ -6771,8 +6805,10 @@ class PHPlot
         // Draw outer box
         ImageFilledRectangle($this->img, $box_start_x, $box_start_y, $box_end_x, $box_end_y,
                              $this->ndx_legend_bg_color);
-        ImageRectangle($this->img, $box_start_x, $box_start_y, $box_end_x, $box_end_y,
-                       $this->ndx_grid_color);
+        if ($this->draw_legend_border) {
+           ImageRectangle($this->img, $box_start_x, $box_start_y, $box_end_x, $box_end_y,
+                          $this->ndx_legend_border_color);
+        }
 
         // Calculate color box and text horizontal positions.
         if (!$colorbox_mode) {
