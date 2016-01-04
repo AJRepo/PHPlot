@@ -52,6 +52,7 @@ default_ttfont		SetDefaultTTFont GetDefaultTTFont	Default TrueType font file. (T
 done	array()	DrawBackground DrawImageBorder DrawTitle	Array of flags for elements that must be drawn at most once. Flag is set TRUE when drawn. Indexes are: background, border, title. (Replaced separate variables in PHPlot-5.3.1.)
 draw_broken_lines	FALSE	SetDrawBrokenLines	Flag: How to handle missing Y values
 draw_data_borders		SetDrawDataBorders	Flag: Draw data borders, available with some plot types (Added in PHPlot-6.0.0)
+draw_legend_border	TRUE	SetDrawLegendBorder	Flag: Draw legend outline border (Added in PHPlot-6.2.1)
 draw_pie_borders		SetDrawPieBorders	Flag: Draw borders on pie chart segments (Added in PHPlot-6.0.0)
 draw_plot_area_background	FALSE	SetDrawPlotAreaBackground	Flag: Draw the background of the plot area
 draw_x_data_label_lines	FALSE	SetDrawXDataLabelLines	Flag: Draw X data label lines
@@ -79,6 +80,7 @@ is_inline	FALSE	SetIsInline	Don't send headers
 label_format	array(...)	SetPieLabelType SetPrecisionX SetPrecisionY SetXDataLabelType SetXLabelType SetXTimeFormat SetYDataLabelType SetYLabelType SetYTimeFormat	Label format info. <link linkend="var-label-format">(See notes for more)</link>
 label_scale_position	0.5	SetLabelScalePosition	Pie chart label position factor
 legend		SetLegend	Legend text array. Each index is a legend text line.
+legend_border_color		SetLegendBorderColor	Color (R,G,B,A) for the legend border (Added in PHPlot-6.2.1)
 legend_bg_color		SetLegendBgColor	Color (R,G,B,A) for the legend background (Added in PHPlot-6.0.0)
 legend_colorbox_align	'right'	SetLegendStyle	Alignment of color boxes or shape markers in the legend: left, right, or none
 legend_colorbox_borders	'textcolor'	SetLegendColorboxBorders	Color control for colorbox borders in legend (Added in PHPlot-6.0.0)
@@ -106,9 +108,10 @@ ndx_data_dark_colors		NeedDataDarkColors	Color index array for plot data, darker
 ndx_datalabel_color		SetColorIndexes	Color index for axis data labels (Added in PHPlot-5.7.0)
 ndx_dvlabel_color		SetColorIndexes	Color index for data value labels (Added in PHPlot-5.7.0)
 ndx_error_bar_colors		NeedErrorBarColors	Color index array for error bars
-ndx_grid_color		SetColorIndexes	Color index for axes, plot area border, legend border, pie chart lines and text
+ndx_grid_color		SetColorIndexes	Color index for axis lines and plot area border; default color for legend border, pie chart lines and text
 ndx_i_border		SetColorIndexes	Color index for image border lines
 ndx_i_border_dark		SetColorIndexes	Color index for image border lines, darker shade
+ndx_legend_border_color		SetColorIndexes	Color index for the legend border (Added in PHPlot-6.2.1)
 ndx_legend_bg_color		SetColorIndexes	Color index for the legend background (Added in PHPlot-6.0.0)
 ndx_legend_text_color		SetColorIndexes	Color index for the legend text (Added in PHPlot-6.0.0)
 ndx_light_grid_color		SetColorIndexes	Color index for grid lines and X data lines
