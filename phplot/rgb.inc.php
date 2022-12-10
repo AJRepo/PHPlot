@@ -3,7 +3,7 @@
 /*
  * This is a large color map which can be used by PHPlot via
  *     $plot->SetRGBArray('large')
- * For more information on PHPlot see http://sourceforge.net/projects/phplot/
+ * For more information on PHPlot see https://github.com/AJRepo/PHPlot
  *
  * rgb.inc.php comes with PHPlot but is derived from the X11 rgb.txt color
  * database file, which contains no specific copyright notice. It may be

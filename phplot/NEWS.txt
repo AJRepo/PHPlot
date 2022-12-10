@@ -1,6 +1,6 @@
 This is the NEWS file for PHPlot, with release documentation.
-The project web site is http://sourceforge.net/projects/phplot/
-The project home page is http://phplot.sourceforge.net/
+The project web site is https://github.com/AJRepo/PHPlot/
+The project home page is https://github.com/AJRepo/PHPlot//
 Refer the the ChangeLog file for detailed source changes.
 See NEWS_part1.txt for older release documentation.
 -----------------------------------------------------------------------------

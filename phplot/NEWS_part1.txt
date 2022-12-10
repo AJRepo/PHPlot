@@ -1,8 +1,8 @@
 This is part 1 of the NEWS file for PHPlot, with previous release documentation
 through Release 5.5.0 on 2011-07-30. For current news, see NEWS.txt.
 
-The project web site is http://sourceforge.net/projects/phplot/
-The project home page is http://phplot.sourceforge.net/
+The project web site is https://github.com/AJRepo/PHPlot/
+The project home page is https://github.com/AJRepo/PHPlot//
 Refer the the ChangeLog file for detailed source changes.
 -----------------------------------------------------------------------------
 
@@ -714,7 +714,7 @@ is released.
 
 The PHPlot reference manual has been updated to match this release.  The
 manual is available as a separate download from Sourceforge. The manual is
-also now available for on-line viewing at http://phplot.sourceforge.net
+also now available for on-line viewing at https://github.com/AJRepo/PHPlot/
 
 See the ChangeLog file for more about changes and bug fixes.
 
@@ -783,7 +783,7 @@ introduce some minor new features.
 
 The PHPlot reference manual has been updated to match this release.  The
 manual is available as a separate download from Sourceforge. The manual is
-also now available for on-line viewing at http://phplot.sourceforge.net
+also now available for on-line viewing at https://github.com/AJRepo/PHPlot/
 
 
 New features in 5.0.6:
@@ -890,7 +890,7 @@ any issues using PHPlot with older versions of PHP.
 
 The PHPlot reference manual has been updated to match this release.  The
 manual is available as a separate download from Sourceforge. The manual is
-now also now available for on-line viewing at http://phplot.sourceforge.net
+now also now available for on-line viewing at https://github.com/AJRepo/PHPlot/
 
 The callback feature added in 5.0.4 is now documented in the reference
 manual. It is still considered experimental and subject to change, however.

@@ -1,6 +1,9 @@
 This is the Change Log for PHPlot.
-The project home page is http://sourceforge.net/projects/phplot/
+The project home page is https://github.com/AJRepo/PHPlot/
 -----------------------------------------------------------------------------
+
+2022-12-09
+    * Update docs to point to Github from Sourceforge.
 
 2016-01-01
     * Mark as pre-release version 6.2.1 and extend copyright to 2016.

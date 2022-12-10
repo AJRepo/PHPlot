@@ -11,13 +11,13 @@
  * $Id$
  *
  * @version 6.2.1-unreleased
- * @copyright 1998-2016 Afan Ottenheimer
+ * @copyright 1998-2022 Afan Ottenheimer
  * @license GNU Lesser General Public License, version 2.1
- * @link http://sourceforge.net/projects/phplot/ PHPlot Web Site with downloads, tracker, discussion
- * @link http://phplot.sourceforge.net PHPlot Project Web Site with links to documentation
+ * @link https://github.com/AJRepo/PHPlot/ PHPlot Web Site with downloads, tracker, discussion
+ * @link https://github.com/AJRepo/PHPlot/ PHPlot Project Web Site with links to documentation
  * @author lbayuk (2006-present) <lbayuk@users.sourceforge.net>
  * @author Miguel de Benito Delgado (co-author and maintainer, 2003-2005)
- * @author Afan Ottenheimer (original author)
+ * @author Afan Ottenheimer (1998-present)
  */
 
 /*

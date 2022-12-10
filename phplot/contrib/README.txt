@@ -1,5 +1,5 @@
 This is the README for PHPlot Contributed Code
-The project web site is http://sourceforge.net/projects/phplot/
+The project web site is https://github.com/AJRepo/PHPlot/
 Last updated on 2011-08-05
 -----------------------------------------------------------------------------
 
