@@ -8,17 +8,16 @@ PHP application.
 
 Where do I start?
 
-The PHPlot project page on github.com is the place to go for downloads, help, and more.
+The PHPlot project page on github.com/AJRepo/phplot is the place to go for downloads, help, and more.
 
 What about documentation?
 
 The PHPlot Reference Manual contains everything you need to know about PHPlot, and more. 
 The manual is available at https://github.com/AJRepo/PHPlot/tree/master/phplotdocs
-
-
-
+See the directory `phplotdocs` for how to build the documentation and see the directory `phplottest` for examples.
 
 How much does it cost?
 
 Trick question! It is completely free for you to use. You can also redistribute it unmodified without restriction. 
-For more information see the licensing files included in the distribution.
+
+License: GNU Lesser General Public License, version 2.1

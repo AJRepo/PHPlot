@@ -1,5 +1,4 @@
 This is the README file for PHPlot
-Last updated for PHPlot-6.2.0 on 2015-11-03
 The project web site is https://github.com/AJRepo/PHPlot/
 The project home page is https://github.com/AJRepo/PHPlot//
 -----------------------------------------------------------------------------
@@ -19,7 +18,7 @@ incompatibilities, see the NEWS.txt file.
 
 CONTENTS:
 
-   COPYING  . . . . . . . . . . . . LGPL 2.1 License file
+   LICENSE  . . . . . . . . . . . . LGPL 2.1 License file
    ChangeLog  . . . . . . . . . . . Lists changes to the sources
    NEWS.txt . . . . . . . . . . . . Highlights changes in releases
    NEWS_*.txt . . . . . . . . . . . Older NEWS files
@@ -33,17 +32,11 @@ REQUIREMENTS:
 
 You need a recent version of PHP, and you are advised to use the latest
 stable release.  This version of PHPlot was tested with PHP-5.6.15,
-PHP-5.5.30, PHP-5.4.45, and also with the pre-release PHP-7.0.0RC6.
+PHP-5.5.30, PHP-5.4.45, PHP-7.0.0, PHP-8.1.2
 (Windows testing was limited to PHP-5.4.x.)
 
-  Note: At the time of this release, PHP-5.4.x just entered end-of-life with
-  no expected further support from the PHP Group.  This version of PHPlot
-  still works with PHP-5.4.x, but future versions will probably not be
-  tested with or support PHP-5.4.x.
-
-  At the time of this release, PHP-7 has not yet been released.  This
-  version of PHPlot has been tested with a pre-release version of PHP-7,
-  and contains fixes that are required for PHP-7.
+  Note: This version of PHPlot still works with PHP-5.4.x, but future
+  versions will not be tested with PHP-5.x.x.
 
 You need the GD extension to PHP either built in to PHP or loaded as a
 module. Refer to the PHP documentation for more information - see the
@@ -149,10 +142,8 @@ Sans font precedes Arial in PHPlot's list of candidate default fonts.
 
 
 If you think you found a problem with PHPlot, or want to ask questions or
-provide feedback, please use the Help and Discussion forum at
+provide feedback, please use the Issues tab at
      https://github.com/AJRepo/PHPlot/
-If you are sure you have found a bug, you can report it on the Bug tracker
-at the same web site. There is also a Features Request tracker.
 
 
 TESTING:
