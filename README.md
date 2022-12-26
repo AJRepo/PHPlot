@@ -8,12 +8,12 @@ PHP application.
 
 Where do I start?
 
-The PHPlot project page on github.com/AJRepo/phplot is the place to go for downloads, help, and more.
+The PHPlot project page on github.com/PHPlot/phplot is the place to go for downloads, help, and more.
 
 What about documentation?
 
 The PHPlot Reference Manual contains everything you need to know about PHPlot, and more. 
-The manual is available at https://github.com/AJRepo/PHPlot/tree/master/phplotdocs
+The manual is available at https://github.com/PHPlot/PHPlot/tree/master/phplotdocs
 See the directory `phplotdocs` for how to build the documentation and see the directory `phplottest` for examples.
 
 How much does it cost?

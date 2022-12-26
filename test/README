@@ -5,7 +5,7 @@ OVERVIEW:
 
 This README describes phplottest, the test suite for PHPlot.
 PHPlot is a PHP module for producing charts or plots. For information
-about PHPlot, see https://www.github.com/AJRepo/PHPlot/
+about PHPlot, see https://www.github.com/PHPlot/PHPlot/
 
 Because PHPlot produces (only) visual graphical output, testing cannot be
 fully automated. At some point, a person needs to look at the output to
