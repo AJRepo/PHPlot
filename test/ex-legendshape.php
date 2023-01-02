@@ -23,7 +23,7 @@ $data = array(
 );
 $legend_text = array('Morning Papers', 'Evening Papers', 'Sunday Papers');
 
-$plot = new PHPlot(800, 600);
+$plot = new PHPlot\PHPlot\PHPlot(800, 600);
 $plot->SetImageBorderType('plain'); // Improves presentation in the manual
 $plot->SetTitle("US Daily Newspaper Circulation\n"
              .  $plot_type . ' plot with SetLegendUseShapes('

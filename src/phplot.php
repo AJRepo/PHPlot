@@ -11,7 +11,7 @@
  *
  * $Id$
  *
- * @version 8.0.0-unreleased
+ * @version 8.0.0-rc1
  * @copyright 1998-2022 Afan Ottenheimer
  * @license GNU Lesser General Public License, version 2.1
  * @link https://github.com/AJRepo/PHPlot/ PHPlot Web Site with downloads, tracker, discussion
@@ -61,7 +61,7 @@ namespace PHPlot\PHPlot;
 class PHPlot
 {
     /** PHPlot version constant as a string */
-    public const version = '8.0.0-Unreleased $Revision$';
+    public const version = '8.0.0-rc1 $Revision$';
     /** PHPlot version constant as a number = major * 10000 + minor * 100 + patch */
     public const version_id = 80000;
 

@@ -20,7 +20,7 @@ $data = array(
 );
 
 // Common setup:
-$plot = new PHPlot(460, 600);
+$plot = new PHPlot\PHPlot\PHPlot(460, 600);
 $plot->SetTitle("Multiple Plots, horiz & vertical (case $case)");
 $plot->SetPlotType('bars');
 $plot->SetPrintImage(False);

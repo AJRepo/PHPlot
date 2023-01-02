@@ -10,7 +10,7 @@ $data = array(
   array('1990',  5, 26, 15, 26, 18, 10),
   array('2000', 28,  0, 18, 16, 33,  5),
 );
-$plot = new PHPlot(800, 600);
+$plot = new PHPlot\PHPlot\PHPlot(800, 600);
 $plot->SetPlotType('stackedarea');
 $plot->SetDataType('text-data');
 $plot->SetDataValues($data);

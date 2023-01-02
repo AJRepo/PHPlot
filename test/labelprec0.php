@@ -11,7 +11,7 @@ $data = array(
   array(55.6543, 4.6, 12.345),
 );
 
-$p = new PHPlot(800, 800);
+$p = new PHPlot\PHPlot\PHPlot(800, 800);
 
 $title = "SetPrecisionX(2); SetPrecisionY(3);\n";
 if ($horizontal) {

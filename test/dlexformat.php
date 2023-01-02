@@ -45,7 +45,7 @@ function fmtdl($label, $passthru, $row=NULL, $col=NULL)
     return "{$result}[$passthru]";
 }
 
-$plot = new PHPlot(800, 600);
+$plot = new PHPlot\PHPlot\PHPlot(800, 600);
 $plot->SetDataType($data_type);
 $plot->SetDataValues(make_data_array($plot_type, $data_type, $nx, $ny, $max));
 $plot->SetPlotType($plot_type);

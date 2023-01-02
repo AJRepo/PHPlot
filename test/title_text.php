@@ -27,7 +27,7 @@ $data = array(
   array('', 1, 10),
 );
 
-$p = new PHPlot(800,600);
+$p = new PHPlot\PHPlot\PHPlot(800,600);
 
 if ($tp['use_ttf']) {
   $p->SetTTFPath($tp['ttfdir']);

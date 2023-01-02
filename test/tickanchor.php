@@ -34,7 +34,7 @@ $title = 'X/Y Tick Anchors' . (empty($subtitle)? "\n" : " - $subtitle\n")
 $data = array();
 for ($x = $start; $x <= $stop; $x += $delta) $data[] = array('', $x, $x);
 
-$plot = new PHPlot(800, 600);
+$plot = new PHPlot\PHPlot\PHPlot(800, 600);
 $plot->SetTitle($title);
 $plot->SetPlotType('lines');
 $plot->SetDataType('data-data');

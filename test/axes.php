@@ -16,7 +16,7 @@ $data = array(
   array('', 4, 8),
 );
 
-$p = new PHPlot(400, 300);
+$p = new PHPlot\PHPlot\PHPlot(400, 300);
 
 $p->SetDataType('data-data');
 $p->SetDataValues($data);

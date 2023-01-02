@@ -27,7 +27,7 @@ $data = array(
     array('D', 4,  8, 6,   16, 20 ),
 );
 
-$plot = new PHPlot(800, 600);
+$plot = new PHPlot\PHPlot\PHPlot(800, 600);
 $plot->SetFailureImage(False); // No error images
 $plot->SetPrintImage(False); // No automatic output
 $plot->SetTitle("Bubbles plot with image map");

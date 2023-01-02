@@ -76,7 +76,7 @@ if ($implied_x && !$error_bars) {
     exit(1);
 }
 
-$p = new PHPlot(800, 800);
+$p = new PHPlot\PHPlot\PHPlot(800, 800);
 $p->SetTitle("Testing PHPlot ($plot_type, $data_type)");
 $p->SetDataType($data_type);
 $p->SetDataValues($data);

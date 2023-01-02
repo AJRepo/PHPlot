@@ -14,7 +14,7 @@ $data = array(
   array('',  2500,  999999),
 );
 
-$plot = new PHPlot();
+$plot = new PHPlot\PHPlot\PHPlot();
 $plot->SetPlotType('lines');
 $plot->SetDataType('data-data');
 $plot->SetDataValues($data);

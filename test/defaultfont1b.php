@@ -8,7 +8,7 @@ $data = array(
   array('B', 2,  4),
   array('C', 1,  2),
 );
-$p = new PHPlot(800, 800);
+$p = new PHPlot\PHPlot\PHPlot(800, 800);
 $p->SetDataType('text-data');
 $p->SetDataValues($data);
 $p->SetPlotType('bars');

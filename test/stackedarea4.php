@@ -8,7 +8,7 @@ $data = array(
   array('C', 0, 12, -6, 10, 4),
   array('D', 5, 5, 0, 5, 5),
 );
-$plot = new PHPlot(800, 600);
+$plot = new PHPlot\PHPlot\PHPlot(800, 600);
 $plot->SetTitle('Stacked Area plot with 0 and <0 Y values');
 $plot->SetPlotType('stackedarea');
 $plot->SetDataType('text-data');

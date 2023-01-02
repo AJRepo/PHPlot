@@ -11,7 +11,7 @@ $data = array(
   array('', 20),
 );
 
-$plot = new PHPlot(800,600);
+$plot = new PHPlot\PHPlot\PHPlot(800,600);
 $plot->SetTitle('Pie + X/Y Title Bug');
 $plot->SetXTitle('Ignored X title');
 $plot->SetYTitle('Ignored Y title');

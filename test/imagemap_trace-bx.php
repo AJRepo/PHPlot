@@ -31,7 +31,7 @@ function store_map($im, $passthru, $shape, $row, $col, $x1, $y1, $x2, $y2)
     imagesetthickness($im, 1);
 }
 
-$plot = new PHPlot(800, 600);
+$plot = new PHPlot\PHPlot\PHPlot(800, 600);
 $plot->SetTitle($title);
 $plot->SetImageBorderType('plain');
 $plot->SetDataValues($data);

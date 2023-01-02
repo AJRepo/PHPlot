@@ -22,9 +22,9 @@ $data = array( array('', 0, 0), array('', 10, 10));
 $outfile = tempnam('.', 'outfile_img');
 
 if ($tp['useset'])
-  $plot = new PHPlot(360, 240);
+  $plot = new PHPlot\PHPlot\PHPlot(360, 240);
 else
-  $plot = new PHPlot(360, 240, $outfile);
+  $plot = new PHPlot\PHPlot\PHPlot(360, 240, $outfile);
 $plot->SetPlotType('lines');
 $plot->SetDataType('data-data');
 $plot->SetDataValues($data);

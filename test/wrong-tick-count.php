@@ -8,7 +8,7 @@ $data = array(
   array('', 95,  50),
 );
 
-$p = new PHPlot();
+$p = new PHPlot\PHPlot\PHPlot();
 $p->SetTitle('Tick Count Tests');
 $p->SetDataType('data-data');
 $p->SetDataValues($data);

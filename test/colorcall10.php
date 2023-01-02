@@ -22,7 +22,7 @@ $data = array(
     array('', 4, 20, 3, 0,   3, 2, 1),
     array('', 5, 25, 0, 2,   0, 2, 0),
 );
-$plot = new PHPlot(800, 600);
+$plot = new PHPlot\PHPlot\PHPlot(800, 600);
 if (function_exists('pick_color')) {
     $title .= "\nWith data color callback";
     $plot->SetCallback('data_color', 'pick_color');

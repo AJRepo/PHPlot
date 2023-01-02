@@ -42,7 +42,7 @@ $data = array(
           array('', 9,   3, 2, 2,        13, 1, 1),
 );
 
-$p = new PHPlot(800, 800);
+$p = new PHPlot\PHPlot\PHPlot(800, 800);
 $p->SetTitle($title);
 $p->SetDataType($data_type);
 $p->SetDataValues($data);

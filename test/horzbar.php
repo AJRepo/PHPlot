@@ -53,7 +53,7 @@ if ($tp['negative'] > 0) {
     }
 }
 
-$p = new PHPlot(800, 800);
+$p = new PHPlot\PHPlot\PHPlot(800, 800);
 // $p->SetCallback('debug_scale', 'debug_handler'); // DEBUG
 
 $p->SetTitle($tp['title'] . $tp['suffix']);

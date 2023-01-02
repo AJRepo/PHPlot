@@ -5,7 +5,7 @@ require_once 'phplot.php';
 $data = array();
 for ($i = 0; $i < 10; $i++)
     $data[] = array('', 500 * $i, 1234 * $i);
-$p = new PHPlot(800, 600);
+$p = new PHPlot\PHPlot\PHPlot(800, 600);
 $p->SetTitle("Label Format Test 1");
 $p->SetDataType('data-data');
 $p->SetDataValues($data);

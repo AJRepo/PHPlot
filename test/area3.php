@@ -8,7 +8,7 @@ $data = array(
   array('C', 6, 5, 4, 3),
   array('D', 7, 6, 5, 4),
 );
-$plot = new PHPlot(800, 600);
+$plot = new PHPlot\PHPlot\PHPlot(800, 600);
 $plot->SetTitle('Area plot with X axis raised to 3');
 $plot->SetPlotType('area');
 $plot->SetDataType('text-data');

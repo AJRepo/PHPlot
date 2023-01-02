@@ -61,7 +61,7 @@ if ($tp['truecolor']) {
     $p = new PHPlot_truecolor(1024, 768);
     $title[] = "Truecolor";
 } else {
-    $p = new PHPlot(1024, 768);
+    $p = new PHPlot\PHPlot\PHPlot(1024, 768);
     $title[] = "Palette Color";
 }
 $p->SetCallback('draw_setup', 'pre_plot');

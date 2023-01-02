@@ -7,7 +7,7 @@ require_once 'phplot.php';
 $data = array();
 for ($x = 1; $x <= 10; $x++) $data[] = array('', $x, 10.0/$x);
 
-$p = new PHPlot(800, 600);
+$p = new PHPlot\PHPlot\PHPlot(800, 600);
 
 $p->SetDataType('data-data');
 $p->SetDataValues($data);

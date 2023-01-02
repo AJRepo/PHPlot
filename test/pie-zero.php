@@ -63,7 +63,7 @@ case 3:
   break;
 }
 
-$plot = new PHPlot(800,600);
+$plot = new PHPlot\PHPlot\PHPlot(800,600);
 $plot->SetTitle("Pie Charts with Zero-size Slices\n" . $descript . $tp['suffix']);
 $plot->SetPlotType('pie');
 $plot->SetDataType('text-data-single');

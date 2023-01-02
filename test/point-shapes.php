@@ -21,7 +21,7 @@ $data = array(
   array('',  10,  10,  11,  12,  13,  14,  15,  16,  17,  18,  19),
 );
 
-$p = new PHPlot();
+$p = new PHPlot\PHPlot\PHPlot();
 
 $p->SetTitle('Points plots, 10 lines/10 shapes');
 $p->SetDataType('data-data');

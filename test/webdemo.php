@@ -20,7 +20,7 @@ $data = array(
 );
 
 # Create a PHPlot object which will make a 600x400 pixel image:
-$p = new PHPlot(600, 400);
+$p = new PHPlot\PHPlot\PHPlot(600, 400);
 
 # Use TrueType fonts:
 $p->SetDefaultTTFont($phplot_test_ttfdir . $phplot_test_ttfonts['sans']);

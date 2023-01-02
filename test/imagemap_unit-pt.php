@@ -93,7 +93,7 @@ for ($i = 0; $i < $n_rows; $i++)
 # This will hold the generated map points:
 $points = array();
 
-$plot = new PHPlot(800, 600);
+$plot = new PHPlot\PHPlot\PHPlot(800, 600);
 $plot->SetFailureImage(False); // No error images
 $plot->SetPrintImage(False); // No automatic output
 $plot->SetDataValues($data);

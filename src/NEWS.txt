@@ -1,17 +1,55 @@
 This is the NEWS file for PHPlot, with release documentation.
 The project web site is https://github.com/AJRepo/PHPlot/
-The project home page is https://github.com/AJRepo/PHPlot//
+The project home page is https://github.com/PHPLot/PHPlot//
 Refer the the ChangeLog file for detailed source changes.
 See NEWS_part1.txt for older release documentation.
 -----------------------------------------------------------------------------
 
-2015-11-01 Release 6.2.0  
+2022-12-28 Release 8.0.0-RC1
 
 === Overview:
 
-This is the current stable release of PHPlot. This is the first release
-that will work with the upcoming PHP-7. This release also adds two new plot
-types.
+This is the RC1 release of PHPlot tested with PHP 8.1 and linted with PSR-12.
+This brings PHPLot better into alignment with community standards as of 2023:
+  * Explicitly defining public functions as "public"
+  * Specifying a namespace (PHPlot\PHPlot)
+  * Matching Composer standards (e.g. phplot -> src, phplotest -> test)
+  * creating a composer.json
+
+=== Cautions, Important Notes, and Compatibility Issues:
+
+---
+Directory name change from /phplot/ to /src/ and from /phplottest/ to /test/
+
+---
+Moving to a specified namespace means a change in defining the PHPlot object.
+
+If you get the error:
+   `PHP Fatal error:  Uncaught Error: Class "PHPlot" not found`
+look at specifying the full namespace. E.g. if you have
+   `$plot = new PHPlot(800, 600);`
+try changing to
+   `$plot = new PHPlot\PHPlot\PHPlot(800, 600);`
+
+---
+PSR-12 standards states that all subclasses get moved to their own file, thus
+phplot_truecolor.php is a new file, which used to be part of file phplot.php.
+
+if you had
+  `require_once 'phplot.php';`
+and also wanted to use truecoloer add the following line
+  `require_once 'phplot_truecolor.php';`
+
+see area2.php for an example.
+
+-----------------------------------------------------------------------------
+
+015-11-01 Release 6.2.0
+
+=== Overview:
+
+This is the current stable release of PHPlot. This is the first release that
+will work with the upcoming PHP-7. This release also adds two new plot types.
 
 The PHPlot Reference Manual has been updated to match this release.
 

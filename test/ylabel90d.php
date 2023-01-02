@@ -15,7 +15,7 @@ $data = array(
   array('F',  2, -40),
   array('G',  3, -60),
 );
-$p = new PHPlot(800,600);
+$p = new PHPlot\PHPlot\PHPlot(800,600);
 $p->SetTitle('Y Tick Labels at 90 degrees');
 $p->SetDataType('data-data');
 $p->SetDataValues($data);

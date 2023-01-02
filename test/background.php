@@ -22,7 +22,7 @@ $data = array(
   array('Apr', 2500), array('May', 1500), array('Jun',  500),
 );
 if ($tp['truecolor']) $plot = new PHPlot_truecolor(800, 600);
-else $plot = new PHPlot(800, 600);
+else $plot = new PHPlot\PHPlot\PHPlot(800, 600);
 $plot->SetPlotType('bars');
 $plot->SetDataType('text-data');
 $plot->SetDataValues($data);

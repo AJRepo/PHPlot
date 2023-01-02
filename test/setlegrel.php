@@ -32,7 +32,7 @@ $data = array(
 $legend = array('Plot Line 1', 'Longer label for Plot Line 2', 'line 3');
 
 
-$p = new PHPlot(800, 600);
+$p = new PHPlot\PHPlot\PHPlot(800, 600);
 if (!empty($title)) {     // $title can be set empty for special case
     if (!empty($suffix)) $title .= "\n" . $suffix;
     $p->SetTitle($title);

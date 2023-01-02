@@ -24,7 +24,7 @@ for ($k = 0; $k <= $steps; $k++) { # Make steps+1 points
   $data[] = $row;
 }
 
-$plot = new PHPlot(1000, 800);
+$plot = new PHPlot\PHPlot\PHPlot(1000, 800);
 $plot->SetPlotType('linepoints');
 $plot->SetDataType('data-data');
 $plot->SetDataValues($data);

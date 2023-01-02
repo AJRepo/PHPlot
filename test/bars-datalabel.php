@@ -40,7 +40,7 @@ if (isset($tp['data'])) {
   }
 }
 
-$p = new PHPlot(800, 600);
+$p = new PHPlot\PHPlot\PHPlot(800, 600);
 $p->SetTitle($tp['title'] . $tp['suffix']);
 $p->SetDataType('text-data');
 $p->SetDataValues($data);

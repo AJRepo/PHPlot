@@ -36,7 +36,7 @@ if ($tp['multiline']) {
   );
 }
 
-$p = new PHPlot(800, 600);
+$p = new PHPlot\PHPlot\PHPlot(800, 600);
 $p->SetTitle($tp['title'] . $tp['suffix']);
 $p->SetDataType('data-data-error');
 $p->SetDataValues($data);

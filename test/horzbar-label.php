@@ -36,7 +36,7 @@ if ($tp['datasign'] > 0) $data = $data1;
 elseif ($tp['datasign'] < 0) $data = $data2;
 else $data = array_merge($data1, $data2);
 
-$p = new PHPlot(800, 800);
+$p = new PHPlot\PHPlot\PHPlot(800, 800);
 
 $p->SetTitle($tp['title'] . $tp['suffix']);
 $p->SetXTitle('This is the X Axis Title');

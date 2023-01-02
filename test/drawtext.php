@@ -46,7 +46,7 @@ $width = 500;
 $height = 500;
 
 # Testing framework: Create an object and initialize.
-$p = new PHPlot($width, $height);
+$p = new PHPlot\PHPlot\PHPlot($width, $height);
 
 # Local variable with image resource:
 $img = $p->img;

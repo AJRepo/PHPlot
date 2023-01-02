@@ -37,7 +37,7 @@ for ($x = 0; $x < $nx; $x++) {
     $data[] = $row;
 }
 
-$p = new PHPlot(800, 800);
+$p = new PHPlot\PHPlot\PHPlot(800, 800);
 $p->SetTitle($title);
 $p->SetDataType($data_type);
 $p->SetDataValues($data);

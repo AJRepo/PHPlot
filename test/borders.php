@@ -24,7 +24,7 @@ $data = array(
   array('',  3,   4),
   array('',  4,   8),
 );
-$p = new PHPlot();
+$p = new PHPlot\PHPlot\PHPlot();
 
 # Build a title:
 $title = 'Plot Border: ';

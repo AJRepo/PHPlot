@@ -15,7 +15,7 @@ $data = array(
 ini_set('memory_limit', 8000000);
 
 # Try to create an image that is too big:
-$p = new PHPlot(3000, 3000);
+$p = new PHPlot\PHPlot\PHPlot(3000, 3000);
 $p->SetTitle('Memory?');
 $p->SetDataType('data-data');
 $p->SetDataValues($data);

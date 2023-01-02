@@ -51,7 +51,7 @@ if ($horiz) {
 $title = "Thinbarline, $dir ($datatype)\n($low : $high)";
 if ($axis0) $title .= " (Axis moved to 0)";
 
-$plot = new PHPlot(400, 400);
+$plot = new PHPlot\PHPlot\PHPlot(400, 400);
 $plot->SetTitle($title);
 $plot->SetPlotType('thinbarline');
 $plot->SetDataType($datatype);

@@ -35,7 +35,7 @@ $max_x = 2 * ($n_plots - 1) + 1;
 $image_height = $n_plots * ($height_of_each_plot + $space_below_plots)
                 + $title_space;
 
-$plot = new PHPlot(800, $image_height);
+$plot = new PHPlot\PHPlot\PHPlot(800, $image_height);
 $plot->SetFontTTF('title', $font, 14);
 $plot->SetFontTTF('x_title', $font, 14);
 $plot->SetFontTTF('y_title', $font, 10);

@@ -19,7 +19,7 @@ for ($i = 1; $i <= 12; $i++) {
   $t += $interval;
 }
 
-$p = new PHPlot(600,400);
+$p = new PHPlot\PHPlot\PHPlot(600,400);
 $p->SetTitle('Meaningless Data with Time X Tick Labels');
 $p->SetDataType('data-data');
 $p->SetDataValues($data);

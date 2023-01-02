@@ -9,7 +9,7 @@ require 'config.php';
 
 $data = array(array('', 0, 0, 0), array('', 10, 5, 10));
 
-$p = new PHPlot(800, 600);
+$p = new PHPlot\PHPlot\PHPlot(800, 600);
 $p->SetTitle("Dual Text Types:\nDefault TTF, TTF title");
 $p->SetDataType('data-data');
 $p->SetDataValues($data);

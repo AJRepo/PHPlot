@@ -19,7 +19,7 @@ $n_fail = 0;
 # Returns a PHPlot object, ready for DrawGraph:
 function make_plot($plot_type, $data_type, $nx, $ny)
 {
-    $plot = new PHPlot(1280, 1024);
+    $plot = new PHPlot\PHPlot\PHPlot(1280, 1024);
     $plot->SetPrintImage(False);
     $plot->SetFailureImage(False);
     $plot->SetDataType($data_type);

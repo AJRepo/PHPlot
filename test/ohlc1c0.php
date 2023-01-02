@@ -29,7 +29,7 @@ $title = "OHLC size/density Test Plot\n$plot_type type, $n points";
 if (!empty($line_widths))
     $title .= ", line_widths=(" . implode(',', $line_widths) . ")";
 
-$p = new PHPlot($width, $height);
+$p = new PHPlot\PHPlot\PHPlot($width, $height);
 $p->SetTitle($title);
 $p->SetDataType('text-data');
 $p->SetDataValues($data);

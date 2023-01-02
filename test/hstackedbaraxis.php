@@ -12,7 +12,7 @@ $data = array(
     array('G', 7, 7, 7),
     array('H', 8, 8, 8),
 );
-$plot = new PHPlot(800, 600);
+$plot = new PHPlot\PHPlot\PHPlot(800, 600);
 $plot->SetPlotType('stackedbars');
 $plot->SetDataType('text-data-yx');
 $plot->SetDataValues($data);

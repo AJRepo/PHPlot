@@ -8,7 +8,7 @@ $data = array(
   array('C', 4, 3, 2, 1, 1),
   array('D', 5, 2, 5, 2, 5),
 );
-$plot = new PHPlot(800, 600);
+$plot = new PHPlot\PHPlot\PHPlot(800, 600);
 $plot->SetTitle('Stacked Area plot with X axis raised to 3');
 $plot->SetPlotType('stackedarea');
 $plot->SetDataType('text-data');

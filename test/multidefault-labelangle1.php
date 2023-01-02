@@ -18,7 +18,7 @@ $data = array(
 );
 
 // Common setup:
-$plot = new PHPlot(460, 600);
+$plot = new PHPlot\PHPlot\PHPlot(460, 600);
 $plot->SetPrintImage(False);
 $plot->SetTitle("Multiple Plots, X data label angle\n"
               . "X label angle 90 (top), 0 (bottom)");

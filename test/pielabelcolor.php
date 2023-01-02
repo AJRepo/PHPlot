@@ -20,7 +20,7 @@ $data = array(
   array('Basketball',   53),
   array('Hockey',       48),
 );
-$plot = new PHPlot(800, 600);
+$plot = new PHPlot\PHPlot\PHPlot(800, 600);
 $plot->SetDataType('text-data-single');
 $plot->SetDataValues($data);
 $plot->SetPlotType('pie');

@@ -4,7 +4,7 @@
 require_once 'phplot.php';
 
 $data = array(array('A', '10', '-5'), array('B', '-10', '5'));
-$p = new PHPlot();
+$p = new PHPlot\PHPlot\PHPlot();
 $p->SetTitle('Bars with negative string values');
 $p->SetDataType('text-data');
 $p->SetDataValues($data);

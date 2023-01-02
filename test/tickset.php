@@ -67,7 +67,7 @@ function do_setrange(&$subtitle, $p, $xmin, $xmax, $ymin, $ymax)
 $title = "Tick Parameter Settings\n"; // More below
 $subtitle = array();
 
-$p = new PHPlot(800, 600);
+$p = new PHPlot\PHPlot\PHPlot(800, 600);
 $p->SetDataType('text-data');
 $p->SetDataValues($data);
 $p->SetPlotType('bars');

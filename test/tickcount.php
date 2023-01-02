@@ -22,7 +22,7 @@ $data = array(
   array('', 1,  1),
 );
 
-$p = new PHPlot();
+$p = new PHPlot\PHPlot\PHPlot();
 $subtitle = " World: ({$tp['xmin']}, {$tp['ymin']}) :"
           . " ({$tp['xmax']}, {$tp['ymax']})"
           . " Tickstep: ({$tp['xti']}, {$tp['yti']})";

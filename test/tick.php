@@ -31,7 +31,7 @@ $data = array(
   array('EEE', 4, 5),
 );
 
-$p = new PHPlot(400,300);
+$p = new PHPlot\PHPlot\PHPlot(400,300);
 $p->SetTitle($tp['title'] . $tp['suffix']);
 $p->SetDataType('data-data');
 $p->SetDataValues($data);

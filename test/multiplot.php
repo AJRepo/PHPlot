@@ -40,7 +40,7 @@ $plot_area_height = ($image_height - ($n_down + 1) * $plot_area_margin)
                    / $n_down;
 
 # Create object
-$p = new PHPlot($image_width, $image_height);
+$p = new PHPlot\PHPlot\PHPlot($image_width, $image_height);
 $p->SetPrintImage(0);  // Do not output image until told
 
 # Set up for first plot:

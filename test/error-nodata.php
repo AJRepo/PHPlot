@@ -9,7 +9,7 @@ $data = array(
   array('',  2,   8),
 );
 
-$p = new PHPlot();
+$p = new PHPlot\PHPlot\PHPlot();
 $p->SetTitle('Bugcheck: No data');
 $p->SetDataType('data-data');
 

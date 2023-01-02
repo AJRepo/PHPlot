@@ -44,7 +44,7 @@ for ($pt = 0; $pt < $n_y; $pt++) {
     $data[] = $row;
 }
 
-$plot = new PHPlot(640, 480);
+$plot = new PHPlot\PHPlot\PHPlot(640, 480);
 $plot->SetTitle($title . $suffix);
 $plot->SetDataType($data_type);
 $plot->SetDataValues($data);

@@ -68,7 +68,7 @@ if (isset($xmiss2)) {
     $title .= " $iv={$xmiss2}";
 }
 
-$p = new PHPlot(1024, 768);
+$p = new PHPlot\PHPlot\PHPlot(1024, 768);
 $p->SetTitle($title . $suffix);
 $p->SetPlotType($PType);
 $p->SetDataType($datatype);
