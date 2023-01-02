@@ -5,7 +5,7 @@
     "require": {
         "ext-gd": "*"
     },
-    "license": "LGPL-2.1",
+    "license": "LGPL-2.1-or-later",
     "autoload": {
         "psr-4": {
             "Phplot\\Phplot\\": "src/"
