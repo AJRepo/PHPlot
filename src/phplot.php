@@ -2416,7 +2416,7 @@ class PHPlot
     /**
      * Outputs the generated image to standard output or to a file
      *
-     * This is automatically called by DrawGraph(), unless SetPrintImage(False) was used.
+     * Automatically called by DrawGraph(), unless SetPrintImage(False) was used.
      *
      * @return bool  True always
      */
@@ -2435,7 +2435,7 @@ class PHPlot
             Header("Content-type: $mime_type");
         }
         if ($this->is_inline && isset($this->output_file)) {
-            $output_f($this->img, $this->output_file);
+            return $output_f($this->img, $this->output_file);
         } else {
             $output_f($this->img);
         }
