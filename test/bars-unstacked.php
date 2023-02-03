@@ -12,7 +12,7 @@ $data = array(
   array('Nov', 35), array('Dec', 40),
 );
 
-$plot = new PHPlot\PHPlot\PHPlot(800, 600);
+$plot = new Phplot\Phplot\PHPlot(800, 600);
 $plot->SetImageBorderType('plain');
 
 $plot->SetPlotType('bars');

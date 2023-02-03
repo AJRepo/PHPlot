@@ -39,7 +39,7 @@ for ($j = 0; $j < $more_legendlines; $j++) $legend[$j + $ny] = "Extra line #$j";
 $title = "Demo: Legend line markers feature ($plot_type plot)";
 if (!empty($subtitle)) $title .= "\n" . $subtitle;
 
-$p = new PHPlot\PHPlot\PHPlot(640, 480);
+$p = new Phplot\Phplot\PHPlot(640, 480);
 $p->SetTitle($title);
 $p->SetDataType('data-data');
 $p->SetDataValues($data);

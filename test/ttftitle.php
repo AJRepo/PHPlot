@@ -13,7 +13,7 @@ $data = array(
   array('F',  2, -4),
   array('G',  3, -6),
 );
-$p = new PHPlot\PHPlot\PHPlot(800,800);
+$p = new Phplot\Phplot\PHPlot(800,800);
 
 $p->SetTTFPath($phplot_test_ttfdir);
 $p->SetDefaultTTFont($phplot_test_ttfonts['sans']);

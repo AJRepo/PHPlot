@@ -4,7 +4,7 @@
 require_once 'phplot.php';
 $data = array();
 for ($i = 0; $i < 20; $i++) $data[] = array("Pt:$i", $i * $i);
-$p = new PHPlot\PHPlot\PHPlot(800, 600);
+$p = new Phplot\Phplot\PHPlot(800, 600);
 $p->SetTitle('X Tick Mark and Data Label Alignment');
 $p->SetDataType('text-data');
 $p->SetDataValues($data);

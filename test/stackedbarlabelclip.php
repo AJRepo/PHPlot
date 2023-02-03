@@ -11,7 +11,7 @@ $data = array(
     array('F', 7, 7, 7),
     array('G', 8, 8, 8),
 );
-$plot = new PHPlot\PHPlot\PHPlot(800, 600);
+$plot = new Phplot\Phplot\PHPlot(800, 600);
 $plot->SetPlotType('stackedbars');
 $plot->SetDataType('text-data');
 $plot->SetDataValues($data);

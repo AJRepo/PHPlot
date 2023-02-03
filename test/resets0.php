@@ -24,7 +24,7 @@ if (empty($test_resets)) {
   $title .= 'Reset to no border, no label formatting';
 }
 
-$plot = new PHPlot\PHPlot\PHPlot(400, 400);
+$plot = new Phplot\Phplot\PHPlot(400, 400);
 $plot->SetTitle($title);
 $plot->SetPlotType('lines');
 $plot->SetDataType('data-data');

@@ -52,7 +52,7 @@ function store_map($im, $data, $shape, $row, $col, $x, $y)
 }
 
 
-$plot = new PHPlot\PHPlot\PHPlot(800, 600);
+$plot = new Phplot\Phplot\PHPlot(800, 600);
 $plot->SetTitle($title);
 $plot->SetImageBorderType('plain');
 $plot->SetDataValues($data);

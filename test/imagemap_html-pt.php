@@ -73,7 +73,7 @@ if ($error_plot) {
     );
 }
 
-$plot = new PHPlot\PHPlot\PHPlot(800, 600);
+$plot = new Phplot\Phplot\PHPlot(800, 600);
 $plot->SetFailureImage(False); // No error images
 $plot->SetPrintImage(False); // No automatic output
 $plot->SetTitle("'$plot_type' $what with image map");

@@ -37,7 +37,7 @@ if ($datatype == 'text-data') {
     );
 }
 
-$p = new PHPlot\PHPlot\PHPlot(800, 600);
+$p = new Phplot\Phplot\PHPlot(800, 600);
 $p->SetTitle("$plottype ($datatype) with missing points");
 $p->SetDataType($datatype);
 $p->SetDataValues($data);

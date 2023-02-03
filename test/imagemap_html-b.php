@@ -43,7 +43,7 @@ $data = array(
   array('G',  3,  6,  8),
 );
 
-$plot = new PHPlot\PHPlot\PHPlot(800, 600);
+$plot = new Phplot\Phplot\PHPlot(800, 600);
 $plot->SetFailureImage(False); // No error images
 $plot->SetPrintImage(False); // No automatic output
 $plot->SetTitle($title);

@@ -29,7 +29,7 @@ If you get the error:
 look at specifying the full namespace. E.g. if you have
    `$plot = new PHPlot(800, 600);`
 try changing to
-   `$plot = new PHPlot\PHPlot\PHPlot(800, 600);`
+   `$plot = new Phplot\Phplot\PHPlot(800, 600);`
 
 ---
 PSR-12 standards states that all subclasses get moved to their own file, thus

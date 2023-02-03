@@ -25,7 +25,7 @@ $data = array();
 for ($i = 1; $i <= $n_points; $i++)
    $data[] = array('', 1, 5 + $i % 2, 10 + $i % 3, 15 + $i % 2, 19);
 
-$p = new PHPlot\PHPlot\PHPlot(800, 600);
+$p = new Phplot\Phplot\PHPlot(800, 600);
 $p->SetTitle($title);
 $p->SetDataType('text-data');
 $p->SetDataValues($data);

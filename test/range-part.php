@@ -41,7 +41,7 @@ if (isset($plot_min_y)) {
 }
 if (!empty($subtitle)) $title .= "\n$subtitle";
 
-$p = new PHPlot\PHPlot\PHPlot(800, 600);
+$p = new Phplot\Phplot\PHPlot(800, 600);
 $p->SetTitle($title);
 $p->SetDataValues($data);
 $p->SetDataType('data-data');

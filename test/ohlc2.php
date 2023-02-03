@@ -27,7 +27,7 @@ $data = array(
     array('L = C = O < H',   1,    2,   1,     1),
     array('L = C = O = H',   1,    1,   1,     1),
 );
-$p = new PHPlot\PHPlot\PHPlot(800, 600);
+$p = new Phplot\Phplot\PHPlot(800, 600);
 $p->SetTitle("OHLC Plots, All Data Order Cases\nPlot type: $plot_type");
 $p->SetDataType('text-data');
 $p->SetDataValues($data);

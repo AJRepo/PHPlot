@@ -17,7 +17,7 @@ for ($i = 1; $i < 48 * 6; $i++) {
 $n = count($data);
 for ($i = 0; $i < $n; $i++) if ($i % 24 != 0) $data[$i][0] = '';
 
-$p = new PHPlot\PHPlot\PHPlot(1024, 768);
+$p = new Phplot\Phplot\PHPlot(1024, 768);
 $p->SetTitle('Test: intermittent X labels');
 $p->SetDataType('data-data');
 $p->SetDataValues($data);

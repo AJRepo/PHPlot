@@ -50,7 +50,7 @@ if (empty($subtitle))
 else
     $title .= "\n" . implode(", ", $subtitle);
 
-$plot = new PHPlot\PHPlot\PHPlot(800, 600);
+$plot = new Phplot\Phplot\PHPlot(800, 600);
 $plot->SetDefaultTTFont($phplot_test_ttfdir . $phplot_test_ttfonts['sans']);
 $plot->SetPlotType('stackedbars');
 $plot->SetDataType($horiz ? 'text-data-yx' : 'text-data');

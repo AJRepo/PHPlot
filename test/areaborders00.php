@@ -52,7 +52,7 @@ $title = "$plot_type plot test, "
                            "Default" : "Set") . "\n"
        . "X Axis is: " . (!isset($x_axis)? "Default" : "at Y=$x_axis");
 
-$plot = new PHPlot\PHPlot\PHPlot(800, 600);
+$plot = new Phplot\Phplot\PHPlot(800, 600);
 $plot->SetTitle($title);
 $plot->SetPlotType($plot_type);
 $plot->SetDataType('text-data');

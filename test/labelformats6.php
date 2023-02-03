@@ -21,7 +21,7 @@ function deg_min_sec($value)
 $data = array();
 for ($i = 0; $i < 15; $i++)
     $data[] = array('', 13 * $i + ($i / 14));
-$p = new PHPlot\PHPlot\PHPlot(800, 600);
+$p = new Phplot\Phplot\PHPlot(800, 600);
 $p->SetTitle("Label Format Test 6 with Y data labels");
 $p->SetDataType('text-data');
 $p->SetDataValues($data);

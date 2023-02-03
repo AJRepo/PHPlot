@@ -92,7 +92,7 @@ if ($data_type == 'text-data-single') {
 # This will hold the generated map points:
 $points = array();
 
-$plot = new PHPlot\PHPlot\PHPlot(800, 600);
+$plot = new Phplot\Phplot\PHPlot(800, 600);
 $plot->SetFailureImage(False); // No error images
 $plot->SetPrintImage(False); // No automatic output
 $plot->SetDataValues($data);

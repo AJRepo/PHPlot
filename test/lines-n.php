@@ -24,7 +24,7 @@ for ($i = 1; $i <= 20; $i++) {
   $data[] = $row;
 }
 
-$p = new PHPlot\PHPlot\PHPlot(800, 600);
+$p = new Phplot\Phplot\PHPlot(800, 600);
 $p->SetTitle($tp['title'] . $tp['suffix']);
 $p->SetDataType('data-data');
 $p->SetDataValues($data);

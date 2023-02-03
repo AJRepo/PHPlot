@@ -25,7 +25,7 @@ $title = "Log/Log Axis Test\nPlotting: XY = $c\n"
 $data = array();
 for ($x = 1; $x <= $c; $x++) $data[] = array('', $x, $c/$x);
 
-$p = new PHPlot\PHPlot\PHPlot(800, 600);
+$p = new Phplot\Phplot\PHPlot(800, 600);
 
 $p->SetDataType('data-data');
 $p->SetDataValues($data);

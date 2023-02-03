@@ -18,7 +18,7 @@ $data = array(
 for ($i = 0; $i < 6; $i++)
    $data[$i][0] = $data[$i][1] = $base_time + $i * $one_day;
 
-$p = new PHPlot\PHPlot\PHPlot(600,400);
+$p = new Phplot\Phplot\PHPlot(600,400);
 $p->SetTitle('lines, date-data with date X labels');
 $p->SetDataType('data-data');
 $p->SetDataValues($data);

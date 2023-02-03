@@ -34,7 +34,7 @@ function test_init()
     global $returns_alpha, $p, $q, $test_verbose;
 
     $p = new PHPlot_truecolor(); // Global
-    $q = new PHPlot\PHPlot\PHPlot(); // Global
+    $q = new Phplot\Phplot\PHPlot(); // Global
 
     # Determine if SetRGBColor returns a 3 or 4 element array for the base
     # class, and keeps the alpha value:

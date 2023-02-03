@@ -46,7 +46,7 @@ $title = "Legend Colorbox Borders Control\n"
        . bcond("Set Data Border Colors", $tp['setdbcolors'])
        . bcond("Set Text Color", $tp['settextcolor']);
 
-$p = new PHPlot\PHPlot\PHPlot(800, 600);
+$p = new Phplot\Phplot\PHPlot(800, 600);
 $p->SetTitle($title);
 $p->SetDataType('text-data');
 $p->SetDataValues($data);

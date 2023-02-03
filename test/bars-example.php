@@ -12,7 +12,7 @@ $data = array(
   array('2000', 109478), array('2001', 128375), array('2002', 140767),
 );
 
-$plot = new PHPlot\PHPlot\PHPlot(800, 600);
+$plot = new Phplot\Phplot\PHPlot(800, 600);
 $plot->SetImageBorderType('plain');
 
 $plot->SetPlotType('bars');

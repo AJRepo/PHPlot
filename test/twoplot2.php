@@ -19,7 +19,7 @@ $data2 = array(
     array('', 9,  0,  0),
 );
 
-$p = new PHPlot\PHPlot\PHPlot(800, 600);
+$p = new Phplot\Phplot\PHPlot(800, 600);
 $p->SetPrintImage(0);  // Do not output image until told
 
 // First plot:

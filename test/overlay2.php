@@ -21,7 +21,7 @@ for ($i = 0; $i < $n_points; $i++) {
    $data2[] = array('', $data1[$i][1], ($data1[$i][2] + $data1[$i][3]) / 2);
 }
 
-$p = new PHPlot\PHPlot\PHPlot(800, 600);
+$p = new Phplot\Phplot\PHPlot(800, 600);
 $p->SetPrintImage(0);  // Do not output image until told
 
 // First plot:

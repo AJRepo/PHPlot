@@ -8,7 +8,7 @@ mt_srand(0); // For 'random' but consistent values
 for ($i = 0; $i < 50; $i++)
     $data[] = array('', $i, mt_rand(0, 10));
 
-$p = new PHPlot\PHPlot\PHPlot(800, 600);
+$p = new Phplot\Phplot\PHPlot(800, 600);
 $p->SetPrintImage(0);  // Do not output image until told
 
 // First plot:

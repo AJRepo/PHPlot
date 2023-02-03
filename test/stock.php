@@ -47,7 +47,7 @@ for ($i = 0; $i < $n_rows; $i++) {
 # print_r($data);
 # exit;
 
-$p = new PHPlot\PHPlot\PHPlot(800,600);
+$p = new Phplot\Phplot\PHPlot(800,600);
 $p->SetTitle($tp['title'] . $tp['suffix']);
 $p->SetDataType('data-data-error');
 $p->SetDataValues($data);

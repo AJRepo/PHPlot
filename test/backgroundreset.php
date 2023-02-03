@@ -21,7 +21,7 @@ $data = array(
   array('Jan', 1000), array('Feb', 2000), array('Mar', 3000),
   array('Apr', 2500), array('May', 1500), array('Jun',  500),
 );
-$plot = new PHPlot\PHPlot\PHPlot(800, 600);
+$plot = new Phplot\Phplot\PHPlot(800, 600);
 $plot->SetPlotType('bars');
 $plot->SetDataType('text-data');
 $plot->SetDataValues($data);

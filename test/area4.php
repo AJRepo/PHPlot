@@ -9,7 +9,7 @@ $data = array(
   array('1990', 100, 95, 69, -54, 28, 10),
   array('2000', 100, 72, 72, 54, 38,  5),
 );
-$plot = new PHPlot\PHPlot\PHPlot(800, 600);
+$plot = new Phplot\Phplot\PHPlot(800, 600);
 $plot->SetTitle('Area plot with non-decreasing, 0, and <0 Y values');
 $plot->SetPlotType('area');
 $plot->SetDataType('text-data');

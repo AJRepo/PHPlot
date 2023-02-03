@@ -20,7 +20,7 @@ $data = array(
   array('Dec', 14, ''),
 );
 
-$p = new PHPlot\PHPlot\PHPlot();
+$p = new Phplot\Phplot\PHPlot();
 $p->SetTitle('Bars - Changing color trick');
 $p->SetDataType('text-data');
 $p->SetDataValues($data);

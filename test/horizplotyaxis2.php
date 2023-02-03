@@ -8,7 +8,7 @@ $data = array(
    array('C', -5),
    array('D', -3),
 );
-$p = new PHPlot\PHPlot\PHPlot();
+$p = new Phplot\Phplot\PHPlot();
 $p->SetTitle('Y Axis Position - horizontal thinbarline, all negative data');
 $p->SetDataType('text-data-yx');
 $p->SetDataValues($data);

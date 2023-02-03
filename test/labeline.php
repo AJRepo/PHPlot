@@ -40,7 +40,7 @@ $data = array(
     array('Dec', 12, 12),
 );
 
-$p = new PHPlot\PHPlot\PHPlot(800, 600);
+$p = new Phplot\Phplot\PHPlot(800, 600);
 $p->SetDataType('data-data');
 $p->SetDataValues($data);
 $p->SetPlotType('lines');

@@ -81,7 +81,7 @@ $data = get_data();
 get_best_worst($data, $best_index, $best_sales, $worst_index, $worst_sales);
 
 # Create the PHPlot object, set title, plot type, data array type, and data:
-$plot = new PHPlot\PHPlot\PHPlot(800, 600);
+$plot = new Phplot\Phplot\PHPlot(800, 600);
 #$plot->SetTitle('Monthly Widget Sales');
 $plot->SetTitle('Plot Annotatation with Callbacks');
 $plot->SetPlotType('bars');

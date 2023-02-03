@@ -59,7 +59,7 @@ default: # Case 0 - baseline
     break;
 }
 
-$plot = new PHPlot\PHPlot\PHPlot(800,600);
+$plot = new Phplot\Phplot\PHPlot(800,600);
 $plot->SetTitle("Bad Data Array - $title");
 $plot->SetDataType($data_type);
 $plot->SetPlotType($plot_type);

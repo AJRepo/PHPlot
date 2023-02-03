@@ -9,7 +9,7 @@ $d_theta = M_PI/48.0;
 for ($theta = M_PI * 7; $theta >= 0; $theta -= $d_theta)
   $data[] = array('', $a * $theta * cos($theta), $a * $theta * sin($theta));
 
-$plot = new PHPlot\PHPlot\PHPlot(800, 600);
+$plot = new Phplot\Phplot\PHPlot(800, 600);
 $plot->SetImageBorderType('plain');
 
 $plot->SetPlotType('points');

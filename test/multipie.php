@@ -21,7 +21,7 @@ $legend = array();
 foreach ($data as $row) $legend[] = $row[0] . ' = ' . $row[1];
 
 # Common setup for all plots on the image:
-$plot = new PHPlot\PHPlot\PHPlot(800, 625);
+$plot = new Phplot\Phplot\PHPlot(800, 625);
 $plot->SetTitle('Multiple pie charts');
 $plot->SetPrintImage(False);
 $plot->SetBackgroundColor('wheat');

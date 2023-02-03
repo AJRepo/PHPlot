@@ -40,7 +40,7 @@ $data = array(
 );
 
 # Fixed setup:
-$plot = new PHPlot\PHPlot\PHPlot(800, 800);
+$plot = new Phplot\Phplot\PHPlot(800, 800);
 for ($i = 0; $i < 5; $i++)
     $plot->SetLegend("Test Case # $i Results");
 $plot->SetTitle($title . "\n" . $suffix);

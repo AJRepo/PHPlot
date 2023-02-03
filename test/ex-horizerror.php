@@ -29,7 +29,7 @@ if (!method_exists('PHPlot', 'DrawXErrorBars')) {
     exit(2);
 }
 
-$plot = new PHPlot\PHPlot\PHPlot(800, 600);
+$plot = new Phplot\Phplot\PHPlot(800, 600);
 $plot->SetTitle('Experiment Results');
 $plot->SetXTitle('Melting Temperature (degrees C)');
 $plot->SetDataValues(reduce_data($results, $error_factor));

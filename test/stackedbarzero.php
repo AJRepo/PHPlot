@@ -55,7 +55,7 @@ elseif ($shading == 0) $title .= "Unshaded";
 else $title .= "Shading: $shading";
 $title .= isset($axis)? ", Axis moved to $axis" : ", default axis position";
 
-$plot = new PHPlot\PHPlot\PHPlot($width, $height);
+$plot = new Phplot\Phplot\PHPlot($width, $height);
 $plot->SetTitle($title);
 $plot->SetPlotType('stackedbars');
 $plot->SetDataValues($data);

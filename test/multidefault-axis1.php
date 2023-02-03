@@ -28,7 +28,7 @@ $data2 = array(
 );
 
 // Common setup:
-$plot = new PHPlot\PHPlot\PHPlot(460, 600);
+$plot = new Phplot\Phplot\PHPlot(460, 600);
 $plot->SetTitle("Multiple Plots - axis position (case $case)\n"
               . "X and Y axis positions stick from upper plot");
 $plot->SetPlotType('points');

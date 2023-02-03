@@ -68,7 +68,7 @@ if ($tp['x']) {
           $values[$i]);
 }
 
-$p = new PHPlot\PHPlot\PHPlot(1024, 768);
+$p = new Phplot\Phplot\PHPlot(1024, 768);
 $p->SetTitle($title . "\n" . $tp['suffix']);
 $p->SetDataType($data_type);
 $p->SetDataValues($data);

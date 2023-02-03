@@ -6,7 +6,7 @@ require_once 'config.php'; // Uses TTF for variety
 $data = array();
 for ($i = 0; $i < 10; $i++)
     $data[] = array('', 500 * $i, 1234 * $i);
-$p = new PHPlot\PHPlot\PHPlot(800, 600);
+$p = new Phplot\Phplot\PHPlot(800, 600);
 $p->SetDefaultTTFont($phplot_test_ttfdir . $phplot_test_ttfonts['serif']);
 $p->SetTitle("Label Format 5 with data_units_text=% suffix (obso)");
 $p->SetDataType('data-data');

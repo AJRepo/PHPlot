@@ -43,7 +43,7 @@ function reduce_data($results)
     return $data;
 }
 
-$plot = new PHPlot\PHPlot\PHPlot(800, 600);
+$plot = new Phplot\Phplot\PHPlot(800, 600);
 $plot->SetTitle('Box Plot (without outliers)');
 $plot->SetDataType('text-data');
 $plot->SetDataValues(reduce_data($results));

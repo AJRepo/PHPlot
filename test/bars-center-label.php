@@ -23,7 +23,7 @@ for ($i = 1; $i <= $tp['ND']; $i++) {
   $data[] = $row;
 }
 
-$plot = new PHPlot\PHPlot\PHPlot(800, 600);
+$plot = new Phplot\Phplot\PHPlot(800, 600);
 
 $plot->SetPlotType('bars');
 $plot->SetDataType('text-data');

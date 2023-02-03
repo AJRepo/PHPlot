@@ -17,7 +17,7 @@ require_once 'phplot.php';
 # Contains font settings:
 require 'config.php';
 
-$p = new PHPlot\PHPlot\PHPlot(800,600);
+$p = new Phplot\Phplot\PHPlot(800,600);
 $data = array(
   array('A POINT LABEL', 10, 9, 8),
   array('B POINT LABEL', 20, 19, 18),

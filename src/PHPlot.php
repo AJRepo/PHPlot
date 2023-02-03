@@ -57,7 +57,7 @@
  * the type of image produced matches the type of the background image.
  *
  */
-namespace PHPlot\PHPlot;
+namespace Phplot\Phplot;
 class PHPlot
 {
     /** PHPlot version constant as a string */

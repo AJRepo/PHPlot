@@ -29,7 +29,7 @@ if (!$do_autosize) {
             . "Pie should be sized just inside (5px) of plot area.";
 }
 
-$plot = new PHPlot\PHPlot\PHPlot(800, 600);
+$plot = new Phplot\Phplot\PHPlot(800, 600);
 $plot->SetPlotType('pie');
 $plot->SetDataType('text-data-single');
 $plot->SetDataValues($data);

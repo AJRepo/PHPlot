@@ -13,7 +13,7 @@ $data = array(
   array('', 1980, 227), array('', 1990, 249), array('', 2000, 281),
 );
 
-$plot = new PHPlot\PHPlot\PHPlot(800, 600);
+$plot = new Phplot\Phplot\PHPlot(800, 600);
 $plot->SetImageBorderType('plain');
 
 $plot->SetPlotType('lines');

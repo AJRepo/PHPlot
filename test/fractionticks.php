@@ -65,7 +65,7 @@ if (!method_exists('PHPlot', 'TuneXAutoTicks')) {
     exit(2); // Exit code for 'skip'
 }
 
-$plot = new PHPlot\PHPlot\PHPlot(800, 600);
+$plot = new Phplot\Phplot\PHPlot(800, 600);
 
 $plot->SetTitle('Powers of 2 X Tick Increment, Fractional Y Tick Labels');
 

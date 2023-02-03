@@ -4,7 +4,7 @@
 require_once 'phplot.php';
 require_once 'config.php'; // Font info
 
-$plot = new PHPlot\PHPlot\PHPlot(600, 400);
+$plot = new Phplot\Phplot\PHPlot(600, 400);
 $plot->SetTTFPath($phplot_test_ttfdir);
 $plot->SetFontTTF('generic', $phplot_test_ttfonts['sansitalic'], 14);
 $plot->SetBackgroundColor('#ffcc99');

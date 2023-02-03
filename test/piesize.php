@@ -100,7 +100,7 @@ $title = trim($t);
 $width  = ($image_aspect == 'S' || $image_aspect == 'L') ? 800 : 400;
 $height = ($image_aspect == 'S' || $image_aspect == 'P') ? 800 : 400;
 
-$plot = new PHPlot\PHPlot\PHPlot($width, $height);
+$plot = new Phplot\Phplot\PHPlot($width, $height);
 $plot->SetPlotType('pie');
 $plot->SetDataType($data_type);
 $plot->SetDataValues($data);

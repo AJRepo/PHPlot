@@ -12,7 +12,7 @@ $data = array();
 for ($x = 0; $x <= $end; $x += $delta)
   $data[] = array('', $x, sin($x), cos($x));
 
-$plot = new PHPlot\PHPlot\PHPlot(800, 600);
+$plot = new Phplot\Phplot\PHPlot(800, 600);
 $plot->SetImageBorderType('plain');
 
 $plot->SetPlotType('lines');

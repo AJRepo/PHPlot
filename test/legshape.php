@@ -39,7 +39,7 @@ $legend = array();
 for ($j = 0; $j < $nlines; $j++)
    $legend[] = "Plot line $j (" . $shapes[$j] . ')';
 
-$p = new PHPlot\PHPlot\PHPlot(800, 600);
+$p = new Phplot\Phplot\PHPlot(800, 600);
 $p->SetTitle($title . "\n" . $suffix);
 $p->SetPointShapes($shapes);
 $p->SetLineStyles('solid');

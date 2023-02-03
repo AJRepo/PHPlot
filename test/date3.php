@@ -18,7 +18,7 @@ for ($i = 0; $i <= 100; $i++) {
   $data[] = array($t, $i,  $i * (0.8 - 0.008 * $i));
 }
 
-$p = new PHPlot\PHPlot\PHPlot(800, 600);
+$p = new Phplot\Phplot\PHPlot(800, 600);
 $p->SetTitle('Date X labels - 8 hour ticks, 24 hour labels');
 $p->SetDataType('data-data');
 $p->SetDataValues($data);

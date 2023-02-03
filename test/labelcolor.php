@@ -39,7 +39,7 @@ $data = array(
   array('B', 2, 3, 4, 5),
   array('C', 3, 4, 5, 6),
 );
-$plot = new PHPlot\PHPlot\PHPlot(800, 600);
+$plot = new Phplot\Phplot\PHPlot(800, 600);
 $plot->SetDataType($data_type);
 $plot->SetDataValues($data);
 $plot->SetPlotType($plot_type);

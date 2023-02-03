@@ -37,7 +37,7 @@ else $shade = "Unshaded";
 $title = "Test Pie Border Control, $shade\n"
        . "Border: $b, Border color: $c, Grid color: $g";
 
-$plot = new PHPlot\PHPlot\PHPlot(800,600);
+$plot = new Phplot\Phplot\PHPlot(800,600);
 $plot->SetTitle($title);
 $plot->SetImageBorderType('plain');
 $plot->SetPlotType('pie');

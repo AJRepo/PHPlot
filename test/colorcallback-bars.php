@@ -24,7 +24,7 @@ $data = array(
     array('Oct',  70), array('Nov',  80), array('Dec',  45),
 );
 
-$plot = new PHPlot\PHPlot\PHPlot(800, 600);
+$plot = new Phplot\Phplot\PHPlot(800, 600);
 $plot->SetImageBorderType('plain'); // Improves presentation in the manual
 $plot->SetPlotType('bars');
 $plot->SetDataValues($data);

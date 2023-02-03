@@ -38,7 +38,7 @@ elseif ($tp['draw_borders']) $title .= 'Enabled';
 else $title .= 'Disabled';
 
 
-$p = new PHPlot\PHPlot\PHPlot(800, 600);
+$p = new Phplot\Phplot\PHPlot(800, 600);
 $p->SetTitle($title);
 $p->SetDataType('text-data');
 $p->SetDataValues($data);

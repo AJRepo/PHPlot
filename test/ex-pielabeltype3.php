@@ -5,7 +5,7 @@
 require_once 'phplot.php';
 require_once 'ex-pielabeltypedata.php'; // Defines $data and $title
 
-$plot = new PHPlot\PHPlot\PHPlot(800, 600);
+$plot = new Phplot\Phplot\PHPlot(800, 600);
 $plot->SetImageBorderType('plain'); // Improves presentation in the manual
 $plot->SetPlotType('pie');
 $plot->SetDataType('text-data-single');

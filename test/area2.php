@@ -36,7 +36,7 @@ mkdata($data,  20, 10, 30);
 mkdata($data,  10, 30, 20);
 mkdata($data,  10, 20, 30);
 
-$p = new PHPlot\PHPlot\PHPlot_truecolor(800, 800);
+$p = new Phplot\Phplot\PHPlot_truecolor(800, 800);
 $p->SetTitle("Area Plot with Overlapping Data\n"
             . "and Partially Transparent Colors (alpha=$alpha)\n"
             . "You should see 7 different color shades");

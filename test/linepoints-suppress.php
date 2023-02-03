@@ -17,7 +17,7 @@ $data = array(
   array('',  10,  10,  11,  12),
 );
 
-$p = new PHPlot\PHPlot\PHPlot();
+$p = new Phplot\Phplot\PHPlot();
 $p->SetTitle('PlotType: linepoints with suppression');
 $p->SetDataType('data-data');
 $p->SetDataValues($data);

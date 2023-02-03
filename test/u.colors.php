@@ -29,7 +29,7 @@ function test_init()
 {
     global $returns_alpha, $p, $test_verbose;
 
-    $p = new PHPlot\PHPlot\PHPlot(); // Global
+    $p = new Phplot\Phplot\PHPlot(); // Global
 
     # Determine if SetRGBColor returns a 3 or 4 element array:
     $test_array = $p->SetRGBColor('');

@@ -42,7 +42,7 @@ $data = array(
   array("4 val\nABCDD",   30,   40,   50,   70,   70),
 );
 
-$p = new PHPlot\PHPlot\PHPlot(900, 600);
+$p = new Phplot\Phplot\PHPlot(900, 600);
 $p->SetTitle("Box Plot with Various Data Cases\n$subtitle");
 $p->SetDataType('text-data');
 $p->SetDataValues($data);

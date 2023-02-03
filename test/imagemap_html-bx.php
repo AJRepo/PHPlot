@@ -28,7 +28,7 @@ $data = array(
     array('D', 4,   10,  11,   12,  13,   14),
 );
 
-$plot = new PHPlot\PHPlot\PHPlot(800, 600);
+$plot = new Phplot\Phplot\PHPlot(800, 600);
 $plot->SetFailureImage(False); // No error images
 $plot->SetPrintImage(False); // No automatic output
 $plot->SetTitle("Boxes plot with image map");

@@ -38,7 +38,7 @@ else $message .= $text;
 if (!empty($extra_chars))
     $message .= str_repeat(' Test', (int)($extra_chars / 5));
 
-$p = new PHPlot\PHPlot\PHPlot(800, 600);
+$p = new Phplot\Phplot\PHPlot(800, 600);
 if (!empty($use_gdfont)) {
     $p->SetFontGD('generic', 5);
 } elseif (!empty($use_ttfont)) {

@@ -55,7 +55,7 @@ $data = array(
 # Random legend lines, different lengths
 $legend = array('Data set 1', 'Data set 2', 'Error', 'Difference', 'Alternate');
 
-$p = new PHPlot\PHPlot\PHPlot(800, 600);
+$p = new Phplot\Phplot\PHPlot(800, 600);
 $p->SetTitle($title);
 $p->SetDataType('data-data');
 $p->SetDataValues($data);

@@ -15,7 +15,7 @@
  *
  */
 
-namespace PHPlot\PHPlot;
+namespace Phplot\Phplot;
 
 class PHPlot_truecolor extends PHPlot
 {

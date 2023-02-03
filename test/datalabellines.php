@@ -70,7 +70,7 @@ if ($plottype == 'bubbles') {
     }
 }
 
-$plot = new PHPlot\PHPlot\PHPlot();
+$plot = new Phplot\Phplot\PHPlot();
 $plot->SetTitle($title . $suffix);
 $plot->SetDataType($data_type);
 $plot->SetDataValues($data);

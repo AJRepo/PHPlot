@@ -13,7 +13,7 @@ $data = array(
   array('', 3),
 );
 
-$p = new PHPlot\PHPlot\PHPlot(800, 800);
+$p = new Phplot\Phplot\PHPlot(800, 800);
 
 $title = "Pie Chart Label Precision\n";
 if ($override) {

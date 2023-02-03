@@ -21,7 +21,7 @@ $data = array(
   array('C',  3, 0),
 );
 
-$p = new PHPlot\PHPlot\PHPlot(400,300);
+$p = new Phplot\Phplot\PHPlot(400,300);
 $p->SetTitle('Error test');
 $p->SetDataType('data-data');
 $p->SetDataValues($data);

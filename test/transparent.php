@@ -25,7 +25,7 @@ $data = array(
   array('',  4,  64,  16, -40),
 );
 
-$p = new PHPlot\PHPlot\PHPlot();
+$p = new Phplot\Phplot\PHPlot();
 
 # File format GIF or PNG, to test transparency:
 if (isset($tp['FFormat'])) $p->SetFileFormat($tp['FFormat']);
