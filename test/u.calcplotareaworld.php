@@ -133,7 +133,7 @@ function test($data_xmin, $data_xmax, $data_ymin, $data_ymax)
     $title = "($data_xmin, $data_ymin) : ($data_xmax, $data_ymax)";
     if ($test_verbose) testin($q);
 
-    $p = new PHPlot_test();
+    $p = new phplot_test();
     $p->SetDataValues(array(array('', $data_xmin, $data_ymin),
                             array('', $data_xmax, $data_ymax)));
     $p->SetDataType('data-data');

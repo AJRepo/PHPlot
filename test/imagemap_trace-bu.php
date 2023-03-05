@@ -24,7 +24,7 @@ function store_map($im, $passthru, $shape, $row, $col, $xc, $yc, $diam)
     imageellipse($im, $xc, $yc, $diam, $diam, $color);
 }
 
-$plot = new Phplot\Phplot\PHPlot(800, 600);
+$plot = new Phplot\Phplot\phplot(800, 600);
 $plot->SetTitle($title);
 $plot->SetImageBorderType('plain');
 $plot->SetDataValues($data);

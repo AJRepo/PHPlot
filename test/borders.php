@@ -24,7 +24,7 @@ $data = array(
   array('',  3,   4),
   array('',  4,   8),
 );
-$p = new Phplot\Phplot\PHPlot();
+$p = new Phplot\Phplot\phplot();
 
 # Build a title:
 $title = 'Plot Border: ';

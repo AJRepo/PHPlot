@@ -8,7 +8,7 @@ for ($i = 0; $i < 12; $i++) {
     $data[] = array('', $t, $i * 13.4);
     $t += 60 * 60 * 24;
 }
-$p = new Phplot\Phplot\PHPlot(800, 600);
+$p = new Phplot\Phplot\phplot(800, 600);
 $p->SetTitle("Label Format 4");
 $p->SetDataType('data-data');
 $p->SetDataValues($data);

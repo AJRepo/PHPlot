@@ -10,7 +10,7 @@ $data = array();
 for ($x = 0; $x <= $end; $x += $delta)
   $data[] = array('', $x, sin($x), cos($x));
 
-$plot = new PHPlot(800, 600);
+$plot = new phplot(800, 600);
 $plot->SetFailureImage(False); // No error images
 $plot->SetPrintImage(False); // No automatic output
 $plot->SetImageBorderType('plain');

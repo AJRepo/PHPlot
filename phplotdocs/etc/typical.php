@@ -15,7 +15,7 @@ $data = array(
 );
 
 # Size of plot is set by PDF 72dpi resolution:
-$p = new PHPlot(400, 300);
+$p = new phplot(400, 300);
 
 $p->SetDataType('data-data');
 $p->SetDataValues($data);

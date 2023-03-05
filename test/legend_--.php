@@ -32,7 +32,7 @@ $data = array(
 );
 if (!isset($tp['text']))
   $tp['text'] = array('Plot Line 1', 'Longer label for Plot Line 2', 'line 3');
-$p = new Phplot\Phplot\PHPlot(800, 600);
+$p = new Phplot\Phplot\phplot(800, 600);
 if ($tp['use_ttf']) {
   $p->SetTTFPath($tp['ttfdir']);
   $p->SetDefaultTTFont($tp['ttfont']);

@@ -41,7 +41,7 @@ $data2 = array(
 );
 $legend2 = array('% positive');
 
-$plot = new PHPlot(800, 600);
+$plot = new phplot(800, 600);
 $plot->SetImageBorderType('plain'); // For presentation in the manual
 $plot->SetPrintImage(False); // Defer output until the end
 $plot->SetTitle($title);

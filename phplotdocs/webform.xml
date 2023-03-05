@@ -395,7 +395,7 @@ function draw_graph($valid_params, $param, $data)
 {
     extract($param);
 
-    $plot = new PHPlot($w, $h);
+    $plot = new phplot($w, $h);
     $plot->SetTitle('Savings with Interest');
     $plot->SetDataType('data-data');
     # Don't set data values if parameters were not valid. This will result

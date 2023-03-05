@@ -11,7 +11,7 @@ $data = array(
   array('B', 2,  4),
   array('C', 1,  2),
 );
-$p = new Phplot\Phplot\PHPlot(800, 800);
+$p = new Phplot\Phplot\phplot(800, 800);
 $p->SetDataType('text-data');
 $p->SetDataValues($data);
 $p->SetPlotType('bars');

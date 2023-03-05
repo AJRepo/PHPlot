@@ -30,7 +30,7 @@ $data = array(
   array('', 1, 2, 3, 4),
   array('', 2, 3, 4, 5),
 );
-$p = new Phplot\Phplot\PHPlot(600, 400);
+$p = new Phplot\Phplot\phplot(600, 400);
 $p->SetTitle("Point Sizes/Shapes (Bug 2963757) - case $case");
 $p->SetDataType('data-data');
 $p->SetDataValues($data);

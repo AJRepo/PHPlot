@@ -26,7 +26,7 @@ $data = array(
 );
 
 
-$p = new Phplot\Phplot\PHPlot(800, 600);
+$p = new Phplot\Phplot\phplot(800, 600);
 $p->SetTitle("Pie Chart with Labels\n"
          .   "Using a locale where numbers look like: 12.345,67");
 $p->SetDataType('text-data-single');

@@ -17,7 +17,7 @@ $colors = array(
   'aquamarine1', 'violet', 'salmon', 'brown', 'pink', 'DimGrey',
 );
 
-$plot = new PHPlot_pv(800, 600);
+$plot = new phplot_pv(800, 600);
 # Define the $shapes array, used for both the point shapes and legend:
 if (isset($use_default_shapes)) {
     # Cheat: grab phplot's internal shapes

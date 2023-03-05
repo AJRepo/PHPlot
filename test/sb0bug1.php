@@ -16,7 +16,7 @@ $data = array(
     array('Mar 2011', 0.5, 1)
 );
 require_once 'phplot.php';
-$plot = new Phplot\Phplot\PHPlot(400, 300);
+$plot = new Phplot\Phplot\phplot(400, 300);
 $plot->SetTitle('Stacked bar 0 bug: initial stack all 0s');
 $plot->SetPlotType('stackedbars');
 $plot->SetDataValues($data);

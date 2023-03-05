@@ -25,7 +25,7 @@ $n_rows = count($data);
 $data[$n_rows] = $data[$n_rows-1];
 $data[$n_rows][0] = '';
 
-$plot = new Phplot\Phplot\PHPlot(800, 600);
+$plot = new Phplot\Phplot\phplot(800, 600);
 $plot->SetTitle($title);
 $plot->SetYTitle('1000\'s of barrels per day');
 $plot->SetDataType('text-data');

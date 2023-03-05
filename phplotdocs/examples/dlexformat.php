@@ -60,7 +60,7 @@ $data = make_data_array(11, 6);
 $max_indexes = find_max_indexes($data);
 
 # Now plot the data:
-$plot = new PHPlot(800, 600);
+$plot = new phplot(800, 600);
 $plot->SetImageBorderType('plain'); // For presentation in the manual
 $plot->SetPlotType('linepoints');
 $plot->SetDataType('data-data');

@@ -29,7 +29,7 @@ $data = array(
   array("YQ3==\nYmax",     14,   5,  10,  15,  22,  22),
 );
 
-$p = new Phplot\Phplot\PHPlot(800, 600);
+$p = new Phplot\Phplot\phplot(800, 600);
 $p->SetTitle('Box Plot with Missing Values');
 $p->SetDataType('data-data');
 $p->SetDataValues($data);

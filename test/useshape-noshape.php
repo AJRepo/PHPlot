@@ -24,7 +24,7 @@ $shapes = array('dot', 'bowtie', 'none', 'rect', 'none');
 for ($iy = 0; $iy < 5; $iy++)
     $legend[$iy] = "Data Set #$iy using shape {$shapes[$iy]}";
 
-$p = new Phplot\Phplot\PHPlot(800, 600);
+$p = new Phplot\Phplot\phplot(800, 600);
 
 $p->SetTitle("$plot_type plot with legend using point shapes, and\n"
            . "shape='none' on 2 of the data sets");

@@ -8,7 +8,7 @@ $data = array(
   array('', 95,  50),
 );
 
-$p = new Phplot\Phplot\PHPlot();
+$p = new Phplot\Phplot\phplot();
 $p->SetTitle('Tick Count Tests');
 $p->SetDataType('data-data');
 $p->SetDataValues($data);

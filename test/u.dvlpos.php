@@ -53,7 +53,7 @@ function test($msg, $angle, $dist, $expect_xoff, $expect_yoff, $expected_align)
   $failed = False;
   $tests++;
 
-  $p = new PHPlot_test();
+  $p = new phplot_test();
 
   if (isset($angle)) $p->data_value_label_angle = $angle;
   if (isset($dist)) $p->data_value_label_distance = $dist;

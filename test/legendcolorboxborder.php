@@ -12,7 +12,7 @@ $tp = array_merge(array(
         ), $tp);
 require_once 'phplot.php';
 
-# Check for new PHPlot method and skip the test if it is missing:
+# Check for new phplot method and skip the test if it is missing:
 if (!method_exists('PHPlot', 'SetLegendColorboxBorders')) {
     echo "Skipping test because it requires SetLegendColorboxBorders()\n";
     exit(2);
@@ -46,7 +46,7 @@ $title = "Legend Colorbox Borders Control\n"
        . bcond("Set Data Border Colors", $tp['setdbcolors'])
        . bcond("Set Text Color", $tp['settextcolor']);
 
-$p = new Phplot\Phplot\PHPlot(800, 600);
+$p = new Phplot\Phplot\phplot(800, 600);
 $p->SetTitle($title);
 $p->SetDataType('text-data');
 $p->SetDataValues($data);

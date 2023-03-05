@@ -10,7 +10,7 @@ for ($i = 1; $i <= 20; $i++) {
   $data[] = $row;
 }
 
-$p = new Phplot\Phplot\PHPlot();
+$p = new Phplot\Phplot\phplot();
 $p->SetTitle('Default Plot Line Colors');
 $p->SetDataType('data-data');
 $p->SetDataValues($data);

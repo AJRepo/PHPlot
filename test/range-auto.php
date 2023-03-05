@@ -72,7 +72,7 @@ if (!empty($intinc)) $title .= "\nForce Integer Step On";
 if (isset($tickanchor)) $title .= "\nTick anchor = $tickanchor";
 if (!empty($subtitle)) $title .= "\n" . $subtitle;
 
-$p = new Phplot\Phplot\PHPlot(800, 800);
+$p = new Phplot\Phplot\phplot(800, 800);
 $p->SetTitle($title);
 $p->SetDataType($data_type);
 $p->SetDataValues($data);

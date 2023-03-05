@@ -67,7 +67,7 @@ function test_case($case)
                       array('', 3, 5, 2, 2));
     }
 
-    $p1 = new Phplot\Phplot\PHPlot(400, 300);
+    $p1 = new Phplot\Phplot\phplot(400, 300);
     $p1->SetFailureImage(False);
     $p1->SetPrintImage(False);
     $p1->SetDataValues($data);
@@ -77,7 +77,7 @@ function test_case($case)
     $p1_image = $p1->EncodeImage('raw');
     if ($test_save) file_put_contents("dta-{$case}a_$data_type.png", $p1_image);
 
-    $p2 = new Phplot\Phplot\PHPlot(400, 300);
+    $p2 = new Phplot\Phplot\phplot(400, 300);
     $p2->SetFailureImage(False);
     $p2->SetPrintImage(False);
     $p2->SetDataValues($data);

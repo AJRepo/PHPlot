@@ -23,7 +23,7 @@ for ($x = 0; $x < $n_x; $x++) {
 $legend = array();
 for ($y = 0; $y < $n_y; $y++) $legend[] = "Data Set $y";
 
-$p = new PHPlot_truecolor(800, 600);
+$p = new phplot_truecolor(800, 600);
 $p->SetTitle("Bubble Plot - Random data, Truecolor\nTranslucent (alpha=$alpha) bubbles");
 $p->SetDataColors(NULL, NULL, $alpha);
 $p->SetDataType('data-data-xyz');

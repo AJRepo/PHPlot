@@ -28,7 +28,7 @@ $legend = array(
   'Dataset 4: 3,...',
 );
 
-$plot = new Phplot\Phplot\PHPlot(800, 600);
+$plot = new Phplot\Phplot\phplot(800, 600);
 $plot->SetPlotType($plot_type);
 $plot->SetDataType('text-data');
 $plot->SetDataValues($data);

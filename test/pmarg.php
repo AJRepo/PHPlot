@@ -29,7 +29,7 @@ $data = array(
 define('PLOT_WIDTH', 1024);
 define('PLOT_HEIGHT', 768);
 
-$p = new Phplot\Phplot\PHPlot(1024, 768);
+$p = new Phplot\Phplot\phplot(1024, 768);
 $p->SetTitle($tp['title'] . $tp['suffix']);
 $p->SetDataType('text-data');
 $p->SetDataValues($data);

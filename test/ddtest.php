@@ -19,7 +19,7 @@ $data = array(
 
 );
 
-$p = new Phplot\Phplot\PHPlot();
+$p = new Phplot\Phplot\phplot();
 
 $p->SetTitle('Out-of-order data-data points');
 $p->SetPlotType('lines');

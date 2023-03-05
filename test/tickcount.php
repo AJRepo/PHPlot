@@ -22,7 +22,7 @@ $data = array(
   array('', 1,  1),
 );
 
-$p = new Phplot\Phplot\PHPlot();
+$p = new Phplot\Phplot\phplot();
 $subtitle = " World: ({$tp['xmin']}, {$tp['ymin']}) :"
           . " ({$tp['xmax']}, {$tp['ymax']})"
           . " Tickstep: ({$tp['xti']}, {$tp['yti']})";

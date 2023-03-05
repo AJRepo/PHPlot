@@ -17,7 +17,7 @@ for ($i = 0; $i < $x_values; $i++) {
     $data[] = $row;
 }
 
-$p = new PHPlot(800, 600);
+$p = new phplot(800, 600);
 $p->SetTitle('Example - Bar Chart with gradient colors');
 $p->SetDataType('text-data');
 $p->SetDataValues($data);

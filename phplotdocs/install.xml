@@ -166,7 +166,7 @@ or by entering this minimal script into a file called (for example)
 <programlisting><![CDATA[<?php
 require 'phplot.php';
 $data = array(array('', 10), array('', 1));
-$plot = new PHPlot();
+$plot = new phplot();
 $plot->SetDataValues($data);
 $plot->SetTitle('First Test Plot');
 $plot->DrawGraph();

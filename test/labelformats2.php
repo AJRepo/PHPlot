@@ -14,7 +14,7 @@ function my_format($val, $arg)
 $data = array();
 for ($i = 0; $i < 10; $i++)
     $data[] = array('', 4000 * $i, 1234 * $i);
-$p = new Phplot\Phplot\PHPlot(800, 600);
+$p = new Phplot\Phplot\phplot(800, 600);
 $p->SetTitle("Label Format Test 2");
 $p->SetDataType('data-data');
 $p->SetDataValues($data);

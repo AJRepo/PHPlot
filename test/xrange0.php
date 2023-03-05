@@ -21,7 +21,7 @@ function debug_scale_f($img, $passthru, $fname, $args)
   fwrite(STDERR, "+debug_scale $fname: " . print_r($args, True) . "\n");
 }
 
-$p = new Phplot\Phplot\PHPlot(800,600);
+$p = new Phplot\Phplot\phplot(800,600);
 #$p->SetCallback('debug_scale', 'debug_scale_f');
 $p->SetTitle('Scatter Plot without X range');
 $p->SetDataType('data-data');

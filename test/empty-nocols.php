@@ -25,7 +25,7 @@ for ($r = 0; $r < 8; $r++) {
   $data[] = $row;
 }
   
-$p = new PHPlot;
+$p = new phplot;
 $p->SetTitle("Plot with no Y values: $plot_type, $data_type\n"
            . "Check for horizontal axis data labels");
 $p->SetPlotType($plot_type);

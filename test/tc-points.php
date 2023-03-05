@@ -11,7 +11,7 @@ for ($i = 0; $i < 20; $i++) {
     }
     $data[] = $row;
 }
-$p = new PHPlot_truecolor(800, 600);
+$p = new phplot_truecolor(800, 600);
 $p->SetTitle('Truecolor Points plot with varying size poionts');
 $p->SetDataType('data-data');
 $p->SetDataValues($data);

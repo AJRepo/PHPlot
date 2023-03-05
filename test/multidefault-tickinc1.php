@@ -23,7 +23,7 @@ function build_data($x1, $dx, $nx, $y1, $y2)
 
 
 // Common setup:
-$plot = new Phplot\Phplot\PHPlot(460, 600);
+$plot = new Phplot\Phplot\phplot(460, 600);
 $plot->SetTitle("Multiple Plots, Sticky Settings\n"
               . "Reset data range and not tick step between plots");
 $plot->SetDataType('data-data');

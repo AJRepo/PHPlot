@@ -10,7 +10,7 @@ function mycallback($str)
     return sprintf('%s (%.1f%%)', $label, $percent);
 }
 
-$plot = new PHPlot(800, 600);
+$plot = new phplot(800, 600);
 $plot->SetImageBorderType('plain'); // Improves presentation in the manual
 $plot->SetPlotType('pie');
 $plot->SetDataType('text-data-single');

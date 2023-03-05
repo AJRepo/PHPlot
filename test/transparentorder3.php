@@ -3,7 +3,7 @@
 # PHPlot test - transparency - truecolor, set transparent then set background
 require_once 'phplot.php';
 $data = array(array('A', 6), array('B', 4), array('C', 2), array('D', 0));
-$p = new PHPlot_truecolor;
+$p = new phplot_truecolor;
 $p->SetTitle('Truecolor, Set transparent, Set background color');
 $p->SetDataValues($data);
 $p->SetPlotType('bars');

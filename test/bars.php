@@ -20,7 +20,7 @@ $data = array(
   array('Oct', 18, 4, 4), array('Nov', 16, 7, 4), array('Dec', 14, 3, 4),
 );
 
-$plot = new Phplot\Phplot\PHPlot(800, 600);
+$plot = new Phplot\Phplot\phplot(800, 600);
 
 $plot->SetPlotType('bars');
 $plot->SetDataType('text-data');

@@ -171,7 +171,7 @@ function test($name, $plot_type, $data_type, $expected)
 
     # See note above on error handler returning - need to check each method
     # here and stop if any returns FALSE, until the last.
-    $plot = new PHPlot_noerr();
+    $plot = new phplot_noerr();
     if (!$plot->SetPlotType($plot_type)
      || !$plot->SetDataType($data_type)
      || !$plot->SetPrintImage(False)

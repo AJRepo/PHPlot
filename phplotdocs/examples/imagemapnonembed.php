@@ -91,7 +91,7 @@ END;
 }
 
 
-$plot = new PHPlot(640, 480);
+$plot = new phplot(640, 480);
 if ($do_html) {
     # When producing HTML, don't output the plot image:
     $plot->SetPrintImage(False);

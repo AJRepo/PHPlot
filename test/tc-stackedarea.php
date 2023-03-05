@@ -9,7 +9,7 @@ $data = array(
   array('C',  2, 3, 1, 3, 2, 3),
   array('D',  4, 1, 5, 0, 4, 4),
 );
-$p = new PHPlot_truecolor(800, 800);
+$p = new phplot_truecolor(800, 800);
 $p->SetTitle("Truecolor Stacked Area chart with alpha channel");
 $p->SetDataType('text-data');
 $p->SetDataValues($data);

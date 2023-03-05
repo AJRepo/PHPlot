@@ -10,7 +10,7 @@ for ($i = 0; $i < 15; $i++) {
   $legend[] = "A very long label for set $i";
 }
 
-$p = new Phplot\Phplot\PHPlot(800,500);
+$p = new Phplot\Phplot\phplot(800,500);
 
 $p->SetPlotAreaPixels(240, 20, 795, 495);
 $p->SetLegendPixels(5, 40);

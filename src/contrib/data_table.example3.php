@@ -20,7 +20,7 @@ $settings = array(
     'data' => $data,
 );
 
-$plot = new PHPlot(600, 400);
+$plot = new phplot(600, 400);
 $plot->SetTitle('Pie Chart with Legend and Data Table');
 $plot->SetDataValues($data);
 $plot->SetDataType('text-data-single');

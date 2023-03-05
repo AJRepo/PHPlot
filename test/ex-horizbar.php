@@ -21,7 +21,7 @@ $data = array(
   array('Barrow AL', 4.2),
 );
 
-$plot = new Phplot\Phplot\PHPlot(800, 800);
+$plot = new Phplot\Phplot\phplot(800, 800);
 $plot->SetImageBorderType('plain'); // Improves presentation in the manual
 $plot->SetTitle("Average Annual Precipitation (inches)\n"
               . "Selected U.S. Cities");

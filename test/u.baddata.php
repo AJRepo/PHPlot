@@ -78,7 +78,7 @@ function test($name, $data, $datatype, $plottype, $expect_fail, $errmatch='')
     $php_warning = ''; // Initialize empty. Error handler will append.
     $details = '';  // Why it passed or failed.
     if ($test_verbose) echo "Test case $n_tests: $name\n";
-    $plot = new PHPlot_noerr;
+    $plot = new phplot_noerr;
 
     if (empty($test_debug_images)) {
         $plot->SetPrintImage(False); // Don't produce an image if OK

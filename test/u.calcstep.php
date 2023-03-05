@@ -149,7 +149,7 @@ function test_good_binary()
 # Test PHPlot CalcStep125 - show valid return values 
 function test_show_calcstep125()
 {
-    $p = new PHPlot_test();
+    $p = new phplot_test();
 
     echo "The following are valid steps returned by CalcStep125():\n";
     $prev_step = -1;
@@ -166,7 +166,7 @@ function test_show_calcstep125()
 # Test PHPlot CalcStepdatetime - show valid return values 
 function test_show_calcstepdatetime()
 {
-    $p = new PHPlot_test();
+    $p = new phplot_test();
 
     echo "The following are valid steps returned by CalcDatetime():\n";
     echo "Seconds    Interval\n";
@@ -301,7 +301,7 @@ function tb($range, $min_ticks)
 
 # ===== Setup =====
 
-$p = new PHPlot_test();
+$p = new phplot_test();
 if (!method_exists('PHPlot', 'CalcStep125')
  || !method_exists('PHPlot', 'CalcStepBinary')
  || !method_exists('PHPlot', 'CalcStepDateTime')) {

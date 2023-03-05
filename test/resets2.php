@@ -12,7 +12,7 @@ $data = array();
 for ($x = -10; $x <= 10; $x++)
     $data[] = array('', $x, ($x + 8) * ($x - 2) * ($x - 10));
 
-$p = new Phplot\Phplot\PHPlot(400, 800);
+$p = new Phplot\Phplot\phplot(400, 800);
 $p->SetPrintImage(FALSE);
 $p->SetPlotBorderType('full');
 

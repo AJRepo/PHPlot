@@ -10,7 +10,7 @@ $data = array(
     array('',  39, 47.58), array('',  70, 42.00), array('',  16, 26.88),
     array('',  81, 30.78), array('',  40, 48.00), array('',  44, 49.28),
 );
-$plot = new PHPlot(800, 400);
+$plot = new phplot(800, 400);
 $plot->SetImageBorderType('plain'); // Improves presentation in the manual
 $plot->SetUseTTF(True);
 $plot->SetTitle('Experimental Results');

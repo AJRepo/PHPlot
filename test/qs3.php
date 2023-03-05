@@ -5,7 +5,7 @@
 require_once 'phplot.php';
 
 //Define the object
-$plot = new Phplot\Phplot\PHPlot(800,600);
+$plot = new Phplot\Phplot\phplot(800,600);
 
 //Set titles
 $plot->SetTitle("A 3-Line Plot\nMade with PHPlot");

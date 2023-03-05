@@ -29,7 +29,7 @@ $data = array(
     array($label, 1),
 );
 
-$plot = new Phplot\Phplot\PHPlot(600, 400);
+$plot = new Phplot\Phplot\phplot(600, 400);
 $plot->SetPlotType('pie');
 $plot->SetDataType('text-data-single');
 $plot->SetDataValues($data);

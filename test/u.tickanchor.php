@@ -21,7 +21,7 @@ function test($start, $step, $anchor)
     static $need_header = 0;
     global $cases, $errors, $verbose;
 
-    $plot = new PHPlot_test();
+    $plot = new phplot_test();
     // Minimal plot setup. Data values do not matter - only CalcTicks is used.
     $plot->SetPlotAreaWorld(NULL, $start, NULL, $start + 10 * $step);
     $plot->SetYTickIncrement($step);

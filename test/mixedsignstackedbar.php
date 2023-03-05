@@ -51,7 +51,7 @@ if ($signedness > 0) {
 $dep_var = $horiz ? 'X' : 'Y';
 $ind_var = $horiz ? 'Y' : 'X';
 
-$plot = new Phplot\Phplot\PHPlot(800, 600);
+$plot = new Phplot\Phplot\phplot(800, 600);
 $plot->SetPlotType('stackedbars');
 $plot->SetDataType($horiz ? 'text-data-yx' : 'text-data');
 $plot->SetDataValues($data);

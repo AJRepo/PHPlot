@@ -229,7 +229,7 @@ manual, which only contains summaries of changes.
 
 2013-04-02
     * reference.xml: Fixed SetXDataLabelPos(). This was not completely
-      updated with the new PHPlot-6.0.0 support for data value labels on
+      updated with the new phplot-6.0.0 support for data value labels on
       more plot types.
 
 2013-04-01
@@ -1538,7 +1538,7 @@ manual, which only contains summaries of changes.
    * Makefile: Added 'install' target to copy the manual files somewhere.
 
    * Fixed external links: www.phplot.com is redirecting away now, so
-     use the new PHPlot web site on Sourceforge.net instead. Fix GD URL.
+     use the new phplot web site on Sourceforge.net instead. Fix GD URL.
      Update peoples' roles to reflect current activities.
 
 2008-01-10
@@ -1618,7 +1618,7 @@ manual, which only contains summaries of changes.
      PHPlot-5.0rc2 and earlier, but has been redone from scratch.
 
 2007-09-08
-   * Removed use of reference assignment ($p =& new PHPlot())
+   * Removed use of reference assignment ($p =& new phplot())
      in all inline examples, external examples, and reference material when
      creating a PHPlot object. Added note to PHPlot constructor reference
      explaining why. This was the result of the fix for bug report #1790441,

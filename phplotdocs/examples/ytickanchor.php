@@ -21,7 +21,7 @@ $data = array();
 for ($x = 0; $x < 500; $x++)
   $data[] = array('', $x, f($x));
 
-$plot = new PHPlot(800, 600);
+$plot = new phplot(800, 600);
 $plot->SetImageBorderType('plain'); // For presentation in the manual
 $plot->SetTitle("Example $case");
 $plot->SetDataType('data-data');

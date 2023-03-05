@@ -127,7 +127,7 @@ function test($name, $p, $e_data_colors, $e_border_colors, $e_error_colors)
 
 # ===== Test Cases =====
 
-$p = new PHPlot_pv();
+$p = new phplot_pv();
 # Use an internal variable to determine the PHPlot version. After this variable
 # was introduced, the color maps expanded.
 if ($p->HAS_default_colors()) {
@@ -139,7 +139,7 @@ if ($p->HAS_default_colors()) {
     $ecol = 8;
     $bcol = 1;
 }
-test('New PHPlot object',
+test('new phplot object',
      $p, $dcol, $bcol, $ecol);
 
 $p->SetDataColors('red');
@@ -148,7 +148,7 @@ $p->SetErrorBarColors('green');
 test('Then set color arrays to single word',
      $p, 1, 1, 1);
 
-$p = new PHPlot_pv();
+$p = new phplot_pv();
 $p->SetDataColors($c6);
 $p->SetDataBorderColors($c6);
 $p->SetErrorBarColors($c6);
@@ -167,7 +167,7 @@ $p->SetErrorBarColors('');
 test('Then set color arrays to default, using empty string',
      $p, $dcol, $bcol, $ecol);
 
-$p = new PHPlot_pv();
+$p = new phplot_pv();
 $p->SetDataColors($c6);
 $p->SetDataColors(False);
 $p->SetDataBorderColors(False);

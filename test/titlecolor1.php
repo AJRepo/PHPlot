@@ -20,7 +20,7 @@ $data = array(
   array('C', 2),
 );
 
-$p = new Phplot\Phplot\PHPlot(600, 600);
+$p = new Phplot\Phplot\phplot(600, 600);
 $p->SetDataType('text-data');
 $p->SetDataValues($data);
 $p->SetPlotType('bars');

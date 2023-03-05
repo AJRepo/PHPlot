@@ -23,7 +23,7 @@ for ($i = 0; $i <= 360; $i += 15) {
   $theta = deg2rad($i);
   $data[] = array('', $i, cos($theta), sin($theta));
 }
-$p = new Phplot\Phplot\PHPlot(800, 600);
+$p = new Phplot\Phplot\phplot(800, 600);
 $p->SetPrintImage(False);
 $p->SetFailureImage(False);
 $p->SetTitle('PHPlot Test - Data URL Encoding');

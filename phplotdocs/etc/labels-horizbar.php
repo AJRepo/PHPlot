@@ -8,7 +8,7 @@ $data = array(
   array('Third', 30),
 );
 
-$p = new PHPlot(400, 300);
+$p = new phplot(400, 300);
 $p->SetDataType('text-data-yx');
 $p->SetDataValues($data);
 $p->SetPlotType('bars');

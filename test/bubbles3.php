@@ -35,7 +35,7 @@ for ($i = 0; $i < $n_p; $i++) {
         mt_rand(0, $max_y-1), mt_rand(0, $max_z-1));
 }
 
-$p = new Phplot\Phplot\PHPlot(1024, 768);
+$p = new Phplot\Phplot\phplot(1024, 768);
 $p->SetTitle("Bubble Plot - Random Scatterplot with Custom Data Colors");
 $p->SetCallback('data_color', 'getcolor', $data);
 $p->SetDataType('data-data-xyz');

@@ -112,7 +112,7 @@ $tests = array(
 function run_test($value, $decimals, $decpt = NULL, $thoumark = NULL)
 {
   $result = '';
-  $p = new PHPlot_test();
+  $p = new phplot_test();
   if (PHP_OS == "WINNT") {
     $p->locale_override = True;
   }

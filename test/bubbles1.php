@@ -28,7 +28,7 @@ if (empty($data)) {
     }
 }
 
-$p = new Phplot\Phplot\PHPlot(800, 600);
+$p = new Phplot\Phplot\phplot(800, 600);
 $p->SetTitle("Bubble Plot - " . $subtitle);
 if (isset($bubbles_min_size)) $p->bubbles_min_size = $bubbles_min_size;
 if (isset($bubbles_max_size)) $p->bubbles_max_size = $bubbles_max_size;

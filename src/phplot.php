@@ -57,8 +57,10 @@
  * the type of image produced matches the type of the background image.
  *
  */
+
 namespace Phplot\Phplot;
-class PHPlot
+
+class phplot
 {
     /** PHPlot version constant as a string */
     public const version = '8.0.0-rc1 $Revision$';

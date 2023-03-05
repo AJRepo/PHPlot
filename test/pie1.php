@@ -19,7 +19,7 @@ $data = array(
   array('USSR', 9710),
 );
 
-$plot = new Phplot\Phplot\PHPlot(800,600);
+$plot = new Phplot\Phplot\phplot(800,600);
 $plot->SetImageBorderType('plain');
 
 $plot->SetPlotType('pie');

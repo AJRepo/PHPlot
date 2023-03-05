@@ -5,7 +5,7 @@
 require_once 'phplot.php';
 
 //Define the object
-$plot = new Phplot\Phplot\PHPlot();
+$plot = new Phplot\Phplot\phplot();
 
 //Define some data
 $example_data = array(

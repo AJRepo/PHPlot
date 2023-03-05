@@ -30,7 +30,7 @@ function my_draw($img, $plot)
 }
 
 $data = array(array('', 0, 0), array('', 10, 10));
-$plot = new Phplot\Phplot\PHPlot(800, 600);
+$plot = new Phplot\Phplot\phplot(800, 600);
 $plot->SetTitle("DrawText() Font Argument Test\nTitle is sans 12pt");
 $plot->SetDataType('data-data');
 $plot->SetDataValues($data);

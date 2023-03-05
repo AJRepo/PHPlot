@@ -16,7 +16,7 @@ $data = array(
     array('', 9,  10, 15, 19, 22, 26, 4, 34),
 );
 
-$plot = new Phplot\Phplot\PHPlot(800, 600);
+$plot = new Phplot\Phplot\phplot(800, 600);
 $plot->SetTitle('Box Plot with outliers and styles');
 $plot->SetDataType('data-data');
 $plot->SetDataValues($data);

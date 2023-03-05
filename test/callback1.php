@@ -54,7 +54,7 @@ $data = array(
   array('F',  2, -4),
   array('G',  3, -6),
 );
-$p = new Phplot\Phplot\PHPlot(400,300);
+$p = new Phplot\Phplot\phplot(400,300);
 foreach ($cblist as $cbname) {
   if (!$p->SetCallback($cbname, 'cb', $cbname))
     fatal("Invalid callback: $cbname");

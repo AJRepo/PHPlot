@@ -9,7 +9,7 @@ require_once 'phplot.php';
 $data = array();
 for ($i = 0; $i < 16; $i++) $data[] = array('', 1);
 
-$p = new PHPlot_truecolor(800, 800);
+$p = new phplot_truecolor(800, 800);
 if ($shading === '') $d_shading = "default shading";
 elseif ($shading === 0) $d_shading = "no shading";
 else $d_shading = "shading=$shading";

@@ -38,7 +38,7 @@ mkdata($data,  10, 20, 30);
 // the same width. This is a quirk of squaredarea.
 $data[] = array('', 10, 20, 30);
 
-$p = new PHPlot_truecolor(800, 800);
+$p = new phplot_truecolor(800, 800);
 $p->SetTitle("Area Plot with Overlapping Data\n"
             . "and Partially Transparent Colors (alpha=$alpha)\n"
             . "You should see 7 different color shades");

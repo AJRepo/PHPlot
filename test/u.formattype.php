@@ -82,7 +82,7 @@ function test_printf($format, $cases)
 
     if ($test_verbose)
         echo "Testing: Single printf format '$format'\n";
-    $p = new PHPlot_test;
+    $p = new phplot_test;
     $p->set_label_type('printf', $format);
     test_cases($p, $cases);
 }
@@ -98,7 +98,7 @@ function test_2printf($format1, $format2, $cases)
 
     if ($test_verbose)
         echo "Testing: Double printf formats '$format1' '$format2'\n";
-    $p = new PHPlot_test;
+    $p = new phplot_test;
     $p->set_label_type('printf', $format1, $format2);
     test_cases($p, $cases);
 }
@@ -114,7 +114,7 @@ function test_3printf($format1, $format2, $format3, $cases)
 
     if ($test_verbose)
         echo "Testing: Triple printf formats '$format1' '$format2' '$format3'\n";
-    $p = new PHPlot_test;
+    $p = new phplot_test;
     $p->set_label_type('printf', $format1, $format2, $format3);
     test_cases($p, $cases);
 }
@@ -128,7 +128,7 @@ function test_data($prec, $prefix, $suffix, $cases)
 
     if ($test_verbose)
         echo "Testing: 'data', prec=$prec prefix=$prefix suffix=$suffix\n";
-    $p = new PHPlot_test;
+    $p = new phplot_test;
     $p->SetNumberFormat('.', ',');
     $p->set_label_type('data', $prec, $prefix, $suffix);
     test_cases($p, $cases);
@@ -143,7 +143,7 @@ function test_data2($prec, $decimal, $thousands, $prefix, $suffix, $cases)
     if ($test_verbose)
         echo "Testing: 'data' (number format $decimal $thousands)",
              " prec=$prec prefix=$prefix suffix=$suffix\n";
-    $p = new PHPlot_test;
+    $p = new phplot_test;
     $p->SetNumberFormat($decimal, $thousands);
     $p->set_label_type('data', $prec, $prefix, $suffix);
     test_cases($p, $cases);
@@ -157,7 +157,7 @@ function test_time($format, $cases)
 
     if ($test_verbose)
         echo "Testing: 'time' format '$format'\n";
-    $p = new PHPlot_test;
+    $p = new phplot_test;
     $p->set_label_type('time', $format);
     test_cases($p, $cases);
 }
@@ -169,7 +169,7 @@ function test_custom($fname, $cases)
 
     if ($test_verbose)
         echo "Testing: 'custom' with function '$fname'\n";
-    $p = new PHPlot_test;
+    $p = new phplot_test;
     $p->set_label_type('custom', $fname);
     test_cases($p, $cases);
 }

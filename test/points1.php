@@ -11,7 +11,7 @@ $data = array(
   array('', 9,  24.5, 2, 2), array('', 10, 28.1, 2, 2),
 );
 
-$plot = new Phplot\Phplot\PHPlot(800, 600);
+$plot = new Phplot\Phplot\phplot(800, 600);
 $plot->SetImageBorderType('plain');
 
 $plot->SetPlotType('points');

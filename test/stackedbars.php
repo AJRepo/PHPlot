@@ -41,7 +41,7 @@ if ($tp['edgedata']) {
   $data[10][1] = $data[10][2] = 0;
 }
 
-$plot = new Phplot\Phplot\PHPlot(800, 600);
+$plot = new Phplot\Phplot\phplot(800, 600);
 $plot->SetImageBorderType('plain');
 
 $plot->SetPlotType('stackedbars');

@@ -13,7 +13,7 @@ $data = array(
   array('Fall',   20, 24, 47, 65, 83),
   array('Winter', 20, 24, 47, 65, 83),
 );
-$p = new PHPlot_truecolor(800, 800);
+$p = new phplot_truecolor(800, 800);
 if ($shading === '') $d_shading = "default shading";
 elseif ($shading === 0) $d_shading = "no shading";
 else $d_shading = "shading=$shading";

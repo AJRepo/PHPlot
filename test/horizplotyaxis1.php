@@ -8,7 +8,7 @@ $data = array(
    array('C', -5, -9),
    array('D', -3, -5),
 );
-$p = new Phplot\Phplot\PHPlot();
+$p = new Phplot\Phplot\phplot();
 $p->SetTitle('Y Axis Position - horizontal bar plot, all negative data');
 $p->SetDataType('text-data-yx');
 $p->SetDataValues($data);

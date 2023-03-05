@@ -32,7 +32,7 @@ function sdc($img, $unused, $row, $col)
 }
 
 $title = "Multiplot vs data colors, type $plot_type";
-$p = new Phplot\Phplot\PHPlot(800, 800);
+$p = new Phplot\Phplot\phplot(800, 800);
 if ($do_callback) {
     $p->SetCallback('data_color', 'sdc');
     $title .= ", with data_color callback";

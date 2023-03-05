@@ -33,7 +33,7 @@ for ($i = 0; $i <= $n_pts; $i++) { // 1 extra point to return to 0
     $theta += $d_theta;
 }
 
-$p = new Phplot\Phplot\PHPlot(800, 600);
+$p = new Phplot\Phplot\phplot(800, 600);
 $p->SetTitle($title . $suffix);
 $p->SetDataType('data-data');
 $p->SetDataValues($data);

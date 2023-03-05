@@ -57,13 +57,13 @@ New examples were added.
           </listitem>
           <listitem>
             <para>
-New <xref linkend="adv-autorange"/> describes the new PHPlot-6.0.0
+New <xref linkend="adv-autorange"/> describes the new phplot-6.0.0
 automatic range and tick increment calculations in detail.
             </para>
           </listitem>
           <listitem>
             <para>
-Documented new PHPlot functions (methods) in the Function Reference:
+Documented new phplot functions (methods) in the Function Reference:
 <xref linkend="SetDrawDataBorders" />,
 <xref linkend="SetDrawPieBorders" />,
 <xref linkend="SetDrawYDataLabelLines" />,

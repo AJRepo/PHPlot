@@ -11,7 +11,7 @@ $data = array(
       array('', 3, 6, 9),
     );
 
-$plot = new Phplot\Phplot\PHPlot(640, 480);
+$plot = new Phplot\Phplot\phplot(640, 480);
 $plot->SetTitle("Testing Streaming Plots");
 $plot->SetDataType('text-data');
 $plot->SetPlotType('lines');

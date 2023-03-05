@@ -304,9 +304,9 @@ path to <filename>phplot.php</filename> when including it, or to copy
 </para>
 
 <para>
-<programlisting><![CDATA[$plot = new PHPlot();
+<programlisting><![CDATA[$plot = new phplot();
 ]]></programlisting>
-Here we create a new PHPlot object and call it <literal>plot</literal>.
+Here we create a new phplot object and call it <literal>plot</literal>.
 Everything else we do with the plot will be through the $plot object.
 </para>
 
@@ -1792,7 +1792,7 @@ The data array labels can also be used to build a plot legend.
 For example, this will produce a pie chart with 3
 segments, and a legend with 3 entries using the labels from the data array:
 <programlisting><![CDATA[$data = array(array('Gold', 100), array('Silver',35), array('Copper',12));
-$plot = new PHPlot();
+$plot = new phplot();
 $plot->SetPlotType('pie');
 $plot->SetDataType('text-data-single');
 $plot->SetDataValues($data);

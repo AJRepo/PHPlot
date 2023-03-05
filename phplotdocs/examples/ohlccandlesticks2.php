@@ -33,7 +33,7 @@ function read_prices_data_data($filename)
     return $data;
 }
 
-$plot = new PHPlot(800, 600);
+$plot = new phplot(800, 600);
 $plot->SetImageBorderType('plain'); // Improves presentation in the manual
 $plot->SetTitle("Filled Candlesticks Financial Plot (data-data)\nMSFT Q1 2009");
 $plot->SetDataType('data-data');

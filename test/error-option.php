@@ -8,7 +8,7 @@ $data = array(
   array('B',  1,  2),
 );
 
-$p = new Phplot\Phplot\PHPlot(400,300);
+$p = new Phplot\Phplot\phplot(400,300);
 $p->SetTitle('Error Tests');
 $p->SetDataValues($data);
 $p->SetDataType('data-data');

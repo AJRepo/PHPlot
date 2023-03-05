@@ -55,7 +55,7 @@ $data = array(
   array('',  3,  27,   9, -30),
   array('',  4,  64,  16, -40),
 );
-$p = new PHPlot(400, 300);
+$p = new phplot(400, 300);
 $p->SetDataType('data-data');
 $p->SetDataValues($data);
 $p->SetTitle("Legend Position Example #$x");

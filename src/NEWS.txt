@@ -27,9 +27,9 @@ Moving to a specified namespace means a change in defining the PHPlot object.
 If you get the error:
    `PHP Fatal error:  Uncaught Error: Class "PHPlot" not found`
 look at specifying the full namespace. E.g. if you have
-   `$plot = new PHPlot(800, 600);`
+   `$plot = new phplot(800, 600);`
 try changing to
-   `$plot = new Phplot\Phplot\PHPlot(800, 600);`
+   `$plot = new Phplot\Phplot\phplot(800, 600);`
 
 ---
 PSR-12 standards states that all subclasses get moved to their own file, thus
@@ -88,7 +88,7 @@ with unused parameters.
 + New objects cannot be assigned by reference. Very old versions of the
 PHPlot Reference Manual had this syntax (and there may still be some old
 versions out there):
-        $plot =& new PHPlot(600, 400);  // Do not use &
+        $plot =& new phplot(600, 400);  // Do not use &
 
 + Division by zero no longer results in E_WARNING, but you end up with one
 of the special float values +INF, -INF, or NAN instead.

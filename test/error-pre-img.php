@@ -9,7 +9,7 @@ $data = array(
   array('C',  3, 0),
 );
 
-$p = new Phplot\Phplot\PHPlot(400,300, NULL, '/no/such/input/file');
+$p = new Phplot\Phplot\phplot(400,300, NULL, '/no/such/input/file');
 // Should never get here.
 $p->SetTitle('Error test');
 $p->SetDataType('data-data');

@@ -19,7 +19,7 @@ $data = array(
   array('2008', 283),
 );
 
-$plot = new PHPlot(800, 600);
+$plot = new phplot(800, 600);
 $plot->SetImageBorderType('plain'); // Improves presentation in the manual
 $plot->SetPlotType('linepoints');
 $plot->SetDataType('text-data');

@@ -25,7 +25,7 @@ for ($i = 1; $i <= $nd; $i++) {
   $y += $dy;
 }
 
-$p = new Phplot\Phplot\PHPlot(800, 600);
+$p = new Phplot\Phplot\phplot(800, 600);
 $p->SetTitle("Bar Chart Direction\nCase: " . $tp['suffix']);
 $p->SetDataType('text-data');
 $p->SetDataValues($data);

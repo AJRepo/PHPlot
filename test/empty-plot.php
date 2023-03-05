@@ -25,7 +25,7 @@ for ($r = 0; $r < $rows; $r++) {
 }
   
 require_once 'phplot.php';
-$p = new PHPlot;
+$p = new phplot;
 $p->SetTitle("Empty Plot: $plot_type, $data_type");
 $p->SetPlotType($plot_type);
 $p->SetDataType($data_type);

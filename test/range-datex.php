@@ -45,7 +45,7 @@ if (isset($mintick)) $title .= "\nX Min Ticks = $mintick";
 if (isset($xtickinc)) $title .= "\nX Tick Increment = $xtickinc";
 if (isset($tickanchor)) $title .= "\nX Tick Anchor = $tickanchor";
 
-$p = new Phplot\Phplot\PHPlot(800, 800);
+$p = new Phplot\Phplot\phplot(800, 800);
 $p->SetTitle($title);
 $p->SetDataType('data-data');
 $p->SetDataValues($data);

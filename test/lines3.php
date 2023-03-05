@@ -15,7 +15,7 @@ $data = array(
   array('',  4,  64,  16, -40),
 );
 
-$p = new Phplot\Phplot\PHPlot();
+$p = new Phplot\Phplot\phplot();
 $p->SetTitle('PlotType: lines, DataType: data-data');
 $p->SetDataType('data-data');
 $p->SetDataValues($data);

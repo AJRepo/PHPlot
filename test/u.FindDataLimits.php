@@ -75,7 +75,7 @@ function test($name, $data_type, $plot_type, $data, $expected)
     $title = "Test case $n_tests: $name";
     if ($test_verbose) echo "$title\n";
 
-    $p = new PHPlot_test(); // See above, for access to protected methods
+    $p = new phplot_test(); // See above, for access to protected methods
     $p->SetDataType($data_type);
     $p->SetPlotType($plot_type);
     $p->SetDataValues($data);

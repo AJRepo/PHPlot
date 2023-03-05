@@ -9,7 +9,7 @@ require 'config.php';
 
 $data = array(array('', 0, 0, 0), array('', 10, 5, 10));
 
-$p = new Phplot\Phplot\PHPlot(800, 600);
+$p = new Phplot\Phplot\phplot(800, 600);
 $p->SetTitle("Dual Text Types:\nDefault GD, TTF title and Y title");
 $p->SetDataType('data-data');
 $p->SetDataValues($data);

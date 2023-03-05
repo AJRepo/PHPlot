@@ -6,7 +6,7 @@ $data = array(
   array('B',  2, 6),
   array('C',  3, 0),
 );
-$p = new PHPlot(500, 200);
+$p = new phplot(500, 200);
 $p->SetPlotType('dots');  # Error!
 $p->SetTitle('Error test');
 $p->SetDataType('data-data');

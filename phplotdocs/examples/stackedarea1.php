@@ -10,7 +10,7 @@ $data = array(
   array('2000', 28,  0, 18, 16, 33,  5),
 );
 
-$plot = new PHPlot(800, 600);
+$plot = new phplot(800, 600);
 $plot->SetImageBorderType('plain');
 
 $plot->SetPlotType('stackedarea');

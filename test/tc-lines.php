@@ -58,10 +58,10 @@ for ($x = 0; $x < 16; $x++) {
 $title = array("Lines plot");
 
 if ($tp['truecolor']) {
-    $p = new PHPlot_truecolor(1024, 768);
+    $p = new phplot_truecolor(1024, 768);
     $title[] = "Truecolor";
 } else {
-    $p = new Phplot\Phplot\PHPlot(1024, 768);
+    $p = new Phplot\Phplot\phplot(1024, 768);
     $title[] = "Palette Color";
 }
 $p->SetCallback('draw_setup', 'pre_plot');

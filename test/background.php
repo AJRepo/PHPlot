@@ -21,8 +21,8 @@ $data = array(
   array('Jan', 1000), array('Feb', 2000), array('Mar', 3000),
   array('Apr', 2500), array('May', 1500), array('Jun',  500),
 );
-if ($tp['truecolor']) $plot = new PHPlot_truecolor(800, 600);
-else $plot = new Phplot\Phplot\PHPlot(800, 600);
+if ($tp['truecolor']) $plot = new phplot_truecolor(800, 600);
+else $plot = new Phplot\Phplot\phplot(800, 600);
 $plot->SetPlotType('bars');
 $plot->SetDataType('text-data');
 $plot->SetDataValues($data);

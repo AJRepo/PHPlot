@@ -58,7 +58,7 @@ for ($i = 0; $i < $nc; $i++) {
 }
 $data = array($row);
 
-$p = new Phplot\Phplot\PHPlot(1024, 768);
+$p = new Phplot\Phplot\phplot(1024, 768);
 $p->SetPlotType('bars');
 $p->SetShading(0);
 $p->SetDataType('text-data');

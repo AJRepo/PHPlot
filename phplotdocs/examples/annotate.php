@@ -79,7 +79,7 @@ $data = get_data();
 get_best_worst($data, $best_index, $best_sales, $worst_index, $worst_sales);
 
 # Create the PHPlot object, set title, plot type, data array type, and data:
-$plot = new PHPlot(800, 600);
+$plot = new phplot(800, 600);
 $plot->SetTitle('Monthly Widget Sales');
 $plot->SetPlotType('bars');
 $plot->SetDataType('text-data');

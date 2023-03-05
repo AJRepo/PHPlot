@@ -12,7 +12,7 @@ for ($i = 0; $i < 50; $i++) {
   $x += $dx;
 }
 
-$plot = new Phplot\Phplot\PHPlot(800, 600);
+$plot = new Phplot\Phplot\phplot(800, 600);
 $plot->SetPlotType('lines');
 $plot->SetDataType('data-data');
 $plot->SetDataValues($data);

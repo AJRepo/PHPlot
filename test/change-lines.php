@@ -4,7 +4,7 @@
 # solid to dash. This produced a bug report which has been fixed.
 require_once 'phplot.php';
 
-$graph = new Phplot\Phplot\PHPlot(800,600);
+$graph = new Phplot\Phplot\phplot(800,600);
 $graph->setNumXTicks(1);
 $graph->setPrecisionY(0);
 $graph->SetDataColors(array("blue","red","green","red","blue","green"));

@@ -79,7 +79,7 @@ function pmarg_test($call_SetMarginsPixels,
 {
     global $data, $margins_override, $plotarea_override;
 
-    $p = new PHPlot_pv(PLOT_WIDTH, PLOT_HEIGHT);
+    $p = new phplot_pv(PLOT_WIDTH, PLOT_HEIGHT);
     $p->SetTitle("Unused Title Goes Here");
     $p->SetDataType('data-data');
     $p->SetDataValues($data);

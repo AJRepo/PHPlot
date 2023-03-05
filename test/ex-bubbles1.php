@@ -24,7 +24,7 @@ $data = array(
     array('Banana', 6,   1, 5,   2, 4,   3, 6,   4, 3,   5, 3,   6, 4),
 );
 
-$plot = new Phplot\Phplot\PHPlot(600, 600);
+$plot = new Phplot\Phplot\phplot(600, 600);
 $plot->SetTitle("Flavor Preference By Age Group");
 $plot->SetDataType('data-data-xyz');
 $plot->SetDataValues($data);

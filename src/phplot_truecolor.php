@@ -17,7 +17,7 @@
 
 namespace Phplot\Phplot;
 
-class PHPlot_truecolor extends PHPlot
+class phplot_truecolor extends phplot
 {
     /**
      * Constructor: Sets up GD truecolor image resource, and initializes plot style controls

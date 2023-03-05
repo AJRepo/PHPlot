@@ -21,7 +21,7 @@ $data = array(
    array('', 6,  -5.80, -1,  3, 7.66, 11, 15),
    array('', 7,  -4.93,  0,  4, 9.88, 12, 16),
 );
-$p = new Phplot\Phplot\PHPlot(800, 600);
+$p = new Phplot\Phplot\phplot(800, 600);
 $p->SetDataType('data-data');
 $p->SetPlotType('points');
 $p->SetDataValues($data);

@@ -124,7 +124,7 @@ You must serialize and unserialize with the exact same version of PHPlot.
 <para>
 Here is an example of serializing a PHPlot object:
 <programlisting><![CDATA[require_once 'phplot.php';
-$plot = new PHPlot(800, 600);
+$plot = new phplot(800, 600);
 ... // Configure the PHPlot object: Set plot type, data values, etc.
 // Do not use DrawGraph (yet)
 $str = serialize($plot);
@@ -177,10 +177,10 @@ To make a Truecolor image in PHPlot, create an object of the derived class
 <literal>PHPlot_truecolor</literal> instead of the class
 <literal>PHPlot</literal>.
 For example, replace this:
-<programlisting><![CDATA[$plot = new PHPlot(800, 600);
+<programlisting><![CDATA[$plot = new phplot(800, 600);
 ]]></programlisting>
 with this:
-<programlisting><![CDATA[$plot = new PHPlot_truecolor(800, 600);
+<programlisting><![CDATA[$plot = new phplot_truecolor(800, 600);
 ]]></programlisting>
 </para>
 
@@ -511,7 +511,7 @@ portions of the bars. With alpha blending, the overlaps take on new colors.
 When creating a PHPlot or PHPlot_truecolor object, you can provide an
 existing image filename to the constructor as the fourth argument,
 <parameter>$input_file</parameter>.
-<programlisting><![CDATA[$plot = new PHPlot(800, 600, NULL, 'myimage.png');
+<programlisting><![CDATA[$plot = new phplot(800, 600, NULL, 'myimage.png');
 ]]></programlisting>
 This image file becomes the background for your plot. (The function
 <xref linkend="SetInputFile"/> also does this,
@@ -567,7 +567,7 @@ is used. Here is a partial example:
     imageantialias($img, True);
 }
 ...
-$plot = new PHPlot_truecolor(1024, 768);
+$plot = new phplot_truecolor(1024, 768);
 $plot->SetCallback('draw_setup', 'pre_plot');
 ]]></programlisting>
 </para>
@@ -605,7 +605,7 @@ This must be done after all drawing, so the post-drawing callback
 }
 
 ...
-$plot = new PHPlot_truecolor(1024, 768);
+$plot = new phplot_truecolor(1024, 768);
 $plot->SetCallback('draw_all', 'post_plot');
 ]]></programlisting>
 </para>
@@ -1187,7 +1187,7 @@ output from this example.
 
 <para>
 The script starts with the usual PHPlot object creation and setup.
-<programlisting><![CDATA[$plot = new PHPlot(800, 600);
+<programlisting><![CDATA[$plot = new phplot(800, 600);
 $plot->SetTitle('Monthly Widget Sales');
 ...
 ]]></programlisting>
@@ -2614,7 +2614,7 @@ use to set the values.
 <para>
 For example, if you want PHPlot to draw the X/Y grid above (after) the plot,
 rather than behind it, you would do the following:
-  <programlisting><![CDATA[$plot = new PHPlot(800, 600);
+  <programlisting><![CDATA[$plot = new phplot(800, 600);
 ...
 $plot->grid_at_foreground = TRUE; // Draw grid after plot
 ]]></programlisting>
@@ -3932,7 +3932,7 @@ function next_row($x)
 for ($i = 0; $i < $n_rows; $i++) $data[$i] = array('', '', '');
 
 # Create and configure the PHPlot object:
-$plot = new PHPlot(640, 480);
+$plot = new phplot(640, 480);
 $plot->SetDataType('text-data');
 $plot->SetPlotType('lines');
 $plot->SetFileFormat('jpg');
@@ -5049,7 +5049,7 @@ There are two other places where the operation differs for the HTML or image
 generation, based on the <literal>$do_html</literal> flag: disabling automatic
 output with <xref linkend="SetPrintImage"/>, and calling
 the <function>generate_html()</function> function at the end.
-<programlisting><![CDATA[$plot = new PHPlot(800, 600);
+<programlisting><![CDATA[$plot = new phplot(800, 600);
 if ($do_html) {
     // Do not output the image in this mode:
     $plot->SetPrintImage(False);

@@ -19,7 +19,7 @@ $data = array(
   array('E', 3, 1),
 );
 
-$p = new PHPlot;
+$p = new phplot;
 $p->SetDataType('text-data');
 $p->SetDataValues($data);
 $p->SetPlotType('bars');

@@ -18,7 +18,7 @@ for ($i = 0; $i < 3; $i++) {
 }
 for ($j = 0; $j < $n_legend; $j++)
      $legend[$j] = "Legend Line $j";
-$p = new Phplot\Phplot\PHPlot(800, 600);
+$p = new Phplot\Phplot\phplot(800, 600);
 $p->SetTitle("Legend Line Count Tests\n$subtitle");
 $p->SetLegend($legend);
 $p->SetDataType('text-data');

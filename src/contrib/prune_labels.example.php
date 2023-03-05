@@ -16,7 +16,7 @@ for ($i = 0; $i < 250; $i++) {
 # Show no more than 20 labels:
 prune_labels($data, 20);
 
-$p = new PHPlot(800, 600);
+$p = new phplot(800, 600);
 $p->SetTitle('Example - pruned data labels');
 $p->SetDataType('data-data');
 $p->SetDataValues($data);

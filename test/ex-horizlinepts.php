@@ -22,7 +22,7 @@ $data = array(
             array('900m', 9, 35),
         );
 
-$plot = new Phplot\Phplot\PHPlot(800, 600);
+$plot = new Phplot\Phplot\phplot(800, 600);
 $plot->SetImageBorderType('plain'); // Improves presentation in the manual
 $plot->SetTitle('Wind Speed at Altitude');
 $plot->SetDataType('data-data-yx');

@@ -41,7 +41,7 @@ function check_frame($frame, $boundary)
 }
 
 # Initial plot object setup:
-$plot = new PHPlot_pv(640, 480);
+$plot = new phplot_pv(640, 480);
 $plot->SetDataType('text-data');
 $plot->SetPlotType('lines');
 $plot->SetFileFormat('jpg');

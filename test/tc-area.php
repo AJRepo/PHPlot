@@ -11,7 +11,7 @@ $data = array(
 $colors = array(
  'red:100', 'red:80', '#ff00003c', 'red:40', 'red:20', 'red',
 );
-$p = new PHPlot_truecolor(800, 800);
+$p = new phplot_truecolor(800, 800);
 $p->SetTitle("Truecolor Area chart with red alpha gradient");
 $p->SetDataType('text-data');
 $p->SetDataValues($data);

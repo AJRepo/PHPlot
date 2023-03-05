@@ -45,7 +45,7 @@ for ($i = 0; $i < $n_points; $i++) {
     $ts += 3600;
 }
 
-$plot = new PHPlot(800, 600);
+$plot = new phplot(800, 600);
 $plot->SetImageBorderType('plain'); // For presentation in the manual
 $plot->SetTitle('Hourly Data Example Plot');
 $plot->SetDataType('data-data');

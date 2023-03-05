@@ -25,7 +25,7 @@ $data = array(
   array("G",           6,  6),
 );
 
-$p = new Phplot\Phplot\PHPlot(400,300);
+$p = new Phplot\Phplot\phplot(400,300);
 if (isset($tp['font'])) {
   $p->SetDefaultTTFont($tp['font']);
 }

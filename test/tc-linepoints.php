@@ -20,7 +20,7 @@ for ($x = 0; $x < 4; $x++) {
     $data[] = $row;
 }
 
-$p = new PHPlot_truecolor(1000, 800);
+$p = new phplot_truecolor(1000, 800);
 $p->SetTitle("Truecolor linespoint plot with all point shapes");
 $p->SetDataType('data-data');
 $p->SetDataValues($data);

@@ -118,7 +118,7 @@ $data = array(
   array('',  5),
 );
 
-$plot = new Phplot\Phplot\PHPlot(800, 600);
+$plot = new Phplot\Phplot\phplot(800, 600);
 // Disable error images, since this script produces HTML:
 $plot->SetFailureImage(False);
 // Disable automatic output of the image:

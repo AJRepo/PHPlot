@@ -11,7 +11,7 @@ $data = array(
   array('Jun',  7),
 );
 
-$p = new PHPlot(400,300);
+$p = new phplot(400,300);
 $p->SetDataType('text-data');
 $p->SetDataValues($data);
 

@@ -38,7 +38,7 @@ function draw_plot($plot, $start_angle, $direction, $xbase, $ybase)
 # Make a data array with equal-size slices:
 $data = array_fill(0, $pie_slices, array('', 1));
 
-$plot = new Phplot\Phplot\PHPlot(800, 600);
+$plot = new Phplot\Phplot\phplot(800, 600);
 $plot->SetDataValues($data);
 $plot->SetDataType('text-data-single');
 $plot->SetPlotType('pie');

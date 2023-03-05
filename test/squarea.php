@@ -144,7 +144,7 @@ if ($missing_point) {
 }
 if (!empty($suffix)) $title .= "\n" . $suffix;
 
-$plot = new PHPlot_truecolor(800, 600);
+$plot = new phplot_truecolor(800, 600);
 
 $plot->SetTitle($title);
 $plot->SetDataType($data_type);

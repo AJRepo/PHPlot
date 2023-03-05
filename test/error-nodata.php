@@ -9,7 +9,7 @@ $data = array(
   array('',  2,   8),
 );
 
-$p = new Phplot\Phplot\PHPlot();
+$p = new Phplot\Phplot\phplot();
 $p->SetTitle('Bugcheck: No data');
 $p->SetDataType('data-data');
 

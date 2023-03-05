@@ -39,7 +39,7 @@ for ($i = 1; $i <= $n_points; $i++) {
 }
 
 # Base setup for all 4 sub-plots:
-$plot = new PHPlot(800, 400);
+$plot = new phplot(800, 400);
 $plot->SetTitle("PHPlot Auto-range Illustration\n"
               . "Case ($case) Y data range $ymin to $ymax");
 $plot->SetDataType($data_type);

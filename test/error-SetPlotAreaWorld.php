@@ -5,7 +5,7 @@
 require 'phplot.php';
 if (empty($spaw)) $spaw = array(20, 20, 200, 200); // Args to SetPlotAreaWorld
 if (empty($subtitle)) $subtitle = 'Baseline(no error)'; // Subtitle for plot
-$plot = new Phplot\Phplot\PHPlot();
+$plot = new Phplot\Phplot\phplot();
 $plot->SetTitle("SetPlotAreaWorld(" . implode(', ', $spaw) . ")\n$subtitle");
 $plot->SetDataType('data-data');
 $plot->SetDataValues(array(array('',  25, 25), array('', 195, 195)));

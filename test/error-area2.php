@@ -8,7 +8,7 @@ $data = array(
   array('C', 6, 5, 4, 3),
   array('D', 7, 6, 5, 4, 12),
 );
-$plot = new Phplot\Phplot\PHPlot(800, 600);
+$plot = new Phplot\Phplot\phplot(800, 600);
 $plot->SetTitle('Error test - Area plot with different point counts');
 $plot->SetPlotType('area');
 $plot->SetDataType('text-data');

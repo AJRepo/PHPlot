@@ -73,7 +73,7 @@ function plot_histogram($image_filename, $param)
     $histo = get_histogram($image_filename);
     if (empty($histo)) return;
     for ($i = 0; $i < 256; $i++) $data[$i] = array('', $histo[$i]);
-    $p = new PHPlot_truecolor($plot_image_width, $plot_image_height);
+    $p = new phplot_truecolor($plot_image_width, $plot_image_height);
     $p->SetFileFormat('jpg');
     $p->SetBgImage($image_filename, 'scale');
     $p->SetDataType('text-data');

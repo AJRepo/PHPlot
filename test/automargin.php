@@ -65,7 +65,7 @@ if ($tp['xlt0']) {
 $x_title = 'X Axis Title';
 $y_title = 'Y Axis Title';
 
-$p = new Phplot\Phplot\PHPlot(800,600);
+$p = new Phplot\Phplot\phplot(800,600);
 # Uncomment this and the require above for tracing:
 #$p->SetCallback('debug_scale', 'debug_handler');
 $p->SetDataType('data-data');

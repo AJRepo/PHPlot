@@ -394,7 +394,7 @@ case of a fatal error.
     </para>
     <para>
 An example of using the <literal>dataurl</literal> encoding is:
-<programlisting><![CDATA[$plot = new PHPlot(800, 600);
+<programlisting><![CDATA[$plot = new phplot(800, 600);
 $plot->SetPrintImage(False);  // Do not output the image
 ... // Plot settings, data, etc.
 $plot->DrawGraph();  // Make the plot but do not output it
@@ -727,11 +727,11 @@ This function was added in PHPlot-5.4.0.
 
   <refnamediv>
     <refname>PHPlot</refname>
-    <refpurpose>Construct a new PHPlot Class Object</refpurpose>
+    <refpurpose>Construct a new phplot Class Object</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>$plot = new PHPlot(<optional><parameter>$width</parameter></optional>, <optional><parameter>$height</parameter></optional>, <optional><parameter>$output_file</parameter></optional>, <optional><parameter>$input_file</parameter></optional>)</synopsis>
+    <synopsis>$plot = new phplot(<optional><parameter>$width</parameter></optional>, <optional><parameter>$height</parameter></optional>, <optional><parameter>$output_file</parameter></optional>, <optional><parameter>$input_file</parameter></optional>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -819,7 +819,7 @@ plot image.
     <para>
 Earlier versions of this manual said that the created object should always
 be returned as a reference, like this:
-      <programlisting><![CDATA[$plot =& new PHPlot(...);  // Do not use this
+      <programlisting><![CDATA[$plot =& new phplot(...);  // Do not use this
 ]]></programlisting>
 This was because PHPlot included a function to deallocate memory used by
 the object at script shutdown, but that would only work if a reference
@@ -839,11 +839,11 @@ is deprecated starting with PHP5, and removed in PHP7.
 
   <refnamediv>
     <refname>PHPlot_truecolor</refname>
-    <refpurpose>Construct a new PHPlot Truecolor Class Object</refpurpose>
+    <refpurpose>Construct a new phplot Truecolor Class Object</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
-    <synopsis>$plot = new PHPlot_truecolor(<optional><parameter>$width</parameter></optional>, <optional><parameter>$height</parameter></optional>, <optional><parameter>$output_file</parameter></optional>, <optional><parameter>$input_file</parameter></optional>)</synopsis>
+    <synopsis>$plot = new phplot_truecolor(<optional><parameter>$width</parameter></optional>, <optional><parameter>$height</parameter></optional>, <optional><parameter>$output_file</parameter></optional>, <optional><parameter>$input_file</parameter></optional>)</synopsis>
   </refsynopsisdiv>
 
   <refsect1>
@@ -1053,7 +1053,7 @@ For more on streaming plots, see <xref linkend="adv-streaming"/>.
 This is a partial example showing how the 3 functions are used to produce
 streaming plots. See <xref linkend="adv-streaming-example"/> for the
 complete example.
-      <programlisting><![CDATA[$plot = new PHPlot(640, 480);
+      <programlisting><![CDATA[$plot = new phplot(640, 480);
 ...
 $plot->SetPrintImage(False);
 $plot->StartStream();
@@ -5689,7 +5689,7 @@ locale settings from the system. For example, if the following code is used,
 numeric formatting will use the fr_CA locale settings, regardless of
 the system locale.
       <programlisting><![CDATA[setlocale(LC_ALL, 'fr_CA');  # On Windows use: 'French_Canada'
-$plot = new PHPlot(800, 600);
+$plot = new phplot(800, 600);
 $plot->locale_override = True;
 ]]></programlisting>
     </para>
@@ -8069,7 +8069,7 @@ title color was set, and that color map defines a color named
           </para>
         </listitem>
       </itemizedlist>
-      <programlisting><![CDATA[$plot = new PHPlot();
+      <programlisting><![CDATA[$plot = new phplot();
 ...
 $plot->SetXTitleColor('blue');
 $plot->SetRGBArray(array('black' => array(255,0,0), 'blue' => array(0, 255, 0)));

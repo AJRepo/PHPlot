@@ -170,7 +170,7 @@ in the 'require' line below.
 ------------ simpleplot.php -----------------------------
 <?php
 require 'phplot.php';
-$plot = new PHPlot();
+$plot = new phplot();
 $data = array(array('', 0, 0), array('', 1, 9));
 $plot->SetDataValues($data);
 $plot->SetDataType('data-data');

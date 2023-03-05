@@ -14,7 +14,7 @@ $data = array(
     array('1970',   79.6,   11.7,   48.1,   27.4,    5.4,   11.4,   17.8),
     array('1990',   63.9,   14.9,   46.4,   42.4,    4.0,   24.6,   15.8),
 );
-$plot = new PHPlot(800, 500);
+$plot = new phplot(800, 500);
 $plot->SetImageBorderType('plain'); // Improves presentation in the manual
 $plot->SetTitle("U.S. Annual Per-Capita Consumption\n"
               . "of Selected Meat and Dairy Products");

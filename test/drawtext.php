@@ -46,7 +46,7 @@ $width = 500;
 $height = 500;
 
 # Testing framework: Create an object and initialize.
-$p = new Phplot\Phplot\PHPlot($width, $height);
+$p = new Phplot\Phplot\phplot($width, $height);
 
 # Local variable with image resource:
 $img = $p->img;
@@ -57,7 +57,7 @@ if ($nlines == 1) $plural = ''; else $plural = 's';
 
 # Font setup:
 # For PHPlot-5.0.5 and earlier, this would directly set its own font[] array
-# with members that we knew PHPlot drawtext() uses. But this changed after
+# with members that we knew phplot drawtext() uses. But this changed after
 # PHPlot-5.0.5, when mixed text types are supported. The goal now is to use
 # PHPlot's own SetFont() methods to set up the array, then peak inside to
 # see whether it is the old one or new one font array name, and copy it out.

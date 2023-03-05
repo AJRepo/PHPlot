@@ -17,7 +17,7 @@ $settings = array(
     'font' => 3,
 );
 
-$plot = new PHPlot(800, 600);
+$plot = new phplot(800, 600);
 $plot->SetTitle('Line Plot with Data Table on Right Side');
 $plot->SetDataValues($data);
 $plot->SetDataType('data-data');

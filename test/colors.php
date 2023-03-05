@@ -8,7 +8,7 @@ class PHPlot_pv extends PHPlot {
     public function GET_rgb_array() { return $this->rgb_array; }
 }
 
-$p = new PHPlot_pv(800,700);
+$p = new phplot_pv(800,700);
 
 # Use internal color map rgb_array to get a list of colors:
 $colors = array_keys($p->GET_rgb_array());

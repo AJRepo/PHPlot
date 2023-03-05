@@ -14,7 +14,7 @@ $data = array(
   array('Sunday', 10),
 );
 
-$p = new Phplot\Phplot\PHPlot();
+$p = new Phplot\Phplot\phplot();
 $p->SetDataType('text-data');
 $p->SetDataValues($data);
 $p->SetPlotType('bars');

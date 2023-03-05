@@ -115,7 +115,7 @@ function store_map($im, $data, $shape, $segment, $unused,
 }
 
 # Create and configure the PHPlot object.
-$plot = new PHPlot(640, 480);
+$plot = new phplot(640, 480);
 # Disable error images, since this script produces HTML:
 $plot->SetFailureImage(False);
 # Disable automatic output of the image by DrawGraph():

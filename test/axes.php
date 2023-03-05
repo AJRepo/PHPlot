@@ -16,7 +16,7 @@ $data = array(
   array('', 4, 8),
 );
 
-$p = new Phplot\Phplot\PHPlot(400, 300);
+$p = new Phplot\Phplot\phplot(400, 300);
 
 $p->SetDataType('data-data');
 $p->SetDataValues($data);

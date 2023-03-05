@@ -59,7 +59,7 @@ case 3:
 
 
 // Common setup:
-$plot = new Phplot\Phplot\PHPlot(460, 600);
+$plot = new Phplot\Phplot\phplot(460, 600);
 $plot->SetPrintImage(False);
 $plot->SetTitle("Multiple Plots, X,Y label format\n$subtitle");
 $plot->SetPlotType('linepoints');
