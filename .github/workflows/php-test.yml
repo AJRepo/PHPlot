@@ -1,0 +1,29 @@
+name: PHPlot loading test
+run-name: ${{ github.actor }} is testing out require 
+on: [push]
+jobs:
+  Test-Require:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+      - run: echo "🐧 This job is now running on a ${{ runner.os }} server."
+      - run: echo "🔎 Branch is ${{ github.ref }} and Repository is ${{ github.repository }}."
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
+      - run: echo "🖥️ The workflow is now ready to test your code on the runner."
+      - run: php --version
+      - name: List files in the repository
+        run: |
+          ls ${{ github.workspace }}
+      - name: See if PHPlot require phplot works
+        run: php -r "require 'src/phplot.php'; \$plot=new Phplot\\Phplot\\phplot(80, 60);"
+      - name: See if PHPlot require phplot_truecolor works
+        run: php -r "require 'src/phplot.php'; require 'src/phplot_truecolor.php'; \$plot=new Phplot\\Phplot\\phplot_truecolor(80, 60);"
+      - name: See if PHPlot works with composer
+        run: composer create-project
+      - run: ls ${{ github.workspace }}
+      - run: php -r "require 'vendor/autoload.php'; \$plot=new Phplot\\Phplot\\phplot(80, 60);"
+      - run: php -r "require 'vendor/autoload.php'; \$plot=new Phplot\\Phplot\\phplot_truecolor(80, 60);"
+      - name: End Status
+        run: echo "🍏 This job's status is ${{ job.status }}."
