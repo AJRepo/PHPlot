@@ -5,8 +5,8 @@ jobs:
   Test-Require:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-      - run: echo "🐧 This job is now running on a ${{ runner.os }} server."
+      - run: echo "🎉 Job was automatically triggered by a ${{ github.event_name }} event."
+      - run: echo "🐧 Job is now running on a ${{ runner.os }} server."
       - run: echo "🔎 Branch is ${{ github.ref }} and Repository is ${{ github.repository }}."
       - name: Check out repository code
         uses: actions/checkout@v3
