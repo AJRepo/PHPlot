@@ -16,9 +16,9 @@ jobs:
       - name: List files in the repository
         run: |
           ls ${{ github.workspace }}
-      - name: See if PHPlot require phplot works
+      - name: See if PHP command "require src/phplot.php" works
         run: php -r "require 'src/phplot.php'; \$plot=new Phplot\\Phplot\\phplot(80, 60);"
-      - name: See if PHPlot require phplot_truecolor works
+      - name: See if PHP command "require src/phplot_truecolor.php" works
         run: php -r "require 'src/phplot.php'; require 'src/phplot_truecolor.php'; \$plot=new Phplot\\Phplot\\phplot_truecolor(80, 60);"
       - name: See if PHPlot works with composer
         run: composer create-project
