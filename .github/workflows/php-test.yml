@@ -1,5 +1,5 @@
 name: PHPlot loading test
-run-name: ${{ github.actor }}: Testing calling via 'require src/...' and via 'composer vendor/autoload.php'
+run-name: ${{ github.actor }} Testing calling via 'require src/...' and via 'composer vendor/autoload.php'
 on: [push]
 jobs:
   Test-require-and-composer:
