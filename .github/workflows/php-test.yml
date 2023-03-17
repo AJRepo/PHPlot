@@ -1,8 +1,8 @@
 name: PHPlot loading test
-run-name: ${{ github.actor }} is testing calling via 'require src/...' and via 'composer vendor/autoload.php'
+run-name: ${{ github.actor }}: Testing calling via 'require src/...' and via 'composer vendor/autoload.php'
 on: [push]
 jobs:
-  Test-Require:
+  Test-require-and-composer:
     runs-on: ubuntu-latest
     steps:
       - run: echo "🎉 Job was automatically triggered by a ${{ github.event_name }} event."
@@ -16,11 +16,11 @@ jobs:
       - name: List files in the repository
         run: |
           ls ${{ github.workspace }}
-      - name: See if PHP command "require src/phplot.php" works
+      - name: See if PHPlot works with "require src/phplot.php"
         run: php -r "require 'src/phplot.php'; \$plot=new Phplot\\Phplot\\phplot(80, 60);"
-      - name: See if PHP command "require src/phplot_truecolor.php" works
+      - name: See if PHPlot trucolor works with "require src/phplot_truecolor.php"
         run: php -r "require 'src/phplot.php'; require 'src/phplot_truecolor.php'; \$plot=new Phplot\\Phplot\\phplot_truecolor(80, 60);"
-      - name: See if PHPlot works with composer
+      - name: See if PHPlot works with 'composer vendor/autoload.php'
         run: composer create-project
       - run: ls ${{ github.workspace }}
       - run: php -r "require 'vendor/autoload.php'; \$plot=new Phplot\\Phplot\\phplot(80, 60);"

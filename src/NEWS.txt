@@ -5,6 +5,24 @@ Refer the the ChangeLog file for detailed source changes.
 See NEWS_part1.txt for older release documentation.
 -----------------------------------------------------------------------------
 
+2022-03-11 Release 8.0.1
+
+This is the release of PHPlot tested with the Composer PSR-4 specification
+https://getcomposer.org/doc/04-schema.md#psr-4 . PSR-4 is recommended by
+getcomposer.org but introduces a case sensitivity that did not exist with
+earlier implementations.
+
+If you are using composer and get the error:
+   `PHP Fatal error:  Uncaught Error: Class "phplot" not found`
+look at the case of the full namespace. E.g. if you have
+   `$plot = new PHPlot\PHPlot\PHPlot(800, 600);`
+try changing to
+   `$plot = new Phplot\Phplot\phplot(800, 600);`
+
+Note that the Namespaces starts with an uppercase "P" and the class starts
+with a lowercase "p." This is to avoid changing the case of the file phplot.php
+
+
 2022-12-28 Release 8.0.0-RC1
 
 === Overview:

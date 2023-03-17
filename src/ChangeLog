@@ -2,10 +2,25 @@ This is the Change Log for PHPlot.
 The project home page is https://github.com/AJRepo/PHPlot/
 -----------------------------------------------------------------------------
 
+2023-03-11
+    * Adding git actions
+    * Composer PSR-4 specification case sensitivity fix. See NEWS.txt for
+      more details
+
+If you are using composer and get the error:
+   `PHP Fatal error:  Uncaught Error: Class "phplot" not found`
+look at the case of the full namespace. E.g. if you have
+   `$plot = new PHPlot\PHPlot\PHPlot(800, 600);`
+try changing to
+   `$plot = new Phplot\Phplot\phplot(800, 600);`
+
+Note that the Namespaces starts with an uppercase "P" and the class starts
+with a lowercase "p." This is to avoid changing the case of the file phplot.php
+
 2022-12-11
     * Update docs to point to Github from Sourceforge.
-    * Deprecating ChangeLog in favor of "git log" from this point forward. 
-      Notes on major upgrades will still appear here. 
+    * Deprecating ChangeLog in favor of "git log" from this point forward.
+      Notes on major upgrades will still appear here.
 
 2016-01-01
     * Mark as pre-release version 6.2.1 and extend copyright to 2016.
@@ -156,7 +171,7 @@ The project home page is https://github.com/AJRepo/PHPlot/
     * Merged /branches/Rel6 changes back into trunk. Changes recorded below
       with "(/branches/Rel6)" were made on the branch. Note: Subversion
       change history for those changes is only available by looking at
-      revision 1558 on the branch, for example: 
+      revision 1558 on the branch, for example:
          svn log ^/branches/Rel6/phplot/phplot.php@1558
       The /branches/Rel6 tree has not been deleted, but may be in the future
       (as recommended in Subversion documentation).
@@ -770,7 +785,7 @@ The project home page is https://github.com/AJRepo/PHPlot/
         label color to the data label color, and default the pie label
         color to the grid color. This is backwards-compatible, except that
         the data value labels used to use the title color.
-      + Use separate color index values for ticks, axis data labels, 
+      + Use separate color index values for ticks, axis data labels,
         data value labels, and pie labels. Use title color only for titles.
 
 2012-02-17
@@ -871,7 +886,7 @@ The project home page is https://github.com/AJRepo/PHPlot/
     ++ Fix pie size calculation, use actual aspect ratio
     ++ Pre-calculate label strings to get their sizes, if needed
     ++ Use new $pie_full_size from SetPieAutoSize() to control autosizing
-    ++ Pie size accounts for largest label (if labels are outside the pie) 
+    ++ Pie size accounts for largest label (if labels are outside the pie)
     ++ Leave safe_margin between labels and pie/plot area edges
     + Changed DrawGraph() to:
     ++ Skip irrelevant data and scale calculations for pie charts
@@ -1432,7 +1447,7 @@ The project home page is https://github.com/AJRepo/PHPlot/
 
      Compatibility: If you were using an invalid data type for a plot type
      whose function did not check, will now get an error.
-     
+
    * Removed some dubious code from DrawLines() and DrawSquared() and
      rewrote comments there. The code initialized lastx[0] and lasty[0],
      but lasty was mapped using the X (rather than Y) function.  This was
@@ -1443,7 +1458,7 @@ The project home page is https://github.com/AJRepo/PHPlot/
    * Truecolor.txt: removed
    * Makefile, README.txt: Removed reference to Truecolor.txt. Full
      documentation for truecolor images is now in the Reference Manual.
-     
+
 2010-06-02
    * Fix bug 3010116 "Bad rendering of title in multi-plot image
      when using TTF":
@@ -1940,7 +1955,7 @@ The project home page is https://github.com/AJRepo/PHPlot/
           y_label_left_offset, y_label_right_offset, y_label_axis_offset,
           x_title_top_offset, x_title_bot_offset,
           y_title_left_offset, y_title_left_offset : Label offsets
-      
+
     * New internal functions:
       CalcPlotAreaPixels : Deferred calculations taken out of SetPlotAreaPixels
         and SetMarginsPixels.
@@ -2215,7 +2230,7 @@ The project home page is https://github.com/AJRepo/PHPlot/
 
         Removed third, unused, default NULL argument from SetLegendPixels and
         SetLegendWorld.
- 
+
         Changes to DrawLegend to convert x, y coords to pixel coordinates
         if they came from SetLegendWorld. Also account for new usage of
         the class variables: Test for unset to mean use default.
@@ -2236,7 +2251,7 @@ The project home page is https://github.com/AJRepo/PHPlot/
       If number formatting is enabled with 'data' format type, PHPlot previously
       used dot for decimal point and comma for thousands separator, and there
       was no way to change it.
-      
+
       This fix adds a new function:
                SetNumberFormat($decimal_point, $thousands_separator)
       to set the separators.  In addition, if that function is not used,
@@ -2292,7 +2307,7 @@ The project home page is https://github.com/AJRepo/PHPlot/
     * Fix for bug 1594457: DrawError text wrap and background fix
       Do error image white background correctly, and word-wrap the text.
 
-    * Fix for bug 1594458: Suppress lines or points in 'linepoints' 
+    * Fix for bug 1594458: Suppress lines or points in 'linepoints'
       Don't draw X data labels twice for 'linepoints'.
       Allow SetPointShapes value 'none' to suppress points, and allow
       SetLineStyles value 'none' to suppress lines. This allows a 'linepoints'
