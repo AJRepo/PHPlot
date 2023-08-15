@@ -2115,7 +2115,7 @@ class phplot
             $ry = $qy + $r10 * $width_factor + $r11 * $font_height;
 
             // Finally, draw the text:
-            ImageTTFText($this->img, $font_size, $angle, $rx, $ry, $color, $font_file, $lines[$i]);
+            ImageTTFText($this->img, $font_size, $angle, (int)$rx, (int)$ry, (int)$color, $font_file, $lines[$i]);
 
             // Step to position of next line.
             // This is a rotation of (x=0,y=height+line_spacing) by $angle:
@@ -7858,7 +7858,7 @@ class phplot
         }
 
         // Draw the bar
-        ImageFilledRectangle($this->img, $x1, $y1, $x2, $y2, $data_color);
+        ImageFilledRectangle($this->img, (int)$x1, (int)$y1, (int)$x2, (int)$y2, (int)$data_color);
 
         // Draw a shade, if shading is on.
         if (isset($shade_color)) {
