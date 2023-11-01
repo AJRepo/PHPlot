@@ -1908,7 +1908,7 @@ class phplot
             $y = $ypos - $r10 * $factor;
 
             // Call ImageString or ImageStringUp:
-            $draw_func($this->img, $font_number, $x, $y, $lines[$i], $color);
+            $draw_func($this->img, $font_number, (int)$x, (int)$y, $lines[$i], (int)$color);
 
             // Step to the next line of text. This is a rotation of (x=0, y=interline_spacing)
             $xpos += $r01 * $interline_step;
@@ -7520,10 +7520,10 @@ class phplot
                         // Draw color boxes:
                         ImageFilledRectangle(
                             $this->img,
-                            $dot_left_x,
-                            $y1,
-                            $dot_right_x,
-                            $y2,
+                            (int) $dot_left_x,
+                            (int) $y1,
+                            (int) $dot_right_x,
+                            (int) $y2,
                             $this->ndx_data_colors[$color_index]
                         );
                        // Draw a rectangle around the box, if enabled.
@@ -8327,13 +8327,13 @@ class phplot
                     // Draw the slice
                     ImageFilledArc(
                         $this->img,
-                        $xpos,
-                        $ypos + $h,
-                        $pie_width,
-                        $pie_height,
-                        $arc_end_angle,
-                        $arc_start_angle,
-                        $slicecol,
+                        (int) $xpos,
+                        (int) $ypos + $h,
+                        (int) $pie_width,
+                        (int) $pie_height,
+                        (int) $arc_end_angle,
+                        (int) $arc_start_angle,
+                        (int) $slicecol,
                         IMG_ARC_PIE
                     );
 
