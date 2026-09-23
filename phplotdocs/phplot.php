@@ -1,1 +1,1 @@
-../phplot/phplot.php
+../src/phplot.php
