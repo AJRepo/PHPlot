@@ -1831,7 +1831,7 @@ class phplot
         // Break up the text into lines, trim whitespace, find longest line.
         // Save the lines and length for drawing below.
         $longest = 0;
-        foreach (explode("\n", $text) as $each_line) {
+        foreach (explode("\n", (string)$text) as $each_line) {
             $lines[] = $line = trim($each_line);
             $line_lens[] = $line_len = strlen($line);
             if ($line_len > $longest) {
@@ -1908,7 +1908,7 @@ class phplot
             $y = $ypos - $r10 * $factor;
 
             // Call ImageString or ImageStringUp:
-            $draw_func($this->img, $font_number, $x, $y, $lines[$i], $color);
+            $draw_func($this->img, $font_number, (int)$x, (int)$y, $lines[$i], $color);
 
             // Step to the next line of text. This is a rotation of (x=0, y=interline_spacing)
             $xpos += $r01 * $interline_step;
@@ -1954,7 +1954,7 @@ class phplot
         //   So 1+bbox[1] is the baseline to bottom distance.
         $total_width = 0;
         $lastline_descent = 0;
-        foreach (explode("\n", $text) as $each_line) {
+        foreach (explode("\n", (string)$text) as $each_line) {
             $lines[] = $line = trim($each_line);
             $bbox = ImageTTFBBox($font_size, 0, $font_file, $line);
             $line_widths[] = $width = $bbox[2] - $bbox[0];
@@ -2567,7 +2567,9 @@ class phplot
                 Header('HTTP/1.0 500 Internal Server Error');
             }
         }
-        trigger_error($error_message, E_USER_ERROR);
+        // trigger_error(E_USER_ERROR) is deprecated since PHP 8.4 - exit directly.
+        echo $error_message;
+        exit(1);
         // This is only reached if the error handler returns TRUE
         unset($this->in_error);
         return false;
@@ -4162,7 +4164,7 @@ class phplot
             $j = 1; // Skips label at [0]
 
             if (!$this->datatype_implied) {
-                $all_iv[] = (double)$this->data[$i][$j++];
+                $all_iv[] = (float)$this->data[$i][$j++];
             }
 
             if ($sum_vals) {
@@ -4173,8 +4175,8 @@ class phplot
             while ($j < $n_vals) {
                 if (is_numeric($val = $this->data[$i][$j++])) {
                     if ($this->datatype_error_bars) {
-                        $all_dv[] = $val + (double)$this->data[$i][$j++];
-                        $all_dv[] = $val - (double)$this->data[$i][$j++];
+                        $all_dv[] = $val + (float)$this->data[$i][$j++];
+                        $all_dv[] = $val - (float)$this->data[$i][$j++];
                     } else {
                         if ($abs_vals) {
                             $val = abs($val); // Use absolute values
@@ -5398,8 +5400,8 @@ class phplot
         }
 
         // To avoid losing a final tick mark due to round-off errors, push tick_end out slightly.
-        $tick_start = (double)$plot_min;
-        $tick_end = (double)$plot_max + ($plot_max - $plot_min) / 10000.0;
+        $tick_start = (float)$plot_min;
+        $tick_end = (float)$plot_max + ($plot_max - $plot_min) / 10000.0;
 
         // If a tick anchor was given, adjust the start of the range so the anchor falls
         // at an exact tick mark (or would, if it was within range).
@@ -7509,7 +7511,7 @@ class phplot
                             $this->ndx_data_colors[$color_index],
                             $this->line_styles[$lws_index] == 'dashed'
                         );
-                        imageline($this->img, $dot_left_x, $yc, $dot_right_x, $yc, $style);
+                        imageline($this->img, (int)$dot_left_x, $yc, (int)$dot_right_x, $yc, $style);
                         imagesetthickness($this->img, 1);
                         if (++$lws_index >= $this->data_columns) {
                             $lws_index = 0; // Wrap around
@@ -7520,10 +7522,10 @@ class phplot
                         // Draw color boxes:
                         ImageFilledRectangle(
                             $this->img,
-                            $dot_left_x,
-                            $y1,
-                            $dot_right_x,
-                            $y2,
+                            (int)$dot_left_x,
+                            (int)$y1,
+                            (int)$dot_right_x,
+                            (int)$y2,
                             $this->ndx_data_colors[$color_index]
                         );
                        // Draw a rectangle around the box, if enabled.
@@ -7533,7 +7535,7 @@ class phplot
                             } else {
                                 $color = $this->ndx_text_color;
                             }
-                            ImageRectangle($this->img, $dot_left_x, $y1, $dot_right_x, $y2, $color);
+                            ImageRectangle($this->img, (int)$dot_left_x, (int)$y1, (int)$dot_right_x, (int)$y2, $color);
                         }
                 }
                 if (++$color_index > $max_color_index) {
@@ -7681,6 +7683,28 @@ class phplot
     }
 
     /**
+     * Draws a polygon, hiding the PHP 8.0 signature change of the GD functions
+     *
+     * The $num_points argument of imagepolygon()/imagefilledpolygon() is
+     * deprecated since PHP 8.0, but still required on older versions.
+     *
+     * @param int[] $points  Flat array of x,y pairs
+     * @param int $color  Color index to use for the polygon
+     * @param bool $filled  True for imagefilledpolygon(), False for imagepolygon()
+     * @return bool  Result of the underlying GD call
+     */
+    protected function DrawPolygon(array $points, $color, $filled = true)
+    {
+        if (PHP_VERSION_ID >= 80000) {
+            return $filled ? ImageFilledPolygon($this->img, $points, $color)
+                           : ImagePolygon($this->img, $points, $color);
+        }
+        $num_points = intdiv(count($points), 2);
+        return $filled ? ImageFilledPolygon($this->img, $points, $num_points, $color)
+                       : ImagePolygon($this->img, $points, $num_points, $color);
+    }
+
+    /**
      * Draws a single marker shape (a dot or shape)
      *
      * This is used by points and linepoints plots to draw a point, and by the
@@ -7733,23 +7757,23 @@ class phplot
                 break;
             case 'diamond':
                 $arrpoints = array($x1, $y, $x, $y1, $x2, $y, $x, $y2);
-                ImageFilledPolygon($this->img, $arrpoints, 4, $color);
+                $this->DrawPolygon($arrpoints, $color);
                 break;
             case 'triangle':
                 $arrpoints = array($x1, $y, $x2, $y, $x, $y2);
-                ImageFilledPolygon($this->img, $arrpoints, 3, $color);
+                $this->DrawPolygon($arrpoints, $color);
                 break;
             case 'trianglemid':
                 $arrpoints = array($x1, $y1, $x2, $y1, $x, $y);
-                ImageFilledPolygon($this->img, $arrpoints, 3, $color);
+                $this->DrawPolygon($arrpoints, $color);
                 break;
             case 'yield':
                 $arrpoints = array($x1, $y1, $x2, $y1, $x, $y2);
-                ImageFilledPolygon($this->img, $arrpoints, 3, $color);
+                $this->DrawPolygon($arrpoints, $color);
                 break;
             case 'delta':
                 $arrpoints = array($x1, $y2, $x2, $y2, $x, $y1);
-                ImageFilledPolygon($this->img, $arrpoints, 3, $color);
+                $this->DrawPolygon($arrpoints, $color);
                 break;
             case 'star':
                 ImageLine($this->img, $x1, $y, $x2, $y, $color);
@@ -7759,11 +7783,11 @@ class phplot
                 break;
             case 'hourglass':
                 $arrpoints = array($x1, $y1, $x2, $y1, $x1, $y2, $x2, $y2);
-                ImageFilledPolygon($this->img, $arrpoints, 4, $color);
+                $this->DrawPolygon($arrpoints, $color);
                 break;
             case 'bowtie':
                 $arrpoints = array($x1, $y1, $x1, $y2, $x2, $y1, $x2, $y2);
-                ImageFilledPolygon($this->img, $arrpoints, 4, $color);
+                $this->DrawPolygon($arrpoints, $color);
                 break;
             case 'target':
                 ImageFilledRectangle($this->img, $x1, $y1, $x, $y, $color);
@@ -7775,13 +7799,13 @@ class phplot
                 break;
             case 'home': /* As in: "home plate" (baseball), also looks sort of like a house. */
                 $arrpoints = array($x1, $y2, $x2, $y2, $x2, $y, $x, $y1, $x1, $y);
-                ImageFilledPolygon($this->img, $arrpoints, 5, $color);
+                $this->DrawPolygon($arrpoints, $color);
                 break;
             case 'up':
-                ImagePolygon($this->img, array($x, $y1, $x2, $y2, $x1, $y2), 3, $color);
+                $this->DrawPolygon(array($x, $y1, $x2, $y2, $x1, $y2), $color, false);
                 break;
             case 'down':
-                ImagePolygon($this->img, array($x, $y2, $x1, $y1, $x2, $y1), 3, $color);
+                $this->DrawPolygon(array($x, $y2, $x1, $y1, $x2, $y1), $color, false);
                 break;
             default: /* Also 'rect' */
                 ImageFilledRectangle($this->img, $x1, $y1, $x2, $y2, $color);
@@ -7871,7 +7895,7 @@ class phplot
             } else { // Suppress top shading (Note shade_top==FALSE && shade_side==FALSE is not allowed)
                 $pts = array($x2, $y2, $x2, $y1, $x2 + $shade, $y1 - $shade, $x2 + $shade, $y2 - $shade);
             }
-            ImageFilledPolygon($this->img, $pts, count($pts) / 2, $shade_color);
+            $this->DrawPolygon($pts, $shade_color);
         }
 
         // Draw a border around the bar, if enabled.
@@ -8628,7 +8652,7 @@ class phplot
                 array_push($pts, $xd[$row], $yd[$row][$col]);
             }
             // Draw it:
-            ImageFilledPolygon($this->img, $pts, $n_rows * 2, $this->ndx_data_colors[$prev_col]);
+            $this->DrawPolygon($pts, $this->ndx_data_colors[$prev_col]);
 
             $prev_col = $col;
         }
@@ -8954,7 +8978,7 @@ class phplot
             }
 
             // Draw the resulting polygon, which has (2 * (1 + 2*(n_rows-1))) points:
-            ImageFilledPolygon($this->img, $pts, 4 * $n_rows - 2, $this->ndx_data_colors[$prev_col]);
+            $this->DrawPolygon($pts, $this->ndx_data_colors[$prev_col]);
             $prev_col = $col;
         }
 
@@ -9530,7 +9554,7 @@ class phplot
             for ($idx = 0; $rec < $this->num_recs[$row]; $rec += 2, $idx++) {
                 if (is_numeric($y_now = $this->data[$row][$rec])) {      //Allow for missing Y data
                     $y = $this->ytr($y_now);
-                    $z = (double)$this->data[$row][$rec + 1]; // Z is required if Y is present.
+                    $z = (float)$this->data[$row][$rec + 1]; // Z is required if Y is present.
                     $size = (int)($f_size * $z + $b_size);  // Calculate bubble size
 
                     // Select the color:
